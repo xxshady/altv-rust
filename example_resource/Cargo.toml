@@ -7,8 +7,6 @@ edition = "2021"
 
 [dependencies]
 alt = { path = "../alt" }
-tokio = { version = "1", features = ["full"] }
-tokio-js-set-interval = "1.2.0"
 
 [lib]
 crate-type = ["cdylib"]
