@@ -25,10 +25,13 @@ pub fn resource_main_func(_: TokenStream, input: TokenStream) -> TokenStream {
     sig.inputs
         .push(syn::parse(quote! { full_main_path: std::path::PathBuf }.into()).unwrap());
 
+    sig.output = syn::parse(quote! { -> alt::MainResource }.into()).unwrap();
+
     quote! {
         #(#attrs)* #vis #sig {
             unsafe { alt::__set_alt_core(core) };
             #(#statements)*
+            alt::MainResource::new(full_main_path)
         }
     }
     .into()
