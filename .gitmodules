@@ -1,0 +1,3 @@
+[submodule "altv_sdk/include/cpp-sdk"]
+	path = altv_sdk/include/cpp-sdk
+	url = https://github.com/altmp/cpp-sdk
