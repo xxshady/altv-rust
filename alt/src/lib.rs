@@ -64,38 +64,16 @@ pub fn create_vehicle(
 pub type ResourceToggleTickHandler = fn(resource: &MainResource, enabled: bool);
 
 pub struct MainResource {
-    toggle_tick_handler: Option<ResourceToggleTickHandler>,
     pub path: PathBuf,
-    pub tick_enabled: bool,
 }
 
 impl MainResource {
     pub fn new(path: PathBuf) -> Self {
-        MainResource {
-            path,
-            toggle_tick_handler: None,
-            tick_enabled: false,
-        }
+        MainResource { path }
     }
 
-    pub fn test(&self) -> i32 {
-        10
-    }
-
-    pub fn on_tick(&self) {
-        println!("on_tick");
-    }
-
-    // is called by altv module
-    pub fn set_tick_toggle_handler(&mut self, toggle_tick_handler: ResourceToggleTickHandler) {
-        self.toggle_tick_handler = Some(toggle_tick_handler);
-    }
-
-    // is called in resource
-    pub fn toggle_tick(&mut self, enable: bool) {
-        self.tick_enabled = enable;
-        self.toggle_tick_handler
-            .expect("toggle_tick_handler is none")(self, enable);
+    pub fn on_tick(&mut self) {
+        println!("MainResource on_tick path: {}", self.path.display());
     }
 }
 

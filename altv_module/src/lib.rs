@@ -43,36 +43,19 @@ extern "C" fn resource_start(resource_path: &str, resource_main: &str) {
         })
     };
 
-    // fn add_on_tick_handler() {
-    //     println!("add on tick handler for resource:");
-    //     dbg!(resource_path);
-    // }
-
     let core_ptr = unsafe { sdk::alt_core_instance() };
     println!("calling resource main func with core ptr: {:?}", core_ptr);
-    let mut resource = unsafe { container.main(core_ptr, full_main_path.clone()) };
-    resource.set_tick_toggle_handler(toggle_resource_tick);
+    let resource = unsafe { container.main(core_ptr, full_main_path.clone()) };
     RESOURCE_MANAGER
-        .lock()
+        .try_lock()
         .unwrap()
         .add(full_main_path, resource);
 }
 
 extern "C" fn resource_on_tick() {
-    for res in RESOURCE_MANAGER.lock().unwrap().resources.values() {
-        if !res.tick_enabled {
-            continue;
-        }
+    for res in RESOURCE_MANAGER.try_lock().unwrap().resources.values_mut() {
         res.on_tick();
     }
-}
-
-fn toggle_resource_tick(resource: &alt::MainResource, enable: bool) {
-    let mut manager = RESOURCE_MANAGER.lock().unwrap();
-
-    let resource = manager.resources.get_mut(&resource.path);
-
-    resource.unwrap().toggle_tick(enable);
 }
 
 #[no_mangle]
