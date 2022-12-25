@@ -1,0 +1,17 @@
+[package]
+name = "altv_module"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+altv_sdk = { path = "../altv_sdk" }
+alt = { path = "../alt" }
+cxx = "1.0"
+dlopen = "0.1.8"
+dlopen_derive = "0.1"
+lazy_static = "1.4.0"
+
+[lib]
+crate-type = ["cdylib"]

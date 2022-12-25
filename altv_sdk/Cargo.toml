@@ -1,0 +1,12 @@
+[package]
+name = "altv_sdk"
+version = "0.0.0"
+edition = "2021"
+
+[dependencies]
+cxx = "1.0"
+extern_type_callback_derive = { path = "../extern_type_callback_derive" }
+
+[build-dependencies]
+cxx-build = "1.0"
+bindgen = "0.63.0"

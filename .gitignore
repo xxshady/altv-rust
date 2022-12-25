@@ -1,0 +1,5 @@
+/target
+/example_resource/target
+/extern_type_callback_derive/target
+/altv_module/target
+/altv_sdk/src/cpp-sdk-version.rs

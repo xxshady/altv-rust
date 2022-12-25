@@ -1,0 +1,10 @@
+[workspace]
+
+members = [
+    "extern_type_callback_derive",
+    "resource_main_macro",
+    "altv_sdk",
+    "altv_module",
+    "alt",
+    "example_resource",
+]
