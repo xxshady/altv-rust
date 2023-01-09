@@ -1,23 +1,34 @@
+use alt::resource_api::TestData;
+use std::sync::{Arc, Mutex};
+
+#[no_mangle]
+extern "C" fn test_interval_c() {
+    println!("test_interval_c called");
+}
+
+fn test_interval() {
+    println!("test_interval called");
+}
+
 #[allow(clippy::not_unsafe_ptr_arg_deref)]
 #[alt::res_main]
 #[no_mangle]
 pub fn main() {
-    alt::log("test ~r~red ~bl~yes ~wl~fuck yea");
+    std::env::set_var("RUST_BACKTRACE", "1");
 
-    // let model_name = "sultan3";
-    // let hash = alt::hash(model_name);
-    // alt::log(&format!(
-    //     "creating vehicle of model: {model_name} hash: {hash}"
-    // ));
+    let resource = alt::MainResource::new(full_main_path, resource_api);
 
-    // let veh = alt::create_vehicle(hash, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    let callback = Arc::new(Mutex::new(alt::log as fn(&str)));
 
-    // alt::log(&format!("created veh: {}", veh.id()));
-    // std::thread::spawn(move || {
-    //     // alt::log("wait for 4000ms");
-    //     println!("wait for 4000ms");
-    //     // std::thread::sleep(std::time::Duration::from_millis(4000));
-    //     // alt::log(&format!("destroy veh"));
-    //     // veh.destroy();
-    // });
+    let test_data = Arc::new(Mutex::new(TestData {
+        a: 10,
+        callback: callback.clone(),
+    }));
+
+    alt::set_interval(test_interval, 1000, test_data.clone());
+
+    test_data.try_lock().unwrap().a += 1;
+    // (callback.try_lock().unwrap())();
+
+    resource
 }

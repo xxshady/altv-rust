@@ -1,22 +1,16 @@
-// pub struct Resource {
-//     path: std::path::PathBuf,
-// }
-
-use std::{collections::HashMap, path::PathBuf};
+use std::{path::PathBuf, rc::Rc};
 
 pub struct ResourceManager {
     // TODO: private
-    pub resources: HashMap<PathBuf, alt::MainResource>,
+    pub resources: Vec<Rc<alt::MainResource>>,
 }
 
 impl ResourceManager {
     pub fn new() -> Self {
-        ResourceManager {
-            resources: HashMap::new(),
-        }
+        ResourceManager { resources: vec![] }
     }
 
-    pub fn add(&mut self, path: PathBuf, resource: alt::MainResource) {
-        self.resources.insert(path, resource);
+    pub fn add(&mut self, path: PathBuf, resource: Rc<alt::MainResource>) {
+        self.resources.push(resource);
     }
 }

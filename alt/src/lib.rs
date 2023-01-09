@@ -1,7 +1,19 @@
 use std::path::PathBuf;
+use std::rc::Rc;
+use std::sync::Arc;
+use std::sync::Mutex;
 
 use altv_sdk::ffi;
 use cxx::let_cxx_string;
+
+pub use ffi::set_alt_core as __set_alt_core;
+pub use ffi::ICore as __alt_ICore;
+use once_cell::sync::OnceCell;
+use resource_api::TestData;
+use resource_api::TestDataContainer;
+pub use resource_main_macro::resource_main_func as res_main;
+
+pub use resource_api;
 
 pub type ModelHash = u32;
 
@@ -67,9 +79,16 @@ pub struct MainResource {
     pub path: PathBuf,
 }
 
+static RESOURCE_API: OnceCell<Arc<Mutex<resource_api::ResourceApi>>> = OnceCell::new();
+
 impl MainResource {
-    pub fn new(path: PathBuf) -> Self {
-        MainResource { path }
+    pub fn new(path: PathBuf, resource_api: Arc<Mutex<resource_api::ResourceApi>>) -> Self {
+        let instance = MainResource { path };
+        println!("MainResource::new call ptr: {:?}", &instance as *const _);
+
+        RESOURCE_API.set(resource_api);
+
+        instance
     }
 
     pub fn on_tick(&mut self) {
@@ -77,6 +96,11 @@ impl MainResource {
     }
 }
 
-pub use ffi::set_alt_core as __set_alt_core;
-pub use ffi::ICore as __alt_ICore;
-pub use resource_main_macro::resource_main_func as res_main;
+pub fn set_interval(callback: fn(), millis: u64, test_data: TestDataContainer) {
+    RESOURCE_API
+        .get()
+        .unwrap()
+        .try_lock()
+        .unwrap()
+        .create_timer(callback, millis, test_data);
+}

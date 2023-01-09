@@ -8,6 +8,8 @@ version = "0.1.0"
 dependencies = [
  "altv_sdk",
  "cxx",
+ "once_cell",
+ "resource_api",
  "resource_main_macro",
 ]
 
@@ -20,7 +22,8 @@ dependencies = [
  "cxx",
  "dlopen",
  "dlopen_derive",
- "lazy_static",
+ "once_cell",
+ "resource_api",
 ]
 
 [[package]]
@@ -327,6 +330,13 @@ name = "regex-syntax"
 version = "0.6.28"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "456c603be3e8d448b072f410900c09faf164fbce2d480456f50eea6e25f9c848"
+
+[[package]]
+name = "resource_api"
+version = "0.1.0"
+dependencies = [
+ "once_cell",
+]
 
 [[package]]
 name = "resource_main_macro"

@@ -1,13 +1,17 @@
 mod resource_manager;
 
-use std::{path::PathBuf, sync::Mutex};
-
 use altv_sdk::ffi as sdk;
 use cxx::let_cxx_string;
 use dlopen::wrapper::{Container, WrapperApi};
 use dlopen_derive::WrapperApi;
-use lazy_static::lazy_static;
-use resource_manager::ResourceManager;
+use once_cell::sync::OnceCell;
+use resource_api::{timers, Managers, ResourceApi};
+use std::{
+    cell::RefCell,
+    collections::HashMap,
+    path::PathBuf,
+    sync::{Arc, Mutex},
+};
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn runtime_create_impl(resource_impl: *mut sdk::RustResourceImpl) {
@@ -21,13 +25,25 @@ extern "C" fn runtime_destroy_impl() {
 
 #[derive(WrapperApi)]
 struct ResourceDll {
-    // core parameter should be injected using alt::res_main macro
-    main: unsafe extern "C" fn(core: *mut sdk::ICore, full_main_path: PathBuf) -> alt::MainResource,
+    // core, full_main_path parameters are injected using alt::res_main macro
+    main: unsafe extern "C" fn(
+        core: *mut sdk::ICore,
+        full_main_path: PathBuf,
+        resource_api: Arc<Mutex<ResourceApi>>,
+    ) -> alt::MainResource,
 }
 
-lazy_static! {
-    static ref RESOURCE_MANAGER: Mutex<ResourceManager> = Mutex::new(ResourceManager::new());
+// static mut RESOURCE_MANAGER: Mutex<ResourceManager> =
+//     Mutex::new(ResourceManager { resources: vec![] });
+
+// static mut RESOURCE_TEST: Option<Rc<alt::MainResource>> = None;
+
+thread_local! {
+    static RESOURCES: RefCell<HashMap<PathBuf, alt::MainResource>> = RefCell::new(HashMap::new());
 }
+
+static MANAGERS_INSTANCE: OnceCell<Arc<Mutex<Managers>>> = OnceCell::new();
+static RESOURCE_API: OnceCell<Arc<Mutex<ResourceApi>>> = OnceCell::new();
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_start(resource_path: &str, resource_main: &str) {
@@ -45,22 +61,52 @@ extern "C" fn resource_start(resource_path: &str, resource_main: &str) {
 
     let core_ptr = unsafe { sdk::alt_core_instance() };
     println!("calling resource main func with core ptr: {:?}", core_ptr);
-    let resource = unsafe { container.main(core_ptr, full_main_path.clone()) };
-    RESOURCE_MANAGER
-        .try_lock()
-        .unwrap()
-        .add(full_main_path, resource);
+    let resource = unsafe {
+        container.main(
+            core_ptr,
+            full_main_path.clone(),
+            Arc::clone(RESOURCE_API.get().expect("RESOURCE_API.get() failed")),
+        )
+    };
+
+    // let resource_rc = Rc::new(resource);
+
+    // unsafe {
+    //     RESOURCE_MANAGER
+    //         .try_lock()
+    //         .unwrap()
+    //         .add(full_main_path, resource_rc.clone());
+    // }
+
+    // unsafe {
+    //     RESOURCE_TEST = Some(resource_rc);
+    // }
+
+    RESOURCES.with(|resources| {
+        let mut resources = resources.borrow_mut();
+        resources.insert(full_main_path, resource);
+    });
 }
 
 extern "C" fn resource_on_tick() {
-    for res in RESOURCE_MANAGER.try_lock().unwrap().resources.values_mut() {
-        res.on_tick();
-    }
+    // println!("resource_on_tick");
+
+    MANAGERS_INSTANCE
+        .get()
+        .unwrap()
+        .try_lock()
+        .unwrap()
+        .timer_manager
+        .try_lock()
+        .unwrap()
+        .process_timers();
 }
 
 #[no_mangle]
 #[allow(clippy::missing_safety_doc)]
 pub unsafe extern "C" fn altMain(core: *mut sdk::ICore) -> bool {
+    std::env::set_var("RUST_BACKTRACE", "1");
+
     sdk::set_alt_core(core);
 
     let runtime = sdk::create_script_runtime();
@@ -75,6 +121,14 @@ pub unsafe extern "C" fn altMain(core: *mut sdk::ICore) -> bool {
         altv_sdk::ResourceStartCallback(resource_start),
         altv_sdk::ResourceOnTickCallback(resource_on_tick),
     );
+
+    MANAGERS_INSTANCE.set(Arc::new(Mutex::new(Managers {
+        timer_manager: timers::TimerManager::instance(),
+    })));
+
+    RESOURCE_API.set(Arc::new(Mutex::new(ResourceApi {
+        managers: Arc::clone(MANAGERS_INSTANCE.get().unwrap()),
+    })));
 
     true
 }
