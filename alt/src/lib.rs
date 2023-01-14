@@ -3,11 +3,8 @@ use std::rc::Rc;
 use std::sync::Arc;
 use std::sync::Mutex;
 
-use altv_sdk::ffi;
 use cxx::let_cxx_string;
 
-pub use ffi::set_alt_core as __set_alt_core;
-pub use ffi::ICore as __alt_ICore;
 use once_cell::sync::OnceCell;
 use resource_api::TestData;
 use resource_api::TestDataContainer;
@@ -36,14 +33,11 @@ pub fn hash(str: &str) -> ModelHash {
 }
 
 pub fn log(str: &str) {
-    let_cxx_string!(cxx_str = str);
-    unsafe {
-        ffi::log_colored(&cxx_str);
-    }
+    println!("alt::log str: {:?}", str);
 }
 
 pub struct Vehicle {
-    ptr: *mut ffi::IVehicle,
+    ptr: i32,
     id: u16,
 }
 
@@ -54,7 +48,6 @@ impl Vehicle {
 
     pub fn destroy(&self) {
         // TODO: baseobject validation shit
-        unsafe { ffi::vehicle_destroy(self.ptr) }
     }
 }
 
@@ -67,10 +60,7 @@ pub fn create_vehicle(
     ry: f32,
     rz: f32,
 ) -> Vehicle {
-    let ptr = unsafe { ffi::create_vehicle(model, x, y, z, rx, ry, rz) };
-    let id = unsafe { ffi::vehicle_get_id(ptr) };
-
-    Vehicle { id, ptr }
+    Vehicle { id: 0, ptr: 0 }
 }
 
 pub type ResourceToggleTickHandler = fn(resource: &MainResource, enabled: bool);
@@ -104,3 +94,5 @@ pub fn set_interval(callback: fn(), millis: u64, test_data: TestDataContainer) {
         .unwrap()
         .create_timer(callback, millis, test_data);
 }
+
+pub mod specs;

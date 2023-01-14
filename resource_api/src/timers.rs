@@ -1,5 +1,8 @@
 use once_cell::sync::OnceCell;
-use std::sync::Mutex;
+use std::{
+    ops::Deref,
+    sync::{Mutex, MutexGuard},
+};
 
 use crate::TestDataContainer;
 
@@ -47,6 +50,8 @@ impl TimerManager {
 
         println!("calling test_data callback...");
         (test_data.try_lock().unwrap().callback.try_lock().unwrap())("test");
+        println!("calling test_data callback2...");
+        (test_data.try_lock().unwrap().callback.try_lock().unwrap())("test");
 
         let next_call_time =
             std::time::SystemTime::now() + std::time::Duration::from_millis(millis);
@@ -78,7 +83,9 @@ impl TimerManager {
                 println!("getting data");
                 let data = timer.test_data.try_lock().unwrap();
                 dbg!(&data.a);
-                (data.callback.try_lock().unwrap())("test");
+                println!("calling callback");
+                let callback = data.callback.try_lock().unwrap();
+                callback("test");
                 println!("getted?");
 
                 timer.next_call_time =
