@@ -3,4 +3,4 @@
 
 @REM !! requires cargo-watch to be installed
 
-cargo watch --exec build --why --watch ../ --watch .
+cargo watch --exec build --why --watch .

@@ -1,41 +1,35 @@
-use dlopen::wrapper::{Container, WrapperApi};
-use dlopen_derive::WrapperApi;
+use libloading::Library;
 use std::{str::FromStr, time::Duration};
 
-#[derive(WrapperApi)]
-struct ModuleDll {
-    // core, full_main_path parameters are injected using alt::res_main macro
-    altMain: unsafe extern "C" fn(),
-    resource_on_tick: extern "C" fn(),
-    resource_start: extern "C" fn(resource_path: &str, resource_main: &str),
-}
-
 fn main() {
-    println!("current dir: {:?}", std::env::current_dir().unwrap());
+    unsafe {
+        println!("current dir: {:?}", std::env::current_dir().unwrap());
 
-    let dll_path = std::path::PathBuf::from_str("./altv_module.dll").unwrap();
+        let dll_path = std::path::PathBuf::from_str("./altv_module.dll").unwrap();
 
-    let container: Container<ModuleDll> = unsafe {
-        Container::load(&dll_path).unwrap_or_else(|e| {
-            panic!(
-                "Failed to open dll at: {}, err: {:?}",
-                dll_path.display(),
-                e
-            )
-        })
-    };
+        let lib = Library::new(dll_path.clone()).unwrap();
+        let altMain: unsafe extern "C" fn() = *lib.get(b"altMain\0").unwrap();
 
-    println!("calling altMain");
-    unsafe { container.altMain() };
+        println!("calling altMain");
+        altMain();
+        println!("called altMain");
 
-    container.resource_start(
-        "C:/dev/rust/altv-xrust/target/debug",
-        "example_resource.dll",
-    );
+        let resource_start: extern "C" fn(resource_path: &str, resource_main: &str) =
+            *lib.get(b"resource_start\0").unwrap();
 
-    println!("starting loop");
-    loop {
-        std::thread::sleep(Duration::from_millis(500));
-        container.resource_on_tick();
+        println!("calling resource_start");
+
+        resource_start(
+            "C:/dev/rust/altv-xrust/target/debug",
+            "example_resource.dll",
+        );
+
+        let resource_on_tick: extern "C" fn() = *lib.get(b"resource_on_tick\0").unwrap();
+
+        println!("starting loop");
+        loop {
+            std::thread::sleep(Duration::from_millis(500));
+            resource_on_tick();
+        }
     }
 }

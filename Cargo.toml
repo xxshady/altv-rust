@@ -1,11 +1,21 @@
-[workspace]
+[package]
+name = "alt"
+version = "0.1.0"
+edition = "2021"
 
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+resource_main_macro = { path = "./resource_main_macro" }
+cxx = "1.0"
+once_cell = "1.16.0"
+specs = "0.18.0"
+
+[workspace]
 members = [
     "extern_type_callback_derive",
     "resource_main_macro",
-    "resource_api",
     "altv_module",
-    "alt",
     "example_resource",
     "call_module",
 ]
