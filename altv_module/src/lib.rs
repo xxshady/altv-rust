@@ -2,8 +2,7 @@ mod resource_manager;
 
 use altv_sdk::ffi as sdk;
 use cxx::let_cxx_string;
-use dlopen::wrapper::{Container, WrapperApi};
-use dlopen_derive::WrapperApi;
+use libloading::Library;
 use once_cell::sync::OnceCell;
 use resource_api::{timers, Managers, ResourceApi};
 use std::{
@@ -23,15 +22,11 @@ extern "C" fn runtime_destroy_impl() {
     println!("runtime_destroy_impl");
 }
 
-#[derive(WrapperApi)]
-struct ResourceDll {
-    // core, full_main_path parameters are injected using alt::res_main macro
-    main: unsafe extern "C" fn(
-        core: *mut sdk::ICore,
-        full_main_path: PathBuf,
-        resource_api: Arc<Mutex<ResourceApi>>,
-    ) -> alt::MainResource,
-}
+type ResourceMainFn = unsafe extern "C" fn(
+    core: *mut sdk::ICore,
+    full_main_path: PathBuf,
+    resource_api: Arc<Mutex<ResourceApi>>,
+) -> alt::MainResource;
 
 // static mut RESOURCE_MANAGER: Mutex<ResourceManager> =
 //     Mutex::new(ResourceManager { resources: vec![] });
@@ -50,37 +45,21 @@ extern "C" fn resource_start(resource_path: &str, resource_main: &str) {
     let full_main_path = std::path::Path::new(resource_path).join(resource_main);
     dbg!(&full_main_path);
 
-    let container: Container<ResourceDll> = unsafe {
-        Container::load(&full_main_path).unwrap_or_else(|_| {
-            panic!(
-                "Failed to open rust resource dll at: {}",
-                full_main_path.display()
-            )
-        })
-    };
-
     let core_ptr = unsafe { sdk::alt_core_instance() };
     println!("calling resource main func with core ptr: {:?}", core_ptr);
+
+    let lib = unsafe { Library::new(full_main_path.clone()) }.unwrap();
+    let main_fn: ResourceMainFn = unsafe { *lib.get(b"main\0").unwrap() };
     let resource = unsafe {
-        container.main(
+        main_fn(
             core_ptr,
             full_main_path.clone(),
             Arc::clone(RESOURCE_API.get().expect("RESOURCE_API.get() failed")),
         )
     };
 
-    // let resource_rc = Rc::new(resource);
-
-    // unsafe {
-    //     RESOURCE_MANAGER
-    //         .try_lock()
-    //         .unwrap()
-    //         .add(full_main_path, resource_rc.clone());
-    // }
-
-    // unsafe {
-    //     RESOURCE_TEST = Some(resource_rc);
-    // }
+    // TODO: better alternative to "leak"
+    Box::leak(Box::new(lib));
 
     RESOURCES.with(|resources| {
         let mut resources = resources.borrow_mut();
