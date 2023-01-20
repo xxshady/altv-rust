@@ -22,25 +22,31 @@ pub fn resource_main_func(_: TokenStream, input: TokenStream) -> TokenStream {
     } = input;
     let statements = &block.stmts;
 
-    sig.inputs.clear();
-    sig.inputs
-        .push(syn::parse(quote! { core: *mut alt::__alt_ICore }.into()).unwrap());
-    sig.inputs
-        .push(syn::parse(quote! { full_main_path: std::path::PathBuf }.into()).unwrap());
-    sig.inputs.push(
-        syn::parse(
-            quote! { resource_api: std::sync::Arc<std::sync::Mutex<alt::resource_api::ResourceApi>> }.into(),
-        )
-        .unwrap(),
-    );
+    // sig.inputs.clear();
+    // sig.inputs
+    //     .push(syn::parse(quote! { core: *mut alt::__alt_ICore }.into()).unwrap());
+    // sig.inputs
+    //     .push(syn::parse(quote! { full_main_path: std::path::PathBuf }.into()).unwrap());
+    // sig.inputs.push(
+    //     syn::parse(
+    //         quote! { resource_api: std::sync::Arc<std::sync::Mutex<alt::__resource_api::ResourceApi>> }.into(),
+    //     )
+    //     .unwrap(),
+    // );
 
-    sig.output = syn::parse(quote! { -> alt::MainResource }.into()).unwrap();
+    // sig.output = syn::parse(quote! { -> alt::MainResource }.into()).unwrap();
 
     quote! {
-        #(#attrs)* #vis #sig {
-            unsafe { alt::__set_alt_core(core) };
-            #(#statements)*
-            // alt::MainResource::new(full_main_path)
+        #(#attrs)* #vis fn main(
+            core: usize,
+            full_main_path: std::path::PathBuf,
+            resource_api: std::sync::Arc<std::sync::Mutex<alt::__resource_api::ResourceApi>>
+        ) -> alt::MainResource {
+            unsafe { alt::__set_alt_core(core as *mut alt::__alt_ICore) };
+            // TODO: improve this shit
+            let __alt_main_resource_instance = alt::MainResource::new(full_main_path, resource_api);
+            #(#statements)*;
+            __alt_main_resource_instance
         }
     }
     .into()

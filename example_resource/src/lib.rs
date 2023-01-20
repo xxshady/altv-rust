@@ -1,34 +1,47 @@
-use alt::resource_api::TestData;
-use std::sync::{Arc, Mutex};
-
-#[no_mangle]
-extern "C" fn test_interval_c() {
-    println!("test_interval_c called");
-}
-
-fn test_interval() {
-    println!("test_interval called");
-}
-
-#[allow(clippy::not_unsafe_ptr_arg_deref)]
 #[alt::res_main]
 #[no_mangle]
 pub fn main() {
-    std::env::set_var("RUST_BACKTRACE", "1");
+    let mut i = 0;
+    alt::set_interval(
+        move || {
+            i += 1;
+            alt::log!("test interval i: {i}");
+        },
+        1000,
+    );
 
-    let resource = alt::MainResource::new(full_main_path, resource_api);
+    std::env::set_var("RUST_BACKTRACE", "full");
+    // alt::set_timeout(|| println!("its timeout"), 300);
 
-    let callback = Arc::new(Mutex::new(alt::log as fn(&str)));
+    fn on_player_connect(player_ptr: usize) {
+        alt::log_warn!("player connect player_ptr: {:?}", player_ptr);
+    }
 
-    let test_data = Arc::new(Mutex::new(TestData {
-        a: 10,
-        callback: callback.clone(),
-    }));
+    fn on_server_started1() {
+        alt::log_warn!("on_server_started 1");
+    }
 
-    alt::set_interval(test_interval, 1000, test_data.clone());
+    fn on_server_started2() {
+        alt::log_warn!("on_server_started 2");
+    }
 
-    test_data.try_lock().unwrap().a += 1;
-    // (callback.try_lock().unwrap())();
+    alt::events::on(alt::__resource_api::events::SDKEvent::PlayerConnect(
+        on_player_connect,
+    ));
 
-    resource
+    alt::events::on(alt::__resource_api::events::SDKEvent::ServerStarted(
+        on_server_started1,
+    ));
+
+    alt::events::on(alt::__resource_api::events::SDKEvent::ServerStarted(
+        on_server_started2,
+    ));
+
+    fn on_player_disconnect(player: usize, reason: String) {
+        alt::log!("on_player_disconnect {:?} {:?}", player, reason);
+    }
+
+    alt::events::on(alt::__resource_api::events::SDKEvent::PlayerDisconnect(
+        on_player_disconnect,
+    ));
 }

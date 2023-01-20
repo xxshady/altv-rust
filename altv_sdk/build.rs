@@ -1,4 +1,5 @@
 const CPP_SDK_VERSION_DIR: &str = "include/cpp-sdk/version";
+const CPP_SDK_EVENTS_DIR: &str = "include/cpp-sdk/events";
 
 fn main() {
     generate_cpp_sdk_version();
@@ -6,7 +7,6 @@ fn main() {
 
     println!("cargo:rerun-if-changed=src/lib.rs");
     println!("cargo:rerun-if-changed=src/alt_bridge.cpp");
-    println!("cargo:rerun-if-changed=include/SDK_extend.h");
     println!("cargo:rerun-if-changed=include/cpp-sdk/*.h");
     println!("cargo:rerun-if-changed=include/cpp-sdk/*.cpp");
 }
@@ -25,8 +25,20 @@ fn generate_cpp_sdk_version() {
         .expect("Unable to generate bindings for version.h");
 
     cpp_sdk_version_bindings
-        .write_to_file("src/cpp-sdk-version.rs")
+        .write_to_file("src/cpp_sdk_version.rs")
         .expect("Couldn't write bindings!");
+
+    // TODO: copy CEvent::Type enum from CEvent.h automatically
+    // let test_events_enums = bindgen::Builder::default()
+    //     .header(format!("{CPP_SDK_EVENTS_DIR}/CEvent.h"))
+    //     .clang_arg("-std=c++20")
+    //     .clang_arg("-xc++")
+    //     .generate()
+    //     .expect("Unable to generate bindings for version.h");
+
+    // test_events_enums
+    //     .write_to_file("src/test_events_enums.rs")
+    //     .expect("Couldn't write test_events_enums bindings!");
 }
 
 fn build_rust() {

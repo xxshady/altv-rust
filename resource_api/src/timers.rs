@@ -7,10 +7,10 @@ pub type TimerId = u32;
 
 struct Timer {
     id: TimerId,
-    callback: fn(),
+    callback: Box<dyn FnMut() + 'static>,
     next_call_time: std::time::SystemTime,
     millis: u64,
-    test_data: TestDataContainer,
+    once: bool,
 }
 
 pub struct TimerManager {
@@ -20,6 +20,7 @@ pub struct TimerManager {
 
 // TEST
 unsafe impl Sync for TimerManager {}
+unsafe impl Send for TimerManager {}
 
 pub static TIMER_MANAGER: OnceCell<Mutex<TimerManager>> = OnceCell::new();
 
@@ -37,16 +38,18 @@ impl TimerManager {
         TIMER_MANAGER.get_or_init(|| Mutex::new(TimerManager::new()))
     }
 
-    pub fn create(&mut self, callback: fn(), millis: u64, test_data: TestDataContainer) -> TimerId {
+    pub fn create(
+        &mut self,
+        callback: Box<impl FnMut() + 'static>,
+        millis: u64,
+        once: bool,
+    ) -> TimerId {
         let id = {
             self.id += 1;
             self.id
         };
 
         println!("create timer id: {:?}", id);
-
-        println!("calling test_data callback...");
-        (test_data.try_lock().unwrap().callback.try_lock().unwrap())("test");
 
         let next_call_time =
             std::time::SystemTime::now() + std::time::Duration::from_millis(millis);
@@ -56,7 +59,7 @@ impl TimerManager {
             callback,
             next_call_time,
             millis,
-            test_data,
+            once,
         });
 
         dbg!(self.timers.len());
@@ -66,24 +69,24 @@ impl TimerManager {
 
     pub fn process_timers(&mut self) {
         let now = std::time::SystemTime::now();
+        let mut indexes_to_remove: Vec<usize> = vec![];
 
-        // dbg!(self.timers.len());
-
-        for timer in &mut self.timers {
-            // println!(
-            //     "now: {:?} >= timer.next_call_time: {:?}",
-            //     now, timer.next_call_time
-            // );
+        for (idx, timer) in self.timers.iter_mut().enumerate() {
             if now >= timer.next_call_time {
-                println!("getting data");
-                let data = timer.test_data.try_lock().unwrap();
-                dbg!(&data.a);
-                (data.callback.try_lock().unwrap())("test");
-                println!("getted?");
-
+                (timer.callback)();
+                if timer.once {
+                    println!("timer.once, millis: {}", timer.millis);
+                    indexes_to_remove.push(idx);
+                    continue;
+                }
                 timer.next_call_time =
                     std::time::SystemTime::now() + std::time::Duration::from_millis(timer.millis);
             }
+        }
+
+        for idx in indexes_to_remove {
+            println!("deleting timer idx: {}", idx);
+            self.timers.swap_remove(idx);
         }
     }
 }

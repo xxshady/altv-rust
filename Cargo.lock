@@ -33,6 +33,7 @@ dependencies = [
  "cxx",
  "cxx-build",
  "extern_type_callback_derive",
+ "primitive_enum",
 ]
 
 [[package]]
@@ -257,6 +258,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "19b17cddbe7ec3f8bc800887bab5e717348c95ea2ca0b1bf0837fb964dc67099"
 
 [[package]]
+name = "primitive_enum"
+version = "1.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ac2c0ab7bc0e810304fadeba0e28d6f3c1f4f070e336f1bdcf9504a3be6b98c9"
+
+[[package]]
 name = "proc-macro2"
 version = "1.0.47"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -293,6 +300,7 @@ checksum = "456c603be3e8d448b072f410900c09faf164fbce2d480456f50eea6e25f9c848"
 name = "resource_api"
 version = "0.1.0"
 dependencies = [
+ "altv_sdk",
  "once_cell",
 ]
 

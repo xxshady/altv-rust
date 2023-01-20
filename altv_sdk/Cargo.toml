@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 cxx = "1.0"
 extern_type_callback_derive = { path = "../extern_type_callback_derive" }
+primitive_enum = "1.0.2"
 
 [build-dependencies]
 cxx-build = "1.0"
