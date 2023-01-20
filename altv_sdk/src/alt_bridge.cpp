@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <memory>
+#include <filesystem>
 #include "altv_sdk/include/alt_bridge.h"
 #include "altv_sdk/include/cpp-sdk/SDK.h"
 
@@ -13,7 +14,17 @@ alt::IResource::Impl* alt_rs::RustRuntime::CreateImpl(alt::IResource* resource)
 {
     alt::ICore::Instance().LogInfo("RustRuntime::CreateImpl");
     alt::ICore::Instance().LogInfo("calling rust func");
-    auto resource_impl = new alt_rs::RustRuntime::RustResource(this, resource);
+
+    std::filesystem::path _full_main_path(std::filesystem::path(resource->GetPath()) / resource->GetMain());
+    std::string full_main_path = _full_main_path.string();
+
+    std::cout << "full_main_path: " << full_main_path << std::endl;
+
+    auto resource_impl = new alt_rs::RustRuntime::RustResource(
+        this,
+        resource,
+        std::move(full_main_path)
+    );
 
     if (create_impl_callback == nullptr)
         alt::ICore::Instance().LogError("rust func is null");
@@ -42,14 +53,14 @@ void alt_rs::RustRuntime::OnTick()
 bool alt_rs::RustRuntime::RustResource::Start()
 {
     alt::ICore::Instance().LogInfo("RustResource::Start");
-    runtime->resource_start_callback(GetIResource()->GetPath(), GetIResource()->GetMain());
+    runtime->resource_start_callback(full_main_path);
     return true;
 }
 
 bool alt_rs::RustRuntime::RustResource::Stop()
 {
     alt::ICore::Instance().LogInfo("RustResource::Stop");
-    runtime->resource_stop_callback(GetIResource()->GetPath(), GetIResource()->GetMain());
+    runtime->resource_stop_callback(full_main_path);
     return true;
 }
 

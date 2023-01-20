@@ -51,8 +51,8 @@ static MANAGERS_INSTANCE: OnceCell<Arc<Mutex<Managers>>> = OnceCell::new();
 static RESOURCE_API: OnceCell<Arc<Mutex<ResourceApi>>> = OnceCell::new();
 
 #[allow(improper_ctypes_definitions)]
-extern "C" fn resource_start(resource_path: &str, resource_main: &str) {
-    let full_main_path = std::path::Path::new(resource_path).join(resource_main);
+extern "C" fn resource_start(full_main_path: &str) {
+    let full_main_path = PathBuf::from(full_main_path);
     dbg!(&full_main_path);
 
     let core_ptr = unsafe { sdk::alt_core_instance() };
@@ -77,8 +77,7 @@ extern "C" fn resource_start(resource_path: &str, resource_main: &str) {
 }
 
 #[allow(improper_ctypes_definitions)]
-extern "C" fn resource_stop(resource_path: &str, resource_main: &str) {
-    let full_main_path = std::path::Path::new(resource_path).join(resource_main);
+extern "C" fn resource_stop(full_main_path: &str) {
     alt::log!("resource stop callback");
     dbg!(&full_main_path);
 
