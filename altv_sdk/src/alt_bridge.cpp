@@ -66,7 +66,7 @@ bool alt_rs::RustRuntime::RustResource::Stop()
 
 void alt_rs::RustRuntime::RustResource::OnEvent(const alt::CEvent* event)
 {
-    runtime->resource_on_event_callback(event);
+    runtime->resource_on_event_callback(full_main_path, event);
 }
 
 void alt_rs::RustRuntime::RustResource::OnTick()

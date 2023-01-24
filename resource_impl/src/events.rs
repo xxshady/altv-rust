@@ -23,6 +23,8 @@ pub struct SDKEventManager {
     handlers: HashMap<altv_sdk::EventType, Vec<SDKEvent>>,
 }
 
+pub type EventHandlersHashMap = HashMap<altv_sdk::EventType, Vec<SDKEvent>>;
+
 impl SDKEventManager {
     pub fn new() -> Self {
         Self {
@@ -45,7 +47,7 @@ impl SDKEventManager {
     }
 
     // intended for altv_module
-    pub fn __get_handlers(&self) -> &HashMap<altv_sdk::EventType, Vec<SDKEvent>> {
+    pub fn __get_handlers(&self) -> &EventHandlersHashMap {
         &self.handlers
     }
 }

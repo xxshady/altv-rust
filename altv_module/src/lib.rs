@@ -19,17 +19,11 @@ extern "C" fn runtime_destroy_impl() {
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn runtime_on_tick() {
-    resource_impl::log!("runtime_on_tick");
+    // resource_impl::log!("runtime_on_tick");
 
-    let mutex = RESOURCES
-        .get()
-        .expect("[runtime_on_tick] RESOURCES.get() failed")
-        .try_lock()
-        .expect("[runtime_on_tick] RESOURCES try_lock() failed");
+    // let resources = ResourceManager::instance().resources_iter();
 
-    let resources = mutex.resources_iter();
-
-    for resource in resources {
+    for (_, resource) in ResourceManager::instance().resources_iter() {
         resource
             .try_lock()
             .expect("resource.try_lock() failed")
@@ -38,35 +32,28 @@ extern "C" fn runtime_on_tick() {
 }
 
 type ResourceMainFn =
-    unsafe extern "C" fn(core: *mut sdk::ICore, full_main_path: PathBuf) -> ResourceImplMutex;
-
-static RESOURCES: OnceCell<Mutex<ResourceManager>> = OnceCell::new();
+    unsafe extern "C" fn(core: *mut sdk::ICore, full_main_path: String) -> ResourceImplMutex;
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_start(full_main_path: &str) {
-    let full_main_path = PathBuf::from(full_main_path);
+    let full_main_path = full_main_path.to_string();
     dbg!(&full_main_path);
 
     let core_ptr = unsafe { sdk::alt_core_instance() };
     resource_impl::log!("calling resource main func with core ptr: {:?}", core_ptr);
 
-    let lib = unsafe { Library::new(full_main_path.clone()) }.unwrap();
+    let lib = unsafe { Library::new(PathBuf::from(&full_main_path)) }.unwrap();
     let main_fn: ResourceMainFn = unsafe { *lib.get(b"main\0").unwrap() };
     let resource = unsafe { main_fn(core_ptr, full_main_path.clone()) };
 
     Box::leak(Box::new(lib));
 
-    RESOURCES
-        .get()
-        .expect("RESOURCES.get_mut() failed")
-        .try_lock()
-        .expect("RESOURCES try_lock() failed")
-        .add(full_main_path, resource);
+    ResourceManager::instance().add(full_main_path, resource);
 }
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_stop(full_main_path: &str) {
-    alt::log!("resource stop callback");
+    resource_impl::log!("resource stop callback");
     dbg!(&full_main_path);
 
     // TODO: some cleanup of timers, altv entities (?), etc.
@@ -76,36 +63,38 @@ extern "C" fn resource_on_tick() {
     // resource_impl::log!("resource_on_tick");
 }
 
-extern "C" fn resource_on_event(event: *const sdk::CEvent) {
+extern "C" fn resource_on_event(full_main_path: &str, event: *const sdk::CEvent) {
     let raw_type = unsafe { sdk::get_event_type(event) };
     let event_type = altv_sdk::EventType::from(raw_type).unwrap();
 
-    // let event_manager = MANAGERS_INSTANCE
-    //     .get()
-    //     .unwrap()
-    //     .try_lock()
-    //     .unwrap()
-    //     .event_manager
-    //     .try_lock()
-    //     .unwrap();
+    resource_impl::log!(
+        "resource_on_event full_main_path: {}, event: {:?}",
+        full_main_path,
+        event_type
+    );
 
-    // if let Some(handlers) = event_manager.get_handlers().get(&event_type) {
-    //     for handler in handlers {
-    //         use resource_impl::events::SDKEvent::*;
-    //         match handler {
-    //             ServerStarted(callback) => callback(),
-    //             PlayerConnect(callback) => {
-    //                 callback(unsafe { sdk::get_event_player_target(event) } as usize)
-    //             }
-    //             PlayerDisconnect(callback) => callback(
-    //                 unsafe { sdk::get_event_player_target(event) } as usize,
-    //                 unsafe { sdk::get_event_reason(event).to_string() },
-    //             ),
-    //         }
-    //     }
-    // } else {
-    //     resource_impl::log_warn!("event type received: {:?} | without handlers", event_type)
-    // }
+    let manager = ResourceManager::instance();
+    let resource = manager.get_by_path(full_main_path).expect(&format!(
+        "[resource_on_event] failed to get resource by path: {full_main_path}",
+    ));
+
+    if let Some(handlers) = resource.__get_sdk_event_handlers().get(&event_type) {
+        for handler in handlers {
+            use resource_impl::events::SDKEvent::*;
+            match handler {
+                ServerStarted(callback) => callback(),
+                PlayerConnect(callback) => {
+                    callback(unsafe { sdk::get_event_player_target(event) } as usize)
+                }
+                PlayerDisconnect(callback) => callback(
+                    unsafe { sdk::get_event_player_target(event) } as usize,
+                    unsafe { sdk::get_event_reason(event).to_string() },
+                ),
+            }
+        }
+    } else {
+        resource_impl::log_warn!("event type received: {:?} | without handlers", event_type)
+    }
 }
 
 #[no_mangle]
@@ -130,9 +119,7 @@ pub unsafe extern "C" fn altMain(core: *mut sdk::ICore) -> bool {
         altv_sdk::ResourceOnEventCallback(resource_on_event),
     );
 
-    RESOURCES
-        .set(Mutex::new(ResourceManager::new()))
-        .expect("RESOURCES.set failed");
+    ResourceManager::init();
 
     true
 }

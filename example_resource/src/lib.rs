@@ -18,9 +18,12 @@ pub fn main() {
     //     alt::log_warn!("player connect player_ptr: {:?}", player_ptr);
     // }
 
-    // fn on_server_started1() {
-    //     alt::log_warn!("on_server_started 1");
-    // }
+    fn on_server_started1() {
+        alt::log_warn!("on_server_started 1");
+    }
+    alt::events::on(alt::events::__test_SDKEvent::ServerStarted(
+        on_server_started1,
+    ));
 
     // fn on_server_started2() {
     //     alt::log_warn!("on_server_started 2");
@@ -28,10 +31,6 @@ pub fn main() {
 
     // alt::events::on(alt::__resource_api::events::SDKEvent::PlayerConnect(
     //     on_player_connect,
-    // ));
-
-    // alt::events::on(alt::__resource_api::events::SDKEvent::ServerStarted(
-    //     on_server_started1,
     // ));
 
     // alt::events::on(alt::__resource_api::events::SDKEvent::ServerStarted(

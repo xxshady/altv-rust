@@ -24,7 +24,7 @@ namespace alt_rs
     using ResourceStartCallback = void (*)(rust::Str full_main_path);
     using ResourceStopCallback = void (*)(rust::Str full_main_path);
     using ResourceOnTickCallback = void (*)();
-    using ResourceOnEventCallback = void (*)(const alt::CEvent* event);
+    using ResourceOnEventCallback = void (*)(rust::Str full_main_path, const alt::CEvent* event);
 
     using StdString = std::unique_ptr<std::string>;
 
