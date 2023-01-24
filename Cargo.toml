@@ -4,7 +4,7 @@ members = [
     "extern_type_callback_derive",
     "resource_main_macro",
     "altv_sdk",
-    "resource_api",
+    "resource_impl",
     "altv_module",
     "alt",
     "example_resource",

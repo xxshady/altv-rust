@@ -1,18 +1,21 @@
 use std::cell::RefCell;
-use std::path::PathBuf;
-use std::sync::Arc;
-use std::sync::Mutex;
 
 use altv_sdk::ffi;
-use cxx::let_cxx_string;
 
 // internal shit
 pub use ffi::set_alt_core as __set_alt_core;
 pub use ffi::ICore as __alt_ICore;
-pub use resource_api as __resource_api;
 
-use once_cell::sync::OnceCell;
 pub use resource_main_macro::resource_main_func as res_main;
+
+pub use resource_impl::log;
+pub use resource_impl::log_error;
+pub use resource_impl::log_warn;
+pub use resource_impl::logging::log;
+pub use resource_impl::logging::log_error;
+pub use resource_impl::logging::log_warn;
+// intended for resource_main_macro
+pub use resource_impl::resource_impl::ResourceImpl as __ResourceImpl;
 
 pub type ModelHash = u32;
 
@@ -35,48 +38,6 @@ pub fn hash(str: &str) -> ModelHash {
     num ^= num >> 11;
 
     (num + (num << 15)).0
-}
-
-pub fn log(str: &str) {
-    let_cxx_string!(cxx_str = str);
-    unsafe {
-        ffi::log_colored(&cxx_str);
-    }
-}
-
-pub fn log_error(str: &str) {
-    let_cxx_string!(cxx_str = str);
-    unsafe {
-        ffi::log_error(&cxx_str);
-    }
-}
-
-pub fn log_warn(str: &str) {
-    let_cxx_string!(cxx_str = str);
-    unsafe {
-        ffi::log_warn(&cxx_str);
-    }
-}
-
-#[macro_export]
-macro_rules! log {
-    ($($arg:tt)*) => {{
-        $crate::log(&format!($($arg)*))
-    }}
-}
-
-#[macro_export]
-macro_rules! log_error {
-    ($($arg:tt)*) => {{
-        $crate::log_error(&format!($($arg)*))
-    }}
-}
-
-#[macro_export]
-macro_rules! log_warn {
-    ($($arg:tt)*) => {{
-        $crate::log_warn(&format!($($arg)*))
-    }}
 }
 
 pub struct Vehicle {
@@ -115,43 +76,23 @@ pub fn create_vehicle(
 
     let id = unsafe { ffi::get_entity_id(ffi::convert_vehicle_to_entity(ptr)) };
 
+    // TODO: RefCell?
     Some(RefCell::new(Vehicle { id, ptr }))
 }
 
-pub struct MainResource {
-    pub path: PathBuf,
+pub fn set_interval(callback: impl FnMut() + 'static + Send + Sync, millis: u64) {
+    resource_impl::resource_impl::ResourceImpl::instance().create_timer(
+        Box::new(callback),
+        millis,
+        false,
+    );
 }
 
-static RESOURCE_API: OnceCell<Arc<Mutex<resource_api::ResourceApi>>> = OnceCell::new();
-
-impl MainResource {
-    pub fn new(path: PathBuf, resource_api: Arc<Mutex<resource_api::ResourceApi>>) -> Self {
-        RESOURCE_API
-            .set(resource_api)
-            .unwrap_or_else(|_| panic!("RESOURCE_API.set failed"));
-
-        MainResource { path }
-    }
-
-    pub fn on_tick(&mut self) {
-        println!("MainResource on_tick path: {}", self.path.display());
-    }
-}
-
-pub fn set_interval(callback: impl FnMut() + 'static, millis: u64) {
-    RESOURCE_API
-        .get()
-        .unwrap()
-        .try_lock()
-        .unwrap()
-        .create_timer(Box::new(callback), millis, false);
-}
-
-pub fn set_timeout(callback: impl FnMut() + 'static, millis: u64) {
-    RESOURCE_API
-        .get()
-        .unwrap()
-        .try_lock()
-        .unwrap()
-        .create_timer(Box::new(callback), millis, true);
-}
+// pub fn set_timeout(callback: impl FnMut() + 'static, millis: u64) {
+//     RESOURCE_API
+//         .get()
+//         .unwrap()
+//         .try_lock()
+//         .unwrap()
+//         .create_timer(Box::new(callback), millis, true);
+// }

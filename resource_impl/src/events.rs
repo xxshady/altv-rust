@@ -1,6 +1,6 @@
-use once_cell::sync::OnceCell;
-use std::{collections::HashMap, sync::Mutex};
+use std::collections::HashMap;
 
+#[derive(Debug)]
 pub enum SDKEvent {
     ServerStarted(fn()),
     PlayerConnect(fn(player: usize)),
@@ -18,25 +18,16 @@ impl SDKEvent {
     }
 }
 
+#[derive(Debug)]
 pub struct SDKEventManager {
     handlers: HashMap<altv_sdk::EventType, Vec<SDKEvent>>,
 }
 
-// TEST
-unsafe impl Sync for SDKEventManager {}
-unsafe impl Send for SDKEventManager {}
-
-pub static SDK_EVENT_MANAGER: OnceCell<Mutex<SDKEventManager>> = OnceCell::new();
-
 impl SDKEventManager {
-    fn new() -> Self {
+    pub fn new() -> Self {
         Self {
             handlers: HashMap::new(),
         }
-    }
-
-    pub fn instance() -> &'static Mutex<SDKEventManager> {
-        SDK_EVENT_MANAGER.get_or_init(|| Mutex::new(SDKEventManager::new()))
     }
 
     pub fn add_handler(&mut self, event: SDKEvent) {
@@ -53,7 +44,8 @@ impl SDKEventManager {
         }
     }
 
-    pub fn get_handlers(&self) -> &HashMap<altv_sdk::EventType, Vec<SDKEvent>> {
+    // intended for altv_module
+    pub fn __get_handlers(&self) -> &HashMap<altv_sdk::EventType, Vec<SDKEvent>> {
         &self.handlers
     }
 }

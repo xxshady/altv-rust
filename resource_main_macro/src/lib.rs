@@ -10,43 +10,26 @@ use syn::ItemFn;
 /// and `alt::__set_alt_core(core);` to the start of function body
 ///
 /// and creates resource instance at the end of function body
-/// `alt::MainResource::new(full_main_path)`
+/// `alt::MainResource::new(...)`
 #[proc_macro_attribute]
 pub fn resource_main_func(_: TokenStream, input: TokenStream) -> TokenStream {
     let input = syn::parse_macro_input!(input as ItemFn);
     let ItemFn {
         attrs,
         vis,
-        mut sig,
+        sig: _sig,
         block,
     } = input;
     let statements = &block.stmts;
-
-    // sig.inputs.clear();
-    // sig.inputs
-    //     .push(syn::parse(quote! { core: *mut alt::__alt_ICore }.into()).unwrap());
-    // sig.inputs
-    //     .push(syn::parse(quote! { full_main_path: std::path::PathBuf }.into()).unwrap());
-    // sig.inputs.push(
-    //     syn::parse(
-    //         quote! { resource_api: std::sync::Arc<std::sync::Mutex<alt::__resource_api::ResourceApi>> }.into(),
-    //     )
-    //     .unwrap(),
-    // );
-
-    // sig.output = syn::parse(quote! { -> alt::MainResource }.into()).unwrap();
 
     quote! {
         #(#attrs)* #vis fn main(
             core: usize,
             full_main_path: std::path::PathBuf,
-            resource_api: std::sync::Arc<std::sync::Mutex<alt::__resource_api::ResourceApi>>
-        ) -> alt::MainResource {
+        ) -> &'static std::sync::Mutex<alt::__ResourceImpl> {
             unsafe { alt::__set_alt_core(core as *mut alt::__alt_ICore) };
-            // TODO: improve this shit
-            let __alt_main_resource_instance = alt::MainResource::new(full_main_path, resource_api);
             #(#statements)*;
-            __alt_main_resource_instance
+            alt::__ResourceImpl::new(full_main_path)
         }
     }
     .into()

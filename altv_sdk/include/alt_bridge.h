@@ -21,8 +21,8 @@ namespace alt_rs
     using RuntimeCreateImplCallback = void (*)(RustResourceImpl rust_resource_impl);
     using RuntimeDestroyImplCallback = void (*)();
     using RuntimeOnTickCallback = void (*)();
-    using ResourceStartCallback = void (*)(rust::Str resource_path, rust::Str resource_main);
-    using ResourceStopCallback = void (*)(rust::Str resource_path, rust::Str resource_main);
+    using ResourceStartCallback = void (*)(rust::Str full_main_path);
+    using ResourceStopCallback = void (*)(rust::Str full_main_path);
     using ResourceOnTickCallback = void (*)();
     using ResourceOnEventCallback = void (*)(const alt::CEvent* event);
 
@@ -56,9 +56,19 @@ namespace alt_rs
         {
             RustRuntime* runtime;
             alt::IResource* resource;
+            std::string full_main_path;
 
         public:
-            RustResource(RustRuntime* runtime, alt::IResource* resource): runtime(runtime), resource(resource) {};
+            RustResource(
+                RustRuntime* runtime,
+                alt::IResource* resource,
+                const std::string&& full_main_path
+            ):
+                runtime(runtime),
+                resource(resource),
+                full_main_path(full_main_path)
+            {};
+
             ~RustResource() = default;
 
             bool Start() override;
@@ -70,12 +80,11 @@ namespace alt_rs
             void OnCreateBaseObject(alt::IBaseObject* object) override;
             void OnRemoveBaseObject(alt::IBaseObject* object) override;
 
-            // Gets the alt:V IResource instance
             alt::IResource* GetIResource()
             {
                 return resource;
             }
-            // Gets the module runtime that instantiated this resource
+
             RustRuntime* GetRuntime()
             {
                 return runtime;
