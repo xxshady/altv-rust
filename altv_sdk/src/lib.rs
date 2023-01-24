@@ -22,11 +22,11 @@ pub struct RuntimeOnTickCallback(pub extern "C" fn());
 
 #[derive(ExternTypeCallback)]
 #[repr(transparent)]
-pub struct ResourceStartCallback(pub extern "C" fn(resource_path: &str, resource_main: &str));
+pub struct ResourceStartCallback(pub extern "C" fn(full_main_path: &str));
 
 #[derive(ExternTypeCallback)]
 #[repr(transparent)]
-pub struct ResourceStopCallback(pub extern "C" fn(resource_path: &str, resource_main: &str));
+pub struct ResourceStopCallback(pub extern "C" fn(full_main_path: &str));
 
 #[derive(ExternTypeCallback)]
 #[repr(transparent)]
