@@ -3,11 +3,10 @@
 //     PlayerDisconnect(fn(player: crate::player::Player, reason: String)),
 // }
 
-pub fn on(event: resource_api::events::SDKEvent) {
-    crate::RESOURCE_API
-        .get()
-        .unwrap()
-        .try_lock()
-        .unwrap()
-        .add_event_handler(event);
+use resource_impl::resource_impl::ResourceImpl;
+
+pub use resource_impl::events::SDKEvent as __test_SDKEvent;
+
+pub fn on(event: resource_impl::events::SDKEvent) {
+    ResourceImpl::instance().add_sdk_event_handler(event);
 }

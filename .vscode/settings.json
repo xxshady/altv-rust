@@ -63,7 +63,17 @@
     "xutility": "cpp",
     "array": "cpp",
     "iterator": "cpp",
-    "xthread": "cpp"
+    "xthread": "cpp",
+    "codecvt": "cpp",
+    "ctime": "cpp",
+    "filesystem": "cpp",
+    "iomanip": "cpp",
+    "locale": "cpp",
+    "string_view": "cpp",
+    "xlocbuf": "cpp",
+    "xlocmes": "cpp",
+    "xlocmon": "cpp",
+    "xloctime": "cpp"
   },
   "editor.defaultFormatter": "rust-lang.rust-analyzer",
   "rust-analyzer.checkOnSave.command": "clippy",

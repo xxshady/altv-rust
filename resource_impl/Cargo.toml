@@ -1,10 +1,11 @@
 [package]
-name = "resource_api"
+name = "resource_impl"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-once_cell = "1.16.0"
 altv_sdk = { path = "../altv_sdk" }
+cxx = "1.0.87"
+once_cell = "1.17.0"

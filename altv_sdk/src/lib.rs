@@ -22,11 +22,11 @@ pub struct RuntimeOnTickCallback(pub extern "C" fn());
 
 #[derive(ExternTypeCallback)]
 #[repr(transparent)]
-pub struct ResourceStartCallback(pub extern "C" fn(resource_path: &str, resource_main: &str));
+pub struct ResourceStartCallback(pub extern "C" fn(full_main_path: &str));
 
 #[derive(ExternTypeCallback)]
 #[repr(transparent)]
-pub struct ResourceStopCallback(pub extern "C" fn(resource_path: &str, resource_main: &str));
+pub struct ResourceStopCallback(pub extern "C" fn(full_main_path: &str));
 
 #[derive(ExternTypeCallback)]
 #[repr(transparent)]
@@ -34,7 +34,9 @@ pub struct ResourceOnTickCallback(pub extern "C" fn());
 
 #[derive(ExternTypeCallback)]
 #[repr(transparent)]
-pub struct ResourceOnEventCallback(pub extern "C" fn(event: *const ffi::CEvent));
+pub struct ResourceOnEventCallback(
+    pub extern "C" fn(full_main_path: &str, event: *const ffi::CEvent),
+);
 
 #[allow(clippy::missing_safety_doc)]
 #[cxx::bridge(namespace = "alt_rs")]
