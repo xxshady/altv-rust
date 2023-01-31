@@ -3,14 +3,32 @@
 pub fn main() {
     std::env::set_var("RUST_BACKTRACE", "full");
 
+    // let mut i = 0;
+    // alt::set_interval(
+    //     move || {
+    //         i += 1;
+    //         alt::log!("test interval i: {i}");
+    //     },
+    //     1000,
+    // );
+
     let mut i = 0;
-    alt::set_interval(
-        move || {
-            i += 1;
-            alt::log!("test interval i: {i}");
-        },
-        1000,
-    );
+    alt::events::on_server_started(move |controller| {
+        i += 1;
+        alt::log!("example resource ServerStarted controller: {controller:?} i: {i:?}");
+    });
+
+    alt::events::on_player_disconnect(|controller| {
+        alt::log!("example resource on_player_disconnect controller: {controller:?}");
+    });
+
+    // alt::events::on(alt::events::Event::PlayerConnect(|data| {
+    //     alt::log!(
+    //         "example resource PlayerConnect data player: {:?} reason: {:?}",
+    //         data.player,
+    //         data.reason
+    //     );
+    // }));
 
     // alt::set_timeout(|| println!("its timeout"), 300);
 
@@ -18,12 +36,9 @@ pub fn main() {
     //     alt::log_warn!("player connect player_ptr: {:?}", player_ptr);
     // }
 
-    fn on_server_started1() {
-        alt::log_warn!("on_server_started 1");
-    }
-    alt::events::on(alt::events::__test_SDKEvent::ServerStarted(
-        on_server_started1,
-    ));
+    // alt::events::on(alt::events::__test_SDKEvent::ServerStarted(|| {
+    //     alt::log!("on_server_started test");
+    // }));
 
     // fn on_server_started2() {
     //     alt::log_warn!("on_server_started 2");
@@ -44,4 +59,16 @@ pub fn main() {
     // alt::events::on(alt::__resource_api::events::SDKEvent::PlayerDisconnect(
     //     on_player_disconnect,
     // ));
+
+    alt::set_timeout(
+        || {
+            let vehicle = alt::create_vehicle(alt::hash("sultan"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+            let binding = vehicle.unwrap();
+            let binding = binding.try_lock().unwrap();
+            let vehicle = binding.as_ref().unwrap();
+
+            dbg!(vehicle.id());
+        },
+        2000,
+    );
 }

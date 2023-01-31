@@ -8,6 +8,9 @@ pub use cpp_sdk_version::ALT_SDK_VERSION;
 mod event_type;
 pub use event_type::EventType;
 
+mod base_object_type;
+pub use base_object_type::BaseObjectType;
+
 #[derive(ExternTypeCallback)]
 #[repr(transparent)]
 pub struct RuntimeCreateImplCallback(pub extern "C" fn(resource_impl: *mut ffi::RustResourceImpl));
@@ -30,12 +33,24 @@ pub struct ResourceStopCallback(pub extern "C" fn(full_main_path: &str));
 
 #[derive(ExternTypeCallback)]
 #[repr(transparent)]
-pub struct ResourceOnTickCallback(pub extern "C" fn());
+pub struct ResourceOnTickCallback(pub extern "C" fn(full_main_path: &str));
 
 #[derive(ExternTypeCallback)]
 #[repr(transparent)]
 pub struct ResourceOnEventCallback(
     pub extern "C" fn(full_main_path: &str, event: *const ffi::CEvent),
+);
+
+#[derive(ExternTypeCallback)]
+#[repr(transparent)]
+pub struct ResourceOnCreateBaseObjectCallback(
+    pub extern "C" fn(full_main_path: &str, base_object: *const ffi::IBaseObject),
+);
+
+#[derive(ExternTypeCallback)]
+#[repr(transparent)]
+pub struct ResourceOnRemoveBaseObjectCallback(
+    pub extern "C" fn(full_main_path: &str, base_object: *const ffi::IBaseObject),
 );
 
 #[allow(clippy::missing_safety_doc)]
@@ -51,6 +66,9 @@ pub mod ffi {
         type ResourceStopCallback = crate::ResourceStopCallback;
         type ResourceOnTickCallback = crate::ResourceOnTickCallback;
         type ResourceOnEventCallback = crate::ResourceOnEventCallback;
+        type ResourceOnCreateBaseObjectCallback = crate::ResourceOnCreateBaseObjectCallback;
+        type ResourceOnRemoveBaseObjectCallback = crate::ResourceOnRemoveBaseObjectCallback;
+
         type ICore;
         type IScriptRuntime;
         type IBaseObject;
@@ -69,6 +87,8 @@ pub mod ffi {
             resource_type: &CxxString,
             runtime: *mut IScriptRuntime,
         );
+
+        #[allow(clippy::too_many_arguments)]
         unsafe fn setup_callbacks(
             create_impl: RuntimeCreateImplCallback,
             destroy_impl: RuntimeDestroyImplCallback,
@@ -77,6 +97,8 @@ pub mod ffi {
             resource_stop: ResourceStopCallback,
             resource_on_tick_callback: ResourceOnTickCallback,
             resource_on_event_callback: ResourceOnEventCallback,
+            resource_on_create_base_object_callback: ResourceOnCreateBaseObjectCallback,
+            resource_on_remove_base_object_callback: ResourceOnRemoveBaseObjectCallback,
         );
 
         // events
@@ -94,15 +116,18 @@ pub mod ffi {
         unsafe fn log_warn(str: &CxxString);
 
         // vehicle conversions
-        unsafe fn convert_vehicle_to_baseobject(baseobject: *mut IVehicle) -> *mut IBaseObject;
-        unsafe fn convert_vehicle_to_entity(entity: *mut IVehicle) -> *mut IEntity;
+        unsafe fn convert_vehicle_to_baseobject(baseobject: *const IVehicle) -> *const IBaseObject;
+        unsafe fn convert_baseobject_to_vehicle(vehicle: *const IBaseObject) -> *const IVehicle;
+        unsafe fn convert_vehicle_to_entity(entity: *const IVehicle) -> *const IEntity;
 
         // player conversions
-        unsafe fn convert_player_to_baseobject(baseobject: *mut IPlayer) -> *mut IBaseObject;
-        unsafe fn convert_player_to_entity(entity: *mut IPlayer) -> *mut IEntity;
+        unsafe fn convert_player_to_baseobject(baseobject: *const IPlayer) -> *const IBaseObject;
+        unsafe fn convert_baseobject_to_player(player: *const IBaseObject) -> *const IPlayer;
+        unsafe fn convert_player_to_entity(entity: *const IPlayer) -> *const IEntity;
 
         // baseobject
-        unsafe fn destroy_baseobject(baseobject: *mut IBaseObject);
+        unsafe fn destroy_baseobject(base_object: *mut IBaseObject);
+        unsafe fn get_baseobject_type(base_object: *const IBaseObject) -> u8;
 
         // entity
         unsafe fn get_entity_id(entity: *mut IEntity) -> u16;

@@ -71,15 +71,17 @@ void alt_rs::RustRuntime::RustResource::OnEvent(const alt::CEvent* event)
 
 void alt_rs::RustRuntime::RustResource::OnTick()
 {
-    runtime->resource_on_tick_callback();
+    runtime->resource_on_tick_callback(full_main_path);
 }
 
-void alt_rs::RustRuntime::RustResource::OnCreateBaseObject(alt::IBaseObject* object)
+void alt_rs::RustRuntime::RustResource::OnCreateBaseObject(alt::IBaseObject* base_object)
 {
+    runtime->resource_on_create_base_object_callback(full_main_path, base_object);
 }
 
-void alt_rs::RustRuntime::RustResource::OnRemoveBaseObject(alt::IBaseObject* object)
+void alt_rs::RustRuntime::RustResource::OnRemoveBaseObject(alt::IBaseObject* base_object)
 {
+    runtime->resource_on_remove_base_object_callback(full_main_path, base_object);
 }
 
 namespace alt_rs
@@ -132,7 +134,9 @@ namespace alt_rs
         ResourceStartCallback resource_start_callback,
         ResourceStopCallback resource_stop_callback,
         ResourceOnTickCallback resource_on_tick_callback,
-        ResourceOnEventCallback resource_on_event_callback
+        ResourceOnEventCallback resource_on_event_callback,
+        ResourceOnCreateBaseObjectCallback resource_on_create_base_object_callback,
+        ResourceOnRemoveBaseObjectCallback resource_on_remove_base_object_callback
     ) {
         RustRuntime::get_instance().set_callbacks(
             create_impl_callback,
@@ -141,7 +145,9 @@ namespace alt_rs
             resource_start_callback,
             resource_stop_callback,
             resource_on_tick_callback,
-            resource_on_event_callback
+            resource_on_event_callback,
+            resource_on_create_base_object_callback,
+            resource_on_remove_base_object_callback
         );
     }
 
@@ -196,25 +202,35 @@ namespace alt_rs
     }
 
     // vehicle conversions
-    IBaseObject* convert_vehicle_to_baseobject(IVehicle* baseobject)
+    const IBaseObject* convert_vehicle_to_baseobject(const IVehicle* baseobject)
     {
-        return static_cast<IBaseObject*>(baseobject);
+        return static_cast<const IBaseObject*>(baseobject);
     }
 
-    IEntity* convert_vehicle_to_entity(IVehicle* entity)
+    const IVehicle* convert_baseobject_to_vehicle(const IBaseObject* vehicle)
     {
-        return static_cast<IEntity*>(entity);
+        return dynamic_cast<const IVehicle*>(vehicle);
+    }
+
+    const IEntity* convert_vehicle_to_entity(const IVehicle* entity)
+    {
+        return static_cast<const IEntity*>(entity);
     }
 
     // player conversions
-    IBaseObject* convert_player_to_baseobject(IPlayer* baseobject)
+    const IBaseObject* convert_player_to_baseobject(const IPlayer* baseobject)
     {
-        return static_cast<IBaseObject*>(baseobject);
+        return static_cast<const IBaseObject*>(baseobject);
     }
 
-    IEntity* convert_player_to_entity(IPlayer* entity)
+    const IPlayer* convert_baseobject_to_player(const IBaseObject* player)
     {
-        return static_cast<IEntity*>(entity);
+        return dynamic_cast<const IPlayer*>(player);
+    }
+
+    const IEntity* convert_player_to_entity(const IPlayer* entity)
+    {
+        return static_cast<const IEntity*>(entity);
     }
 
     // vehicle
@@ -249,6 +265,20 @@ namespace alt_rs
 
         ICore::Instance().LogInfo("destroy_baseobject type: " + std::to_string(static_cast<uint8_t>(baseobject->GetType())));
         ICore::Instance().DestroyBaseObject(baseobject);
+    }
+
+    uint8_t get_baseobject_type(const IBaseObject* baseobject)
+    {
+        if (!baseobject)
+        {
+            ICore::Instance().LogError("get_baseobject_type nullptr baseobject");
+            return 255;
+        }
+
+        uint8_t type = static_cast<uint8_t>(baseobject->GetType());
+
+        ICore::Instance().LogInfo("get_baseobject_type type: " + std::to_string(type));
+        return type;
     }
 
     // player

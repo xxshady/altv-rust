@@ -1,6 +1,7 @@
 use crate::{
-    events::{EventHandlersHashMap, SDKEvent, SDKEventManager},
+    events::{Event, EventManager, PublicEventType},
     timers::{TimerCallback, TimerManager},
+    vehicle::VehicleManager,
 };
 use once_cell::sync::OnceCell;
 use std::sync::{Mutex, MutexGuard};
@@ -10,9 +11,10 @@ static RESOURCE_IMPL_INSTANCE: OnceCell<Mutex<ResourceImpl>> = OnceCell::new();
 
 #[derive(Debug)]
 pub struct ResourceImpl {
-    full_main_path: String,
+    pub full_main_path: String,
     timers: TimerManager,
-    sdk_events: SDKEventManager,
+    events: EventManager,
+    vehicles: VehicleManager,
 }
 
 impl ResourceImpl {
@@ -20,7 +22,8 @@ impl ResourceImpl {
         let instance = ResourceImpl {
             full_main_path,
             timers: TimerManager::new(),
-            sdk_events: SDKEventManager::new(),
+            events: EventManager::new(),
+            vehicles: VehicleManager::new(),
         };
 
         RESOURCE_IMPL_INSTANCE
@@ -49,12 +52,45 @@ impl ResourceImpl {
         self.timers.__process_timers();
     }
 
-    pub fn add_sdk_event_handler(&mut self, event: SDKEvent) {
-        self.sdk_events.add_handler(event);
+    pub fn add_event_handler(
+        &mut self,
+        public_type: PublicEventType,
+        sdk_type: altv_sdk::EventType,
+        event: Event,
+    ) {
+        self.events.add_handler(public_type, sdk_type, event);
     }
 
     // intended for altv_module
-    pub fn __get_sdk_event_handlers(&self) -> &EventHandlersHashMap {
-        self.sdk_events.__get_handlers()
+    pub fn __on_sdk_event(
+        &mut self,
+        event_type: altv_sdk::EventType,
+        event: *const altv_sdk::ffi::CEvent,
+    ) {
+        self.events.on_sdk_event(event_type, event);
     }
+
+    pub fn create_vehicle(
+        &mut self,
+        model: u32,
+        x: f32,
+        y: f32,
+        z: f32,
+        rx: f32,
+        ry: f32,
+        rz: f32,
+    ) -> Option<crate::vehicle::VehicleContainer> {
+        self.vehicles.create_vehicle(model, x, y, z, rx, ry, rz)
+    }
+
+    // intended for altv_module
+    pub fn __on_vehicle_create(&mut self, vehicle: *mut altv_sdk::ffi::IVehicle) {
+        self.vehicles.on_vehicle_create(vehicle);
+    }
+
+    // TODO:
+    // intended for altv_module
+    // pub fn __on_custom_event(&mut self, event_type: PublicEventType) {
+    //     self.events.on_custom_event(event_type);
+    // }
 }

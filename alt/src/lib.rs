@@ -1,12 +1,5 @@
-use std::cell::RefCell;
-
 use altv_sdk::ffi;
-
-// internal shit
-pub use ffi::set_alt_core as __set_alt_core;
-pub use ffi::ICore as __alt_ICore;
-
-pub use resource_main_macro::resource_main_func as res_main;
+use std::cell::RefCell;
 
 pub use resource_impl::log;
 pub use resource_impl::log_error;
@@ -14,7 +7,15 @@ pub use resource_impl::log_warn;
 pub use resource_impl::logging::log;
 pub use resource_impl::logging::log_error;
 pub use resource_impl::logging::log_warn;
+pub use resource_main_macro::resource_main_func as res_main;
+
+#[doc(hidden)]
+pub use ffi::set_alt_core as __set_alt_core;
+#[doc(hidden)]
+pub use ffi::ICore as __alt_ICore;
+
 // intended for resource_main_macro
+#[doc(hidden)]
 pub use resource_impl::resource_impl::ResourceImpl as __ResourceImpl;
 
 pub type ModelHash = u32;
@@ -40,25 +41,31 @@ pub fn hash(str: &str) -> ModelHash {
     (num + (num << 15)).0
 }
 
-pub struct Vehicle {
-    ptr: *mut ffi::IVehicle,
-    id: u16,
-}
+// TODO: move implement this shit in resource_impl!!!!!
 
-impl Vehicle {
-    pub fn all() -> Vec<RefCell<Vehicle>> {
-        todo!()
-    }
+// pub struct Vehicle {
+//     ptr: *mut ffi::IVehicle,
+//     id: u16,
+// }
 
-    pub fn id(&self) -> u16 {
-        self.id
-    }
+// impl Vehicle {
+//     pub fn all() -> Vec<RefCell<Vehicle>> {
+//         todo!()
+//     }
 
-    pub fn destroy(self) {
-        // TODO: baseobject validation shit
-        unsafe { ffi::destroy_baseobject(ffi::convert_vehicle_to_baseobject(self.ptr)) }
-    }
-}
+//     pub fn id(&self) -> u16 {
+//         self.id
+//     }
+
+//     pub fn destroy(self) {
+//         // TODO: baseobject validation shit
+//         unsafe {
+//             ffi::destroy_baseobject(
+//                 ffi::convert_vehicle_to_baseobject(self.ptr) as *mut ffi::IBaseObject
+//             )
+//         }
+//     }
+// }
 
 pub fn create_vehicle(
     model: ModelHash,
@@ -68,16 +75,9 @@ pub fn create_vehicle(
     rx: f32,
     ry: f32,
     rz: f32,
-) -> Option<RefCell<Vehicle>> {
-    let ptr = unsafe { ffi::create_vehicle(model, x, y, z, rx, ry, rz) };
-    if ptr.is_null() {
-        return None;
-    }
-
-    let id = unsafe { ffi::get_entity_id(ffi::convert_vehicle_to_entity(ptr)) };
-
-    // TODO: RefCell?
-    Some(RefCell::new(Vehicle { id, ptr }))
+) -> Option<resource_impl::vehicle::VehicleContainer> {
+    resource_impl::resource_impl::ResourceImpl::instance()
+        .create_vehicle(model, x, y, z, rx, ry, rz)
 }
 
 pub fn set_interval(callback: impl FnMut() + 'static + Send + Sync, millis: u64) {
@@ -88,11 +88,16 @@ pub fn set_interval(callback: impl FnMut() + 'static + Send + Sync, millis: u64)
     );
 }
 
-// pub fn set_timeout(callback: impl FnMut() + 'static, millis: u64) {
-//     RESOURCE_API
-//         .get()
-//         .unwrap()
-//         .try_lock()
-//         .unwrap()
-//         .create_timer(Box::new(callback), millis, true);
-// }
+pub fn set_timeout(callback: impl FnMut() + 'static + Send + Sync, millis: u64) {
+    resource_impl::resource_impl::ResourceImpl::instance().create_timer(
+        Box::new(callback),
+        millis,
+        true,
+    );
+}
+
+#[doc(hidden)]
+pub fn __init(full_main_path: String) {
+    log!("alt __init");
+    __ResourceImpl::init(full_main_path);
+}

@@ -23,8 +23,10 @@ namespace alt_rs
     using RuntimeOnTickCallback = void (*)();
     using ResourceStartCallback = void (*)(rust::Str full_main_path);
     using ResourceStopCallback = void (*)(rust::Str full_main_path);
-    using ResourceOnTickCallback = void (*)();
+    using ResourceOnTickCallback = void (*)(rust::Str full_main_path);
     using ResourceOnEventCallback = void (*)(rust::Str full_main_path, const alt::CEvent* event);
+    using ResourceOnCreateBaseObjectCallback = void (*)(rust::Str full_main_path, const IBaseObject* base_object);
+    using ResourceOnRemoveBaseObjectCallback = void (*)(rust::Str full_main_path, const IBaseObject* base_object);
 
     using StdString = std::unique_ptr<std::string>;
 
@@ -45,6 +47,8 @@ namespace alt_rs
         ResourceStopCallback resource_stop_callback;
         ResourceOnTickCallback resource_on_tick_callback;
         ResourceOnEventCallback resource_on_event_callback;
+        ResourceOnCreateBaseObjectCallback resource_on_create_base_object_callback;
+        ResourceOnRemoveBaseObjectCallback resource_on_remove_base_object_callback;
 
         static RustRuntime& get_instance()
         {
@@ -104,7 +108,9 @@ namespace alt_rs
             ResourceStartCallback _resource_start_callback,
             ResourceStopCallback _resource_stop_callback,
             ResourceOnTickCallback _resource_on_tick_callback,
-            ResourceOnEventCallback _resource_on_event_callback
+            ResourceOnEventCallback _resource_on_event_callback,
+            ResourceOnCreateBaseObjectCallback _resource_on_create_base_object_callback,
+            ResourceOnRemoveBaseObjectCallback _resource_on_remove_base_object_callback
         )
         {
             create_impl_callback = _create_impl_callback;
@@ -114,6 +120,8 @@ namespace alt_rs
             resource_stop_callback = _resource_stop_callback;
             resource_on_tick_callback = _resource_on_tick_callback;
             resource_on_event_callback = _resource_on_event_callback;
+            resource_on_create_base_object_callback = _resource_on_create_base_object_callback;
+            resource_on_remove_base_object_callback = _resource_on_remove_base_object_callback;
         }
     };
 
@@ -138,7 +146,9 @@ namespace alt_rs
         ResourceStartCallback resource_start_callback,
         ResourceStopCallback resource_stop_callback,
         ResourceOnTickCallback resource_on_tick_callback,
-        ResourceOnEventCallback _resource_on_event_callback
+        ResourceOnEventCallback _resource_on_event_callback,
+        ResourceOnCreateBaseObjectCallback _resource_on_create_base_object_callback,
+        ResourceOnRemoveBaseObjectCallback _resource_on_remove_base_object_callback
     );
 
     // events
@@ -149,14 +159,20 @@ namespace alt_rs
     StdString get_event_reason(const alt::CEvent* event);
 
     // baseobject conversions
-    IBaseObject* convert_vehicle_to_baseobject(IVehicle* baseobject);
-    IBaseObject* convert_player_to_baseobject(IPlayer* baseobject);
+    const IBaseObject* convert_vehicle_to_baseobject(const IVehicle* baseobject);
+    const IVehicle* convert_baseobject_to_vehicle(const IBaseObject* vehicle);
+    const IEntity* convert_vehicle_to_entity(const IVehicle* entity);
 
-    IEntity* convert_vehicle_to_entity(IVehicle* entity);
-    IEntity* convert_player_to_entity(IPlayer* entity);
+    const IBaseObject* convert_player_to_baseobject(const IPlayer* baseobject);
+    const IPlayer* convert_baseobject_to_player(const IBaseObject* player);
+    const IEntity* convert_player_to_entity(const IPlayer* entity);
 
     // baseobject
     void destroy_baseobject(IBaseObject* baseobject);
+
+    // alt::IBaseObject::Type
+    // returns 255 if baseobj is null
+    uint8_t get_baseobject_type(const IBaseObject* baseobject);
 
     // entity
     uint16_t get_entity_id(IEntity* entity);
