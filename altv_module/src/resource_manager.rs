@@ -5,13 +5,11 @@ use std::{
     sync::{Mutex, MutexGuard},
 };
 
-pub type ResourceImplMutex = &'static Mutex<ResourceImpl>;
-
 static RESOURCE_MANAGER_INSTANCE: OnceCell<Mutex<ResourceManager>> = OnceCell::new();
 
 #[derive(Debug)]
 pub struct ResourceManager {
-    resources: HashMap<String, ResourceImplMutex>,
+    resources: HashMap<String, ResourceImpl>,
 }
 
 impl ResourceManager {
@@ -33,19 +31,19 @@ impl ResourceManager {
             .expect("RESOURCE_MANAGER_INSTANCE try_lock() failed")
     }
 
-    pub fn resources_iter<'a>(&'a self) -> hash_map::Iter<String, &Mutex<ResourceImpl>> {
-        self.resources.iter()
+    pub fn resources_iter_mut(&mut self) -> hash_map::IterMut<String, ResourceImpl> {
+        self.resources.iter_mut()
     }
 
-    pub fn add(&mut self, full_main_path: String, resource: ResourceImplMutex) {
+    pub fn add(&mut self, full_main_path: String, resource: ResourceImpl) {
         self.resources.insert(full_main_path, resource);
     }
 
-    pub fn get_by_path(&self, full_main_path: &str) -> Option<MutexGuard<ResourceImpl>> {
-        let resource = self.resources.get(full_main_path);
+    pub fn get_by_path(&mut self, full_main_path: &str) -> Option<&mut ResourceImpl> {
+        let resource = self.resources.get_mut(full_main_path);
 
         if let Some(resource) = resource {
-            Some(resource.try_lock().expect("resource.try_lock() failed"))
+            Some(resource)
         } else {
             None
         }

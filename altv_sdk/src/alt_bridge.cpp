@@ -241,6 +241,15 @@ namespace alt_rs
         return ICore::Instance().CreateVehicle(model, { x, y, z }, { rx, ry, rz });
     }
 
+    void set_vehicle_primary_color(IVehicle* vehicle, uint8_t color)
+    {
+        vehicle->SetPrimaryColor(color);
+    }
+    uint8_t get_vehicle_primary_color(const IVehicle* vehicle)
+    {
+        return vehicle->GetPrimaryColor();
+    }
+
     uint16_t get_entity_id(IEntity* entity)
     {
         if (!entity)

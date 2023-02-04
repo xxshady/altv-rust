@@ -1,4 +1,4 @@
-use std::fmt::Debug;
+use std::{fmt::Debug, sync::MutexGuard};
 
 pub type TimerId = u32;
 
@@ -20,41 +20,35 @@ impl Debug for Timer {
 }
 
 #[derive(Debug)]
-pub struct TimerManager {
+pub struct ScheduleState {
     id: TimerId,
     timers: Vec<Timer>,
 }
 
-impl TimerManager {
+impl ScheduleState {
     pub fn new() -> Self {
         Self {
             id: 0,
             timers: vec![],
         }
     }
+}
 
-    pub fn create(&mut self, callback: Box<TimerCallback>, millis: u64, once: bool) -> TimerId {
-        let id = {
-            self.id += 1;
-            self.id
-        };
+#[derive(Debug)]
+pub struct TimerManager {
+    timers: Vec<Timer>,
+}
 
-        let next_call_time =
-            std::time::SystemTime::now() + std::time::Duration::from_millis(millis);
-
-        self.timers.push(Timer {
-            id,
-            callback,
-            next_call_time,
-            millis,
-            once,
-        });
-
-        id
+impl TimerManager {
+    pub fn new() -> Self {
+        Self { timers: vec![] }
     }
 
     // intended for altv_module
-    pub fn __process_timers(&mut self) {
+    pub fn process_timers(&mut self, mut schedule: MutexGuard<ScheduleState>) {
+        self.timers.append(&mut schedule.timers);
+        drop(schedule); // unlock ScheduleState mutex lock
+
         let now = std::time::SystemTime::now();
         let mut indexes_to_remove: Vec<usize> = vec![];
 
@@ -74,4 +68,28 @@ impl TimerManager {
             self.timers.swap_remove(idx);
         }
     }
+}
+
+pub fn create(
+    mut state: MutexGuard<ScheduleState>,
+    callback: Box<TimerCallback>,
+    millis: u64,
+    once: bool,
+) -> TimerId {
+    let id = {
+        state.id += 1;
+        state.id
+    };
+
+    let next_call_time = std::time::SystemTime::now() + std::time::Duration::from_millis(millis);
+
+    state.timers.push(Timer {
+        id,
+        callback,
+        next_call_time,
+        millis,
+        once,
+    });
+
+    id
 }

@@ -1,3 +1,5 @@
+#![allow(non_camel_case_types)]
+
 use primitive_enum::primitive_enum;
 
 // TODO: copy IBaseObject::Type enum from IBaseObject.h automatically

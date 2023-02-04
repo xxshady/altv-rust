@@ -11,3 +11,4 @@ primitive_enum = "1.0.2"
 [build-dependencies]
 cxx-build = "1.0"
 bindgen = "0.63.0"
+rerun_except = "1.0.0"

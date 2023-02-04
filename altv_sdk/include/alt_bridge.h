@@ -183,6 +183,8 @@ namespace alt_rs
         float x, float y, float z,
         float rx, float ry, float rz
     );
+    void set_vehicle_primary_color(IVehicle* vehicle, uint8_t color);
+    uint8_t get_vehicle_primary_color(const IVehicle* vehicle);
 
     // player
     StdString get_player_name(IPlayer* player);

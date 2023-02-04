@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\dev\rust\altv-xrust\build\CMakeFiles\d578ea0f557589406a1ed7f270c3caa8\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{47B859DE-A789-367A-92F8-3A991A443C4E}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

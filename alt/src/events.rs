@@ -1,15 +1,12 @@
-use resource_impl::{
-    events::{
-        Event, PlayerConnectController, PlayerDisconnectController, PublicEventType, SDKEventType,
-        ServerStartedController,
-    },
-    resource_impl::ResourceImpl,
+use resource_impl::events::{
+    Event, PlayerConnectController, PlayerDisconnectController, PublicEventType, SDKEventType,
+    ServerStartedController,
 };
 
 macro_rules! on_event {
     ($func_name: ident, $event_path: path, $controller: ty, $public_type: path, $sdk_type: path) => {
         pub fn $func_name(handler: impl FnMut($controller) + 'static + Sync + Send) {
-            ResourceImpl::instance().add_event_handler(
+            resource_impl::resource_impl::add_event_handler(
                 $public_type,
                 $sdk_type,
                 $event_path(Box::new(handler)),

@@ -1,5 +1,4 @@
 use altv_sdk::ffi;
-use std::cell::RefCell;
 
 pub use resource_impl::log;
 pub use resource_impl::log_error;
@@ -76,28 +75,19 @@ pub fn create_vehicle(
     ry: f32,
     rz: f32,
 ) -> Option<resource_impl::vehicle::VehicleContainer> {
-    resource_impl::resource_impl::ResourceImpl::instance()
-        .create_vehicle(model, x, y, z, rx, ry, rz)
+    resource_impl::resource_impl::create_vehicle(model, x, y, z, rx, ry, rz)
 }
 
-pub fn set_interval(callback: impl FnMut() + 'static + Send + Sync, millis: u64) {
-    resource_impl::resource_impl::ResourceImpl::instance().create_timer(
-        Box::new(callback),
-        millis,
-        false,
-    );
-}
+// pub fn set_interval(callback: impl FnMut() + 'static + Send + Sync, millis: u64) {
+//     resource_impl::resource_impl::ResourceImpl::timers_create(Box::new(callback), millis, once);
+// }
 
 pub fn set_timeout(callback: impl FnMut() + 'static + Send + Sync, millis: u64) {
-    resource_impl::resource_impl::ResourceImpl::instance().create_timer(
-        Box::new(callback),
-        millis,
-        true,
-    );
+    resource_impl::resource_impl::timers_create(Box::new(callback), millis, true);
 }
 
 #[doc(hidden)]
-pub fn __init(full_main_path: String) {
+pub fn __init(full_main_path: String) -> __ResourceImpl {
     log!("alt __init");
-    __ResourceImpl::init(full_main_path);
+    __ResourceImpl::init(full_main_path)
 }

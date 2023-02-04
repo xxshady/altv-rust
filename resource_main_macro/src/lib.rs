@@ -26,12 +26,10 @@ pub fn resource_main_func(_: TokenStream, input: TokenStream) -> TokenStream {
         #(#attrs)* #vis fn main(
             core: usize,
             full_main_path: String,
-            __on_resource_impl_create: fn(resource: &'static std::sync::Mutex<alt::__ResourceImpl>)
+            __on_resource_impl_create: fn(resource: alt::__ResourceImpl)
         ) {
             unsafe { alt::__set_alt_core(core as *mut alt::__alt_ICore) };
-            alt::__init(full_main_path);
-            // TODO: fix this
-            __on_resource_impl_create(alt::__ResourceImpl::get_mutex());
+            __on_resource_impl_create(alt::__init(full_main_path));
 
             #(#statements)*
         }

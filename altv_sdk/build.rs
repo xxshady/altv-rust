@@ -1,14 +1,11 @@
 const CPP_SDK_VERSION_DIR: &str = "include/cpp-sdk/version";
-const CPP_SDK_EVENTS_DIR: &str = "include/cpp-sdk/events";
+// const CPP_SDK_EVENTS_DIR: &str = "include/cpp-sdk/events";
 
 fn main() {
     generate_cpp_sdk_version();
     build_rust();
 
-    println!("cargo:rerun-if-changed=src/lib.rs");
-    println!("cargo:rerun-if-changed=src/alt_bridge.cpp");
-    println!("cargo:rerun-if-changed=include/cpp-sdk/*.h");
-    println!("cargo:rerun-if-changed=include/cpp-sdk/*.cpp");
+    rerun_except::rerun_except(&["src/cpp_sdk_version.rs"]).expect("rerun_except failed");
 }
 
 fn generate_cpp_sdk_version() {

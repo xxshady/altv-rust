@@ -3,7 +3,8 @@ mod resource_manager;
 use altv_sdk::ffi as sdk;
 use cxx::let_cxx_string;
 use libloading::Library;
-use resource_manager::{ResourceImplMutex, ResourceManager};
+use resource_impl::resource_impl::ResourceImpl;
+use resource_manager::ResourceManager;
 use std::path::PathBuf;
 
 mod helpers;
@@ -24,18 +25,15 @@ extern "C" fn runtime_on_tick() {
 
     // let resources = ResourceManager::instance().resources_iter();
 
-    for (_, resource) in ResourceManager::instance().resources_iter() {
-        resource
-            .try_lock()
-            .expect("resource.try_lock() failed")
-            .__on_tick();
+    for (_, resource) in ResourceManager::instance().resources_iter_mut() {
+        resource.__on_tick();
     }
 }
 
 type ResourceMainFn = unsafe extern "C" fn(
     core: *mut sdk::ICore,
     full_main_path: String,
-    __on_resource_impl_create: fn(resource: ResourceImplMutex),
+    __on_resource_impl_create: fn(resource: ResourceImpl),
 );
 
 #[allow(improper_ctypes_definitions)]
@@ -53,13 +51,10 @@ extern "C" fn resource_start(full_main_path: &str) {
     Box::leak(Box::new(lib));
 }
 
-fn __on_resource_impl_create(resource: ResourceImplMutex) {
+fn __on_resource_impl_create(resource: ResourceImpl) {
     resource_impl::log_warn!("on_resource_impl_create");
 
-    ResourceManager::instance().add(
-        resource.try_lock().unwrap().full_main_path.clone(),
-        resource,
-    );
+    ResourceManager::instance().add(resource.full_main_path.clone(), resource);
 }
 
 #[allow(improper_ctypes_definitions)]
@@ -95,14 +90,15 @@ extern "C" fn resource_on_event(full_main_path: &str, event: *const sdk::CEvent)
         return;
     }
 
-    let manager = ResourceManager::instance();
-    let mut resource = manager.get_by_path(full_main_path).unwrap_or_else(|| {
+    let mut manager = ResourceManager::instance();
+    let resource = manager.get_by_path(full_main_path).unwrap_or_else(|| {
         panic!("[resource_on_event] failed to get resource by path: {full_main_path}");
     });
 
     resource.__on_sdk_event(event_type, event);
 }
 
+#[allow(improper_ctypes_definitions)]
 extern "C" fn resource_on_create_base_object(
     full_main_path: &str,
     base_object: *const sdk::IBaseObject,
@@ -113,12 +109,10 @@ extern "C" fn resource_on_create_base_object(
 
     let base_object_type = helpers::get_base_object_type(base_object);
 
-    resource_impl::log_warn!(
-        "resource_on_create_base_object full_main_path: {full_main_path:?} type: {base_object_type:?}",
-    );
+    resource_impl::log_warn!("resource_on_create_base_object type: {base_object_type:?}",);
 
-    let manager = ResourceManager::instance();
-    let mut resource = manager.get_by_path(full_main_path).unwrap_or_else(|| {
+    let mut manager = ResourceManager::instance();
+    let resource = manager.get_by_path(full_main_path).unwrap_or_else(|| {
         panic!("[resource_on_create_base_object] failed to get resource by path: {full_main_path}");
     });
 
@@ -129,10 +123,11 @@ extern "C" fn resource_on_create_base_object(
                 sdk::convert_baseobject_to_vehicle(base_object) as *mut sdk::IVehicle
             });
         }
-        _ => panic!("unknown baseobject creation type: {base_object_type:?}"),
+        _ => panic!("unknown baseobject create type: {base_object_type:?}"),
     }
 }
 
+#[allow(improper_ctypes_definitions)]
 extern "C" fn resource_on_remove_base_object(
     full_main_path: &str,
     base_object: *const sdk::IBaseObject,
@@ -147,6 +142,21 @@ extern "C" fn resource_on_remove_base_object(
         "resource_on_remove_base_object type: {:?}",
         base_object_type
     );
+
+    let mut manager = ResourceManager::instance();
+    let resource = manager.get_by_path(full_main_path).unwrap_or_else(|| {
+        panic!("[resource_on_remove_base_object] failed to get resource by path: {full_main_path}");
+    });
+
+    use altv_sdk::BaseObjectType::*;
+    match base_object_type {
+        VEHICLE => {
+            resource.__on_vehicle_destroy(unsafe {
+                sdk::convert_baseobject_to_vehicle(base_object) as *mut sdk::IVehicle
+            });
+        }
+        _ => panic!("unknown baseobject remove type: {base_object_type:?}"),
+    }
 }
 
 #[no_mangle]

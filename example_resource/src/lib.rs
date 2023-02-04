@@ -12,15 +12,15 @@ pub fn main() {
     //     1000,
     // );
 
-    let mut i = 0;
-    alt::events::on_server_started(move |controller| {
-        i += 1;
-        alt::log!("example resource ServerStarted controller: {controller:?} i: {i:?}");
-    });
+    // let mut i = 0;
+    // alt::events::on_server_started(move |controller| {
+    //     i += 1;
+    //     alt::log!("example resource ServerStarted controller: {controller:?} i: {i:?}");
+    // });
 
-    alt::events::on_player_disconnect(|controller| {
-        alt::log!("example resource on_player_disconnect controller: {controller:?}");
-    });
+    // alt::events::on_player_disconnect(|controller| {
+    //     alt::log!("example resource on_player_disconnect controller: {controller:?}");
+    // });
 
     // alt::events::on(alt::events::Event::PlayerConnect(|data| {
     //     alt::log!(
@@ -59,16 +59,36 @@ pub fn main() {
     // alt::events::on(alt::__resource_api::events::SDKEvent::PlayerDisconnect(
     //     on_player_disconnect,
     // ));
+    // let vehicle = alt::create_vehicle(alt::hash("sultan"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0).unwrap();
+    // let mut veh = vehicle.try_lock().unwrap();
+
+    // dbg!(veh.id());
+    // veh.set_secondary_color(10);
+
+    // drop(veh);
 
     alt::set_timeout(
-        || {
-            let vehicle = alt::create_vehicle(alt::hash("sultan"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-            let binding = vehicle.unwrap();
-            let binding = binding.try_lock().unwrap();
-            let vehicle = binding.as_ref().unwrap();
-
-            dbg!(vehicle.id());
+        move || {
+            let vehicle =
+                alt::create_vehicle(alt::hash("sultan"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0).unwrap();
+            // let mut veh = vehicle.try_lock().unwrap();
+            // alt::log_warn!("timeout rust test");
+            // dbg!(veh.get_secondary_color());
+            // veh.destroy();
         },
-        2000,
+        1000,
     );
+
+    // fn recurse_set_timeout() {
+
+    // alt::set_timeout(
+    //     || {
+    //         alt::log!("set_timeout ~gl~recursion");
+    //         recurse_set_timeout();
+    //     },
+    //     500,
+    // )
+    // }
+
+    // recurse_set_timeout();
 }

@@ -142,6 +142,8 @@ pub mod ffi {
             ry: f32,
             rz: f32,
         ) -> *mut IVehicle;
+        unsafe fn set_vehicle_primary_color(vehicle: *mut IVehicle, color: u8);
+        unsafe fn get_vehicle_primary_color(vehicle: *const IVehicle) -> u8;
 
         // player
         unsafe fn get_player_name(player: *mut IPlayer) -> UniquePtr<CxxString>;
