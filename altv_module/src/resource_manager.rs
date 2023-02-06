@@ -2,10 +2,11 @@ use once_cell::sync::OnceCell;
 use resource_impl::resource_impl::ResourceImpl;
 use std::{
     collections::{hash_map, HashMap},
-    sync::{Mutex, MutexGuard},
+    sync::{RwLock, RwLockReadGuard, RwLockWriteGuard},
 };
 
-static RESOURCE_MANAGER_INSTANCE: OnceCell<Mutex<ResourceManager>> = OnceCell::new();
+// TODO: since we dont need multi-threading here its better to migrate to thread_local refcell
+static RESOURCE_MANAGER_INSTANCE: OnceCell<RwLock<ResourceManager>> = OnceCell::new();
 
 #[derive(Debug)]
 pub struct ResourceManager {
@@ -19,28 +20,36 @@ impl ResourceManager {
         };
 
         RESOURCE_MANAGER_INSTANCE
-            .set(Mutex::new(instance))
+            .set(RwLock::new(instance))
             .expect("RESOURCE_MANAGER_INSTANCE.set failed");
     }
 
-    pub fn instance() -> MutexGuard<'static, Self> {
+    pub fn instance() -> RwLockReadGuard<'static, Self> {
         RESOURCE_MANAGER_INSTANCE
             .get()
             .expect("RESOURCE_MANAGER_INSTANCE.get() failed")
-            .try_lock()
-            .expect("RESOURCE_MANAGER_INSTANCE try_lock() failed")
+            .try_read()
+            .expect("RESOURCE_MANAGER_INSTANCE try_read() failed")
     }
 
-    pub fn resources_iter_mut(&mut self) -> hash_map::IterMut<String, ResourceImpl> {
-        self.resources.iter_mut()
+    pub fn instance_mut() -> RwLockWriteGuard<'static, Self> {
+        RESOURCE_MANAGER_INSTANCE
+            .get()
+            .expect("RESOURCE_MANAGER_INSTANCE.get() failed")
+            .try_write()
+            .expect("RESOURCE_MANAGER_INSTANCE try_write() failed")
+    }
+
+    pub fn resources_iter_mut(&self) -> hash_map::Iter<String, ResourceImpl> {
+        self.resources.iter()
     }
 
     pub fn add(&mut self, full_main_path: String, resource: ResourceImpl) {
         self.resources.insert(full_main_path, resource);
     }
 
-    pub fn get_by_path(&mut self, full_main_path: &str) -> Option<&mut ResourceImpl> {
-        let resource = self.resources.get_mut(full_main_path);
+    pub fn get_by_path(&self, full_main_path: &str) -> Option<&ResourceImpl> {
+        let resource = self.resources.get(full_main_path);
 
         if let Some(resource) = resource {
             Some(resource)

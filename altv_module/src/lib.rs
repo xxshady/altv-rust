@@ -54,7 +54,7 @@ extern "C" fn resource_start(full_main_path: &str) {
 fn __on_resource_impl_create(resource: ResourceImpl) {
     resource_impl::log_warn!("on_resource_impl_create");
 
-    ResourceManager::instance().add(resource.full_main_path.clone(), resource);
+    ResourceManager::instance_mut().add(resource.full_main_path.clone(), resource);
 }
 
 #[allow(improper_ctypes_definitions)]
@@ -90,7 +90,7 @@ extern "C" fn resource_on_event(full_main_path: &str, event: *const sdk::CEvent)
         return;
     }
 
-    let mut manager = ResourceManager::instance();
+    let manager = ResourceManager::instance();
     let resource = manager.get_by_path(full_main_path).unwrap_or_else(|| {
         panic!("[resource_on_event] failed to get resource by path: {full_main_path}");
     });
@@ -111,7 +111,7 @@ extern "C" fn resource_on_create_base_object(
 
     resource_impl::log_warn!("resource_on_create_base_object type: {base_object_type:?}",);
 
-    let mut manager = ResourceManager::instance();
+    let manager = ResourceManager::instance();
     let resource = manager.get_by_path(full_main_path).unwrap_or_else(|| {
         panic!("[resource_on_create_base_object] failed to get resource by path: {full_main_path}");
     });
@@ -143,7 +143,7 @@ extern "C" fn resource_on_remove_base_object(
         base_object_type
     );
 
-    let mut manager = ResourceManager::instance();
+    let manager = ResourceManager::instance();
     let resource = manager.get_by_path(full_main_path).unwrap_or_else(|| {
         panic!("[resource_on_remove_base_object] failed to get resource by path: {full_main_path}");
     });

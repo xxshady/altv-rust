@@ -17,6 +17,8 @@ pub use ffi::ICore as __alt_ICore;
 #[doc(hidden)]
 pub use resource_impl::resource_impl::ResourceImpl as __ResourceImpl;
 
+pub use resource_impl::vehicle::Vehicle;
+
 pub type ModelHash = u32;
 
 pub mod events;
@@ -38,44 +40,6 @@ pub fn hash(str: &str) -> ModelHash {
     num ^= num >> 11;
 
     (num + (num << 15)).0
-}
-
-// TODO: move implement this shit in resource_impl!!!!!
-
-// pub struct Vehicle {
-//     ptr: *mut ffi::IVehicle,
-//     id: u16,
-// }
-
-// impl Vehicle {
-//     pub fn all() -> Vec<RefCell<Vehicle>> {
-//         todo!()
-//     }
-
-//     pub fn id(&self) -> u16 {
-//         self.id
-//     }
-
-//     pub fn destroy(self) {
-//         // TODO: baseobject validation shit
-//         unsafe {
-//             ffi::destroy_baseobject(
-//                 ffi::convert_vehicle_to_baseobject(self.ptr) as *mut ffi::IBaseObject
-//             )
-//         }
-//     }
-// }
-
-pub fn create_vehicle(
-    model: ModelHash,
-    x: f32,
-    y: f32,
-    z: f32,
-    rx: f32,
-    ry: f32,
-    rz: f32,
-) -> Option<resource_impl::vehicle::VehicleContainer> {
-    resource_impl::resource_impl::create_vehicle(model, x, y, z, rx, ry, rz)
 }
 
 // pub fn set_interval(callback: impl FnMut() + 'static + Send + Sync, millis: u64) {

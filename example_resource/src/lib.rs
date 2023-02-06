@@ -59,22 +59,37 @@ pub fn main() {
     // alt::events::on(alt::__resource_api::events::SDKEvent::PlayerDisconnect(
     //     on_player_disconnect,
     // ));
-    // let vehicle = alt::create_vehicle(alt::hash("sultan"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0).unwrap();
-    // let mut veh = vehicle.try_lock().unwrap();
+    let vehicle = alt::Vehicle::new(alt::hash("sultan"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0).unwrap();
+    let mut veh = vehicle.try_lock().unwrap();
 
-    // dbg!(veh.id());
-    // veh.set_secondary_color(10);
+    dbg!(veh.id());
+    dbg!(veh.set_secondary_color(10));
 
-    // drop(veh);
+    drop(veh);
+
+    let test_veh_get_by_id = || {
+        if let Some(v) = alt::Vehicle::get_by_id(0) {
+            alt::log_warn!(
+                "get_by_id veh get_secondary_color: {:?}",
+                v.try_lock().unwrap().get_secondary_color()
+            );
+        } else {
+            alt::log_warn!("get_by_id veh not found");
+        }
+    };
+    test_veh_get_by_id();
 
     alt::set_timeout(
         move || {
-            let vehicle =
-                alt::create_vehicle(alt::hash("sultan"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0).unwrap();
-            // let mut veh = vehicle.try_lock().unwrap();
-            // alt::log_warn!("timeout rust test");
-            // dbg!(veh.get_secondary_color());
-            // veh.destroy();
+            let mut veh = vehicle.try_lock().unwrap();
+            alt::log_warn!("timeout rust test");
+
+            // drop(veh);
+            // alt::Vehicle::destroy_vehicle(vehicle);
+            veh.destroy().unwrap_or_else(|e| panic!("error: {e}"));
+            dbg!(veh.get_secondary_color());
+
+            test_veh_get_by_id();
         },
         1000,
     );
