@@ -1,3 +1,5 @@
+use alt::Entity;
+
 #[alt::res_main]
 #[no_mangle]
 pub fn main() {
@@ -59,37 +61,40 @@ pub fn main() {
     // alt::events::on(alt::__resource_api::events::SDKEvent::PlayerDisconnect(
     //     on_player_disconnect,
     // ));
-    let vehicle = alt::Vehicle::new(alt::hash("sultan"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0).unwrap();
+    let vehicle = alt::Vehicle::new(alt::hash("sultan"), 0.into(), 0.into()).unwrap();
     let mut veh = vehicle.try_lock().unwrap();
 
-    dbg!(veh.id());
-    dbg!(veh.set_secondary_color(10));
+    dbg!(veh.id().unwrap());
+    dbg!(veh.set_secondary_color(10).unwrap());
+
+    // dbg!(veh.destroy());
 
     drop(veh);
 
-    let test_veh_get_by_id = || {
-        if let Some(v) = alt::Vehicle::get_by_id(0) {
-            alt::log_warn!(
-                "get_by_id veh get_secondary_color: {:?}",
-                v.try_lock().unwrap().get_secondary_color()
-            );
-        } else {
-            alt::log_warn!("get_by_id veh not found");
-        }
-    };
-    test_veh_get_by_id();
+    // let test_veh_get_by_id = || {
+    //     if let Some(v) = alt::Vehicle::get_by_id(0) {
+    //         alt::log_warn!(
+    //             "get_by_id veh get_secondary_color: {:?}",
+    //             v.try_lock().unwrap().get_secondary_color()
+    //         );
+    //     } else {
+    //         alt::log_warn!("get_by_id veh not found");
+    //     }
+    // };
+    // test_veh_get_by_id();
 
     alt::set_timeout(
         move || {
-            let mut veh = vehicle.try_lock().unwrap();
             alt::log_warn!("timeout rust test");
+            let mut veh = vehicle.try_lock().unwrap();
+            dbg!(veh.get_secondary_color());
 
             // drop(veh);
             // alt::Vehicle::destroy_vehicle(vehicle);
-            veh.destroy().unwrap_or_else(|e| panic!("error: {e}"));
-            dbg!(veh.get_secondary_color());
+            // veh.destroy().unwrap_or_else(|e| panic!("error: {e}"));
+            // dbg!(veh.get_secondary_color().unwrap());
 
-            test_veh_get_by_id();
+            // test_veh_get_by_id();
         },
         1000,
     );

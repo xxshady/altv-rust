@@ -44,13 +44,13 @@ pub struct ResourceOnEventCallback(
 #[derive(ExternTypeCallback)]
 #[repr(transparent)]
 pub struct ResourceOnCreateBaseObjectCallback(
-    pub extern "C" fn(full_main_path: &str, base_object: *const ffi::IBaseObject),
+    pub extern "C" fn(full_main_path: &str, base_object: *mut ffi::IBaseObject),
 );
 
 #[derive(ExternTypeCallback)]
 #[repr(transparent)]
 pub struct ResourceOnRemoveBaseObjectCallback(
-    pub extern "C" fn(full_main_path: &str, base_object: *const ffi::IBaseObject),
+    pub extern "C" fn(full_main_path: &str, base_object: *mut ffi::IBaseObject),
 );
 
 #[allow(clippy::missing_safety_doc)]
@@ -115,15 +115,18 @@ pub mod ffi {
         unsafe fn log_error(str: &CxxString);
         unsafe fn log_warn(str: &CxxString);
 
+        // entity conversions
+        unsafe fn convert_baseobject_to_entity(baseobject: *mut IBaseObject) -> *mut IEntity;
+
         // vehicle conversions
-        unsafe fn convert_vehicle_to_baseobject(baseobject: *const IVehicle) -> *const IBaseObject;
-        unsafe fn convert_baseobject_to_vehicle(vehicle: *const IBaseObject) -> *const IVehicle;
-        unsafe fn convert_vehicle_to_entity(entity: *const IVehicle) -> *const IEntity;
+        unsafe fn convert_vehicle_to_baseobject(baseobject: *mut IVehicle) -> *mut IBaseObject;
+        unsafe fn convert_baseobject_to_vehicle(vehicle: *mut IBaseObject) -> *mut IVehicle;
+        unsafe fn convert_vehicle_to_entity(entity: *mut IVehicle) -> *mut IEntity;
 
         // player conversions
-        unsafe fn convert_player_to_baseobject(baseobject: *const IPlayer) -> *const IBaseObject;
-        unsafe fn convert_baseobject_to_player(player: *const IBaseObject) -> *const IPlayer;
-        unsafe fn convert_player_to_entity(entity: *const IPlayer) -> *const IEntity;
+        unsafe fn convert_player_to_baseobject(baseobject: *mut IPlayer) -> *mut IBaseObject;
+        unsafe fn convert_baseobject_to_player(player: *mut IBaseObject) -> *mut IPlayer;
+        unsafe fn convert_player_to_entity(entity: *mut IPlayer) -> *mut IEntity;
 
         // baseobject
         unsafe fn destroy_baseobject(base_object: *mut IBaseObject);

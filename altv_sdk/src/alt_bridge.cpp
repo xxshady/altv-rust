@@ -201,36 +201,42 @@ namespace alt_rs
         }
     }
 
+    // entity conversions
+    IEntity* convert_baseobject_to_entity(IBaseObject* entity)
+    {
+        return dynamic_cast<IEntity*>(entity);
+    }
+
     // vehicle conversions
-    const IBaseObject* convert_vehicle_to_baseobject(const IVehicle* baseobject)
+    IBaseObject* convert_vehicle_to_baseobject(IVehicle* baseobject)
     {
-        return static_cast<const IBaseObject*>(baseobject);
+        return static_cast<IBaseObject*>(baseobject);
     }
 
-    const IVehicle* convert_baseobject_to_vehicle(const IBaseObject* vehicle)
+    IVehicle* convert_baseobject_to_vehicle(IBaseObject* vehicle)
     {
-        return dynamic_cast<const IVehicle*>(vehicle);
+        return dynamic_cast<IVehicle*>(vehicle);
     }
 
-    const IEntity* convert_vehicle_to_entity(const IVehicle* entity)
+    IEntity* convert_vehicle_to_entity(IVehicle* entity)
     {
-        return static_cast<const IEntity*>(entity);
+        return static_cast<IEntity*>(entity);
     }
 
     // player conversions
-    const IBaseObject* convert_player_to_baseobject(const IPlayer* baseobject)
+    IBaseObject* convert_player_to_baseobject(IPlayer* baseobject)
     {
-        return static_cast<const IBaseObject*>(baseobject);
+        return static_cast<IBaseObject*>(baseobject);
     }
 
-    const IPlayer* convert_baseobject_to_player(const IBaseObject* player)
+    IPlayer* convert_baseobject_to_player(IBaseObject* player)
     {
-        return dynamic_cast<const IPlayer*>(player);
+        return dynamic_cast<IPlayer*>(player);
     }
 
-    const IEntity* convert_player_to_entity(const IPlayer* entity)
+    IEntity* convert_player_to_entity(IPlayer* entity)
     {
-        return static_cast<const IEntity*>(entity);
+        return static_cast<IEntity*>(entity);
     }
 
     // vehicle

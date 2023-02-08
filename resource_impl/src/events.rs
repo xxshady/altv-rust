@@ -92,10 +92,10 @@ impl EventManager {
                 match h {
                     ServerStarted(callback) => callback(ServerStartedController {}),
                     PlayerConnect(callback) => {
-                        callback(PlayerConnectController { player: Player {} })
+                        callback(PlayerConnectController { player: todo!() })
                     }
                     PlayerDisconnect(callback) => callback(PlayerDisconnectController {
-                        player: Player {},
+                        player: todo!(),
                         reason: unsafe { altv_sdk::ffi::get_event_reason(event) }.to_string(),
                     }),
                     _ => todo!(),

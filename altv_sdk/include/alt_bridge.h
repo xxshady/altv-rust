@@ -25,8 +25,8 @@ namespace alt_rs
     using ResourceStopCallback = void (*)(rust::Str full_main_path);
     using ResourceOnTickCallback = void (*)(rust::Str full_main_path);
     using ResourceOnEventCallback = void (*)(rust::Str full_main_path, const alt::CEvent* event);
-    using ResourceOnCreateBaseObjectCallback = void (*)(rust::Str full_main_path, const IBaseObject* base_object);
-    using ResourceOnRemoveBaseObjectCallback = void (*)(rust::Str full_main_path, const IBaseObject* base_object);
+    using ResourceOnCreateBaseObjectCallback = void (*)(rust::Str full_main_path, IBaseObject* base_object);
+    using ResourceOnRemoveBaseObjectCallback = void (*)(rust::Str full_main_path, IBaseObject* base_object);
 
     using StdString = std::unique_ptr<std::string>;
 
@@ -159,13 +159,15 @@ namespace alt_rs
     StdString get_event_reason(const alt::CEvent* event);
 
     // baseobject conversions
-    const IBaseObject* convert_vehicle_to_baseobject(const IVehicle* baseobject);
-    const IVehicle* convert_baseobject_to_vehicle(const IBaseObject* vehicle);
-    const IEntity* convert_vehicle_to_entity(const IVehicle* entity);
+    IEntity* convert_baseobject_to_entity(IBaseObject* entity);
 
-    const IBaseObject* convert_player_to_baseobject(const IPlayer* baseobject);
-    const IPlayer* convert_baseobject_to_player(const IBaseObject* player);
-    const IEntity* convert_player_to_entity(const IPlayer* entity);
+    IBaseObject* convert_vehicle_to_baseobject(IVehicle* baseobject);
+    IVehicle* convert_baseobject_to_vehicle(IBaseObject* vehicle);
+    IEntity* convert_vehicle_to_entity(IVehicle* entity);
+
+    IBaseObject* convert_player_to_baseobject(IPlayer* baseobject);
+    IPlayer* convert_baseobject_to_player(IBaseObject* player);
+    IEntity* convert_player_to_entity(IPlayer* entity);
 
     // baseobject
     void destroy_baseobject(IBaseObject* baseobject);

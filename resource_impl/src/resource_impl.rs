@@ -1,4 +1,6 @@
 use crate::{
+    base_object::{self, BaseObject, BaseObjectContainer, RawBaseObjectPointer},
+    entity,
     events::{self, Event, PublicEventType},
     timers, vehicle,
 };
@@ -26,8 +28,10 @@ pub struct ResourceImpl {
     timer_schedule_state: &'static Mutex<timers::ScheduleState>,
     events: &'static Mutex<events::EventManager>,
     vehicles: &'static Mutex<vehicle::VehicleManager>,
-    vehicle_creation: &'static Mutex<vehicle::PendingVehicleCreation>,
-    vehicle_deletion: &'static Mutex<vehicle::PendingVehicleDeletion>,
+    base_object_creation: &'static Mutex<base_object::PendingBaseObjectCreation>,
+    base_object_deletion: &'static Mutex<base_object::PendingBaseObjectDeletion>,
+    base_objects: &'static Mutex<base_object::BaseObjectManager>,
+    entities: &'static Mutex<entity::EntityManager>,
 }
 
 impl ResourceImpl {
@@ -41,14 +45,19 @@ impl ResourceImpl {
             ),
             events: init_static!(EVENT_MANAGER_INSTANCE, events::EventManager),
             vehicles: init_static!(vehicle::VEHICLE_MANAGER_INSTANCE, vehicle::VehicleManager),
-            vehicle_creation: init_static!(
-                vehicle::VEHICLE_CREATION_INSTANCE,
-                vehicle::PendingVehicleCreation
+            base_object_creation: init_static!(
+                base_object::BASE_OBJECT_CREATION_INSTANCE,
+                base_object::PendingBaseObjectCreation
             ),
-            vehicle_deletion: init_static!(
-                vehicle::VEHICLE_DELETION_INSTANCE,
-                vehicle::PendingVehicleDeletion
+            base_object_deletion: init_static!(
+                base_object::BASE_OBJECT_DELETION_INSTANCE,
+                base_object::PendingBaseObjectDeletion
             ),
+            base_objects: init_static!(
+                base_object::BASE_OBJECT_MANAGER_INSTANCE,
+                base_object::BaseObjectManager
+            ),
+            entities: init_static!(entity::ENTITY_MANAGER_INSTANCE, entity::EntityManager),
         };
 
         instance
@@ -72,24 +81,87 @@ impl ResourceImpl {
             .process_timers(self.timer_schedule_state.try_lock().unwrap());
     }
 
-    pub fn __on_vehicle_create(&self, vehicle: *mut altv_sdk::ffi::IVehicle) {
-        if self.vehicle_creation.try_lock().is_err() {
-            crate::log_warn!("__on_vehicle_create pending creation, skip");
+    #[allow(clippy::not_unsafe_ptr_arg_deref)]
+    pub fn __on_base_object_create(
+        &self,
+        raw_ptr: RawBaseObjectPointer,
+        base_object_type: altv_sdk::BaseObjectType,
+    ) {
+        if self.base_object_creation.try_lock().is_err() {
+            crate::log_warn!("__on_base_object_create pending creation, skip");
             return;
         }
-        self.vehicles.try_lock().unwrap().on_vehicle_create(vehicle);
-    }
 
-    pub fn __on_vehicle_destroy(&self, vehicle: *mut altv_sdk::ffi::IVehicle) {
-        if self.vehicle_deletion.try_lock().is_err() {
-            crate::log_warn!("__on_vehicle_destroy pending deletion, skip");
-            return;
-        }
-        self.vehicles
+        use altv_sdk::BaseObjectType::*;
+        let base_object: BaseObjectContainer = match base_object_type {
+            VEHICLE => {
+                let vehicle = vehicle::VehicleManager::create_vehicle_container(unsafe {
+                    altv_sdk::ffi::convert_baseobject_to_vehicle(raw_ptr)
+                });
+                self.entities.try_lock().unwrap().on_create(
+                    unsafe {
+                        altv_sdk::ffi::get_entity_id(
+                            vehicle.try_lock().unwrap().ptr().to_entity().unwrap(),
+                        )
+                    },
+                    entity::EntityWrapper::Vehicle(vehicle.clone()),
+                );
+                vehicle
+            }
+            _ => todo!(),
+        };
+
+        self.base_objects
             .try_lock()
             .unwrap()
-            .on_vehicle_destroy(vehicle);
+            .on_create(raw_ptr, base_object);
     }
+
+    pub fn __on_base_object_destroy(&self, raw_ptr: RawBaseObjectPointer) {
+        if self.base_object_deletion.try_lock().is_err() {
+            crate::log_warn!("__on_base_object_destroy pending deletion, skip");
+            return;
+        }
+
+        let mut base_objects = self.base_objects.try_lock().unwrap();
+        let base_object = base_objects.get_by_raw_ptr(raw_ptr);
+        if let Some(base_object) = base_object {
+            use altv_sdk::BaseObjectType::*;
+            let base_object_guard = base_object.try_lock().unwrap();
+            match base_object_guard.base_type() {
+                VEHICLE => {
+                    self.entities
+                        .try_lock()
+                        .unwrap()
+                        .on_destroy(base_object_guard.ptr().to_entity().unwrap());
+                }
+                _ => todo!(),
+            };
+            drop(base_object_guard);
+            base_objects.on_destroy(base_object.clone());
+        } else {
+            crate::log_error!("__on_base_object_destroy unknown base object: {raw_ptr:?}");
+        }
+    }
+
+    // pub fn __on_vehicle_create(&self, vehicle: *mut altv_sdk::ffi::IVehicle) {
+    //     if self.vehicle_creation.try_lock().is_err() {
+    //         crate::log_warn!("__on_vehicle_create pending creation, skip");
+    //         return;
+    //     }
+    //     self.vehicles.try_lock().unwrap().on_vehicle_create(vehicle);
+    // }
+
+    // pub fn __on_vehicle_destroy(&self, vehicle: *mut altv_sdk::ffi::IVehicle) {
+    //     if self.vehicle_deletion.try_lock().is_err() {
+    //         crate::log_warn!("__on_vehicle_destroy pending deletion, skip");
+    //         return;
+    //     }
+    //     self.vehicles
+    //         .try_lock()
+    //         .unwrap()
+    //         .on_vehicle_destroy(vehicle);
+    // }
 }
 
 pub fn timers_create(callback: Box<timers::TimerCallback>, millis: u64, once: bool) {

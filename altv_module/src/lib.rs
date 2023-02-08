@@ -101,7 +101,7 @@ extern "C" fn resource_on_event(full_main_path: &str, event: *const sdk::CEvent)
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_on_create_base_object(
     full_main_path: &str,
-    base_object: *const sdk::IBaseObject,
+    base_object: *mut sdk::IBaseObject,
 ) {
     if base_object.is_null() {
         panic!("resource_on_create_base_object base_object is null");
@@ -116,21 +116,22 @@ extern "C" fn resource_on_create_base_object(
         panic!("[resource_on_create_base_object] failed to get resource by path: {full_main_path}");
     });
 
-    use altv_sdk::BaseObjectType::*;
-    match base_object_type {
-        VEHICLE => {
-            resource.__on_vehicle_create(unsafe {
-                sdk::convert_baseobject_to_vehicle(base_object) as *mut sdk::IVehicle
-            });
-        }
-        _ => panic!("unknown baseobject create type: {base_object_type:?}"),
-    }
+    resource.__on_base_object_create(base_object, base_object_type);
+
+    // use altv_sdk::BaseObjectType::*;
+    // match base_object_type {
+    //     VEHICLE => {
+    //         resource
+    //             .__on_vehicle_create(unsafe { sdk::convert_baseobject_to_vehicle(base_object) });
+    //     }
+    //     _ => panic!("unknown baseobject create type: {base_object_type:?}"),
+    // }
 }
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_on_remove_base_object(
     full_main_path: &str,
-    base_object: *const sdk::IBaseObject,
+    base_object: *mut sdk::IBaseObject,
 ) {
     if base_object.is_null() {
         panic!("resource_on_remove_base_object base_object is null");
@@ -148,15 +149,16 @@ extern "C" fn resource_on_remove_base_object(
         panic!("[resource_on_remove_base_object] failed to get resource by path: {full_main_path}");
     });
 
-    use altv_sdk::BaseObjectType::*;
-    match base_object_type {
-        VEHICLE => {
-            resource.__on_vehicle_destroy(unsafe {
-                sdk::convert_baseobject_to_vehicle(base_object) as *mut sdk::IVehicle
-            });
-        }
-        _ => panic!("unknown baseobject remove type: {base_object_type:?}"),
-    }
+    resource.__on_base_object_destroy(base_object);
+
+    // use altv_sdk::BaseObjectType::*;
+    // match base_object_type {
+    //     VEHICLE => {
+    //         resource
+    //             .__on_vehicle_destroy(unsafe { sdk::convert_baseobject_to_vehicle(base_object) });
+    //     }
+    //     _ => panic!("unknown baseobject remove type: {base_object_type:?}"),
+    // }
 }
 
 #[no_mangle]
