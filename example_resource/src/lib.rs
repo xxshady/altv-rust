@@ -71,17 +71,17 @@ pub fn main() {
 
     drop(veh);
 
-    // let test_veh_get_by_id = || {
-    //     if let Some(v) = alt::Vehicle::get_by_id(0) {
-    //         alt::log_warn!(
-    //             "get_by_id veh get_secondary_color: {:?}",
-    //             v.try_lock().unwrap().get_secondary_color()
-    //         );
-    //     } else {
-    //         alt::log_warn!("get_by_id veh not found");
-    //     }
-    // };
-    // test_veh_get_by_id();
+    let test_veh_get_by_id = |id: alt::EntityId| {
+        if let Some(v) = alt::Vehicle::get_by_id(id) {
+            alt::log_warn!(
+                "get_by_id veh id: {id} get_secondary_color: {:?}",
+                v.try_lock().unwrap().get_secondary_color()
+            );
+        } else {
+            alt::log_warn!("get_by_id veh not found id: {id}");
+        }
+    };
+    test_veh_get_by_id(0);
 
     alt::set_timeout(
         move || {
@@ -93,8 +93,10 @@ pub fn main() {
             // alt::Vehicle::destroy_vehicle(vehicle);
             // veh.destroy().unwrap_or_else(|e| panic!("error: {e}"));
             // dbg!(veh.get_secondary_color().unwrap());
-
-            // test_veh_get_by_id();
+            veh.destroy();
+            drop(veh);
+            test_veh_get_by_id(1);
+            test_veh_get_by_id(0);
         },
         1000,
     );

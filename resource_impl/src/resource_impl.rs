@@ -1,6 +1,6 @@
 use crate::{
-    base_object::{self, BaseObject, BaseObjectContainer, RawBaseObjectPointer},
-    entity,
+    base_object::{self, BaseObjectContainer, RawBaseObjectPointer},
+    entity::{self, Entity},
     events::{self, Event, PublicEventType},
     timers, vehicle,
 };
@@ -99,11 +99,7 @@ impl ResourceImpl {
                     altv_sdk::ffi::convert_baseobject_to_vehicle(raw_ptr)
                 });
                 self.entities.try_lock().unwrap().on_create(
-                    unsafe {
-                        altv_sdk::ffi::get_entity_id(
-                            vehicle.try_lock().unwrap().ptr().to_entity().unwrap(),
-                        )
-                    },
+                    vehicle.try_lock().unwrap().id().unwrap(),
                     entity::EntityWrapper::Vehicle(vehicle.clone()),
                 );
                 vehicle

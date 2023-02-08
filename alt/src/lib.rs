@@ -19,6 +19,7 @@ pub use resource_impl::resource_impl::ResourceImpl as __ResourceImpl;
 
 pub use resource_impl::base_object::BaseObject;
 pub use resource_impl::entity::Entity;
+pub use resource_impl::entity::EntityId;
 pub use resource_impl::vector::Vector3;
 pub use resource_impl::vehicle::Vehicle;
 

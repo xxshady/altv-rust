@@ -41,6 +41,8 @@ impl Vehicle {
         let manager = ENTITY_MANAGER_INSTANCE.get().unwrap().try_lock().unwrap();
         let result = manager.get_by_id(id);
 
+        dbg!(result);
+
         match result {
             Some(_wrapper @ EntityWrapper::Vehicle(vehicle)) => Some(vehicle.clone()),
             None | Some(_) => None,
@@ -57,6 +59,13 @@ impl Vehicle {
     }
 
     pub fn destroy(&mut self) -> Result<(), String> {
+        ENTITY_MANAGER_INSTANCE
+            .get()
+            .unwrap()
+            .try_lock()
+            .unwrap()
+            .on_destroy(self.ptr().to_entity().unwrap());
+
         self.destroy_base_object()
     }
 }
@@ -113,6 +122,16 @@ impl VehicleManager {
             .on_create(
                 unsafe { sdk::convert_vehicle_to_baseobject(raw_ptr) },
                 vehicle.clone(),
+            );
+
+        ENTITY_MANAGER_INSTANCE
+            .get()
+            .unwrap()
+            .try_lock()
+            .unwrap()
+            .on_create(
+                vehicle.try_lock().unwrap().id().unwrap(),
+                EntityWrapper::Vehicle(vehicle.clone()),
             );
 
         Some(vehicle)

@@ -54,8 +54,8 @@ impl EntityManager {
         self.entities.insert(id, entity);
     }
 
-    pub fn on_destroy(&mut self, raw_ptr: RawEntityPointer) -> Option<&EntityWrapper> {
+    pub fn on_destroy(&mut self, raw_ptr: RawEntityPointer) -> Option<EntityWrapper> {
         let id = unsafe { sdk::get_entity_id(raw_ptr) };
-        self.entities.get(&id)
+        self.entities.remove(&id)
     }
 }
