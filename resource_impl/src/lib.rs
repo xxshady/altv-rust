@@ -1,8 +1,8 @@
-pub mod base_object;
+mod base_object;
 pub mod entity;
 pub mod events;
 pub mod logging;
-mod player;
+pub mod player;
 pub mod resource_impl;
 pub mod sdk_events;
 mod timers;

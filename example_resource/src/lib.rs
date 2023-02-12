@@ -1,5 +1,3 @@
-use alt::Entity;
-
 #[alt::res_main]
 #[no_mangle]
 pub fn main() {
@@ -20,17 +18,15 @@ pub fn main() {
     //     alt::log!("example resource ServerStarted controller: {controller:?} i: {i:?}");
     // });
 
-    // alt::events::on_player_disconnect(|controller| {
-    //     alt::log!("example resource on_player_disconnect controller: {controller:?}");
-    // });
-
-    // alt::events::on(alt::events::Event::PlayerConnect(|data| {
-    //     alt::log!(
-    //         "example resource PlayerConnect data player: {:?} reason: {:?}",
-    //         data.player,
-    //         data.reason
-    //     );
-    // }));
+    alt::events::on_player_connect(|controller| {
+        // at least downcasting works.. but i need to downcast it in the module somehow
+        let player = controller.player.try_lock().unwrap();
+        let player = player.as_any().downcast_ref::<alt::Player>().unwrap();
+        alt::log!(
+            "example resource on_player_connect player name: {:?}",
+            player.name().unwrap()
+        );
+    });
 
     // alt::set_timeout(|| println!("its timeout"), 300);
 
@@ -61,45 +57,45 @@ pub fn main() {
     // alt::events::on(alt::__resource_api::events::SDKEvent::PlayerDisconnect(
     //     on_player_disconnect,
     // ));
-    let vehicle = alt::Vehicle::new(alt::hash("sultan"), 0.into(), 0.into()).unwrap();
-    let mut veh = vehicle.try_lock().unwrap();
+    // let vehicle = alt::Vehicle::new(alt::hash("sultan"), 0.into(), 0.into()).unwrap();
+    // let mut veh = vehicle.try_lock().unwrap();
 
-    dbg!(veh.id().unwrap());
-    dbg!(veh.set_secondary_color(10).unwrap());
+    // dbg!(veh.id().unwrap());
+    // dbg!(veh.set_secondary_color(10).unwrap());
 
-    // dbg!(veh.destroy());
+    // // dbg!(veh.destroy());
 
-    drop(veh);
+    // drop(veh);
 
-    let test_veh_get_by_id = |id: alt::EntityId| {
-        if let Some(v) = alt::Vehicle::get_by_id(id) {
-            alt::log_warn!(
-                "get_by_id veh id: {id} get_secondary_color: {:?}",
-                v.try_lock().unwrap().get_secondary_color()
-            );
-        } else {
-            alt::log_warn!("get_by_id veh not found id: {id}");
-        }
-    };
-    test_veh_get_by_id(0);
+    // let test_veh_get_by_id = |id: alt::EntityId| {
+    //     if let Some(v) = alt::Vehicle::get_by_id(id) {
+    //         alt::log_warn!(
+    //             "get_by_id veh id: {id} get_secondary_color: {:?}",
+    //             v.try_lock().unwrap().get_secondary_color()
+    //         );
+    //     } else {
+    //         alt::log_warn!("get_by_id veh not found id: {id}");
+    //     }
+    // };
+    // test_veh_get_by_id(0);
 
-    alt::set_timeout(
-        move || {
-            alt::log_warn!("timeout rust test");
-            let mut veh = vehicle.try_lock().unwrap();
-            dbg!(veh.get_secondary_color());
+    // alt::set_timeout(
+    //     move || {
+    //         alt::log_warn!("timeout rust test");
+    //         let mut veh = vehicle.try_lock().unwrap();
+    //         dbg!(veh.get_secondary_color());
 
-            // drop(veh);
-            // alt::Vehicle::destroy_vehicle(vehicle);
-            // veh.destroy().unwrap_or_else(|e| panic!("error: {e}"));
-            // dbg!(veh.get_secondary_color().unwrap());
-            veh.destroy();
-            drop(veh);
-            test_veh_get_by_id(1);
-            test_veh_get_by_id(0);
-        },
-        1000,
-    );
+    //         // drop(veh);
+    //         // alt::Vehicle::destroy_vehicle(vehicle);
+    //         // veh.destroy().unwrap_or_else(|e| panic!("error: {e}"));
+    //         // dbg!(veh.get_secondary_color().unwrap());
+    //         veh.destroy();
+    //         drop(veh);
+    //         test_veh_get_by_id(1);
+    //         test_veh_get_by_id(0);
+    //     },
+    //     1000,
+    // );
 
     // fn recurse_set_timeout() {
 

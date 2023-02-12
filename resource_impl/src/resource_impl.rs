@@ -1,8 +1,8 @@
 use crate::{
     base_object::{self, BaseObjectContainer, RawBaseObjectPointer},
-    entity::{self, Entity},
+    entity::{self, Entity, EntityWrapper},
     events::{self, Event, PublicEventType},
-    timers, vehicle,
+    player, timers, vehicle,
 };
 use once_cell::sync::OnceCell;
 use std::sync::Mutex;
@@ -15,6 +15,8 @@ static EVENT_MANAGER_INSTANCE: OnceCell<Mutex<events::EventManager>> = OnceCell:
 
 macro_rules! init_static {
     ($static_var: path, $manager: ty) => {{
+        // TEST
+        println!("[init_static!] {}", stringify!($static_var));
         $static_var.set(Mutex::new(<$manager>::new())).unwrap();
         $static_var.get().unwrap()
     }};
@@ -27,7 +29,6 @@ pub struct ResourceImpl {
     timers: &'static Mutex<timers::TimerManager>,
     timer_schedule_state: &'static Mutex<timers::ScheduleState>,
     events: &'static Mutex<events::EventManager>,
-    vehicles: &'static Mutex<vehicle::VehicleManager>,
     base_object_creation: &'static Mutex<base_object::PendingBaseObjectCreation>,
     base_object_deletion: &'static Mutex<base_object::PendingBaseObjectDeletion>,
     base_objects: &'static Mutex<base_object::BaseObjectManager>,
@@ -44,7 +45,6 @@ impl ResourceImpl {
                 timers::ScheduleState
             ),
             events: init_static!(EVENT_MANAGER_INSTANCE, events::EventManager),
-            vehicles: init_static!(vehicle::VEHICLE_MANAGER_INSTANCE, vehicle::VehicleManager),
             base_object_creation: init_static!(
                 base_object::BASE_OBJECT_CREATION_INSTANCE,
                 base_object::PendingBaseObjectCreation
@@ -71,7 +71,7 @@ impl ResourceImpl {
         self.events
             .try_lock()
             .unwrap()
-            .on_sdk_event(event_type, event);
+            .on_sdk_event(self.base_objects, event_type, event);
     }
 
     pub fn __on_tick(&self) {
@@ -92,17 +92,27 @@ impl ResourceImpl {
             return;
         }
 
+        let add_entity_to_pool = |entity: EntityWrapper| {
+            self.entities.try_lock().unwrap().on_create(
+                match &entity {
+                    EntityWrapper::Player(p) => p.try_lock().unwrap().id().unwrap(),
+                    EntityWrapper::Vehicle(p) => p.try_lock().unwrap().id().unwrap(),
+                },
+                entity,
+            )
+        };
+
         use altv_sdk::BaseObjectType::*;
         let base_object: BaseObjectContainer = match base_object_type {
             VEHICLE => {
-                let vehicle = vehicle::VehicleManager::create_vehicle_container(unsafe {
-                    altv_sdk::ffi::convert_baseobject_to_vehicle(raw_ptr)
-                });
-                self.entities.try_lock().unwrap().on_create(
-                    vehicle.try_lock().unwrap().id().unwrap(),
-                    entity::EntityWrapper::Vehicle(vehicle.clone()),
-                );
+                let vehicle = vehicle::create_vehicle_container(raw_ptr);
+                add_entity_to_pool(EntityWrapper::Vehicle(vehicle.clone()));
                 vehicle
+            }
+            PLAYER => {
+                let player = player::create_player_container(raw_ptr);
+                add_entity_to_pool(EntityWrapper::Player(player.clone()));
+                player
             }
             _ => todo!(),
         };

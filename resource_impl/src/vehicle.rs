@@ -1,16 +1,13 @@
 use crate::{
     base_object::{
-        BaseObject, BaseObjectPointer, PendingBaseObjectCreation, PendingBaseObjectDeletion,
-        BASE_OBJECT_CREATION_INSTANCE, BASE_OBJECT_DELETION_INSTANCE, BASE_OBJECT_MANAGER_INSTANCE,
+        BaseObject, BaseObjectPointer, PendingBaseObjectCreation, RawBaseObjectPointer,
+        BASE_OBJECT_CREATION_INSTANCE, BASE_OBJECT_MANAGER_INSTANCE,
     },
     entity::{Entity, EntityId, EntityWrapper, ENTITY_MANAGER_INSTANCE},
     vector::Vector3,
 };
 use altv_sdk::ffi as sdk;
-use once_cell::sync::OnceCell;
 use std::sync::{Arc, Mutex, MutexGuard};
-
-type RawVehiclePointer = *mut sdk::IVehicle;
 
 #[derive(Debug)]
 pub struct Vehicle {
@@ -20,21 +17,16 @@ pub struct Vehicle {
 
 impl Vehicle {
     pub fn new(model: u32, pos: Vector3, rot: Vector3) -> Option<VehicleContainer> {
-        VEHICLE_MANAGER_INSTANCE
-            .get()
-            .unwrap()
-            .try_lock()
-            .unwrap()
-            .create_vehicle(
-                BASE_OBJECT_CREATION_INSTANCE
-                    .get()
-                    .unwrap()
-                    .try_lock()
-                    .unwrap(),
-                model,
-                pos,
-                rot,
-            )
+        create_vehicle(
+            BASE_OBJECT_CREATION_INSTANCE
+                .get()
+                .unwrap()
+                .try_lock()
+                .unwrap(),
+            model,
+            pos,
+            rot,
+        )
     }
 
     pub fn get_by_id(id: EntityId) -> Option<VehicleContainer> {
@@ -71,6 +63,10 @@ impl Vehicle {
 }
 
 impl BaseObject for Vehicle {
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
+
     fn ptr(&self) -> &BaseObjectPointer {
         &self.ptr
     }
@@ -87,61 +83,45 @@ impl Entity for Vehicle {}
 
 pub type VehicleContainer = Arc<Mutex<Vehicle>>;
 
-pub(crate) static VEHICLE_MANAGER_INSTANCE: OnceCell<Mutex<VehicleManager>> = OnceCell::new();
+pub fn create_vehicle(
+    _: MutexGuard<PendingBaseObjectCreation>,
+    model: u32,
+    pos: Vector3,
+    rot: Vector3,
+) -> Option<VehicleContainer> {
+    let raw_ptr =
+        unsafe { sdk::create_vehicle(model, pos.x(), pos.y(), pos.z(), rot.x(), rot.y(), rot.z()) };
 
-#[derive(Debug)]
-pub struct VehicleManager {}
-
-impl VehicleManager {
-    pub fn new() -> Self {
-        VehicleManager {}
+    if raw_ptr.is_null() {
+        return None;
     }
 
-    pub fn create_vehicle(
-        &mut self,
-        _: MutexGuard<PendingBaseObjectCreation>,
-        model: u32,
-        pos: Vector3,
-        rot: Vector3,
-    ) -> Option<VehicleContainer> {
-        let raw_ptr = unsafe {
-            sdk::create_vehicle(model, pos.x(), pos.y(), pos.z(), rot.x(), rot.y(), rot.z())
-        };
+    let base_object_raw_ptr = unsafe { sdk::convert_vehicle_to_baseobject(raw_ptr) };
+    let vehicle: VehicleContainer = create_vehicle_container(base_object_raw_ptr);
 
-        if raw_ptr.is_null() {
-            return None;
-        }
+    BASE_OBJECT_MANAGER_INSTANCE
+        .get()
+        .unwrap()
+        .try_lock()
+        .unwrap()
+        .on_create(base_object_raw_ptr, vehicle.clone());
 
-        let vehicle: VehicleContainer = VehicleManager::create_vehicle_container(raw_ptr);
+    ENTITY_MANAGER_INSTANCE
+        .get()
+        .unwrap()
+        .try_lock()
+        .unwrap()
+        .on_create(
+            vehicle.try_lock().unwrap().id().unwrap(),
+            EntityWrapper::Vehicle(vehicle.clone()),
+        );
 
-        BASE_OBJECT_MANAGER_INSTANCE
-            .get()
-            .unwrap()
-            .try_lock()
-            .unwrap()
-            .on_create(
-                unsafe { sdk::convert_vehicle_to_baseobject(raw_ptr) },
-                vehicle.clone(),
-            );
+    Some(vehicle)
+}
 
-        ENTITY_MANAGER_INSTANCE
-            .get()
-            .unwrap()
-            .try_lock()
-            .unwrap()
-            .on_create(
-                vehicle.try_lock().unwrap().id().unwrap(),
-                EntityWrapper::Vehicle(vehicle.clone()),
-            );
-
-        Some(vehicle)
-    }
-
-    #[allow(clippy::not_unsafe_ptr_arg_deref)]
-    pub fn create_vehicle_container(raw_ptr: RawVehiclePointer) -> VehicleContainer {
-        Arc::new(Mutex::new(Vehicle {
-            ptr: BaseObjectPointer::new(unsafe { sdk::convert_vehicle_to_baseobject(raw_ptr) }),
-            base_type: altv_sdk::BaseObjectType::VEHICLE,
-        }))
-    }
+pub fn create_vehicle_container(raw_ptr: RawBaseObjectPointer) -> VehicleContainer {
+    Arc::new(Mutex::new(Vehicle {
+        ptr: BaseObjectPointer::new(raw_ptr),
+        base_type: altv_sdk::BaseObjectType::VEHICLE,
+    }))
 }

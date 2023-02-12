@@ -1,16 +1,16 @@
 use std::{
+    any::Any,
     collections::HashMap,
     fmt::Debug,
+    ops::Deref,
+    rc::Rc,
     sync::{Arc, Mutex},
 };
 
 use altv_sdk::ffi as sdk;
 use once_cell::sync::OnceCell;
 
-pub type RawBaseObjectPointer = *mut sdk::IBaseObject;
-
-#[derive(Debug)]
-pub struct BaseObjectPointer(Option<RawBaseObjectPointer>);
+pub(crate) type RawBaseObjectPointer = *mut sdk::IBaseObject;
 
 macro_rules! convert_ptr_to {
     ($self: ident, $sdk_converter: path) => {
@@ -21,6 +21,9 @@ macro_rules! convert_ptr_to {
         }
     };
 }
+
+#[derive(Debug)]
+pub struct BaseObjectPointer(Option<RawBaseObjectPointer>);
 
 impl BaseObjectPointer {
     pub fn new(raw_ptr: RawBaseObjectPointer) -> Self {
@@ -56,14 +59,13 @@ impl BaseObjectPointer {
 unsafe impl Send for BaseObjectPointer {}
 unsafe impl Sync for BaseObjectPointer {}
 
+// TEST
+// pub(crate) trait BaseObject {
 pub trait BaseObject {
+    fn as_any(&self) -> &dyn Any;
     fn ptr(&self) -> &BaseObjectPointer;
     fn ptr_mut(&mut self) -> &mut BaseObjectPointer;
     fn base_type(&self) -> altv_sdk::BaseObjectType;
-
-    fn valid(&self) -> bool {
-        self.ptr().get().is_ok()
-    }
 
     fn destroy_base_object(&mut self) -> Result<(), String> {
         if let Ok(raw_ptr) = self.ptr().get() {
@@ -90,6 +92,18 @@ pub trait BaseObject {
     }
 }
 
+#[derive(Debug)]
+struct Blocker<T: ?Sized>(T);
+
+impl<T> Deref for Blocker<T> {
+    type Target = T;
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+// TEST
+// pub(crate) type BaseObjectContainer = Arc<Mutex<dyn BaseObject + Send + Sync>>;
 pub(crate) type BaseObjectContainer = Arc<Mutex<dyn BaseObject + Send + Sync>>;
 
 pub(crate) static BASE_OBJECT_MANAGER_INSTANCE: OnceCell<Mutex<BaseObjectManager>> =
@@ -102,9 +116,10 @@ impl Debug for dyn BaseObject + Send + Sync {
 }
 
 #[derive(Debug)]
-pub(crate) struct BaseObjectManager {
+pub struct BaseObjectManager {
     // usize is RawBaseObjectPointer
     base_objects: HashMap<usize, BaseObjectContainer>,
+    // concrete: HashMap<usize, BaseObjectContainer>,
 }
 
 impl BaseObjectManager {
@@ -158,7 +173,7 @@ impl PendingBaseObjectCreation {
 }
 
 #[derive(Debug)]
-pub struct PendingBaseObjectDeletion;
+pub(crate) struct PendingBaseObjectDeletion;
 
 impl PendingBaseObjectDeletion {
     pub fn new() -> Self {

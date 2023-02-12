@@ -1,6 +1,14 @@
-use std::collections::{HashMap, HashSet};
+use std::{
+    any::Any,
+    collections::{HashMap, HashSet},
+    sync::{Arc, Mutex},
+};
 
-use crate::{player::Player, sdk_events::SDKEventManager};
+use crate::{
+    base_object::{self, BaseObjectContainer, BaseObjectManager},
+    player::{Player, PlayerContainer},
+    sdk_events::SDKEventManager,
+};
 
 pub use altv_sdk::EventType as SDKEventType;
 
@@ -33,7 +41,7 @@ pub struct ServerStartedController {}
 
 #[derive(Debug)]
 pub struct PlayerConnectController {
-    pub player: Player,
+    pub player: BaseObjectContainer,
 }
 
 #[derive(Debug)]
@@ -83,7 +91,12 @@ impl EventManager {
     }
 
     #[allow(clippy::not_unsafe_ptr_arg_deref)]
-    pub fn on_sdk_event(&mut self, event_type: SDKEventType, event: *const altv_sdk::ffi::CEvent) {
+    pub fn on_sdk_event(
+        &mut self,
+        base_objects: &'static Mutex<BaseObjectManager>,
+        event_type: SDKEventType,
+        event: *const altv_sdk::ffi::CEvent,
+    ) {
         let handlers = self.public_handlers.get_mut(&event_type.into());
 
         if let Some(handlers) = handlers {
@@ -91,9 +104,29 @@ impl EventManager {
                 use Event::*;
                 match h {
                     ServerStarted(callback) => callback(ServerStartedController {}),
-                    PlayerConnect(callback) => {
-                        callback(PlayerConnectController { player: todo!() })
-                    }
+                    PlayerConnect(callback) => callback(PlayerConnectController {
+                        player: {
+                            let raw_ptr = {
+                                let player_raw_ptr =
+                                    unsafe { altv_sdk::ffi::get_event_player_target(event) };
+
+                                if player_raw_ptr.is_null() {
+                                    panic!("PlayerConnect get_event_player_target returned null player ptr");
+                                }
+
+                                unsafe {
+                                    altv_sdk::ffi::convert_player_to_baseobject(player_raw_ptr)
+                                }
+                            };
+
+                            base_objects
+                                .try_lock()
+                                .unwrap()
+                                .get_by_raw_ptr(raw_ptr)
+                                .unwrap()
+                                .clone()
+                        },
+                    }),
                     PlayerDisconnect(callback) => callback(PlayerDisconnectController {
                         player: todo!(),
                         reason: unsafe { altv_sdk::ffi::get_event_reason(event) }.to_string(),

@@ -17,16 +17,15 @@ pub use ffi::ICore as __alt_ICore;
 #[doc(hidden)]
 pub use resource_impl::resource_impl::ResourceImpl as __ResourceImpl;
 
-pub use resource_impl::base_object::BaseObject;
 pub use resource_impl::entity::Entity;
 pub use resource_impl::entity::EntityId;
+pub use resource_impl::player::Player;
 pub use resource_impl::vector::Vector3;
 pub use resource_impl::vehicle::Vehicle;
 
 pub type ModelHash = u32;
 
 pub mod events;
-pub mod player;
 
 // credits to altv-rs creator
 // https://github.com/justdimaa/altv-rs/blob/f5cf1733493466634793804dfb1ca6d387fbe687/altv-sdk/src/lib.rs#L24
