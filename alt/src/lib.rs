@@ -1,4 +1,9 @@
+use std::cell::RefCell;
+use std::thread::LocalKey;
+
 use altv_sdk::ffi;
+
+pub mod events;
 
 pub use resource_impl::log;
 pub use resource_impl::log_error;
@@ -25,8 +30,6 @@ pub use resource_impl::vehicle::Vehicle;
 
 pub type ModelHash = u32;
 
-pub mod events;
-
 // credits to altv-rs creator
 // https://github.com/justdimaa/altv-rs/blob/f5cf1733493466634793804dfb1ca6d387fbe687/altv-sdk/src/lib.rs#L24
 pub fn hash(str: &str) -> ModelHash {
@@ -45,16 +48,16 @@ pub fn hash(str: &str) -> ModelHash {
     (num + (num << 15)).0
 }
 
-// pub fn set_interval(callback: impl FnMut() + 'static + Send + Sync, millis: u64) {
-//     resource_impl::resource_impl::ResourceImpl::timers_create(Box::new(callback), millis, once);
-// }
+pub fn set_interval(callback: impl FnMut() + 'static + Send + Sync, millis: u64) {
+    resource_impl::resource_impl::timers_create(Box::new(callback), millis, false);
+}
 
 pub fn set_timeout(callback: impl FnMut() + 'static + Send + Sync, millis: u64) {
     resource_impl::resource_impl::timers_create(Box::new(callback), millis, true);
 }
 
 #[doc(hidden)]
-pub fn __init(full_main_path: String) -> __ResourceImpl {
+pub fn __init(full_main_path: String) -> &'static LocalKey<RefCell<__ResourceImpl>> {
     log!("alt __init");
     __ResourceImpl::init(full_main_path)
 }

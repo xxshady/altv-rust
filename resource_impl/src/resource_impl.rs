@@ -1,66 +1,151 @@
 use crate::{
-    base_object::{self, BaseObjectContainer, RawBaseObjectPointer},
-    entity::{self, Entity, EntityWrapper},
+    base_object,
+    entity::{self, Entity},
     events::{self, Event, PublicEventType},
     player, timers, vehicle,
 };
-use once_cell::sync::OnceCell;
-use std::sync::Mutex;
+use std::{
+    cell::{Ref, RefCell, RefMut},
+    rc::Rc,
+    thread::LocalKey,
+};
 
-// these statics should not be used directly in altv_module,
-// but via ResourceImpl instance
-static TIMER_MANAGER_INSTANCE: OnceCell<Mutex<timers::TimerManager>> = OnceCell::new();
-static TIMER_SCHEDULE_STATE_INSTANCE: OnceCell<Mutex<timers::ScheduleState>> = OnceCell::new();
-static EVENT_MANAGER_INSTANCE: OnceCell<Mutex<events::EventManager>> = OnceCell::new();
+pub type ResourceImplContainer = &'static LocalKey<RefCell<ResourceImpl>>;
 
-macro_rules! init_static {
-    ($static_var: path, $manager: ty) => {{
-        // TEST
-        println!("[init_static!] {}", stringify!($static_var));
-        $static_var.set(Mutex::new(<$manager>::new())).unwrap();
-        $static_var.get().unwrap()
-    }};
+thread_local! {
+    pub static RESOURCE_IMPL_INSTANCE: RefCell<ResourceImpl> = RefCell::new(ResourceImpl::new());
 }
 
 // intended for altv_module
 #[derive(Debug)]
 pub struct ResourceImpl {
     pub full_main_path: String,
-    timers: &'static Mutex<timers::TimerManager>,
-    timer_schedule_state: &'static Mutex<timers::ScheduleState>,
-    events: &'static Mutex<events::EventManager>,
-    base_object_creation: &'static Mutex<base_object::PendingBaseObjectCreation>,
-    base_object_deletion: &'static Mutex<base_object::PendingBaseObjectDeletion>,
-    base_objects: &'static Mutex<base_object::BaseObjectManager>,
-    entities: &'static Mutex<entity::EntityManager>,
+    timers: RefCell<timers::TimerManager>,
+    timer_schedule_state: RefCell<timers::ScheduleState>,
+    base_object_creation: RefCell<base_object::PendingBaseObjectCreation>,
+    base_object_deletion: RefCell<base_object::PendingBaseObjectDeletion>,
+    base_objects: RefCell<base_object::BaseObjectManager>,
+    entities: RefCell<entity::EntityManager>,
+    players: RefCell<player::PlayerManager>,
+    events: RefCell<events::EventManager>,
 }
 
 impl ResourceImpl {
-    pub fn init(full_main_path: String) -> ResourceImpl {
-        let instance = ResourceImpl {
-            full_main_path,
-            timers: init_static!(TIMER_MANAGER_INSTANCE, timers::TimerManager),
-            timer_schedule_state: init_static!(
-                TIMER_SCHEDULE_STATE_INSTANCE,
-                timers::ScheduleState
-            ),
-            events: init_static!(EVENT_MANAGER_INSTANCE, events::EventManager),
-            base_object_creation: init_static!(
-                base_object::BASE_OBJECT_CREATION_INSTANCE,
-                base_object::PendingBaseObjectCreation
-            ),
-            base_object_deletion: init_static!(
-                base_object::BASE_OBJECT_DELETION_INSTANCE,
-                base_object::PendingBaseObjectDeletion
-            ),
-            base_objects: init_static!(
-                base_object::BASE_OBJECT_MANAGER_INSTANCE,
-                base_object::BaseObjectManager
-            ),
-            entities: init_static!(entity::ENTITY_MANAGER_INSTANCE, entity::EntityManager),
+    pub(crate) fn new() -> Self {
+        Self {
+            full_main_path: "".into(),
+            timer_schedule_state: RefCell::new(timers::ScheduleState::new()),
+            timers: RefCell::new(timers::TimerManager::new()),
+            base_object_creation: RefCell::new(base_object::PendingBaseObjectCreation::new()),
+            base_object_deletion: RefCell::new(base_object::PendingBaseObjectDeletion::new()),
+            base_objects: RefCell::new(base_object::BaseObjectManager::new()),
+            entities: RefCell::new(entity::EntityManager::new()),
+            players: RefCell::new(player::PlayerManager::new()),
+            events: RefCell::new(events::EventManager::new()),
+        }
+    }
+
+    pub fn init(full_main_path: String) -> ResourceImplContainer {
+        RESOURCE_IMPL_INSTANCE.with(|instance| {
+            instance.borrow_mut().full_main_path = full_main_path;
+        });
+
+        &RESOURCE_IMPL_INSTANCE
+    }
+
+    pub fn __on_tick(&self) {
+        self.timers
+            .borrow_mut()
+            .process_timers(self.timer_schedule_state.borrow_mut());
+    }
+
+    #[allow(clippy::not_unsafe_ptr_arg_deref)]
+    pub fn __on_base_object_create(
+        &self,
+        raw_ptr: base_object::RawBaseObjectPointer,
+        base_object_type: altv_sdk::BaseObjectType,
+    ) {
+        if self.base_object_creation.try_borrow_mut().is_err() {
+            crate::log_warn!("__on_base_object_create pending creation, skip");
+            return;
+        }
+
+        let add_entity_to_pool = |entity: entity::EntityWrapper| {
+            self.entities.borrow_mut().on_create(
+                match &entity {
+                    entity::EntityWrapper::Player(p) => p.borrow().id().unwrap(),
+                    entity::EntityWrapper::Vehicle(p) => p.borrow().id().unwrap(),
+                },
+                entity,
+            )
         };
 
-        instance
+        use altv_sdk::BaseObjectType::*;
+        let base_object: base_object::BaseObjectContainer = match base_object_type {
+            VEHICLE => {
+                let vehicle = vehicle::create_vehicle_container(raw_ptr);
+                add_entity_to_pool(entity::EntityWrapper::Vehicle(Rc::clone(&vehicle)));
+                vehicle
+            }
+            PLAYER => {
+                let player = player::create_player_container(raw_ptr);
+                add_entity_to_pool(entity::EntityWrapper::Player(Rc::clone(&player)));
+                self.players.borrow_mut().add_player(Rc::clone(&player));
+                player
+            }
+            _ => todo!(),
+        };
+
+        self.base_objects
+            .borrow_mut()
+            .on_create(raw_ptr, base_object);
+    }
+
+    pub fn __on_base_object_destroy(&self, raw_ptr: base_object::RawBaseObjectPointer) {
+        if self.base_object_deletion.try_borrow_mut().is_err() {
+            crate::log_warn!("__on_base_object_destroy pending deletion, skip");
+            return;
+        }
+
+        let mut base_objects = self.base_objects.borrow_mut();
+        let base_object = base_objects.get_by_raw_ptr(raw_ptr);
+        if let Some(base_object) = base_object {
+            use altv_sdk::BaseObjectType::*;
+            let base_object_borrow = base_object.borrow();
+            match base_object_borrow.base_type() {
+                VEHICLE | PLAYER => {
+                    self.entities
+                        .borrow_mut()
+                        .on_destroy(base_object_borrow.ptr().to_entity().unwrap());
+                    // TEST
+                    // TODO: check if baseobject is player and only then remove it from player pool
+                    self.players
+                        .borrow_mut()
+                        .remove_player(base_object_borrow.ptr().get().unwrap());
+                }
+                _ => todo!(),
+            };
+            drop(base_object_borrow);
+            base_objects.on_destroy(Rc::clone(&base_object));
+        } else {
+            crate::log_error!("__on_base_object_destroy unknown base object: {raw_ptr:?}");
+        }
+    }
+
+    pub(crate) fn borrow_mut_base_object_deletion(
+        &self,
+    ) -> RefMut<base_object::PendingBaseObjectDeletion> {
+        self.base_object_deletion.borrow_mut()
+    }
+
+    pub(crate) fn borrow_mut_base_object_creation(
+        &self,
+    ) -> RefMut<base_object::PendingBaseObjectCreation> {
+        self.base_object_creation.borrow_mut()
+    }
+
+    pub(crate) fn borrow_mut_base_objects(&self) -> RefMut<base_object::BaseObjectManager> {
+        self.base_objects.borrow_mut()
     }
 
     pub fn __on_sdk_event(
@@ -68,126 +153,24 @@ impl ResourceImpl {
         event_type: altv_sdk::EventType,
         event: *const altv_sdk::ffi::CEvent,
     ) {
-        self.events
-            .try_lock()
-            .unwrap()
-            .on_sdk_event(self.base_objects, event_type, event);
+        self.events.borrow_mut().on_sdk_event(
+            self.base_objects.borrow(),
+            self.players.borrow(),
+            event_type,
+            event,
+        );
     }
-
-    pub fn __on_tick(&self) {
-        self.timers
-            .try_lock()
-            .unwrap()
-            .process_timers(self.timer_schedule_state.try_lock().unwrap());
-    }
-
-    #[allow(clippy::not_unsafe_ptr_arg_deref)]
-    pub fn __on_base_object_create(
-        &self,
-        raw_ptr: RawBaseObjectPointer,
-        base_object_type: altv_sdk::BaseObjectType,
-    ) {
-        if self.base_object_creation.try_lock().is_err() {
-            crate::log_warn!("__on_base_object_create pending creation, skip");
-            return;
-        }
-
-        let add_entity_to_pool = |entity: EntityWrapper| {
-            self.entities.try_lock().unwrap().on_create(
-                match &entity {
-                    EntityWrapper::Player(p) => p.try_lock().unwrap().id().unwrap(),
-                    EntityWrapper::Vehicle(p) => p.try_lock().unwrap().id().unwrap(),
-                },
-                entity,
-            )
-        };
-
-        use altv_sdk::BaseObjectType::*;
-        let base_object: BaseObjectContainer = match base_object_type {
-            VEHICLE => {
-                let vehicle = vehicle::create_vehicle_container(raw_ptr);
-                add_entity_to_pool(EntityWrapper::Vehicle(vehicle.clone()));
-                vehicle
-            }
-            PLAYER => {
-                let player = player::create_player_container(raw_ptr);
-                add_entity_to_pool(EntityWrapper::Player(player.clone()));
-                player
-            }
-            _ => todo!(),
-        };
-
-        self.base_objects
-            .try_lock()
-            .unwrap()
-            .on_create(raw_ptr, base_object);
-    }
-
-    pub fn __on_base_object_destroy(&self, raw_ptr: RawBaseObjectPointer) {
-        if self.base_object_deletion.try_lock().is_err() {
-            crate::log_warn!("__on_base_object_destroy pending deletion, skip");
-            return;
-        }
-
-        let mut base_objects = self.base_objects.try_lock().unwrap();
-        let base_object = base_objects.get_by_raw_ptr(raw_ptr);
-        if let Some(base_object) = base_object {
-            use altv_sdk::BaseObjectType::*;
-            let base_object_guard = base_object.try_lock().unwrap();
-            match base_object_guard.base_type() {
-                VEHICLE => {
-                    self.entities
-                        .try_lock()
-                        .unwrap()
-                        .on_destroy(base_object_guard.ptr().to_entity().unwrap());
-                }
-                _ => todo!(),
-            };
-            drop(base_object_guard);
-            base_objects.on_destroy(base_object.clone());
-        } else {
-            crate::log_error!("__on_base_object_destroy unknown base object: {raw_ptr:?}");
-        }
-    }
-
-    // pub fn __on_vehicle_create(&self, vehicle: *mut altv_sdk::ffi::IVehicle) {
-    //     if self.vehicle_creation.try_lock().is_err() {
-    //         crate::log_warn!("__on_vehicle_create pending creation, skip");
-    //         return;
-    //     }
-    //     self.vehicles.try_lock().unwrap().on_vehicle_create(vehicle);
-    // }
-
-    // pub fn __on_vehicle_destroy(&self, vehicle: *mut altv_sdk::ffi::IVehicle) {
-    //     if self.vehicle_deletion.try_lock().is_err() {
-    //         crate::log_warn!("__on_vehicle_destroy pending deletion, skip");
-    //         return;
-    //     }
-    //     self.vehicles
-    //         .try_lock()
-    //         .unwrap()
-    //         .on_vehicle_destroy(vehicle);
-    // }
 }
 
 pub fn timers_create(callback: Box<timers::TimerCallback>, millis: u64, once: bool) {
-    let state = TIMER_SCHEDULE_STATE_INSTANCE
-        .get()
-        .unwrap()
-        .try_lock()
-        .unwrap();
-
-    timers::create(state, callback, millis, once);
-}
-
-pub fn create_timer(callback: Box<timers::TimerCallback>, millis: u64, once: bool) {
-    let state = TIMER_SCHEDULE_STATE_INSTANCE
-        .get()
-        .unwrap()
-        .try_lock()
-        .unwrap();
-
-    timers::create(state, callback, millis, once);
+    RESOURCE_IMPL_INSTANCE.with(|instance| {
+        timers::create(
+            instance.borrow().timer_schedule_state.borrow_mut(),
+            callback,
+            millis,
+            once,
+        )
+    });
 }
 
 pub fn add_event_handler(
@@ -195,10 +178,11 @@ pub fn add_event_handler(
     sdk_type: altv_sdk::EventType,
     event: Event,
 ) {
-    EVENT_MANAGER_INSTANCE
-        .get()
-        .unwrap()
-        .try_lock()
-        .unwrap()
-        .add_handler(public_type, sdk_type, event);
+    RESOURCE_IMPL_INSTANCE.with(|instance| {
+        instance
+            .borrow()
+            .events
+            .borrow_mut()
+            .add_handler(public_type, sdk_type, event);
+    });
 }

@@ -18,46 +18,20 @@ pub fn main() {
     //     alt::log!("example resource ServerStarted controller: {controller:?} i: {i:?}");
     // });
 
-    alt::events::on_player_connect(|controller| {
-        // at least downcasting works.. but i need to downcast it in the module somehow
-        let player = controller.player.try_lock().unwrap();
-        let player = player.as_any().downcast_ref::<alt::Player>().unwrap();
-        alt::log!(
-            "example resource on_player_connect player name: {:?}",
-            player.name().unwrap()
-        );
+    alt::events::on_server_started(|_| {
+        alt::log!("example resource on_server_started!!!!!!");
+    });
+
+    alt::events::on_player_connect(|data| {
+        alt::log!("example resource on_player_connect!!!!!!");
+        dbg!(data.player.borrow().name());
     });
 
     // alt::set_timeout(|| println!("its timeout"), 300);
 
-    // fn on_player_connect(player_ptr: usize) {
-    //     alt::log_warn!("player connect player_ptr: {:?}", player_ptr);
-    // }
-
-    // alt::events::on(alt::events::__test_SDKEvent::ServerStarted(|| {
-    //     alt::log!("on_server_started test");
-    // }));
-
-    // fn on_server_started2() {
-    //     alt::log_warn!("on_server_started 2");
-    // }
-
-    // alt::events::on(alt::__resource_api::events::SDKEvent::PlayerConnect(
-    //     on_player_connect,
-    // ));
-
-    // alt::events::on(alt::__resource_api::events::SDKEvent::ServerStarted(
-    //     on_server_started2,
-    // ));
-
-    // fn on_player_disconnect(player: usize, reason: String) {
-    //     alt::log!("on_player_disconnect {:?} {:?}", player, reason);
-    // }
-
-    // alt::events::on(alt::__resource_api::events::SDKEvent::PlayerDisconnect(
-    //     on_player_disconnect,
-    // ));
     // let vehicle = alt::Vehicle::new(alt::hash("sultan"), 0.into(), 0.into()).unwrap();
+    // dbg!(&vehicle);
+    // vehicle.borrow_mut().destroy().unwrap();
     // let mut veh = vehicle.try_lock().unwrap();
 
     // dbg!(veh.id().unwrap());
@@ -98,15 +72,13 @@ pub fn main() {
     // );
 
     // fn recurse_set_timeout() {
-
-    // alt::set_timeout(
-    //     || {
-    //         alt::log!("set_timeout ~gl~recursion");
-    //         recurse_set_timeout();
-    //     },
-    //     500,
-    // )
+    //     alt::set_timeout(
+    //         || {
+    //             alt::log!("set_timeout ~gl~recursion");
+    //             recurse_set_timeout();
+    //         },
+    //         500,
+    //     )
     // }
-
     // recurse_set_timeout();
 }

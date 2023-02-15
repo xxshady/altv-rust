@@ -3,9 +3,10 @@ mod resource_manager;
 use altv_sdk::ffi as sdk;
 use cxx::let_cxx_string;
 use libloading::Library;
-use resource_impl::resource_impl::ResourceImpl;
-use resource_manager::ResourceManager;
+use resource_impl::resource_impl::ResourceImplContainer;
 use std::path::PathBuf;
+
+use crate::resource_manager::RESOURCE_MANAGER_INSTANCE;
 
 mod helpers;
 
@@ -25,15 +26,19 @@ extern "C" fn runtime_on_tick() {
 
     // let resources = ResourceManager::instance().resources_iter();
 
-    for (_, resource) in ResourceManager::instance().resources_iter_mut() {
-        resource.__on_tick();
-    }
+    RESOURCE_MANAGER_INSTANCE.with(|v| {
+        for (_, resource) in v.borrow().resources_iter() {
+            resource.with(|v| {
+                v.borrow().__on_tick();
+            })
+        }
+    });
 }
 
 type ResourceMainFn = unsafe extern "C" fn(
     core: *mut sdk::ICore,
     full_main_path: String,
-    __on_resource_impl_create: fn(resource: ResourceImpl),
+    __on_resource_impl_create: fn(resource: ResourceImplContainer),
 );
 
 #[allow(improper_ctypes_definitions)]
@@ -51,10 +56,16 @@ extern "C" fn resource_start(full_main_path: &str) {
     Box::leak(Box::new(lib));
 }
 
-fn __on_resource_impl_create(resource: ResourceImpl) {
+fn __on_resource_impl_create(resource: ResourceImplContainer) {
     resource_impl::log_warn!("on_resource_impl_create");
 
-    ResourceManager::instance_mut().add(resource.full_main_path.clone(), resource);
+    RESOURCE_MANAGER_INSTANCE.with(|manager| {
+        resource.with(|resource_cell| {
+            manager
+                .borrow_mut()
+                .add(resource_cell.borrow().full_main_path.clone(), resource);
+        })
+    });
 }
 
 #[allow(improper_ctypes_definitions)]
@@ -90,12 +101,18 @@ extern "C" fn resource_on_event(full_main_path: &str, event: *const sdk::CEvent)
         return;
     }
 
-    let manager = ResourceManager::instance();
-    let resource = manager.get_by_path(full_main_path).unwrap_or_else(|| {
-        panic!("[resource_on_event] failed to get resource by path: {full_main_path}");
+    RESOURCE_MANAGER_INSTANCE.with(|manager| {
+        let manager = manager.borrow();
+        manager
+            .get_by_path(full_main_path)
+            .unwrap_or_else(|| {
+                panic!("[resource_on_event] failed to get resource by path: {full_main_path}");
+            })
+            .with(|res| {
+                // TODO: on_sdk_event
+                res.borrow().__on_sdk_event(event_type, event);
+            });
     });
-
-    resource.__on_sdk_event(event_type, event);
 }
 
 #[allow(improper_ctypes_definitions)]
@@ -111,21 +128,18 @@ extern "C" fn resource_on_create_base_object(
 
     resource_impl::log_warn!("resource_on_create_base_object type: {base_object_type:?}",);
 
-    let manager = ResourceManager::instance();
-    let resource = manager.get_by_path(full_main_path).unwrap_or_else(|| {
-        panic!("[resource_on_create_base_object] failed to get resource by path: {full_main_path}");
+    RESOURCE_MANAGER_INSTANCE.with(|manager| {
+        let manager = manager.borrow();
+        manager
+            .get_by_path(full_main_path)
+            .unwrap_or_else(|| {
+                panic!("[resource_on_event] failed to get resource by path: {full_main_path}");
+            })
+            .with(|res| {
+                res.borrow()
+                    .__on_base_object_create(base_object, base_object_type)
+            });
     });
-
-    resource.__on_base_object_create(base_object, base_object_type);
-
-    // use altv_sdk::BaseObjectType::*;
-    // match base_object_type {
-    //     VEHICLE => {
-    //         resource
-    //             .__on_vehicle_create(unsafe { sdk::convert_baseobject_to_vehicle(base_object) });
-    //     }
-    //     _ => panic!("unknown baseobject create type: {base_object_type:?}"),
-    // }
 }
 
 #[allow(improper_ctypes_definitions)]
@@ -144,21 +158,15 @@ extern "C" fn resource_on_remove_base_object(
         base_object_type
     );
 
-    let manager = ResourceManager::instance();
-    let resource = manager.get_by_path(full_main_path).unwrap_or_else(|| {
-        panic!("[resource_on_remove_base_object] failed to get resource by path: {full_main_path}");
+    RESOURCE_MANAGER_INSTANCE.with(|manager| {
+        let manager = manager.borrow();
+        manager
+            .get_by_path(full_main_path)
+            .unwrap_or_else(|| {
+                panic!("[resource_on_event] failed to get resource by path: {full_main_path}");
+            })
+            .with(|res| res.borrow().__on_base_object_destroy(base_object));
     });
-
-    resource.__on_base_object_destroy(base_object);
-
-    // use altv_sdk::BaseObjectType::*;
-    // match base_object_type {
-    //     VEHICLE => {
-    //         resource
-    //             .__on_vehicle_destroy(unsafe { sdk::convert_baseobject_to_vehicle(base_object) });
-    //     }
-    //     _ => panic!("unknown baseobject remove type: {base_object_type:?}"),
-    // }
 }
 
 #[no_mangle]
@@ -188,8 +196,6 @@ pub unsafe extern "C" fn altMain(core: *mut sdk::ICore) -> bool {
         altv_sdk::ResourceOnCreateBaseObjectCallback(resource_on_create_base_object),
         altv_sdk::ResourceOnRemoveBaseObjectCallback(resource_on_remove_base_object),
     );
-
-    ResourceManager::init();
 
     true
 }

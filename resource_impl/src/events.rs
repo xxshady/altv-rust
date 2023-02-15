@@ -1,12 +1,15 @@
 use std::{
     any::Any,
+    cell::{Ref, RefMut},
     collections::{HashMap, HashSet},
+    rc::Rc,
     sync::{Arc, Mutex},
 };
 
 use crate::{
     base_object::{self, BaseObjectContainer, BaseObjectManager},
-    player::{Player, PlayerContainer},
+    player::{self, Player, PlayerContainer, PlayerManager},
+    resource_impl::RESOURCE_IMPL_INSTANCE,
     sdk_events::SDKEventManager,
 };
 
@@ -41,7 +44,7 @@ pub struct ServerStartedController {}
 
 #[derive(Debug)]
 pub struct PlayerConnectController {
-    pub player: BaseObjectContainer,
+    pub player: PlayerContainer,
 }
 
 #[derive(Debug)]
@@ -75,7 +78,7 @@ impl std::fmt::Debug for Event {
 // }
 
 #[derive(Debug)]
-pub struct EventManager {
+pub(crate) struct EventManager {
     public_handlers: HashMap<PublicEventType, Vec<Event>>,
     enabled_sdk_events: HashSet<SDKEventType>,
     sdk_events_manager: SDKEventManager,
@@ -93,10 +96,14 @@ impl EventManager {
     #[allow(clippy::not_unsafe_ptr_arg_deref)]
     pub fn on_sdk_event(
         &mut self,
-        base_objects: &'static Mutex<BaseObjectManager>,
+        base_objects: Ref<BaseObjectManager>,
+        players: Ref<PlayerManager>,
         event_type: SDKEventType,
         event: *const altv_sdk::ffi::CEvent,
     ) {
+        // TEST
+        crate::log_warn!("[events.on_sdk_event] received event: {:?}", event_type);
+
         let handlers = self.public_handlers.get_mut(&event_type.into());
 
         if let Some(handlers) = handlers {
@@ -119,12 +126,13 @@ impl EventManager {
                                 }
                             };
 
-                            base_objects
-                                .try_lock()
+                            let base_object = base_objects.get_by_raw_ptr(raw_ptr).unwrap();
+                            let base_object = base_object.borrow();
+
+                            // TEST
+                            players
+                                .get_by_ptr(base_object.ptr().get().unwrap())
                                 .unwrap()
-                                .get_by_raw_ptr(raw_ptr)
-                                .unwrap()
-                                .clone()
                         },
                     }),
                     PlayerDisconnect(callback) => callback(PlayerDisconnectController {
