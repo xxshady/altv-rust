@@ -1,3 +1,5 @@
+use alt::Entity;
+
 #[alt::res_main]
 #[no_mangle]
 pub fn main() {
@@ -22,15 +24,25 @@ pub fn main() {
         alt::log!("example resource on_server_started!!!!!!");
     });
 
-    alt::events::on_player_connect(|data| {
-        alt::log!("example resource on_player_connect!!!!!!");
-        dbg!(data.player.borrow().name());
-    });
+    // alt::events::on_player_connect(|data| {
+    //     alt::log!("example resource on_player_connect!!!!!!");
+    //     dbg!(data.player.borrow().name());
+    // });
 
     // alt::set_timeout(|| println!("its timeout"), 300);
 
-    // let vehicle = alt::Vehicle::new(alt::hash("sultan"), 0.into(), 0.into()).unwrap();
-    // dbg!(&vehicle);
+    let vehicle = alt::Vehicle::new(alt::hash("sultan"), 0.into(), 0.into()).unwrap();
+    dbg!(&vehicle);
+
+    let id = vehicle.borrow().id().unwrap();
+    dbg!(&id);
+
+    dbg!(alt::Vehicle::get_by_id(id));
+
+    vehicle.borrow_mut().destroy().unwrap();
+
+    dbg!(alt::Vehicle::get_by_id(id));
+
     // vehicle.borrow_mut().destroy().unwrap();
     // let mut veh = vehicle.try_lock().unwrap();
 

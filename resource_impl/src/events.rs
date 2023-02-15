@@ -94,9 +94,8 @@ impl EventManager {
     }
 
     #[allow(clippy::not_unsafe_ptr_arg_deref)]
-    pub fn on_sdk_event(
+    pub fn __on_sdk_event(
         &mut self,
-        base_objects: Ref<BaseObjectManager>,
         players: Ref<PlayerManager>,
         event_type: SDKEventType,
         event: *const altv_sdk::ffi::CEvent,
@@ -126,13 +125,8 @@ impl EventManager {
                                 }
                             };
 
-                            let base_object = base_objects.get_by_raw_ptr(raw_ptr).unwrap();
-                            let base_object = base_object.borrow();
-
                             // TEST
-                            players
-                                .get_by_ptr(base_object.ptr().get().unwrap())
-                                .unwrap()
+                            players.get_by_base_object_ptr(raw_ptr).unwrap()
                         },
                     }),
                     PlayerDisconnect(callback) => callback(PlayerDisconnectController {

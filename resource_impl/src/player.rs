@@ -1,9 +1,10 @@
 use crate::{
     base_object::{BaseObject, BaseObjectPointer, RawBaseObjectPointer},
-    entity::Entity,
+    entity::{Entity, EntityId, EntityWrapper},
+    resource_impl::RESOURCE_IMPL_INSTANCE,
 };
 use altv_sdk::ffi as sdk;
-use std::{cell::RefCell, collections::HashMap, hash::Hash, rc::Rc};
+use std::{cell::RefCell, collections::HashMap, rc::Rc};
 
 pub type PlayerContainer = Rc<RefCell<Player>>;
 
@@ -14,18 +15,19 @@ pub struct Player {
 }
 
 impl Player {
-    // TODO:
-    // pub fn get_by_id(id: EntityId) -> Option<PlayerContainer> {
-    //     let manager = ENTITY_MANAGER_INSTANCE.get().unwrap().try_lock().unwrap();
-    //     let result = manager.get_by_id(id);
+    // TODO: test this
+    pub fn get_by_id(id: EntityId) -> Option<PlayerContainer> {
+        RESOURCE_IMPL_INSTANCE.with(|instance| {
+            let instance = instance.borrow();
+            let entities = instance.borrow_entities();
+            let result = entities.get_by_id(id);
 
-    //     dbg!(result);
-
-    //     match result {
-    //         Some(_wrapper @ EntityWrapper::Player(player)) => Some(Rc::clone(&player)),
-    //         None | Some(_) => None,
-    //     }
-    // }
+            match result {
+                Some(_wrapper @ EntityWrapper::Player(player)) => Some(Rc::clone(player)),
+                None | Some(_) => None,
+            }
+        })
+    }
 
     pub fn name(&self) -> Result<String, String> {
         Ok(unsafe { sdk::get_player_name(self.ptr.to_player()?) }.to_string())
@@ -73,24 +75,17 @@ impl PlayerManager {
     }
 
     pub fn add_player(&mut self, player: PlayerContainer) {
-        // TEST
-        dbg!();
-
         self.players.insert(
             player.borrow().ptr().get().unwrap() as usize,
             Rc::clone(&player),
         );
-
-        dbg!(&self.players);
     }
 
     pub fn remove_player(&mut self, raw_ptr: RawBaseObjectPointer) {
-        dbg!("remove_player");
         self.players.remove(&(raw_ptr as usize));
     }
 
-    pub fn get_by_ptr(&self, raw_ptr: RawBaseObjectPointer) -> Option<PlayerContainer> {
-        dbg!(&self.players);
+    pub fn get_by_base_object_ptr(&self, raw_ptr: RawBaseObjectPointer) -> Option<PlayerContainer> {
         self.players.get(&(raw_ptr as usize)).cloned()
     }
 }

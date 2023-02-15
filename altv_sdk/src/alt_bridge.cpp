@@ -188,7 +188,7 @@ namespace alt_rs
         case CEvent::Type::PLAYER_DISCONNECT:
             return std::make_unique<std::string>(std::string{
                 static_cast<const alt::CPlayerDisconnectEvent*>(event)->GetReason()
-                });
+            });
             break;
 
         default:
@@ -264,7 +264,7 @@ namespace alt_rs
             return 0;
         }
 
-        ICore::Instance().LogInfo("get_entity_id entity type: " + std::to_string(static_cast<uint8_t>(entity->GetType())));
+        // ICore::Instance().LogInfo("get_entity_id entity type: " + std::to_string(static_cast<uint8_t>(entity->GetType())));
         return entity->GetID();
     }
 

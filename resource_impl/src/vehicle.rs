@@ -26,17 +26,18 @@ impl Vehicle {
         })
     }
 
-    // pub fn get_by_id(id: EntityId) -> Option<VehicleContainer> {
-    //     let manager = ENTITY_MANAGER_INSTANCE.get().unwrap().try_lock().unwrap();
-    //     let result = manager.get_by_id(id);
+    pub fn get_by_id(id: EntityId) -> Option<VehicleContainer> {
+        RESOURCE_IMPL_INSTANCE.with(|instance| {
+            let instance = instance.borrow();
+            let entities = instance.borrow_entities();
+            let result = entities.get_by_id(id);
 
-    //     dbg!(result);
-
-    //     match result {
-    //         Some(_wrapper @ EntityWrapper::Vehicle(vehicle)) => Some(Rc::clone(&vehicle)),
-    //         None | Some(_) => None,
-    //     }
-    // }
+            match result {
+                Some(_wrapper @ EntityWrapper::Vehicle(vehicle)) => Some(Rc::clone(vehicle)),
+                None | Some(_) => None,
+            }
+        })
+    }
 
     pub fn set_secondary_color(&self, color: u8) -> Result<(), String> {
         unsafe { sdk::set_vehicle_primary_color(self.ptr.to_vehicle()?, color) };
@@ -55,6 +56,12 @@ impl Vehicle {
         //     .try_lock()
         //     .unwrap()
         //     .on_destroy(self.ptr().to_entity().unwrap());
+
+        RESOURCE_IMPL_INSTANCE.with(|instance| {
+            let instance = instance.borrow();
+            let mut entities = instance.borrow_mut_entities();
+            entities.on_destroy(self.ptr().to_entity().unwrap());
+        });
 
         self.destroy_base_object()
     }
@@ -99,16 +106,14 @@ pub fn create_vehicle(
 
     base_objects.on_create(base_object_raw_ptr, vehicle.clone());
 
-    // TODO:
-    // ENTITY_MANAGER_INSTANCE
-    //     .get()
-    //     .unwrap()
-    //     .try_lock()
-    //     .unwrap()
-    //     .on_create(
-    //         vehicle.borrow().id().unwrap(),
-    //         EntityWrapper::Vehicle(Rc::clone),
-    //     );
+    RESOURCE_IMPL_INSTANCE.with(|instance| {
+        let instance = instance.borrow();
+        let mut entities = instance.borrow_mut_entities();
+        entities.on_create(
+            vehicle.borrow().id().unwrap(),
+            EntityWrapper::Vehicle(Rc::clone(&vehicle)),
+        );
+    });
 
     Some(vehicle)
 }

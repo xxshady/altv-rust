@@ -107,21 +107,27 @@ impl ResourceImpl {
             return;
         }
 
+        let remove_entity_from_pool = |base_object_borrow: &Ref<dyn base_object::BaseObject>| {
+            self.entities
+                .borrow_mut()
+                .on_destroy(base_object_borrow.ptr().to_entity().unwrap());
+        };
+
         let mut base_objects = self.base_objects.borrow_mut();
         let base_object = base_objects.get_by_raw_ptr(raw_ptr);
         if let Some(base_object) = base_object {
-            use altv_sdk::BaseObjectType::*;
             let base_object_borrow = base_object.borrow();
+
+            use altv_sdk::BaseObjectType::*;
             match base_object_borrow.base_type() {
-                VEHICLE | PLAYER => {
-                    self.entities
-                        .borrow_mut()
-                        .on_destroy(base_object_borrow.ptr().to_entity().unwrap());
-                    // TEST
-                    // TODO: check if baseobject is player and only then remove it from player pool
+                PLAYER => {
+                    remove_entity_from_pool(&base_object_borrow);
                     self.players
                         .borrow_mut()
                         .remove_player(base_object_borrow.ptr().get().unwrap());
+                }
+                VEHICLE => {
+                    remove_entity_from_pool(&base_object_borrow);
                 }
                 _ => todo!(),
             };
@@ -130,6 +136,16 @@ impl ResourceImpl {
         } else {
             crate::log_error!("__on_base_object_destroy unknown base object: {raw_ptr:?}");
         }
+    }
+
+    pub fn __on_sdk_event(
+        &self,
+        event_type: altv_sdk::EventType,
+        event: *const altv_sdk::ffi::CEvent,
+    ) {
+        self.events
+            .borrow_mut()
+            .__on_sdk_event(self.players.borrow(), event_type, event);
     }
 
     pub(crate) fn borrow_mut_base_object_deletion(
@@ -148,17 +164,12 @@ impl ResourceImpl {
         self.base_objects.borrow_mut()
     }
 
-    pub fn __on_sdk_event(
-        &self,
-        event_type: altv_sdk::EventType,
-        event: *const altv_sdk::ffi::CEvent,
-    ) {
-        self.events.borrow_mut().on_sdk_event(
-            self.base_objects.borrow(),
-            self.players.borrow(),
-            event_type,
-            event,
-        );
+    pub(crate) fn borrow_entities(&self) -> Ref<entity::EntityManager> {
+        self.entities.borrow()
+    }
+
+    pub(crate) fn borrow_mut_entities(&self) -> RefMut<entity::EntityManager> {
+        self.entities.borrow_mut()
     }
 }
 
