@@ -1,11 +1,10 @@
-use std::{cell::RefMut, fmt::Debug, sync::MutexGuard};
+use std::{cell::RefMut, fmt::Debug};
 
 pub type TimerId = u32;
 
 pub type TimerCallback = dyn FnMut() + 'static + Send + Sync;
 
 struct Timer {
-    id: TimerId,
     callback: Box<TimerCallback>,
     next_call_time: std::time::SystemTime,
     millis: u64,
@@ -83,7 +82,6 @@ pub fn create(
     let next_call_time = std::time::SystemTime::now() + std::time::Duration::from_millis(millis);
 
     state.timers.push(Timer {
-        id,
         callback,
         next_call_time,
         millis,
