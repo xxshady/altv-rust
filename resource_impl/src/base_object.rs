@@ -53,8 +53,6 @@ impl BaseObjectPointer {
 unsafe impl Send for BaseObjectPointer {}
 unsafe impl Sync for BaseObjectPointer {}
 
-// TEST
-// pub(crate) trait BaseObject {
 pub trait BaseObject {
     fn as_any(&mut self) -> &mut dyn Any;
     fn ptr(&self) -> &BaseObjectPointer;
