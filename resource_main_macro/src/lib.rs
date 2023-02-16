@@ -2,15 +2,7 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn::ItemFn;
 
-/// Injects to resource "main" function
-///
-/// altv core as first parameter and removes any other parameter from the signature
-/// `fn main(core: *mut alt::__alt_ICore, full_main_path: std::path::PathBuf) -> alt::MainResource { ... }`
-///
-/// and `alt::__set_alt_core(core);` to the start of function body
-///
-/// and creates resource instance at the end of function body
-/// `alt::MainResource::new(...)`
+/// Injects __set_alt_core to resource "main" function
 #[proc_macro_attribute]
 pub fn resource_main_func(_: TokenStream, input: TokenStream) -> TokenStream {
     let input = syn::parse_macro_input!(input as ItemFn);

@@ -11,7 +11,7 @@ pub use resource_impl::log_warn;
 pub use resource_impl::logging::log;
 pub use resource_impl::logging::log_error;
 pub use resource_impl::logging::log_warn;
-pub use resource_main_macro::resource_main_func as res_main;
+pub use resource_main_macro::resource_main_func as main;
 
 #[doc(hidden)]
 pub use ffi::set_alt_core as __set_alt_core;

@@ -1,6 +1,6 @@
 use alt::Entity;
 
-#[alt::res_main]
+#[alt::main]
 #[no_mangle]
 pub fn main() {
     std::env::set_var("RUST_BACKTRACE", "full");
