@@ -1,15 +1,10 @@
 use std::{
-    any::Any,
-    cell::{Ref, RefMut},
+    cell::Ref,
     collections::{HashMap, HashSet},
-    rc::Rc,
-    sync::{Arc, Mutex},
 };
 
 use crate::{
-    base_object::{self, BaseObjectContainer, BaseObjectManager},
-    player::{self, Player, PlayerContainer, PlayerManager},
-    resource_impl::RESOURCE_IMPL_INSTANCE,
+    player::{Player, PlayerContainer, PlayerManager},
     sdk_events::SDKEventManager,
 };
 
