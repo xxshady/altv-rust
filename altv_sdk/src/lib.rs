@@ -11,6 +11,7 @@ pub use event_type::EventType;
 mod base_object_type;
 pub use base_object_type::BaseObjectType;
 
+// TODO: maybe change this proc macro to macro-by-example
 #[derive(ExternTypeCallback)]
 #[repr(transparent)]
 pub struct RuntimeCreateImplCallback(pub extern "C" fn(resource_impl: *mut ffi::RustResourceImpl));
