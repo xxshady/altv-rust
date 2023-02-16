@@ -101,7 +101,7 @@ pub fn create_vehicle(
         return None;
     }
 
-    let base_object_raw_ptr = unsafe { sdk::convert_vehicle_to_baseobject(raw_ptr) };
+    let base_object_raw_ptr = unsafe { sdk::convert_vehicle_to_base_object(raw_ptr) };
     let vehicle: VehicleContainer = create_vehicle_container(base_object_raw_ptr);
 
     base_objects.on_create(base_object_raw_ptr, vehicle.clone());

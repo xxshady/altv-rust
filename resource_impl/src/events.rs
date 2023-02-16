@@ -121,7 +121,7 @@ impl EventManager {
                                 }
 
                                 unsafe {
-                                    altv_sdk::ffi::convert_player_to_baseobject(player_raw_ptr)
+                                    altv_sdk::ffi::convert_player_to_base_object(player_raw_ptr)
                                 }
                             };
 

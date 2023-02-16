@@ -37,15 +37,15 @@ impl BaseObjectPointer {
     }
 
     pub fn to_entity(&self) -> Result<*mut sdk::IEntity, String> {
-        convert_ptr_to!(self, sdk::convert_baseobject_to_entity)
+        convert_ptr_to!(self, sdk::convert_base_object_to_entity)
     }
 
     pub fn to_vehicle(&self) -> Result<*mut sdk::IVehicle, String> {
-        convert_ptr_to!(self, sdk::convert_baseobject_to_vehicle)
+        convert_ptr_to!(self, sdk::convert_base_object_to_vehicle)
     }
 
     pub fn to_player(&self) -> Result<*mut sdk::IPlayer, String> {
-        convert_ptr_to!(self, sdk::convert_baseobject_to_player)
+        convert_ptr_to!(self, sdk::convert_base_object_to_player)
     }
 }
 
@@ -65,7 +65,7 @@ pub trait BaseObject {
                 let instance = instance.borrow();
                 let _deletion = instance.borrow_mut_base_object_deletion();
 
-                unsafe { sdk::destroy_baseobject(raw_ptr) }
+                unsafe { sdk::destroy_base_object(raw_ptr) }
                 self.ptr_mut().set(None);
 
                 instance.borrow_mut_base_objects().remove(raw_ptr);
