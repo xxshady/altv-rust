@@ -16,7 +16,6 @@ name = "alt"
 version = "0.1.0"
 dependencies = [
  "altv_sdk",
- "once_cell",
  "resource_impl",
  "resource_main_macro",
 ]
@@ -28,7 +27,6 @@ dependencies = [
  "altv_sdk",
  "cxx",
  "libloading",
- "once_cell",
  "resource_impl",
 ]
 
@@ -367,7 +365,6 @@ version = "0.1.0"
 dependencies = [
  "altv_sdk",
  "cxx",
- "once_cell",
 ]
 
 [[package]]
