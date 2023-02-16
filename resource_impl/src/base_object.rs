@@ -98,9 +98,7 @@ impl Debug for dyn BaseObject {
 
 #[derive(Debug)]
 pub struct BaseObjectManager {
-    // usize is RawBaseObjectPointer
-    base_objects: HashMap<usize, BaseObjectContainer>,
-    // concrete: HashMap<usize, BaseObjectContainer>,
+    base_objects: HashMap<RawBaseObjectPointer, BaseObjectContainer>,
 }
 
 impl BaseObjectManager {
@@ -111,7 +109,7 @@ impl BaseObjectManager {
     }
 
     pub fn on_create(&mut self, raw_ptr: RawBaseObjectPointer, base_object: BaseObjectContainer) {
-        self.base_objects.insert(raw_ptr as usize, base_object);
+        self.base_objects.insert(raw_ptr, base_object);
     }
 
     pub fn on_destroy(&mut self, base_object: BaseObjectContainer) {
@@ -119,7 +117,7 @@ impl BaseObjectManager {
         let raw_ptr = base_object.ptr().get().unwrap();
         base_object.ptr_mut().set(None);
 
-        if self.base_objects.remove(&(raw_ptr as usize)).is_some() {
+        if self.base_objects.remove(&raw_ptr).is_some() {
             crate::log!("~gl~BaseObjectManager destroyed object: {raw_ptr:?}");
         } else {
             crate::log_error!("BaseObjectManager on_destroy invalid object: {raw_ptr:?}");
@@ -127,7 +125,7 @@ impl BaseObjectManager {
     }
 
     fn remove(&mut self, raw_ptr: RawBaseObjectPointer) {
-        if self.base_objects.remove(&(raw_ptr as usize)).is_some() {
+        if self.base_objects.remove(&raw_ptr).is_some() {
             crate::log!("~gl~BaseObjectManager removed object: {raw_ptr:?}");
         } else {
             crate::log_error!("BaseObjectManager remove invalid object: {raw_ptr:?}");
@@ -135,7 +133,7 @@ impl BaseObjectManager {
     }
 
     pub fn get_by_raw_ptr(&self, raw_ptr: RawBaseObjectPointer) -> Option<BaseObjectContainer> {
-        self.base_objects.get(&(raw_ptr as usize)).cloned()
+        self.base_objects.get(&raw_ptr).cloned()
     }
 }
 

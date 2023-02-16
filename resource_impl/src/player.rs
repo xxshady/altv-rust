@@ -15,7 +15,6 @@ pub struct Player {
 }
 
 impl Player {
-    // TODO: test this
     pub fn get_by_id(id: EntityId) -> Option<PlayerContainer> {
         RESOURCE_IMPL_INSTANCE.with(|instance| {
             let instance = instance.borrow();
@@ -63,8 +62,7 @@ pub fn create_player_container(raw_ptr: RawBaseObjectPointer) -> PlayerContainer
 
 #[derive(Debug)]
 pub(crate) struct PlayerManager {
-    // usize is RawBaseObjectPointer
-    players: HashMap<usize, PlayerContainer>,
+    players: HashMap<RawBaseObjectPointer, PlayerContainer>,
 }
 
 impl PlayerManager {
@@ -75,17 +73,15 @@ impl PlayerManager {
     }
 
     pub fn add_player(&mut self, player: PlayerContainer) {
-        self.players.insert(
-            player.borrow().ptr().get().unwrap() as usize,
-            Rc::clone(&player),
-        );
+        self.players
+            .insert(player.borrow().ptr().get().unwrap(), Rc::clone(&player));
     }
 
     pub fn remove_player(&mut self, raw_ptr: RawBaseObjectPointer) {
-        self.players.remove(&(raw_ptr as usize));
+        self.players.remove(&raw_ptr);
     }
 
     pub fn get_by_base_object_ptr(&self, raw_ptr: RawBaseObjectPointer) -> Option<PlayerContainer> {
-        self.players.get(&(raw_ptr as usize)).cloned()
+        self.players.get(&raw_ptr).cloned()
     }
 }

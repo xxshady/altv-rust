@@ -24,7 +24,7 @@ pub fn resource_main_func(_: TokenStream, input: TokenStream) -> TokenStream {
 
     quote! {
         #(#attrs)* #vis fn main(
-            core: usize,
+            core: usize, // workaround for the clippy unsafety error
             full_main_path: String,
             __on_resource_impl_create: fn(resource: &std::thread::LocalKey<std::cell::RefCell<alt::__ResourceImpl>>)
         ) {
