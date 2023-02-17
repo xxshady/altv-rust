@@ -19,7 +19,7 @@ namespace alt_rs
     // custom
     using RustResourceImpl = alt::IResource::Impl*;
     using RuntimeCreateImplCallback = void (*)(RustResourceImpl rust_resource_impl);
-    using RuntimeDestroyImplCallback = void (*)();
+    using RuntimeResourceDestroyImplCallback = void (*)();
     using RuntimeOnTickCallback = void (*)();
     using ResourceStartCallback = void (*)(rust::Str full_main_path);
     using ResourceStopCallback = void (*)(rust::Str full_main_path);
@@ -41,7 +41,7 @@ namespace alt_rs
 
     public:
         RuntimeCreateImplCallback create_impl_callback;
-        RuntimeDestroyImplCallback destroy_impl_callback;
+        RuntimeResourceDestroyImplCallback resource_impl_destroy_callback;
         RuntimeOnTickCallback on_tick_callback;
         ResourceStartCallback resource_start_callback;
         ResourceStopCallback resource_stop_callback;
@@ -103,7 +103,7 @@ namespace alt_rs
 
         void set_callbacks(
             RuntimeCreateImplCallback _create_impl_callback,
-            RuntimeDestroyImplCallback _destroy_impl_callback,
+            RuntimeResourceDestroyImplCallback _resource_impl_destroy_callback,
             RuntimeOnTickCallback _on_tick_callback,
             ResourceStartCallback _resource_start_callback,
             ResourceStopCallback _resource_stop_callback,
@@ -114,7 +114,7 @@ namespace alt_rs
         )
         {
             create_impl_callback = _create_impl_callback;
-            destroy_impl_callback = _destroy_impl_callback;
+            resource_impl_destroy_callback = _resource_impl_destroy_callback;
             on_tick_callback = _on_tick_callback;
             resource_start_callback = _resource_start_callback;
             resource_stop_callback = _resource_stop_callback;
@@ -141,7 +141,7 @@ namespace alt_rs
 
     void setup_callbacks(
         RuntimeCreateImplCallback create_impl_callback,
-        RuntimeDestroyImplCallback destroy_impl_callback,
+        RuntimeResourceDestroyImplCallback resource_impl_destroy_callback,
         RuntimeOnTickCallback on_tick_callback,
         ResourceStartCallback resource_start_callback,
         ResourceStopCallback resource_stop_callback,

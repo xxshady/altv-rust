@@ -2,7 +2,7 @@ use crate::{
     base_object::{BaseObject, BaseObjectManager, BaseObjectPointer, RawBaseObjectPointer},
     entity::{Entity, EntityId, EntityWrapper},
     impl_base_object_for,
-    resource_impl::RESOURCE_IMPL_INSTANCE,
+    resource_impl::with_resource_impl,
     vector::Vector3,
 };
 use altv_sdk::ffi as sdk;
@@ -19,8 +19,7 @@ pub struct Vehicle {
 
 impl Vehicle {
     pub fn new(model: u32, pos: Vector3, rot: Vector3) -> Option<VehicleContainer> {
-        RESOURCE_IMPL_INSTANCE.with(|instance| {
-            let instance = instance.borrow();
+        with_resource_impl(|instance| {
             let _creation = instance.borrow_mut_base_object_creation();
             let base_objects = instance.borrow_mut_base_objects();
             create_vehicle(base_objects, model, pos, rot)
@@ -41,8 +40,7 @@ impl Vehicle {
     }
 
     pub fn destroy(&mut self) -> Result<(), String> {
-        RESOURCE_IMPL_INSTANCE.with(|instance| {
-            let instance = instance.borrow();
+        with_resource_impl(|instance| {
             let mut entities = instance.borrow_mut_entities();
             entities.on_destroy(self.ptr().to_entity().unwrap());
         });
@@ -74,8 +72,7 @@ pub fn create_vehicle(
 
     base_objects.on_create(base_object_raw_ptr, vehicle.clone());
 
-    RESOURCE_IMPL_INSTANCE.with(|instance| {
-        let instance = instance.borrow();
+    with_resource_impl(|instance| {
         let mut entities = instance.borrow_mut_entities();
         entities.on_create(
             vehicle.borrow().id().unwrap(),

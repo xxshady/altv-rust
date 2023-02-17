@@ -7,19 +7,24 @@ use crate::{
 use std::{
     cell::{Ref, RefCell, RefMut},
     rc::Rc,
-    thread::LocalKey,
 };
 
-pub type ResourceImplContainer = &'static LocalKey<RefCell<ResourceImpl>>;
+pub type ResourceImplRef = Rc<RefCell<ResourceImpl>>;
 
 thread_local! {
-    pub static RESOURCE_IMPL_INSTANCE: RefCell<ResourceImpl> = RefCell::new(ResourceImpl::new());
+    pub static RESOURCE_IMPL_INSTANCE: RefCell<Option<ResourceImplRef>> = RefCell::new(None);
+}
+
+pub fn with_resource_impl<F, R>(f: F) -> R
+where
+    F: FnOnce(Ref<ResourceImpl>) -> R,
+{
+    RESOURCE_IMPL_INSTANCE.with(|v| f(v.borrow().as_ref().unwrap().borrow()))
 }
 
 // intended for altv_module
 #[derive(Debug)]
 pub struct ResourceImpl {
-    pub full_main_path: String,
     timers: RefCell<timers::TimerManager>,
     timer_schedule_state: RefCell<timers::ScheduleState>,
     base_object_creation: RefCell<base_object::PendingBaseObjectCreation>,
@@ -31,9 +36,8 @@ pub struct ResourceImpl {
 }
 
 impl ResourceImpl {
-    pub(crate) fn new() -> Self {
+    pub fn new() -> Self {
         Self {
-            full_main_path: "".into(),
             timer_schedule_state: RefCell::new(timers::ScheduleState::new()),
             timers: RefCell::new(timers::TimerManager::new()),
             base_object_creation: RefCell::new(base_object::PendingBaseObjectCreation::new()),
@@ -45,12 +49,8 @@ impl ResourceImpl {
         }
     }
 
-    pub fn init(full_main_path: String) -> ResourceImplContainer {
-        RESOURCE_IMPL_INSTANCE.with(|instance| {
-            instance.borrow_mut().full_main_path = full_main_path;
-        });
-
-        &RESOURCE_IMPL_INSTANCE
+    pub fn init(resource_impl: ResourceImplRef) {
+        RESOURCE_IMPL_INSTANCE.with(|instance| instance.borrow_mut().replace(resource_impl));
     }
 
     pub fn __on_tick(&self) {
@@ -174,9 +174,9 @@ impl ResourceImpl {
 }
 
 pub fn timers_create(callback: Box<timers::TimerCallback>, millis: u64, once: bool) {
-    RESOURCE_IMPL_INSTANCE.with(|instance| {
+    with_resource_impl(|instance| {
         timers::create(
-            instance.borrow().timer_schedule_state.borrow_mut(),
+            instance.timer_schedule_state.borrow_mut(),
             callback,
             millis,
             once,
@@ -189,9 +189,8 @@ pub fn add_event_handler(
     sdk_type: altv_sdk::EventType,
     event: Event,
 ) {
-    RESOURCE_IMPL_INSTANCE.with(|instance| {
+    with_resource_impl(|instance| {
         instance
-            .borrow()
             .events
             .borrow_mut()
             .add_handler(public_type, sdk_type, event);

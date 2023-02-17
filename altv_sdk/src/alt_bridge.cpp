@@ -40,7 +40,7 @@ void alt_rs::RustRuntime::DestroyImpl(alt::IResource::Impl* impl)
 {
     alt::ICore::Instance().LogInfo("RustRuntime::DestroyImpl");
 
-    destroy_impl_callback();
+    resource_impl_destroy_callback();
 
     delete impl;
 }
@@ -129,7 +129,7 @@ namespace alt_rs
 
     void setup_callbacks(
         RuntimeCreateImplCallback create_impl_callback,
-        RuntimeDestroyImplCallback destroy_impl_callback,
+        RuntimeResourceDestroyImplCallback resource_impl_destroy_callback,
         RuntimeOnTickCallback on_tick_callback,
         ResourceStartCallback resource_start_callback,
         ResourceStopCallback resource_stop_callback,
@@ -140,7 +140,7 @@ namespace alt_rs
     ) {
         RustRuntime::get_instance().set_callbacks(
             create_impl_callback,
-            destroy_impl_callback,
+            resource_impl_destroy_callback,
             on_tick_callback,
             resource_start_callback,
             resource_stop_callback,

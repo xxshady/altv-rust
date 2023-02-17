@@ -27,6 +27,7 @@ impl From<SDKEventType> for PublicEventType {
             SERVER_STARTED => Self::ServerStarted,
             PLAYER_CONNECT => Self::PlayerConnect,
             PLAYER_DISCONNECT => Self::PlayerDisconnect,
+            RESOURCE_STOP => Self::ResourceStop,
             _ => {
                 panic!("Cannot convert sdk event type: {sdk_type:?} to PublicEventType");
             }
@@ -64,6 +65,19 @@ impl std::fmt::Debug for Event {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         // TODO:
         write!(f, "Event <any>")
+    }
+}
+
+impl Drop for Event {
+    fn drop(&mut self) {
+        match self {
+            Event::ServerStarted(_) => {
+                // TEST
+                println!("Event::ServerStarted drop");
+            }
+            // TEST
+            _ => panic!("Event drop invalid type"),
+        }
     }
 }
 

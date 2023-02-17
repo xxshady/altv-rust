@@ -20,7 +20,8 @@ pub use ffi::ICore as __alt_ICore;
 
 // intended for resource_main_macro
 #[doc(hidden)]
-pub use resource_impl::resource_impl::ResourceImpl as __ResourceImpl;
+use resource_impl::resource_impl::ResourceImpl;
+pub use resource_impl::resource_impl::ResourceImplRef as __ResourceImplRef;
 
 pub use resource_impl::entity::Entity;
 pub use resource_impl::entity::EntityId;
@@ -57,6 +58,6 @@ pub fn set_timeout(callback: impl FnMut() + 'static + Send + Sync, millis: u64) 
 }
 
 #[doc(hidden)]
-pub fn __init(full_main_path: String) -> &'static LocalKey<RefCell<__ResourceImpl>> {
-    __ResourceImpl::init(full_main_path)
+pub fn __init(resource_impl: __ResourceImplRef) {
+    ResourceImpl::init(resource_impl);
 }

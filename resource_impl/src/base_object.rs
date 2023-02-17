@@ -1,8 +1,8 @@
-use std::{any::Any, cell::RefCell, collections::HashMap, fmt::Debug, ops::Deref, rc::Rc};
+use std::{any::Any, cell::RefCell, collections::HashMap, fmt::Debug, rc::Rc};
 
 use altv_sdk::ffi as sdk;
 
-use crate::resource_impl::RESOURCE_IMPL_INSTANCE;
+use crate::resource_impl::with_resource_impl;
 
 pub(crate) type RawBaseObjectPointer = *mut sdk::IBaseObject;
 
@@ -61,8 +61,7 @@ pub trait BaseObject {
 
     fn destroy_base_object(&mut self) -> Result<(), String> {
         if let Ok(raw_ptr) = self.ptr().get() {
-            RESOURCE_IMPL_INSTANCE.with(|instance| {
-                let instance = instance.borrow();
+            with_resource_impl(|instance| {
                 let _deletion = instance.borrow_mut_base_object_deletion();
 
                 unsafe { sdk::destroy_base_object(raw_ptr) }

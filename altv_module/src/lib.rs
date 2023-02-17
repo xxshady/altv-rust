@@ -3,10 +3,10 @@ mod resource_manager;
 use altv_sdk::ffi as sdk;
 use cxx::let_cxx_string;
 use libloading::Library;
-use resource_impl::resource_impl::ResourceImplContainer;
-use std::path::PathBuf;
+use resource_impl::resource_impl::{ResourceImpl, ResourceImplRef};
+use std::{cell::RefCell, path::PathBuf, rc::Rc};
 
-use crate::resource_manager::RESOURCE_MANAGER_INSTANCE;
+use crate::resource_manager::{ResourceController, RESOURCE_MANAGER_INSTANCE};
 
 mod helpers;
 
@@ -16,8 +16,8 @@ extern "C" fn runtime_create_impl(resource_impl: *mut sdk::RustResourceImpl) {
 }
 
 #[allow(improper_ctypes_definitions)]
-extern "C" fn runtime_destroy_impl() {
-    resource_impl::log!("runtime_destroy_impl");
+extern "C" fn runtime_resource_destroy_impl() {
+    resource_impl::log!("runtime_resource_destroy_impl");
 }
 
 #[allow(improper_ctypes_definitions)]
@@ -28,18 +28,12 @@ extern "C" fn runtime_on_tick() {
 
     RESOURCE_MANAGER_INSTANCE.with(|v| {
         for (_, resource) in v.borrow().resources_iter() {
-            resource.with(|v| {
-                v.borrow().__on_tick();
-            })
+            resource.resource_impl.borrow().__on_tick();
         }
     });
 }
 
-type ResourceMainFn = unsafe extern "C" fn(
-    core: *mut sdk::ICore,
-    full_main_path: String,
-    __on_resource_impl_create: fn(resource: ResourceImplContainer),
-);
+type ResourceMainFn = unsafe extern "C" fn(core: *mut sdk::ICore, resource_impl: ResourceImplRef);
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_start(full_main_path: &str) {
@@ -49,31 +43,28 @@ extern "C" fn resource_start(full_main_path: &str) {
     let core_ptr = unsafe { sdk::alt_core_instance() };
     resource_impl::log!("calling resource main func with core ptr: {:?}", core_ptr);
 
+    let resource_impl = Rc::new(RefCell::new(ResourceImpl::new()));
+
     let lib = unsafe { Library::new(PathBuf::from(&full_main_path)) }.unwrap();
     let main_fn: ResourceMainFn = unsafe { *lib.get(b"main\0").unwrap() };
-    unsafe { main_fn(core_ptr, full_main_path, __on_resource_impl_create) };
+    unsafe { main_fn(core_ptr, Rc::clone(&resource_impl)) };
 
-    Box::leak(Box::new(lib));
-}
-
-fn __on_resource_impl_create(resource: ResourceImplContainer) {
-    resource_impl::log_warn!("on_resource_impl_create");
+    let resource_controller = ResourceController::new(lib, resource_impl);
 
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
-        resource.with(|resource_cell| {
-            manager
-                .borrow_mut()
-                .add(resource_cell.borrow().full_main_path.clone(), resource);
-        })
+        manager
+            .borrow_mut()
+            .add(full_main_path, resource_controller);
     });
 }
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_stop(full_main_path: &str) {
-    resource_impl::log!("resource stop callback");
-    dbg!(&full_main_path);
+    resource_impl::log!("resource_stop: {full_main_path}");
 
-    // TODO: some cleanup of timers, altv entities (?), etc.
+    RESOURCE_MANAGER_INSTANCE.with(|manager| {
+        manager.borrow_mut().remove(full_main_path);
+    });
 }
 
 extern "C" fn resource_on_tick(full_main_path: &str) {
@@ -108,9 +99,9 @@ extern "C" fn resource_on_event(full_main_path: &str, event: *const sdk::CEvent)
             .unwrap_or_else(|| {
                 panic!("[resource_on_event] failed to get resource by path: {full_main_path}");
             })
-            .with(|res| {
-                res.borrow().__on_sdk_event(event_type, event);
-            });
+            .resource_impl
+            .borrow()
+            .__on_sdk_event(event_type, event);
     });
 }
 
@@ -134,10 +125,9 @@ extern "C" fn resource_on_create_base_object(
             .unwrap_or_else(|| {
                 panic!("[resource_on_event] failed to get resource by path: {full_main_path}");
             })
-            .with(|res| {
-                res.borrow()
-                    .__on_base_object_create(base_object, base_object_type)
-            });
+            .resource_impl
+            .borrow()
+            .__on_base_object_create(base_object, base_object_type);
     });
 }
 
@@ -164,7 +154,9 @@ extern "C" fn resource_on_remove_base_object(
             .unwrap_or_else(|| {
                 panic!("[resource_on_event] failed to get resource by path: {full_main_path}");
             })
-            .with(|res| res.borrow().__on_base_object_destroy(base_object));
+            .resource_impl
+            .borrow()
+            .__on_base_object_destroy(base_object);
     });
 }
 
@@ -186,7 +178,7 @@ pub unsafe extern "C" fn altMain(core: *mut sdk::ICore) -> bool {
 
     sdk::setup_callbacks(
         altv_sdk::RuntimeCreateImplCallback(runtime_create_impl),
-        altv_sdk::RuntimeDestroyImplCallback(runtime_destroy_impl),
+        altv_sdk::RuntimeResourceDestroyImplCallback(runtime_resource_destroy_impl),
         altv_sdk::RuntimeOnTickCallback(runtime_on_tick),
         altv_sdk::ResourceStartCallback(resource_start),
         altv_sdk::ResourceStopCallback(resource_stop),

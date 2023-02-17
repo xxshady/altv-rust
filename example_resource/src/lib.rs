@@ -13,28 +13,28 @@ pub fn main() {
     //     1000,
     // );
 
-    alt::events::on_server_started(|_| {
-        alt::log!("example resource on_server_started");
-    });
+    // alt::events::on_server_started(|controller| {
+    //     alt::log_warn!("example resource on_server_started controller: {controller:?}");
+    // });
 
-    alt::events::on_player_connect(|alt::events::PlayerConnectController { player }| {
-        let player = player.borrow();
-        let id = player.id().unwrap();
+    // alt::events::on_player_connect(|alt::events::PlayerConnectController { player }| {
+    //     let player = player.borrow();
+    //     let id = player.id().unwrap();
 
-        alt::log!(
-            "example resource on_player_connect name: {} id: {}",
-            player.name().unwrap(),
-            id
-        );
+    //     alt::log!(
+    //         "example resource on_player_connect name: {} id: {}",
+    //         player.name().unwrap(),
+    //         id
+    //     );
 
-        dbg!(alt::Player::get_by_id(id));
-        let result = id.checked_sub(1);
-        if let Some(id) = result {
-            dbg!(alt::Player::get_by_id(dbg!(id)));
-        } else {
-            alt::log_error!("failed to sub player id");
-        }
-    });
+    //     dbg!(alt::Player::get_by_id(id));
+    //     let result = id.checked_sub(1);
+    //     if let Some(id) = result {
+    //         dbg!(alt::Player::get_by_id(dbg!(id)));
+    //     } else {
+    //         alt::log_error!("failed to sub player id");
+    //     }
+    // });
 
     // alt::set_timeout(|| println!("its timeout"), 300);
 
@@ -90,14 +90,14 @@ pub fn main() {
     //     1000,
     // );
 
-    // fn recurse_set_timeout() {
-    //     alt::set_timeout(
-    //         || {
-    //             alt::log!("set_timeout ~gl~recursion");
-    //             recurse_set_timeout();
-    //         },
-    //         500,
-    //     )
-    // }
-    // recurse_set_timeout();
+    fn recurse_set_timeout() {
+        alt::set_timeout(
+            || {
+                alt::log!("set_timeout ~gl~recursion");
+                recurse_set_timeout();
+            },
+            500,
+        )
+    }
+    recurse_set_timeout();
 }

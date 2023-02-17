@@ -18,7 +18,7 @@ pub struct RuntimeCreateImplCallback(pub extern "C" fn(resource_impl: *mut ffi::
 
 #[derive(ExternTypeCallback)]
 #[repr(transparent)]
-pub struct RuntimeDestroyImplCallback(pub extern "C" fn());
+pub struct RuntimeResourceDestroyImplCallback(pub extern "C" fn());
 
 #[derive(ExternTypeCallback)]
 #[repr(transparent)]
@@ -61,7 +61,7 @@ pub mod ffi {
         include!("altv_sdk/include/alt_bridge.h");
 
         type RuntimeCreateImplCallback = crate::RuntimeCreateImplCallback;
-        type RuntimeDestroyImplCallback = crate::RuntimeDestroyImplCallback;
+        type RuntimeResourceDestroyImplCallback = crate::RuntimeResourceDestroyImplCallback;
         type RuntimeOnTickCallback = crate::RuntimeOnTickCallback;
         type ResourceStartCallback = crate::ResourceStartCallback;
         type ResourceStopCallback = crate::ResourceStopCallback;
@@ -92,7 +92,7 @@ pub mod ffi {
         #[allow(clippy::too_many_arguments)]
         unsafe fn setup_callbacks(
             create_impl: RuntimeCreateImplCallback,
-            destroy_impl: RuntimeDestroyImplCallback,
+            destroy_impl: RuntimeResourceDestroyImplCallback,
             on_tick_callback: RuntimeOnTickCallback,
             resource_start: ResourceStartCallback,
             resource_stop: ResourceStopCallback,
