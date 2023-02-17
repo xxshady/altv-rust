@@ -1,6 +1,6 @@
-use resource_impl::resource_impl::ResourceImplRef;
+use resource_impl::resource_impl::{ResourceImpl, ResourceImplRef};
 use std::{
-    cell::RefCell,
+    cell::{Ref, RefCell},
     collections::{hash_map, HashMap},
 };
 
@@ -11,19 +11,16 @@ thread_local! {
 #[derive(Debug)]
 pub struct ResourceController {
     lib: libloading::Library,
-    pub resource_impl: ResourceImplRef,
+    resource_impl: ResourceImplRef,
 }
 
 impl ResourceController {
     pub fn new(lib: libloading::Library, resource_impl: ResourceImplRef) -> Self {
         Self { lib, resource_impl }
     }
-}
 
-impl Drop for ResourceController {
-    fn drop(&mut self) {
-        // TEST
-        resource_impl::log_warn!("ResourceController drop lib: {:?}", self.lib);
+    pub fn borrow_resource_impl(&self) -> Ref<ResourceImpl> {
+        self.resource_impl.borrow()
     }
 }
 
@@ -48,7 +45,9 @@ impl ResourceManager {
 
     pub fn remove(&mut self, full_main_path: &str) {
         if let Some(controller) = self.resources.remove(full_main_path) {
-            controller.resource_impl.borrow().__on_remove();
+            // workaround to fix crash due to drop_in_place of boxed closures
+            // core::ptr::drop_in_place<alloc::boxed::Box<dyn$<core::ops::function::Fn<...
+            drop(controller.resource_impl);
         } else {
             resource_impl::log_error!("ResourceManager remove unknown resource: {full_main_path}");
         }

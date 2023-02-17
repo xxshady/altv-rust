@@ -33,12 +33,6 @@ impl ScheduleState {
     }
 }
 
-impl ScheduleState {
-    pub fn __on_remove(&mut self) {
-        self.timers.clear();
-    }
-}
-
 #[derive(Debug)]
 pub struct TimerManager {
     timers: Vec<Timer>,
@@ -71,10 +65,6 @@ impl TimerManager {
         for idx in indexes_to_remove {
             self.timers.swap_remove(idx);
         }
-    }
-
-    pub fn __on_remove(&mut self) {
-        self.timers.clear();
     }
 }
 

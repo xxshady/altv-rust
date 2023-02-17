@@ -27,8 +27,8 @@ extern "C" fn runtime_on_tick() {
     // let resources = ResourceManager::instance().resources_iter();
 
     RESOURCE_MANAGER_INSTANCE.with(|v| {
-        for (_, resource) in v.borrow().resources_iter() {
-            resource.resource_impl.borrow().__on_tick();
+        for (_, controller) in v.borrow().resources_iter() {
+            controller.borrow_resource_impl().__on_tick();
         }
     });
 }
@@ -99,8 +99,7 @@ extern "C" fn resource_on_event(full_main_path: &str, event: *const sdk::CEvent)
             .unwrap_or_else(|| {
                 panic!("[resource_on_event] failed to get resource by path: {full_main_path}");
             })
-            .resource_impl
-            .borrow()
+            .borrow_resource_impl()
             .__on_sdk_event(event_type, event);
     });
 }
@@ -125,8 +124,7 @@ extern "C" fn resource_on_create_base_object(
             .unwrap_or_else(|| {
                 panic!("[resource_on_event] failed to get resource by path: {full_main_path}");
             })
-            .resource_impl
-            .borrow()
+            .borrow_resource_impl()
             .__on_base_object_create(base_object, base_object_type);
     });
 }
@@ -154,8 +152,7 @@ extern "C" fn resource_on_remove_base_object(
             .unwrap_or_else(|| {
                 panic!("[resource_on_event] failed to get resource by path: {full_main_path}");
             })
-            .resource_impl
-            .borrow()
+            .borrow_resource_impl()
             .__on_base_object_destroy(base_object);
     });
 }
