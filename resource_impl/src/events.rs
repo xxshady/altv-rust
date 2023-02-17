@@ -3,10 +3,7 @@ use std::{
     collections::{HashMap, HashSet},
 };
 
-use crate::{
-    player::{Player, PlayerContainer, PlayerManager},
-    sdk_events::SDKEventManager,
-};
+use crate::player::{Player, PlayerContainer, PlayerManager};
 
 pub use altv_sdk::EventType as SDKEventType;
 
@@ -90,7 +87,6 @@ impl Drop for Event {
 pub(crate) struct EventManager {
     public_handlers: HashMap<PublicEventType, Vec<Event>>,
     enabled_sdk_events: HashSet<SDKEventType>,
-    sdk_events_manager: SDKEventManager,
 }
 
 impl EventManager {
@@ -98,7 +94,6 @@ impl EventManager {
         Self {
             enabled_sdk_events: HashSet::new(),
             public_handlers: HashMap::new(),
-            sdk_events_manager: SDKEventManager::new(),
         }
     }
 
@@ -188,7 +183,9 @@ impl EventManager {
             crate::log!("sdk_type: {sdk_type:?} | enabling it in sdk");
 
             self.enabled_sdk_events.insert(sdk_type);
-            self.sdk_events_manager.toggle_event_type(sdk_type, true);
+            unsafe {
+                altv_sdk::ffi::toggle_event_type(sdk_type as u16, true);
+            }
         }
 
         let handlers = self.public_handlers.get_mut(&public_type);
