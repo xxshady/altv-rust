@@ -65,19 +65,6 @@ impl std::fmt::Debug for Event {
     }
 }
 
-impl Drop for Event {
-    fn drop(&mut self) {
-        match self {
-            Event::ServerStarted(_) => {
-                // TEST
-                println!("Event::ServerStarted drop");
-            }
-            // TEST
-            _ => panic!("Event drop invalid type"),
-        }
-    }
-}
-
 // TODO:
 // pub enum CustomEventPayload {
 //     BaseObjectCreate(base_object_type: altv_sdk::BaseObjectType, pointer: *const altv_sdk::ffi::IBaseObject),

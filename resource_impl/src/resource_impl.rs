@@ -196,10 +196,3 @@ pub fn add_event_handler(
             .add_handler(public_type, sdk_type, event);
     });
 }
-
-impl Drop for ResourceImpl {
-    fn drop(&mut self) {
-        // TEST
-        crate::log_warn!("ResourceImpl drop");
-    }
-}
