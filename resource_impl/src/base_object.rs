@@ -101,16 +101,6 @@ macro_rules! impl_base_object_for {
     };
 }
 
-#[derive(Debug)]
-struct Blocker<T: ?Sized>(T);
-
-impl<T> Deref for Blocker<T> {
-    type Target = T;
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
 pub(crate) type BaseObjectContainer = Rc<RefCell<dyn BaseObject>>;
 
 impl Debug for dyn BaseObject {
