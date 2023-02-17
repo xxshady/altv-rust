@@ -1,7 +1,6 @@
 use alt::Entity;
 
-#[alt::main]
-#[no_mangle]
+#[alt::main(crate_name = "alt")]
 pub fn main() {
     std::env::set_var("RUST_BACKTRACE", "full");
 

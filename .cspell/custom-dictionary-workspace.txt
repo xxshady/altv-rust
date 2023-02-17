@@ -1,7 +1,8 @@
 -DALT_SERVER_API
 # Custom Dictionary Words
+altvx
 cxxbridge
+dlopen
+improper_ctypes_definitions
 repr
 xrust
-improper_ctypes_definitions
-dlopen

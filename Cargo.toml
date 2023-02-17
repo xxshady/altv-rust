@@ -6,6 +6,6 @@ members = [
     "altv_sdk",
     "resource_impl",
     "altv_module",
-    "alt",
+    "altvx",
     "example_resource",
 ]

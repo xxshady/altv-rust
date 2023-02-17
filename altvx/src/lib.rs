@@ -58,6 +58,5 @@ pub fn set_timeout(callback: impl FnMut() + 'static + Send + Sync, millis: u64) 
 
 #[doc(hidden)]
 pub fn __init(full_main_path: String) -> &'static LocalKey<RefCell<__ResourceImpl>> {
-    log!("alt __init");
     __ResourceImpl::init(full_main_path)
 }
