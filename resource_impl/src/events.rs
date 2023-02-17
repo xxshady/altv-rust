@@ -196,4 +196,8 @@ impl EventManager {
             self.public_handlers.insert(public_type, vec![event]);
         }
     }
+
+    pub fn __on_remove(&mut self) {
+        self.public_handlers.clear();
+    }
 }

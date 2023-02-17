@@ -47,16 +47,14 @@ impl ResourceManager {
     }
 
     pub fn remove(&mut self, full_main_path: &str) {
-        self.resources.remove(full_main_path);
+        if let Some(controller) = self.resources.remove(full_main_path) {
+            controller.resource_impl.borrow().__on_remove();
+        } else {
+            resource_impl::log_error!("ResourceManager remove unknown resource: {full_main_path}");
+        }
     }
 
     pub fn get_by_path(&self, full_main_path: &str) -> Option<&ResourceController> {
-        let resource = self.resources.get(full_main_path);
-
-        if let Some(resource) = resource {
-            Some(resource)
-        } else {
-            None
-        }
+        self.resources.get(full_main_path)
     }
 }

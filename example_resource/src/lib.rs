@@ -13,9 +13,9 @@ pub fn main() {
     //     1000,
     // );
 
-    // alt::events::on_server_started(|controller| {
-    //     alt::log_warn!("example resource on_server_started controller: {controller:?}");
-    // });
+    alt::events::on_server_started(|controller| {
+        alt::log_warn!("example resource on_server_started controller: {controller:?}");
+    });
 
     // alt::events::on_player_connect(|alt::events::PlayerConnectController { player }| {
     //     let player = player.borrow();

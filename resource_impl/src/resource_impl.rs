@@ -148,6 +148,14 @@ impl ResourceImpl {
             .__on_sdk_event(self.players.borrow(), event_type, event);
     }
 
+    // workaround to fix crash due to drop_in_place of boxed closures
+    // core::ptr::drop_in_place<alloc::boxed::Box<dyn$<core::ops::function::Fn<...
+    pub fn __on_remove(&self) {
+        self.events.borrow_mut().__on_remove();
+        self.timer_schedule_state.borrow_mut().__on_remove();
+        self.timers.borrow_mut().__on_remove();
+    }
+
     pub(crate) fn borrow_mut_base_object_deletion(
         &self,
     ) -> RefMut<base_object::PendingBaseObjectDeletion> {
