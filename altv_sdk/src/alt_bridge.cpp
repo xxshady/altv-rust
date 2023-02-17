@@ -204,6 +204,48 @@ namespace alt_rs
         }
     }
 
+    StdString get_event_console_command_name(const alt::CEvent* event)
+    {
+        auto type = event->GetType();
+
+        switch (type)
+        {
+        case CEvent::Type::CONSOLE_COMMAND_EVENT:
+            return std::make_unique<std::string>(std::string{
+                static_cast<const alt::CConsoleCommandEvent*>(event)->GetName()
+            });
+            break;
+
+        default:
+            ICore::Instance().LogError(
+                "get_event_console_command_name unknown event type: " +
+                std::to_string(static_cast<uint16_t>(type))
+            );
+            return std::make_unique<std::string>(std::string{ "" });
+            break;
+        }
+    }
+
+    StdStringVector get_event_console_command_args(const alt::CEvent* event)
+    {
+        auto type = event->GetType();
+
+        switch (type)
+        {
+        case CEvent::Type::CONSOLE_COMMAND_EVENT:
+            return std::make_unique<std::vector<std::string>>(static_cast<const alt::CConsoleCommandEvent*>(event)->GetArgs());
+            break;
+
+        default:
+            ICore::Instance().LogError(
+                "get_event_console_command_name unknown event type: " +
+                std::to_string(static_cast<uint16_t>(type))
+            );
+            return std::make_unique<std::vector<std::string>>();
+            break;
+        }
+    }
+
     // entity conversions
     IEntity* convert_base_object_to_entity(IBaseObject* entity)
     {

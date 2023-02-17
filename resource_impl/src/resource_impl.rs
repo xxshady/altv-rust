@@ -1,5 +1,5 @@
 use crate::{
-    base_object,
+    base_object, base_object_maps,
     entity::{self, Entity},
     events::{self, Event, PublicEventType},
     player, timers, vehicle,
@@ -31,8 +31,8 @@ pub struct ResourceImpl {
     base_object_deletion: RefCell<base_object::PendingBaseObjectDeletion>,
     base_objects: RefCell<base_object::BaseObjectManager>,
     entities: RefCell<entity::EntityManager>,
-    players: RefCell<player::PlayerManager>,
     events: RefCell<events::EventManager>,
+    player_base_object_map: RefCell<base_object_maps::PlayerBaseObjectMap>,
 }
 
 impl ResourceImpl {
@@ -44,8 +44,8 @@ impl ResourceImpl {
             base_object_deletion: RefCell::new(base_object::PendingBaseObjectDeletion::new()),
             base_objects: RefCell::new(base_object::BaseObjectManager::new()),
             entities: RefCell::new(entity::EntityManager::new()),
-            players: RefCell::new(player::PlayerManager::new()),
             events: RefCell::new(events::EventManager::new()),
+            player_base_object_map: RefCell::new(base_object_maps::PlayerBaseObjectMap::new()),
         }
     }
 
@@ -90,7 +90,9 @@ impl ResourceImpl {
             PLAYER => {
                 let player = player::create_player_container(raw_ptr);
                 add_entity_to_pool(entity::EntityWrapper::Player(Rc::clone(&player)));
-                self.players.borrow_mut().add_player(Rc::clone(&player));
+                self.player_base_object_map
+                    .borrow_mut()
+                    .add_base_object(Rc::clone(&player));
                 player
             }
             _ => todo!(),
@@ -122,9 +124,9 @@ impl ResourceImpl {
             match base_object_borrow.base_type() {
                 PLAYER => {
                     remove_entity_from_pool(&base_object_borrow);
-                    self.players
+                    self.player_base_object_map
                         .borrow_mut()
-                        .remove_player(base_object_borrow.ptr().get().unwrap());
+                        .remove_base_object(base_object_borrow.ptr().get().unwrap());
                 }
                 VEHICLE => {
                     remove_entity_from_pool(&base_object_borrow);
@@ -143,9 +145,11 @@ impl ResourceImpl {
         event_type: altv_sdk::EventType,
         event: *const altv_sdk::ffi::CEvent,
     ) {
-        self.events
-            .borrow_mut()
-            .__on_sdk_event(self.players.borrow(), event_type, event);
+        self.events.borrow_mut().__on_sdk_event(
+            self.player_base_object_map.borrow(),
+            event_type,
+            event,
+        );
     }
 
     pub(crate) fn borrow_mut_base_object_deletion(

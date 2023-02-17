@@ -29,6 +29,7 @@ namespace alt_rs
     using ResourceOnRemoveBaseObjectCallback = void (*)(rust::Str full_main_path, IBaseObject* base_object);
 
     using StdString = std::unique_ptr<std::string>;
+    using StdStringVector = std::unique_ptr<std::vector<std::string>>;
 
     class RustRuntime: public alt::IScriptRuntime
     {
@@ -157,6 +158,8 @@ namespace alt_rs
     uint16_t get_event_type(const alt::CEvent* event);
     IPlayer* get_event_player_target(const alt::CEvent* event);
     StdString get_event_reason(const alt::CEvent* event);
+    StdString get_event_console_command_name(const alt::CEvent* event);
+    StdStringVector get_event_console_command_args(const alt::CEvent* event);
 
     // base_object conversions
     IEntity* convert_base_object_to_entity(IBaseObject* entity);

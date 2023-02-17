@@ -4,11 +4,12 @@ use std::{
 };
 
 use crate::{
-    helpers::get_player_from_event,
-    player::{PlayerContainer, PlayerManager},
+    base_object_maps::PlayerBaseObjectMap, helpers::get_player_from_event, player::PlayerContainer,
 };
 
 pub use altv_sdk::EventType as SDKEventType;
+
+use altv_sdk::ffi as sdk;
 
 #[derive(Debug, Eq, PartialEq, Hash, PartialOrd, Ord)]
 #[repr(u16)]
@@ -18,6 +19,7 @@ pub enum PublicEventType {
     PlayerDisconnect,
     ResourceStop,
     BaseObjectCreate,
+    ConsoleCommand,
 }
 
 impl From<SDKEventType> for PublicEventType {
@@ -28,6 +30,7 @@ impl From<SDKEventType> for PublicEventType {
             PLAYER_CONNECT => Self::PlayerConnect,
             PLAYER_DISCONNECT => Self::PlayerDisconnect,
             RESOURCE_STOP => Self::ResourceStop,
+            CONSOLE_COMMAND_EVENT => Self::ConsoleCommand,
             _ => {
                 panic!("Cannot convert sdk event type: {sdk_type:?} to PublicEventType");
             }
@@ -52,12 +55,19 @@ pub struct PlayerDisconnectController {
 #[derive(Debug)]
 pub struct BaseObjectCreateController {}
 
+#[derive(Debug)]
+pub struct ConsoleCommandController {
+    pub name: String,
+    pub args: Vec<String>,
+}
+
 #[repr(u16)]
 pub enum Event {
     ServerStarted(Box<dyn FnMut(ServerStartedController)>),
     PlayerConnect(Box<dyn FnMut(PlayerConnectController)>),
     PlayerDisconnect(Box<dyn FnMut(PlayerDisconnectController)>),
     BaseObjectCreate(Box<dyn FnMut(BaseObjectCreateController)>),
+    ConsoleCommand(Box<dyn FnMut(ConsoleCommandController)>),
     ResourceStop(fn()),
 }
 
@@ -70,7 +80,7 @@ impl std::fmt::Debug for Event {
 
 // TODO:
 // pub enum CustomEventPayload {
-//     BaseObjectCreate(base_object_type: altv_sdk::BaseObjectType, pointer: *const altv_sdk::ffi::IBaseObject),
+//     BaseObjectCreate(base_object_type: altv_sdk::BaseObjectType, pointer: *const sdk::IBaseObject),
 // }
 
 #[derive(Debug)]
@@ -90,9 +100,9 @@ impl EventManager {
     #[allow(clippy::not_unsafe_ptr_arg_deref)]
     pub fn __on_sdk_event(
         &mut self,
-        players: Ref<PlayerManager>,
+        players: Ref<PlayerBaseObjectMap>,
         event_type: SDKEventType,
-        event: *const altv_sdk::ffi::CEvent,
+        event: *const sdk::CEvent,
     ) {
         // TEST
         crate::log_warn!("[events.on_sdk_event] received event: {:?}", event_type);
@@ -109,7 +119,14 @@ impl EventManager {
                     }),
                     PlayerDisconnect(callback) => callback(PlayerDisconnectController {
                         player: get_player_from_event(event, &players),
-                        reason: unsafe { altv_sdk::ffi::get_event_reason(event) }.to_string(),
+                        reason: unsafe { sdk::get_event_reason(event) }.to_string(),
+                    }),
+                    ConsoleCommand(callback) => callback(ConsoleCommandController {
+                        name: unsafe { sdk::get_event_console_command_name(event) }.to_string(),
+                        args: unsafe { sdk::get_event_console_command_args(event) }
+                            .iter()
+                            .map(|s| s.to_string())
+                            .collect(),
                     }),
                     _ => todo!(),
                 }
@@ -158,7 +175,7 @@ impl EventManager {
 
             self.enabled_sdk_events.insert(sdk_type);
             unsafe {
-                altv_sdk::ffi::toggle_event_type(sdk_type as u16, true);
+                sdk::toggle_event_type(sdk_type as u16, true);
             }
         }
 

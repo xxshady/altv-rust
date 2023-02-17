@@ -1,4 +1,5 @@
 mod base_object;
+mod base_object_maps;
 pub mod entity;
 pub mod events;
 mod helpers;

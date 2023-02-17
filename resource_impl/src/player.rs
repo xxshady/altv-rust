@@ -4,7 +4,7 @@ use crate::{
     impl_base_object_for,
 };
 use altv_sdk::ffi as sdk;
-use std::{cell::RefCell, collections::HashMap, rc::Rc};
+use std::{cell::RefCell, rc::Rc};
 
 pub type PlayerContainer = Rc<RefCell<Player>>;
 
@@ -33,30 +33,4 @@ pub fn create_player_container(raw_ptr: RawBaseObjectPointer) -> PlayerContainer
         ptr: BaseObjectPointer::new(raw_ptr),
         base_type: altv_sdk::BaseObjectType::VEHICLE,
     }))
-}
-
-#[derive(Debug)]
-pub(crate) struct PlayerManager {
-    players: HashMap<RawBaseObjectPointer, PlayerContainer>,
-}
-
-impl PlayerManager {
-    pub fn new() -> Self {
-        Self {
-            players: HashMap::new(),
-        }
-    }
-
-    pub fn add_player(&mut self, player: PlayerContainer) {
-        self.players
-            .insert(player.borrow().ptr().get().unwrap(), Rc::clone(&player));
-    }
-
-    pub fn remove_player(&mut self, raw_ptr: RawBaseObjectPointer) {
-        self.players.remove(&raw_ptr);
-    }
-
-    pub fn get_by_base_object_ptr(&self, raw_ptr: RawBaseObjectPointer) -> Option<PlayerContainer> {
-        self.players.get(&raw_ptr).cloned()
-    }
 }

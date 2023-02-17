@@ -109,6 +109,10 @@ pub mod ffi {
         unsafe fn get_event_type(event: *const CEvent) -> u16;
         unsafe fn get_event_player_target(event: *const CEvent) -> *mut IPlayer;
         unsafe fn get_event_reason(event: *const CEvent) -> UniquePtr<CxxString>;
+        unsafe fn get_event_console_command_name(event: *const CEvent) -> UniquePtr<CxxString>;
+        unsafe fn get_event_console_command_args(
+            event: *const CEvent,
+        ) -> UniquePtr<CxxVector<CxxString>>;
 
         // --------------- script api ---------------
         // logging

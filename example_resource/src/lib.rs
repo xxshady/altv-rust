@@ -1,4 +1,7 @@
-use alt::{events::PlayerDisconnectController, Entity};
+use alt::{
+    events::{ConsoleCommandController, PlayerDisconnectController},
+    Entity,
+};
 
 #[alt::main(crate_name = "alt")]
 pub fn main() {
@@ -44,6 +47,10 @@ pub fn main() {
             player.id().unwrap(),
             reason
         )
+    });
+
+    alt::events::on_console_command(|ConsoleCommandController { name, args }| {
+        alt::log_warn!("on_console_command name: {name:?} args: {args:?}");
     });
 
     // alt::set_timeout(|| println!("its timeout"), 300);
@@ -100,14 +107,14 @@ pub fn main() {
     //     1000,
     // );
 
-    fn recurse_set_timeout() {
-        alt::set_timeout(
-            || {
-                alt::log!("set_timeout ~gl~recursion");
-                recurse_set_timeout();
-            },
-            500,
-        )
-    }
-    recurse_set_timeout();
+    // fn recurse_set_timeout() {
+    //     alt::set_timeout(
+    //         || {
+    //             alt::log!("set_timeout ~gl~recursion");
+    //             recurse_set_timeout();
+    //         },
+    //         500,
+    //     )
+    // }
+    // recurse_set_timeout();
 }
