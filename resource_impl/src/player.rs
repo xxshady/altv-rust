@@ -1,7 +1,7 @@
 use crate::{
     base_object::{BaseObject, BaseObjectPointer, RawBaseObjectPointer},
     entity::{Entity, EntityId, EntityWrapper},
-    resource_impl::RESOURCE_IMPL_INSTANCE,
+    impl_base_object_for,
 };
 use altv_sdk::ffi as sdk;
 use std::{cell::RefCell, collections::HashMap, rc::Rc};
@@ -16,16 +16,7 @@ pub struct Player {
 
 impl Player {
     pub fn get_by_id(id: EntityId) -> Option<PlayerContainer> {
-        RESOURCE_IMPL_INSTANCE.with(|instance| {
-            let instance = instance.borrow();
-            let entities = instance.borrow_entities();
-            let result = entities.get_by_id(id);
-
-            match result {
-                Some(_wrapper @ EntityWrapper::Player(player)) => Some(Rc::clone(player)),
-                None | Some(_) => None,
-            }
-        })
+        crate::get_entity_by_id!(EntityWrapper::Player, id)
     }
 
     pub fn name(&self) -> Result<String, String> {
@@ -33,23 +24,7 @@ impl Player {
     }
 }
 
-impl BaseObject for Player {
-    fn as_any(&mut self) -> &mut dyn std::any::Any {
-        self
-    }
-
-    fn ptr(&self) -> &BaseObjectPointer {
-        &self.ptr
-    }
-
-    fn ptr_mut(&mut self) -> &mut BaseObjectPointer {
-        &mut self.ptr
-    }
-
-    fn base_type(&self) -> altv_sdk::BaseObjectType {
-        self.base_type
-    }
-}
+impl_base_object_for!(Player);
 impl Entity for Player {}
 
 #[allow(clippy::not_unsafe_ptr_arg_deref)]

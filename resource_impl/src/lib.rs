@@ -1,6 +1,7 @@
 mod base_object;
 pub mod entity;
 pub mod events;
+mod helpers;
 pub mod logging;
 pub mod player;
 pub mod resource_impl;

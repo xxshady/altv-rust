@@ -78,6 +78,29 @@ pub trait BaseObject {
     }
 }
 
+#[macro_export]
+macro_rules! impl_base_object_for {
+    ($struct: path) => {
+        impl BaseObject for $struct {
+            fn as_any(&mut self) -> &mut dyn std::any::Any {
+                self
+            }
+
+            fn ptr(&self) -> &BaseObjectPointer {
+                &self.ptr
+            }
+
+            fn ptr_mut(&mut self) -> &mut BaseObjectPointer {
+                &mut self.ptr
+            }
+
+            fn base_type(&self) -> altv_sdk::BaseObjectType {
+                self.base_type
+            }
+        }
+    };
+}
+
 #[derive(Debug)]
 struct Blocker<T: ?Sized>(T);
 

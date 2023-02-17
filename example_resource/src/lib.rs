@@ -13,12 +13,6 @@ pub fn main() {
     //     1000,
     // );
 
-    // let mut i = 0;
-    // alt::events::on_server_started(move |controller| {
-    //     i += 1;
-    //     alt::log!("example resource ServerStarted controller: {controller:?} i: {i:?}");
-    // });
-
     alt::events::on_server_started(|_| {
         alt::log!("example resource on_server_started");
     });

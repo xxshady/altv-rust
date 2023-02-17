@@ -1,6 +1,7 @@
 use crate::{
     base_object::{BaseObject, BaseObjectManager, BaseObjectPointer, RawBaseObjectPointer},
     entity::{Entity, EntityId, EntityWrapper},
+    impl_base_object_for,
     resource_impl::RESOURCE_IMPL_INSTANCE,
     vector::Vector3,
 };
@@ -27,16 +28,7 @@ impl Vehicle {
     }
 
     pub fn get_by_id(id: EntityId) -> Option<VehicleContainer> {
-        RESOURCE_IMPL_INSTANCE.with(|instance| {
-            let instance = instance.borrow();
-            let entities = instance.borrow_entities();
-            let result = entities.get_by_id(id);
-
-            match result {
-                Some(_wrapper @ EntityWrapper::Vehicle(vehicle)) => Some(Rc::clone(vehicle)),
-                None | Some(_) => None,
-            }
-        })
+        crate::get_entity_by_id!(EntityWrapper::Vehicle, id)
     }
 
     pub fn set_secondary_color(&self, color: u8) -> Result<(), String> {
@@ -67,23 +59,7 @@ impl Vehicle {
     }
 }
 
-impl BaseObject for Vehicle {
-    fn as_any(&mut self) -> &mut dyn std::any::Any {
-        self
-    }
-
-    fn ptr(&self) -> &BaseObjectPointer {
-        &self.ptr
-    }
-
-    fn ptr_mut(&mut self) -> &mut BaseObjectPointer {
-        &mut self.ptr
-    }
-
-    fn base_type(&self) -> altv_sdk::BaseObjectType {
-        self.base_type
-    }
-}
+impl_base_object_for!(Vehicle);
 impl Entity for Vehicle {}
 
 pub type VehicleContainer = Rc<RefCell<Vehicle>>;
