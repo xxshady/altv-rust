@@ -2,7 +2,7 @@ use std::{cell::RefMut, fmt::Debug};
 
 pub type TimerId = u32;
 
-pub type TimerCallback = dyn FnMut() + 'static + Send + Sync;
+pub type TimerCallback = dyn FnMut() + 'static;
 
 struct Timer {
     callback: Box<TimerCallback>,

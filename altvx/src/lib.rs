@@ -49,11 +49,11 @@ pub fn hash(str: &str) -> ModelHash {
     (num + (num << 15)).0
 }
 
-pub fn set_interval(callback: impl FnMut() + 'static + Send + Sync, millis: u64) {
+pub fn set_interval(callback: impl FnMut() + 'static, millis: u64) {
     resource_impl::resource_impl::timers_create(Box::new(callback), millis, false);
 }
 
-pub fn set_timeout(callback: impl FnMut() + 'static + Send + Sync, millis: u64) {
+pub fn set_timeout(callback: impl FnMut() + 'static, millis: u64) {
     resource_impl::resource_impl::timers_create(Box::new(callback), millis, true);
 }
 

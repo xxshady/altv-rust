@@ -51,10 +51,10 @@ pub struct BaseObjectCreateController {}
 
 #[repr(u16)]
 pub enum Event {
-    ServerStarted(Box<dyn FnMut(ServerStartedController) + Send + Sync>),
-    PlayerConnect(Box<dyn FnMut(PlayerConnectController) + Send + Sync>),
-    PlayerDisconnect(Box<dyn FnMut(PlayerDisconnectController) + Send + Sync>),
-    BaseObjectCreate(Box<dyn FnMut(BaseObjectCreateController) + Send + Sync>),
+    ServerStarted(Box<dyn FnMut(ServerStartedController)>),
+    PlayerConnect(Box<dyn FnMut(PlayerConnectController)>),
+    PlayerDisconnect(Box<dyn FnMut(PlayerDisconnectController)>),
+    BaseObjectCreate(Box<dyn FnMut(BaseObjectCreateController)>),
     ResourceStop(fn()),
 }
 

@@ -104,7 +104,7 @@ pub(crate) type BaseObjectContainer = Rc<RefCell<dyn BaseObject>>;
 
 impl Debug for dyn BaseObject {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "dyn BaseObject + Send + Sync")
+        write!(f, "dyn BaseObject")
     }
 }
 

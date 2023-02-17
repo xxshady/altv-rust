@@ -6,7 +6,7 @@ pub use resource_impl::events::{
 
 macro_rules! on_event {
     ($func_name: ident, $event_path: path, $controller: ty, $public_type: path, $sdk_type: path) => {
-        pub fn $func_name(handler: impl FnMut($controller) + 'static + Sync + Send) {
+        pub fn $func_name(handler: impl FnMut($controller) + 'static) {
             resource_impl::resource_impl::add_event_handler(
                 $public_type,
                 $sdk_type,

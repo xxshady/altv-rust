@@ -1,4 +1,4 @@
-use std::{cell::RefCell, collections::HashMap, fmt::Debug, rc::Rc};
+use std::{collections::HashMap, fmt::Debug};
 
 use altv_sdk::ffi as sdk;
 
@@ -13,9 +13,7 @@ pub trait Entity: BaseObject {
     }
 }
 
-pub(crate) type EntityContainer = Rc<RefCell<dyn Entity + Send + Sync>>;
-
-impl Debug for dyn Entity + Send + Sync {
+impl Debug for dyn Entity {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "dyn Entity <any>")
     }
