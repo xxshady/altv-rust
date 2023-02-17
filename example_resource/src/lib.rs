@@ -1,4 +1,4 @@
-use alt::Entity;
+use alt::{events::PlayerDisconnectController, Entity};
 
 #[alt::main(crate_name = "alt")]
 pub fn main() {
@@ -35,6 +35,16 @@ pub fn main() {
     //         alt::log_error!("failed to sub player id");
     //     }
     // });
+
+    alt::events::on_player_disconnect(|PlayerDisconnectController { player, reason }| {
+        let player = player.borrow();
+        alt::log_warn!(
+            "on_player_disconnect player: {} [{}], reason: {}",
+            player.name().unwrap(),
+            player.id().unwrap(),
+            reason
+        )
+    });
 
     // alt::set_timeout(|| println!("its timeout"), 300);
 

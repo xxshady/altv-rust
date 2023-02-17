@@ -167,16 +167,19 @@ namespace alt_rs
     {
         auto type = event->GetType();
 
-        if (type == CEvent::Type::PLAYER_CONNECT)
+        switch (type)
         {
+        case CEvent::Type::PLAYER_CONNECT:
             return static_cast<const alt::CPlayerConnectEvent*>(event)->GetTarget();
+        case CEvent::Type::PLAYER_DISCONNECT:
+            return static_cast<const alt::CPlayerDisconnectEvent*>(event)->GetTarget();
+        default:
+            ICore::Instance().LogError(
+                "get_event_player_target unknown event type: " +
+                std::to_string(static_cast<uint16_t>(type))
+            );
+            return nullptr;
         }
-
-        ICore::Instance().LogError(
-            "get_event_player_target unknown event type: " +
-            std::to_string(static_cast<uint16_t>(type))
-        );
-        return nullptr;
     }
 
     StdString get_event_reason(const alt::CEvent* event)

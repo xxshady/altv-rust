@@ -1,3 +1,7 @@
+use std::cell::Ref;
+
+use crate::player::{PlayerContainer, PlayerManager};
+
 #[macro_export]
 macro_rules! get_entity_by_id {
     ($wrapper: path, $entity_id: ident) => {
@@ -11,4 +15,21 @@ macro_rules! get_entity_by_id {
             }
         })
     };
+}
+
+pub(crate) fn get_player_from_event(
+    event: *const altv_sdk::ffi::CEvent,
+    players: &Ref<PlayerManager>,
+) -> PlayerContainer {
+    let raw_ptr = {
+        let player_raw_ptr = unsafe { altv_sdk::ffi::get_event_player_target(event) };
+
+        if player_raw_ptr.is_null() {
+            panic!("get_event_player_target returned null player ptr");
+        }
+
+        unsafe { altv_sdk::ffi::convert_player_to_base_object(player_raw_ptr) }
+    };
+
+    players.get_by_base_object_ptr(raw_ptr).unwrap()
 }

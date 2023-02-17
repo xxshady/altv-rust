@@ -3,7 +3,10 @@ use std::{
     collections::{HashMap, HashSet},
 };
 
-use crate::player::{Player, PlayerContainer, PlayerManager};
+use crate::{
+    helpers::get_player_from_event,
+    player::{PlayerContainer, PlayerManager},
+};
 
 pub use altv_sdk::EventType as SDKEventType;
 
@@ -42,7 +45,7 @@ pub struct PlayerConnectController {
 
 #[derive(Debug)]
 pub struct PlayerDisconnectController {
-    pub player: Player,
+    pub player: PlayerContainer,
     pub reason: String,
 }
 
@@ -102,26 +105,10 @@ impl EventManager {
                 match h {
                     ServerStarted(callback) => callback(ServerStartedController {}),
                     PlayerConnect(callback) => callback(PlayerConnectController {
-                        player: {
-                            let raw_ptr = {
-                                let player_raw_ptr =
-                                    unsafe { altv_sdk::ffi::get_event_player_target(event) };
-
-                                if player_raw_ptr.is_null() {
-                                    panic!("PlayerConnect get_event_player_target returned null player ptr");
-                                }
-
-                                unsafe {
-                                    altv_sdk::ffi::convert_player_to_base_object(player_raw_ptr)
-                                }
-                            };
-
-                            // TEST
-                            players.get_by_base_object_ptr(raw_ptr).unwrap()
-                        },
+                        player: get_player_from_event(event, &players),
                     }),
                     PlayerDisconnect(callback) => callback(PlayerDisconnectController {
-                        player: todo!(),
+                        player: get_player_from_event(event, &players),
                         reason: unsafe { altv_sdk::ffi::get_event_reason(event) }.to_string(),
                     }),
                     _ => todo!(),
