@@ -11,6 +11,7 @@ pub use event_type::EventType;
 mod base_object_type;
 pub use base_object_type::BaseObjectType;
 
+// TODO: maybe change this proc macro to macro-by-example
 #[derive(ExternTypeCallback)]
 #[repr(transparent)]
 pub struct RuntimeCreateImplCallback(pub extern "C" fn(resource_impl: *mut ffi::RustResourceImpl));
@@ -116,21 +117,21 @@ pub mod ffi {
         unsafe fn log_warn(str: &CxxString);
 
         // entity conversions
-        unsafe fn convert_baseobject_to_entity(baseobject: *mut IBaseObject) -> *mut IEntity;
+        unsafe fn convert_base_object_to_entity(base_object: *mut IBaseObject) -> *mut IEntity;
 
         // vehicle conversions
-        unsafe fn convert_vehicle_to_baseobject(baseobject: *mut IVehicle) -> *mut IBaseObject;
-        unsafe fn convert_baseobject_to_vehicle(vehicle: *mut IBaseObject) -> *mut IVehicle;
+        unsafe fn convert_vehicle_to_base_object(base_object: *mut IVehicle) -> *mut IBaseObject;
+        unsafe fn convert_base_object_to_vehicle(vehicle: *mut IBaseObject) -> *mut IVehicle;
         unsafe fn convert_vehicle_to_entity(entity: *mut IVehicle) -> *mut IEntity;
 
         // player conversions
-        unsafe fn convert_player_to_baseobject(baseobject: *mut IPlayer) -> *mut IBaseObject;
-        unsafe fn convert_baseobject_to_player(player: *mut IBaseObject) -> *mut IPlayer;
+        unsafe fn convert_player_to_base_object(base_object: *mut IPlayer) -> *mut IBaseObject;
+        unsafe fn convert_base_object_to_player(player: *mut IBaseObject) -> *mut IPlayer;
         unsafe fn convert_player_to_entity(entity: *mut IPlayer) -> *mut IEntity;
 
-        // baseobject
-        unsafe fn destroy_baseobject(base_object: *mut IBaseObject);
-        unsafe fn get_baseobject_type(base_object: *const IBaseObject) -> u8;
+        // base_object
+        unsafe fn destroy_base_object(base_object: *mut IBaseObject);
+        unsafe fn get_base_object_type(base_object: *const IBaseObject) -> u8;
 
         // entity
         unsafe fn get_entity_id(entity: *mut IEntity) -> u16;

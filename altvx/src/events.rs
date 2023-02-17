@@ -1,6 +1,7 @@
-use resource_impl::events::{
-    Event, PlayerConnectController, PlayerDisconnectController, PublicEventType, SDKEventType,
-    ServerStartedController,
+use resource_impl::events::{Event, PublicEventType, SDKEventType};
+
+pub use resource_impl::events::{
+    PlayerConnectController, PlayerDisconnectController, ServerStartedController,
 };
 
 macro_rules! on_event {

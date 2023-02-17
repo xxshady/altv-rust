@@ -1,5 +1,6 @@
-#[alt::res_main]
-#[no_mangle]
+use alt::Entity;
+
+#[alt::main(crate_name = "alt")]
 pub fn main() {
     std::env::set_var("RUST_BACKTRACE", "full");
 
@@ -12,52 +13,44 @@ pub fn main() {
     //     1000,
     // );
 
-    // let mut i = 0;
-    // alt::events::on_server_started(move |controller| {
-    //     i += 1;
-    //     alt::log!("example resource ServerStarted controller: {controller:?} i: {i:?}");
-    // });
+    alt::events::on_server_started(|_| {
+        alt::log!("example resource on_server_started");
+    });
 
-    alt::events::on_player_connect(|controller| {
-        // at least downcasting works.. but i need to downcast it in the module somehow
-        let player = controller.player.try_lock().unwrap();
-        let player = player.as_any().downcast_ref::<alt::Player>().unwrap();
+    alt::events::on_player_connect(|alt::events::PlayerConnectController { player }| {
+        let player = player.borrow();
+        let id = player.id().unwrap();
+
         alt::log!(
-            "example resource on_player_connect player name: {:?}",
-            player.name().unwrap()
+            "example resource on_player_connect name: {} id: {}",
+            player.name().unwrap(),
+            id
         );
+
+        dbg!(alt::Player::get_by_id(id));
+        let result = id.checked_sub(1);
+        if let Some(id) = result {
+            dbg!(alt::Player::get_by_id(dbg!(id)));
+        } else {
+            alt::log_error!("failed to sub player id");
+        }
     });
 
     // alt::set_timeout(|| println!("its timeout"), 300);
 
-    // fn on_player_connect(player_ptr: usize) {
-    //     alt::log_warn!("player connect player_ptr: {:?}", player_ptr);
-    // }
-
-    // alt::events::on(alt::events::__test_SDKEvent::ServerStarted(|| {
-    //     alt::log!("on_server_started test");
-    // }));
-
-    // fn on_server_started2() {
-    //     alt::log_warn!("on_server_started 2");
-    // }
-
-    // alt::events::on(alt::__resource_api::events::SDKEvent::PlayerConnect(
-    //     on_player_connect,
-    // ));
-
-    // alt::events::on(alt::__resource_api::events::SDKEvent::ServerStarted(
-    //     on_server_started2,
-    // ));
-
-    // fn on_player_disconnect(player: usize, reason: String) {
-    //     alt::log!("on_player_disconnect {:?} {:?}", player, reason);
-    // }
-
-    // alt::events::on(alt::__resource_api::events::SDKEvent::PlayerDisconnect(
-    //     on_player_disconnect,
-    // ));
     // let vehicle = alt::Vehicle::new(alt::hash("sultan"), 0.into(), 0.into()).unwrap();
+    // dbg!(&vehicle);
+
+    // let id = vehicle.borrow().id().unwrap();
+    // dbg!(&id);
+
+    // dbg!(alt::Vehicle::get_by_id(id));
+
+    // vehicle.borrow_mut().destroy().unwrap();
+
+    // dbg!(alt::Vehicle::get_by_id(id));
+
+    // vehicle.borrow_mut().destroy().unwrap();
     // let mut veh = vehicle.try_lock().unwrap();
 
     // dbg!(veh.id().unwrap());
@@ -98,15 +91,13 @@ pub fn main() {
     // );
 
     // fn recurse_set_timeout() {
-
-    // alt::set_timeout(
-    //     || {
-    //         alt::log!("set_timeout ~gl~recursion");
-    //         recurse_set_timeout();
-    //     },
-    //     500,
-    // )
+    //     alt::set_timeout(
+    //         || {
+    //             alt::log!("set_timeout ~gl~recursion");
+    //             recurse_set_timeout();
+    //         },
+    //         500,
+    //     )
     // }
-
     // recurse_set_timeout();
 }

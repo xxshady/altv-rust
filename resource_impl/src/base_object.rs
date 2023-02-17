@@ -1,14 +1,8 @@
-use std::{
-    any::Any,
-    collections::HashMap,
-    fmt::Debug,
-    ops::Deref,
-    rc::Rc,
-    sync::{Arc, Mutex},
-};
+use std::{any::Any, cell::RefCell, collections::HashMap, fmt::Debug, ops::Deref, rc::Rc};
 
 use altv_sdk::ffi as sdk;
-use once_cell::sync::OnceCell;
+
+use crate::resource_impl::RESOURCE_IMPL_INSTANCE;
 
 pub(crate) type RawBaseObjectPointer = *mut sdk::IBaseObject;
 
@@ -43,15 +37,15 @@ impl BaseObjectPointer {
     }
 
     pub fn to_entity(&self) -> Result<*mut sdk::IEntity, String> {
-        convert_ptr_to!(self, sdk::convert_baseobject_to_entity)
+        convert_ptr_to!(self, sdk::convert_base_object_to_entity)
     }
 
     pub fn to_vehicle(&self) -> Result<*mut sdk::IVehicle, String> {
-        convert_ptr_to!(self, sdk::convert_baseobject_to_vehicle)
+        convert_ptr_to!(self, sdk::convert_base_object_to_vehicle)
     }
 
     pub fn to_player(&self) -> Result<*mut sdk::IPlayer, String> {
-        convert_ptr_to!(self, sdk::convert_baseobject_to_player)
+        convert_ptr_to!(self, sdk::convert_base_object_to_player)
     }
 }
 
@@ -59,57 +53,57 @@ impl BaseObjectPointer {
 unsafe impl Send for BaseObjectPointer {}
 unsafe impl Sync for BaseObjectPointer {}
 
-// TEST
-// pub(crate) trait BaseObject {
 pub trait BaseObject {
-    fn as_any(&self) -> &dyn Any;
+    fn as_any(&mut self) -> &mut dyn Any;
     fn ptr(&self) -> &BaseObjectPointer;
     fn ptr_mut(&mut self) -> &mut BaseObjectPointer;
     fn base_type(&self) -> altv_sdk::BaseObjectType;
 
     fn destroy_base_object(&mut self) -> Result<(), String> {
         if let Ok(raw_ptr) = self.ptr().get() {
-            let _deletion = BASE_OBJECT_DELETION_INSTANCE
-                .get()
-                .unwrap()
-                .try_lock()
-                .unwrap();
+            RESOURCE_IMPL_INSTANCE.with(|instance| {
+                let instance = instance.borrow();
+                let _deletion = instance.borrow_mut_base_object_deletion();
 
-            unsafe { sdk::destroy_baseobject(raw_ptr) }
-            self.ptr_mut().set(None);
+                unsafe { sdk::destroy_base_object(raw_ptr) }
+                self.ptr_mut().set(None);
 
-            BASE_OBJECT_MANAGER_INSTANCE
-                .get()
-                .unwrap()
-                .try_lock()
-                .unwrap()
-                .remove(raw_ptr);
+                instance.borrow_mut_base_objects().remove(raw_ptr);
 
-            Ok(())
+                Ok(())
+            })
         } else {
             Err("Base object is already destroyed".to_string())
         }
     }
 }
 
-#[derive(Debug)]
-struct Blocker<T: ?Sized>(T);
+#[macro_export]
+macro_rules! impl_base_object_for {
+    ($struct: path) => {
+        impl BaseObject for $struct {
+            fn as_any(&mut self) -> &mut dyn std::any::Any {
+                self
+            }
 
-impl<T> Deref for Blocker<T> {
-    type Target = T;
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
+            fn ptr(&self) -> &BaseObjectPointer {
+                &self.ptr
+            }
+
+            fn ptr_mut(&mut self) -> &mut BaseObjectPointer {
+                &mut self.ptr
+            }
+
+            fn base_type(&self) -> altv_sdk::BaseObjectType {
+                self.base_type
+            }
+        }
+    };
 }
 
-// TEST
-// pub(crate) type BaseObjectContainer = Arc<Mutex<dyn BaseObject + Send + Sync>>;
-pub(crate) type BaseObjectContainer = Arc<Mutex<dyn BaseObject + Send + Sync>>;
+pub(crate) type BaseObjectContainer = Rc<RefCell<dyn BaseObject>>;
 
-pub(crate) static BASE_OBJECT_MANAGER_INSTANCE: OnceCell<Mutex<BaseObjectManager>> =
-    OnceCell::new();
-
-impl Debug for dyn BaseObject + Send + Sync {
+impl Debug for dyn BaseObject {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "dyn BaseObject + Send + Sync")
     }
@@ -117,9 +111,7 @@ impl Debug for dyn BaseObject + Send + Sync {
 
 #[derive(Debug)]
 pub struct BaseObjectManager {
-    // usize is RawBaseObjectPointer
-    base_objects: HashMap<usize, BaseObjectContainer>,
-    // concrete: HashMap<usize, BaseObjectContainer>,
+    base_objects: HashMap<RawBaseObjectPointer, BaseObjectContainer>,
 }
 
 impl BaseObjectManager {
@@ -130,15 +122,15 @@ impl BaseObjectManager {
     }
 
     pub fn on_create(&mut self, raw_ptr: RawBaseObjectPointer, base_object: BaseObjectContainer) {
-        self.base_objects.insert(raw_ptr as usize, base_object);
+        self.base_objects.insert(raw_ptr, base_object);
     }
 
     pub fn on_destroy(&mut self, base_object: BaseObjectContainer) {
-        let mut base_object = base_object.try_lock().unwrap();
+        let mut base_object = base_object.borrow_mut();
         let raw_ptr = base_object.ptr().get().unwrap();
         base_object.ptr_mut().set(None);
 
-        if self.base_objects.remove(&(raw_ptr as usize)).is_some() {
+        if self.base_objects.remove(&raw_ptr).is_some() {
             crate::log!("~gl~BaseObjectManager destroyed object: {raw_ptr:?}");
         } else {
             crate::log_error!("BaseObjectManager on_destroy invalid object: {raw_ptr:?}");
@@ -146,7 +138,7 @@ impl BaseObjectManager {
     }
 
     fn remove(&mut self, raw_ptr: RawBaseObjectPointer) {
-        if self.base_objects.remove(&(raw_ptr as usize)).is_some() {
+        if self.base_objects.remove(&raw_ptr).is_some() {
             crate::log!("~gl~BaseObjectManager removed object: {raw_ptr:?}");
         } else {
             crate::log_error!("BaseObjectManager remove invalid object: {raw_ptr:?}");
@@ -154,14 +146,9 @@ impl BaseObjectManager {
     }
 
     pub fn get_by_raw_ptr(&self, raw_ptr: RawBaseObjectPointer) -> Option<BaseObjectContainer> {
-        self.base_objects.get(&(raw_ptr as usize)).cloned()
+        self.base_objects.get(&raw_ptr).cloned()
     }
 }
-
-pub(crate) static BASE_OBJECT_CREATION_INSTANCE: OnceCell<Mutex<PendingBaseObjectCreation>> =
-    OnceCell::new();
-pub(crate) static BASE_OBJECT_DELETION_INSTANCE: OnceCell<Mutex<PendingBaseObjectDeletion>> =
-    OnceCell::new();
 
 #[derive(Debug)]
 pub struct PendingBaseObjectCreation;

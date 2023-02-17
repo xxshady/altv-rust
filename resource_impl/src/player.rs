@@ -1,11 +1,12 @@
 use crate::{
     base_object::{BaseObject, BaseObjectPointer, RawBaseObjectPointer},
-    entity::{Entity, EntityId, EntityWrapper, ENTITY_MANAGER_INSTANCE},
+    entity::{Entity, EntityId, EntityWrapper},
+    impl_base_object_for,
 };
 use altv_sdk::ffi as sdk;
-use std::sync::{Arc, Mutex};
+use std::{cell::RefCell, collections::HashMap, rc::Rc};
 
-pub type PlayerContainer = Arc<Mutex<Player>>;
+pub type PlayerContainer = Rc<RefCell<Player>>;
 
 #[derive(Debug)]
 pub struct Player {
@@ -15,15 +16,7 @@ pub struct Player {
 
 impl Player {
     pub fn get_by_id(id: EntityId) -> Option<PlayerContainer> {
-        let manager = ENTITY_MANAGER_INSTANCE.get().unwrap().try_lock().unwrap();
-        let result = manager.get_by_id(id);
-
-        dbg!(result);
-
-        match result {
-            Some(_wrapper @ EntityWrapper::Player(player)) => Some(player.clone()),
-            None | Some(_) => None,
-        }
+        crate::get_entity_by_id!(EntityWrapper::Player, id)
     }
 
     pub fn name(&self) -> Result<String, String> {
@@ -31,29 +24,39 @@ impl Player {
     }
 }
 
-impl BaseObject for Player {
-    fn as_any(&self) -> &dyn std::any::Any {
-        self
-    }
-
-    fn ptr(&self) -> &BaseObjectPointer {
-        &self.ptr
-    }
-
-    fn ptr_mut(&mut self) -> &mut BaseObjectPointer {
-        &mut self.ptr
-    }
-
-    fn base_type(&self) -> altv_sdk::BaseObjectType {
-        self.base_type
-    }
-}
+impl_base_object_for!(Player);
 impl Entity for Player {}
 
 #[allow(clippy::not_unsafe_ptr_arg_deref)]
 pub fn create_player_container(raw_ptr: RawBaseObjectPointer) -> PlayerContainer {
-    Arc::new(Mutex::new(Player {
+    Rc::new(RefCell::new(Player {
         ptr: BaseObjectPointer::new(raw_ptr),
         base_type: altv_sdk::BaseObjectType::VEHICLE,
     }))
+}
+
+#[derive(Debug)]
+pub(crate) struct PlayerManager {
+    players: HashMap<RawBaseObjectPointer, PlayerContainer>,
+}
+
+impl PlayerManager {
+    pub fn new() -> Self {
+        Self {
+            players: HashMap::new(),
+        }
+    }
+
+    pub fn add_player(&mut self, player: PlayerContainer) {
+        self.players
+            .insert(player.borrow().ptr().get().unwrap(), Rc::clone(&player));
+    }
+
+    pub fn remove_player(&mut self, raw_ptr: RawBaseObjectPointer) {
+        self.players.remove(&raw_ptr);
+    }
+
+    pub fn get_by_base_object_ptr(&self, raw_ptr: RawBaseObjectPointer) -> Option<PlayerContainer> {
+        self.players.get(&raw_ptr).cloned()
+    }
 }

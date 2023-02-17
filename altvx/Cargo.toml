@@ -1,5 +1,5 @@
 [package]
-name = "alt"
+name = "altvx"
 version = "0.1.0"
 edition = "2021"
 
@@ -9,4 +9,3 @@ edition = "2021"
 altv_sdk = { path = "../altv_sdk" }
 resource_main_macro = { path = "../resource_main_macro" }
 resource_impl = { path = "../resource_impl" }
-once_cell = "1.16.0"

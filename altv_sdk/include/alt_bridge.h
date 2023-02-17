@@ -158,23 +158,23 @@ namespace alt_rs
     IPlayer* get_event_player_target(const alt::CEvent* event);
     StdString get_event_reason(const alt::CEvent* event);
 
-    // baseobject conversions
-    IEntity* convert_baseobject_to_entity(IBaseObject* entity);
+    // base_object conversions
+    IEntity* convert_base_object_to_entity(IBaseObject* entity);
 
-    IBaseObject* convert_vehicle_to_baseobject(IVehicle* baseobject);
-    IVehicle* convert_baseobject_to_vehicle(IBaseObject* vehicle);
+    IBaseObject* convert_vehicle_to_base_object(IVehicle* base_object);
+    IVehicle* convert_base_object_to_vehicle(IBaseObject* vehicle);
     IEntity* convert_vehicle_to_entity(IVehicle* entity);
 
-    IBaseObject* convert_player_to_baseobject(IPlayer* baseobject);
-    IPlayer* convert_baseobject_to_player(IBaseObject* player);
+    IBaseObject* convert_player_to_base_object(IPlayer* base_object);
+    IPlayer* convert_base_object_to_player(IBaseObject* player);
     IEntity* convert_player_to_entity(IPlayer* entity);
 
-    // baseobject
-    void destroy_baseobject(IBaseObject* baseobject);
+    // base_object
+    void destroy_base_object(IBaseObject* base_object);
 
     // alt::IBaseObject::Type
     // returns 255 if baseobj is null
-    uint8_t get_baseobject_type(const IBaseObject* baseobject);
+    uint8_t get_base_object_type(const IBaseObject* base_object);
 
     // entity
     uint16_t get_entity_id(IEntity* entity);

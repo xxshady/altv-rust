@@ -1,12 +1,10 @@
 use std::{
-    any::Any,
+    cell::Ref,
     collections::{HashMap, HashSet},
-    sync::{Arc, Mutex},
 };
 
 use crate::{
-    base_object::{self, BaseObjectContainer, BaseObjectManager},
-    player::{Player, PlayerContainer},
+    player::{Player, PlayerContainer, PlayerManager},
     sdk_events::SDKEventManager,
 };
 
@@ -41,7 +39,7 @@ pub struct ServerStartedController {}
 
 #[derive(Debug)]
 pub struct PlayerConnectController {
-    pub player: BaseObjectContainer,
+    pub player: PlayerContainer,
 }
 
 #[derive(Debug)]
@@ -75,7 +73,7 @@ impl std::fmt::Debug for Event {
 // }
 
 #[derive(Debug)]
-pub struct EventManager {
+pub(crate) struct EventManager {
     public_handlers: HashMap<PublicEventType, Vec<Event>>,
     enabled_sdk_events: HashSet<SDKEventType>,
     sdk_events_manager: SDKEventManager,
@@ -91,12 +89,15 @@ impl EventManager {
     }
 
     #[allow(clippy::not_unsafe_ptr_arg_deref)]
-    pub fn on_sdk_event(
+    pub fn __on_sdk_event(
         &mut self,
-        base_objects: &'static Mutex<BaseObjectManager>,
+        players: Ref<PlayerManager>,
         event_type: SDKEventType,
         event: *const altv_sdk::ffi::CEvent,
     ) {
+        // TEST
+        crate::log_warn!("[events.on_sdk_event] received event: {:?}", event_type);
+
         let handlers = self.public_handlers.get_mut(&event_type.into());
 
         if let Some(handlers) = handlers {
@@ -115,16 +116,12 @@ impl EventManager {
                                 }
 
                                 unsafe {
-                                    altv_sdk::ffi::convert_player_to_baseobject(player_raw_ptr)
+                                    altv_sdk::ffi::convert_player_to_base_object(player_raw_ptr)
                                 }
                             };
 
-                            base_objects
-                                .try_lock()
-                                .unwrap()
-                                .get_by_raw_ptr(raw_ptr)
-                                .unwrap()
-                                .clone()
+                            // TEST
+                            players.get_by_base_object_ptr(raw_ptr).unwrap()
                         },
                     }),
                     PlayerDisconnect(callback) => callback(PlayerDisconnectController {

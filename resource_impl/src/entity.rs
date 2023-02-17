@@ -1,18 +1,11 @@
-use std::{
-    collections::HashMap,
-    fmt::Debug,
-    sync::{Arc, Mutex},
-};
+use std::{cell::RefCell, collections::HashMap, fmt::Debug, rc::Rc};
 
 use altv_sdk::ffi as sdk;
-use once_cell::sync::OnceCell;
 
 use crate::{base_object::BaseObject, player::PlayerContainer, vehicle::VehicleContainer};
 
 pub type RawEntityPointer = *mut sdk::IEntity;
 pub type EntityId = u16;
-
-pub(crate) static ENTITY_MANAGER_INSTANCE: OnceCell<Mutex<EntityManager>> = OnceCell::new();
 
 pub trait Entity: BaseObject {
     fn id(&self) -> Result<EntityId, String> {
@@ -20,7 +13,7 @@ pub trait Entity: BaseObject {
     }
 }
 
-pub(crate) type EntityContainer = Arc<Mutex<dyn Entity + Send + Sync>>;
+pub(crate) type EntityContainer = Rc<RefCell<dyn Entity + Send + Sync>>;
 
 impl Debug for dyn Entity + Send + Sync {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

@@ -188,7 +188,7 @@ namespace alt_rs
         case CEvent::Type::PLAYER_DISCONNECT:
             return std::make_unique<std::string>(std::string{
                 static_cast<const alt::CPlayerDisconnectEvent*>(event)->GetReason()
-                });
+            });
             break;
 
         default:
@@ -202,18 +202,18 @@ namespace alt_rs
     }
 
     // entity conversions
-    IEntity* convert_baseobject_to_entity(IBaseObject* entity)
+    IEntity* convert_base_object_to_entity(IBaseObject* entity)
     {
         return dynamic_cast<IEntity*>(entity);
     }
 
     // vehicle conversions
-    IBaseObject* convert_vehicle_to_baseobject(IVehicle* baseobject)
+    IBaseObject* convert_vehicle_to_base_object(IVehicle* base_object)
     {
-        return static_cast<IBaseObject*>(baseobject);
+        return static_cast<IBaseObject*>(base_object);
     }
 
-    IVehicle* convert_baseobject_to_vehicle(IBaseObject* vehicle)
+    IVehicle* convert_base_object_to_vehicle(IBaseObject* vehicle)
     {
         return dynamic_cast<IVehicle*>(vehicle);
     }
@@ -224,12 +224,12 @@ namespace alt_rs
     }
 
     // player conversions
-    IBaseObject* convert_player_to_baseobject(IPlayer* baseobject)
+    IBaseObject* convert_player_to_base_object(IPlayer* base_object)
     {
-        return static_cast<IBaseObject*>(baseobject);
+        return static_cast<IBaseObject*>(base_object);
     }
 
-    IPlayer* convert_baseobject_to_player(IBaseObject* player)
+    IPlayer* convert_base_object_to_player(IBaseObject* player)
     {
         return dynamic_cast<IPlayer*>(player);
     }
@@ -264,35 +264,35 @@ namespace alt_rs
             return 0;
         }
 
-        ICore::Instance().LogInfo("get_entity_id entity type: " + std::to_string(static_cast<uint8_t>(entity->GetType())));
+        // ICore::Instance().LogInfo("get_entity_id entity type: " + std::to_string(static_cast<uint8_t>(entity->GetType())));
         return entity->GetID();
     }
 
-    void destroy_baseobject(IBaseObject* baseobject)
+    void destroy_base_object(IBaseObject* base_object)
     {
-        if (!baseobject)
+        if (!base_object)
         {
-            ICore::Instance().LogError("destroy_baseobject nullptr baseobject");
+            ICore::Instance().LogError("destroy_base_object nullptr base_object");
             return;
         }
 
-        alt::IBaseObject::Type type = baseobject->GetType();
+        alt::IBaseObject::Type type = base_object->GetType();
 
-        ICore::Instance().LogInfo("destroy_baseobject type: " + std::to_string(static_cast<uint8_t>(baseobject->GetType())));
-        ICore::Instance().DestroyBaseObject(baseobject);
+        ICore::Instance().LogInfo("destroy_base_object type: " + std::to_string(static_cast<uint8_t>(base_object->GetType())));
+        ICore::Instance().DestroyBaseObject(base_object);
     }
 
-    uint8_t get_baseobject_type(const IBaseObject* baseobject)
+    uint8_t get_base_object_type(const IBaseObject* base_object)
     {
-        if (!baseobject)
+        if (!base_object)
         {
-            ICore::Instance().LogError("get_baseobject_type nullptr baseobject");
+            ICore::Instance().LogError("get_base_object_type nullptr base_object");
             return 255;
         }
 
-        uint8_t type = static_cast<uint8_t>(baseobject->GetType());
+        uint8_t type = static_cast<uint8_t>(base_object->GetType());
 
-        ICore::Instance().LogInfo("get_baseobject_type type: " + std::to_string(type));
+        ICore::Instance().LogInfo("get_base_object_type type: " + std::to_string(type));
         return type;
     }
 

@@ -1,11 +1,10 @@
-use std::{fmt::Debug, sync::MutexGuard};
+use std::{cell::RefMut, fmt::Debug};
 
 pub type TimerId = u32;
 
 pub type TimerCallback = dyn FnMut() + 'static + Send + Sync;
 
 struct Timer {
-    id: TimerId,
     callback: Box<TimerCallback>,
     next_call_time: std::time::SystemTime,
     millis: u64,
@@ -44,10 +43,9 @@ impl TimerManager {
         Self { timers: vec![] }
     }
 
-    // intended for altv_module
-    pub fn process_timers(&mut self, mut schedule: MutexGuard<ScheduleState>) {
+    pub fn process_timers(&mut self, mut schedule: RefMut<ScheduleState>) {
         self.timers.append(&mut schedule.timers);
-        drop(schedule); // unlock ScheduleState mutex lock
+        drop(schedule); // unborrow ScheduleState
 
         let now = std::time::SystemTime::now();
         let mut indexes_to_remove: Vec<usize> = vec![];
@@ -71,7 +69,7 @@ impl TimerManager {
 }
 
 pub fn create(
-    mut state: MutexGuard<ScheduleState>,
+    mut state: RefMut<ScheduleState>,
     callback: Box<TimerCallback>,
     millis: u64,
     once: bool,
@@ -84,7 +82,6 @@ pub fn create(
     let next_call_time = std::time::SystemTime::now() + std::time::Duration::from_millis(millis);
 
     state.timers.push(Timer {
-        id,
         callback,
         next_call_time,
         millis,

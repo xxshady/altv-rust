@@ -10,7 +10,6 @@ altv_sdk = { path = "../altv_sdk" }
 resource_impl = { path = "../resource_impl" }
 libloading = "0.7.4"
 cxx = "1.0.87"
-once_cell = "1.17.0"
 
 [lib]
 crate-type = ["cdylib"]
