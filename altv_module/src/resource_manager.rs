@@ -4,7 +4,6 @@ use std::{
     collections::{hash_map, HashMap},
 };
 
-// TODO: since we dont need multi-threading here its better to migrate to thread_local refcell
 thread_local! {
     pub static RESOURCE_MANAGER_INSTANCE: RefCell<ResourceManager> = RefCell::new(ResourceManager::new());
 }

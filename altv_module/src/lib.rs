@@ -109,7 +109,6 @@ extern "C" fn resource_on_event(full_main_path: &str, event: *const sdk::CEvent)
                 panic!("[resource_on_event] failed to get resource by path: {full_main_path}");
             })
             .with(|res| {
-                // TODO: on_sdk_event
                 res.borrow().__on_sdk_event(event_type, event);
             });
     });

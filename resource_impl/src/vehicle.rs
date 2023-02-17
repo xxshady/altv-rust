@@ -41,14 +41,6 @@ impl Vehicle {
     }
 
     pub fn destroy(&mut self) -> Result<(), String> {
-        // TODO:
-        // ENTITY_MANAGER_INSTANCE
-        //     .get()
-        //     .unwrap()
-        //     .try_lock()
-        //     .unwrap()
-        //     .on_destroy(self.ptr().to_entity().unwrap());
-
         RESOURCE_IMPL_INSTANCE.with(|instance| {
             let instance = instance.borrow();
             let mut entities = instance.borrow_mut_entities();
