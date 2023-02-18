@@ -2,6 +2,7 @@ use alt::{
     events::{ConsoleCommandController, PlayerDisconnectController},
     Entity,
 };
+use cxx::let_cxx_string;
 
 #[alt::main(crate_name = "alt")]
 pub fn main() {
@@ -20,24 +21,30 @@ pub fn main() {
         alt::log_warn!("example resource on_server_started controller: {controller:?}");
     });
 
-    // alt::events::on_player_connect(|alt::events::PlayerConnectController { player }| {
-    //     let player = player.borrow();
-    //     let id = player.id().unwrap();
+    alt::events::on_player_connect(|alt::events::PlayerConnectController { player }| {
+        let player = player.borrow();
+        let id = player.id().unwrap();
 
-    //     alt::log!(
-    //         "example resource on_player_connect name: {} id: {}",
-    //         player.name().unwrap(),
-    //         id
-    //     );
+        alt::log!(
+            "example resource on_player_connect name: {} id: {}",
+            player.name().unwrap(),
+            id
+        );
 
-    //     dbg!(alt::Player::get_by_id(id));
-    //     let result = id.checked_sub(1);
-    //     if let Some(id) = result {
-    //         dbg!(alt::Player::get_by_id(dbg!(id)));
-    //     } else {
-    //         alt::log_error!("failed to sub player id");
-    //     }
-    // });
+        let_cxx_string!(event_name = "test");
+
+        // let args = cxx::UniquePtr::new();
+
+        // alt::__test_trigger_client_event(player.ptr(), &event_name, args)
+
+        // dbg!(alt::Player::get_by_id(id));
+        // let result = id.checked_sub(1);
+        // if let Some(id) = result {
+        //     dbg!(alt::Player::get_by_id(dbg!(id)));
+        // } else {
+        //     alt::log_error!("failed to sub player id");
+        // }
+    });
 
     alt::events::on_player_disconnect(|PlayerDisconnectController { player, reason }| {
         let player = player.borrow();

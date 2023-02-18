@@ -18,6 +18,10 @@ pub use ffi::set_alt_core as __set_alt_core;
 #[doc(hidden)]
 pub use ffi::ICore as __alt_ICore;
 
+// TEST
+pub use ffi as __test_ffi;
+pub use ffi::trigger_client_event as __test_trigger_client_event;
+
 // intended for resource_main_macro
 #[doc(hidden)]
 use resource_impl::resource_impl::ResourceImpl;

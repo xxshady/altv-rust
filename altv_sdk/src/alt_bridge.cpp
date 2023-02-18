@@ -347,4 +347,21 @@ namespace alt_rs
         return std::make_unique<std::string>(player->GetName());
     }
 
+    // mvalue
+    std::unique_ptr<MValue> create_mvalue_bool(bool value)
+    {
+        return std::make_unique<MValue>(ICore::Instance().CreateMValueBool(value));
+    }
+
+    void trigger_client_event(IPlayer* player, const std::string& event_name, MValueArgsVector args_vector)
+    {
+        alt::MValueArgs args;
+        // TEST
+        for (int i = 0; i < args_vector->size(); ++i)
+        {
+            args.Push((*args_vector)[i]);
+        }
+
+        ICore::Instance().TriggerClientEvent(player, event_name, args);
+    }
 }

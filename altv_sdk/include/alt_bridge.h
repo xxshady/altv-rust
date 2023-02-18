@@ -16,6 +16,11 @@ namespace alt_rs
     using IBlip = alt::IBlip;
     using CEvent = alt::CEvent;
 
+    using MValue = alt::MValue;
+    using MValueBool = alt::MValueBool; // TODO: do we need this here?
+    using MValueArgs = alt::MValueArgs;
+    using MValueArgsVector = rust::Vec<MValue>&;
+
     // custom
     using RustResourceImpl = alt::IResource::Impl*;
     using RuntimeCreateImplCallback = void (*)(RustResourceImpl rust_resource_impl);
@@ -193,4 +198,9 @@ namespace alt_rs
 
     // player
     StdString get_player_name(IPlayer* player);
+
+    // mvalue
+    std::unique_ptr<MValue> create_mvalue_bool(bool value);
+
+    void trigger_client_event(IPlayer* player, const std::string& event_name, MValueArgsVector args_vector);
 }

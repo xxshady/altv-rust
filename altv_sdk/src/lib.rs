@@ -79,6 +79,10 @@ pub mod ffi {
         type RustResourceImpl;
         type CEvent;
 
+        type MValue;
+        type MValueBool;
+        type MValueArgs;
+
         // internal shit
         unsafe fn set_alt_core(core: *mut ICore);
         unsafe fn alt_core_instance() -> *mut ICore;
@@ -155,5 +159,14 @@ pub mod ffi {
 
         // player
         unsafe fn get_player_name(player: *mut IPlayer) -> UniquePtr<CxxString>;
+
+        // mvalue
+        unsafe fn create_mvalue_bool(value: bool) -> UniquePtr<MValue>;
+
+        unsafe fn trigger_client_event(
+            player: *mut IPlayer,
+            event_name: &CxxString,
+            args: &Vec<MValue>,
+        );
     }
 }
