@@ -64,7 +64,6 @@ fn generate_rust_enum_from_cpp(
     let content = String::from_utf8(fs::read(path).unwrap()).unwrap();
     let str = str_to_find;
     let idx = content.find(str).unwrap();
-    dbg!(idx);
 
     let mut open_brace = false;
     let mut start_idx = 0;
