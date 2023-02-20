@@ -5,13 +5,13 @@ const BASE_OBJECT_TYPE_ENUM_FILE: &str = "include/cpp-sdk/objects/IBaseObject.h"
 const EVENT_TYPE_ENUM_FILE: &str = "include/cpp-sdk/events/CEvent.h";
 
 fn main() {
-    generate_cpp_sdk_version();
+    generate_cpp_to_rust_bindings();
     build_rust();
 
     rerun_except::rerun_except(&["src/cpp_sdk_version.rs"]).expect("rerun_except failed");
 }
 
-fn generate_cpp_sdk_version() {
+fn generate_cpp_to_rust_bindings() {
     std::process::Command::new(format!("{CPP_SDK_VERSION_DIR}/get-version.bat"))
         .current_dir(CPP_SDK_VERSION_DIR)
         .output()
