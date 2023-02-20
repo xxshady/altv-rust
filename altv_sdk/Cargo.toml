@@ -4,7 +4,7 @@ version = "0.0.0"
 edition = "2021"
 
 [dependencies]
-cxx = "1.0"
+cxx = { workspace = true }
 extern_type_callback_derive = { path = "../extern_type_callback_derive" }
 primitive_enum = "1.0.2"
 

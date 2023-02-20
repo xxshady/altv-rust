@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 alt = { path = "../altvx", package = "altvx" }
-cxx = "1.0.91"
+cxx = { workspace = true } # TEST
 
 [lib]
 crate-type = ["cdylib"]

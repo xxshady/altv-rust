@@ -9,3 +9,6 @@ members = [
     "altvx",
     "example_resource",
 ]
+
+[workspace.dependencies]
+cxx = "1.0.91"
