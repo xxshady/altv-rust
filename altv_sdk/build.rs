@@ -56,7 +56,7 @@ fn build_rust() {
         .file("src/alt_bridge.cpp")
         .flag("-DALT_SERVER_API")
         .flag("/std:c++20")
-        .compile("alt_sdk");
+        .compile("altv_sdk");
 }
 
 fn generate_rust_enum_from_cpp(
