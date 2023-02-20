@@ -8,7 +8,12 @@ fn main() {
     generate_cpp_to_rust_bindings();
     build_rust();
 
-    rerun_except::rerun_except(&["src/cpp_sdk_version.rs"]).expect("rerun_except failed");
+    rerun_except::rerun_except(&[
+        "src/cpp_sdk_version.rs",
+        "src/base_object_type.rs",
+        "src/event_type.rs",
+    ])
+    .expect("rerun_except failed");
 }
 
 fn generate_cpp_to_rust_bindings() {
