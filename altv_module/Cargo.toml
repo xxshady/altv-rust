@@ -9,7 +9,7 @@ edition = "2021"
 altv_sdk = { path = "../altv_sdk" }
 resource_impl = { path = "../resource_impl" }
 libloading = "0.7.4"
-cxx = { workspace = true }
+autocxx = { workspace = true }
 
 [lib]
 crate-type = ["cdylib"]

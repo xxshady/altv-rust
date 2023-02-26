@@ -1,6 +1,3 @@
-use std::cell::RefCell;
-use std::thread::LocalKey;
-
 use altv_sdk::ffi;
 
 pub mod events;
@@ -14,13 +11,9 @@ pub use resource_impl::logging::log_warn;
 pub use resource_main_macro::resource_main_func as main;
 
 #[doc(hidden)]
-pub use ffi::set_alt_core as __set_alt_core;
+pub use ffi::alt::ICore as __alt_ICore;
 #[doc(hidden)]
-pub use ffi::ICore as __alt_ICore;
-
-// TEST
-pub use ffi as __test_ffi;
-pub use ffi::trigger_client_event as __test_trigger_client_event;
+pub use ffi::set_alt_core as __set_alt_core;
 
 // intended for resource_main_macro
 #[doc(hidden)]

@@ -18,7 +18,7 @@ macro_rules! get_entity_by_id {
 }
 
 pub(crate) fn get_player_from_event(
-    event: *const altv_sdk::ffi::CEvent,
+    event: *const altv_sdk::ffi::alt::CEvent,
     players: &Ref<PlayerBaseObjectMap>,
 ) -> PlayerContainer {
     let raw_ptr = {

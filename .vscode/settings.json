@@ -96,7 +96,6 @@
     "target/**/*": true
   },
   "editor.tabSize": 4,
-  "cmake.sourceDirectory": "${workspaceFolder}/altv_sdk/include/cpp-sdk",
   "rust-analyzer.check.allTargets": false,
   "rust-analyzer.check.targets": "x86_64-pc-windows-msvc",
   "rust-analyzer.trace.extension": true

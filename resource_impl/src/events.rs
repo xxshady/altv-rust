@@ -80,7 +80,7 @@ impl std::fmt::Debug for Event {
 
 // TODO:
 // pub enum CustomEventPayload {
-//     BaseObjectCreate(base_object_type: altv_sdk::BaseObjectType, pointer: *const sdk::IBaseObject),
+//     BaseObjectCreate(base_object_type: altv_sdk::BaseObjectType, pointer: *const sdk::alt::IBaseObject),
 // }
 
 #[derive(Debug)]
@@ -102,7 +102,7 @@ impl EventManager {
         &mut self,
         players: Ref<PlayerBaseObjectMap>,
         event_type: SDKEventType,
-        event: *const sdk::CEvent,
+        event: *const sdk::alt::CEvent,
     ) {
         // TEST
         crate::log_warn!("[events.on_sdk_event] received event: {:?}", event_type);

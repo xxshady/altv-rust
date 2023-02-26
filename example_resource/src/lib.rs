@@ -8,14 +8,14 @@ use cxx::let_cxx_string;
 pub fn main() {
     std::env::set_var("RUST_BACKTRACE", "full");
 
-    // let mut i = 0;
-    // alt::set_interval(
-    //     move || {
-    //         i += 1;
-    //         alt::log!("test interval i: {i}");
-    //     },
-    //     1000,
-    // );
+    let mut i = 0;
+    alt::set_interval(
+        move || {
+            i += 1;
+            alt::log!("test interval i: {i}");
+        },
+        1000,
+    );
 
     alt::events::on_server_started(|controller| {
         alt::log_warn!("example resource on_server_started controller: {controller:?}");

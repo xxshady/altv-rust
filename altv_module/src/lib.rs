@@ -1,47 +1,23 @@
-mod resource_manager;
-
-use altv_sdk::ffi as sdk;
-use cxx::let_cxx_string;
-use libloading::Library;
-use resource_impl::resource_impl::{ResourceImpl, ResourceImplRef};
 use std::{cell::RefCell, path::PathBuf, rc::Rc};
 
-use crate::resource_manager::{ResourceController, RESOURCE_MANAGER_INSTANCE};
+use altv_sdk::ffi as sdk;
+use libloading::Library;
+use resource_impl::resource_impl::{ResourceImpl, ResourceImplRef};
+use resource_manager::ResourceController;
+
+use crate::resource_manager::RESOURCE_MANAGER_INSTANCE;
 
 mod helpers;
+mod resource_manager;
+
+type ResourceMainFn =
+    unsafe extern "C" fn(core: *mut sdk::alt::ICore, resource_impl: ResourceImplRef);
 
 #[allow(improper_ctypes_definitions)]
-extern "C" fn runtime_create_impl(resource_impl: *mut sdk::RustResourceImpl) {
-    resource_impl::log!("runtime_create_impl resource_impl: {:?}", resource_impl);
-}
+extern "C" fn resource_start(full_main_path: String) {
+    resource_impl::log!("resource_start: {full_main_path}");
 
-#[allow(improper_ctypes_definitions)]
-extern "C" fn runtime_resource_destroy_impl() {
-    resource_impl::log!("runtime_resource_destroy_impl");
-}
-
-#[allow(improper_ctypes_definitions)]
-extern "C" fn runtime_on_tick() {
-    // resource_impl::log!("runtime_on_tick");
-
-    // let resources = ResourceManager::instance().resources_iter();
-
-    RESOURCE_MANAGER_INSTANCE.with(|v| {
-        for (_, controller) in v.borrow().resources_iter() {
-            controller.borrow_resource_impl().__on_tick();
-        }
-    });
-}
-
-type ResourceMainFn = unsafe extern "C" fn(core: *mut sdk::ICore, resource_impl: ResourceImplRef);
-
-#[allow(improper_ctypes_definitions)]
-extern "C" fn resource_start(full_main_path: &str) {
-    let full_main_path = full_main_path.to_string();
-    dbg!(&full_main_path);
-
-    let core_ptr = unsafe { sdk::alt_core_instance() };
-    resource_impl::log!("calling resource main func with core ptr: {:?}", core_ptr);
+    let core_ptr = unsafe { sdk::get_alt_core() };
 
     let resource_impl = Rc::new(RefCell::new(ResourceImpl::new()));
 
@@ -59,20 +35,34 @@ extern "C" fn resource_start(full_main_path: &str) {
 }
 
 #[allow(improper_ctypes_definitions)]
-extern "C" fn resource_stop(full_main_path: &str) {
+extern "C" fn resource_stop(full_main_path: String) {
     resource_impl::log!("resource_stop: {full_main_path}");
 
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
-        manager.borrow_mut().remove(full_main_path);
+        manager.borrow_mut().remove(&full_main_path);
     });
 }
 
-extern "C" fn resource_on_tick(full_main_path: &str) {
+#[allow(improper_ctypes_definitions)]
+extern "C" fn runtime_resource_destroy_impl() {
+    // resource_impl::log!("runtime_resource_destroy_impl");
+}
+
+#[allow(improper_ctypes_definitions)]
+extern "C" fn runtime_on_tick() {
+    RESOURCE_MANAGER_INSTANCE.with(|v| {
+        for (_, controller) in v.borrow().resources_iter() {
+            controller.borrow_resource_impl().__on_tick();
+        }
+    });
+}
+
+extern "C" fn resource_on_tick(full_main_path: String) {
     // resource_impl::log!("resource_on_tick");
 }
 
 #[allow(improper_ctypes_definitions)]
-extern "C" fn resource_on_event(full_main_path: &str, event: *const sdk::CEvent) {
+extern "C" fn resource_on_event(full_main_path: String, event: *const sdk::alt::CEvent) {
     if event.is_null() {
         panic!("resource_on_event event is null");
     }
@@ -86,7 +76,7 @@ extern "C" fn resource_on_event(full_main_path: &str, event: *const sdk::CEvent)
         event_type
     );
 
-    // heron said it will be removed
+    // // heron said it will be removed
     if event_type == altv_sdk::EventType::PLAYER_BEFORE_CONNECT {
         resource_impl::log_warn!("ignoring PLAYER_BEFORE_CONNECT");
         return;
@@ -95,7 +85,7 @@ extern "C" fn resource_on_event(full_main_path: &str, event: *const sdk::CEvent)
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
         let manager = manager.borrow();
         manager
-            .get_by_path(full_main_path)
+            .get_by_path(&full_main_path)
             .unwrap_or_else(|| {
                 panic!("[resource_on_event] failed to get resource by path: {full_main_path}");
             })
@@ -106,8 +96,8 @@ extern "C" fn resource_on_event(full_main_path: &str, event: *const sdk::CEvent)
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_on_create_base_object(
-    full_main_path: &str,
-    base_object: *mut sdk::IBaseObject,
+    full_main_path: String,
+    base_object: *mut sdk::alt::IBaseObject,
 ) {
     if base_object.is_null() {
         panic!("resource_on_create_base_object base_object is null");
@@ -120,9 +110,9 @@ extern "C" fn resource_on_create_base_object(
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
         let manager = manager.borrow();
         manager
-            .get_by_path(full_main_path)
+            .get_by_path(&full_main_path)
             .unwrap_or_else(|| {
-                panic!("[resource_on_event] failed to get resource by path: {full_main_path}");
+                panic!("[resource_on_remove_base_object] failed to get resource by path: {full_main_path}");
             })
             .borrow_resource_impl()
             .__on_base_object_create(base_object, base_object_type);
@@ -131,8 +121,8 @@ extern "C" fn resource_on_create_base_object(
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_on_remove_base_object(
-    full_main_path: &str,
-    base_object: *mut sdk::IBaseObject,
+    full_main_path: String,
+    base_object: *mut sdk::alt::IBaseObject,
 ) {
     if base_object.is_null() {
         panic!("resource_on_remove_base_object base_object is null");
@@ -148,9 +138,9 @@ extern "C" fn resource_on_remove_base_object(
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
         let manager = manager.borrow();
         manager
-            .get_by_path(full_main_path)
+            .get_by_path(&full_main_path)
             .unwrap_or_else(|| {
-                panic!("[resource_on_event] failed to get resource by path: {full_main_path}");
+                panic!("[resource_on_remove_base_object] failed to get resource by path: {full_main_path}");
             })
             .borrow_resource_impl()
             .__on_base_object_destroy(base_object);
@@ -159,30 +149,27 @@ extern "C" fn resource_on_remove_base_object(
 
 #[no_mangle]
 #[allow(clippy::missing_safety_doc)]
-pub unsafe extern "C" fn altMain(core: *mut sdk::ICore) -> bool {
+pub unsafe extern "C" fn altMain(core: *mut sdk::alt::ICore) -> bool {
     std::env::set_var("RUST_BACKTRACE", "1");
 
     if core.is_null() {
         panic!("altMain core is null");
     }
 
-    sdk::set_alt_core(core);
+    sdk::set_alt_core(core as *mut sdk::alt::ICore);
 
     let runtime = sdk::create_script_runtime();
-    let_cxx_string!(resource_type = "rs");
-
-    sdk::register_script_runtime(core, &resource_type, runtime);
+    sdk::register_script_runtime(core as *mut sdk::alt::ICore, "rs", runtime);
 
     sdk::setup_callbacks(
-        altv_sdk::RuntimeCreateImplCallback(runtime_create_impl),
-        altv_sdk::RuntimeResourceDestroyImplCallback(runtime_resource_destroy_impl),
-        altv_sdk::RuntimeOnTickCallback(runtime_on_tick),
-        altv_sdk::ResourceStartCallback(resource_start),
-        altv_sdk::ResourceStopCallback(resource_stop),
-        altv_sdk::ResourceOnTickCallback(resource_on_tick),
-        altv_sdk::ResourceOnEventCallback(resource_on_event),
-        altv_sdk::ResourceOnCreateBaseObjectCallback(resource_on_create_base_object),
-        altv_sdk::ResourceOnRemoveBaseObjectCallback(resource_on_remove_base_object),
+        sdk::ResourceStartCallback(resource_start),
+        sdk::ResourceStopCallback(resource_stop),
+        sdk::RuntimeResourceDestroyImplCallback(runtime_resource_destroy_impl),
+        sdk::RuntimeOnTickCallback(runtime_on_tick),
+        sdk::ResourceOnTickCallback(resource_on_tick),
+        sdk::ResourceOnEventCallback(resource_on_event),
+        sdk::ResourceOnCreateBaseObjectCallback(resource_on_create_base_object),
+        sdk::ResourceOnRemoveBaseObjectCallback(resource_on_remove_base_object),
     );
 
     true

@@ -4,7 +4,7 @@ use altv_sdk::ffi as sdk;
 
 use crate::{base_object::BaseObject, player::PlayerContainer, vehicle::VehicleContainer};
 
-pub type RawEntityPointer = *mut sdk::IEntity;
+pub type RawEntityPointer = *mut sdk::alt::IEntity;
 pub type EntityId = u16;
 
 pub trait Entity: BaseObject {

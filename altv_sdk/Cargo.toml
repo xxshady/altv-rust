@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 cxx = { workspace = true }
+autocxx = { workspace = true }
 extern_type_callback_derive = { path = "../extern_type_callback_derive" }
 primitive_enum = "1.0.2"
 
@@ -12,3 +13,5 @@ primitive_enum = "1.0.2"
 cxx-build = "1.0"
 bindgen = "0.63.0"
 rerun_except = "1.0.0"
+autocxx-build = "0.24.0"
+miette = { version = "5", features = ["fancy"] }
