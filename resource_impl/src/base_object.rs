@@ -4,7 +4,7 @@ use altv_sdk::ffi as sdk;
 
 use crate::resource_impl::with_resource_impl;
 
-pub(crate) type RawBaseObjectPointer = *mut sdk::IBaseObject;
+pub(crate) type RawBaseObjectPointer = *mut sdk::alt::IBaseObject;
 
 macro_rules! convert_ptr_to {
     ($self: ident, $sdk_converter: path) => {
@@ -36,15 +36,15 @@ impl BaseObjectPointer {
         self.0 = value;
     }
 
-    pub fn to_entity(&self) -> Result<*mut sdk::IEntity, String> {
+    pub fn to_entity(&self) -> Result<*mut sdk::alt::IEntity, String> {
         convert_ptr_to!(self, sdk::convert_base_object_to_entity)
     }
 
-    pub fn to_vehicle(&self) -> Result<*mut sdk::IVehicle, String> {
+    pub fn to_vehicle(&self) -> Result<*mut sdk::alt::IVehicle, String> {
         convert_ptr_to!(self, sdk::convert_base_object_to_vehicle)
     }
 
-    pub fn to_player(&self) -> Result<*mut sdk::IPlayer, String> {
+    pub fn to_player(&self) -> Result<*mut sdk::alt::IPlayer, String> {
         convert_ptr_to!(self, sdk::convert_base_object_to_player)
     }
 }

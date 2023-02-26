@@ -2,20 +2,19 @@ use alt::{
     events::{ConsoleCommandController, PlayerDisconnectController},
     Entity,
 };
-use cxx::let_cxx_string;
 
 #[alt::main(crate_name = "alt")]
 pub fn main() {
     std::env::set_var("RUST_BACKTRACE", "full");
 
-    // let mut i = 0;
-    // alt::set_interval(
-    //     move || {
-    //         i += 1;
-    //         alt::log!("test interval i: {i}");
-    //     },
-    //     1000,
-    // );
+    let mut i = 0;
+    alt::set_interval(
+        move || {
+            i += 1;
+            alt::log!("test interval i: {i}");
+        },
+        1000,
+    );
 
     alt::events::on_server_started(|controller| {
         alt::log_warn!("example resource on_server_started controller: {controller:?}");
@@ -30,8 +29,6 @@ pub fn main() {
             player.name().unwrap(),
             id
         );
-
-        let_cxx_string!(event_name = "test");
 
         // let args = cxx::UniquePtr::new();
 

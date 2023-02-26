@@ -10,7 +10,7 @@ pub fn extern_type_callback_derive(input: TokenStream) -> TokenStream {
 
 fn impl_extern_type(ast: &syn::DeriveInput) -> TokenStream {
     let name = &ast.ident;
-    let type_id = format!("alt_rs::{name}");
+    let type_id = format!("callbacks::{name}");
     let gen = quote! {
         unsafe impl ExternType for #name {
             type Id = type_id!(#type_id);

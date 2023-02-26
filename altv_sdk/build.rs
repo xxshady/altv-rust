@@ -1,12 +1,12 @@
 use std::fs;
 
-const CPP_SDK_VERSION_DIR: &str = "include/cpp-sdk/version";
-const BASE_OBJECT_TYPE_ENUM_FILE: &str = "include/cpp-sdk/objects/IBaseObject.h";
-const EVENT_TYPE_ENUM_FILE: &str = "include/cpp-sdk/events/CEvent.h";
+const CPP_SDK_VERSION_DIR: &str = "cpp-sdk/version";
+const BASE_OBJECT_TYPE_ENUM_FILE: &str = "cpp-sdk/objects/IBaseObject.h";
+const EVENT_TYPE_ENUM_FILE: &str = "cpp-sdk/events/CEvent.h";
 
-fn main() {
+fn main() -> miette::Result<()> {
     generate_cpp_to_rust_bindings();
-    build_rust();
+    build_rust()?;
 
     rerun_except::rerun_except(&[
         "src/cpp_sdk_version.rs",
@@ -14,13 +14,16 @@ fn main() {
         "src/event_type.rs",
     ])
     .expect("rerun_except failed");
+
+    Ok(())
 }
 
 fn generate_cpp_to_rust_bindings() {
-    std::process::Command::new(format!("{CPP_SDK_VERSION_DIR}/get-version.bat"))
+    let version_bat = format!("{CPP_SDK_VERSION_DIR}/get-version.bat");
+    std::process::Command::new(version_bat.clone())
         .current_dir(CPP_SDK_VERSION_DIR)
         .output()
-        .expect("failed to run cpp-sdk get-version.bat");
+        .unwrap_or_else(|e| panic!("failed to run cpp-sdk get-version.bat in: {version_bat} {e}"));
 
     let cpp_sdk_version_bindings = bindgen::Builder::default()
         .header(format!("{CPP_SDK_VERSION_DIR}/version.h"))
@@ -50,13 +53,16 @@ fn generate_cpp_to_rust_bindings() {
     );
 }
 
-fn build_rust() {
-    let sources = vec!["src/lib.rs"];
-    cxx_build::bridges(sources)
-        .file("src/alt_bridge.cpp")
-        .flag("-DALT_SERVER_API")
+fn build_rust() -> miette::Result<()> {
+    let path = std::path::PathBuf::from("src");
+
+    autocxx_build::Builder::new("src/lib.rs", [&path])
+        .extra_clang_args(&["-std=c++20"])
+        .build()?
         .flag("/std:c++20")
         .compile("altv_sdk");
+
+    Ok(())
 }
 
 fn generate_rust_enum_from_cpp(
@@ -89,7 +95,6 @@ fn generate_rust_enum_from_cpp(
         if *char == b'{' {
             open_brace = true;
             start_idx = idx + 1;
-            println!("open brace found at {idx:?}");
         }
     }
 
@@ -107,7 +112,8 @@ fn generate_rust_enum_from_cpp(
     fs::write(
         write_to,
         format!(
-            "#![allow(non_camel_case_types)]\n\
+            "// auto-generated from build.rs\n\n\
+            #![allow(non_camel_case_types)]\n\
             use primitive_enum::primitive_enum;\n\
             primitive_enum! {{ {enum_name} {enum_type} ;\n\
                 {result_string},\n\

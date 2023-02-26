@@ -143,7 +143,7 @@ impl ResourceImpl {
     pub fn __on_sdk_event(
         &self,
         event_type: altv_sdk::EventType,
-        event: *const altv_sdk::ffi::CEvent,
+        event: *const altv_sdk::ffi::alt::CEvent,
     ) {
         self.events.borrow_mut().__on_sdk_event(
             self.player_base_object_map.borrow(),
