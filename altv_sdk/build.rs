@@ -112,7 +112,8 @@ fn generate_rust_enum_from_cpp(
     fs::write(
         write_to,
         format!(
-            "#![allow(non_camel_case_types)]\n\
+            "// auto-generated from build.rs\n\n\
+            #![allow(non_camel_case_types)]\n\
             use primitive_enum::primitive_enum;\n\
             primitive_enum! {{ {enum_name} {enum_type} ;\n\
                 {result_string},\n\

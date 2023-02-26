@@ -10,16 +10,10 @@ pub mod ffi {
 
         name!(alt_bridge)
 
-        // generate!("IEntity")
-        // generate!("IPlayer")
-        // generate!("IVehicle")
-        // generate!("CEvent")
-
         generate!("set_alt_core")
         generate!("get_alt_core")
         generate!("create_script_runtime")
         generate!("register_script_runtime")
-
 
         // mvalue
         generate!("MValueWrapper")
