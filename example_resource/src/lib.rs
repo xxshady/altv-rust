@@ -2,7 +2,6 @@ use alt::{
     events::{ConsoleCommandController, PlayerDisconnectController},
     Entity,
 };
-use cxx::let_cxx_string;
 
 #[alt::main(crate_name = "alt")]
 pub fn main() {
@@ -30,8 +29,6 @@ pub fn main() {
             player.name().unwrap(),
             id
         );
-
-        let_cxx_string!(event_name = "test");
 
         // let args = cxx::UniquePtr::new();
 

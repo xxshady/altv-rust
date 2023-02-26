@@ -384,7 +384,6 @@ name = "example_resource"
 version = "0.1.0"
 dependencies = [
  "altvx",
- "cxx",
 ]
 
 [[package]]

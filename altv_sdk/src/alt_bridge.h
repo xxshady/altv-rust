@@ -18,9 +18,6 @@ using u32 = uint32_t;
 using f32 = float;
 using f64 = double;
 
-// TEST aliases2
-using AltCore = alt::ICore;
-
 void set_alt_core(alt::ICore* core) {
     alt::ICore::SetInstance(core);
 }
