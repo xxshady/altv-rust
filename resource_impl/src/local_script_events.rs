@@ -26,13 +26,6 @@ macro_rules! emit_local_event {
     }};
 }
 
-#[macro_export]
-macro_rules! mvalue_list {
-    ($($arg: expr),+ $(,)*) => {
-        vec![$($arg.into()),*]
-    };
-}
-
 pub type LocalEventArgs<'a> = &'a mvalue::MValueList;
 pub type LocalEventHandler = Box<dyn FnMut(LocalEventArgs) -> anyhow::Result<()>>;
 

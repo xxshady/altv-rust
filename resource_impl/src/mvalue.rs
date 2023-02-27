@@ -165,3 +165,10 @@ fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper) -> MValue {
         _ => todo!(),
     }
 }
+
+#[macro_export]
+macro_rules! mvalue_list {
+    ($($arg: expr),+ $(,)*) => {
+        vec![$($arg.into()),*]
+    };
+}
