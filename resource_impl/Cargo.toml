@@ -7,3 +7,5 @@ edition = "2021"
 
 [dependencies]
 altv_sdk = { path = "../altv_sdk" }
+anyhow = "1.0.69"
+autocxx = { workspace = true }
