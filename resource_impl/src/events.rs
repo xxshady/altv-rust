@@ -1,10 +1,11 @@
 use std::{
-    cell::Ref,
+    cell::{Ref, RefMut},
     collections::{HashMap, HashSet},
 };
 
 use crate::{
-    base_object_maps::PlayerBaseObjectMap, helpers::get_player_from_event, player::PlayerContainer,
+    base_object_maps::PlayerBaseObjectMap, helpers::get_player_from_event, local_script_events,
+    mvalue, player::PlayerContainer,
 };
 
 pub use altv_sdk::EventType as SDKEventType;
@@ -20,6 +21,7 @@ pub enum PublicEventType {
     ResourceStop,
     BaseObjectCreate,
     ConsoleCommand,
+    ServerScriptEvent,
 }
 
 impl From<SDKEventType> for PublicEventType {
@@ -31,6 +33,7 @@ impl From<SDKEventType> for PublicEventType {
             PLAYER_DISCONNECT => Self::PlayerDisconnect,
             RESOURCE_STOP => Self::ResourceStop,
             CONSOLE_COMMAND_EVENT => Self::ConsoleCommand,
+            SERVER_SCRIPT_EVENT => Self::ServerScriptEvent,
             _ => {
                 panic!("Cannot convert sdk event type: {sdk_type:?} to PublicEventType");
             }
@@ -101,11 +104,30 @@ impl EventManager {
     pub fn __on_sdk_event(
         &mut self,
         players: Ref<PlayerBaseObjectMap>,
+        mut local_script_events: RefMut<local_script_events::LocalEventManager>,
         event_type: SDKEventType,
         event: *const sdk::alt::CEvent,
     ) {
         // TEST
         crate::log_warn!("[events.on_sdk_event] received event: {:?}", event_type);
+
+        match event_type {
+            SDKEventType::SERVER_SCRIPT_EVENT => {
+                let event_name = unsafe { sdk::get_event_server_script_event_name(event) };
+
+                let args = unsafe { sdk::get_event_server_script_event_args(event) };
+
+                let deserialized_args = mvalue::deserialize_mvalue_args(args);
+
+                local_script_events.receive_event(
+                    event_name.as_ref().unwrap().to_str().unwrap(),
+                    &deserialized_args,
+                );
+
+                return;
+            }
+            _ => {}
+        }
 
         let handlers = self.public_handlers.get_mut(&event_type.into());
 

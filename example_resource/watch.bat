@@ -3,4 +3,4 @@
 
 @REM !! requires cargo-watch to be installed
 
-cargo watch --exec build --why --watch ../altvx --watch ../resource_main_macro --watch ../resource_impl --watch .
+cargo watch --exec build --why --watch ../altvx --watch ../resource_main_macro --watch ../resource_impl --watch . --watch ../altv_sdk

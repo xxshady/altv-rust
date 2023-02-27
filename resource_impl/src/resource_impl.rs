@@ -2,7 +2,7 @@ use crate::{
     base_object, base_object_maps,
     entity::{self, Entity},
     events::{self, Event, PublicEventType},
-    player, timers, vehicle,
+    local_script_events, player, timers, vehicle,
 };
 use std::{
     cell::{Ref, RefCell, RefMut},
@@ -33,6 +33,7 @@ pub struct ResourceImpl {
     entities: RefCell<entity::EntityManager>,
     events: RefCell<events::EventManager>,
     player_base_object_map: RefCell<base_object_maps::PlayerBaseObjectMap>,
+    local_script_events: RefCell<local_script_events::LocalEventManager>,
 }
 
 impl ResourceImpl {
@@ -46,6 +47,7 @@ impl ResourceImpl {
             entities: RefCell::new(entity::EntityManager::new()),
             events: RefCell::new(events::EventManager::new()),
             player_base_object_map: RefCell::new(base_object_maps::PlayerBaseObjectMap::new()),
+            local_script_events: RefCell::new(local_script_events::LocalEventManager::new()),
         }
     }
 
@@ -147,6 +149,7 @@ impl ResourceImpl {
     ) {
         self.events.borrow_mut().__on_sdk_event(
             self.player_base_object_map.borrow(),
+            self.local_script_events.borrow_mut(),
             event_type,
             event,
         );
@@ -198,5 +201,17 @@ pub fn add_event_handler(
             .events
             .borrow_mut()
             .add_handler(public_type, sdk_type, event);
+    });
+}
+
+pub fn on(
+    event_name: String,
+    handler: impl FnMut(local_script_events::LocalEventArgs) -> anyhow::Result<()> + 'static,
+) {
+    with_resource_impl(|instance| {
+        instance
+            .local_script_events
+            .borrow_mut()
+            .add_handler(event_name, Box::new(handler))
     });
 }

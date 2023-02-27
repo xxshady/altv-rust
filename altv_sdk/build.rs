@@ -3,6 +3,7 @@ use std::fs;
 const CPP_SDK_VERSION_DIR: &str = "cpp-sdk/version";
 const BASE_OBJECT_TYPE_ENUM_FILE: &str = "cpp-sdk/objects/IBaseObject.h";
 const EVENT_TYPE_ENUM_FILE: &str = "cpp-sdk/events/CEvent.h";
+const MVALUE_TYPE_ENUM_FILE: &str = "cpp-sdk/types/MValue.h";
 
 fn main() -> miette::Result<()> {
     generate_cpp_to_rust_bindings();
@@ -12,6 +13,7 @@ fn main() -> miette::Result<()> {
         "src/cpp_sdk_version.rs",
         "src/base_object_type.rs",
         "src/event_type.rs",
+        "src/mvalue_type.rs",
     ])
     .expect("rerun_except failed");
 
@@ -50,6 +52,14 @@ fn generate_cpp_to_rust_bindings() {
         EVENT_TYPE_ENUM_FILE,
         "enum class Type : uint16_t",
         "src/event_type.rs",
+    );
+
+    generate_rust_enum_from_cpp(
+        "MValueType",
+        "u8",
+        MVALUE_TYPE_ENUM_FILE,
+        "enum class Type : uint8_t",
+        "src/mvalue_type.rs",
     );
 }
 

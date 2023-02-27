@@ -15,6 +15,8 @@ using StdStringVector = std::vector<std::string>;
 using u8 = uint8_t;
 using u16 = uint16_t;
 using u32 = uint32_t;
+using u64 = uint64_t;
+using i64 = int64_t;
 using f32 = float;
 using f64 = double;
 
@@ -43,7 +45,7 @@ void register_script_runtime(
 
 class MValueWrapper {
 public:
-    std::shared_ptr<alt::MValue> ptr;
+    std::shared_ptr<alt::MValueConst> ptr;
 
     MValueWrapper clone() {
         MValueWrapper instance;
@@ -52,6 +54,35 @@ public:
         return instance;
     }
 };
+
+u8 get_mvalue_wrapper_type(MValueWrapper mvalue) {
+    return static_cast<u8>(mvalue.ptr->Get()->GetType());
+}
+
+bool get_mvalue_wrapper_bool(MValueWrapper mvalue) {
+    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::BOOL);
+    return mvalue.ptr->As<alt::IMValueBool>().Get()->Value();
+}
+
+f64 get_mvalue_wrapper_double(MValueWrapper mvalue) {
+    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::DOUBLE);
+    return mvalue.ptr->As<alt::IMValueDouble>().Get()->Value();
+}
+
+std::string get_mvalue_wrapper_string(MValueWrapper mvalue) {
+    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::STRING);
+    return mvalue.ptr->As<alt::IMValueString>().Get()->Value();
+}
+
+i64 get_mvalue_wrapper_int(MValueWrapper mvalue) {
+    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::INT);
+    return mvalue.ptr->As<alt::IMValueInt>().Get()->Value();
+}
+
+u64 get_mvalue_wrapper_uint(MValueWrapper mvalue) {
+    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::UINT);
+    return mvalue.ptr->As<alt::IMValueUInt>().Get()->Value();
+}
 
 using MValueWrapperVec = std::vector<MValueWrapper>;
 
@@ -66,19 +97,37 @@ void push_to_mvalue_vec(MValueWrapperVec& mvalue_vec, MValueWrapper mvalue) {
 
 MValueWrapper create_mvalue_bool(bool value) {
     MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueBool(true));
+    wrapper.ptr = std::make_shared<alt::MValueConst>(alt::ICore::Instance().CreateMValueBool(value));
     return wrapper;
 }
 
 MValueWrapper create_mvalue_double(f64 value) {
     MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueDouble(value));
+    wrapper.ptr = std::make_shared<alt::MValueConst>(alt::ICore::Instance().CreateMValueDouble(value));
     return wrapper;
 }
 
 MValueWrapper create_mvalue_string(std::string value) {
     MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueString(value));
+    wrapper.ptr = std::make_shared<alt::MValueConst>(alt::ICore::Instance().CreateMValueString(value));
+    return wrapper;
+}
+
+MValueWrapper create_mvalue_nil() {
+    MValueWrapper wrapper;
+    wrapper.ptr = std::make_shared<alt::MValueConst>(alt::ICore::Instance().CreateMValueNil());
+    return wrapper;
+}
+
+MValueWrapper create_mvalue_int(i64 value) {
+    MValueWrapper wrapper;
+    wrapper.ptr = std::make_shared<alt::MValueConst>(alt::ICore::Instance().CreateMValueInt(value));
+    return wrapper;
+}
+
+MValueWrapper create_mvalue_uint(u64 value) {
+    MValueWrapper wrapper;
+    wrapper.ptr = std::make_shared<alt::MValueConst>(alt::ICore::Instance().CreateMValueUInt(value));
     return wrapper;
 }
 
@@ -178,6 +227,30 @@ std::unique_ptr<StdStringVector> get_event_console_command_args(const alt::CEven
         return std::make_unique<StdStringVector>();
         break;
     }
+}
+
+StdStringPtr get_event_server_script_event_name(const alt::CEvent* event) {
+    assert(event->GetType() == alt::CEvent::Type::SERVER_SCRIPT_EVENT);
+
+    return std::make_unique<std::string>(std::string {
+        static_cast<const alt::CServerScriptEvent*>(event)->GetName()
+    });
+}
+
+MValueWrapperVec get_event_server_script_event_args(const alt::CEvent* event) {
+    assert(event->GetType() == alt::CEvent::Type::SERVER_SCRIPT_EVENT);
+
+    auto args = static_cast<const alt::CServerScriptEvent*>(event)->GetArgs();
+    auto mvalue_vec = create_mvalue_vec();
+
+    for (int i = 0; i < args.GetSize(); ++i)
+    {
+        MValueWrapper wrapper;
+        wrapper.ptr = std::make_shared<alt::MValueConst>(args[i]);
+        mvalue_vec.push_back(wrapper.clone());
+    }
+
+    return mvalue_vec;
 }
 
 void log_colored(std::string str) {

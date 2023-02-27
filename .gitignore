@@ -5,3 +5,4 @@
 /altv_sdk/src/cpp_sdk_version.rs
 /altv_sdk/src/base_object_type.rs
 /altv_sdk/src/event_type.rs
+/altv_sdk/src/mvalue_type.rs

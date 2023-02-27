@@ -17,11 +17,20 @@ pub mod ffi {
 
         // mvalue
         generate!("MValueWrapper")
+        generate!("get_mvalue_wrapper_type")
+        generate!("get_mvalue_wrapper_bool")
+        generate!("get_mvalue_wrapper_double")
+        generate!("get_mvalue_wrapper_string")
+        generate!("get_mvalue_wrapper_int")
+        generate!("get_mvalue_wrapper_uint")
         generate!("create_mvalue_vec")
         generate!("push_to_mvalue_vec")
         generate!("create_mvalue_bool")
         generate!("create_mvalue_double")
         generate!("create_mvalue_string")
+        generate!("create_mvalue_nil")
+        generate!("create_mvalue_int")
+        generate!("create_mvalue_uint")
 
         // events
         generate!("trigger_local_event")
@@ -31,6 +40,8 @@ pub mod ffi {
         generate!("get_event_reason")
         generate!("get_event_console_command_name")
         generate!("get_event_console_command_args")
+        generate!("get_event_server_script_event_name")
+        generate!("get_event_server_script_event_args")
 
         // base_object conversions
         generate!("convert_base_object_to_entity")
@@ -141,3 +152,6 @@ pub use base_object_type::BaseObjectType;
 
 mod event_type;
 pub use event_type::EventType;
+
+mod mvalue_type;
+pub use mvalue_type::MValueType;

@@ -5,6 +5,11 @@ pub use resource_impl::events::{
     ServerStartedController,
 };
 
+pub use resource_impl::emit_local_event as emit;
+pub use resource_impl::mvalue::MValue;
+pub use resource_impl::mvalue::None;
+pub use resource_impl::resource_impl::on;
+
 macro_rules! on_event {
     ($func_name: ident, $event_path: path, $controller: ty, $public_type: path, $sdk_type: path) => {
         pub fn $func_name(handler: impl FnMut($controller) + 'static) {

@@ -7,14 +7,14 @@ use alt::{
 pub fn main() {
     std::env::set_var("RUST_BACKTRACE", "full");
 
-    let mut i = 0;
-    alt::set_interval(
-        move || {
-            i += 1;
-            alt::log!("test interval i: {i}");
-        },
-        1000,
-    );
+    // let mut i = 0;
+    // alt::set_interval(
+    //     move || {
+    //         i += 1;
+    //         alt::log!("test interval i: {i}");
+    //     },
+    //     1000,
+    // );
 
     alt::events::on_server_started(|controller| {
         alt::log_warn!("example resource on_server_started controller: {controller:?}");
@@ -121,4 +121,39 @@ pub fn main() {
     //     )
     // }
     // recurse_set_timeout();
+
+    let max_uint = u64::MAX;
+    let max_uint2 = max_uint;
+    let max_int = i64::MAX;
+    let max_int2 = i64::MAX;
+
+    alt::events::on("test".to_string(), move |args| {
+        alt::log!("received test args: {args:?}");
+
+        let bool = args.get_bool_at(0)?;
+        let f64 = args.get_f64_at(1)?;
+        let string = args.get_string_at(2)?;
+
+        alt::log!("bool: {bool:?}");
+        alt::log!("f64: {f64:?}");
+        alt::log!("string: {string:?}");
+
+        assert_eq!(max_uint2, *args.get_u64_at(4)?);
+        assert_eq!(max_int2, *args.get_i64_at(5)?);
+
+        Ok(())
+    });
+
+    alt::events::emit!(
+        "test",
+        true,
+        0.5,
+        "test123_AWJK%&$#(!@",
+        alt::events::None,
+        max_uint,
+        max_int,
+    );
+
+    // should raise warning
+    alt::events::emit!("test2");
 }
