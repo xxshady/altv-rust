@@ -17,12 +17,12 @@ pub mod ffi {
 
         // mvalue
         generate!("MValueWrapper")
-        generate!("get_mvalue_wrapper_type")
-        generate!("get_mvalue_wrapper_bool")
-        generate!("get_mvalue_wrapper_double")
-        generate!("get_mvalue_wrapper_string")
-        generate!("get_mvalue_wrapper_int")
-        generate!("get_mvalue_wrapper_uint")
+        generate!("get_mvalue_type")
+        generate!("get_mvalue_bool")
+        generate!("get_mvalue_double")
+        generate!("get_mvalue_string")
+        generate!("get_mvalue_int")
+        generate!("get_mvalue_uint")
         generate!("create_mvalue_vec")
         generate!("push_to_mvalue_vec")
         generate!("create_mvalue_bool")

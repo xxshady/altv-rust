@@ -128,19 +128,17 @@ pub fn deserialize_mvalue_args(args: UniquePtr<CxxVector<MValueWrapper>>) -> MVa
     let mut deserialized_args = mvalue::MValueArgs::new();
 
     for arg in args.as_ref().unwrap() {
-        let mvalue_type = unsafe { sdk::get_mvalue_wrapper_type(arg) };
+        let mvalue_type = unsafe { sdk::get_mvalue_type(arg) };
         let mvalue_type = altv_sdk::MValueType::from(mvalue_type).unwrap();
 
         use altv_sdk::MValueType::*;
         let mvalue = match mvalue_type {
-            BOOL => mvalue::MValue::Bool(unsafe { sdk::get_mvalue_wrapper_bool(arg) }),
-            DOUBLE => mvalue::MValue::F64(unsafe { sdk::get_mvalue_wrapper_double(arg) }),
-            STRING => {
-                mvalue::MValue::String(unsafe { sdk::get_mvalue_wrapper_string(arg).to_string() })
-            }
+            BOOL => mvalue::MValue::Bool(unsafe { sdk::get_mvalue_bool(arg) }),
+            DOUBLE => mvalue::MValue::F64(unsafe { sdk::get_mvalue_double(arg) }),
+            STRING => mvalue::MValue::String(unsafe { sdk::get_mvalue_string(arg).to_string() }),
             NIL | NONE => mvalue::MValue::None,
-            INT => mvalue::MValue::I64(unsafe { sdk::get_mvalue_wrapper_int(arg) }),
-            UINT => mvalue::MValue::U64(unsafe { sdk::get_mvalue_wrapper_uint(arg) }),
+            INT => mvalue::MValue::I64(unsafe { sdk::get_mvalue_int(arg) }),
+            UINT => mvalue::MValue::U64(unsafe { sdk::get_mvalue_uint(arg) }),
             _ => todo!(),
         };
         deserialized_args.push(mvalue);

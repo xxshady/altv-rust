@@ -55,31 +55,31 @@ public:
     }
 };
 
-u8 get_mvalue_wrapper_type(MValueWrapper mvalue) {
+u8 get_mvalue_type(MValueWrapper mvalue) {
     return static_cast<u8>(mvalue.ptr->Get()->GetType());
 }
 
-bool get_mvalue_wrapper_bool(MValueWrapper mvalue) {
+bool get_mvalue_bool(MValueWrapper mvalue) {
     assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::BOOL);
     return mvalue.ptr->As<alt::IMValueBool>().Get()->Value();
 }
 
-f64 get_mvalue_wrapper_double(MValueWrapper mvalue) {
+f64 get_mvalue_double(MValueWrapper mvalue) {
     assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::DOUBLE);
     return mvalue.ptr->As<alt::IMValueDouble>().Get()->Value();
 }
 
-std::string get_mvalue_wrapper_string(MValueWrapper mvalue) {
+std::string get_mvalue_string(MValueWrapper mvalue) {
     assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::STRING);
     return mvalue.ptr->As<alt::IMValueString>().Get()->Value();
 }
 
-i64 get_mvalue_wrapper_int(MValueWrapper mvalue) {
+i64 get_mvalue_int(MValueWrapper mvalue) {
     assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::INT);
     return mvalue.ptr->As<alt::IMValueInt>().Get()->Value();
 }
 
-u64 get_mvalue_wrapper_uint(MValueWrapper mvalue) {
+u64 get_mvalue_uint(MValueWrapper mvalue) {
     assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::UINT);
     return mvalue.ptr->As<alt::IMValueUInt>().Get()->Value();
 }
