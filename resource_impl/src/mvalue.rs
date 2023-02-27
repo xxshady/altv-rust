@@ -1,11 +1,7 @@
 use crate::mvalue;
-use altv_sdk::ffi::{self as sdk, MValueWrapper};
+use altv_sdk::ffi as sdk;
 use anyhow::Context;
 use autocxx::{cxx::CxxVector, prelude::*};
-
-pub fn create_mvalue_bool(value: bool) -> UniquePtr<sdk::MValueWrapper> {
-    unsafe { sdk::create_mvalue_bool(value).within_unique_ptr() }
-}
 
 pub struct Serializable(UniquePtr<sdk::MValueWrapper>);
 
@@ -50,6 +46,15 @@ impl From<u64> for Serializable {
     }
 }
 
+impl From<Vec<Serializable>> for Serializable {
+    fn from(value: Vec<Serializable>) -> Self {
+        Self(
+            unsafe { sdk::create_mvalue_list(convert_vec_to_mvalue_vec(value)) }
+                .within_unique_ptr(),
+        )
+    }
+}
+
 pub(crate) fn convert_vec_to_mvalue_vec(
     vec: Vec<Serializable>,
 ) -> UniquePtr<CxxVector<sdk::MValueWrapper>> {
@@ -72,6 +77,7 @@ pub enum MValue {
     None,
     I64(i64),
     U64(u64),
+    List(MValueList),
 }
 
 macro_rules! get_mvalue_type_at {
@@ -97,14 +103,14 @@ macro_rules! get_mvalue_type_at {
     };
 }
 
-#[derive(Debug)]
-pub struct MValueArgs {
+#[derive(Debug, Default)]
+pub struct MValueList {
     vec: Vec<MValue>,
 }
 
-impl MValueArgs {
-    pub fn new() -> Self {
-        Self { vec: vec![] }
+impl MValueList {
+    pub fn new(vec: Vec<MValue>) -> Self {
+        Self { vec }
     }
 
     pub fn get(&self, index: usize) -> anyhow::Result<&MValue> {
@@ -118,31 +124,44 @@ impl MValueArgs {
     get_mvalue_type_at!(get_string_at, String, MValue::String);
     get_mvalue_type_at!(get_i64_at, i64, MValue::I64);
     get_mvalue_type_at!(get_u64_at, u64, MValue::U64);
+    get_mvalue_type_at!(get_list_at, MValueList, MValue::List);
 
     pub(crate) fn push(&mut self, mvalue: MValue) {
         self.vec.push(mvalue);
     }
 }
 
-pub fn deserialize_mvalue_args(args: UniquePtr<CxxVector<MValueWrapper>>) -> MValueArgs {
-    let mut deserialized_args = mvalue::MValueArgs::new();
+pub fn deserialize_mvalue_args(args: UniquePtr<CxxVector<sdk::MValueWrapper>>) -> MValueList {
+    let mut deserialized_args = MValueList::default();
 
     for arg in args.as_ref().unwrap() {
-        let mvalue_type = unsafe { sdk::get_mvalue_type(arg) };
-        let mvalue_type = altv_sdk::MValueType::from(mvalue_type).unwrap();
-
-        use altv_sdk::MValueType::*;
-        let mvalue = match mvalue_type {
-            BOOL => mvalue::MValue::Bool(unsafe { sdk::get_mvalue_bool(arg) }),
-            DOUBLE => mvalue::MValue::F64(unsafe { sdk::get_mvalue_double(arg) }),
-            STRING => mvalue::MValue::String(unsafe { sdk::get_mvalue_string(arg).to_string() }),
-            NIL | NONE => mvalue::MValue::None,
-            INT => mvalue::MValue::I64(unsafe { sdk::get_mvalue_int(arg) }),
-            UINT => mvalue::MValue::U64(unsafe { sdk::get_mvalue_uint(arg) }),
-            _ => todo!(),
-        };
-        deserialized_args.push(mvalue);
+        deserialized_args.push(deserialize_mvalue(arg));
     }
 
     deserialized_args
+}
+
+fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper) -> MValue {
+    let mvalue_type = unsafe { sdk::get_mvalue_type(cpp_wrapper) };
+    let mvalue_type = altv_sdk::MValueType::from(mvalue_type).unwrap();
+
+    use altv_sdk::MValueType::*;
+
+    match mvalue_type {
+        BOOL => mvalue::MValue::Bool(unsafe { sdk::get_mvalue_bool(cpp_wrapper) }),
+        DOUBLE => mvalue::MValue::F64(unsafe { sdk::get_mvalue_double(cpp_wrapper) }),
+        STRING => {
+            mvalue::MValue::String(unsafe { sdk::get_mvalue_string(cpp_wrapper).to_string() })
+        }
+        NIL | NONE => mvalue::MValue::None,
+        INT => mvalue::MValue::I64(unsafe { sdk::get_mvalue_int(cpp_wrapper) }),
+        UINT => mvalue::MValue::U64(unsafe { sdk::get_mvalue_uint(cpp_wrapper) }),
+        LIST => mvalue::MValue::List(MValueList::new(
+            unsafe { sdk::get_mvalue_list(cpp_wrapper) }
+                .iter()
+                .map(deserialize_mvalue)
+                .collect(),
+        )),
+        _ => todo!(),
+    }
 }

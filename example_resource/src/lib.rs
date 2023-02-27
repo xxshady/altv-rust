@@ -141,6 +141,10 @@ pub fn main() {
         assert_eq!(max_uint2, *args.get_u64_at(4)?);
         assert_eq!(max_int2, *args.get_i64_at(5)?);
 
+        let list = args.get_list_at(6)?;
+        let list_string = list.get_string_at(0)?;
+        alt::log!("list: {list:?} list_string: {list_string:?}");
+
         Ok(())
     });
 
@@ -152,6 +156,7 @@ pub fn main() {
         alt::events::None,
         max_uint,
         max_int,
+        alt::events::nested_args!["aa", "b"]
     );
 
     // should raise warning

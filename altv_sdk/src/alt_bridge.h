@@ -55,6 +55,17 @@ public:
     }
 };
 
+using MValueWrapperVec = std::vector<MValueWrapper>;
+
+MValueWrapperVec create_mvalue_vec() {
+    MValueWrapperVec vec;
+    return vec;
+}
+
+void push_to_mvalue_vec(MValueWrapperVec& mvalue_vec, MValueWrapper mvalue) {
+    mvalue_vec.push_back(mvalue.clone());
+}
+
 u8 get_mvalue_type(MValueWrapper mvalue) {
     return static_cast<u8>(mvalue.ptr->Get()->GetType());
 }
@@ -84,15 +95,22 @@ u64 get_mvalue_uint(MValueWrapper mvalue) {
     return mvalue.ptr->As<alt::IMValueUInt>().Get()->Value();
 }
 
-using MValueWrapperVec = std::vector<MValueWrapper>;
+MValueWrapperVec get_mvalue_list(MValueWrapper mvalue) {
+    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::LIST);
 
-MValueWrapperVec create_mvalue_vec() {
-    MValueWrapperVec vec;
-    return vec;
-}
+    auto list = mvalue.ptr->As<alt::IMValueList>().Get();
+    auto size = list->GetSize();
 
-void push_to_mvalue_vec(MValueWrapperVec& mvalue_vec, MValueWrapper mvalue) {
-    mvalue_vec.push_back(mvalue.clone());
+    auto mvalue_vec = create_mvalue_vec();
+
+    for (int i = 0; i < size; ++i)
+    {
+        MValueWrapper wrapper;
+        wrapper.ptr = std::make_shared<alt::MValueConst>(list->Get(i));
+        mvalue_vec.push_back(wrapper.clone());
+    }
+
+    return mvalue_vec;
 }
 
 MValueWrapper create_mvalue_bool(bool value) {
@@ -128,6 +146,20 @@ MValueWrapper create_mvalue_int(i64 value) {
 MValueWrapper create_mvalue_uint(u64 value) {
     MValueWrapper wrapper;
     wrapper.ptr = std::make_shared<alt::MValueConst>(alt::ICore::Instance().CreateMValueUInt(value));
+    return wrapper;
+}
+
+MValueWrapper create_mvalue_list(MValueWrapperVec mvalue_vec) {
+    auto size = mvalue_vec.size();
+    auto mvalue_list = alt::ICore::Instance().CreateMValueList();
+
+    for (size_t i = 0; i < size; ++i)
+    {
+        mvalue_list->PushConst(*(mvalue_vec[i].ptr));
+    }
+
+    MValueWrapper wrapper;
+    wrapper.ptr = std::make_shared<alt::MValueConst>(mvalue_list);
     return wrapper;
 }
 
