@@ -103,8 +103,7 @@ MValueWrapperVec get_mvalue_list(MValueWrapper mvalue) {
 
     auto mvalue_vec = create_mvalue_vec();
 
-    for (int i = 0; i < size; ++i)
-    {
+    for (alt::Size i = 0; i < size; ++i) {
         MValueWrapper wrapper;
         wrapper.ptr = std::make_shared<alt::MValueConst>(list->Get(i));
         mvalue_vec.push_back(wrapper.clone());
@@ -150,11 +149,10 @@ MValueWrapper create_mvalue_uint(u64 value) {
 }
 
 MValueWrapper create_mvalue_list(MValueWrapperVec mvalue_vec) {
-    auto size = mvalue_vec.size();
     auto mvalue_list = alt::ICore::Instance().CreateMValueList();
+    auto size = mvalue_vec.size();
 
-    for (size_t i = 0; i < size; ++i)
-    {
+    for (size_t i = 0; i < size; ++i) {
         mvalue_list->PushConst(*(mvalue_vec[i].ptr));
     }
 
@@ -167,10 +165,12 @@ MValueWrapper create_mvalue_list(MValueWrapperVec mvalue_vec) {
 
 void trigger_local_event(std::string event_name, MValueWrapperVec mvalue_vec) {
     alt::MValueArgs args;
-    for (int i = 0; i < mvalue_vec.size(); ++i)
-    {
+    auto size = mvalue_vec.size();
+
+    for (alt::Size i = 0; i < size; ++i) {
         args.Push(*(mvalue_vec[i].ptr));
     }
+
     alt::ICore::Instance().TriggerLocalEvent(event_name, args);
 }
 
@@ -185,8 +185,7 @@ u16 get_event_type(const alt::CEvent* event) {
 alt::IPlayer* get_event_player_target(const alt::CEvent* event) {
     auto type = event->GetType();
 
-    switch (type)
-    {
+    switch (type) {
     case alt::CEvent::Type::PLAYER_CONNECT:
         return static_cast<const alt::CPlayerConnectEvent*>(event)->GetTarget();
     case alt::CEvent::Type::PLAYER_DISCONNECT:
@@ -203,8 +202,7 @@ alt::IPlayer* get_event_player_target(const alt::CEvent* event) {
 StdStringPtr get_event_reason(const alt::CEvent* event) {
     auto type = event->GetType();
 
-    switch (type)
-    {
+    switch (type) {
     case alt::CEvent::Type::PLAYER_DISCONNECT:
         return std::make_unique<std::string>(std::string{
             static_cast<const alt::CPlayerDisconnectEvent*>(event)->GetReason()
@@ -224,8 +222,7 @@ StdStringPtr get_event_reason(const alt::CEvent* event) {
 StdStringPtr get_event_console_command_name(const alt::CEvent* event) {
     auto type = event->GetType();
 
-    switch (type)
-    {
+    switch (type) {
     case alt::CEvent::Type::CONSOLE_COMMAND_EVENT:
         return std::make_unique<std::string>(std::string{
             static_cast<const alt::CConsoleCommandEvent*>(event)->GetName()
@@ -245,8 +242,7 @@ StdStringPtr get_event_console_command_name(const alt::CEvent* event) {
 std::unique_ptr<StdStringVector> get_event_console_command_args(const alt::CEvent* event) {
     auto type = event->GetType();
 
-    switch (type)
-    {
+    switch (type) {
     case alt::CEvent::Type::CONSOLE_COMMAND_EVENT:
         return std::make_unique<StdStringVector>(static_cast<const alt::CConsoleCommandEvent*>(event)->GetArgs());
         break;
@@ -274,9 +270,9 @@ MValueWrapperVec get_event_server_script_event_args(const alt::CEvent* event) {
 
     auto args = static_cast<const alt::CServerScriptEvent*>(event)->GetArgs();
     auto mvalue_vec = create_mvalue_vec();
+    auto size = args.GetSize();
 
-    for (int i = 0; i < args.GetSize(); ++i)
-    {
+    for (alt::Size i = 0; i < size; ++i) {
         MValueWrapper wrapper;
         wrapper.ptr = std::make_shared<alt::MValueConst>(args[i]);
         mvalue_vec.push_back(wrapper.clone());
@@ -346,8 +342,7 @@ u8 get_vehicle_primary_color(const alt::IVehicle* vehicle) {
 }
 
 u16 get_entity_id(alt::IEntity* entity) {
-    if (!entity)
-    {
+    if (!entity) {
         alt::ICore::Instance().LogError("get_entity_id nullptr entity");
         return 0;
     }
@@ -357,8 +352,7 @@ u16 get_entity_id(alt::IEntity* entity) {
 }
 
 void destroy_base_object(alt::IBaseObject* base_object) {
-    if (!base_object)
-    {
+    if (!base_object) {
         alt::ICore::Instance().LogError("destroy_base_object nullptr base_object");
         return;
     }
@@ -370,8 +364,7 @@ void destroy_base_object(alt::IBaseObject* base_object) {
 }
 
 u8 get_base_object_type(const alt::IBaseObject* base_object) {
-    if (!base_object)
-    {
+    if (!base_object) {
         alt::ICore::Instance().LogError("get_base_object_type nullptr base_object");
         return 255;
     }

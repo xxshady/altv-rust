@@ -10,13 +10,16 @@ thread_local! {
 
 #[derive(Debug)]
 pub struct ResourceController {
-    lib: libloading::Library,
+    _lib: libloading::Library,
     resource_impl: ResourceImplRef,
 }
 
 impl ResourceController {
     pub fn new(lib: libloading::Library, resource_impl: ResourceImplRef) -> Self {
-        Self { lib, resource_impl }
+        Self {
+            _lib: lib,
+            resource_impl,
+        }
     }
 
     pub fn borrow_resource_impl(&self) -> Ref<ResourceImpl> {

@@ -57,7 +57,8 @@ extern "C" fn runtime_on_tick() {
     });
 }
 
-extern "C" fn resource_on_tick(full_main_path: String) {
+#[allow(improper_ctypes_definitions)]
+extern "C" fn resource_on_tick(_full_main_path: String) {
     // resource_impl::log!("resource_on_tick");
 }
 
