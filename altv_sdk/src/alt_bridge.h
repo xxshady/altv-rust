@@ -220,41 +220,17 @@ StdStringPtr get_event_reason(const alt::CEvent* event) {
 }
 
 StdStringPtr get_event_console_command_name(const alt::CEvent* event) {
-    auto type = event->GetType();
-
-    switch (type) {
-    case alt::CEvent::Type::CONSOLE_COMMAND_EVENT:
-        return std::make_unique<std::string>(std::string{
-            static_cast<const alt::CConsoleCommandEvent*>(event)->GetName()
-        });
-        break;
-
-    default:
-        alt::ICore::Instance().LogError(
-            "get_event_console_command_name unknown event type: " +
-            std::to_string(static_cast<u16>(type))
-        );
-        return std::make_unique<std::string>(std::string{ "" });
-        break;
-    }
+    assert(event->GetType() == alt::CEvent::Type::CONSOLE_COMMAND_EVENT);
+    return std::make_unique<std::string>(std::string{
+        static_cast<const alt::CConsoleCommandEvent*>(event)->GetName()
+    });
 }
 
 std::unique_ptr<StdStringVector> get_event_console_command_args(const alt::CEvent* event) {
-    auto type = event->GetType();
-
-    switch (type) {
-    case alt::CEvent::Type::CONSOLE_COMMAND_EVENT:
-        return std::make_unique<StdStringVector>(static_cast<const alt::CConsoleCommandEvent*>(event)->GetArgs());
-        break;
-
-    default:
-        alt::ICore::Instance().LogError(
-            "get_event_console_command_name unknown event type: " +
-            std::to_string(static_cast<u16>(type))
-        );
-        return std::make_unique<StdStringVector>();
-        break;
-    }
+    assert(event->GetType() == alt::CEvent::Type::CONSOLE_COMMAND_EVENT);
+    return std::make_unique<StdStringVector>(
+        static_cast<const alt::CConsoleCommandEvent*>(event)->GetArgs()
+    );
 }
 
 StdStringPtr get_event_server_script_event_name(const alt::CEvent* event) {
