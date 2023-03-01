@@ -79,6 +79,8 @@ pub fn create(
         state.id
     };
 
+    logger::debug!("creating timer with id: {id}");
+
     let next_call_time = std::time::SystemTime::now() + std::time::Duration::from_millis(millis);
 
     state.timers.push(Timer {
