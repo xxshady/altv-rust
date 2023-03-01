@@ -94,10 +94,6 @@ pub mod ffi {
 
     #[derive(ExternTypeCallback)]
     #[repr(transparent)]
-    pub struct ResourceOnTickCallback(pub extern "C" fn(full_main_path: String));
-
-    #[derive(ExternTypeCallback)]
-    #[repr(transparent)]
     pub struct ResourceOnEventCallback(
         pub extern "C" fn(full_main_path: String, event: *const alt_bridge::alt::CEvent),
     );
@@ -123,7 +119,6 @@ pub mod ffi {
             type ResourceStopCallback = super::ResourceStopCallback;
             type RuntimeResourceDestroyImplCallback = super::RuntimeResourceDestroyImplCallback;
             type RuntimeOnTickCallback = super::RuntimeOnTickCallback;
-            type ResourceOnTickCallback = super::ResourceOnTickCallback;
             type ResourceOnEventCallback = super::ResourceOnEventCallback;
             type ResourceOnCreateBaseObjectCallback = super::ResourceOnCreateBaseObjectCallback;
             type ResourceOnRemoveBaseObjectCallback = super::ResourceOnRemoveBaseObjectCallback;
@@ -134,7 +129,6 @@ pub mod ffi {
                 resource_stop: ResourceStopCallback,
                 resource_impl_destroy: RuntimeResourceDestroyImplCallback,
                 on_tick: RuntimeOnTickCallback,
-                resource_on_tick: ResourceOnTickCallback,
                 resource_on_event: ResourceOnEventCallback,
                 resource_on_create_base_object: ResourceOnCreateBaseObjectCallback,
                 resource_on_remove_base_object: ResourceOnRemoveBaseObjectCallback,

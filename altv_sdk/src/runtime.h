@@ -15,7 +15,6 @@ public:
     shared::ResourceStopCallback resource_stop_callback = nullptr;
     shared::RuntimeResourceDestroyImplCallback resource_impl_destroy_callback = nullptr;
     shared::RuntimeOnTickCallback on_tick_callback = nullptr;
-    shared::ResourceOnTickCallback resource_on_tick_callback = nullptr;
     shared::ResourceOnEventCallback resource_on_event_callback = nullptr;
     shared::ResourceOnCreateBaseObjectCallback resource_on_create_base_object_callback = nullptr;
     shared::ResourceOnRemoveBaseObjectCallback resource_on_remove_base_object_callback = nullptr;
@@ -60,10 +59,6 @@ public:
         void OnEvent(const alt::CEvent* event) override {
             assert(runtime->resource_on_event_callback != nullptr);
             runtime->resource_on_event_callback(full_main_path, event);
-        }
-        void OnTick() override {
-            assert(runtime->resource_on_tick_callback != nullptr);
-            runtime->resource_on_tick_callback(full_main_path);
         }
 
         void OnCreateBaseObject(alt::IBaseObject* base_object) override {
@@ -122,7 +117,6 @@ public:
         shared::ResourceStopCallback _resource_stop,
         shared::RuntimeResourceDestroyImplCallback _resource_impl_destroy,
         shared::RuntimeOnTickCallback _on_tick,
-        shared::ResourceOnTickCallback _resource_on_tick,
         shared::ResourceOnEventCallback _resource_on_event,
         shared::ResourceOnCreateBaseObjectCallback _resource_on_create_base_object,
         shared::ResourceOnRemoveBaseObjectCallback _resource_on_remove_base_object
@@ -132,7 +126,6 @@ public:
         resource_stop_callback = _resource_stop;
         resource_impl_destroy_callback = _resource_impl_destroy;
         on_tick_callback = _on_tick;
-        resource_on_tick_callback = _resource_on_tick;
         resource_on_event_callback = _resource_on_event;
         resource_on_create_base_object_callback = _resource_on_create_base_object;
         resource_on_remove_base_object_callback = _resource_on_remove_base_object;

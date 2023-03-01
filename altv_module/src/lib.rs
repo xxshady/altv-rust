@@ -58,11 +58,6 @@ extern "C" fn runtime_on_tick() {
 }
 
 #[allow(improper_ctypes_definitions)]
-extern "C" fn resource_on_tick(_full_main_path: String) {
-    // resource_impl::log!("resource_on_tick");
-}
-
-#[allow(improper_ctypes_definitions)]
 extern "C" fn resource_on_event(full_main_path: String, event: *const sdk::alt::CEvent) {
     if event.is_null() {
         panic!("resource_on_event event is null");
@@ -167,7 +162,6 @@ pub unsafe extern "C" fn altMain(core: *mut sdk::alt::ICore) -> bool {
         sdk::ResourceStopCallback(resource_stop),
         sdk::RuntimeResourceDestroyImplCallback(runtime_resource_destroy_impl),
         sdk::RuntimeOnTickCallback(runtime_on_tick),
-        sdk::ResourceOnTickCallback(resource_on_tick),
         sdk::ResourceOnEventCallback(resource_on_event),
         sdk::ResourceOnCreateBaseObjectCallback(resource_on_create_base_object),
         sdk::ResourceOnRemoveBaseObjectCallback(resource_on_remove_base_object),
