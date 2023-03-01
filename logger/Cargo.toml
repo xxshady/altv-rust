@@ -1,12 +1,10 @@
 [package]
-name = "resource_impl"
+name = "logger"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-altv_sdk = { path = "../altv_sdk" }
-logger = { path = "../logger" }
-anyhow = "1.0.69"
-autocxx = { workspace = true }
+colored = "2.0.0"
+log = "0.4.17"

@@ -45,16 +45,13 @@ impl LocalEventManager {
         if let Some(handlers) = handlers {
             for h in handlers {
                 if let Err(error) = h(&args) {
-                    crate::log_error!(
-                        "local event handler of event: {event_name:?} failed with error: {error:?}"
-                    )
+                    logger::error!("handler of event: {event_name:?} failed with error: {error:?}");
+                } else {
+                    logger::debug!("handler of event: {event_name:?} called successfully");
                 }
             }
         } else {
-            // TEST
-            crate::log_warn!(
-                "LocalEventManager.receive_event no handlers for event: {event_name:?}"
-            )
+            logger::debug!("receive_event no handlers for event: {event_name:?}")
         }
     }
 

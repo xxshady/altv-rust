@@ -81,11 +81,6 @@ impl std::fmt::Debug for Event {
     }
 }
 
-// TODO:
-// pub enum CustomEventPayload {
-//     BaseObjectCreate(base_object_type: altv_sdk::BaseObjectType, pointer: *const sdk::alt::IBaseObject),
-// }
-
 #[derive(Debug)]
 pub(crate) struct EventManager {
     public_handlers: HashMap<PublicEventType, Vec<Event>>,
@@ -108,8 +103,7 @@ impl EventManager {
         event_type: SDKEventType,
         event: *const sdk::alt::CEvent,
     ) {
-        // TEST
-        crate::log_warn!("[events.on_sdk_event] received event: {:?}", event_type);
+        logger::debug!("received event: {:?}", event_type);
 
         match event_type {
             SDKEventType::SERVER_SCRIPT_EVENT => {
@@ -154,35 +148,12 @@ impl EventManager {
                 }
             }
         } else {
-            crate::log_error!(
-                "[events.on_sdk_event] received event without handlers: {:?}",
+            logger::error!(
+                "[on_sdk_event] received event without handlers: {:?}",
                 event_type
             );
         }
     }
-
-    // TODO:
-    // pub fn on_custom_event(&mut self, event_type: PublicEventType, payload: CustomEventPayload) {
-    //     let handlers = self.public_handlers.get_mut(&event_type);
-
-    //     if let Some(handlers) = handlers {
-    //         for h in handlers {
-    //             use Event::*;
-    //             match h {
-    //                 BaseObjectCreate(h) => h(BaseObjectCreateController {}),
-    //                 _ => todo!(),
-    //             }
-    //         }
-    //     } else {
-    //         crate::log_error!(
-    //             "[events.on_custom_event] received event without handlers: {:?}",
-    //             event_type
-    //         );
-    //     }
-
-    //     // internal stuff
-
-    // }
 
     pub fn add_handler(
         &mut self,
@@ -190,10 +161,10 @@ impl EventManager {
         sdk_type: SDKEventType,
         event: Event,
     ) {
-        crate::log!("events add_handler event public_type: {public_type:?}");
+        logger::debug!("events add_handler event public_type: {public_type:?}");
 
         if sdk_type != SDKEventType::NONE && self.enabled_sdk_events.get(&sdk_type).is_none() {
-            crate::log!("sdk_type: {sdk_type:?} | enabling it in sdk");
+            logger::debug!("sdk_type: {sdk_type:?} | enabling it in sdk");
 
             self.enabled_sdk_events.insert(sdk_type);
             unsafe {

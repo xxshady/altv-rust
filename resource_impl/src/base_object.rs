@@ -126,17 +126,17 @@ impl BaseObjectManager {
         base_object.ptr_mut().set(None);
 
         if self.base_objects.remove(&raw_ptr).is_some() {
-            crate::log!("~gl~BaseObjectManager destroyed object: {raw_ptr:?}");
+            logger::debug!("~gl~BaseObjectManager destroyed object: {raw_ptr:?}");
         } else {
-            crate::log_error!("BaseObjectManager on_destroy invalid object: {raw_ptr:?}");
+            logger::error!("BaseObjectManager on_destroy invalid object: {raw_ptr:?}");
         }
     }
 
     fn remove(&mut self, raw_ptr: RawBaseObjectPointer) {
         if self.base_objects.remove(&raw_ptr).is_some() {
-            crate::log!("~gl~BaseObjectManager removed object: {raw_ptr:?}");
+            logger::debug!("~gl~BaseObjectManager removed object: {raw_ptr:?}");
         } else {
-            crate::log_error!("BaseObjectManager remove invalid object: {raw_ptr:?}");
+            logger::error!("BaseObjectManager remove invalid object: {raw_ptr:?}");
         }
     }
 

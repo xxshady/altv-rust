@@ -68,7 +68,7 @@ impl ResourceImpl {
         base_object_type: altv_sdk::BaseObjectType,
     ) {
         if self.base_object_creation.try_borrow_mut().is_err() {
-            crate::log_warn!("__on_base_object_create pending creation, skip");
+            logger::debug!("__on_base_object_create pending creation, skip");
             return;
         }
 
@@ -107,7 +107,7 @@ impl ResourceImpl {
 
     pub fn __on_base_object_destroy(&self, raw_ptr: base_object::RawBaseObjectPointer) {
         if self.base_object_deletion.try_borrow_mut().is_err() {
-            crate::log_warn!("__on_base_object_destroy pending deletion, skip");
+            logger::debug!("__on_base_object_destroy pending deletion, skip");
             return;
         }
 
@@ -138,7 +138,7 @@ impl ResourceImpl {
             drop(base_object_borrow);
             base_objects.on_destroy(Rc::clone(&base_object));
         } else {
-            crate::log_error!("__on_base_object_destroy unknown base object: {raw_ptr:?}");
+            logger::error!("__on_base_object_destroy unknown base object: {raw_ptr:?}");
         }
     }
 

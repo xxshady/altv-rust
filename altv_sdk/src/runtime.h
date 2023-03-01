@@ -43,14 +43,12 @@ public:
         ~RustResource() = default;
 
         bool Start() override {
-            alt::ICore::Instance().LogInfo("RustResource::Start");
             assert(runtime->resource_start_callback != nullptr);
             runtime->resource_start_callback(full_main_path);
             return true;
         }
 
         bool Stop() override {
-            alt::ICore::Instance().LogInfo("RustResource::Stop");
             assert(runtime->resource_stop_callback != nullptr);
             runtime->resource_stop_callback(full_main_path);
             return true;
@@ -81,9 +79,7 @@ public:
         }
     };
 
-    RustRuntime() {
-        alt::ICore::Instance().LogInfo("RustRuntime ctor call");
-    }
+    RustRuntime() {}
 
     alt::IResource::Impl* CreateImpl(alt::IResource* resource) override {
         std::filesystem::path _full_main_path(std::filesystem::path(resource->GetPath()) / resource->GetMain());
@@ -99,8 +95,6 @@ public:
     }
 
     void DestroyImpl(alt::IResource::Impl* impl) override {
-        alt::ICore::Instance().LogInfo("RustRuntime::DestroyImpl");
-
         assert(resource_impl_destroy_callback != nullptr);
         resource_impl_destroy_callback();
 

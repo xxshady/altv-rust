@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 altv_sdk = { path = "../altv_sdk" }
 resource_impl = { path = "../resource_impl" }
+logger = { path = "../logger" }
 libloading = "0.7.4"
 autocxx = { workspace = true }
 

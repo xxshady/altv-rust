@@ -15,7 +15,7 @@ type ResourceMainFn =
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_start(full_main_path: String) {
-    resource_impl::log!("resource_start: {full_main_path}");
+    logger::debug!("resource_start: {full_main_path}");
 
     let core_ptr = unsafe { sdk::get_alt_core() };
 
@@ -36,7 +36,7 @@ extern "C" fn resource_start(full_main_path: String) {
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_stop(full_main_path: String) {
-    resource_impl::log!("resource_stop: {full_main_path}");
+    logger::debug!("resource_stop: {full_main_path}");
 
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
         manager.borrow_mut().remove(&full_main_path);
@@ -45,7 +45,7 @@ extern "C" fn resource_stop(full_main_path: String) {
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn runtime_resource_destroy_impl() {
-    // resource_impl::log!("runtime_resource_destroy_impl");
+    // logger::debug!("runtime_resource_destroy_impl");
 }
 
 #[allow(improper_ctypes_definitions)]
@@ -66,7 +66,7 @@ extern "C" fn resource_on_event(full_main_path: String, event: *const sdk::alt::
     let raw_type = unsafe { sdk::get_event_type(event) };
     let event_type = altv_sdk::EventType::from(raw_type).unwrap();
 
-    resource_impl::log!(
+    logger::debug!(
         "resource_on_event full_main_path: {}, event: {:?}",
         full_main_path,
         event_type
@@ -74,7 +74,7 @@ extern "C" fn resource_on_event(full_main_path: String, event: *const sdk::alt::
 
     // // heron said it will be removed
     if event_type == altv_sdk::EventType::PLAYER_BEFORE_CONNECT {
-        resource_impl::log_warn!("ignoring PLAYER_BEFORE_CONNECT");
+        logger::info!("ignoring PLAYER_BEFORE_CONNECT");
         return;
     }
 
@@ -101,7 +101,7 @@ extern "C" fn resource_on_create_base_object(
 
     let base_object_type = helpers::get_base_object_type(base_object);
 
-    resource_impl::log_warn!("resource_on_create_base_object type: {base_object_type:?}",);
+    logger::debug!("resource_on_create_base_object type: {base_object_type:?}",);
 
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
         let manager = manager.borrow();
@@ -126,7 +126,7 @@ extern "C" fn resource_on_remove_base_object(
 
     let base_object_type = helpers::get_base_object_type(base_object);
 
-    resource_impl::log_warn!(
+    logger::debug!(
         "resource_on_remove_base_object type: {:?}",
         base_object_type
     );
@@ -152,11 +152,18 @@ pub unsafe extern "C" fn altMain(core: *mut sdk::alt::ICore) -> bool {
         panic!("altMain core is null");
     }
 
+    logger::init().unwrap();
+
+    logger::info!("set_alt_core");
     sdk::set_alt_core(core as *mut sdk::alt::ICore);
 
+    logger::info!("create_script_runtime");
     let runtime = sdk::create_script_runtime();
+
+    logger::info!("register_script_runtime");
     sdk::register_script_runtime(core as *mut sdk::alt::ICore, "rs", runtime);
 
+    logger::info!("setup_callbacks");
     sdk::setup_callbacks(
         sdk::ResourceStartCallback(resource_start),
         sdk::ResourceStopCallback(resource_stop),

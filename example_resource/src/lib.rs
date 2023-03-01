@@ -16,46 +16,46 @@ pub fn main() {
     //     1000,
     // );
 
-    alt::events::on_server_started(|controller| {
-        alt::log_warn!("example resource on_server_started controller: {controller:?}");
-    });
+    // alt::events::on_server_started(|controller| {
+    //     alt::log_warn!("example resource on_server_started controller: {controller:?}");
+    // });
 
-    alt::events::on_player_connect(|alt::events::PlayerConnectController { player }| {
-        let player = player.borrow();
-        let id = player.id().unwrap();
+    // alt::events::on_player_connect(|alt::events::PlayerConnectController { player }| {
+    //     let player = player.borrow();
+    //     let id = player.id().unwrap();
 
-        alt::log!(
-            "example resource on_player_connect name: {} id: {}",
-            player.name().unwrap(),
-            id
-        );
+    //     alt::log!(
+    //         "example resource on_player_connect name: {} id: {}",
+    //         player.name().unwrap(),
+    //         id
+    //     );
 
-        // let args = cxx::UniquePtr::new();
+    //     // let args = cxx::UniquePtr::new();
 
-        // alt::__test_trigger_client_event(player.ptr(), &event_name, args)
+    //     // alt::__test_trigger_client_event(player.ptr(), &event_name, args)
 
-        // dbg!(alt::Player::get_by_id(id));
-        // let result = id.checked_sub(1);
-        // if let Some(id) = result {
-        //     dbg!(alt::Player::get_by_id(dbg!(id)));
-        // } else {
-        //     alt::log_error!("failed to sub player id");
-        // }
-    });
+    //     // dbg!(alt::Player::get_by_id(id));
+    //     // let result = id.checked_sub(1);
+    //     // if let Some(id) = result {
+    //     //     dbg!(alt::Player::get_by_id(dbg!(id)));
+    //     // } else {
+    //     //     alt::log_error!("failed to sub player id");
+    //     // }
+    // });
 
-    alt::events::on_player_disconnect(|PlayerDisconnectController { player, reason }| {
-        let player = player.borrow();
-        alt::log_warn!(
-            "on_player_disconnect player: {} [{}], reason: {}",
-            player.name().unwrap(),
-            player.id().unwrap(),
-            reason
-        )
-    });
+    // alt::events::on_player_disconnect(|PlayerDisconnectController { player, reason }| {
+    //     let player = player.borrow();
+    //     alt::log_warn!(
+    //         "on_player_disconnect player: {} [{}], reason: {}",
+    //         player.name().unwrap(),
+    //         player.id().unwrap(),
+    //         reason
+    //     )
+    // });
 
-    alt::events::on_console_command(|ConsoleCommandController { name, args }| {
-        alt::log_warn!("on_console_command name: {name:?} args: {args:?}");
-    });
+    // alt::events::on_console_command(|ConsoleCommandController { name, args }| {
+    //     alt::log_warn!("on_console_command name: {name:?} args: {args:?}");
+    // });
 
     // alt::set_timeout(|| println!("its timeout"), 300);
 
@@ -122,43 +122,60 @@ pub fn main() {
     // }
     // recurse_set_timeout();
 
-    let max_uint = u64::MAX;
-    let max_uint2 = max_uint;
-    let max_int = i64::MAX;
-    let max_int2 = i64::MAX;
+    alt::set_timeout(
+        || {
+            alt::log!("~cl~start");
 
-    alt::events::on("test".to_string(), move |args| {
-        alt::log!("received test args: {args:?}");
+            let max_uint = u64::MAX;
+            let max_uint2 = max_uint;
+            let max_int = i64::MAX;
+            let max_int2 = i64::MAX;
 
-        let bool = args.get_bool_at(0)?;
-        let f64 = args.get_f64_at(1)?;
-        let string = args.get_string_at(2)?;
+            alt::events::on("test".to_string(), |_| {
+                // // alt::log!("received test args: {args:?}");
 
-        alt::log!("bool: {bool:?}");
-        alt::log!("f64: {f64:?}");
-        alt::log!("string: {string:?}");
+                // let bool = args.get_bool_at(0)?;
+                // let f64 = args.get_f64_at(1)?;
+                // let string = args.get_string_at(2)?;
 
-        assert_eq!(max_uint2, *args.get_u64_at(4)?);
-        assert_eq!(max_int2, *args.get_i64_at(5)?);
+                // // alt::log!("bool: {bool:?}");
+                // // alt::log!("f64: {f64:?}");
+                // // alt::log!("string: {string:?}");
 
-        let list = args.get_list_at(6)?;
-        let list_string = list.get_string_at(0)?;
-        alt::log!("list: {list:?} list_string: {list_string:?}");
+                // assert_eq!(max_uint2, *args.get_u64_at(4)?);
+                // assert_eq!(max_int2, *args.get_i64_at(5)?);
 
-        Ok(())
-    });
+                // let list = args.get_list_at(6)?;
+                // let list_string = list.get_string_at(0)?;
+                // // alt::log!("list: {list:?} list_string: {list_string:?}");
 
-    alt::events::emit!(
-        "test",
-        true,
-        0.5,
-        "test123_AWJK%&$#(!@",
-        alt::events::None,
-        max_uint,
-        max_int,
-        alt::events::nested_args!["aa", "b"]
+                Ok(())
+            });
+
+            for i in 0..1 {
+                let mut str = String::from("");
+                for _ in 1..100 {
+                    let a: i32 = rand::random();
+                    str += a.to_string().as_str();
+                }
+
+                alt::events::emit!(
+                    "test",
+                    true,
+                    0.5,
+                    str.as_str(),
+                    alt::events::None,
+                    max_uint,
+                    max_int,
+                    alt::events::nested_args!["aa", "b"]
+                );
+            }
+
+            alt::log!("~gl~done");
+        },
+        3000,
     );
 
-    // should raise warning
-    alt::events::emit!("test2");
+    // // should raise warning
+    // alt::events::emit!("test2");
 }

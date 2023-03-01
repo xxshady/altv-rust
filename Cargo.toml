@@ -8,6 +8,7 @@ members = [
     "altv_module",
     "altvx",
     "example_resource",
+    "logger",
 ]
 
 [workspace.dependencies]

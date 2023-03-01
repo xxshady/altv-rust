@@ -318,12 +318,7 @@ u8 get_vehicle_primary_color(const alt::IVehicle* vehicle) {
 }
 
 u16 get_entity_id(alt::IEntity* entity) {
-    if (!entity) {
-        alt::ICore::Instance().LogError("get_entity_id nullptr entity");
-        return 0;
-    }
-
-    // alt::ICore::Instance().LogInfo("get_entity_id entity type: " + std::to_string(static_cast<u8>(entity->GetType())));
+    assert(entity != nullptr);
     return entity->GetID();
 }
 
@@ -335,7 +330,6 @@ void destroy_base_object(alt::IBaseObject* base_object) {
 
     auto type = base_object->GetType();
 
-    alt::ICore::Instance().LogInfo("destroy_base_object type: " + std::to_string(static_cast<u8>(base_object->GetType())));
     alt::ICore::Instance().DestroyBaseObject(base_object);
 }
 
@@ -344,11 +338,7 @@ u8 get_base_object_type(const alt::IBaseObject* base_object) {
         alt::ICore::Instance().LogError("get_base_object_type nullptr base_object");
         return 255;
     }
-
-    u8 type = static_cast<u8>(base_object->GetType());
-
-    alt::ICore::Instance().LogInfo("get_base_object_type type: " + std::to_string(type));
-    return type;
+    return static_cast<u8>(base_object->GetType());
 }
 
 // player

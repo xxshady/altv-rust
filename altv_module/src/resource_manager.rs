@@ -52,7 +52,7 @@ impl ResourceManager {
             // core::ptr::drop_in_place<alloc::boxed::Box<dyn$<core::ops::function::Fn<...
             drop(controller.resource_impl);
         } else {
-            resource_impl::log_error!("ResourceManager remove unknown resource: {full_main_path}");
+            logger::error!("ResourceManager remove unknown resource: {full_main_path}");
         }
     }
 

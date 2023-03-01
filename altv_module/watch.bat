@@ -3,4 +3,4 @@
 
 @REM !! requires cargo-watch to be installed
 
-cargo watch --exec build --why --watch ../altvx --watch ../altv_sdk/src/lib.rs --watch ../altv_sdk/src/alt_bridge.h --watch ../altv_sdk/src/callbacks.h --watch ../altv_sdk/src/runtime.h --watch ../resource_impl --watch .
+cargo watch --exec build --why --watch ../altvx --watch ../altv_sdk/src/lib.rs --watch ../altv_sdk/src/alt_bridge.h --watch ../altv_sdk/src/callbacks.h --watch ../altv_sdk/src/runtime.h --watch ../resource_impl --watch . --watch ../logger
