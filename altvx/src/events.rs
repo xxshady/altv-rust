@@ -9,7 +9,7 @@ pub use resource_impl::emit_local_event as emit;
 pub use resource_impl::mvalue::MValue;
 pub use resource_impl::mvalue::None;
 pub use resource_impl::mvalue_dict as dict;
-pub use resource_impl::mvalue_list as nested_args;
+pub use resource_impl::mvalue_list as list;
 pub use resource_impl::resource_impl::on;
 
 macro_rules! on_event {

@@ -138,7 +138,7 @@ pub fn main() {
                     true,
                     0.5,
                     alt::events::None,
-                    alt::events::nested_args!["aa", "b"],
+                    alt::events::list!["aa", "b"],
                     alt::events::dict! {
                         "a" => 123u64,
                         "b" => 0.15,
