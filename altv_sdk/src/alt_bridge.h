@@ -3,6 +3,7 @@
 #define ALT_SERVER_API
 
 #include <memory>
+#include <utility>
 #include "shared.h"
 #include "runtime.h"
 
@@ -49,6 +50,32 @@ public:
 
     MValueWrapper clone() {
         MValueWrapper instance;
+        instance.ptr = this->ptr;
+
+        return instance;
+    }
+};
+
+class MValueMutWrapper {
+public:
+    std::shared_ptr<alt::MValue> ptr;
+
+    MValueMutWrapper clone() {
+        MValueMutWrapper instance;
+        instance.ptr = this->ptr;
+
+        return instance;
+    }
+};
+
+using MValueDictPair = std::pair<std::string, MValueWrapper>;
+
+class MValueDictPairWrapper {
+public:
+    std::shared_ptr<MValueDictPair> ptr;
+
+    MValueDictPairWrapper clone() {
+        MValueDictPairWrapper instance;
         instance.ptr = this->ptr;
 
         return instance;
@@ -112,6 +139,32 @@ MValueWrapperVec get_mvalue_list(MValueWrapper mvalue) {
     return mvalue_vec;
 }
 
+std::vector<MValueDictPairWrapper> get_mvalue_dict(MValueWrapper mvalue) {
+    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::DICT);
+    auto dict = mvalue.ptr->As<alt::IMValueDict>().Get();
+
+    std::vector<MValueDictPairWrapper> vec;
+
+    for (auto it = dict->Begin(); it; it = dict->Next()) {
+        MValueWrapper value_wrapper;
+        value_wrapper.ptr = std::make_shared<alt::MValueConst>(it->GetValue());
+
+        MValueDictPairWrapper pair;
+        pair.ptr = std::make_shared<MValueDictPair>(std::pair { it->GetKey(), value_wrapper.clone() });
+        vec.push_back(pair.clone());
+    }
+
+    return vec;
+}
+
+std::string get_mvalue_dict_pair_key(const MValueDictPairWrapper& pair) {
+    return pair.ptr->first;
+}
+
+MValueWrapper get_mvalue_dict_pair_value(const MValueDictPairWrapper& pair) {
+    return pair.ptr->second.clone();
+}
+
 MValueWrapper create_mvalue_bool(bool value) {
     MValueWrapper wrapper;
     wrapper.ptr = std::make_shared<alt::MValueConst>(alt::ICore::Instance().CreateMValueBool(value));
@@ -158,6 +211,25 @@ MValueWrapper create_mvalue_list(MValueWrapperVec mvalue_vec) {
 
     MValueWrapper wrapper;
     wrapper.ptr = std::make_shared<alt::MValueConst>(mvalue_list);
+    return wrapper;
+}
+
+MValueMutWrapper create_mvalue_dict() {
+    MValueMutWrapper wrapper;
+    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueDict());
+    return wrapper;
+}
+
+void push_to_mvalue_dict(MValueMutWrapper& dict, std::string key, MValueWrapper mvalue) {
+    assert(dict.ptr->Get()->GetType() == alt::IMValue::Type::DICT);
+    dict.ptr->As<alt::IMValueDict>().Get()->SetConst(key, *(mvalue.ptr));
+}
+
+MValueWrapper convert_mvalue_mut_wrapper_to_const(MValueMutWrapper mut_wrapper) {
+    MValueWrapper wrapper;
+    // is this even legal?
+    wrapper.ptr = std::make_shared<alt::MValueConst>(*mut_wrapper.ptr);
+    mut_wrapper.ptr = nullptr;
     return wrapper;
 }
 

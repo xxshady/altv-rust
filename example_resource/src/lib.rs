@@ -1,8 +1,3 @@
-use alt::{
-    events::{ConsoleCommandController, PlayerDisconnectController},
-    Entity,
-};
-
 #[alt::main(crate_name = "alt")]
 pub fn main() {
     std::env::set_var("RUST_BACKTRACE", "full");
@@ -126,33 +121,12 @@ pub fn main() {
         || {
             alt::log!("~cl~start");
 
-            let max_uint = u64::MAX;
-            let max_uint2 = max_uint;
-            let max_int = i64::MAX;
-            let max_int2 = i64::MAX;
-
-            alt::events::on("test".to_string(), |_| {
-                // // alt::log!("received test args: {args:?}");
-
-                // let bool = args.get_bool_at(0)?;
-                // let f64 = args.get_f64_at(1)?;
-                // let string = args.get_string_at(2)?;
-
-                // // alt::log!("bool: {bool:?}");
-                // // alt::log!("f64: {f64:?}");
-                // // alt::log!("string: {string:?}");
-
-                // assert_eq!(max_uint2, *args.get_u64_at(4)?);
-                // assert_eq!(max_int2, *args.get_i64_at(5)?);
-
-                // let list = args.get_list_at(6)?;
-                // let list_string = list.get_string_at(0)?;
-                // // alt::log!("list: {list:?} list_string: {list_string:?}");
-
+            alt::events::on("test".to_string(), |args| {
+                args.get_dict_at(4).unwrap();
                 Ok(())
             });
 
-            for i in 0..1 {
+            for _ in 0..1 {
                 let mut str = String::from("");
                 for _ in 1..100 {
                     let a: i32 = rand::random();
@@ -163,11 +137,13 @@ pub fn main() {
                     "test",
                     true,
                     0.5,
-                    str.as_str(),
                     alt::events::None,
-                    max_uint,
-                    max_int,
-                    alt::events::nested_args!["aa", "b"]
+                    alt::events::nested_args!["aa", "b"],
+                    alt::events::dict! {
+                        "a" => 123u64,
+                        "b" => 0.15,
+                        "c" => str.as_str(),
+                    },
                 );
             }
 

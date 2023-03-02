@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::mvalue;
 use altv_sdk::ffi as sdk;
 use anyhow::Context;
@@ -55,6 +57,18 @@ impl From<Vec<Serializable>> for Serializable {
     }
 }
 
+impl From<HashMap<String, Serializable>> for Serializable {
+    fn from(value: HashMap<String, Serializable>) -> Self {
+        Self({
+            let mut dict = unsafe { sdk::create_mvalue_dict() }.within_unique_ptr();
+            for (key, value) in value {
+                unsafe { sdk::push_to_mvalue_dict(dict.as_mut().unwrap(), key, value.0) }
+            }
+            unsafe { sdk::convert_mvalue_mut_wrapper_to_const(dict) }.within_unique_ptr()
+        })
+    }
+}
+
 pub(crate) fn convert_vec_to_mvalue_vec(
     vec: Vec<Serializable>,
 ) -> UniquePtr<CxxVector<sdk::MValueWrapper>> {
@@ -78,6 +92,7 @@ pub enum MValue {
     I64(i64),
     U64(u64),
     List(MValueList),
+    Dict(HashMap<String, MValue>),
 }
 
 macro_rules! get_mvalue_type_at {
@@ -125,6 +140,7 @@ impl MValueList {
     get_mvalue_type_at!(get_i64_at, i64, MValue::I64);
     get_mvalue_type_at!(get_u64_at, u64, MValue::U64);
     get_mvalue_type_at!(get_list_at, MValueList, MValue::List);
+    get_mvalue_type_at!(get_dict_at, HashMap<String, MValue>, MValue::Dict);
 
     pub(crate) fn push(&mut self, mvalue: MValue) {
         self.vec.push(mvalue);
@@ -162,7 +178,24 @@ fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper) -> MValue {
                 .map(deserialize_mvalue)
                 .collect(),
         )),
-        _ => todo!(),
+        DICT => mvalue::MValue::Dict({
+            let mut hash_map = HashMap::new();
+
+            unsafe { sdk::get_mvalue_dict(cpp_wrapper) }
+                .iter()
+                .for_each(|pair| {
+                    let key = unsafe { sdk::get_mvalue_dict_pair_key(pair) }.to_string();
+                    let value = unsafe { sdk::get_mvalue_dict_pair_value(pair) };
+                    let value = deserialize_mvalue(value.within_unique_ptr().as_ref().unwrap());
+                    hash_map.insert(key, value);
+                });
+
+            hash_map
+        }),
+        _ => {
+            logger::error!("[deserialize_mvalue] unknown mvalue type: {mvalue_type:?}");
+            mvalue::MValue::None
+        }
     }
 }
 
@@ -171,4 +204,13 @@ macro_rules! mvalue_list {
     ($($arg: expr),+ $(,)*) => {
         vec![$($arg.into()),*]
     };
+}
+
+#[macro_export]
+macro_rules! mvalue_dict {
+    ($($key: expr => $value: expr),+ $(,)*) => {{
+        let mut hash_map = std::collections::HashMap::new();
+        $( hash_map.insert($key.to_string(), $value.into()); )+
+        hash_map
+    }};
 }
