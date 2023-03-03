@@ -40,7 +40,6 @@ pub mod ffi {
         generate!("create_mvalue_uint")
         generate!("create_mvalue_list")
         generate!("create_mvalue_dict")
-        generate!("create_mvalue_dict")
         generate!("push_to_mvalue_dict")
 
 
