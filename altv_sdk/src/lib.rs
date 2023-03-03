@@ -17,6 +17,7 @@ pub mod ffi {
 
         // mvalue
         generate!("MValueWrapper")
+        generate!("convert_mvalue_mut_wrapper_to_const")
         generate!("create_mvalue_vec")
         generate!("push_to_mvalue_vec")
         generate!("get_mvalue_type")
@@ -26,8 +27,8 @@ pub mod ffi {
         generate!("get_mvalue_int")
         generate!("get_mvalue_uint")
         generate!("get_mvalue_list")
-        generate!("get_mvalue_dict")
 
+        generate!("get_mvalue_dict")
         generate!("get_mvalue_dict_pair_key")
         generate!("get_mvalue_dict_pair_value")
 
@@ -39,10 +40,9 @@ pub mod ffi {
         generate!("create_mvalue_uint")
         generate!("create_mvalue_list")
         generate!("create_mvalue_dict")
-
         generate!("create_mvalue_dict")
         generate!("push_to_mvalue_dict")
-        generate!("convert_mvalue_mut_wrapper_to_const")
+
 
         // events
         generate!("trigger_local_event")
