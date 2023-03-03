@@ -22,7 +22,7 @@ macro_rules! emit_local_event {
         unsafe { $crate::local_script_events::emit_local_event_without_args($event_name) };
     }};
     ($event_name: expr, $($arg: expr),+ $(,)*) => {{
-        unsafe { $crate::local_script_events::emit_local_event($event_name, vec![$($arg.into()),*]) };
+        unsafe { $crate::local_script_events::emit_local_event($event_name, vec![$($arg.into()),+]) };
     }};
 }
 
