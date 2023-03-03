@@ -109,9 +109,10 @@ macro_rules! get_mvalue_type_at {
                 Ok(&value)
             } else {
                 anyhow::bail!(
-                    "MValueArgs {} index: {index} exists but is not {}",
+                    "MValueArgs {} index: {index} exists but is not: {} (it is actually: {:?})",
                     stringify!($method_name),
                     stringify!($type_name),
+                    value
                 )
             }
         }

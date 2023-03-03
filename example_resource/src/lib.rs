@@ -122,7 +122,7 @@ pub fn main() {
             alt::log!("~cl~start");
 
             alt::events::on("test".to_string(), |args| {
-                args.get_dict_at(4).unwrap();
+                args.get_dict_at(4)?;
                 Ok(())
             });
 
@@ -139,17 +139,18 @@ pub fn main() {
                     0.5,
                     alt::events::None,
                     alt::events::list!["aa", "b"],
-                    alt::events::dict! {
-                        "a" => 123u64,
-                        "b" => 0.15,
-                        "c" => str.as_str(),
-                    },
+                    alt::events::list!["aa", "b"],
+                    // alt::events::dict! {
+                    //     "a" => 123u64,
+                    //     "b" => 0.15,
+                    //     "c" => str.as_str(),
+                    // },
                 );
             }
 
             alt::log!("~gl~done");
         },
-        3000,
+        100,
     );
 
     // // should raise warning
