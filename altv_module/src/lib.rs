@@ -108,7 +108,7 @@ extern "C" fn resource_on_create_base_object(
         manager
             .get_by_path(&full_main_path)
             .unwrap_or_else(|| {
-                panic!("[resource_on_remove_base_object] failed to get resource by path: {full_main_path}");
+                panic!("[resource_on_create_base_object] failed to get resource by path: {full_main_path}");
             })
             .borrow_resource_impl()
             .__on_base_object_create(base_object, base_object_type);
