@@ -32,8 +32,9 @@ pub struct ResourceImpl {
     base_objects: RefCell<base_object::BaseObjectManager>,
     entities: RefCell<entity::EntityManager>,
     events: RefCell<events::EventManager>,
-    player_base_object_map: RefCell<base_object_maps::PlayerBaseObjectMap>,
-    local_script_events: RefCell<local_script_events::LocalEventManager>,
+    pub player_base_object_map: RefCell<base_object_maps::PlayerBaseObjectMap>,
+    pub vehicle_base_object_map: RefCell<base_object_maps::VehicleBaseObjectMap>,
+    pub local_script_events: RefCell<local_script_events::LocalEventManager>,
 }
 
 impl ResourceImpl {
@@ -47,6 +48,7 @@ impl ResourceImpl {
             entities: RefCell::new(entity::EntityManager::new()),
             events: RefCell::new(events::EventManager::new()),
             player_base_object_map: RefCell::new(base_object_maps::PlayerBaseObjectMap::new()),
+            vehicle_base_object_map: RefCell::new(base_object_maps::VehicleBaseObjectMap::new()),
             local_script_events: RefCell::new(local_script_events::LocalEventManager::new()),
         }
     }
@@ -88,6 +90,10 @@ impl ResourceImpl {
             VEHICLE => {
                 let vehicle = vehicle::create_vehicle_container(raw_ptr);
                 add_entity_to_pool(entity::EntityWrapper::Vehicle(Rc::clone(&vehicle)));
+                self.vehicle_base_object_map
+                    .borrow_mut()
+                    .add_base_object(Rc::clone(&vehicle));
+
                 vehicle
             }
             PLAYER => {
@@ -96,6 +102,7 @@ impl ResourceImpl {
                 self.player_base_object_map
                     .borrow_mut()
                     .add_base_object(Rc::clone(&player));
+
                 player
             }
             _ => todo!(),
@@ -148,12 +155,9 @@ impl ResourceImpl {
         event_type: altv_sdk::EventType,
         event: *const altv_sdk::ffi::alt::CEvent,
     ) {
-        self.events.borrow_mut().__on_sdk_event(
-            self.player_base_object_map.borrow(),
-            self.local_script_events.borrow_mut(),
-            event_type,
-            event,
-        );
+        self.events
+            .borrow_mut()
+            .__on_sdk_event(self, event_type, event);
     }
 
     pub(crate) fn borrow_mut_base_object_deletion(
@@ -166,6 +170,10 @@ impl ResourceImpl {
         &self,
     ) -> RefMut<base_object::PendingBaseObjectCreation> {
         self.base_object_creation.borrow_mut()
+    }
+
+    pub(crate) fn borrow_base_objects(&self) -> Ref<base_object::BaseObjectManager> {
+        self.base_objects.borrow()
     }
 
     pub(crate) fn borrow_mut_base_objects(&self) -> RefMut<base_object::BaseObjectManager> {

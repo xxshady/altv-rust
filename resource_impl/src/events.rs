@@ -1,12 +1,7 @@
-use std::{
-    cell::{Ref, RefMut},
-    collections::{HashMap, HashSet},
-};
-
 use crate::{
-    base_object_maps::PlayerBaseObjectMap, helpers::get_player_from_event, local_script_events,
-    mvalue, player::PlayerContainer,
+    helpers::get_player_from_event, mvalue, player::PlayerContainer, resource_impl::ResourceImpl,
 };
+use std::collections::{HashMap, HashSet};
 
 pub use altv_sdk::EventType as SDKEventType;
 
@@ -98,8 +93,7 @@ impl EventManager {
     #[allow(clippy::not_unsafe_ptr_arg_deref)]
     pub fn __on_sdk_event(
         &mut self,
-        players: Ref<PlayerBaseObjectMap>,
-        mut local_script_events: RefMut<local_script_events::LocalEventManager>,
+        resource_impl: &ResourceImpl,
         event_type: SDKEventType,
         event: *const sdk::alt::CEvent,
     ) {
@@ -108,15 +102,16 @@ impl EventManager {
         match event_type {
             SDKEventType::SERVER_SCRIPT_EVENT => {
                 let event_name = unsafe { sdk::get_event_server_script_event_name(event) };
-
                 let args = unsafe { sdk::get_event_server_script_event_args(event) };
+                let deserialized_args = mvalue::deserialize_mvalue_args(args, resource_impl);
 
-                let deserialized_args = mvalue::deserialize_mvalue_args(args);
-
-                local_script_events.receive_event(
-                    event_name.as_ref().unwrap().to_str().unwrap(),
-                    &deserialized_args,
-                );
+                resource_impl
+                    .local_script_events
+                    .borrow_mut()
+                    .receive_event(
+                        event_name.as_ref().unwrap().to_str().unwrap(),
+                        &deserialized_args,
+                    );
 
                 return;
             }
@@ -126,6 +121,8 @@ impl EventManager {
         let handlers = self.public_handlers.get_mut(&event_type.into());
 
         if let Some(handlers) = handlers {
+            let players = resource_impl.player_base_object_map.borrow();
+
             for h in handlers {
                 use Event::*;
                 match h {

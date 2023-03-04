@@ -1,14 +1,13 @@
-use std::{collections::HashMap, rc::Rc};
-
 use crate::{
     base_object::{self, BaseObject},
-    player,
+    player, vehicle,
 };
+use std::{collections::HashMap, rc::Rc};
 
 macro_rules! base_object_map {
     ($name: ident, $container: ty) => {
         #[derive(Debug)]
-        pub(crate) struct $name {
+        pub struct $name {
             base_objects: HashMap<base_object::RawBaseObjectPointer, $container>,
         }
 
@@ -41,3 +40,4 @@ macro_rules! base_object_map {
 }
 
 base_object_map!(PlayerBaseObjectMap, player::PlayerContainer);
+base_object_map!(VehicleBaseObjectMap, vehicle::VehicleContainer);

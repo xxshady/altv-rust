@@ -78,6 +78,9 @@ pub fn create_vehicle(
             vehicle.borrow().id().unwrap(),
             EntityWrapper::Vehicle(Rc::clone(&vehicle)),
         );
+
+        let mut vehicle_base_object_map = instance.vehicle_base_object_map.borrow_mut();
+        vehicle_base_object_map.add_base_object(Rc::clone(&vehicle));
     });
 
     Some(vehicle)

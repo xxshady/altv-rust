@@ -1,9 +1,13 @@
-use std::collections::HashMap;
-
-use crate::mvalue;
+use crate::{
+    base_object::{self, BaseObject},
+    player,
+    resource_impl::ResourceImpl,
+    vehicle,
+};
 use altv_sdk::ffi as sdk;
 use anyhow::Context;
 use autocxx::{cxx::CxxVector, prelude::*};
+use std::{cell::RefMut, collections::HashMap, fmt::Debug};
 
 pub struct Serializable(UniquePtr<sdk::MValueWrapper>);
 
@@ -69,6 +73,62 @@ impl From<HashMap<String, Serializable>> for Serializable {
     }
 }
 
+pub struct ValidBaseObject<'a>(RefMut<'a, dyn base_object::BaseObject>);
+
+macro_rules! impl_base_object_to_serializable {
+    ($base_object_struct: path, $container: path, $func_name: ident) => {
+        impl<'a> TryFrom<RefMut<'a, $base_object_struct>> for ValidBaseObject<'a> {
+            type Error = anyhow::Error;
+
+            fn try_from(value: RefMut<'a, $base_object_struct>) -> Result<Self, Self::Error> {
+                if !value.valid() {
+                    anyhow::bail!(
+                        "base object: {} is invalid",
+                        stringify!($base_object_struct)
+                    );
+                }
+                Ok(Self(value))
+            }
+        }
+
+        impl From<$container> for Serializable {
+            fn from(value: $container) -> Self {
+                Self(
+                    unsafe {
+                        sdk::create_mvalue_base_object(
+                            value
+                                .borrow_mut()
+                                .ptr_mut()
+                                .get()
+                                // this should never panic since ValidBaseObject protects baseobject from being destroyed
+                                .expect("this shit should never happen"),
+                        )
+                    }
+                    .within_unique_ptr(),
+                )
+            }
+        }
+
+        pub fn $func_name<'a>(
+            base_object: RefMut<'a, $base_object_struct>,
+        ) -> Result<ValidBaseObject<'a>, anyhow::Error> {
+            $crate::mvalue::ValidBaseObject::try_from(base_object)
+        }
+    };
+}
+
+impl_base_object_to_serializable!(vehicle::Vehicle, vehicle::VehicleContainer, valid_vehicle);
+impl_base_object_to_serializable!(player::Player, player::PlayerContainer, valid_player);
+
+impl From<ValidBaseObject<'_>> for Serializable {
+    fn from(mut value: ValidBaseObject) -> Self {
+        Self(
+            unsafe { sdk::create_mvalue_base_object(value.0.ptr_mut().get().unwrap()) }
+                .within_unique_ptr(),
+        )
+    }
+}
+
 pub(crate) fn convert_vec_to_mvalue_vec(
     vec: Vec<Serializable>,
 ) -> UniquePtr<CxxVector<sdk::MValueWrapper>> {
@@ -93,6 +153,9 @@ pub enum MValue {
     U64(u64),
     List(MValueList),
     Dict(HashMap<String, MValue>),
+    Vehicle(vehicle::VehicleContainer),
+    Player(player::PlayerContainer),
+    InvalidBaseObject,
 }
 
 macro_rules! get_mvalue_type_at {
@@ -119,7 +182,7 @@ macro_rules! get_mvalue_type_at {
     };
 }
 
-#[derive(Debug, Default)]
+#[derive(Default)]
 pub struct MValueList {
     vec: Vec<MValue>,
 }
@@ -148,38 +211,45 @@ impl MValueList {
     }
 }
 
-pub fn deserialize_mvalue_args(args: UniquePtr<CxxVector<sdk::MValueWrapper>>) -> MValueList {
+impl Debug for MValueList {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self.vec)
+    }
+}
+
+pub fn deserialize_mvalue_args(
+    args: UniquePtr<CxxVector<sdk::MValueWrapper>>,
+    resource_impl: &ResourceImpl,
+) -> MValueList {
     let mut deserialized_args = MValueList::default();
 
     for arg in args.as_ref().unwrap() {
-        deserialized_args.push(deserialize_mvalue(arg));
+        deserialized_args.push(deserialize_mvalue(arg, resource_impl));
     }
 
     deserialized_args
 }
 
-fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper) -> MValue {
+fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource_impl: &ResourceImpl) -> MValue {
     let mvalue_type = unsafe { sdk::get_mvalue_type(cpp_wrapper) };
     let mvalue_type = altv_sdk::MValueType::from(mvalue_type).unwrap();
 
     use altv_sdk::MValueType::*;
 
     match mvalue_type {
-        BOOL => mvalue::MValue::Bool(unsafe { sdk::get_mvalue_bool(cpp_wrapper) }),
-        DOUBLE => mvalue::MValue::F64(unsafe { sdk::get_mvalue_double(cpp_wrapper) }),
-        STRING => {
-            mvalue::MValue::String(unsafe { sdk::get_mvalue_string(cpp_wrapper).to_string() })
-        }
-        NIL | NONE => mvalue::MValue::None,
-        INT => mvalue::MValue::I64(unsafe { sdk::get_mvalue_int(cpp_wrapper) }),
-        UINT => mvalue::MValue::U64(unsafe { sdk::get_mvalue_uint(cpp_wrapper) }),
-        LIST => mvalue::MValue::List(MValueList::new(
+        BOOL => MValue::Bool(unsafe { sdk::get_mvalue_bool(cpp_wrapper) }),
+        DOUBLE => MValue::F64(unsafe { sdk::get_mvalue_double(cpp_wrapper) }),
+        STRING => MValue::String(unsafe { sdk::get_mvalue_string(cpp_wrapper).to_string() }),
+        NIL | NONE => MValue::None,
+        INT => MValue::I64(unsafe { sdk::get_mvalue_int(cpp_wrapper) }),
+        UINT => MValue::U64(unsafe { sdk::get_mvalue_uint(cpp_wrapper) }),
+        LIST => MValue::List(MValueList::new(
             unsafe { sdk::get_mvalue_list(cpp_wrapper) }
                 .iter()
-                .map(deserialize_mvalue)
+                .map(|v| deserialize_mvalue(v, resource_impl))
                 .collect(),
         )),
-        DICT => mvalue::MValue::Dict({
+        DICT => MValue::Dict({
             let mut hash_map = HashMap::new();
 
             unsafe { sdk::get_mvalue_dict(cpp_wrapper) }
@@ -187,15 +257,69 @@ fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper) -> MValue {
                 .for_each(|pair| {
                     let key = unsafe { sdk::get_mvalue_dict_pair_key(pair) }.to_string();
                     let value = unsafe { sdk::get_mvalue_dict_pair_value(pair) };
-                    let value = deserialize_mvalue(value.within_unique_ptr().as_ref().unwrap());
+                    let value = deserialize_mvalue(
+                        value.within_unique_ptr().as_ref().unwrap(),
+                        resource_impl,
+                    );
                     hash_map.insert(key, value);
                 });
 
             hash_map
         }),
+        BASE_OBJECT => {
+            let raw_ptr = unsafe { sdk::get_mvalue_base_object(cpp_wrapper) };
+            logger::debug!("deserializing BASE_OBJECT raw ptr: {raw_ptr:?}");
+            if raw_ptr.is_null() {
+                return MValue::InvalidBaseObject;
+            }
+
+            let base_obj = resource_impl.borrow_base_objects().get_by_raw_ptr(raw_ptr);
+            if let Some(base_obj) = base_obj {
+                use altv_sdk::BaseObjectType::*;
+
+                macro_rules! deserialize_base_object {
+                    ($base_object_name: literal, $mvalue_item: path, $resource_impl_base_obj_map: path) => {{
+                        paste::paste! {
+                            let base_obj = resource_impl
+                            .[<$resource_impl_base_obj_map>]
+                            .borrow()
+                            .get_by_base_object_ptr(raw_ptr);
+
+                        if let Some(base_obj) = base_obj {
+                            MValue::$mvalue_item(base_obj)
+                        } else {
+                            logger::error!(
+                                "[deserialize_mvalue] {0} baseobject pointer is not null, but {0} is not in pool",
+                                stringify!($base_object_name)
+                            );
+                            MValue::InvalidBaseObject
+                        }
+                        }
+                    }};
+                }
+
+                match base_obj.borrow().base_type() {
+                    VEHICLE => {
+                        deserialize_base_object!("vehicle", Vehicle, vehicle_base_object_map)
+                    }
+                    PLAYER => {
+                        deserialize_base_object!("player", Player, player_base_object_map)
+                    }
+                    base_type => {
+                        logger::error!(
+                            "[deserialize_mvalue] unknown baseobject type: {base_type:?}"
+                        );
+                        MValue::InvalidBaseObject
+                    }
+                }
+            } else {
+                logger::error!("[deserialize_mvalue] baseobject pointer is not null, but baseobject is not in pool");
+                MValue::InvalidBaseObject
+            }
+        }
         _ => {
             logger::error!("[deserialize_mvalue] unknown mvalue type: {mvalue_type:?}");
-            mvalue::MValue::None
+            MValue::None
         }
     }
 }
@@ -203,7 +327,9 @@ fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper) -> MValue {
 #[macro_export]
 macro_rules! mvalue_list {
     ($($arg: expr),+ $(,)*) => {
-        vec![$($arg.into()),*]
+        vec![$(
+            $crate::mvalue::Serializable::from($arg)
+        ),*]
     };
 }
 
@@ -211,7 +337,9 @@ macro_rules! mvalue_list {
 macro_rules! mvalue_dict {
     ($($key: expr => $value: expr),+ $(,)*) => {{
         let mut hash_map = std::collections::HashMap::new();
-        $( hash_map.insert($key.to_string(), $value.into()); )+
+        $(
+            hash_map.insert($key.to_string(), $crate::mvalue::Serializable::from($value));
+        )+
         hash_map
     }};
 }

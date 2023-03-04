@@ -51,6 +51,7 @@ impl BaseObjectPointer {
 
 pub trait BaseObject {
     fn as_any(&mut self) -> &mut dyn Any;
+    fn valid(&self) -> bool;
     fn ptr(&self) -> &BaseObjectPointer;
     fn ptr_mut(&mut self) -> &mut BaseObjectPointer;
     fn base_type(&self) -> altv_sdk::BaseObjectType;
@@ -81,6 +82,10 @@ macro_rules! impl_base_object_for {
                 self
             }
 
+            fn valid(&self) -> bool {
+                self.ptr.get().is_ok()
+            }
+
             fn ptr(&self) -> &BaseObjectPointer {
                 &self.ptr
             }
@@ -96,7 +101,7 @@ macro_rules! impl_base_object_for {
     };
 }
 
-pub(crate) type BaseObjectContainer = Rc<RefCell<dyn BaseObject>>;
+pub type BaseObjectContainer = Rc<RefCell<dyn BaseObject>>;
 
 impl Debug for dyn BaseObject {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

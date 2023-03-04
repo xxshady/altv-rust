@@ -122,7 +122,8 @@ pub fn main() {
             alt::log!("~cl~start");
 
             alt::events::on("test".to_string(), |args| {
-                args.get_dict_at(4)?;
+                alt::log!("test event args: {:?}", args);
+                // args.get_dict_at(4)?;
                 Ok(())
             });
 
@@ -133,19 +134,18 @@ pub fn main() {
                     str += a.to_string().as_str();
                 }
 
-                alt::events::emit!(
-                    "test",
-                    true,
-                    0.5,
-                    alt::events::None,
-                    alt::events::list!["aa", "b"],
-                    alt::events::list!["aa", "b"],
-                    // alt::events::dict! {
-                    //     "a" => 123u64,
-                    //     "b" => 0.15,
-                    //     "c" => str.as_str(),
-                    // },
+                alt::set_timeout(
+                    move || {
+                        let vehicle =
+                            alt::Vehicle::new(alt::hash("sultan2"), 0.into(), 0.into()).unwrap();
+                        let valid_veh = alt::events::valid_vehicle(vehicle.borrow_mut()).unwrap();
+                        alt::events::emit!("test", valid_veh);
+                        // vehicle.borrow_mut().destroy().unwrap();
+                    },
+                    500,
                 );
+
+                // vehicle.borrow_mut().destroy().unwrap();
             }
 
             alt::log!("~gl~done");

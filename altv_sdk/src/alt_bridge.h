@@ -68,6 +68,14 @@ public:
     }
 };
 
+MValueWrapper convert_mvalue_mut_wrapper_to_const(MValueMutWrapper mut_wrapper) {
+    MValueWrapper wrapper;
+    // is this even legal?
+    wrapper.ptr = std::make_shared<alt::MValueConst>(*mut_wrapper.ptr);
+    mut_wrapper.ptr = nullptr;
+    return wrapper;
+}
+
 using MValueDictPair = std::pair<std::string, MValueWrapper>;
 
 class MValueDictPairWrapper {
@@ -165,6 +173,11 @@ MValueWrapper get_mvalue_dict_pair_value(const MValueDictPairWrapper& pair) {
     return pair.ptr->second.clone();
 }
 
+alt::IBaseObject* get_mvalue_base_object(MValueWrapper mvalue) {
+    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::BASE_OBJECT);
+    return mvalue.ptr->As<alt::IMValueBaseObject>().Get()->RawValue();
+}
+
 MValueWrapper create_mvalue_bool(bool value) {
     MValueWrapper wrapper;
     wrapper.ptr = std::make_shared<alt::MValueConst>(alt::ICore::Instance().CreateMValueBool(value));
@@ -225,11 +238,9 @@ void push_to_mvalue_dict(MValueMutWrapper& dict, std::string key, MValueWrapper 
     dict.ptr->As<alt::IMValueDict>().Get()->SetConst(key, *(mvalue.ptr));
 }
 
-MValueWrapper convert_mvalue_mut_wrapper_to_const(MValueMutWrapper mut_wrapper) {
+MValueWrapper create_mvalue_base_object(alt::IBaseObject* value) {
     MValueWrapper wrapper;
-    // is this even legal?
-    wrapper.ptr = std::make_shared<alt::MValueConst>(*mut_wrapper.ptr);
-    mut_wrapper.ptr = nullptr;
+    wrapper.ptr = std::make_shared<alt::MValueConst>(alt::ICore::Instance().CreateMValueBaseObject(value));
     return wrapper;
 }
 

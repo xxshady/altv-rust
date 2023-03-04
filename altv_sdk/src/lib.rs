@@ -32,6 +32,8 @@ pub mod ffi {
         generate!("get_mvalue_dict_pair_key")
         generate!("get_mvalue_dict_pair_value")
 
+        generate!("get_mvalue_base_object")
+
         generate!("create_mvalue_bool")
         generate!("create_mvalue_double")
         generate!("create_mvalue_string")
@@ -41,7 +43,7 @@ pub mod ffi {
         generate!("create_mvalue_list")
         generate!("create_mvalue_dict")
         generate!("push_to_mvalue_dict")
-
+        generate!("create_mvalue_base_object")
 
         // events
         generate!("trigger_local_event")

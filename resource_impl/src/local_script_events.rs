@@ -11,10 +11,20 @@ pub fn emit_local_event_without_args(event_name: &str) {
     unsafe { sdk::trigger_local_event(event_name, sdk::create_mvalue_vec()) };
 }
 
-/// Example:
+/// Examples
+///
+/// Sending primitives
 /// ```rust
 /// altvx::events::emit!("example");
 /// altvx::events::emit!("example", 1, 2, 3);
+/// ```
+///
+/// Sending base objects (vehicle, player, etc.)
+/// ```rust
+/// let vehicle =
+///     alt::Vehicle::new(alt::hash("sultan2"), 0.into(), 0.into()).unwrap();
+/// let valid_veh = alt::events::valid_vehicle(vehicle.borrow_mut()).unwrap();
+/// alt::events::emit!("example", valid_veh);
 /// ```
 #[macro_export]
 macro_rules! emit_local_event {
@@ -22,14 +32,19 @@ macro_rules! emit_local_event {
         unsafe { $crate::local_script_events::emit_local_event_without_args($event_name) };
     }};
     ($event_name: expr, $($arg: expr),+ $(,)*) => {{
-        unsafe { $crate::local_script_events::emit_local_event($event_name, vec![$($arg.into()),+]) };
+        unsafe { $crate::local_script_events::emit_local_event(
+            $event_name,
+            vec![$(
+                $crate::mvalue::Serializable::from($arg)
+            ),+]
+        ) };
     }};
 }
 
 pub type LocalEventArgs<'a> = &'a mvalue::MValueList;
 pub type LocalEventHandler = Box<dyn FnMut(LocalEventArgs) -> anyhow::Result<()>>;
 
-pub(crate) struct LocalEventManager {
+pub struct LocalEventManager {
     handlers: HashMap<String, Vec<LocalEventHandler>>,
 }
 
