@@ -8,6 +8,6 @@ edition = "2021"
 [dependencies]
 altv_sdk = { path = "../altv_sdk" }
 logger = { path = "../logger" }
-anyhow = "1.0.69"
+anyhow = { workspace = true }
 autocxx = { workspace = true }
 paste = "1.0.11"

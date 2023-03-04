@@ -9,3 +9,4 @@ edition = "2021"
 altv_sdk = { path = "../altv_sdk" }
 resource_main_macro = { path = "../resource_main_macro" }
 resource_impl = { path = "../resource_impl" }
+anyhow = { workspace = true }
