@@ -21,11 +21,11 @@ fn main() -> miette::Result<()> {
 }
 
 fn generate_cpp_to_rust_bindings() {
-    let version_bat = format!("{CPP_SDK_VERSION_DIR}/get-version.bat");
+    let version_bat = format!("./get-version.sh");
     std::process::Command::new(version_bat.clone())
         .current_dir(CPP_SDK_VERSION_DIR)
         .output()
-        .unwrap_or_else(|e| panic!("failed to run cpp-sdk get-version.bat in: {version_bat} {e}"));
+        .unwrap_or_else(|e| panic!("failed to run cpp-sdk get-version.sh in: {version_bat} {e}"));
 
     let cpp_sdk_version_bindings = bindgen::Builder::default()
         .header(format!("{CPP_SDK_VERSION_DIR}/version.h"))
@@ -69,7 +69,7 @@ fn build_rust() -> miette::Result<()> {
     autocxx_build::Builder::new("src/lib.rs", [&path])
         .extra_clang_args(&["-std=c++20"])
         .build()?
-        .flag("/std:c++20")
+        .flag("-std=c++2a")
         .compile("altv_sdk");
 
     Ok(())
