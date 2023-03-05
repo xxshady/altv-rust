@@ -24,6 +24,10 @@ impl BaseObjectPointer {
         Self(Some(raw_ptr))
     }
 
+    pub fn valid(&self) -> bool {
+        self.0.is_some()
+    }
+
     pub fn get(&self) -> Result<RawBaseObjectPointer, String> {
         if let Some(raw) = self.0 {
             Ok(raw)

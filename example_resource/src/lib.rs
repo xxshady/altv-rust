@@ -138,9 +138,21 @@ pub fn main() {
                     move || {
                         let vehicle =
                             alt::Vehicle::new(alt::hash("sultan2"), 0.into(), 0.into()).unwrap();
-                        let valid_veh = alt::events::valid_vehicle(vehicle.borrow_mut()).unwrap();
-                        alt::events::emit!("test", valid_veh);
+
                         // vehicle.borrow_mut().destroy().unwrap();
+
+                        alt::events::emit!(
+                            "test",
+                            123i64,
+                            true,
+                            "string",
+                            // TODO: make this shit more user-friendly if dict! or list! result is passed directly without unwrapping it
+                            alt::events::dict! {
+                                "vehicle" => vehicle.clone(),
+                            }
+                            .unwrap()
+                        )
+                        .unwrap();
                     },
                     500,
                 );

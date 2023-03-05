@@ -13,32 +13,42 @@ pub fn emit_local_event_without_args(event_name: &str) {
 
 /// Examples
 ///
-/// Sending primitives
 /// ```rust
-/// altvx::events::emit!("example");
-/// altvx::events::emit!("example", 1, 2, 3);
+/// altvx::events::emit!("example").unwrap();
 /// ```
 ///
-/// Sending base objects (vehicle, player, etc.)
+/// Sending primitives
 /// ```rust
-/// let vehicle =
-///     alt::Vehicle::new(alt::hash("sultan2"), 0.into(), 0.into()).unwrap();
-/// let valid_veh = alt::events::valid_vehicle(vehicle.borrow_mut()).unwrap();
-/// alt::events::emit!("example", valid_veh);
+/// altvx::events::emit!("example", 1, 2, 3).unwrap();
+/// ```
+///
+/// Sending lists
+/// ```rust
+/// altvx::events::emit!("example", altvx::events::list![1, 2, 3]).unwrap();
 /// ```
 #[macro_export]
 macro_rules! emit_local_event {
-    ($event_name: expr) => {{
+    ($event_name: expr) => {
         unsafe { $crate::local_script_events::emit_local_event_without_args($event_name) };
-    }};
-    ($event_name: expr, $($arg: expr),+ $(,)*) => {{
-        unsafe { $crate::local_script_events::emit_local_event(
-            $event_name,
-            vec![$(
-                $crate::mvalue::Serializable::from($arg)
-            ),+]
-        ) };
-    }};
+    };
+    ($event_name: expr, $($arg: expr),+ $(,)*) => {
+        match $crate::mvalue_list!($($arg),+) {
+            Ok(vec) => {
+                unsafe {
+                    $crate::local_script_events::emit_local_event(
+                        $event_name,
+                        vec![$(
+                            $crate::mvalue::Serializable::try_from($arg).unwrap()
+                        ),+]
+                    )
+                };
+                Ok(())
+            }
+            Err(error) => {
+                Err(error)
+            }
+        }
+    };
 }
 
 pub type LocalEventArgs<'a> = &'a mvalue::MValueList;

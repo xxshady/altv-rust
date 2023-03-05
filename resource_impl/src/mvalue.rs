@@ -1,131 +1,82 @@
-use crate::{
-    base_object::{self, BaseObject},
-    player,
-    resource_impl::ResourceImpl,
-    vehicle,
-};
+use crate::{base_object::BaseObject, player, resource_impl::ResourceImpl, vehicle};
 use altv_sdk::ffi as sdk;
 use anyhow::Context;
 use autocxx::{cxx::CxxVector, prelude::*};
-use std::{cell::RefMut, collections::HashMap, fmt::Debug};
+use std::{collections::HashMap, fmt::Debug};
 
 pub struct Serializable(UniquePtr<sdk::MValueWrapper>);
 
-impl From<bool> for Serializable {
-    fn from(value: bool) -> Self {
-        Self(unsafe { sdk::create_mvalue_bool(value) }.within_unique_ptr())
-    }
-}
-
-impl From<f64> for Serializable {
-    fn from(value: f64) -> Self {
-        Self(unsafe { sdk::create_mvalue_double(value) }.within_unique_ptr())
-    }
-}
-
-impl From<&str> for Serializable {
-    fn from(value: &str) -> Self {
-        Self(unsafe { sdk::create_mvalue_string(value) }.within_unique_ptr())
-    }
-}
-
-// TODO: fix this none/null/nil shit
-/// alias for `MValue::None`
-#[derive(Debug)]
-pub struct None;
-
-impl From<None> for Serializable {
-    fn from(_: None) -> Self {
-        Self(unsafe { sdk::create_mvalue_nil() }.within_unique_ptr())
-    }
-}
-
-impl From<i64> for Serializable {
-    fn from(value: i64) -> Self {
-        Self(unsafe { sdk::create_mvalue_int(value) }.within_unique_ptr())
-    }
-}
-
-impl From<u64> for Serializable {
-    fn from(value: u64) -> Self {
-        Self(unsafe { sdk::create_mvalue_uint(value) }.within_unique_ptr())
-    }
-}
-
-impl From<Vec<Serializable>> for Serializable {
-    fn from(value: Vec<Serializable>) -> Self {
-        Self(
-            unsafe { sdk::create_mvalue_list(convert_vec_to_mvalue_vec(value)) }
-                .within_unique_ptr(),
-        )
-    }
-}
-
-impl From<HashMap<String, Serializable>> for Serializable {
-    fn from(value: HashMap<String, Serializable>) -> Self {
-        Self({
-            let mut dict = unsafe { sdk::create_mvalue_dict() }.within_unique_ptr();
-            for (key, value) in value {
-                unsafe { sdk::push_to_mvalue_dict(dict.as_mut().unwrap(), key, value.0) }
-            }
-            unsafe { sdk::convert_mvalue_mut_wrapper_to_const(dict) }.within_unique_ptr()
-        })
-    }
-}
-
-pub struct ValidBaseObject<'a>(RefMut<'a, dyn base_object::BaseObject>);
-
-macro_rules! impl_base_object_to_serializable {
-    ($base_object_struct: path, $container: path, $func_name: ident) => {
-        impl<'a> TryFrom<RefMut<'a, $base_object_struct>> for ValidBaseObject<'a> {
+macro_rules! impl_serializable {
+    ($value_type: ty, $create_func: expr) => {
+        impl TryFrom<$value_type> for Serializable {
             type Error = anyhow::Error;
-
-            fn try_from(value: RefMut<'a, $base_object_struct>) -> Result<Self, Self::Error> {
-                if !value.valid() {
-                    anyhow::bail!(
-                        "base object: {} is invalid",
-                        stringify!($base_object_struct)
-                    );
-                }
-                Ok(Self(value))
+            fn try_from(value: $value_type) -> anyhow::Result<Self> {
+                Ok(Self(unsafe { $create_func(value) }.within_unique_ptr()))
             }
-        }
-
-        impl From<$container> for Serializable {
-            fn from(value: $container) -> Self {
-                Self(
-                    unsafe {
-                        sdk::create_mvalue_base_object(
-                            value
-                                .borrow_mut()
-                                .ptr_mut()
-                                .get()
-                                // this should never panic since ValidBaseObject protects baseobject from being destroyed
-                                .expect("this shit should never happen"),
-                        )
-                    }
-                    .within_unique_ptr(),
-                )
-            }
-        }
-
-        pub fn $func_name<'a>(
-            base_object: RefMut<'a, $base_object_struct>,
-        ) -> Result<ValidBaseObject<'a>, anyhow::Error> {
-            $crate::mvalue::ValidBaseObject::try_from(base_object)
         }
     };
 }
 
-impl_base_object_to_serializable!(vehicle::Vehicle, vehicle::VehicleContainer, valid_vehicle);
-impl_base_object_to_serializable!(player::Player, player::PlayerContainer, valid_player);
+impl_serializable!(bool, sdk::create_mvalue_bool);
+impl_serializable!(f64, sdk::create_mvalue_double);
+impl_serializable!(i64, sdk::create_mvalue_int);
+impl_serializable!(u64, sdk::create_mvalue_uint);
+impl_serializable!(&str, sdk::create_mvalue_string);
 
-impl From<ValidBaseObject<'_>> for Serializable {
-    fn from(mut value: ValidBaseObject) -> Self {
-        Self(
-            unsafe { sdk::create_mvalue_base_object(value.0.ptr_mut().get().unwrap()) }
-                .within_unique_ptr(),
-        )
+impl_serializable!(
+    Vec<Serializable>,
+    (|value| sdk::create_mvalue_list(convert_vec_to_mvalue_vec(value)))
+);
+
+impl_serializable!(
+   HashMap<String, Serializable>,
+(|value: HashMap<String, Serializable>| {
+   let mut dict = sdk::create_mvalue_dict().within_unique_ptr();
+    for (key, value) in value {
+        sdk::push_to_mvalue_dict(dict.as_mut().unwrap(), key, value.0)
+    }
+    sdk::convert_mvalue_mut_wrapper_to_const(dict)
+}));
+
+macro_rules! impl_serializable_base_object {
+    ($base_object: ty, $short_name: literal) => {
+        impl TryFrom<$base_object> for Serializable {
+            type Error = anyhow::Error;
+
+            fn try_from(base_object: $base_object) -> anyhow::Result<Self> {
+                let mut borrowed = base_object.borrow_mut();
+                let ptr = borrowed.ptr_mut();
+                if ptr.valid() {
+                    Ok(Self(
+                        unsafe {
+                            sdk::create_mvalue_base_object(
+                                ptr.get().expect("this shit should never happen"),
+                            )
+                        }
+                        .within_unique_ptr(),
+                    ))
+                } else {
+                    anyhow::bail!("{} base object is destroyed", $short_name)
+                }
+            }
+        }
+    };
+}
+
+impl_serializable_base_object!(vehicle::VehicleContainer, "vehicle");
+impl_serializable_base_object!(player::PlayerContainer, "player");
+
+// TODO: fix this none/null/nil shit
+/// alias for `MValue::None`
+#[derive(Debug)]
+pub struct MValueNone;
+
+impl TryFrom<MValueNone> for Serializable {
+    type Error = anyhow::Error;
+    fn try_from(_: MValueNone) -> anyhow::Result<Self> {
+        Ok(Self(
+            unsafe { sdk::create_mvalue_nil() }.within_unique_ptr(),
+        ))
     }
 }
 
@@ -325,21 +276,59 @@ fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource_impl: &Resource
 }
 
 #[macro_export]
+macro_rules! serialize_mvalue {
+    ($value: expr, $vec: expr) => {
+        let serializable = $crate::mvalue::Serializable::try_from($value);
+
+        match serializable {
+            Ok(serialized) => {
+                $vec.push(serialized);
+            }
+            Err(error) => {
+                $crate::anyhow::bail!(
+                    "Failed to convert value: {} to mvalue, error: {}",
+                    stringify!($value),
+                    error
+                );
+            }
+        }
+    };
+}
+
+#[macro_export]
 macro_rules! mvalue_list {
     ($($arg: expr),+ $(,)*) => {
-        vec![$(
-            $crate::mvalue::Serializable::from($arg)
-        ),*]
+        (|| {
+            let mut vec = vec![];
+            $(
+                $crate::serialize_mvalue!($arg, vec);
+            )+
+            Ok(vec)
+        })()
     };
 }
 
 #[macro_export]
 macro_rules! mvalue_dict {
-    ($($key: expr => $value: expr),+ $(,)*) => {{
-        let mut hash_map = std::collections::HashMap::new();
-        $(
-            hash_map.insert($key.to_string(), $crate::mvalue::Serializable::from($value));
-        )+
-        hash_map
-    }};
+    ($($key: expr => $value: expr),+ $(,)*) => {
+        (||{
+            let mut hash_map = std::collections::HashMap::new();
+            $(
+                let serializable = $crate::mvalue::Serializable::try_from($value);
+                match serializable {
+                    Ok(serialized) => {
+                        hash_map.insert($key.to_string(), serialized);
+                    }
+                    Err(error) => {
+                        $crate::anyhow::bail!(
+                            "Failed to convert value: {} to mvalue, error: {}",
+                            stringify!($value),
+                            error
+                        );
+                    }
+                }
+            )+
+            Ok(hash_map)
+        })()
+    };
 }

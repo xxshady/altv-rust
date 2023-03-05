@@ -7,14 +7,10 @@ pub use resource_impl::events::{
 
 pub use resource_impl::emit_local_event as emit;
 pub use resource_impl::mvalue::MValue;
-pub use resource_impl::mvalue::None;
-pub use resource_impl::mvalue::ValidBaseObject;
+pub use resource_impl::mvalue::MValueNone;
 pub use resource_impl::mvalue_dict as dict;
 pub use resource_impl::mvalue_list as list;
 pub use resource_impl::resource_impl::on;
-
-pub use resource_impl::mvalue::valid_player;
-pub use resource_impl::mvalue::valid_vehicle;
 
 macro_rules! on_event {
     ($func_name: ident, $event_path: path, $controller: ty, $public_type: path, $sdk_type: path) => {
