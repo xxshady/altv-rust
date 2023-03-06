@@ -54,8 +54,8 @@ impl ResourceImpl {
     }
 
     pub fn init(resource_impl: ResourceImplRef) {
-        RESOURCE_IMPL_INSTANCE.with(|instance| instance.borrow_mut().replace(resource_impl));
         logger::init().unwrap();
+        RESOURCE_IMPL_INSTANCE.with(|instance| instance.borrow_mut().replace(resource_impl));
     }
 
     pub fn __on_tick(&self) {

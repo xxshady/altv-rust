@@ -78,7 +78,7 @@ extern "C" fn resource_on_event(full_main_path: &str, event: *const sdk::alt::CE
         event_type
     );
 
-    // // heron said it will be removed
+    // heron said it will be removed
     if event_type == altv_sdk::EventType::PLAYER_BEFORE_CONNECT {
         logger::info!("ignoring PLAYER_BEFORE_CONNECT");
         return;
@@ -163,16 +163,16 @@ pub unsafe extern "C" fn altMain(core: *mut sdk::alt::ICore) -> bool {
 
     logger::init().unwrap();
 
-    logger::info!("set_alt_core");
+    logger::debug!("set_alt_core");
     sdk::set_alt_core(core as *mut sdk::alt::ICore);
 
-    logger::info!("create_script_runtime");
+    logger::debug!("create_script_runtime");
     let runtime = sdk::create_script_runtime();
 
-    logger::info!("register_script_runtime");
+    logger::debug!("register_script_runtime");
     sdk::register_script_runtime(core as *mut sdk::alt::ICore, "rs", runtime);
 
-    logger::info!("setup_callbacks");
+    logger::debug!("setup_callbacks");
     sdk::setup_callbacks(
         sdk::ResourceStartCallback(resource_start),
         sdk::ResourceStopCallback(resource_stop),
