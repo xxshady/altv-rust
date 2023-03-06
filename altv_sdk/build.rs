@@ -1,6 +1,8 @@
 use std::fs;
 
 const CPP_SDK_VERSION_DIR: &str = "cpp-sdk/version";
+const CPP_SDK_VERSION_SCRIPT: &str = "cpp-sdk/version/get-version";
+
 const BASE_OBJECT_TYPE_ENUM_FILE: &str = "cpp-sdk/objects/IBaseObject.h";
 const EVENT_TYPE_ENUM_FILE: &str = "cpp-sdk/events/CEvent.h";
 const MVALUE_TYPE_ENUM_FILE: &str = "cpp-sdk/types/MValue.h";
@@ -21,11 +23,26 @@ fn main() -> miette::Result<()> {
 }
 
 fn generate_cpp_to_rust_bindings() {
-    let version_bat = format!("./get-version.sh");
-    std::process::Command::new(version_bat.clone())
-        .current_dir(CPP_SDK_VERSION_DIR)
+    let version_script_ext = if cfg!(target_os = "windows") {
+        ".bat"
+    } else if cfg!(target_os = "linux") {
+        ".sh"
+    } else {
+        panic!("unsupported target_os");
+    };
+
+    let version_script_path = std::fs::canonicalize(dbg!(format!(
+        "{CPP_SDK_VERSION_SCRIPT}{version_script_ext}"
+    )))
+    .unwrap();
+
+    dbg!(&version_script_path);
+
+    std::process::Command::new(version_script_path.clone())
         .output()
-        .unwrap_or_else(|e| panic!("failed to run cpp-sdk get-version.sh in: {version_bat} {e}"));
+        .unwrap_or_else(|e| {
+            panic!("failed to run cpp-sdk get-version script in: {version_script_path:?} {e}")
+        });
 
     let cpp_sdk_version_bindings = bindgen::Builder::default()
         .header(format!("{CPP_SDK_VERSION_DIR}/version.h"))
@@ -66,12 +83,23 @@ fn generate_cpp_to_rust_bindings() {
 fn build_rust() -> miette::Result<()> {
     let path = std::path::PathBuf::from("src");
 
-    autocxx_build::Builder::new("src/lib.rs", [&path])
+    let mut build = autocxx_build::Builder::new("src/lib.rs", [&path])
         .extra_clang_args(&["-std=c++20"])
-        .build()?
-        .flag("-std=c++2a")
-        .compile("altv_sdk");
+        .build()?;
 
+    let flags = if cfg!(target_os = "windows") {
+        ["/std:c++20"]
+    } else if cfg!(target_os = "linux") {
+        ["-std=c++2a"]
+    } else {
+        panic!("unsupported target_os");
+    };
+
+    for flag in flags {
+        build.flag(flag);
+    }
+
+    build.compile("altv_sdk");
     Ok(())
 }
 
