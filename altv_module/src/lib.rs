@@ -16,7 +16,7 @@ type ResourceMainFn =
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_start(full_main_path: &str) {
     let full_main_path = full_main_path.to_string();
-    logger::error!("resource_start: {full_main_path}");
+    logger::debug!("resource_start: {full_main_path}");
 
     let core_ptr = unsafe { sdk::get_alt_core() };
 
@@ -68,7 +68,7 @@ extern "C" fn resource_on_event(full_main_path: &str, event: *const sdk::alt::CE
     }
 
     let raw_type = unsafe { sdk::get_event_type(event) };
-    logger::warn!("resource_on_event {raw_type:?}");
+    logger::debug!("resource_on_event {raw_type:?}");
 
     let event_type = altv_sdk::EventType::from(raw_type).unwrap();
 
