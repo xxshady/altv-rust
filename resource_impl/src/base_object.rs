@@ -4,7 +4,7 @@ use altv_sdk::ffi as sdk;
 
 use crate::resource_impl::with_resource_impl;
 
-pub(crate) type RawBaseObjectPointer = *mut sdk::alt::IBaseObject;
+pub type RawBaseObjectPointer = *mut sdk::alt::IBaseObject;
 
 macro_rules! convert_ptr_to {
     ($self: ident, $sdk_converter: path) => {
@@ -164,7 +164,7 @@ impl PendingBaseObjectCreation {
 }
 
 #[derive(Debug)]
-pub(crate) struct PendingBaseObjectDeletion;
+pub struct PendingBaseObjectDeletion;
 
 impl PendingBaseObjectDeletion {
     pub fn new() -> Self {

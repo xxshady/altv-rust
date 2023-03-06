@@ -80,7 +80,7 @@ impl TryFrom<MValueNone> for Serializable {
     }
 }
 
-pub(crate) fn convert_vec_to_mvalue_vec(
+pub fn convert_vec_to_mvalue_vec(
     vec: Vec<Serializable>,
 ) -> UniquePtr<CxxVector<sdk::MValueWrapper>> {
     let mut mvalue_vec = unsafe { sdk::create_mvalue_vec() };
@@ -157,7 +157,7 @@ impl MValueList {
     get_mvalue_type_at!(get_list_at, MValueList, MValue::List);
     get_mvalue_type_at!(get_dict_at, HashMap<String, MValue>, MValue::Dict);
 
-    pub(crate) fn push(&mut self, mvalue: MValue) {
+    pub fn push(&mut self, mvalue: MValue) {
         self.vec.push(mvalue);
     }
 }

@@ -160,31 +160,31 @@ impl ResourceImpl {
             .__on_sdk_event(self, event_type, event);
     }
 
-    pub(crate) fn borrow_mut_base_object_deletion(
+    pub fn borrow_mut_base_object_deletion(
         &self,
     ) -> RefMut<base_object::PendingBaseObjectDeletion> {
         self.base_object_deletion.borrow_mut()
     }
 
-    pub(crate) fn borrow_mut_base_object_creation(
+    pub fn borrow_mut_base_object_creation(
         &self,
     ) -> RefMut<base_object::PendingBaseObjectCreation> {
         self.base_object_creation.borrow_mut()
     }
 
-    pub(crate) fn borrow_base_objects(&self) -> Ref<base_object::BaseObjectManager> {
+    pub fn borrow_base_objects(&self) -> Ref<base_object::BaseObjectManager> {
         self.base_objects.borrow()
     }
 
-    pub(crate) fn borrow_mut_base_objects(&self) -> RefMut<base_object::BaseObjectManager> {
+    pub fn borrow_mut_base_objects(&self) -> RefMut<base_object::BaseObjectManager> {
         self.base_objects.borrow_mut()
     }
 
-    pub(crate) fn borrow_entities(&self) -> Ref<entity::EntityManager> {
+    pub fn borrow_entities(&self) -> Ref<entity::EntityManager> {
         self.entities.borrow()
     }
 
-    pub(crate) fn borrow_mut_entities(&self) -> RefMut<entity::EntityManager> {
+    pub fn borrow_mut_entities(&self) -> RefMut<entity::EntityManager> {
         self.entities.borrow_mut()
     }
 }

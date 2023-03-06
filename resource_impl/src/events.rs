@@ -77,7 +77,7 @@ impl std::fmt::Debug for Event {
 }
 
 #[derive(Debug)]
-pub(crate) struct EventManager {
+pub struct EventManager {
     public_handlers: HashMap<PublicEventType, Vec<Event>>,
     enabled_sdk_events: HashSet<SDKEventType>,
 }

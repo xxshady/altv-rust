@@ -20,13 +20,13 @@ impl Debug for dyn Entity {
 }
 
 #[derive(Debug)]
-pub(crate) enum EntityWrapper {
+pub enum EntityWrapper {
     Vehicle(VehicleContainer),
     Player(PlayerContainer),
 }
 
 #[derive(Debug, Default)]
-pub(crate) struct EntityManager {
+pub struct EntityManager {
     entities: HashMap<EntityId, EntityWrapper>,
 }
 
