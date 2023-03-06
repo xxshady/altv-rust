@@ -20,8 +20,8 @@ pub struct Vehicle {
 impl Vehicle {
     pub fn new(model: u32, pos: Vector3, rot: Vector3) -> Option<VehicleContainer> {
         with_resource_impl(|instance| {
-            let _creation = instance.borrow_mut_base_object_creation();
-            let base_objects = instance.borrow_mut_base_objects();
+            let _creation = instance.base_object_creation.borrow_mut();
+            let base_objects = instance.base_objects.borrow_mut();
             create_vehicle(base_objects, model, pos, rot)
         })
     }
@@ -41,7 +41,7 @@ impl Vehicle {
 
     pub fn destroy(&mut self) -> Result<(), String> {
         with_resource_impl(|instance| {
-            let mut entities = instance.borrow_mut_entities();
+            let mut entities = instance.entities.borrow_mut();
             entities.on_destroy(self.ptr().to_entity().unwrap());
         });
 
@@ -73,7 +73,7 @@ pub fn create_vehicle(
     base_objects.on_create(base_object_raw_ptr, vehicle.clone());
 
     with_resource_impl(|instance| {
-        let mut entities = instance.borrow_mut_entities();
+        let mut entities = instance.entities.borrow_mut();
         entities.on_create(
             vehicle.borrow().id().unwrap(),
             EntityWrapper::Vehicle(Rc::clone(&vehicle)),

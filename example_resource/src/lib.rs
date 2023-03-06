@@ -143,7 +143,7 @@ pub fn main() {
 
                         alt::events::emit!(
                             "test",
-                            123i64,
+                            69i64,
                             true,
                             "string",
                             // TODO: make this shit more user-friendly if dict! or list! result is passed directly without unwrapping it

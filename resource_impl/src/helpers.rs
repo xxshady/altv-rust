@@ -6,7 +6,7 @@ use crate::{base_object_maps::PlayerBaseObjectMap, player::PlayerContainer};
 macro_rules! get_entity_by_id {
     ($wrapper: path, $entity_id: ident) => {
         $crate::resource_impl::with_resource_impl(|instance| {
-            let entities = instance.borrow_entities();
+            let entities = instance.entities.borrow();
             let result = entities.get_by_id($entity_id);
 
             match result {

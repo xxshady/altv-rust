@@ -224,7 +224,7 @@ fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource_impl: &Resource
                 return MValue::InvalidBaseObject;
             }
 
-            let base_obj = resource_impl.borrow_base_objects().get_by_raw_ptr(raw_ptr);
+            let base_obj = resource_impl.base_objects.borrow().get_by_raw_ptr(raw_ptr);
             if let Some(base_obj) = base_obj {
                 use altv_sdk::BaseObjectType::*;
 

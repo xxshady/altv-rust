@@ -63,12 +63,12 @@ pub trait BaseObject {
     fn destroy_base_object(&mut self) -> Result<(), String> {
         if let Ok(raw_ptr) = self.ptr().get() {
             with_resource_impl(|instance| {
-                let _deletion = instance.borrow_mut_base_object_deletion();
+                let _deletion = instance.base_object_deletion.borrow_mut();
 
                 unsafe { sdk::destroy_base_object(raw_ptr) }
                 self.ptr_mut().set(None);
 
-                instance.borrow_mut_base_objects().remove(raw_ptr);
+                instance.base_objects.borrow_mut().remove(raw_ptr);
 
                 Ok(())
             })

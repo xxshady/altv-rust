@@ -5,7 +5,7 @@ use crate::{
     local_script_events, player, timers, vehicle,
 };
 use std::{
-    cell::{Ref, RefCell, RefMut},
+    cell::{Ref, RefCell},
     rc::Rc,
 };
 
@@ -25,13 +25,13 @@ where
 // intended for altv_module
 #[derive(Debug)]
 pub struct ResourceImpl {
-    timers: RefCell<timers::TimerManager>,
-    timer_schedule_state: RefCell<timers::ScheduleState>,
-    base_object_creation: RefCell<base_object::PendingBaseObjectCreation>,
-    base_object_deletion: RefCell<base_object::PendingBaseObjectDeletion>,
-    base_objects: RefCell<base_object::BaseObjectManager>,
-    entities: RefCell<entity::EntityManager>,
-    events: RefCell<events::EventManager>,
+    pub timers: RefCell<timers::TimerManager>,
+    pub timer_schedule_state: RefCell<timers::ScheduleState>,
+    pub base_object_creation: RefCell<base_object::PendingBaseObjectCreation>,
+    pub base_object_deletion: RefCell<base_object::PendingBaseObjectDeletion>,
+    pub base_objects: RefCell<base_object::BaseObjectManager>,
+    pub entities: RefCell<entity::EntityManager>,
+    pub events: RefCell<events::EventManager>,
     pub player_base_object_map: RefCell<base_object_maps::PlayerBaseObjectMap>,
     pub vehicle_base_object_map: RefCell<base_object_maps::VehicleBaseObjectMap>,
     pub local_script_events: RefCell<local_script_events::LocalEventManager>,
@@ -158,34 +158,6 @@ impl ResourceImpl {
         self.events
             .borrow_mut()
             .__on_sdk_event(self, event_type, event);
-    }
-
-    pub fn borrow_mut_base_object_deletion(
-        &self,
-    ) -> RefMut<base_object::PendingBaseObjectDeletion> {
-        self.base_object_deletion.borrow_mut()
-    }
-
-    pub fn borrow_mut_base_object_creation(
-        &self,
-    ) -> RefMut<base_object::PendingBaseObjectCreation> {
-        self.base_object_creation.borrow_mut()
-    }
-
-    pub fn borrow_base_objects(&self) -> Ref<base_object::BaseObjectManager> {
-        self.base_objects.borrow()
-    }
-
-    pub fn borrow_mut_base_objects(&self) -> RefMut<base_object::BaseObjectManager> {
-        self.base_objects.borrow_mut()
-    }
-
-    pub fn borrow_entities(&self) -> Ref<entity::EntityManager> {
-        self.entities.borrow()
-    }
-
-    pub fn borrow_mut_entities(&self) -> RefMut<entity::EntityManager> {
-        self.entities.borrow_mut()
     }
 }
 
