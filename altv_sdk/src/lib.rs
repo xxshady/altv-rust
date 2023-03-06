@@ -89,11 +89,11 @@ pub mod ffi {
 
     #[derive(ExternTypeCallback)]
     #[repr(transparent)]
-    pub struct ResourceStartCallback(pub extern "C" fn(full_main_path: String));
+    pub struct ResourceStartCallback(pub extern "C" fn(full_main_path: &str));
 
     #[derive(ExternTypeCallback)]
     #[repr(transparent)]
-    pub struct ResourceStopCallback(pub extern "C" fn(full_main_path: String));
+    pub struct ResourceStopCallback(pub extern "C" fn(full_main_path: &str));
 
     #[derive(ExternTypeCallback)]
     #[repr(transparent)]
@@ -106,19 +106,19 @@ pub mod ffi {
     #[derive(ExternTypeCallback)]
     #[repr(transparent)]
     pub struct ResourceOnEventCallback(
-        pub extern "C" fn(full_main_path: String, event: *const alt_bridge::alt::CEvent),
+        pub extern "C" fn(full_main_path: &str, event: *const alt_bridge::alt::CEvent),
     );
 
     #[derive(ExternTypeCallback)]
     #[repr(transparent)]
     pub struct ResourceOnCreateBaseObjectCallback(
-        pub extern "C" fn(full_main_path: String, base_object: *mut alt_bridge::alt::IBaseObject),
+        pub extern "C" fn(full_main_path: &str, base_object: *mut alt_bridge::alt::IBaseObject),
     );
 
     #[derive(ExternTypeCallback)]
     #[repr(transparent)]
     pub struct ResourceOnRemoveBaseObjectCallback(
-        pub extern "C" fn(full_main_path: String, base_object: *mut alt_bridge::alt::IBaseObject),
+        pub extern "C" fn(full_main_path: &str, base_object: *mut alt_bridge::alt::IBaseObject),
     );
 
     #[cxx::bridge(namespace = "callbacks")]

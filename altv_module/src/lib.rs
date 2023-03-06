@@ -14,7 +14,8 @@ type ResourceMainFn =
     unsafe extern "C" fn(core: *mut sdk::alt::ICore, resource_impl: ResourceImplRef);
 
 #[allow(improper_ctypes_definitions)]
-extern "C" fn resource_start(full_main_path: String) {
+extern "C" fn resource_start(full_main_path: &str) {
+    let full_main_path = full_main_path.to_string();
     logger::debug!("resource_start: {full_main_path}");
 
     let core_ptr = unsafe { sdk::get_alt_core() };
@@ -35,7 +36,8 @@ extern "C" fn resource_start(full_main_path: String) {
 }
 
 #[allow(improper_ctypes_definitions)]
-extern "C" fn resource_stop(full_main_path: String) {
+extern "C" fn resource_stop(full_main_path: &str) {
+    let full_main_path = full_main_path.to_string();
     logger::debug!("resource_stop: {full_main_path}");
 
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
@@ -58,12 +60,16 @@ extern "C" fn runtime_on_tick() {
 }
 
 #[allow(improper_ctypes_definitions)]
-extern "C" fn resource_on_event(full_main_path: String, event: *const sdk::alt::CEvent) {
+extern "C" fn resource_on_event(full_main_path: &str, event: *const sdk::alt::CEvent) {
+    let full_main_path = full_main_path.to_string();
+
     if event.is_null() {
         panic!("resource_on_event event is null");
     }
 
     let raw_type = unsafe { sdk::get_event_type(event) };
+    logger::debug!("resource_on_event {raw_type:?}");
+
     let event_type = altv_sdk::EventType::from(raw_type).unwrap();
 
     logger::debug!(
@@ -92,9 +98,11 @@ extern "C" fn resource_on_event(full_main_path: String, event: *const sdk::alt::
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_on_create_base_object(
-    full_main_path: String,
+    full_main_path: &str,
     base_object: *mut sdk::alt::IBaseObject,
 ) {
+    let full_main_path = full_main_path.to_string();
+
     if base_object.is_null() {
         panic!("resource_on_create_base_object base_object is null");
     }
@@ -117,9 +125,10 @@ extern "C" fn resource_on_create_base_object(
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_on_remove_base_object(
-    full_main_path: String,
+    full_main_path: &str,
     base_object: *mut sdk::alt::IBaseObject,
 ) {
+    let full_main_path = full_main_path.to_string();
     if base_object.is_null() {
         panic!("resource_on_remove_base_object base_object is null");
     }
