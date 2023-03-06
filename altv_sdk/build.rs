@@ -32,6 +32,19 @@ fn generate_cpp_to_rust_bindings() {
         panic!("unsupported target_os");
     };
 
+    if cfg!(target_os = "linux") {
+        std::process::Command::new("chmod")
+            .current_dir(CPP_SDK_VERSION_DIR)
+            .arg("+x")
+            .arg(version_script_path.clone())
+            .output()
+            .unwrap_or_else(|e| {
+                panic!(
+                    "failed to run chmod +x for get-version script in: {version_script_path:?} {e}"
+                )
+            });
+    }
+
     std::process::Command::new(version_script_path.clone())
         .current_dir(CPP_SDK_VERSION_DIR)
         .output()
