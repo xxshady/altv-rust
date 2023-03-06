@@ -1,8 +1,6 @@
 use std::fs;
 
 const CPP_SDK_VERSION_DIR: &str = "cpp-sdk/version";
-const CPP_SDK_VERSION_SCRIPT: &str = "cpp-sdk/version/get-version";
-
 const BASE_OBJECT_TYPE_ENUM_FILE: &str = "cpp-sdk/objects/IBaseObject.h";
 const EVENT_TYPE_ENUM_FILE: &str = "cpp-sdk/events/CEvent.h";
 const MVALUE_TYPE_ENUM_FILE: &str = "cpp-sdk/types/MValue.h";
@@ -23,20 +21,16 @@ fn main() -> miette::Result<()> {
 }
 
 fn generate_cpp_to_rust_bindings() {
-    let version_script_ext = if cfg!(target_os = "windows") {
-        ".bat"
+    let version_script_path = if cfg!(target_os = "windows") {
+        std::fs::canonicalize(format!("{CPP_SDK_VERSION_DIR}/get-version.bat"))
+            .unwrap()
+            .display()
+            .to_string()
     } else if cfg!(target_os = "linux") {
-        ".sh"
+        "./get-version.sh".to_string()
     } else {
         panic!("unsupported target_os");
     };
-
-    let version_script_path = std::fs::canonicalize(dbg!(format!(
-        "{CPP_SDK_VERSION_SCRIPT}{version_script_ext}"
-    )))
-    .unwrap();
-
-    dbg!(&version_script_path);
 
     std::process::Command::new(version_script_path.clone())
         .current_dir(CPP_SDK_VERSION_DIR)
