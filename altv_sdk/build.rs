@@ -39,6 +39,7 @@ fn generate_cpp_to_rust_bindings() {
     dbg!(&version_script_path);
 
     std::process::Command::new(version_script_path.clone())
+        .current_dir(CPP_SDK_VERSION_DIR)
         .output()
         .unwrap_or_else(|e| {
             panic!("failed to run cpp-sdk get-version script in: {version_script_path:?} {e}")
