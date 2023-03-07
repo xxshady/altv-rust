@@ -8,11 +8,11 @@
 	"features": {
 		"ghcr.io/devcontainers/features/node:1": {
 			"nodeGypDependencies": true,
-			"version": "18.14.2"
+			"version": "18"
 		},
 		"ghcr.io/devcontainers/features/rust:1": {
-			"version": "latest",
-			"profile": "1.67.1"
+			"version": "1.67",
+			"profile": "minimal"
 		}
 	}
 
