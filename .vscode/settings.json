@@ -98,5 +98,8 @@
   "editor.tabSize": 4,
   "rust-analyzer.check.allTargets": false,
   "rust-analyzer.check.targets": "x86_64-pc-windows-msvc",
-  "rust-analyzer.trace.extension": true
+  "rust-analyzer.trace.extension": true,
+  "rust-analyzer.check.extraEnv": {
+    "LOG_LEVEL": "debug"
+  }
 }
