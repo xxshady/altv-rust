@@ -79,6 +79,10 @@ impl LocalEventManager {
             self.handlers.insert(event_name, vec![handler]);
         }
     }
+
+    pub fn is_handled(&self, event_name: &str) -> bool {
+        self.handlers.contains_key(event_name)
+    }
 }
 
 impl Debug for LocalEventManager {

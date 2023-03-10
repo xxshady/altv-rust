@@ -91,13 +91,23 @@ impl EventManager {
         match event_type {
             SDKEventType::SERVER_SCRIPT_EVENT => {
                 let event_name = unsafe { sdk::get_event_server_script_event_name(event) };
+                let event_name = event_name.as_ref().unwrap().to_string();
+                if !resource
+                    .local_script_events
+                    .borrow()
+                    .is_handled(&event_name)
+                {
+                    logger::debug!("SERVER_SCRIPT_EVENT name: {event_name} is unhandled");
+                    return;
+                }
+
                 let args = unsafe { sdk::get_event_server_script_event_args(event) };
                 let deserialized_args = mvalue::deserialize_mvalue_args(args, resource);
 
-                resource.local_script_events.borrow_mut().receive_event(
-                    event_name.as_ref().unwrap().to_str().unwrap(),
-                    &deserialized_args,
-                );
+                resource
+                    .local_script_events
+                    .borrow_mut()
+                    .receive_event(&event_name, &deserialized_args);
 
                 return;
             }
