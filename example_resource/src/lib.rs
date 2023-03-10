@@ -1,3 +1,5 @@
+use alt::Entity;
+
 #[alt::main(crate_name = "alt")]
 pub fn main() {
     std::env::set_var("RUST_BACKTRACE", "full");
@@ -46,28 +48,45 @@ pub fn main() {
     //     alt::log_warn!("example resource on_server_started controller: {controller:?}");
     // });
 
-    // alt::events::on_player_connect(|alt::events::PlayerConnectController { player }| {
-    //     let player = player.borrow();
-    //     let id = player.id().unwrap();
+    alt::events::on_player_connect(|alt::events::PlayerConnectController { player }| {
+        {
+            let player = player.borrow();
+            let id = player.id().unwrap();
 
-    //     alt::log!(
-    //         "example resource on_player_connect name: {} id: {}",
-    //         player.name().unwrap(),
-    //         id
-    //     );
+            alt::log!(
+                "example resource on_player_connect name: {} id: {}",
+                player.name().unwrap(),
+                id
+            );
+        }
 
-    //     // let args = cxx::UniquePtr::new();
+        alt::set_interval(
+            move || {
+                let vehicle = alt::Vehicle::new(alt::hash("sultan2"), 0.into(), 0.into()).unwrap();
+                alt::events::emit_client!(
+                    "test",
+                    player.clone(),
+                    "test",
+                    123u64,
+                    alt::events::list![vehicle].unwrap()
+                )
+                .unwrap();
 
-    //     // alt::__test_trigger_client_event(player.ptr(), &event_name, args)
+                alt::events::emit_client!("test", player.clone()).unwrap();
 
-    //     // dbg!(alt::Player::get_by_id(id));
-    //     // let result = id.checked_sub(1);
-    //     // if let Some(id) = result {
-    //     //     dbg!(alt::Player::get_by_id(dbg!(id)));
-    //     // } else {
-    //     //     alt::log_error!("failed to sub player id");
-    //     // }
-    // });
+                alt::events::emit_all_clients!("test", "emit all", player.clone()).unwrap();
+
+                alt::events::emit_some_clients!(
+                    "test",
+                    vec![player.clone()],
+                    "emit some",
+                    player.clone()
+                )
+                .unwrap();
+            },
+            1000,
+        );
+    });
 
     // alt::events::on_player_disconnect(|PlayerDisconnectController { player, reason }| {
     //     let player = player.borrow();

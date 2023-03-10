@@ -90,6 +90,31 @@ public:
     }
 };
 
+class PlayerPtrWrapper {
+public:
+    std::shared_ptr<alt::IPlayer*> ptr;
+
+    PlayerPtrWrapper clone() {
+        PlayerPtrWrapper instance;
+        instance.ptr = this->ptr;
+
+        return instance;
+    }
+};
+
+using PlayerVector = std::vector<PlayerPtrWrapper>;
+
+PlayerVector create_player_vec() {
+    PlayerVector vec;
+    return vec;
+}
+
+void push_to_player_vec(PlayerVector& player_vec, alt::IPlayer* player) {
+    PlayerPtrWrapper wrapper;
+    wrapper.ptr = std::make_shared<alt::IPlayer*>(player);
+    player_vec.push_back(wrapper.clone());
+}
+
 using MValueWrapperVec = std::vector<MValueWrapper>;
 
 MValueWrapperVec create_mvalue_vec() {
@@ -255,6 +280,45 @@ void trigger_local_event(std::string event_name, MValueWrapperVec mvalue_vec) {
     }
 
     alt::ICore::Instance().TriggerLocalEvent(event_name, args);
+}
+
+void trigger_client_event(alt::IPlayer* player, std::string event_name, MValueWrapperVec mvalue_vec) {
+    alt::MValueArgs args;
+    auto size = mvalue_vec.size();
+
+    for (alt::Size i = 0; i < size; ++i) {
+        args.Push(*(mvalue_vec[i].ptr));
+    }
+
+    alt::ICore::Instance().TriggerClientEvent(player, event_name, args);
+}
+
+void trigger_client_event_for_some(PlayerVector players, std::string event_name, MValueWrapperVec mvalue_vec) {
+    alt::MValueArgs args;
+    auto size = mvalue_vec.size();
+
+    for (alt::Size i = 0; i < size; ++i) {
+        args.Push(*(mvalue_vec[i].ptr));
+    }
+
+    std::vector<alt::IPlayer*> normal_players_vec;
+    for (auto& player : players)
+    {
+        normal_players_vec.push_back(*player.ptr);
+    }
+
+    alt::ICore::Instance().TriggerClientEvent(normal_players_vec, event_name, args);
+}
+
+void trigger_client_event_for_all(std::string event_name, MValueWrapperVec mvalue_vec) {
+    alt::MValueArgs args;
+    auto size = mvalue_vec.size();
+
+    for (alt::Size i = 0; i < size; ++i) {
+        args.Push(*(mvalue_vec[i].ptr));
+    }
+
+    alt::ICore::Instance().TriggerClientEventForAll(event_name, args);
 }
 
 void toggle_event_type(u16 event_type, bool state) {
@@ -428,3 +492,4 @@ u8 get_base_object_type(const alt::IBaseObject* base_object) {
 StdStringPtr get_player_name(const alt::IPlayer* player) {
     return std::make_unique<std::string>(player->GetName());
 }
+

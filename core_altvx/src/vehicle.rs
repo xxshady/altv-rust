@@ -29,16 +29,16 @@ impl Vehicle {
         crate::get_entity_by_id!(EntityWrapper::Vehicle, id)
     }
 
-    pub fn set_secondary_color(&self, color: u8) -> Result<(), String> {
+    pub fn set_secondary_color(&self, color: u8) -> anyhow::Result<()> {
         unsafe { sdk::set_vehicle_primary_color(self.ptr.to_vehicle()?, color) };
         Ok(())
     }
 
-    pub fn get_secondary_color(&self) -> Result<u8, String> {
+    pub fn get_secondary_color(&self) -> anyhow::Result<u8> {
         Ok(unsafe { sdk::get_vehicle_primary_color(self.ptr.to_vehicle()?) })
     }
 
-    pub fn destroy(&mut self) -> Result<(), String> {
+    pub fn destroy(&mut self) -> anyhow::Result<()> {
         Resource::with_base_object_deletion_mut(|_, resource| {
             let mut entities = resource.entities.borrow_mut();
             entities.on_destroy(self.ptr().to_entity().unwrap());

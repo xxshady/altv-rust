@@ -1,6 +1,10 @@
 use std::cell::Ref;
 
-use crate::{base_object_maps::PlayerBaseObjectMap, player::PlayerContainer};
+use crate::{
+    base_object::BaseObject,
+    base_object_maps::PlayerBaseObjectMap,
+    player::{self, PlayerContainer},
+};
 
 #[macro_export]
 macro_rules! get_entity_by_id {
@@ -31,4 +35,10 @@ pub fn get_player_from_event(
     };
 
     players.get_by_base_object_ptr(raw_ptr).unwrap()
+}
+
+pub fn get_player_raw_ptr(
+    player: player::PlayerContainer,
+) -> anyhow::Result<*mut altv_sdk::ffi::alt::IPlayer> {
+    player.try_borrow_mut()?.ptr_mut().to_player()
 }

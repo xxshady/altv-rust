@@ -12,6 +12,10 @@ pub use core_altvx::mvalue::MValueNone;
 pub use core_altvx::mvalue_dict as dict;
 pub use core_altvx::mvalue_list as list;
 
+pub use core_altvx::emit_all_clients;
+pub use core_altvx::emit_client;
+pub use core_altvx::emit_some_clients;
+
 macro_rules! on_event {
     ($func_name: ident, $event_path: path, $controller: ty, $public_type: path, $sdk_type: path) => {
         pub fn $func_name(handler: impl FnMut($controller) + 'static) {

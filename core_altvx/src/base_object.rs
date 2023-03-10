@@ -9,7 +9,10 @@ macro_rules! convert_ptr_to {
         if let Some(raw) = $self.0 {
             Ok(unsafe { $sdk_converter(raw) })
         } else {
-            Err("Raw base object pointer is none".to_string())
+            $crate::anyhow::bail!(
+                "[{}] Raw base object pointer is none",
+                stringify!($sdk_converter)
+            )
         }
     };
 }
@@ -38,15 +41,15 @@ impl BaseObjectPointer {
         self.0 = value;
     }
 
-    pub fn to_entity(&self) -> Result<*mut sdk::alt::IEntity, String> {
+    pub fn to_entity(&self) -> anyhow::Result<*mut sdk::alt::IEntity> {
         convert_ptr_to!(self, sdk::convert_base_object_to_entity)
     }
 
-    pub fn to_vehicle(&self) -> Result<*mut sdk::alt::IVehicle, String> {
+    pub fn to_vehicle(&self) -> anyhow::Result<*mut sdk::alt::IVehicle> {
         convert_ptr_to!(self, sdk::convert_base_object_to_vehicle)
     }
 
-    pub fn to_player(&self) -> Result<*mut sdk::alt::IPlayer, String> {
+    pub fn to_player(&self) -> anyhow::Result<*mut sdk::alt::IPlayer> {
         convert_ptr_to!(self, sdk::convert_base_object_to_player)
     }
 }
@@ -58,7 +61,7 @@ pub trait BaseObject {
     fn ptr_mut(&mut self) -> &mut BaseObjectPointer;
     fn base_type(&self) -> altv_sdk::BaseObjectType;
 
-    fn destroy_base_object(&mut self) -> Result<(), String> {
+    fn destroy_base_object(&mut self) -> anyhow::Result<()> {
         if let Ok(raw_ptr) = self.ptr().get() {
             Resource::with_base_object_deletion_mut(|_, resource| {
                 unsafe { sdk::destroy_base_object(raw_ptr) }
@@ -69,7 +72,7 @@ pub trait BaseObject {
                 Ok(())
             })
         } else {
-            Err("Base object is already destroyed".to_string())
+            anyhow::bail!("Base object is already destroyed")
         }
     }
 }

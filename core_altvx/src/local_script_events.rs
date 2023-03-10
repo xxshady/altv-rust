@@ -35,22 +35,14 @@ macro_rules! emit_local_event {
         unsafe { $crate::local_script_events::emit_local_event_without_args($event_name) };
     };
     ($event_name: expr, $($arg: expr),+ $(,)*) => {
-        match $crate::mvalue_list!($($arg),+) {
-            Ok(vec) => {
-                unsafe {
-                    $crate::local_script_events::emit_local_event(
-                        $event_name,
-                        vec![$(
-                            $crate::mvalue::Serializable::try_from($arg).unwrap()
-                        ),+]
-                    )
-                };
-                Ok(())
-            }
-            Err(error) => {
-                Err(error)
-            }
-        }
+        (|| -> $crate::anyhow::Result<()> {
+            let vec = $crate::mvalue_list!($( $arg ),+)?;
+            $crate::local_script_events::emit_local_event(
+                $event_name,
+                vec
+            );
+            Ok(())
+        })()
     };
 }
 

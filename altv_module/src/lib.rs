@@ -1,5 +1,4 @@
 use altv_sdk::ffi as sdk;
-use core_module::ResourceForModule;
 use libloading::Library;
 use resource_manager::ResourceController;
 use std::path::PathBuf;

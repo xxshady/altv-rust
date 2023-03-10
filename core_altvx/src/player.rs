@@ -19,7 +19,7 @@ impl Player {
         crate::get_entity_by_id!(EntityWrapper::Player, id)
     }
 
-    pub fn name(&self) -> Result<String, String> {
+    pub fn name(&self) -> anyhow::Result<String> {
         Ok(unsafe { sdk::get_player_name(self.ptr.to_player()?) }.to_string())
     }
 }

@@ -1,4 +1,6 @@
-use crate::{base_object::BaseObject, player, resource::Resource, vehicle};
+use crate::{
+    base_object::BaseObject, helpers::get_player_raw_ptr, player, resource::Resource, vehicle,
+};
 use altv_sdk::ffi as sdk;
 use anyhow::Context;
 use autocxx::{cxx::CxxVector, prelude::*};
@@ -92,6 +94,20 @@ pub fn convert_vec_to_mvalue_vec(
     }
 
     mvalue_vec
+}
+
+pub fn convert_player_vec_to_cpp_vec(
+    vec: Vec<player::PlayerContainer>,
+) -> anyhow::Result<UniquePtr<CxxVector<sdk::PlayerPtrWrapper>>> {
+    let mut cpp_vec = unsafe { sdk::create_player_vec() };
+
+    for player in vec {
+        unsafe {
+            sdk::push_to_player_vec(cpp_vec.as_mut().unwrap(), get_player_raw_ptr(player)?);
+        }
+    }
+
+    Ok(cpp_vec)
 }
 
 #[derive(Debug)]

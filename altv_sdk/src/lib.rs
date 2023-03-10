@@ -47,6 +47,10 @@ pub mod ffi {
 
         // events
         generate!("trigger_local_event")
+        generate!("trigger_client_event")
+        generate!("trigger_client_event_for_some")
+        generate!("trigger_client_event_for_all")
+        generate!("trigger_local_event")
         generate!("toggle_event_type")
         generate!("get_event_type")
         generate!("get_event_player_target")
@@ -84,6 +88,9 @@ pub mod ffi {
         generate!("log_colored")
         generate!("log_warn")
         generate!("log_error")
+
+        generate!("create_player_vec")
+        generate!("push_to_player_vec")
     }
     pub use alt_bridge::*;
 

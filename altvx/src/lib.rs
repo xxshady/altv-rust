@@ -22,6 +22,7 @@ pub use core_altvx::logging::log;
 pub use core_altvx::logging::log_error;
 pub use core_altvx::logging::log_warn;
 
+pub use core_altvx::entity::Entity;
 pub use core_altvx::player::Player;
 pub use core_altvx::vehicle::Vehicle;
 

@@ -7,7 +7,8 @@ use resource::Resource;
 
 mod base_object;
 mod base_object_maps;
-mod entity;
+pub mod client_events;
+pub mod entity;
 pub mod events;
 mod helpers;
 pub mod local_script_events;

@@ -8,7 +8,7 @@ pub type RawEntityPointer = *mut sdk::alt::IEntity;
 pub type EntityId = u16;
 
 pub trait Entity: BaseObject {
-    fn id(&self) -> Result<EntityId, String> {
+    fn id(&self) -> anyhow::Result<EntityId> {
         Ok(unsafe { sdk::get_entity_id(self.ptr().to_entity()?) })
     }
 }
