@@ -2,6 +2,37 @@
 pub fn main() {
     std::env::set_var("RUST_BACKTRACE", "full");
 
+    // alt::set_timeout(
+    //     || {
+    //         alt::log!("example set_timeout");
+    //         alt::set_timeout(
+    //             || {
+    //                 alt::log!("example nested set_timeout");
+    //             },
+    //             500,
+    //         )
+    //     },
+    //     500,
+    // );
+
+    // timers unloading on resource stop
+    // alt::log!("start");
+    // for i in 0..100 {
+    //     let mut vec = vec![];
+
+    //     for _ in 0..50_000 {
+    //         vec.push(Box::new(u64::MAX));
+    //     }
+
+    //     alt::set_interval(
+    //         move || {
+    //             alt::log!("interval {} vec: {:?}", i, vec);
+    //         },
+    //         100000u64,
+    //     );
+    // }
+    // alt::log!("~gl~end");
+
     // let mut i = 0;
     // alt::set_interval(
     //     move || {
@@ -52,8 +83,7 @@ pub fn main() {
     //     alt::log_warn!("on_console_command name: {name:?} args: {args:?}");
     // });
 
-    // alt::set_timeout(|| println!("its timeout"), 300);
-
+    // TODO: check resource restart with created vehicle here:
     // let vehicle = alt::Vehicle::new(alt::hash("sultan"), 0.into(), 0.into()).unwrap();
     // dbg!(&vehicle);
 
@@ -141,18 +171,26 @@ pub fn main() {
 
                         // vehicle.borrow_mut().destroy().unwrap();
 
-                        alt::events::emit!(
-                            "test",
-                            69i64,
-                            true,
-                            "string",
-                            // TODO: make this shit more user-friendly if dict! or list! result is passed directly without unwrapping it
-                            alt::events::dict! {
-                                "vehicle" => vehicle.clone(),
-                            }
-                            .unwrap()
+                        alt::events::emit!("js-destroy-veh", vehicle.clone()).unwrap();
+
+                        alt::set_timeout(
+                            move || {
+                                alt::events::emit!(
+                                    "test",
+                                    69i64,
+                                    true,
+                                    "string",
+                                    // TODO: make this shit more user-friendly if dict! or list! result is passed directly without unwrapping it
+                                    alt::events::dict! {
+                                        "kek" => 123i64,
+                                        // "vehicle" => vehicle.clone(),
+                                    }
+                                    .unwrap()
+                                )
+                                .unwrap();
+                            },
+                            500,
                         )
-                        .unwrap();
                     },
                     500,
                 );

@@ -1,10 +1,8 @@
 use std::{any::Any, cell::RefCell, collections::HashMap, fmt::Debug, rc::Rc};
 
-use altv_sdk::ffi as sdk;
+use altv_sdk::{ffi as sdk, IBaseObjectMutPtr};
 
-use crate::resource_impl::with_resource_impl;
-
-pub type RawBaseObjectPointer = *mut sdk::alt::IBaseObject;
+use crate::resource::Resource;
 
 macro_rules! convert_ptr_to {
     ($self: ident, $sdk_converter: path) => {
@@ -17,10 +15,10 @@ macro_rules! convert_ptr_to {
 }
 
 #[derive(Debug)]
-pub struct BaseObjectPointer(Option<RawBaseObjectPointer>);
+pub struct BaseObjectPointer(Option<IBaseObjectMutPtr>);
 
 impl BaseObjectPointer {
-    pub fn new(raw_ptr: RawBaseObjectPointer) -> Self {
+    pub fn new(raw_ptr: IBaseObjectMutPtr) -> Self {
         Self(Some(raw_ptr))
     }
 
@@ -28,7 +26,7 @@ impl BaseObjectPointer {
         self.0.is_some()
     }
 
-    pub fn get(&self) -> Result<RawBaseObjectPointer, String> {
+    pub fn get(&self) -> Result<IBaseObjectMutPtr, String> {
         if let Some(raw) = self.0 {
             Ok(raw)
         } else {
@@ -36,7 +34,7 @@ impl BaseObjectPointer {
         }
     }
 
-    pub fn set(&mut self, value: Option<RawBaseObjectPointer>) {
+    pub fn set(&mut self, value: Option<IBaseObjectMutPtr>) {
         self.0 = value;
     }
 
@@ -62,13 +60,11 @@ pub trait BaseObject {
 
     fn destroy_base_object(&mut self) -> Result<(), String> {
         if let Ok(raw_ptr) = self.ptr().get() {
-            with_resource_impl(|instance| {
-                let _deletion = instance.base_object_deletion.borrow_mut();
-
+            Resource::with_base_object_deletion_mut(|_, resource| {
                 unsafe { sdk::destroy_base_object(raw_ptr) }
                 self.ptr_mut().set(None);
 
-                instance.base_objects.borrow_mut().remove(raw_ptr);
+                resource.base_objects.borrow_mut().remove(raw_ptr);
 
                 Ok(())
             })
@@ -113,19 +109,13 @@ impl Debug for dyn BaseObject {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct BaseObjectManager {
-    base_objects: HashMap<RawBaseObjectPointer, BaseObjectContainer>,
+    base_objects: HashMap<IBaseObjectMutPtr, BaseObjectContainer>,
 }
 
 impl BaseObjectManager {
-    pub fn new() -> Self {
-        Self {
-            base_objects: HashMap::new(),
-        }
-    }
-
-    pub fn on_create(&mut self, raw_ptr: RawBaseObjectPointer, base_object: BaseObjectContainer) {
+    pub fn on_create(&mut self, raw_ptr: IBaseObjectMutPtr, base_object: BaseObjectContainer) {
         self.base_objects.insert(raw_ptr, base_object);
     }
 
@@ -141,7 +131,7 @@ impl BaseObjectManager {
         }
     }
 
-    fn remove(&mut self, raw_ptr: RawBaseObjectPointer) {
+    fn remove(&mut self, raw_ptr: IBaseObjectMutPtr) {
         if self.base_objects.remove(&raw_ptr).is_some() {
             logger::debug!("~gl~BaseObjectManager removed object: {raw_ptr:?}");
         } else {
@@ -149,25 +139,13 @@ impl BaseObjectManager {
         }
     }
 
-    pub fn get_by_raw_ptr(&self, raw_ptr: RawBaseObjectPointer) -> Option<BaseObjectContainer> {
+    pub fn get_by_raw_ptr(&self, raw_ptr: IBaseObjectMutPtr) -> Option<BaseObjectContainer> {
         self.base_objects.get(&raw_ptr).cloned()
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct PendingBaseObjectCreation;
 
-impl PendingBaseObjectCreation {
-    pub fn new() -> Self {
-        Self
-    }
-}
-
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct PendingBaseObjectDeletion;
-
-impl PendingBaseObjectDeletion {
-    pub fn new() -> Self {
-        Self
-    }
-}

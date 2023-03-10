@@ -1,11 +1,7 @@
-use crate::{
-    helpers::get_player_from_event, mvalue, player::PlayerContainer, resource_impl::ResourceImpl,
-};
-use std::collections::{HashMap, HashSet};
-
-pub use altv_sdk::EventType as SDKEventType;
-
+use crate::{helpers::get_player_from_event, mvalue, player::PlayerContainer, resource::Resource};
 use altv_sdk::ffi as sdk;
+pub use altv_sdk::EventType as SDKEventType;
+use std::collections::{HashMap, HashSet};
 
 #[derive(Debug, Eq, PartialEq, Hash, PartialOrd, Ord)]
 #[repr(u16)]
@@ -76,26 +72,19 @@ impl std::fmt::Debug for Event {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct EventManager {
     public_handlers: HashMap<PublicEventType, Vec<Event>>,
     enabled_sdk_events: HashSet<SDKEventType>,
 }
 
 impl EventManager {
-    pub fn new() -> Self {
-        Self {
-            enabled_sdk_events: HashSet::new(),
-            public_handlers: HashMap::new(),
-        }
-    }
-
     #[allow(clippy::not_unsafe_ptr_arg_deref)]
-    pub fn __on_sdk_event(
+    pub fn on_sdk_event(
         &mut self,
-        resource_impl: &ResourceImpl,
         event_type: SDKEventType,
         event: *const sdk::alt::CEvent,
+        resource: &Resource,
     ) {
         logger::debug!("received event: {:?}", event_type);
 
@@ -103,15 +92,12 @@ impl EventManager {
             SDKEventType::SERVER_SCRIPT_EVENT => {
                 let event_name = unsafe { sdk::get_event_server_script_event_name(event) };
                 let args = unsafe { sdk::get_event_server_script_event_args(event) };
-                let deserialized_args = mvalue::deserialize_mvalue_args(args, resource_impl);
+                let deserialized_args = mvalue::deserialize_mvalue_args(args, resource);
 
-                resource_impl
-                    .local_script_events
-                    .borrow_mut()
-                    .receive_event(
-                        event_name.as_ref().unwrap().to_str().unwrap(),
-                        &deserialized_args,
-                    );
+                resource.local_script_events.borrow_mut().receive_event(
+                    event_name.as_ref().unwrap().to_str().unwrap(),
+                    &deserialized_args,
+                );
 
                 return;
             }
@@ -121,7 +107,7 @@ impl EventManager {
         let handlers = self.public_handlers.get_mut(&event_type.into());
 
         if let Some(handlers) = handlers {
-            let players = resource_impl.player_base_object_map.borrow();
+            let players = resource.player_base_object_map.borrow();
 
             for h in handlers {
                 use Event::*;
@@ -145,7 +131,7 @@ impl EventManager {
                 }
             }
         } else {
-            logger::error!(
+            logger::debug!(
                 "[on_sdk_event] received event without handlers: {:?}",
                 event_type
             );
@@ -177,4 +163,10 @@ impl EventManager {
             self.public_handlers.insert(public_type, vec![event]);
         }
     }
+}
+
+pub fn add_handler(public_type: PublicEventType, sdk_type: altv_sdk::EventType, event: Event) {
+    Resource::with_events_mut(|mut events, _| {
+        events.add_handler(public_type, sdk_type, event);
+    });
 }

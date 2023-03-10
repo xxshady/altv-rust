@@ -1,6 +1,9 @@
 use std::{collections::HashMap, fmt::Debug};
 
-use crate::mvalue::{self, convert_vec_to_mvalue_vec, Serializable};
+use crate::{
+    mvalue::{self, convert_vec_to_mvalue_vec, Serializable},
+    resource::Resource,
+};
 use altv_sdk::ffi as sdk;
 
 pub fn emit_local_event(event_name: &str, args: Vec<Serializable>) {
@@ -54,17 +57,12 @@ macro_rules! emit_local_event {
 pub type LocalEventArgs<'a> = &'a mvalue::MValueList;
 pub type LocalEventHandler = Box<dyn FnMut(LocalEventArgs) -> anyhow::Result<()>>;
 
+#[derive(Default)]
 pub struct LocalEventManager {
     handlers: HashMap<String, Vec<LocalEventHandler>>,
 }
 
 impl LocalEventManager {
-    pub fn new() -> Self {
-        Self {
-            handlers: HashMap::new(),
-        }
-    }
-
     pub fn receive_event(&mut self, event_name: &str, args: LocalEventArgs) {
         let handlers = self.handlers.get_mut(event_name);
         if let Some(handlers) = handlers {
@@ -95,4 +93,13 @@ impl Debug for LocalEventManager {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "LocalEventManager")
     }
+}
+
+pub fn add_handler(
+    event_name: String,
+    handler: impl FnMut(LocalEventArgs) -> anyhow::Result<()> + 'static,
+) {
+    Resource::with_local_script_events_mut(|mut local_events, _| {
+        local_events.add_handler(event_name, Box::new(handler))
+    });
 }

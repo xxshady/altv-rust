@@ -1,10 +1,12 @@
 [workspace]
 
 members = [
+    "core_shared",
+    "core_module",
+    "core_altvx",
     "extern_type_callback_derive",
     "resource_main_macro",
     "altv_sdk",
-    "resource_impl",
     "altv_module",
     "altvx",
     "example_resource",
@@ -15,3 +17,4 @@ members = [
 cxx = "1.0.91"
 autocxx = "0.24.0"
 anyhow = "1.0.69"
+paste = "1.0.11"

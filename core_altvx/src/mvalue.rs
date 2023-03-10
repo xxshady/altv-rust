@@ -1,4 +1,4 @@
-use crate::{base_object::BaseObject, player, resource_impl::ResourceImpl, vehicle};
+use crate::{base_object::BaseObject, player, resource::Resource, vehicle};
 use altv_sdk::ffi as sdk;
 use anyhow::Context;
 use autocxx::{cxx::CxxVector, prelude::*};
@@ -170,18 +170,18 @@ impl Debug for MValueList {
 
 pub fn deserialize_mvalue_args(
     args: UniquePtr<CxxVector<sdk::MValueWrapper>>,
-    resource_impl: &ResourceImpl,
+    resource: &Resource,
 ) -> MValueList {
     let mut deserialized_args = MValueList::default();
 
     for arg in args.as_ref().unwrap() {
-        deserialized_args.push(deserialize_mvalue(arg, resource_impl));
+        deserialized_args.push(deserialize_mvalue(arg, resource));
     }
 
     deserialized_args
 }
 
-fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource_impl: &ResourceImpl) -> MValue {
+fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Resource) -> MValue {
     let mvalue_type = unsafe { sdk::get_mvalue_type(cpp_wrapper) };
     let mvalue_type = altv_sdk::MValueType::from(mvalue_type).unwrap();
 
@@ -197,7 +197,7 @@ fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource_impl: &Resource
         LIST => MValue::List(MValueList::new(
             unsafe { sdk::get_mvalue_list(cpp_wrapper) }
                 .iter()
-                .map(|v| deserialize_mvalue(v, resource_impl))
+                .map(|v| deserialize_mvalue(v, resource))
                 .collect(),
         )),
         DICT => MValue::Dict({
@@ -208,10 +208,8 @@ fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource_impl: &Resource
                 .for_each(|pair| {
                     let key = unsafe { sdk::get_mvalue_dict_pair_key(pair) }.to_string();
                     let value = unsafe { sdk::get_mvalue_dict_pair_value(pair) };
-                    let value = deserialize_mvalue(
-                        value.within_unique_ptr().as_ref().unwrap(),
-                        resource_impl,
-                    );
+                    let value =
+                        deserialize_mvalue(value.within_unique_ptr().as_ref().unwrap(), resource);
                     hash_map.insert(key, value);
                 });
 
@@ -224,14 +222,14 @@ fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource_impl: &Resource
                 return MValue::InvalidBaseObject;
             }
 
-            let base_obj = resource_impl.base_objects.borrow().get_by_raw_ptr(raw_ptr);
+            let base_obj = resource.base_objects.borrow().get_by_raw_ptr(raw_ptr);
             if let Some(base_obj) = base_obj {
                 use altv_sdk::BaseObjectType::*;
 
                 macro_rules! deserialize_base_object {
                     ($base_object_name: literal, $mvalue_item: path, $resource_impl_base_obj_map: path) => {{
                         paste::paste! {
-                            let base_obj = resource_impl
+                            let base_obj = resource
                             .[<$resource_impl_base_obj_map>]
                             .borrow()
                             .get_by_base_object_ptr(raw_ptr);

@@ -65,10 +65,10 @@ pub fn resource_main_func(args: TokenStream, input: TokenStream) -> TokenStream 
         #[no_mangle]
         #(#attrs)* #vis fn main(
             core: usize, // workaround for the clippy unsafety error
-            resource_impl: #crate_name_ident::__ResourceImplRef,
+            resource_handlers: &mut #crate_name_ident::__internal::ResourceHandlers,
         ) {
-            unsafe { #crate_name_ident::__set_alt_core(core as *mut #crate_name_ident::__alt_ICore) };
-            #crate_name_ident::__init(resource_impl);
+            unsafe { #crate_name_ident::__internal::set_alt_core(core as *mut #crate_name_ident::__internal::ICore) };
+            #crate_name_ident::__internal::init(resource_handlers);
 
             #(#statements)*
         }

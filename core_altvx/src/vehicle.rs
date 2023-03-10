@@ -1,8 +1,8 @@
 use crate::{
-    base_object::{BaseObject, BaseObjectManager, BaseObjectPointer, RawBaseObjectPointer},
+    base_object::{BaseObject, BaseObjectManager, BaseObjectPointer},
     entity::{Entity, EntityId, EntityWrapper},
     impl_base_object_for,
-    resource_impl::with_resource_impl,
+    resource::Resource,
     vector::Vector3,
 };
 use altv_sdk::ffi as sdk;
@@ -19,9 +19,8 @@ pub struct Vehicle {
 
 impl Vehicle {
     pub fn new(model: u32, pos: Vector3, rot: Vector3) -> Option<VehicleContainer> {
-        with_resource_impl(|instance| {
-            let _creation = instance.base_object_creation.borrow_mut();
-            let base_objects = instance.base_objects.borrow_mut();
+        Resource::with_base_object_creation_mut(|_, resource| {
+            let base_objects = resource.base_objects.borrow_mut();
             create_vehicle(base_objects, model, pos, rot)
         })
     }
@@ -40,8 +39,8 @@ impl Vehicle {
     }
 
     pub fn destroy(&mut self) -> Result<(), String> {
-        with_resource_impl(|instance| {
-            let mut entities = instance.entities.borrow_mut();
+        Resource::with_base_object_deletion_mut(|_, resource| {
+            let mut entities = resource.entities.borrow_mut();
             entities.on_destroy(self.ptr().to_entity().unwrap());
         });
 
@@ -72,21 +71,20 @@ pub fn create_vehicle(
 
     base_objects.on_create(base_object_raw_ptr, vehicle.clone());
 
-    with_resource_impl(|instance| {
-        let mut entities = instance.entities.borrow_mut();
+    Resource::with_entities_mut(|mut entities, resource| {
         entities.on_create(
             vehicle.borrow().id().unwrap(),
             EntityWrapper::Vehicle(Rc::clone(&vehicle)),
         );
 
-        let mut vehicle_base_object_map = instance.vehicle_base_object_map.borrow_mut();
+        let mut vehicle_base_object_map = resource.vehicle_base_object_map.borrow_mut();
         vehicle_base_object_map.add_base_object(Rc::clone(&vehicle));
     });
 
     Some(vehicle)
 }
 
-pub fn create_vehicle_container(raw_ptr: RawBaseObjectPointer) -> VehicleContainer {
+pub fn create_vehicle_container(raw_ptr: altv_sdk::IBaseObjectMutPtr) -> VehicleContainer {
     Rc::new(RefCell::new(Vehicle {
         ptr: BaseObjectPointer::new(raw_ptr),
         base_type: altv_sdk::BaseObjectType::VEHICLE,

@@ -1,12 +1,10 @@
 [package]
-name = "altvx"
+name = "core_module"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+core_shared = { path = "../core_shared" }
 altv_sdk = { path = "../altv_sdk" }
-resource_main_macro = { path = "../resource_main_macro" }
-anyhow = { workspace = true }
-core_altvx = { path = "../core_altvx" }

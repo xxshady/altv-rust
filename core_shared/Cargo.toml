@@ -1,5 +1,5 @@
 [package]
-name = "altvx"
+name = "core_shared"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,6 +7,3 @@ edition = "2021"
 
 [dependencies]
 altv_sdk = { path = "../altv_sdk" }
-resource_main_macro = { path = "../resource_main_macro" }
-anyhow = { workspace = true }
-core_altvx = { path = "../core_altvx" }

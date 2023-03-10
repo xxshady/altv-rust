@@ -1,36 +1,33 @@
-use altv_sdk::ffi;
+pub use resource_main_macro::resource_main_func as main;
+// __internal is intended for resource_main_func proc macro ^
+#[doc(hidden)]
+pub mod __internal {
+    pub use altv_sdk::ffi::{alt::ICore, set_alt_core};
+
+    pub use core_altvx::{init as core_init, ResourceHandlers};
+
+    pub fn init(resource_state: &mut ResourceHandlers) {
+        core_init(resource_state)
+    }
+}
 
 pub mod events;
 
-pub use resource_impl::log;
-pub use resource_impl::log_error;
-pub use resource_impl::log_warn;
-pub use resource_impl::logging::log;
-pub use resource_impl::logging::log_error;
-pub use resource_impl::logging::log_warn;
-pub use resource_main_macro::resource_main_func as main;
+// macros
+pub use core_altvx::log;
+pub use core_altvx::log_error;
+pub use core_altvx::log_warn;
+// functions
+pub use core_altvx::logging::log;
+pub use core_altvx::logging::log_error;
+pub use core_altvx::logging::log_warn;
 
-#[doc(hidden)]
-pub use ffi::alt::ICore as __alt_ICore;
-#[doc(hidden)]
-pub use ffi::set_alt_core as __set_alt_core;
-
-// intended for resource_main_macro
-#[doc(hidden)]
-use resource_impl::resource_impl::ResourceImpl;
-pub use resource_impl::resource_impl::ResourceImplRef as __ResourceImplRef;
-
-pub use resource_impl::entity::Entity;
-pub use resource_impl::entity::EntityId;
-pub use resource_impl::player::Player;
-pub use resource_impl::vector::Vector3;
-pub use resource_impl::vehicle::Vehicle;
-
-pub type ModelHash = u32;
+pub use core_altvx::player::Player;
+pub use core_altvx::vehicle::Vehicle;
 
 // credits to altv-rs creator
 // https://github.com/justdimaa/altv-rs/blob/f5cf1733493466634793804dfb1ca6d387fbe687/altv-sdk/src/lib.rs#L24
-pub fn hash(str: &str) -> ModelHash {
+pub fn hash(str: &str) -> u32 {
     let bytes = str.as_bytes();
     let mut num: std::num::Wrapping<u32> = std::num::Wrapping(0u32);
 
@@ -46,15 +43,10 @@ pub fn hash(str: &str) -> ModelHash {
     (num + (num << 15)).0
 }
 
-pub fn set_interval(callback: impl FnMut() + 'static, millis: u64) {
-    resource_impl::resource_impl::timers_create(Box::new(callback), millis, false);
-}
-
 pub fn set_timeout(callback: impl FnMut() + 'static, millis: u64) {
-    resource_impl::resource_impl::timers_create(Box::new(callback), millis, true);
+    core_altvx::timers::create_timer(Box::new(callback), millis, true);
 }
 
-#[doc(hidden)]
-pub fn __init(resource_impl: __ResourceImplRef) {
-    ResourceImpl::init(resource_impl);
+pub fn set_interval(callback: impl FnMut() + 'static, millis: u64) {
+    core_altvx::timers::create_timer(Box::new(callback), millis, false);
 }

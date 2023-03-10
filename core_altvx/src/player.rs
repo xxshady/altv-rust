@@ -1,5 +1,5 @@
 use crate::{
-    base_object::{BaseObject, BaseObjectPointer, RawBaseObjectPointer},
+    base_object::{BaseObject, BaseObjectPointer},
     entity::{Entity, EntityId, EntityWrapper},
     impl_base_object_for,
 };
@@ -28,7 +28,7 @@ impl_base_object_for!(Player);
 impl Entity for Player {}
 
 #[allow(clippy::not_unsafe_ptr_arg_deref)]
-pub fn create_player_container(raw_ptr: RawBaseObjectPointer) -> PlayerContainer {
+pub fn create_player_container(raw_ptr: altv_sdk::IBaseObjectMutPtr) -> PlayerContainer {
     Rc::new(RefCell::new(Player {
         ptr: BaseObjectPointer::new(raw_ptr),
         base_type: altv_sdk::BaseObjectType::VEHICLE,

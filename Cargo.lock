@@ -43,9 +43,10 @@ version = "0.1.0"
 dependencies = [
  "altv_sdk",
  "autocxx",
+ "core_module",
  "libloading",
  "logger",
- "resource_impl",
+ "paste",
 ]
 
 [[package]]
@@ -68,7 +69,7 @@ version = "0.1.0"
 dependencies = [
  "altv_sdk",
  "anyhow",
- "resource_impl",
+ "core_altvx",
  "resource_main_macro",
 ]
 
@@ -320,6 +321,33 @@ dependencies = [
  "atty",
  "lazy_static",
  "winapi",
+]
+
+[[package]]
+name = "core_altvx"
+version = "0.1.0"
+dependencies = [
+ "altv_sdk",
+ "anyhow",
+ "autocxx",
+ "core_shared",
+ "logger",
+ "paste",
+]
+
+[[package]]
+name = "core_module"
+version = "0.1.0"
+dependencies = [
+ "altv_sdk",
+ "core_shared",
+]
+
+[[package]]
+name = "core_shared"
+version = "0.1.0"
+dependencies = [
+ "altv_sdk",
 ]
 
 [[package]]
@@ -846,17 +874,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "89974a5bef01d82b843f85cbab168e8554b3776f875dcc7a66bf03c757db5ab1"
 dependencies = [
  "ignore",
-]
-
-[[package]]
-name = "resource_impl"
-version = "0.1.0"
-dependencies = [
- "altv_sdk",
- "anyhow",
- "autocxx",
- "logger",
- "paste",
 ]
 
 [[package]]

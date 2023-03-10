@@ -1,21 +1,21 @@
-use resource_impl::events::*;
+use core_altvx::events::*;
 
-pub use resource_impl::events::{
+pub use core_altvx::events::{
     ConsoleCommandController, PlayerConnectController, PlayerDisconnectController,
     ServerStartedController,
 };
 
-pub use resource_impl::emit_local_event as emit;
-pub use resource_impl::mvalue::MValue;
-pub use resource_impl::mvalue::MValueNone;
-pub use resource_impl::mvalue_dict as dict;
-pub use resource_impl::mvalue_list as list;
-pub use resource_impl::resource_impl::on;
+pub use core_altvx::emit_local_event as emit;
+pub use core_altvx::local_script_events::add_handler as on;
+pub use core_altvx::mvalue::MValue;
+pub use core_altvx::mvalue::MValueNone;
+pub use core_altvx::mvalue_dict as dict;
+pub use core_altvx::mvalue_list as list;
 
 macro_rules! on_event {
     ($func_name: ident, $event_path: path, $controller: ty, $public_type: path, $sdk_type: path) => {
         pub fn $func_name(handler: impl FnMut($controller) + 'static) {
-            resource_impl::resource_impl::add_event_handler(
+            core_altvx::events::add_handler(
                 $public_type,
                 $sdk_type,
                 $event_path(Box::new(handler)),

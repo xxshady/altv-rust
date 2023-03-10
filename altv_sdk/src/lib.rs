@@ -149,6 +149,9 @@ pub mod ffi {
     pub use callbacks::*;
 }
 
+pub type CEventPtr = *const ffi::alt::CEvent;
+pub type IBaseObjectMutPtr = *mut ffi::alt::IBaseObject;
+
 // auto generated files:
 
 mod cpp_sdk_version;
