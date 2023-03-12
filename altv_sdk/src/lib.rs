@@ -57,8 +57,8 @@ pub mod ffi {
         generate!("get_event_reason")
         generate!("get_event_console_command_name")
         generate!("get_event_console_command_args")
-        generate!("get_event_server_script_event_name")
-        generate!("get_event_server_script_event_args")
+        generate!("get_any_script_event_name")
+        generate!("get_any_script_event_args")
 
         // base_object conversions
         generate!("convert_base_object_to_entity")

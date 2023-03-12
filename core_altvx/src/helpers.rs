@@ -1,9 +1,7 @@
-use std::cell::Ref;
-
 use crate::{
     base_object::BaseObject,
-    base_object_maps::PlayerBaseObjectMap,
     player::{self, PlayerContainer},
+    resource::Resource,
 };
 
 #[macro_export]
@@ -22,7 +20,7 @@ macro_rules! get_entity_by_id {
 
 pub fn get_player_from_event(
     event: *const altv_sdk::ffi::alt::CEvent,
-    players: &Ref<PlayerBaseObjectMap>,
+    resource: &Resource,
 ) -> PlayerContainer {
     let raw_ptr = {
         let player_raw_ptr = unsafe { altv_sdk::ffi::get_event_player_target(event) };
@@ -34,6 +32,7 @@ pub fn get_player_from_event(
         unsafe { altv_sdk::ffi::convert_player_to_base_object(player_raw_ptr) }
     };
 
+    let players = resource.player_base_object_map.borrow();
     players.get_by_base_object_ptr(raw_ptr).unwrap()
 }
 

@@ -6,11 +6,12 @@ pub use core_altvx::events::{
 };
 
 pub use core_altvx::emit_local_event as emit;
-pub use core_altvx::local_script_events::add_handler as on;
 pub use core_altvx::mvalue::MValue;
 pub use core_altvx::mvalue::MValueNone;
 pub use core_altvx::mvalue_dict as dict;
 pub use core_altvx::mvalue_list as list;
+pub use core_altvx::script_events::add_client_handler as on_client;
+pub use core_altvx::script_events::add_local_handler as on;
 
 pub use core_altvx::emit_all_clients;
 pub use core_altvx::emit_client;

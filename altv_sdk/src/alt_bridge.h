@@ -331,12 +331,13 @@ u16 get_event_type(const alt::CEvent* event) {
 
 alt::IPlayer* get_event_player_target(const alt::CEvent* event) {
     auto type = event->GetType();
-
     switch (type) {
     case alt::CEvent::Type::PLAYER_CONNECT:
         return static_cast<const alt::CPlayerConnectEvent*>(event)->GetTarget();
     case alt::CEvent::Type::PLAYER_DISCONNECT:
         return static_cast<const alt::CPlayerDisconnectEvent*>(event)->GetTarget();
+    case alt::CEvent::Type::CLIENT_SCRIPT_EVENT:
+        return static_cast<const alt::CClientScriptEvent*>(event)->GetTarget();
     default:
         alt::ICore::Instance().LogError(
             "get_event_player_target unknown event type: " +
@@ -354,8 +355,6 @@ StdStringPtr get_event_reason(const alt::CEvent* event) {
         return std::make_unique<std::string>(std::string{
             static_cast<const alt::CPlayerDisconnectEvent*>(event)->GetReason()
         });
-        break;
-
     default:
         alt::ICore::Instance().LogError(
             "get_event_reason unknown event type: " +
@@ -380,18 +379,36 @@ std::unique_ptr<StdStringVector> get_event_console_command_args(const alt::CEven
     );
 }
 
-StdStringPtr get_event_server_script_event_name(const alt::CEvent* event) {
-    assert(event->GetType() == alt::CEvent::Type::SERVER_SCRIPT_EVENT);
-
-    return std::make_unique<std::string>(std::string {
-        static_cast<const alt::CServerScriptEvent*>(event)->GetName()
-    });
+StdStringPtr get_any_script_event_name(const alt::CEvent* event) {
+    auto type = event->GetType();
+    switch (type) {
+    case alt::CEvent::Type::SERVER_SCRIPT_EVENT:
+        return std::make_unique<std::string>(std::string {
+            static_cast<const alt::CServerScriptEvent*>(event)->GetName()
+        });
+    case alt::CEvent::Type::CLIENT_SCRIPT_EVENT:
+        return std::make_unique<std::string>(std::string {
+            static_cast<const alt::CClientScriptEvent*>(event)->GetName()
+        });
+    default:
+        assert(("get_any_script_event_name expected server or client script event", false));
+    }
 }
 
-MValueWrapperVec get_event_server_script_event_args(const alt::CEvent* event) {
-    assert(event->GetType() == alt::CEvent::Type::SERVER_SCRIPT_EVENT);
+MValueWrapperVec get_any_script_event_args(const alt::CEvent* event) {
+    auto type = event->GetType();
+    alt::MValueArgs args;
+    switch (type) {
+    case alt::CEvent::Type::SERVER_SCRIPT_EVENT:
+        args = static_cast<const alt::CServerScriptEvent*>(event)->GetArgs();
+        break;
+    case alt::CEvent::Type::CLIENT_SCRIPT_EVENT:
+        args = static_cast<const alt::CClientScriptEvent*>(event)->GetArgs();
+        break;
+    default:
+        assert(("get_any_script_event_args expected server or client script event", false));
+    }
 
-    auto args = static_cast<const alt::CServerScriptEvent*>(event)->GetArgs();
     auto mvalue_vec = create_mvalue_vec();
     auto size = args.GetSize();
 

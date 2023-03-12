@@ -222,6 +222,13 @@ pub fn main() {
         100,
     );
 
-    // // should raise warning
-    // alt::events::emit!("test2");
+    // should raise warning
+    alt::events::emit!("lalallaall");
+
+    alt::events::on_client("test".to_string(), |player, args| {
+        alt::log!("on client test player: {}", player.try_borrow()?.name()?);
+        args.get_bool_at(9999999)?;
+        alt::log!("on client test args: {:#?}", args);
+        Ok(())
+    });
 }

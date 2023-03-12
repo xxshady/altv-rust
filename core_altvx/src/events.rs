@@ -1,4 +1,7 @@
-use crate::{helpers::get_player_from_event, mvalue, player::PlayerContainer, resource::Resource};
+use crate::{
+    helpers::get_player_from_event, mvalue, player::PlayerContainer, resource::Resource,
+    script_events::ScriptEventManager,
+};
 use altv_sdk::ffi as sdk;
 pub use altv_sdk::EventType as SDKEventType;
 use std::collections::{HashMap, HashSet};
@@ -88,63 +91,77 @@ impl EventManager {
     ) {
         logger::debug!("received event: {:?}", event_type);
 
-        match event_type {
-            SDKEventType::SERVER_SCRIPT_EVENT => {
-                let event_name = unsafe { sdk::get_event_server_script_event_name(event) };
+        // i'm just too retarded to make generic function...
+        macro_rules! prepare_script_event_if_handled {
+            ($manager: expr) => {{
+                let event_name = unsafe { sdk::get_any_script_event_name(event) };
                 let event_name = event_name.as_ref().unwrap().to_string();
-                if !resource
-                    .local_script_events
-                    .borrow()
-                    .is_handled(&event_name)
-                {
-                    logger::debug!("SERVER_SCRIPT_EVENT name: {event_name} is unhandled");
-                    return;
+                if $manager.is_event_handled(&event_name) {
+                    let args = unsafe { sdk::get_any_script_event_args(event) };
+                    let deserialized_args = mvalue::deserialize_mvalue_args(args, resource);
+                    Some((event_name, deserialized_args))
+                } else {
+                    logger::debug!("script event name: {event_name} ({event_type:?}) is unhandled");
+                    None
                 }
-
-                let args = unsafe { sdk::get_event_server_script_event_args(event) };
-                let deserialized_args = mvalue::deserialize_mvalue_args(args, resource);
-
-                resource
-                    .local_script_events
-                    .borrow_mut()
-                    .receive_event(&event_name, &deserialized_args);
-
-                return;
-            }
-            _ => {}
+            }};
         }
 
-        let handlers = self.public_handlers.get_mut(&event_type.into());
-
-        if let Some(handlers) = handlers {
-            let players = resource.player_base_object_map.borrow();
-
-            for h in handlers {
-                use Event::*;
-                match h {
-                    ServerStarted(callback) => callback(ServerStartedController {}),
-                    PlayerConnect(callback) => callback(PlayerConnectController {
-                        player: get_player_from_event(event, &players),
-                    }),
-                    PlayerDisconnect(callback) => callback(PlayerDisconnectController {
-                        player: get_player_from_event(event, &players),
-                        reason: unsafe { sdk::get_event_reason(event) }.to_string(),
-                    }),
-                    ConsoleCommand(callback) => callback(ConsoleCommandController {
-                        name: unsafe { sdk::get_event_console_command_name(event) }.to_string(),
-                        args: unsafe { sdk::get_event_console_command_args(event) }
-                            .iter()
-                            .map(|s| s.to_string())
-                            .collect(),
-                    }),
-                    _ => todo!(),
+        match event_type {
+            SDKEventType::SERVER_SCRIPT_EVENT => {
+                if let Some((event_name, deserialized_args)) =
+                    prepare_script_event_if_handled!(resource.local_script_events.borrow())
+                {
+                    resource
+                        .local_script_events
+                        .borrow_mut()
+                        .handle_event(&event_name, &deserialized_args);
                 }
             }
-        } else {
-            logger::debug!(
-                "[on_sdk_event] received event without handlers: {:?}",
-                event_type
-            );
+            SDKEventType::CLIENT_SCRIPT_EVENT => {
+                if let Some((event_name, deserialized_args)) =
+                    prepare_script_event_if_handled!(resource.client_script_events.borrow())
+                {
+                    resource.client_script_events.borrow_mut().handle_event(
+                        &event_name,
+                        get_player_from_event(event, resource),
+                        &deserialized_args,
+                    );
+                }
+            }
+            _ => {
+                let handlers = self.public_handlers.get_mut(&event_type.into());
+
+                if let Some(handlers) = handlers {
+                    for h in handlers {
+                        use Event::*;
+                        match h {
+                            ServerStarted(callback) => callback(ServerStartedController {}),
+                            PlayerConnect(callback) => callback(PlayerConnectController {
+                                player: get_player_from_event(event, resource),
+                            }),
+                            PlayerDisconnect(callback) => callback(PlayerDisconnectController {
+                                player: get_player_from_event(event, resource),
+                                reason: unsafe { sdk::get_event_reason(event) }.to_string(),
+                            }),
+                            ConsoleCommand(callback) => callback(ConsoleCommandController {
+                                name: unsafe { sdk::get_event_console_command_name(event) }
+                                    .to_string(),
+                                args: unsafe { sdk::get_event_console_command_args(event) }
+                                    .iter()
+                                    .map(|s| s.to_string())
+                                    .collect(),
+                            }),
+                            _ => todo!(),
+                        }
+                    }
+                } else {
+                    logger::debug!(
+                        "[on_sdk_event] received event without handlers: {:?}",
+                        event_type
+                    );
+                }
+            }
         }
     }
 

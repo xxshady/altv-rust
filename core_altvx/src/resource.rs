@@ -6,7 +6,7 @@ use std::{
 use crate::{
     base_object, base_object_maps,
     entity::{self, Entity},
-    events, local_script_events, player, timers, vehicle,
+    events, player, script_events, timers, vehicle,
 };
 
 thread_local! {
@@ -23,7 +23,8 @@ pub struct Resource {
     pub base_object_creation: RefCell<base_object::PendingBaseObjectCreation>,
     pub entities: RefCell<entity::EntityManager>,
     pub events: RefCell<events::EventManager>,
-    pub local_script_events: RefCell<local_script_events::LocalEventManager>,
+    pub local_script_events: RefCell<script_events::LocalEventManager>,
+    pub client_script_events: RefCell<script_events::ClientEventManager>,
     pub player_base_object_map: RefCell<base_object_maps::PlayerBaseObjectMap>,
     pub vehicle_base_object_map: RefCell<base_object_maps::VehicleBaseObjectMap>,
 }
@@ -174,7 +175,8 @@ impl Resource {
     impl_borrow_fn!(entities, entity::EntityManager);
     impl_borrow_mut_fn!(entities, entity::EntityManager);
     impl_borrow_mut_fn!(events, events::EventManager);
-    impl_borrow_mut_fn!(local_script_events, local_script_events::LocalEventManager);
+    impl_borrow_mut_fn!(local_script_events, script_events::LocalEventManager);
+    impl_borrow_mut_fn!(client_script_events, script_events::ClientEventManager);
     impl_borrow_mut_fn!(
         player_base_object_map,
         base_object_maps::PlayerBaseObjectMap
