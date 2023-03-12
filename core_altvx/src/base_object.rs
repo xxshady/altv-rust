@@ -55,7 +55,6 @@ impl BaseObjectPointer {
 }
 
 pub trait BaseObject {
-    fn as_any(&mut self) -> &mut dyn Any;
     fn valid(&self) -> bool;
     fn ptr(&self) -> &BaseObjectPointer;
     fn ptr_mut(&mut self) -> &mut BaseObjectPointer;
@@ -81,10 +80,6 @@ pub trait BaseObject {
 macro_rules! impl_base_object_for {
     ($struct: path) => {
         impl BaseObject for $struct {
-            fn as_any(&mut self) -> &mut dyn std::any::Any {
-                self
-            }
-
             fn valid(&self) -> bool {
                 self.ptr.get().is_ok()
             }
