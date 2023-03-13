@@ -119,8 +119,7 @@ fn generate_rust_enum_from_cpp(
     write_to: &str,
 ) {
     let content = String::from_utf8(fs::read(path).unwrap()).unwrap();
-    let str = str_to_find;
-    let idx = content.find(str).unwrap();
+    let idx = content.find(str_to_find).unwrap();
 
     let mut open_brace = false;
     let mut start_idx = 0;
@@ -145,7 +144,7 @@ fn generate_rust_enum_from_cpp(
     }
 
     if !open_brace {
-        panic!("cannot find open brace of {str:?}")
+        panic!("cannot find open brace of {str_to_find:?}")
     }
 
     let result_string = String::from_utf8_lossy(&chars[start_idx..=end_idx])
