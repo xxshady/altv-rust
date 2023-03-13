@@ -510,3 +510,10 @@ StdStringPtr get_player_name(const alt::IPlayer* player) {
     return std::make_unique<std::string>(player->GetName());
 }
 
+void spawn_player(alt::IPlayer* player, f32 x, f32 y, f32 z) {
+    player->Spawn({ x, y, z }, 0);
+}
+
+void set_player_model(alt::IPlayer* player, u32 model) {
+    player->SetModel(model);
+}

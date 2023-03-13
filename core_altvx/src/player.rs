@@ -2,6 +2,7 @@ use crate::{
     base_object::{BaseObject, BaseObjectPointer},
     entity::{Entity, EntityId, EntityWrapper},
     impl_base_object_for,
+    vector::Vector3,
 };
 use altv_sdk::ffi as sdk;
 use std::{cell::RefCell, rc::Rc};
@@ -21,6 +22,15 @@ impl Player {
 
     pub fn name(&self) -> anyhow::Result<String> {
         Ok(unsafe { sdk::get_player_name(self.ptr.to_player()?) }.to_string())
+    }
+
+    pub fn spawn(&self, model: u32, pos: Vector3) -> anyhow::Result<()> {
+        self.set_model(model)?;
+        Ok(unsafe { sdk::spawn_player(self.ptr.to_player()?, pos.x(), pos.y(), pos.z()) })
+    }
+
+    pub fn set_model(&self, model: u32) -> anyhow::Result<()> {
+        Ok(unsafe { sdk::set_player_model(self.ptr.to_player()?, model) })
     }
 }
 

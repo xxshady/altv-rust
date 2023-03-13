@@ -83,6 +83,8 @@ pub mod ffi {
 
         // player
         generate!("get_player_name")
+        generate!("spawn_player")
+        generate!("set_player_model")
 
         // logging
         generate!("log_colored")

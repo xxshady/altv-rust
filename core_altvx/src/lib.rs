@@ -16,7 +16,7 @@ pub mod mvalue;
 pub mod player;
 pub mod script_events;
 pub mod timers;
-mod vector;
+pub mod vector;
 pub mod vehicle;
 
 pub fn init(resource_handlers: &mut ResourceHandlers) {

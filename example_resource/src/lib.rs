@@ -227,8 +227,13 @@ pub fn main() {
 
     alt::events::on_client("test".to_string(), |player, args| {
         alt::log!("on client test player: {}", player.try_borrow()?.name()?);
-        args.get_bool_at(9999999)?;
         alt::log!("on client test args: {:#?}", args);
+
+        player.borrow().spawn(
+            alt::hash("mp_m_freemode_01"),
+            alt::Vector3::new(0f32, 0f32, 72f32),
+        )?;
+
         Ok(())
     });
 }
