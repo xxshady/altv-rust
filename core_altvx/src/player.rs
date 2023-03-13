@@ -41,6 +41,6 @@ impl Entity for Player {}
 pub fn create_player_container(raw_ptr: altv_sdk::IBaseObjectMutPtr) -> PlayerContainer {
     Rc::new(RefCell::new(Player {
         ptr: BaseObjectPointer::new(raw_ptr),
-        base_type: altv_sdk::BaseObjectType::VEHICLE,
+        base_type: altv_sdk::BaseObjectType::PLAYER,
     }))
 }
