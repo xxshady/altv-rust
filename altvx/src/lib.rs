@@ -27,6 +27,8 @@ pub use core_altvx::player::Player;
 pub use core_altvx::vector::Vector3;
 pub use core_altvx::vehicle::Vehicle;
 
+pub use anyhow;
+
 // credits to altv-rs creator
 // https://github.com/justdimaa/altv-rs/blob/f5cf1733493466634793804dfb1ca6d387fbe687/altv-sdk/src/lib.rs#L24
 pub fn hash(str: &str) -> u32 {
@@ -45,10 +47,10 @@ pub fn hash(str: &str) -> u32 {
     (num + (num << 15)).0
 }
 
-pub fn set_timeout(callback: impl FnMut() + 'static, millis: u64) {
+pub fn set_timeout(callback: impl FnMut() -> anyhow::Result<()> + 'static, millis: u64) {
     core_altvx::timers::create_timer(Box::new(callback), millis, true);
 }
 
-pub fn set_interval(callback: impl FnMut() + 'static, millis: u64) {
+pub fn set_interval(callback: impl FnMut() -> anyhow::Result<()> + 'static, millis: u64) {
     core_altvx::timers::create_timer(Box::new(callback), millis, false);
 }
