@@ -124,8 +124,6 @@ extern "C" fn resource_on_remove_base_object(
 #[no_mangle]
 #[allow(clippy::missing_safety_doc)]
 pub unsafe extern "C" fn altMain(core: *mut sdk::alt::ICore) -> bool {
-    std::env::set_var("RUST_BACKTRACE", "1");
-
     if core.is_null() {
         panic!("altMain core is null");
     }
