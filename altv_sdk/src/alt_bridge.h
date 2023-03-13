@@ -486,6 +486,10 @@ u16 get_entity_id(alt::IEntity* entity) {
     return entity->GetID();
 }
 
+u32 get_entity_model(const alt::IEntity* entity) {
+    return entity->GetModel();
+}
+
 void destroy_base_object(alt::IBaseObject* base_object) {
     if (!base_object) {
         alt::ICore::Instance().LogError("destroy_base_object nullptr base_object");

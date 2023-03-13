@@ -11,6 +11,10 @@ pub trait Entity: BaseObject {
     fn id(&self) -> anyhow::Result<EntityId> {
         Ok(unsafe { sdk::get_entity_id(self.ptr().to_entity()?) })
     }
+
+    fn model(&self) -> anyhow::Result<u32> {
+        Ok(unsafe { sdk::get_entity_model(self.ptr().to_entity()?) })
+    }
 }
 
 impl Debug for dyn Entity {

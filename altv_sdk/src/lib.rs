@@ -75,6 +75,7 @@ pub mod ffi {
 
         // entity
         generate!("get_entity_id")
+        generate!("get_entity_model")
 
         // vehicle
         generate!("create_vehicle")

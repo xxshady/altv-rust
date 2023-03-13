@@ -229,10 +229,13 @@ pub fn main() {
         alt::log!("on client test player: {}", player.try_borrow()?.name()?);
         alt::log!("on client test args: {:#?}", args);
 
-        player.borrow().spawn(
-            alt::hash("mp_m_freemode_01"),
-            alt::Vector3::new(0f32, 0f32, 72f32),
-        )?;
+        let player = player.borrow();
+
+        let model = alt::hash("mp_m_freemode_01");
+
+        player.spawn(model, alt::Vector3::new(0f32, 0f32, 72f32))?;
+
+        dbg!(player.model()? == model);
 
         Ok(())
     });
