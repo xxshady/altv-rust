@@ -3,7 +3,7 @@ use std::{cell::RefMut, fmt::Debug};
 use crate::resource::Resource;
 
 pub type TimerId = u32;
-pub type TimerCallback = dyn FnMut() + 'static;
+pub type TimerCallback = dyn FnMut() -> anyhow::Result<()> + 'static;
 
 struct Timer {
     callback: Box<TimerCallback>,
@@ -63,7 +63,11 @@ impl TimerManager {
 
         for (idx, timer) in self.timers.iter_mut().enumerate() {
             if now >= timer.next_call_time {
-                (timer.callback)();
+                if let Err(error) = (timer.callback)() {
+                    logger::error!("timer callback failed with error: {error:?}");
+                } else {
+                    logger::debug!("timer callback called successfully");
+                }
                 if timer.once {
                     indexes_to_remove.push(idx);
                     continue;
@@ -79,6 +83,10 @@ impl TimerManager {
     }
 }
 
-pub fn create_timer(callback: Box<dyn FnMut() + 'static>, millis: u64, once: bool) {
+pub fn create_timer(
+    callback: Box<dyn FnMut() -> anyhow::Result<()> + 'static>,
+    millis: u64,
+    once: bool,
+) {
     Resource::with_timer_schedule_mut(|mut t, _| t.create(callback, millis, once));
 }

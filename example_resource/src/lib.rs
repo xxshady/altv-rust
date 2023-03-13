@@ -83,6 +83,8 @@ pub fn main() {
                     player.clone()
                 )
                 .unwrap();
+
+                Ok(())
             },
             1000,
         );
@@ -207,9 +209,13 @@ pub fn main() {
                                     .unwrap()
                                 )
                                 .unwrap();
+
+                                Ok(())
                             },
                             500,
-                        )
+                        );
+
+                        Ok(())
                     },
                     500,
                 );
@@ -218,6 +224,8 @@ pub fn main() {
             }
 
             alt::log!("~gl~done");
+
+            Ok(())
         },
         100,
     );
