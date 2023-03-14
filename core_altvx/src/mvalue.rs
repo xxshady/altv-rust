@@ -6,16 +6,27 @@ use anyhow::Context;
 use autocxx::{cxx::CxxVector, prelude::*};
 use std::{collections::HashMap, fmt::Debug};
 
-pub struct Serializable(UniquePtr<sdk::MValueWrapper>);
+pub struct Serializable(UniquePtr<sdk::MValueMutWrapper>);
 
 macro_rules! impl_serializable {
-    ($value_type: ty, $create_func: expr) => {
+    (@internal $value_type: ty, $create_mvalue: expr) => {
         impl TryFrom<$value_type> for Serializable {
             type Error = anyhow::Error;
             fn try_from(value: $value_type) -> anyhow::Result<Self> {
-                Ok(Self(unsafe { $create_func(value) }.within_unique_ptr()))
+                Ok(Self(unsafe { $create_mvalue(value) }))
             }
         }
+    };
+
+    (@no_unique_ptr $value_type: ty, $create_func: expr) => {
+        impl_serializable!(@internal $value_type, $create_func);
+    };
+
+    ($value_type: ty, $create_func: expr) => {
+        impl_serializable!(@internal
+            $value_type,
+            |value| { $create_func(value) }.within_unique_ptr()
+        );
     };
 }
 
@@ -25,20 +36,20 @@ impl_serializable!(i64, sdk::create_mvalue_int);
 impl_serializable!(u64, sdk::create_mvalue_uint);
 impl_serializable!(&str, sdk::create_mvalue_string);
 
-impl_serializable!(
-    Vec<Serializable>,
-    (|value| sdk::create_mvalue_list(convert_vec_to_mvalue_vec(value)))
-);
+impl_serializable!(Vec<Serializable>, |value| sdk::create_mvalue_list(
+    convert_vec_to_mvalue_vec(value)
+));
 
-impl_serializable!(
-   HashMap<String, Serializable>,
-(|value: HashMap<String, Serializable>| {
-   let mut dict = sdk::create_mvalue_dict().within_unique_ptr();
-    for (key, value) in value {
-        sdk::push_to_mvalue_dict(dict.as_mut().unwrap(), key, value.0)
+impl_serializable!(@no_unique_ptr
+    HashMap<String, Serializable>,
+    |value: HashMap<String, Serializable>| {
+    let mut dict = sdk::create_mvalue_dict().within_unique_ptr();
+        for (key, value) in value {
+            sdk::push_to_mvalue_dict(dict.as_mut().unwrap(), key, value.0)
+        }
+        dict
     }
-    sdk::convert_mvalue_mut_wrapper_to_const(dict)
-}));
+);
 
 macro_rules! impl_serializable_base_object {
     ($base_object: ty, $short_name: literal) => {

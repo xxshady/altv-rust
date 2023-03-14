@@ -122,8 +122,8 @@ MValueWrapperVec create_mvalue_vec() {
     return vec;
 }
 
-void push_to_mvalue_vec(MValueWrapperVec& mvalue_vec, MValueWrapper mvalue) {
-    mvalue_vec.push_back(mvalue.clone());
+void push_to_mvalue_vec(MValueWrapperVec& mvalue_vec, MValueMutWrapper mvalue) {
+    mvalue_vec.push_back(convert_mvalue_mut_wrapper_to_const(mvalue));
 }
 
 u8 get_mvalue_type(MValueWrapper mvalue) {
@@ -203,43 +203,43 @@ alt::IBaseObject* get_mvalue_base_object(MValueWrapper mvalue) {
     return mvalue.ptr->As<alt::IMValueBaseObject>().Get()->RawValue();
 }
 
-MValueWrapper create_mvalue_bool(bool value) {
-    MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(alt::ICore::Instance().CreateMValueBool(value));
+MValueMutWrapper create_mvalue_bool(bool value) {
+    MValueMutWrapper wrapper;
+    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueBool(value));
     return wrapper;
 }
 
-MValueWrapper create_mvalue_double(f64 value) {
-    MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(alt::ICore::Instance().CreateMValueDouble(value));
+MValueMutWrapper create_mvalue_double(f64 value) {
+    MValueMutWrapper wrapper;
+    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueDouble(value));
     return wrapper;
 }
 
-MValueWrapper create_mvalue_string(std::string value) {
-    MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(alt::ICore::Instance().CreateMValueString(value));
+MValueMutWrapper create_mvalue_string(std::string value) {
+    MValueMutWrapper wrapper;
+    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueString(value));
     return wrapper;
 }
 
-MValueWrapper create_mvalue_nil() {
-    MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(alt::ICore::Instance().CreateMValueNil());
+MValueMutWrapper create_mvalue_nil() {
+    MValueMutWrapper wrapper;
+    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueNil());
     return wrapper;
 }
 
-MValueWrapper create_mvalue_int(i64 value) {
-    MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(alt::ICore::Instance().CreateMValueInt(value));
+MValueMutWrapper create_mvalue_int(i64 value) {
+    MValueMutWrapper wrapper;
+    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueInt(value));
     return wrapper;
 }
 
-MValueWrapper create_mvalue_uint(u64 value) {
-    MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(alt::ICore::Instance().CreateMValueUInt(value));
+MValueMutWrapper create_mvalue_uint(u64 value) {
+    MValueMutWrapper wrapper;
+    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueUInt(value));
     return wrapper;
 }
 
-MValueWrapper create_mvalue_list(MValueWrapperVec mvalue_vec) {
+MValueMutWrapper create_mvalue_list(MValueWrapperVec mvalue_vec) {
     auto mvalue_list = alt::ICore::Instance().CreateMValueList();
     auto size = mvalue_vec.size();
 
@@ -247,8 +247,8 @@ MValueWrapper create_mvalue_list(MValueWrapperVec mvalue_vec) {
         mvalue_list->PushConst(*(mvalue_vec[i].ptr));
     }
 
-    MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(mvalue_list);
+    MValueMutWrapper wrapper;
+    wrapper.ptr = std::make_shared<alt::MValue>(mvalue_list);
     return wrapper;
 }
 
@@ -258,14 +258,14 @@ MValueMutWrapper create_mvalue_dict() {
     return wrapper;
 }
 
-void push_to_mvalue_dict(MValueMutWrapper& dict, std::string key, MValueWrapper mvalue) {
+void push_to_mvalue_dict(MValueMutWrapper& dict, std::string key, MValueMutWrapper mvalue) {
     assert(dict.ptr->Get()->GetType() == alt::IMValue::Type::DICT);
     dict.ptr->As<alt::IMValueDict>().Get()->SetConst(key, *(mvalue.ptr));
 }
 
-MValueWrapper create_mvalue_base_object(alt::IBaseObject* value) {
-    MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(alt::ICore::Instance().CreateMValueBaseObject(value));
+MValueMutWrapper create_mvalue_base_object(alt::IBaseObject* value) {
+    MValueMutWrapper wrapper;
+    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueBaseObject(value));
     return wrapper;
 }
 
