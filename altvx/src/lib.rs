@@ -11,6 +11,11 @@ pub mod __internal {
     }
 }
 
+pub mod prelude {
+    pub use core_altvx::entity::Entity;
+    pub use core_altvx::world_object::WorldObject;
+}
+
 pub mod events;
 
 // macros
