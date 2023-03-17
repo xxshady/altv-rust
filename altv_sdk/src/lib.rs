@@ -61,12 +61,12 @@ pub mod ffi {
         generate!("get_mvalue_int")
         generate!("get_mvalue_uint")
         generate!("get_mvalue_list")
-
         generate!("get_mvalue_dict")
         generate!("get_mvalue_dict_pair_key")
         generate!("get_mvalue_dict_pair_value")
-
         generate!("get_mvalue_base_object")
+        generate!("get_mvalue_vector3")
+        generate!("get_mvalue_vector2")
 
         generate!("create_mvalue_bool")
         generate!("create_mvalue_double")
@@ -78,6 +78,8 @@ pub mod ffi {
         generate!("create_mvalue_dict")
         generate!("push_to_mvalue_dict")
         generate!("create_mvalue_base_object")
+        generate!("create_mvalue_vector3")
+        generate!("create_mvalue_vector2")
 
         // events
         generate!("trigger_local_event")

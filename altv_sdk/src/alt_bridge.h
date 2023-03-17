@@ -153,9 +153,9 @@ public:
     Vector2Wrapper(f32 _x, f32 _y): x(_x), y(_y) {}
 };
 
-void read_vector2(const Vector3Wrapper& vector3, f32* out_x, f32* out_y) {
-    *out_x = vector3.x;
-    *out_y = vector3.y;
+void read_vector2(const Vector2Wrapper& vector2, f32* out_x, f32* out_y) {
+    *out_x = vector2.x;
+    *out_y = vector2.y;
 }
 
 class RGBAWrapper {
@@ -289,6 +289,18 @@ alt::IBaseObject* get_mvalue_base_object(MValueWrapper mvalue) {
     return mvalue.ptr->As<alt::IMValueBaseObject>().Get()->RawValue();
 }
 
+Vector3Wrapper get_mvalue_vector3(MValueWrapper mvalue) {
+    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::VECTOR3);
+    auto vector3 = mvalue.ptr->As<alt::IMValueVector3>().Get()->Value();
+    return { vector3[0], vector3[1], vector3[2] };
+}
+
+Vector2Wrapper get_mvalue_vector2(MValueWrapper mvalue) {
+    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::VECTOR2);
+    auto vector2 = mvalue.ptr->As<alt::IMValueVector2>().Get()->Value();
+    return { vector2[0], vector2[1] };
+}
+
 MValueMutWrapper create_mvalue_bool(bool value) {
     MValueMutWrapper wrapper;
     wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueBool(value));
@@ -352,6 +364,18 @@ void push_to_mvalue_dict(MValueMutWrapper& dict, std::string key, MValueMutWrapp
 MValueMutWrapper create_mvalue_base_object(alt::IBaseObject* value) {
     MValueMutWrapper wrapper;
     wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueBaseObject(value));
+    return wrapper;
+}
+
+MValueMutWrapper create_mvalue_vector3(f32 x, f32 y, f32 z) {
+    MValueMutWrapper wrapper;
+    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueVector3({ x, y, z }));
+    return wrapper;
+}
+
+MValueMutWrapper create_mvalue_vector2(f32 x, f32 y) {
+    MValueMutWrapper wrapper;
+    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueVector2({ x, y }));
     return wrapper;
 }
 

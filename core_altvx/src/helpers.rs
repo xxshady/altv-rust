@@ -2,7 +2,7 @@ use crate::{
     base_object::BaseObject,
     player::{self, PlayerContainer},
     resource::Resource,
-    vector::Vector3,
+    vector::{Vector2, Vector3},
 };
 use altv_sdk::ffi as sdk;
 use altv_sdk::ffi::alt::IPlayer;
@@ -54,5 +54,14 @@ pub fn read_cpp_vector3(cpp_vector: UniquePtr<sdk::Vector3Wrapper>) -> Vector3 {
     unsafe {
         sdk::read_vector3(cpp_vector.as_ref().unwrap(), out_x, out_y, out_z);
         Vector3::new(*out_x, *out_y, *out_z)
+    }
+}
+
+pub fn read_cpp_vector2(cpp_vector: UniquePtr<sdk::Vector2Wrapper>) -> Vector2 {
+    let out_x = Box::into_raw(Box::new(0f32));
+    let out_y = Box::into_raw(Box::new(0f32));
+    unsafe {
+        sdk::read_vector2(cpp_vector.as_ref().unwrap(), out_x, out_y);
+        Vector2::new(*out_x, *out_y)
     }
 }

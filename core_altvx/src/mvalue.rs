@@ -1,5 +1,10 @@
 use crate::{
-    base_object::BaseObject, helpers::get_player_raw_ptr, player, resource::Resource, vehicle,
+    base_object::BaseObject,
+    helpers::{get_player_raw_ptr, read_cpp_vector2, read_cpp_vector3},
+    player,
+    resource::Resource,
+    vector::{Vector2, Vector3},
+    vehicle,
 };
 use altv_sdk::ffi as sdk;
 use anyhow::Context;
@@ -50,6 +55,17 @@ impl_serializable!(@no_unique_ptr
         dict
     }
 );
+
+impl_serializable!(Vector3, |value: Vector3| sdk::create_mvalue_vector3(
+    value.x(),
+    value.y(),
+    value.z()
+));
+
+impl_serializable!(Vector2, |value: Vector2| sdk::create_mvalue_vector2(
+    value.x(),
+    value.y(),
+));
 
 macro_rules! impl_serializable_base_object {
     ($base_object: ty, $short_name: literal) => {
@@ -134,6 +150,8 @@ pub enum MValue {
     Vehicle(vehicle::VehicleContainer),
     Player(player::PlayerContainer),
     InvalidBaseObject,
+    Vector3(Vector3),
+    Vector2(Vector2),
 }
 
 macro_rules! get_mvalue_type_at {
@@ -183,6 +201,7 @@ impl MValueList {
     get_mvalue_type_at!(get_u64_at, u64, MValue::U64);
     get_mvalue_type_at!(get_list_at, MValueList, MValue::List);
     get_mvalue_type_at!(get_dict_at, HashMap<String, MValue>, MValue::Dict);
+    get_mvalue_type_at!(get_vector3_at, Vector3, MValue::Vector3);
 
     pub fn push(&mut self, mvalue: MValue) {
         self.vec.push(mvalue);
@@ -293,6 +312,12 @@ fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Resource) -> 
                 MValue::InvalidBaseObject
             }
         }
+        VECTOR3 => MValue::Vector3(read_cpp_vector3(
+            unsafe { sdk::get_mvalue_vector3(cpp_wrapper) }.within_unique_ptr(),
+        )),
+        VECTOR2 => MValue::Vector2(read_cpp_vector2(
+            unsafe { sdk::get_mvalue_vector2(cpp_wrapper) }.within_unique_ptr(),
+        )),
         _ => {
             logger::error!("[deserialize_mvalue] unknown mvalue type: {mvalue_type:?}");
             MValue::None

@@ -656,4 +656,15 @@ pub fn main() {
     dbg!(veh.dimension());
     dbg!(veh.set_dimension(1));
     dbg!(veh.dimension());
+
+    // vector2 & vector3 mvalue
+
+    alt::events::on("test".to_string(), |args| {
+        dbg!(args);
+        Ok(())
+    });
+
+    dbg!(alt::events::emit!("test", alt::Vector3::new(0.0, 1.0, 2.0)));
+
+    dbg!(alt::events::emit!("test", alt::Vector2::new(0.0, 1.0)));
 }
