@@ -409,6 +409,10 @@ void trigger_client_event_for_all(std::string event_name, MValueWrapperVec mvalu
 
 namespace base_object
 {
+    alt::IWorldObject* to_world_object(alt::IBaseObject* base_object) {
+        return dynamic_cast<alt::IWorldObject*>(base_object);
+    }
+
     alt::IEntity* to_entity(alt::IBaseObject* base_object) {
         return dynamic_cast<alt::IEntity*>(base_object);
     }

@@ -1,4 +1,4 @@
-use alt::{BaseObject, Entity};
+pub use alt::prelude::*;
 use autocxx::prelude::*;
 
 #[alt::main(crate_name = "alt")]
@@ -49,61 +49,61 @@ pub fn main() {
     //     alt::log_warn!("example resource on_server_started controller: {controller:?}");
     // });
 
-    alt::events::on_player_connect(|alt::events::PlayerConnectController { player }| {
-        {
-            let mut player = player.try_borrow_mut().unwrap();
-            let id = player.id().unwrap();
+    // alt::events::on_player_connect(|alt::events::PlayerConnectController { player }| {
+    //     {
+    //         let mut player = player.try_borrow_mut().unwrap();
+    //         let id = player.id().unwrap();
 
-            alt::log!(
-                "example resource on_player_connect name: {} id: {}",
-                player.name().unwrap(),
-                id
-            );
-            // TEST
-            unsafe {
-                alt::ffi::IPlayer::Spawn(
-                    player.ptr_mut().to_player().unwrap(),
-                    0 as f32,
-                    0 as f32,
-                    72 as f32,
-                    0,
-                );
-                alt::ffi::IPlayer::SetModel(
-                    player.ptr_mut().to_player().unwrap(),
-                    alt::hash("mp_f_freemode_01"),
-                );
-            }
-        }
+    //         alt::log!(
+    //             "example resource on_player_connect name: {} id: {}",
+    //             player.name().unwrap(),
+    //             id
+    //         );
+    //         // TEST
+    //         unsafe {
+    //             alt::ffi::IPlayer::Spawn(
+    //                 player.ptr_mut().to_player().unwrap(),
+    //                 0 as f32,
+    //                 0 as f32,
+    //                 72 as f32,
+    //                 0,
+    //             );
+    //             alt::ffi::IPlayer::SetModel(
+    //                 player.ptr_mut().to_player().unwrap(),
+    //                 alt::hash("mp_f_freemode_01"),
+    //             );
+    //         }
+    //     }
 
-        // alt::set_interval(
-        //     move || {
-        //         let vehicle = alt::Vehicle::new(alt::hash("sultan2"), 0.into(), 0.into()).unwrap();
-        //         alt::events::emit_client!(
-        //             "test",
-        //             player.clone(),
-        //             "test",
-        //             123u64,
-        //             alt::events::list![vehicle].unwrap()
-        //         )
-        //         .unwrap();
+    //     // alt::set_interval(
+    //     //     move || {
+    //     //         let vehicle = alt::Vehicle::new(alt::hash("sultan2"), 0.into(), 0.into()).unwrap();
+    //     //         alt::events::emit_client!(
+    //     //             "test",
+    //     //             player.clone(),
+    //     //             "test",
+    //     //             123u64,
+    //     //             alt::events::list![vehicle].unwrap()
+    //     //         )
+    //     //         .unwrap();
 
-        //         alt::events::emit_client!("test", player.clone()).unwrap();
+    //     //         alt::events::emit_client!("test", player.clone()).unwrap();
 
-        //         alt::events::emit_all_clients!("test", "emit all", player.clone()).unwrap();
+    //     //         alt::events::emit_all_clients!("test", "emit all", player.clone()).unwrap();
 
-        //         alt::events::emit_some_clients!(
-        //             "test",
-        //             vec![player.clone()],
-        //             "emit some",
-        //             player.clone()
-        //         )
-        //         .unwrap();
+    //     //         alt::events::emit_some_clients!(
+    //     //             "test",
+    //     //             vec![player.clone()],
+    //     //             "emit some",
+    //     //             player.clone()
+    //     //         )
+    //     //         .unwrap();
 
-        //         Ok(())
-        //     },
-        //     1000,
-        // );
-    });
+    //     //         Ok(())
+    //     //     },
+    //     //     1000,
+    //     // );
+    // });
 
     // alt::events::on_player_disconnect(|PlayerDisconnectController { player, reason }| {
     //     let player = player.borrow();
@@ -246,401 +246,414 @@ pub fn main() {
     // );
 
     // debug log should be printed that event is unhandled
-    alt::events::emit!("lalallaall", alt::events::dict! { "test" => true }.unwrap()).unwrap();
+    // alt::events::emit!("lalallaall", alt::events::dict! { "test" => true }.unwrap()).unwrap();
 
-    alt::events::on_client("test".to_string(), |player_rc, args| {
-        alt::log!("on client test player: {}", player_rc.try_borrow()?.name()?);
-        alt::log!("on client test args: {:#?}", args);
+    // alt::events::on_client("test".to_string(), |player_rc, args| {
+    //     alt::log!("on client test player: {}", player_rc.try_borrow()?.name()?);
+    //     alt::log!("on client test args: {:#?}", args);
 
-        let mut player = player_rc.try_borrow_mut()?;
+    //     let mut player = player_rc.try_borrow_mut()?;
 
-        let model = alt::hash("mp_m_freemode_01");
+    //     let model = alt::hash("mp_m_freemode_01");
 
-        // player.spawn(model, alt::Vector3::new(0f32, 0f32, 72f32))?;
+    //     // player.spawn(model, alt::Vector3::new(0f32, 0f32, 72f32))?;
 
-        dbg!(player.model()? == model);
+    //     dbg!(player.model()? == model);
 
-        unsafe {
-            alt::ffi::IPlayer::GiveWeapon(
-                player.ptr_mut().to_player()?,
-                alt::hash("weapon_pistol"),
-                100,
-                true,
-            )
-        }
+    //     unsafe {
+    //         alt::ffi::IPlayer::GiveWeapon(
+    //             player.ptr_mut().to_player()?,
+    //             alt::hash("weapon_pistol"),
+    //             100,
+    //             true,
+    //         )
+    //     }
 
-        let player_inter = player_rc.clone();
-        let mut hour = 0;
+    //     let player_inter = player_rc.clone();
+    //     let mut hour = 0;
 
-        let veh = alt::Vehicle::new(
-            alt::hash("sultan3"),
-            alt::Vector3::new(0f32, 0f32, 72f32),
-            0.into(),
-        )
-        .unwrap();
+    //     let veh = alt::Vehicle::new(
+    //         alt::hash("sultan3"),
+    //         alt::Vector3::new(0f32, 0f32, 72f32),
+    //         0.into(),
+    //     )
+    //     .unwrap();
 
-        unsafe {
-            let ptr = player.ptr_mut().to_player()?;
-            alt::ffi::IPlayer::SetHeadBlendData(ptr, 1, 2, 3, 4, 5, 6, 7.0, 8.0, 9.0);
+    //     unsafe {
+    //         let ptr = player.ptr_mut().to_player()?;
+    //         alt::ffi::IPlayer::SetHeadBlendData(ptr, 1, 2, 3, 4, 5, 6, 7.0, 8.0, 9.0);
 
-            let data = alt::ffi::IPlayer::GetHeadBlendData(ptr).within_unique_ptr();
+    //         let data = alt::ffi::IPlayer::GetHeadBlendData(ptr).within_unique_ptr();
 
-            let out_shape_first_id = Box::into_raw(Box::new(0u32));
-            let out_shape_second_id = Box::into_raw(Box::new(0u32));
-            let out_shape_third_id = Box::into_raw(Box::new(0u32));
-            let out_skin_first_id = Box::into_raw(Box::new(0u32));
-            let out_skin_second_id = Box::into_raw(Box::new(0u32));
-            let out_skin_third_id = Box::into_raw(Box::new(0u32));
-            let out_shape_mix = Box::into_raw(Box::new(0f32));
-            let out_skin_mix = Box::into_raw(Box::new(0f32));
-            let out_third_mix = Box::into_raw(Box::new(0f32));
-            alt::ffi::read_alt_head_blend_data(
-                data.as_ref().unwrap(),
-                out_shape_first_id,
-                out_shape_second_id,
-                out_shape_third_id,
-                out_skin_first_id,
-                out_skin_second_id,
-                out_skin_third_id,
-                out_shape_mix,
-                out_skin_mix,
-                out_third_mix,
-            );
+    //         let out_shape_first_id = Box::into_raw(Box::new(0u32));
+    //         let out_shape_second_id = Box::into_raw(Box::new(0u32));
+    //         let out_shape_third_id = Box::into_raw(Box::new(0u32));
+    //         let out_skin_first_id = Box::into_raw(Box::new(0u32));
+    //         let out_skin_second_id = Box::into_raw(Box::new(0u32));
+    //         let out_skin_third_id = Box::into_raw(Box::new(0u32));
+    //         let out_shape_mix = Box::into_raw(Box::new(0f32));
+    //         let out_skin_mix = Box::into_raw(Box::new(0f32));
+    //         let out_third_mix = Box::into_raw(Box::new(0f32));
+    //         alt::ffi::read_alt_head_blend_data(
+    //             data.as_ref().unwrap(),
+    //             out_shape_first_id,
+    //             out_shape_second_id,
+    //             out_shape_third_id,
+    //             out_skin_first_id,
+    //             out_skin_second_id,
+    //             out_skin_third_id,
+    //             out_shape_mix,
+    //             out_skin_mix,
+    //             out_third_mix,
+    //         );
 
-            dbg!(
-                *out_shape_first_id,
-                *out_shape_second_id,
-                *out_shape_third_id,
-                *out_skin_first_id,
-                *out_skin_second_id,
-                *out_skin_third_id,
-                *out_shape_mix,
-                *out_skin_mix,
-                *out_third_mix
-            );
+    //         dbg!(
+    //             *out_shape_first_id,
+    //             *out_shape_second_id,
+    //             *out_shape_third_id,
+    //             *out_skin_first_id,
+    //             *out_skin_second_id,
+    //             *out_skin_third_id,
+    //             *out_shape_mix,
+    //             *out_skin_mix,
+    //             *out_third_mix
+    //         );
 
-            alt::ffi::IPlayer::SetHeadOverlay(ptr, 8, 3, 0.3);
-            alt::ffi::IPlayer::SetHeadOverlayColor(ptr, 8, 2, 2, 1);
+    //         alt::ffi::IPlayer::SetHeadOverlay(ptr, 8, 3, 0.3);
+    //         alt::ffi::IPlayer::SetHeadOverlayColor(ptr, 8, 2, 2, 1);
 
-            let overlay = alt::ffi::IPlayer::GetHeadOverlay(ptr, 8).within_unique_ptr();
+    //         let overlay = alt::ffi::IPlayer::GetHeadOverlay(ptr, 8).within_unique_ptr();
 
-            let out_index = Box::into_raw(Box::new(0));
-            let out_opacity = Box::into_raw(Box::new(0.0));
-            let out_color_type = Box::into_raw(Box::new(0));
-            let out_color_index = Box::into_raw(Box::new(0));
-            let out_second_color_index = Box::into_raw(Box::new(0));
+    //         let out_index = Box::into_raw(Box::new(0));
+    //         let out_opacity = Box::into_raw(Box::new(0.0));
+    //         let out_color_type = Box::into_raw(Box::new(0));
+    //         let out_color_index = Box::into_raw(Box::new(0));
+    //         let out_second_color_index = Box::into_raw(Box::new(0));
 
-            alt::ffi::read_alt_head_overlay(
-                overlay.as_ref().unwrap(),
-                out_index,
-                out_opacity,
-                out_color_type,
-                out_color_index,
-                out_second_color_index,
-            );
+    //         alt::ffi::read_alt_head_overlay(
+    //             overlay.as_ref().unwrap(),
+    //             out_index,
+    //             out_opacity,
+    //             out_color_type,
+    //             out_color_index,
+    //             out_second_color_index,
+    //         );
 
-            println!("head overlay read:");
+    //         println!("head overlay read:");
 
-            dbg!(
-                *out_index,
-                *out_opacity,
-                *out_color_type,
-                *out_color_index,
-                *out_second_color_index
-            );
+    //         dbg!(
+    //             *out_index,
+    //             *out_opacity,
+    //             *out_color_type,
+    //             *out_color_index,
+    //             *out_second_color_index
+    //         );
 
-            alt::ffi::IPlayer::SetLocalMetaData(
-                ptr,
-                "test",
-                alt::ffi::create_mvalue_bool(true).within_unique_ptr(),
-            );
-            alt::ffi::IPlayer::SetLocalMetaData(
-                ptr,
-                "test2",
-                alt::ffi::create_mvalue_bool(false).within_unique_ptr(),
-            );
+    //         alt::ffi::IPlayer::SetLocalMetaData(
+    //             ptr,
+    //             "test",
+    //             alt::ffi::create_mvalue_bool(true).within_unique_ptr(),
+    //         );
+    //         alt::ffi::IPlayer::SetLocalMetaData(
+    //             ptr,
+    //             "test2",
+    //             alt::ffi::create_mvalue_bool(false).within_unique_ptr(),
+    //         );
 
-            dbg!(alt::ffi::IPlayer::GetLocalMetaDataKeys(ptr));
-        }
+    //         dbg!(alt::ffi::IPlayer::GetLocalMetaDataKeys(ptr));
+    //     }
 
-        // alt::set_interval(
-        //     move || {
-        //         let mut player = player_inter.try_borrow_mut()?;
-        //         hour = if hour == 23 { 0 } else { hour + 1 };
-        //         unsafe {
-        //             alt::ffi::IPlayer::GiveWeapon(
-        //                 player.ptr_mut().to_player()?,
-        //                 alt::hash("weapon_smg"),
-        //                 100,
-        //                 true,
-        //             );
-        //             alt::ffi::IPlayer::SetDateTime(
-        //                 player.ptr_mut().to_player()?,
-        //                 0.into(),
-        //                 0.into(),
-        //                 0.into(),
-        //                 hour.into(),
-        //                 0.into(),
-        //                 0.into(),
-        //             );
+    //     // alt::set_interval(
+    //     //     move || {
+    //     //         let mut player = player_inter.try_borrow_mut()?;
+    //     //         hour = if hour == 23 { 0 } else { hour + 1 };
+    //     //         unsafe {
+    //     //             alt::ffi::IPlayer::GiveWeapon(
+    //     //                 player.ptr_mut().to_player()?,
+    //     //                 alt::hash("weapon_smg"),
+    //     //                 100,
+    //     //                 true,
+    //     //             );
+    //     //             alt::ffi::IPlayer::SetDateTime(
+    //     //                 player.ptr_mut().to_player()?,
+    //     //                 0.into(),
+    //     //                 0.into(),
+    //     //                 0.into(),
+    //     //                 hour.into(),
+    //     //                 0.into(),
+    //     //                 0.into(),
+    //     //             );
 
-        //             alt::ffi::IPlayer::SetLocalMetaData(
-        //                 player.ptr_mut().to_player()?,
-        //                 "test",
-        //                 alt::ffi::create_mvalue_bool(true).within_unique_ptr(),
-        //             );
+    //     //             alt::ffi::IPlayer::SetLocalMetaData(
+    //     //                 player.ptr_mut().to_player()?,
+    //     //                 "test",
+    //     //                 alt::ffi::create_mvalue_bool(true).within_unique_ptr(),
+    //     //             );
 
-        //             alt::ffi::IPlayer::SetProps(player.ptr_mut().to_player()?, 6, 0, 1);
+    //     //             alt::ffi::IPlayer::SetProps(player.ptr_mut().to_player()?, 6, 0, 1);
 
-        //             let prop = alt::ffi::IPlayer::GetProps(player.ptr_mut().to_player()?, 6)
-        //                 .within_unique_ptr();
+    //     //             let prop = alt::ffi::IPlayer::GetProps(player.ptr_mut().to_player()?, 6)
+    //     //                 .within_unique_ptr();
 
-        //             let out_drawable = Box::into_raw(Box::new(0u16));
-        //             let out_texture = Box::into_raw(Box::new(0u8));
+    //     //             let out_drawable = Box::into_raw(Box::new(0u16));
+    //     //             let out_texture = Box::into_raw(Box::new(0u8));
 
-        //             alt::ffi::read_alt_prop(prop.as_ref().unwrap(), out_drawable, out_texture);
-        //             alt::log_error!(
-        //                 "prop drawable: {:?} texture: {:?}",
-        //                 *out_drawable,
-        //                 *out_texture
-        //             );
+    //     //             alt::ffi::read_alt_prop(prop.as_ref().unwrap(), out_drawable, out_texture);
+    //     //             alt::log_error!(
+    //     //                 "prop drawable: {:?} texture: {:?}",
+    //     //                 *out_drawable,
+    //     //                 *out_texture
+    //     //             );
 
-        //             let clothes_result =
-        //                 alt::ffi::IPlayer::SetClothes(player.ptr_mut().to_player()?, 11, 1, 1, 0);
-        //             dbg!(clothes_result);
+    //     //             let clothes_result =
+    //     //                 alt::ffi::IPlayer::SetClothes(player.ptr_mut().to_player()?, 11, 1, 1, 0);
+    //     //             dbg!(clothes_result);
 
-        //             let cloth = alt::ffi::IPlayer::GetClothes(player.ptr_mut().to_player()?, 11)
-        //                 .within_unique_ptr();
+    //     //             let cloth = alt::ffi::IPlayer::GetClothes(player.ptr_mut().to_player()?, 11)
+    //     //                 .within_unique_ptr();
 
-        //             let out_drawable = Box::into_raw(Box::new(0u16));
-        //             let out_texture = Box::into_raw(Box::new(0u8));
-        //             let out_palette = Box::into_raw(Box::new(0u8));
+    //     //             let out_drawable = Box::into_raw(Box::new(0u16));
+    //     //             let out_texture = Box::into_raw(Box::new(0u8));
+    //     //             let out_palette = Box::into_raw(Box::new(0u8));
 
-        //             alt::ffi::read_alt_cloth(
-        //                 cloth.as_ref().unwrap(),
-        //                 out_drawable,
-        //                 out_texture,
-        //                 out_palette,
-        //             );
-        //             alt::log_error!(
-        //                 "cloth drawable: {:?} texture: {:?} palette: {:?}",
-        //                 *out_drawable,
-        //                 *out_texture,
-        //                 *out_palette
-        //             );
+    //     //             alt::ffi::read_alt_cloth(
+    //     //                 cloth.as_ref().unwrap(),
+    //     //                 out_drawable,
+    //     //                 out_texture,
+    //     //                 out_palette,
+    //     //             );
+    //     //             alt::log_error!(
+    //     //                 "cloth drawable: {:?} texture: {:?} palette: {:?}",
+    //     //                 *out_drawable,
+    //     //                 *out_texture,
+    //     //                 *out_palette
+    //     //             );
 
-        //             let dlc_clothes_result = alt::ffi::IPlayer::SetDlcClothes(
-        //                 player.ptr_mut().to_player()?,
-        //                 11,
-        //                 3,
-        //                 2,
-        //                 0,
-        //                 0,
-        //             );
-        //             dbg!(dlc_clothes_result);
+    //     //             let dlc_clothes_result = alt::ffi::IPlayer::SetDlcClothes(
+    //     //                 player.ptr_mut().to_player()?,
+    //     //                 11,
+    //     //                 3,
+    //     //                 2,
+    //     //                 0,
+    //     //                 0,
+    //     //             );
+    //     //             dbg!(dlc_clothes_result);
 
-        //             let dlc_cloth =
-        //                 alt::ffi::IPlayer::GetDlcClothes(player.ptr_mut().to_player()?, 11)
-        //                     .within_unique_ptr();
+    //     //             let dlc_cloth =
+    //     //                 alt::ffi::IPlayer::GetDlcClothes(player.ptr_mut().to_player()?, 11)
+    //     //                     .within_unique_ptr();
 
-        //             let out_drawable = Box::into_raw(Box::new(0u16));
-        //             let out_texture = Box::into_raw(Box::new(0u8));
-        //             let out_palette = Box::into_raw(Box::new(0u8));
-        //             let out_dlc = Box::into_raw(Box::new(0u32));
+    //     //             let out_drawable = Box::into_raw(Box::new(0u16));
+    //     //             let out_texture = Box::into_raw(Box::new(0u8));
+    //     //             let out_palette = Box::into_raw(Box::new(0u8));
+    //     //             let out_dlc = Box::into_raw(Box::new(0u32));
 
-        //             alt::ffi::read_alt_dlc_cloth(
-        //                 dlc_cloth.as_ref().unwrap(),
-        //                 out_drawable,
-        //                 out_texture,
-        //                 out_palette,
-        //                 out_dlc,
-        //             );
-        //             alt::log_error!(
-        //                 "dlc cloth drawable: {:?} texture: {:?} palette: {:?} dlc: {:?}",
-        //                 *out_drawable,
-        //                 *out_texture,
-        //                 *out_palette,
-        //                 *out_dlc
-        //             );
+    //     //             alt::ffi::read_alt_dlc_cloth(
+    //     //                 dlc_cloth.as_ref().unwrap(),
+    //     //                 out_drawable,
+    //     //                 out_texture,
+    //     //                 out_palette,
+    //     //                 out_dlc,
+    //     //             );
+    //     //             alt::log_error!(
+    //     //                 "dlc cloth drawable: {:?} texture: {:?} palette: {:?} dlc: {:?}",
+    //     //                 *out_drawable,
+    //     //                 *out_texture,
+    //     //                 *out_palette,
+    //     //                 *out_dlc
+    //     //             );
 
-        //             let aim_pos = alt::ffi::IPlayer::GetAimPos(player.ptr_mut().to_player()?)
-        //                 .within_unique_ptr();
+    //     //             let aim_pos = alt::ffi::IPlayer::GetAimPos(player.ptr_mut().to_player()?)
+    //     //                 .within_unique_ptr();
 
-        //             let out_x = Box::into_raw(Box::new(0f32));
-        //             let out_y = Box::into_raw(Box::new(0f32));
-        //             let out_z = Box::into_raw(Box::new(0f32));
-        //             alt::ffi::read_vector3(aim_pos.as_ref().unwrap(), out_x, out_y, out_z);
+    //     //             let out_x = Box::into_raw(Box::new(0f32));
+    //     //             let out_y = Box::into_raw(Box::new(0f32));
+    //     //             let out_z = Box::into_raw(Box::new(0f32));
+    //     //             alt::ffi::read_vector3(aim_pos.as_ref().unwrap(), out_x, out_y, out_z);
 
-        //             alt::log_error!("aim pos: {:?} {:?} {:?}", *out_x, *out_y, *out_z,);
+    //     //             alt::log_error!("aim pos: {:?} {:?} {:?}", *out_x, *out_y, *out_z,);
 
-        //             let left = Box::into_raw(Box::new(false));
-        //             let right = Box::into_raw(Box::new(false));
-        //             let front = Box::into_raw(Box::new(false));
-        //             let back = Box::into_raw(Box::new(false));
-        //             alt::ffi::IVehicle::GetNeonActive(
-        //                 veh.borrow_mut().ptr_mut().to_vehicle()?,
-        //                 left,
-        //                 right,
-        //                 front,
-        //                 back,
-        //             );
-        //             alt::log!(
-        //                 "neon left: {:?}, right: {:?}, front: {:?}, back: {:?}",
-        //                 *left,
-        //                 *right,
-        //                 *front,
-        //                 *back
-        //             );
+    //     //             let left = Box::into_raw(Box::new(false));
+    //     //             let right = Box::into_raw(Box::new(false));
+    //     //             let front = Box::into_raw(Box::new(false));
+    //     //             let back = Box::into_raw(Box::new(false));
+    //     //             alt::ffi::IVehicle::GetNeonActive(
+    //     //                 veh.borrow_mut().ptr_mut().to_vehicle()?,
+    //     //                 left,
+    //     //                 right,
+    //     //                 front,
+    //     //                 back,
+    //     //             );
+    //     //             alt::log!(
+    //     //                 "neon left: {:?}, right: {:?}, front: {:?}, back: {:?}",
+    //     //                 *left,
+    //     //                 *right,
+    //     //                 *front,
+    //     //                 *back
+    //     //             );
 
-        //             alt::ffi::IVehicle::SetNeonColor(
-        //                 veh.borrow_mut().ptr_mut().to_vehicle()?,
-        //                 rand::random(),
-        //                 rand::random(),
-        //                 rand::random(),
-        //                 255,
-        //             );
+    //     //             alt::ffi::IVehicle::SetNeonColor(
+    //     //                 veh.borrow_mut().ptr_mut().to_vehicle()?,
+    //     //                 rand::random(),
+    //     //                 rand::random(),
+    //     //                 rand::random(),
+    //     //                 255,
+    //     //             );
 
-        //             alt::ffi::IVehicle::SetNeonActive(
-        //                 veh.borrow_mut().ptr_mut().to_vehicle()?,
-        //                 !*left,
-        //                 !*right,
-        //                 !*front,
-        //                 !*back,
-        //             );
+    //     //             alt::ffi::IVehicle::SetNeonActive(
+    //     //                 veh.borrow_mut().ptr_mut().to_vehicle()?,
+    //     //                 !*left,
+    //     //                 !*right,
+    //     //                 !*front,
+    //     //                 !*back,
+    //     //             );
 
-        //             alt::ffi::IVehicle::SetPrimaryColorRGB(
-        //                 veh.borrow_mut().ptr_mut().to_vehicle()?,
-        //                 255,
-        //                 0,
-        //                 0,
-        //                 255,
-        //             );
+    //     //             alt::ffi::IVehicle::SetPrimaryColorRGB(
+    //     //                 veh.borrow_mut().ptr_mut().to_vehicle()?,
+    //     //                 255,
+    //     //                 0,
+    //     //                 0,
+    //     //                 255,
+    //     //             );
 
-        //             alt::ffi::IVehicle::SetSecondaryColorRGB(
-        //                 veh.borrow_mut().ptr_mut().to_vehicle()?,
-        //                 255,
-        //                 0,
-        //                 255,
-        //                 255,
-        //             );
+    //     //             alt::ffi::IVehicle::SetSecondaryColorRGB(
+    //     //                 veh.borrow_mut().ptr_mut().to_vehicle()?,
+    //     //                 255,
+    //     //                 0,
+    //     //                 255,
+    //     //                 255,
+    //     //             );
 
-        //             let rgba = alt::ffi::IVehicle::GetSecondaryColorRGB(
-        //                 veh.borrow_mut().ptr_mut().to_vehicle()?,
-        //             );
+    //     //             let rgba = alt::ffi::IVehicle::GetSecondaryColorRGB(
+    //     //                 veh.borrow_mut().ptr_mut().to_vehicle()?,
+    //     //             );
 
-        //             let out_r = Box::into_raw(Box::from(0u8));
-        //             let out_g = Box::into_raw(Box::from(0u8));
-        //             let out_b = Box::into_raw(Box::from(0u8));
-        //             let out_a = Box::into_raw(Box::from(0u8));
-        //             alt::ffi::read_rgba(
-        //                 rgba.within_unique_ptr().as_ref().unwrap(),
-        //                 out_r,
-        //                 out_g,
-        //                 out_b,
-        //                 out_a,
-        //             );
+    //     //             let out_r = Box::into_raw(Box::from(0u8));
+    //     //             let out_g = Box::into_raw(Box::from(0u8));
+    //     //             let out_b = Box::into_raw(Box::from(0u8));
+    //     //             let out_a = Box::into_raw(Box::from(0u8));
+    //     //             alt::ffi::read_rgba(
+    //     //                 rgba.within_unique_ptr().as_ref().unwrap(),
+    //     //                 out_r,
+    //     //                 out_g,
+    //     //                 out_b,
+    //     //                 out_a,
+    //     //             );
 
-        //             alt::log!(
-        //                 "GetSecondaryColorRGB rgba {:?}, {:?}, {:?}, {:?}",
-        //                 *out_r,
-        //                 *out_g,
-        //                 *out_b,
-        //                 *out_a
-        //             );
+    //     //             alt::log!(
+    //     //                 "GetSecondaryColorRGB rgba {:?}, {:?}, {:?}, {:?}",
+    //     //                 *out_r,
+    //     //                 *out_g,
+    //     //                 *out_b,
+    //     //                 *out_a
+    //     //             );
 
-        //             // alt::ffi::IPlayer::Spawn(
-        //             //     player.ptr_mut().to_player()?,
-        //             //     hour as f32,
-        //             //     0 as f32,
-        //             //     72 as f32,
-        //             //     0,
-        //             // );
+    //     //             // alt::ffi::IPlayer::Spawn(
+    //     //             //     player.ptr_mut().to_player()?,
+    //     //             //     hour as f32,
+    //     //             //     0 as f32,
+    //     //             //     72 as f32,
+    //     //             //     0,
+    //     //             // );
 
-        //             // let driver =
-        //             //     alt::ffi::IVehicle_GetDriver(veh.borrow_mut().ptr_mut().to_vehicle()?);
-        //             // alt::log!(
-        //             //     "vehicle driver: {:?} {:?}",
-        //             //     driver,
-        //             //     driver == player.ptr_mut().to_player()?
-        //             // );
+    //     //             // let driver =
+    //     //             //     alt::ffi::IVehicle_GetDriver(veh.borrow_mut().ptr_mut().to_vehicle()?);
+    //     //             // alt::log!(
+    //     //             //     "vehicle driver: {:?} {:?}",
+    //     //             //     driver,
+    //     //             //     driver == player.ptr_mut().to_player()?
+    //     //             // );
 
-        //             // let velocity =
-        //             //     alt::ffi::IVehicle_GetVelocity(veh.borrow_mut().ptr_mut().to_vehicle()?)
-        //             //         .within_unique_ptr();
-        //             // alt::log_error!(
-        //             //     "veh velocity: {:?} {:?} {:?}",
-        //             //     alt::ffi::read_vector3_x(velocity.as_ref().unwrap()),
-        //             //     alt::ffi::read_vector3_y(velocity.as_ref().unwrap()),
-        //             //     alt::ffi::read_vector3_z(velocity.as_ref().unwrap()),
-        //             // );
-        //             // alt::events::emit!(
-        //             //     "js-veh-velocity",
-        //             //     alt::events::dict!("kek" => "kek").unwrap()
-        //             // )
-        //             // .unwrap();
+    //     //             // let velocity =
+    //     //             //     alt::ffi::IVehicle_GetVelocity(veh.borrow_mut().ptr_mut().to_vehicle()?)
+    //     //             //         .within_unique_ptr();
+    //     //             // alt::log_error!(
+    //     //             //     "veh velocity: {:?} {:?} {:?}",
+    //     //             //     alt::ffi::read_vector3_x(velocity.as_ref().unwrap()),
+    //     //             //     alt::ffi::read_vector3_y(velocity.as_ref().unwrap()),
+    //     //             //     alt::ffi::read_vector3_z(velocity.as_ref().unwrap()),
+    //     //             // );
+    //     //             // alt::events::emit!(
+    //     //             //     "js-veh-velocity",
+    //     //             //     alt::events::dict!("kek" => "kek").unwrap()
+    //     //             // )
+    //     //             // .unwrap();
 
-        //             alt::ffi::IPlayer::SetHeadOverlay(ptr, overlayID, index, opacity)
-        //         }
-        //         Ok(())
-        //     },
-        //     700,
-        // );
+    //     //             alt::ffi::IPlayer::SetHeadOverlay(ptr, overlayID, index, opacity)
+    //     //         }
+    //     //         Ok(())
+    //     //     },
+    //     //     700,
+    //     // );
 
-        Ok(())
-    });
+    //     Ok(())
+    // });
 
-    alt::events::on_console_command(
-        |alt::events::ConsoleCommandController { name, args: _args }| {
-            if name != "weapon" {
-                return;
-            }
-            alt::log!("weapon cmd");
+    // alt::events::on_console_command(
+    //     |alt::events::ConsoleCommandController { name, args: _args }| {
+    //         if name != "weapon" {
+    //             return;
+    //         }
+    //         alt::log!("weapon cmd");
 
-            let player = alt::Player::get_by_id(0).unwrap();
-            let mut player = player.borrow_mut();
+    //         let player = alt::Player::get_by_id(0).unwrap();
+    //         let mut player = player.borrow_mut();
 
-            unsafe {
-                let ptr = player.ptr_mut().to_player().unwrap();
+    //         unsafe {
+    //             let ptr = player.ptr_mut().to_player().unwrap();
 
-                let smg = alt::hash("weapon_smg");
-                alt::ffi::IPlayer::GiveWeapon(ptr, smg, 100, true);
-                alt::ffi::IPlayer::SetWeaponTintIndex(ptr, smg, 3);
+    //             let smg = alt::hash("weapon_smg");
+    //             alt::ffi::IPlayer::GiveWeapon(ptr, smg, 100, true);
+    //             alt::ffi::IPlayer::SetWeaponTintIndex(ptr, smg, 3);
 
-                let pistol = alt::hash("weapon_pistol");
-                alt::ffi::IPlayer::GiveWeapon(ptr, pistol, 100, true);
-                alt::ffi::IPlayer::AddWeaponComponent(ptr, pistol, 0xD7391086);
-                alt::ffi::IPlayer::AddWeaponComponent(ptr, pistol, 0xED265A1C);
-                // alt::ffi::IPlayer::RemoveWeaponComponent(ptr, pistol, 0xED265A1C);
+    //             let pistol = alt::hash("weapon_pistol");
+    //             alt::ffi::IPlayer::GiveWeapon(ptr, pistol, 100, true);
+    //             alt::ffi::IPlayer::AddWeaponComponent(ptr, pistol, 0xD7391086);
+    //             alt::ffi::IPlayer::AddWeaponComponent(ptr, pistol, 0xED265A1C);
+    //             // alt::ffi::IPlayer::RemoveWeaponComponent(ptr, pistol, 0xED265A1C);
 
-                alt::set_timeout(
-                    move || {
-                        let current_weapon = alt::ffi::IPlayer::GetCurrentWeapon(ptr);
-                        let components = alt::ffi::IPlayer::GetCurrentWeaponComponents(ptr);
-                        dbg!(current_weapon, current_weapon == pistol);
-                        dbg!(0xD7391086u32);
-                        dbg!(0xED265A1Cu32);
-                        dbg!(components);
+    //             alt::set_timeout(
+    //                 move || {
+    //                     let current_weapon = alt::ffi::IPlayer::GetCurrentWeapon(ptr);
+    //                     let components = alt::ffi::IPlayer::GetCurrentWeaponComponents(ptr);
+    //                     dbg!(current_weapon, current_weapon == pistol);
+    //                     dbg!(0xD7391086u32);
+    //                     dbg!(0xED265A1Cu32);
+    //                     dbg!(components);
 
-                        let weapons = alt::ffi::IPlayer::GetWeapons(ptr);
-                        for w in weapons.iter() {
-                            let out_hash = Box::into_raw(Box::new(0));
-                            let out_tint_index = Box::into_raw(Box::new(0));
-                            alt::ffi::read_weapon(w, out_hash, out_tint_index);
-                            dbg!(
-                                *out_hash,
-                                *out_tint_index,
-                                *out_hash == alt::hash("weapon_pistol"),
-                                *out_hash == alt::hash("weapon_smg"),
-                            );
-                            let comps = alt::ffi::read_weapon_components(w);
-                            dbg!(comps);
-                        }
+    //                     let weapons = alt::ffi::IPlayer::GetWeapons(ptr);
+    //                     for w in weapons.iter() {
+    //                         let out_hash = Box::into_raw(Box::new(0));
+    //                         let out_tint_index = Box::into_raw(Box::new(0));
+    //                         alt::ffi::read_weapon(w, out_hash, out_tint_index);
+    //                         dbg!(
+    //                             *out_hash,
+    //                             *out_tint_index,
+    //                             *out_hash == alt::hash("weapon_pistol"),
+    //                             *out_hash == alt::hash("weapon_smg"),
+    //                         );
+    //                         let comps = alt::ffi::read_weapon_components(w);
+    //                         dbg!(comps);
+    //                     }
 
-                        Ok(())
-                    },
-                    1000,
-                );
-            }
-        },
-    );
+    //                     Ok(())
+    //                 },
+    //                 1000,
+    //             );
+    //         }
+    //     },
+    // );
+
+    // world object stuff
+
+    let veh = alt::Vehicle::new(alt::hash("sultan3"), 0.into(), 0.into()).unwrap();
+    let veh = veh.borrow();
+
+    dbg!(veh.pos());
+    dbg!(veh.set_pos(1.into()));
+    dbg!(veh.pos());
+
+    dbg!(veh.dimension());
+    dbg!(veh.set_dimension(1));
+    dbg!(veh.dimension());
 }

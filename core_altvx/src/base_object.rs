@@ -41,6 +41,10 @@ impl BaseObjectPointer {
         self.0 = value;
     }
 
+    pub fn to_world_object(&self) -> anyhow::Result<*mut sdk::alt::IWorldObject> {
+        convert_ptr_to!(self, sdk::base_object::to_world_object)
+    }
+
     pub fn to_entity(&self) -> anyhow::Result<*mut sdk::alt::IEntity> {
         convert_ptr_to!(self, sdk::base_object::to_entity)
     }

@@ -3,6 +3,7 @@ use crate::{
     entity::{Entity, EntityId, EntityWrapper},
     impl_base_object_for,
     vector::Vector3,
+    world_object::WorldObject,
 };
 use altv_sdk::ffi as sdk;
 use std::{cell::RefCell, rc::Rc};
@@ -35,6 +36,7 @@ impl Player {
 }
 
 impl_base_object_for!(Player);
+impl WorldObject for Player {}
 impl Entity for Player {}
 
 #[allow(clippy::not_unsafe_ptr_arg_deref)]

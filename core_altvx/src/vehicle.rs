@@ -4,6 +4,7 @@ use crate::{
     impl_base_object_for,
     resource::Resource,
     vector::Vector3,
+    world_object::WorldObject,
 };
 use altv_sdk::ffi as sdk;
 use std::{
@@ -49,6 +50,7 @@ impl Vehicle {
 }
 
 impl_base_object_for!(Vehicle);
+impl WorldObject for Vehicle {}
 impl Entity for Vehicle {}
 
 pub type VehicleContainer = Rc<RefCell<Vehicle>>;

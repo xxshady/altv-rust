@@ -2,12 +2,12 @@ use std::{collections::HashMap, fmt::Debug};
 
 use altv_sdk::ffi as sdk;
 
-use crate::{base_object::BaseObject, player::PlayerContainer, vehicle::VehicleContainer};
+use crate::{player::PlayerContainer, vehicle::VehicleContainer, world_object::WorldObject};
 
 pub type RawEntityPointer = *mut sdk::alt::IEntity;
 pub type EntityId = u16;
 
-pub trait Entity: BaseObject {
+pub trait Entity: WorldObject {
     fn id(&self) -> anyhow::Result<EntityId> {
         Ok(unsafe { sdk::IEntity::GetID(self.ptr().to_entity()?) })
     }
