@@ -1,4 +1,4 @@
-use crate::{base_object::BaseObject, vector::Vector3};
+use crate::{base_object::BaseObject, helpers::read_cpp_vector3, vector::Vector3};
 use altv_sdk::ffi as sdk;
 use autocxx::prelude::*;
 use std::fmt::Debug;
@@ -7,16 +7,9 @@ pub type RawWorldObjectPointer = *mut sdk::alt::IWorldObject;
 
 pub trait WorldObject: BaseObject {
     fn pos(&self) -> anyhow::Result<Vector3> {
-        let cpp_vector = unsafe { sdk::IWorldObject::GetPosition(self.ptr().to_world_object()?) }
-            .within_unique_ptr();
-
-        let out_x = Box::into_raw(Box::new(0f32));
-        let out_y = Box::into_raw(Box::new(0f32));
-        let out_z = Box::into_raw(Box::new(0f32));
-        unsafe {
-            sdk::read_vector3(cpp_vector.as_ref().unwrap(), out_x, out_y, out_z);
-            Ok(Vector3::new(*out_x, *out_y, *out_z))
-        }
+        Ok(read_cpp_vector3(unsafe {
+            sdk::IWorldObject::GetPosition(self.ptr().to_world_object()?).within_unique_ptr()
+        }))
     }
 
     fn set_pos(&self, pos: Vector3) -> anyhow::Result<()> {

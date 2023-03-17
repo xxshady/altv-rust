@@ -650,7 +650,7 @@ pub fn main() {
     let veh = veh.borrow();
 
     dbg!(veh.pos());
-    dbg!(veh.set_pos(1.into()));
+    dbg!(veh.set_pos(alt::Vector3::new(1.0, 2.0, 3.0)));
     dbg!(veh.pos());
 
     dbg!(veh.dimension());
