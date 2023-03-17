@@ -21,16 +21,16 @@ impl Player {
     }
 
     pub fn name(&self) -> anyhow::Result<String> {
-        Ok(unsafe { sdk::get_player_name(self.ptr.to_player()?) }.to_string())
+        Ok(unsafe { sdk::IPlayer::GetName(self.ptr.to_player()?) }.to_string())
     }
 
     pub fn spawn(&self, model: u32, pos: Vector3) -> anyhow::Result<()> {
         self.set_model(model)?;
-        Ok(unsafe { sdk::spawn_player(self.ptr.to_player()?, pos.x(), pos.y(), pos.z()) })
+        Ok(unsafe { sdk::IPlayer::Spawn(self.ptr.to_player()?, pos.x(), pos.y(), pos.z(), 0) })
     }
 
     pub fn set_model(&self, model: u32) -> anyhow::Result<()> {
-        Ok(unsafe { sdk::set_player_model(self.ptr.to_player()?, model) })
+        Ok(unsafe { sdk::IPlayer::SetModel(self.ptr.to_player()?, model) })
     }
 }
 

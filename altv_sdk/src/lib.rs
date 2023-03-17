@@ -7,8 +7,42 @@ pub mod ffi {
 
     include_cpp! {
         #include "alt_bridge.h"
+        #include "alt_classes/ICore.h"
+        #include "alt_classes/IBaseObject.h"
+        #include "alt_classes/IWorldObject.h"
+        #include "alt_classes/IEntity.h"
+        #include "alt_classes/IPlayer.h"
+        #include "alt_classes/IVehicle.h"
+        #include "alt_classes/IColShape.h"
+        #include "alt_classes/IBlip.h"
+        #include "alt_classes/ICheckpoint.h"
+        #include "alt_classes/CEvent.h"
+        #include "alt_classes/CConsoleCommandEvent.h"
+        #include "alt_classes/CServerScriptEvent.h"
+        #include "alt_classes/CClientScriptEvent.h"
+        #include "alt_classes/CPlayerConnectEvent.h"
+        #include "alt_classes/CPlayerDisconnectEvent.h"
 
         name!(alt_bridge)
+
+        generate_ns!("ICore")
+        generate_ns!("IBaseObject")
+        generate_ns!("IWorldObject")
+        generate_ns!("IEntity")
+        generate_ns!("IPlayer")
+        generate_ns!("IVehicle")
+        generate_ns!("IColShape")
+        generate_ns!("IBlip")
+        generate_ns!("ICheckpoint")
+        generate_ns!("CEvent")
+        generate_ns!("CConsoleCommandEvent")
+        generate_ns!("CServerScriptEvent")
+        generate_ns!("CClientScriptEvent")
+        generate_ns!("CPlayerConnectEvent")
+        generate_ns!("CPlayerDisconnectEvent")
+
+        // defined in alt_bridge
+        generate_ns!("events")
 
         generate!("set_alt_core")
         generate!("get_alt_core")
@@ -51,46 +85,44 @@ pub mod ffi {
         generate!("trigger_client_event_for_some")
         generate!("trigger_client_event_for_all")
         generate!("trigger_local_event")
-        generate!("toggle_event_type")
-        generate!("get_event_type")
-        generate!("get_event_player_target")
-        generate!("get_event_reason")
-        generate!("get_event_console_command_name")
-        generate!("get_event_console_command_args")
-        generate!("get_any_script_event_name")
-        generate!("get_any_script_event_args")
 
-        // base_object conversions
-        generate!("convert_base_object_to_entity")
-        generate!("convert_player_to_entity")
-        generate!("convert_base_object_to_player")
-        generate!("convert_player_to_base_object")
-        generate!("convert_vehicle_to_entity")
-        generate!("convert_base_object_to_vehicle")
-        generate!("convert_vehicle_to_base_object")
+        generate_ns!("base_object")
+        generate_ns!("world_object")
+        generate_ns!("entity")
+        generate_ns!("player")
+        generate_ns!("vehicle")
 
-        // base_object
-        generate!("get_base_object_type")
-        generate!("destroy_base_object")
+        // alt::Prop
+        generate!("read_alt_prop")
+        // alt::DlcProp
+        generate!("read_alt_dlc_prop")
 
-        // entity
-        generate!("get_entity_id")
-        generate!("get_entity_model")
+        // alt::Cloth
+        generate!("read_alt_cloth")
+        // alt::DlcCloth
+        generate!("read_alt_dlc_cloth")
 
-        // vehicle
-        generate!("create_vehicle")
-        generate!("get_vehicle_primary_color")
-        generate!("set_vehicle_primary_color")
+        // alt::HeadOverlay
+        generate!("read_alt_head_overlay")
 
-        // player
-        generate!("get_player_name")
-        generate!("spawn_player")
-        generate!("set_player_model")
+        // alt::HeadBlendData
+        generate!("read_alt_head_blend_data")
 
-        // logging
-        generate!("log_colored")
-        generate!("log_warn")
-        generate!("log_error")
+        // Vector3Wrapper
+        generate!("Vector3Wrapper")
+        generate!("read_vector3")
+
+        // Vector2Wrapper
+        generate!("Vector2Wrapper")
+        generate!("read_vector2")
+
+        // RGBAWrapper
+        generate!("RGBAWrapper")
+        generate!("read_rgba")
+
+        generate!("WeaponWrapper")
+        generate!("read_weapon")
+        generate!("read_weapon_components")
 
         generate!("create_player_vec")
         generate!("push_to_player_vec")

@@ -1,3 +1,5 @@
+use altv_sdk::ffi::alt::IPlayer;
+
 use crate::{
     base_object::BaseObject,
     player::{self, PlayerContainer},
@@ -18,18 +20,19 @@ macro_rules! get_entity_by_id {
     };
 }
 
-pub fn get_player_from_event(
-    event: *const altv_sdk::ffi::alt::CEvent,
+pub fn get_player_from_event<T>(
+    event: *const T,
     resource: &Resource,
+    get_target: unsafe fn(*const T) -> *mut IPlayer,
 ) -> PlayerContainer {
     let raw_ptr = {
-        let player_raw_ptr = unsafe { altv_sdk::ffi::get_event_player_target(event) };
+        let player_raw_ptr = unsafe { get_target(event) };
 
         if player_raw_ptr.is_null() {
             panic!("get_event_player_target returned null player ptr");
         }
 
-        unsafe { altv_sdk::ffi::convert_player_to_base_object(player_raw_ptr) }
+        unsafe { altv_sdk::ffi::player::to_base_object(player_raw_ptr) }
     };
 
     let players = resource.player_base_object_map.borrow();

@@ -93,25 +93,29 @@ impl EventManager {
 
         // i'm just too retarded to make generic function...
         macro_rules! prepare_script_event_if_handled {
-            ($manager: expr) => {{
-                let event_name = unsafe { sdk::get_any_script_event_name(event) };
-                let event_name = event_name.as_ref().unwrap().to_string();
-                if $manager.is_event_handled(&event_name) {
-                    let args = unsafe { sdk::get_any_script_event_args(event) };
-                    let deserialized_args = mvalue::deserialize_mvalue_args(args, resource);
-                    Some((event_name, deserialized_args))
-                } else {
-                    logger::debug!("script event name: {event_name} ({event_type:?}) is unhandled");
-                    None
+            ($manager: expr, $sdk_class: ident) => {{
+                paste::paste! {
+                    let converted_event = unsafe { sdk::events::[<to_ $sdk_class>](event) };
+                    let event_name = unsafe { sdk::$sdk_class::GetName(converted_event) };
+                    let event_name = event_name.as_ref().unwrap().to_string();
+                    if $manager.is_event_handled(&event_name) {
+                        let args = unsafe { sdk::$sdk_class::GetArgs(converted_event) };
+                        let deserialized_args = mvalue::deserialize_mvalue_args(args, resource);
+                        Some((event_name, deserialized_args))
+                    } else {
+                        logger::debug!("script event name: {event_name} ({event_type:?}) is unhandled");
+                        None
+                    }
                 }
             }};
         }
 
         match event_type {
             SDKEventType::SERVER_SCRIPT_EVENT => {
-                if let Some((event_name, deserialized_args)) =
-                    prepare_script_event_if_handled!(resource.local_script_events.borrow())
-                {
+                if let Some((event_name, deserialized_args)) = prepare_script_event_if_handled!(
+                    resource.local_script_events.borrow(),
+                    CServerScriptEvent
+                ) {
                     resource
                         .local_script_events
                         .borrow_mut()
@@ -119,12 +123,17 @@ impl EventManager {
                 }
             }
             SDKEventType::CLIENT_SCRIPT_EVENT => {
-                if let Some((event_name, deserialized_args)) =
-                    prepare_script_event_if_handled!(resource.client_script_events.borrow())
-                {
+                if let Some((event_name, deserialized_args)) = prepare_script_event_if_handled!(
+                    resource.client_script_events.borrow(),
+                    CClientScriptEvent
+                ) {
                     resource.client_script_events.borrow_mut().handle_event(
                         &event_name,
-                        get_player_from_event(event, resource),
+                        get_player_from_event(
+                            unsafe { sdk::events::to_CClientScriptEvent(event) },
+                            resource,
+                            sdk::CClientScriptEvent::GetTarget,
+                        ),
                         &deserialized_args,
                     );
                 }
@@ -138,19 +147,35 @@ impl EventManager {
                         match h {
                             ServerStarted(callback) => callback(ServerStartedController {}),
                             PlayerConnect(callback) => callback(PlayerConnectController {
-                                player: get_player_from_event(event, resource),
+                                player: get_player_from_event(
+                                    unsafe { sdk::events::to_CPlayerConnectEvent(event) },
+                                    resource,
+                                    sdk::CPlayerConnectEvent::GetTarget,
+                                ),
                             }),
                             PlayerDisconnect(callback) => callback(PlayerDisconnectController {
-                                player: get_player_from_event(event, resource),
-                                reason: unsafe { sdk::get_event_reason(event) }.to_string(),
+                                player: get_player_from_event(
+                                    unsafe { sdk::events::to_CPlayerDisconnectEvent(event) },
+                                    resource,
+                                    sdk::CPlayerDisconnectEvent::GetTarget,
+                                ),
+                                reason: unsafe {
+                                    sdk::CPlayerDisconnectEvent::GetReason(
+                                        sdk::events::to_CPlayerDisconnectEvent(event),
+                                    )
+                                }
+                                .to_string(),
                             }),
-                            ConsoleCommand(callback) => callback(ConsoleCommandController {
-                                name: unsafe { sdk::get_event_console_command_name(event) }
-                                    .to_string(),
-                                args: unsafe { sdk::get_event_console_command_args(event) }
-                                    .iter()
-                                    .map(|s| s.to_string())
-                                    .collect(),
+                            ConsoleCommand(callback) => callback({
+                                let event = unsafe { sdk::events::to_CConsoleCommandEvent(event) };
+                                ConsoleCommandController {
+                                    name: unsafe { sdk::CConsoleCommandEvent::GetName(event) }
+                                        .to_string(),
+                                    args: unsafe { sdk::CConsoleCommandEvent::GetArgs(event) }
+                                        .iter()
+                                        .map(|s| s.to_string())
+                                        .collect(),
+                                }
                             }),
                             _ => todo!(),
                         }
@@ -178,7 +203,7 @@ impl EventManager {
 
             self.enabled_sdk_events.insert(sdk_type);
             unsafe {
-                sdk::toggle_event_type(sdk_type as u16, true);
+                sdk::ICore::ToggleEvent(sdk_type as u16, true);
             }
         }
 

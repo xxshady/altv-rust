@@ -2,19 +2,19 @@ use altv_sdk::ffi as sdk;
 
 pub fn log(str: &str) {
     unsafe {
-        sdk::log_colored(str);
+        sdk::ICore::LogColored(str, std::ptr::null_mut());
     }
 }
 
 pub fn log_error(str: &str) {
     unsafe {
-        sdk::log_error(str);
+        sdk::ICore::LogError(str, std::ptr::null_mut());
     }
 }
 
 pub fn log_warn(str: &str) {
     unsafe {
-        sdk::log_warn(str);
+        sdk::ICore::LogWarning(str, std::ptr::null_mut());
     }
 }
 

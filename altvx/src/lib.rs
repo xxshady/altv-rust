@@ -22,10 +22,14 @@ pub use core_altvx::logging::log;
 pub use core_altvx::logging::log_error;
 pub use core_altvx::logging::log_warn;
 
+pub use core_altvx::base_object::BaseObject;
 pub use core_altvx::entity::Entity;
 pub use core_altvx::player::Player;
 pub use core_altvx::vector::Vector3;
 pub use core_altvx::vehicle::Vehicle;
+
+// TEST
+pub use altv_sdk::ffi;
 
 pub use anyhow;
 

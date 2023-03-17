@@ -6,20 +6,35 @@
 #include <utility>
 #include "shared.h"
 #include "runtime.h"
+#include "unordered_set"
 
 using ResourceOnRemoveBaseObjectCallback = shared::ResourceOnRemoveBaseObjectCallback;
 using ResourceStartCallback = shared::ResourceStartCallback;
 
 using StdStringPtr = std::unique_ptr<std::string>;
-using StdStringVector = std::vector<std::string>;
 
 using u8 = uint8_t;
 using u16 = uint16_t;
 using u32 = uint32_t;
 using u64 = uint64_t;
+
+using i8 = int8_t;
+using i16 = int16_t;
+using i32 = int32_t;
+using cpp_int = int; // why? for some reason sdk uses int and int32_t at the same time
 using i64 = int64_t;
+
 using f32 = float;
 using f64 = double;
+
+using BaseObjectType = uint8_t;
+using ColShapeType = uint8_t;
+using BlipType = uint8_t;
+using WeaponDamageEventBodyPart = int8_t;
+using EventType = uint16_t;
+
+// used for const std::string& return values in altv event classes
+using StdStringClone = std::string;
 
 void set_alt_core(alt::ICore* core) {
     alt::ICore::SetInstance(core);
@@ -113,6 +128,77 @@ void push_to_player_vec(PlayerVector& player_vec, alt::IPlayer* player) {
     PlayerPtrWrapper wrapper;
     wrapper.ptr = std::make_shared<alt::IPlayer*>(player);
     player_vec.push_back(wrapper.clone());
+}
+
+class Vector3Wrapper {
+public:
+    f32 x = 0;
+    f32 y = 0;
+    f32 z = 0;
+
+    Vector3Wrapper(f32 _x, f32 _y, f32 _z): x(_x), y(_y), z(_z) {}
+};
+
+void read_vector3(const Vector3Wrapper& vector3, f32* out_x, f32* out_y, f32* out_z) {
+    *out_x = vector3.x;
+    *out_y = vector3.y;
+    *out_z = vector3.z;
+}
+
+class Vector2Wrapper {
+public:
+    f32 x = 0;
+    f32 y = 0;
+
+    Vector2Wrapper(f32 _x, f32 _y): x(_x), y(_y) {}
+};
+
+void read_vector2(const Vector3Wrapper& vector3, f32* out_x, f32* out_y) {
+    *out_x = vector3.x;
+    *out_y = vector3.y;
+}
+
+class RGBAWrapper {
+public:
+    u8 r = 0;
+    u8 g = 0;
+    u8 b = 0;
+    u8 a = 0;
+
+    RGBAWrapper(u8 _r, u8 _g, u8 _b, u8 _a): r(_r), g(_g), b(_b), a(_a) {}
+};
+
+void read_rgba(const RGBAWrapper& rgba, u8* out_r, u8* out_g, u8* out_b, u8* out_a) {
+    *out_r = rgba.r;
+    *out_g = rgba.g;
+    *out_b = rgba.b;
+    *out_a = rgba.a;
+}
+
+class WeaponWrapper {
+public:
+    u32 hash = 0;
+    u8 tint_index = 0;
+    std::vector<u32> components {};
+
+    WeaponWrapper(u32 _hash, u8 _tint_index, std::unordered_set<u32> _components):
+        hash(_hash),
+        tint_index(_tint_index)
+    {
+        this->components.reserve(_components.size());
+        for (const auto& comp : _components) {
+            this->components.push_back(comp);
+        }
+    }
+};
+
+void read_weapon(const WeaponWrapper& weapon, u32* out_hash, u8* out_tint_index) {
+    *out_hash = weapon.hash;
+    *out_tint_index = weapon.tint_index;
+}
+
+std::vector<u32> read_weapon_components(const WeaponWrapper& weapon) {
+    return weapon.components;
 }
 
 using MValueWrapperVec = std::vector<MValueWrapper>;
@@ -321,203 +407,150 @@ void trigger_client_event_for_all(std::string event_name, MValueWrapperVec mvalu
     alt::ICore::Instance().TriggerClientEventForAll(event_name, args);
 }
 
-void toggle_event_type(u16 event_type, bool state) {
-    alt::ICore::Instance().ToggleEvent(static_cast<alt::CEvent::Type>(event_type), state);
-}
-
-u16 get_event_type(const alt::CEvent* event) {
-    return static_cast<u16>(event->GetType());
-}
-
-alt::IPlayer* get_event_player_target(const alt::CEvent* event) {
-    auto type = event->GetType();
-    switch (type) {
-    case alt::CEvent::Type::PLAYER_CONNECT:
-        return static_cast<const alt::CPlayerConnectEvent*>(event)->GetTarget();
-    case alt::CEvent::Type::PLAYER_DISCONNECT:
-        return static_cast<const alt::CPlayerDisconnectEvent*>(event)->GetTarget();
-    case alt::CEvent::Type::CLIENT_SCRIPT_EVENT:
-        return static_cast<const alt::CClientScriptEvent*>(event)->GetTarget();
-    default:
-        alt::ICore::Instance().LogError(
-            "get_event_player_target unknown event type: " +
-            std::to_string(static_cast<u16>(type))
-        );
-        return nullptr;
-    }
-}
-
-StdStringPtr get_event_reason(const alt::CEvent* event) {
-    auto type = event->GetType();
-
-    switch (type) {
-    case alt::CEvent::Type::PLAYER_DISCONNECT:
-        return std::make_unique<std::string>(std::string{
-            static_cast<const alt::CPlayerDisconnectEvent*>(event)->GetReason()
-        });
-    default:
-        alt::ICore::Instance().LogError(
-            "get_event_reason unknown event type: " +
-            std::to_string(static_cast<u16>(type))
-        );
-        return std::make_unique<std::string>(std::string{ "" });
-        break;
-    }
-}
-
-StdStringPtr get_event_console_command_name(const alt::CEvent* event) {
-    assert(event->GetType() == alt::CEvent::Type::CONSOLE_COMMAND_EVENT);
-    return std::make_unique<std::string>(std::string{
-        static_cast<const alt::CConsoleCommandEvent*>(event)->GetName()
-    });
-}
-
-std::unique_ptr<StdStringVector> get_event_console_command_args(const alt::CEvent* event) {
-    assert(event->GetType() == alt::CEvent::Type::CONSOLE_COMMAND_EVENT);
-    return std::make_unique<StdStringVector>(
-        static_cast<const alt::CConsoleCommandEvent*>(event)->GetArgs()
-    );
-}
-
-StdStringPtr get_any_script_event_name(const alt::CEvent* event) {
-    auto type = event->GetType();
-    switch (type) {
-    case alt::CEvent::Type::SERVER_SCRIPT_EVENT:
-        return std::make_unique<std::string>(std::string {
-            static_cast<const alt::CServerScriptEvent*>(event)->GetName()
-        });
-    case alt::CEvent::Type::CLIENT_SCRIPT_EVENT:
-        return std::make_unique<std::string>(std::string {
-            static_cast<const alt::CClientScriptEvent*>(event)->GetName()
-        });
-    default:
-        assert(("get_any_script_event_name expected server or client script event", false));
-    }
-}
-
-MValueWrapperVec get_any_script_event_args(const alt::CEvent* event) {
-    auto type = event->GetType();
-    alt::MValueArgs args;
-    switch (type) {
-    case alt::CEvent::Type::SERVER_SCRIPT_EVENT:
-        args = static_cast<const alt::CServerScriptEvent*>(event)->GetArgs();
-        break;
-    case alt::CEvent::Type::CLIENT_SCRIPT_EVENT:
-        args = static_cast<const alt::CClientScriptEvent*>(event)->GetArgs();
-        break;
-    default:
-        assert(("get_any_script_event_args expected server or client script event", false));
+namespace base_object
+{
+    alt::IEntity* to_entity(alt::IBaseObject* base_object) {
+        return dynamic_cast<alt::IEntity*>(base_object);
     }
 
-    auto mvalue_vec = create_mvalue_vec();
-    auto size = args.GetSize();
-
-    for (alt::Size i = 0; i < size; ++i) {
-        MValueWrapper wrapper;
-        wrapper.ptr = std::make_shared<alt::MValueConst>(args[i]);
-        mvalue_vec.push_back(wrapper.clone());
+    alt::IVehicle* to_vehicle(alt::IBaseObject* base_object) {
+        return dynamic_cast<alt::IVehicle*>(base_object);
     }
 
-    return mvalue_vec;
+    alt::IPlayer* to_player(alt::IBaseObject* base_object) {
+        return dynamic_cast<alt::IPlayer*>(base_object);
+    }
+} // namespace base_object
+
+namespace world_object
+{
+
+} // namespace base_object
+
+namespace entity
+{
+
+} // namespace entity
+
+namespace player
+{
+    alt::IEntity* to_entity(alt::IPlayer* player) {
+        return static_cast<alt::IEntity*>(player);
+    }
+
+    // player conversions
+    alt::IBaseObject* to_base_object(alt::IPlayer* player) {
+        return static_cast<alt::IBaseObject*>(player);
+    }
+} // namespace player
+
+namespace vehicle
+{
+    alt::IBaseObject* to_base_object(alt::IVehicle* vehicle) {
+        return static_cast<alt::IBaseObject*>(vehicle);
+    }
+
+    alt::IEntity* to_entity(alt::IVehicle* vehicle) {
+        return static_cast<alt::IEntity*>(vehicle);
+    }
+} // namespace vehicle
+
+void read_alt_prop(const alt::Prop& prop, u16* out_drawable, u8* out_texture) {
+    *out_drawable = prop.drawableId;
+    *out_texture = prop.textureId;
 }
 
-void log_colored(std::string str) {
-    return alt::ICore::Instance().LogColored(str);
+void read_alt_dlc_prop(const alt::DlcProp& prop, u8* out_drawable, u8* out_texture, u32* out_dlc) {
+    *out_drawable = prop.drawableId;
+    *out_texture = prop.textureId;
+    *out_dlc = prop.dlc;
 }
 
-void log_error(std::string str) {
-    return alt::ICore::Instance().LogError(str);
+void read_alt_cloth(const alt::Cloth& cloth, u16* out_drawable, u8* out_texture, u8* out_palette) {
+    *out_drawable = cloth.drawableId;
+    *out_texture = cloth.textureId;
+    *out_palette = cloth.paletteId;
 }
 
-void log_warn(std::string str) {
-    return alt::ICore::Instance().LogWarning(str);
+void read_alt_dlc_cloth(const alt::DlcCloth& cloth, u16* out_drawable, u8* out_texture, u8* out_palette, u32* out_dlc) {
+    *out_drawable = cloth.drawableId;
+    *out_texture = cloth.textureId;
+    *out_palette = cloth.paletteId;
+    *out_dlc = cloth.dlc;
 }
 
-// entity conversions
-alt::IEntity* convert_base_object_to_entity(alt::IBaseObject* base_object) {
-    return dynamic_cast<alt::IEntity*>(base_object);
-}
-
-// vehicle conversions
-alt::IBaseObject* convert_vehicle_to_base_object(alt::IVehicle* vehicle) {
-    return static_cast<alt::IBaseObject*>(vehicle);
-}
-
-alt::IVehicle* convert_base_object_to_vehicle(alt::IBaseObject* base_object) {
-    return dynamic_cast<alt::IVehicle*>(base_object);
-}
-
-alt::IEntity* convert_vehicle_to_entity(alt::IVehicle* vehicle) {
-    return static_cast<alt::IEntity*>(vehicle);
-}
-
-// player conversions
-alt::IBaseObject* convert_player_to_base_object(alt::IPlayer* player) {
-    return static_cast<alt::IBaseObject*>(player);
-}
-
-alt::IPlayer* convert_base_object_to_player(alt::IBaseObject* base_object) {
-    return dynamic_cast<alt::IPlayer*>(base_object);
-}
-
-alt::IEntity* convert_player_to_entity(alt::IPlayer* player) {
-    return static_cast<alt::IEntity*>(player);
-}
-
-// vehicle
-alt::IVehicle* create_vehicle(
-    u32 model,
-    f32 x, f32 y, f32 z,
-    f32 rx, f32 ry, f32 rz
+void read_alt_head_overlay(
+    const alt::HeadOverlay& overlay,
+    u8* out_index,
+    f32* out_opacity,
+    u8* out_color_type,
+    u8* out_color_index,
+    u8* out_second_color_index
 ) {
-    return alt::ICore::Instance().CreateVehicle(model, { x, y, z }, { rx, ry, rz });
+    *out_index = overlay.index;
+    *out_opacity = overlay.opacity;
+    *out_color_type = overlay.colorType;
+    *out_color_index = overlay.colorIndex;
+    *out_second_color_index = overlay.secondColorIndex;
 }
 
-void set_vehicle_primary_color(alt::IVehicle* vehicle, u8 color) {
-    vehicle->SetPrimaryColor(color);
+void read_alt_head_blend_data(
+    const alt::HeadBlendData& blend_data,
+    u32* out_shape_first_id,
+    u32* out_shape_second_id,
+    u32* out_shape_third_id,
+    u32* out_skin_first_id,
+    u32* out_skin_second_id,
+    u32* out_skin_third_id,
+    f32* out_shape_mix,
+    f32* out_skin_mix,
+    f32* out_third_mix
+) {
+    *out_shape_first_id = blend_data.shapeFirstID;
+    *out_shape_second_id = blend_data.shapeSecondID;
+    *out_shape_third_id = blend_data.shapeThirdID;
+    *out_skin_first_id = blend_data.skinFirstID;
+    *out_skin_second_id = blend_data.skinSecondID;
+    *out_skin_third_id = blend_data.skinThirdID;
+    *out_shape_mix = blend_data.shapeMix;
+    *out_skin_mix = blend_data.skinMix;
+    *out_third_mix = blend_data.thirdMix;
 }
 
-u8 get_vehicle_primary_color(const alt::IVehicle* vehicle) {
-    return vehicle->GetPrimaryColor();
-}
-
-u16 get_entity_id(alt::IEntity* entity) {
-    assert(entity != nullptr);
-    return entity->GetID();
-}
-
-u32 get_entity_model(const alt::IEntity* entity) {
-    return entity->GetModel();
-}
-
-void destroy_base_object(alt::IBaseObject* base_object) {
-    if (!base_object) {
-        alt::ICore::Instance().LogError("destroy_base_object nullptr base_object");
-        return;
+namespace events
+{
+    const alt::CConsoleCommandEvent* to_CConsoleCommandEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::CONSOLE_COMMAND_EVENT);
+        return static_cast<const alt::CConsoleCommandEvent*>(event);
     }
 
-    auto type = base_object->GetType();
-
-    alt::ICore::Instance().DestroyBaseObject(base_object);
-}
-
-u8 get_base_object_type(const alt::IBaseObject* base_object) {
-    if (!base_object) {
-        alt::ICore::Instance().LogError("get_base_object_type nullptr base_object");
-        return 255;
+    const alt::CServerScriptEvent* to_CServerScriptEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::SERVER_SCRIPT_EVENT);
+        return static_cast<const alt::CServerScriptEvent*>(event);
     }
-    return static_cast<u8>(base_object->GetType());
-}
 
-// player
-StdStringPtr get_player_name(const alt::IPlayer* player) {
-    return std::make_unique<std::string>(player->GetName());
-}
+    const alt::CClientScriptEvent* to_CClientScriptEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::CLIENT_SCRIPT_EVENT);
+        return static_cast<const alt::CClientScriptEvent*>(event);
+    }
 
-void spawn_player(alt::IPlayer* player, f32 x, f32 y, f32 z) {
-    player->Spawn({ x, y, z }, 0);
-}
+    const alt::CPlayerDisconnectEvent* to_CPlayerDisconnectEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::PLAYER_DISCONNECT);
+        return static_cast<const alt::CPlayerDisconnectEvent*>(event);
+    }
 
-void set_player_model(alt::IPlayer* player, u32 model) {
-    player->SetModel(model);
-}
+    const alt::CPlayerConnectEvent* to_CPlayerConnectEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::PLAYER_CONNECT);
+        return static_cast<const alt::CPlayerConnectEvent*>(event);
+    }
+
+    const alt::CColShapeEvent* to_CColShapeEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::COLSHAPE_EVENT);
+        return static_cast<const alt::CColShapeEvent*>(event);
+    }
+
+    const alt::CWeaponDamageEvent* to_CWeaponDamageEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::WEAPON_DAMAGE_EVENT);
+        return static_cast<const alt::CWeaponDamageEvent*>(event);
+    }
+} // namespace events

@@ -1,14 +1,10 @@
 [package]
-name = "example_resource"
+name = "cpp_codegen"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-alt = { path = "../altvx", package = "altvx" }
-rand = "0.8.5"
-autocxx = { workspace = true } # TEST
-
-[lib]
-crate-type = ["cdylib"]
+anyhow = { workspace = true }
+lazy_static = "1.4.0"

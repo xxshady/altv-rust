@@ -354,6 +354,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "cpp_codegen"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "lazy_static",
+]
+
+[[package]]
 name = "cxx"
 version = "1.0.91"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -418,6 +426,7 @@ name = "example_resource"
 version = "0.1.0"
 dependencies = [
  "altvx",
+ "autocxx",
  "rand",
 ]
 

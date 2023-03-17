@@ -11,6 +11,7 @@ members = [
     "altvx",
     "example_resource",
     "logger",
+    "cpp_codegen",
 ]
 
 [workspace.dependencies]

@@ -9,11 +9,11 @@ pub type EntityId = u16;
 
 pub trait Entity: BaseObject {
     fn id(&self) -> anyhow::Result<EntityId> {
-        Ok(unsafe { sdk::get_entity_id(self.ptr().to_entity()?) })
+        Ok(unsafe { sdk::IEntity::GetID(self.ptr().to_entity()?) })
     }
 
     fn model(&self) -> anyhow::Result<u32> {
-        Ok(unsafe { sdk::get_entity_model(self.ptr().to_entity()?) })
+        Ok(unsafe { sdk::IEntity::GetModel(self.ptr().to_entity()?) })
     }
 }
 
@@ -50,7 +50,7 @@ impl EntityManager {
     }
 
     pub fn on_destroy(&mut self, raw_ptr: RawEntityPointer) -> Option<EntityWrapper> {
-        let id = unsafe { sdk::get_entity_id(raw_ptr) };
+        let id = unsafe { sdk::IEntity::GetID(raw_ptr) };
         self.entities.remove(&id)
     }
 }

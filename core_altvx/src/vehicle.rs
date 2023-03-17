@@ -30,12 +30,12 @@ impl Vehicle {
     }
 
     pub fn set_secondary_color(&self, color: u8) -> anyhow::Result<()> {
-        unsafe { sdk::set_vehicle_primary_color(self.ptr.to_vehicle()?, color) };
+        unsafe { sdk::IVehicle::SetPrimaryColor(self.ptr.to_vehicle()?, color) };
         Ok(())
     }
 
     pub fn get_secondary_color(&self) -> anyhow::Result<u8> {
-        Ok(unsafe { sdk::get_vehicle_primary_color(self.ptr.to_vehicle()?) })
+        Ok(unsafe { sdk::IVehicle::GetPrimaryColor(self.ptr.to_vehicle()?) })
     }
 
     pub fn destroy(&mut self) -> anyhow::Result<()> {
@@ -59,14 +59,15 @@ pub fn create_vehicle(
     pos: Vector3,
     rot: Vector3,
 ) -> Option<VehicleContainer> {
-    let raw_ptr =
-        unsafe { sdk::create_vehicle(model, pos.x(), pos.y(), pos.z(), rot.x(), rot.y(), rot.z()) };
+    let raw_ptr = unsafe {
+        sdk::ICore::CreateVehicle(model, pos.x(), pos.y(), pos.z(), rot.x(), rot.y(), rot.z())
+    };
 
     if raw_ptr.is_null() {
         return None;
     }
 
-    let base_object_raw_ptr = unsafe { sdk::convert_vehicle_to_base_object(raw_ptr) };
+    let base_object_raw_ptr = unsafe { sdk::vehicle::to_base_object(raw_ptr) };
     let vehicle: VehicleContainer = create_vehicle_container(base_object_raw_ptr);
 
     base_objects.on_create(base_object_raw_ptr, vehicle.clone());

@@ -5,7 +5,7 @@ pub use anyhow;
 mod resource;
 use resource::Resource;
 
-mod base_object;
+pub mod base_object;
 mod base_object_maps;
 pub mod client_events;
 pub mod entity;

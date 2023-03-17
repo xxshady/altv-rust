@@ -75,7 +75,7 @@ extern "C" fn resource_on_event(full_main_path: &str, event: altv_sdk::CEventPtr
         panic!("resource_on_event event is null");
     }
 
-    let raw_type = unsafe { sdk::get_event_type(event) };
+    let raw_type = unsafe { sdk::CEvent::GetType(event) };
     logger::debug!("resource_on_event {raw_type:?}");
 
     let event_type = altv_sdk::EventType::from(raw_type).unwrap();
