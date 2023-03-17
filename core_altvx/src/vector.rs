@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub struct Vector3 {
     x: f32,
     y: f32,
