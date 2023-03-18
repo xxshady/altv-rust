@@ -57,13 +57,8 @@ lazy_static::lazy_static! {
         hash_map.insert("std::vector<uint32_t>", "std::vector<u32>");
         hash_map.insert("std::vector<std::string>", "std::vector<std::string>");
         hash_map.insert("std::vector<Weapon>", "std::vector<WeaponWrapper>");
-
-        // TODO: test
         hash_map.insert("std::vector<std::string>&", "std::vector<std::string>");
-
-        // TODO: test
         hash_map.insert("Rotation", "Vector3Wrapper");
-
         hash_map.insert("bool*", "bool*");
 
         hash_map
@@ -145,7 +140,6 @@ fn gen_default(class_name: &str, in_file: &str) {
 }
 
 fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) -> String>) {
-    let str_to_find = &format!("class {class_name}");
     let mut rust_functions_cpp_file = format!(
         "#pragma once\n\
         #define ALT_SERVER_API\n\
@@ -157,7 +151,7 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
     let mut cpp_method_to_rust = |method: String| match cpp_method_to_rust_compatible_func(
         class_name,
         method.clone(),
-        custom_method_caller, // TEST
+        custom_method_caller,
     ) {
         Ok(rust_func) => {
             rust_functions_cpp_file += &format!("{rust_func}\n");
@@ -169,15 +163,9 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
 
     let content = String::from_utf8(fs::read(in_file).unwrap()).unwrap();
 
-    // TODO: test this shit
-    // let idx = content.find(str_to_find).unwrap();
-    // let content = content.get((idx + str_to_find.len())..).unwrap();
-    // let start_idx = content.find("{").unwrap();
-    // let content = content.get(start_idx..).unwrap();
-    // let end_idx = content.find("}").unwrap();
-
     let mut cpp_if_directive = "";
     let mut multiline_method: String = "".to_string();
+
     for line in content.lines() {
         let mut line = line.trim();
         // dbg!(line);
@@ -249,7 +237,6 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
             continue;
         }
 
-        // TEST
         // println!("line: {line:#?}");
 
         if line.ends_with(",") {
