@@ -1,5 +1,6 @@
 use crate::{
     base_object::BaseObject,
+    base_object_maps::BaseObjectMap,
     helpers::{get_player_raw_ptr, read_cpp_vector2, read_cpp_vector3},
     player,
     resource::Resource,

@@ -457,7 +457,9 @@ namespace world_object
 
 namespace entity
 {
-
+    alt::IBaseObject* to_base_object(alt::IEntity* entity) {
+        return static_cast<alt::IBaseObject*>(entity);
+    }
 } // namespace entity
 
 namespace player
@@ -466,11 +468,16 @@ namespace player
         return static_cast<alt::IEntity*>(player);
     }
 
-    // player conversions
     alt::IBaseObject* to_base_object(alt::IPlayer* player) {
         return static_cast<alt::IBaseObject*>(player);
     }
 } // namespace player
+
+namespace col_shape {
+    alt::IBaseObject* to_base_object(alt::IColShape* col_shape) {
+        return static_cast<alt::IBaseObject*>(col_shape);
+    }
+} // colshape
 
 namespace vehicle
 {

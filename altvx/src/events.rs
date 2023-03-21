@@ -29,6 +29,19 @@ macro_rules! on_event {
     };
 }
 
+macro_rules! on_extra_event {
+    ($func_name: ident, $event_path: path, $controller: ty, $public_event: expr, $extra_type: path, $sdk_type: path) => {
+        pub fn $func_name(handler: impl FnMut($controller) + 'static) {
+            core_altvx::events::add_extra_handler(
+                $public_event,
+                $extra_type,
+                $sdk_type,
+                $event_path(Box::new(handler)),
+            );
+        }
+    };
+}
+
 on_event!(
     on_server_started,
     Event::ServerStarted,
@@ -59,4 +72,13 @@ on_event!(
     ConsoleCommandController,
     PublicEventType::ConsoleCommand,
     SDKEventType::CONSOLE_COMMAND_EVENT
+);
+
+on_extra_event!(
+    on_vehicle_enter_col_shape,
+    ExtraEvent::VehicleEnterColShape,
+    VehicleEnterColShapeController,
+    Event::ColShape,
+    ExtraEventType::VehicleEnterColShape,
+    SDKEventType::COLSHAPE_EVENT
 );

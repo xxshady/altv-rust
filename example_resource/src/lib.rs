@@ -59,7 +59,6 @@ pub fn main() {
     //             player.name().unwrap(),
     //             id
     //         );
-    //         // TEST
     //         unsafe {
     //             alt::ffi::IPlayer::Spawn(
     //                 player.ptr_mut().to_player().unwrap(),
@@ -646,25 +645,43 @@ pub fn main() {
 
     // world object stuff
 
-    let veh = alt::Vehicle::new(alt::hash("sultan3"), 0.into(), 0.into()).unwrap();
-    let veh = veh.borrow();
+    // let veh = alt::Vehicle::new(alt::hash("sultan3"), 0.into(), 0.into()).unwrap();
+    // let veh = veh.borrow();
 
-    dbg!(veh.pos());
-    dbg!(veh.set_pos(alt::Vector3::new(1.0, 2.0, 3.0)));
-    dbg!(veh.pos());
+    // dbg!(veh.pos());
+    // dbg!(veh.set_pos(alt::Vector3::new(1.0, 2.0, 3.0)));
+    // dbg!(veh.pos());
 
-    dbg!(veh.dimension());
-    dbg!(veh.set_dimension(1));
-    dbg!(veh.dimension());
+    // dbg!(veh.dimension());
+    // dbg!(veh.set_dimension(1));
+    // dbg!(veh.dimension());
 
     // vector2 & vector3 mvalue
 
-    alt::events::on("test".to_string(), |args| {
-        dbg!(args);
-        Ok(())
+    // alt::events::on("test".to_string(), |args| {
+    //     dbg!(args);
+    //     Ok(())
+    // });
+
+    // dbg!(alt::events::emit!("test", alt::Vector3::new(0.0, 1.0, 2.0)));
+
+    // dbg!(alt::events::emit!("test", alt::Vector2::new(0.0, 1.0)));
+
+    let col_shape = alt::ColShape::new_circle(0.into(), 10.0);
+
+    let veh = alt::Vehicle::new(alt::hash("sultan"), 0.into(), 0.into()).unwrap();
+    dbg!(veh);
+
+    alt::events::on_vehicle_enter_col_shape(|controller| {
+        alt::log!(
+            "on_vehicle_enter_col_shape: {:?}, {:?}",
+            controller.col_shape,
+            controller.vehicle
+        );
     });
 
-    dbg!(alt::events::emit!("test", alt::Vector3::new(0.0, 1.0, 2.0)));
+    // col_shape.borrow_mut().destroy().unwrap();
+    // col_shape.borrow_mut().destroy().unwrap();
 
-    dbg!(alt::events::emit!("test", alt::Vector2::new(0.0, 1.0)));
+    // alt::log!("colshape destroyed");
 }

@@ -1,11 +1,11 @@
 use crate::{
     base_object::BaseObject,
+    base_object_maps::BaseObjectMap,
     player::{self, PlayerContainer},
     resource::Resource,
     vector::{Vector2, Vector3},
 };
 use altv_sdk::ffi as sdk;
-use altv_sdk::ffi::alt::IPlayer;
 use autocxx::prelude::*;
 
 #[macro_export]
@@ -25,7 +25,7 @@ macro_rules! get_entity_by_id {
 pub fn get_player_from_event<T>(
     event: *const T,
     resource: &Resource,
-    get_target: unsafe fn(*const T) -> *mut IPlayer,
+    get_target: unsafe fn(*const T) -> *mut sdk::alt::IPlayer,
 ) -> PlayerContainer {
     let raw_ptr = {
         let player_raw_ptr = unsafe { get_target(event) };
@@ -34,7 +34,7 @@ pub fn get_player_from_event<T>(
             panic!("get_event_player_target returned null player ptr");
         }
 
-        unsafe { altv_sdk::ffi::player::to_base_object(player_raw_ptr) }
+        unsafe { sdk::player::to_base_object(player_raw_ptr) }
     };
 
     let players = resource.player_base_object_map.borrow();
@@ -43,7 +43,7 @@ pub fn get_player_from_event<T>(
 
 pub fn get_player_raw_ptr(
     player: player::PlayerContainer,
-) -> anyhow::Result<*mut altv_sdk::ffi::alt::IPlayer> {
+) -> anyhow::Result<*mut sdk::alt::IPlayer> {
     player.try_borrow_mut()?.ptr_mut().to_player()
 }
 

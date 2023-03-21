@@ -19,6 +19,7 @@ pub mod timers;
 pub mod vector;
 pub mod vehicle;
 pub mod world_object;
+pub mod col_shape;
 
 pub fn init(resource_handlers: &mut ResourceHandlers) {
     logger::init().unwrap();

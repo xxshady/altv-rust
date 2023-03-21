@@ -1,15 +1,3 @@
-pub fn get_base_object_type(
-    base_object: *const altv_sdk::ffi::alt::IBaseObject,
-) -> altv_sdk::BaseObjectType {
-    let raw_type = unsafe { altv_sdk::ffi::IBaseObject::GetType(base_object) };
-    if raw_type == 255 {
-        panic!("resource_on_create_base_object base_object type is invalid");
-    }
-
-    altv_sdk::BaseObjectType::from(raw_type)
-        .expect("failed to convert raw baseobj type to BaseObjectType")
-}
-
 #[macro_export]
 macro_rules! on_base_object_event {
     ($method_name: ident, $full_main_path: expr, $base_object: expr) => {
@@ -31,7 +19,7 @@ macro_rules! on_base_object_event {
                     panic!("{} base_object is null", stringified_method_name);
                 }
 
-                let base_object_type = helpers::get_base_object_type($base_object);
+                let base_object_type = altv_sdk::helpers::get_base_object_type($base_object);
 
                 logger::debug!(
                     "{} type: {:?}",

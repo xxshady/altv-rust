@@ -28,6 +28,7 @@ pub use core_altvx::logging::log_error;
 pub use core_altvx::logging::log_warn;
 
 pub use core_altvx::base_object::BaseObject;
+pub use core_altvx::col_shape::ColShape;
 pub use core_altvx::entity::Entity;
 pub use core_altvx::player::Player;
 pub use core_altvx::vector::Vector2;

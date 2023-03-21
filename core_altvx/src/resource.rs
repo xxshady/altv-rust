@@ -4,7 +4,9 @@ use std::{
 };
 
 use crate::{
-    base_object, base_object_maps,
+    base_object,
+    base_object_maps::{self, BaseObjectMap},
+    col_shape,
     entity::{self, Entity},
     events, player, script_events, timers, vehicle,
 };
@@ -27,6 +29,7 @@ pub struct Resource {
     pub client_script_events: RefCell<script_events::ClientEventManager>,
     pub player_base_object_map: RefCell<base_object_maps::PlayerBaseObjectMap>,
     pub vehicle_base_object_map: RefCell<base_object_maps::VehicleBaseObjectMap>,
+    pub col_shape_base_object_map: RefCell<base_object_maps::ColShapeBaseObjectMap>,
 }
 
 macro_rules! with_resource {
@@ -122,6 +125,14 @@ impl Resource {
 
                 player
             }
+            COLSHAPE => {
+                let col_shape = col_shape::create_col_shape_container(raw_ptr);
+                self.col_shape_base_object_map
+                    .borrow_mut()
+                    .add_base_object(Rc::clone(&col_shape));
+
+                col_shape
+            }
             _ => todo!(),
         };
 
@@ -157,6 +168,14 @@ impl Resource {
                 }
                 VEHICLE => {
                     remove_entity_from_pool(&base_object_borrow);
+                    self.vehicle_base_object_map
+                        .borrow_mut()
+                        .remove_base_object(base_object_borrow.ptr().get().unwrap());
+                }
+                COLSHAPE => {
+                    self.col_shape_base_object_map
+                        .borrow_mut()
+                        .remove_base_object(base_object_borrow.ptr().get().unwrap());
                 }
                 _ => todo!(),
             };
@@ -184,5 +203,9 @@ impl Resource {
     impl_borrow_mut_fn!(
         vehicle_base_object_map,
         base_object_maps::VehicleBaseObjectMap
+    );
+    impl_borrow_mut_fn!(
+        col_shape_base_object_map,
+        base_object_maps::ColShapeBaseObjectMap
     );
 }

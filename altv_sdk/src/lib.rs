@@ -22,6 +22,7 @@ pub mod ffi {
         #include "alt_classes/CClientScriptEvent.h"
         #include "alt_classes/CPlayerConnectEvent.h"
         #include "alt_classes/CPlayerDisconnectEvent.h"
+        #include "alt_classes/CColShapeEvent.h"
 
         name!(alt_bridge)
 
@@ -40,6 +41,7 @@ pub mod ffi {
         generate_ns!("CClientScriptEvent")
         generate_ns!("CPlayerConnectEvent")
         generate_ns!("CPlayerDisconnectEvent")
+        generate_ns!("CColShapeEvent")
 
         // defined in alt_bridge
         generate_ns!("events")
@@ -93,6 +95,7 @@ pub mod ffi {
         generate_ns!("entity")
         generate_ns!("player")
         generate_ns!("vehicle")
+        generate_ns!("col_shape")
 
         // alt::Prop
         generate!("read_alt_prop")
@@ -195,6 +198,8 @@ pub mod ffi {
 
 pub type CEventPtr = *const ffi::alt::CEvent;
 pub type IBaseObjectMutPtr = *mut ffi::alt::IBaseObject;
+
+pub mod helpers;
 
 // auto generated files:
 

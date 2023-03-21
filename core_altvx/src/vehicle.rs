@@ -1,5 +1,6 @@
 use crate::{
     base_object::{BaseObject, BaseObjectManager, BaseObjectPointer},
+    base_object_maps::BaseObjectMap,
     entity::{Entity, EntityId, EntityWrapper},
     impl_base_object_for,
     resource::Resource,
