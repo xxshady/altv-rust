@@ -8,70 +8,69 @@ const CPP_OUT_DIR: &str = "../altv_sdk/src/alt_classes";
 
 lazy_static::lazy_static! {
     static ref SUPPORTED_CPP_TYPES: HashMap<&'static str, &'static str> = {
-        let mut hash_map = HashMap::new();
-        hash_map.insert("void", "void");
-        hash_map.insert("bool", "bool");
+        HashMap::from([
+            ("void", "void"),
+            ("bool", "bool"),
 
-        hash_map.insert("uint8_t", "u8");
-        hash_map.insert("uint16_t", "u16");
-        hash_map.insert("uint32_t", "u32");
-        hash_map.insert("uint64_t", "u64");
+            ("uint8_t", "u8"),
+            ("uint16_t", "u16"),
+            ("uint32_t", "u32"),
+            ("uint64_t", "u64"),
 
-        hash_map.insert("int8_t", "i8");
-        hash_map.insert("int16_t", "i16");
-        hash_map.insert("int", "cpp_int"); // why? for some reason sdk uses int and uint32_t at the same time
-        hash_map.insert("int32_t", "i32");
-        hash_map.insert("int64_t", "i64");
+            ("int8_t", "i8"),
+            ("int16_t", "i16"),
+            ("int", "cpp_int"), // why? for some reason sdk uses int and uint32_t at the same time
+            ("int32_t", "i32"),
+            ("int64_t", "i64"),
 
-        hash_map.insert("float", "f32");
-        hash_map.insert("double", "f64");
+            ("float", "f32"),
+            ("double", "f64"),
 
-        hash_map.insert("std::string", "std::string");
-        hash_map.insert("std::string&", "StdStringClone");
-        hash_map.insert("MValue", "MValueMutWrapper");
-        hash_map.insert("MValueConst", "MValueWrapper");
-        hash_map.insert("MValueArgs&", "MValueWrapperVec");
+            ("std::string", "std::string"),
+            ("std::string&", "StdStringClone"),
+            ("MValue", "MValueMutWrapper"),
+            ("MValueConst", "MValueWrapper"),
+            ("MValueArgs&", "MValueWrapperVec"),
 
-        hash_map.insert("IBaseObject*", "alt::IBaseObject*");
-        hash_map.insert("IVehicle*", "alt::IVehicle*");
-        hash_map.insert("IEntity*", "alt::IEntity*");
-        hash_map.insert("IPlayer*", "alt::IPlayer*");
-        hash_map.insert("IColShape*", "alt::IColShape*");
-        hash_map.insert("IResource*", "alt::IResource*");
-        hash_map.insert("ICore*", "alt::ICore*");
+            ("IBaseObject*", "alt::IBaseObject*"),
+            ("IVehicle*", "alt::IVehicle*"),
+            ("IEntity*", "alt::IEntity*"),
+            ("IPlayer*", "alt::IPlayer*"),
+            ("IColShape*", "alt::IColShape*"),
+            ("IResource*", "alt::IResource*"),
+            ("ICore*", "alt::ICore*"),
 
-        hash_map.insert("alt::Prop", "alt::Prop");
-        hash_map.insert("alt::DlcProp", "alt::DlcProp");
-        hash_map.insert("alt::Cloth", "alt::Cloth");
-        hash_map.insert("alt::DlcCloth", "alt::DlcCloth");
-        hash_map.insert("HeadOverlay", "alt::HeadOverlay");
-        hash_map.insert("HeadBlendData", "alt::HeadBlendData");
-        hash_map.insert("alt::CEvent::Type", "EventType");
+            ("alt::Prop", "alt::Prop"),
+            ("alt::DlcProp", "alt::DlcProp"),
+            ("alt::Cloth", "alt::Cloth"),
+            ("alt::DlcCloth", "alt::DlcCloth"),
+            ("HeadOverlay", "alt::HeadOverlay"),
+            ("HeadBlendData", "alt::HeadBlendData"),
+            ("alt::CEvent::Type", "EventType"),
 
-        hash_map.insert("alt::Position", "Vector3Wrapper");
-        hash_map.insert("Position", "Vector3Wrapper");
-        hash_map.insert("Vector3f", "Vector3Wrapper");
-        hash_map.insert("Vector2f", "Vector2Wrapper");
-        hash_map.insert("RGBA", "RGBAWrapper");
-        hash_map.insert("alt::RGBA", "RGBAWrapper");
-        hash_map.insert("std::vector<uint32_t>", "std::vector<u32>");
-        hash_map.insert("std::vector<std::string>", "std::vector<std::string>");
-        hash_map.insert("std::vector<Weapon>", "std::vector<WeaponWrapper>");
-        hash_map.insert("std::vector<std::string>&", "std::vector<std::string>");
-        hash_map.insert("Rotation", "Vector3Wrapper");
-        hash_map.insert("bool*", "bool*");
-
-        hash_map
+            ("alt::Position", "Vector3Wrapper"),
+            ("Position", "Vector3Wrapper"),
+            ("Vector3f", "Vector3Wrapper"),
+            ("Vector2f", "Vector2Wrapper"),
+            ("RGBA", "RGBAWrapper"),
+            ("alt::RGBA", "RGBAWrapper"),
+            ("std::vector<uint32_t>", "std::vector<u32>"),
+            ("std::vector<std::string>", "std::vector<std::string>"),
+            ("std::vector<Weapon>", "std::vector<WeaponWrapper>"),
+            ("std::vector<std::string>&", "std::vector<std::string>"),
+            ("Rotation", "Vector3Wrapper"),
+            ("bool*", "bool*"),
+        ])
     };
 
     static ref SUPPORTED_CPP_TYPES_IN_CLASSES: HashMap<&'static str, &'static str> = {
-        let mut hash_map = HashMap::new();
-        hash_map.insert("IBaseObject::Type", "BaseObjectType");
-        hash_map.insert("IColShape::ColShapeType", "ColShapeType");
-        hash_map.insert("IBlip::BlipType", "BlipType");
-        hash_map.insert("CWeaponDamageEvent::BodyPart", "WeaponDamageEventBodyPart");
-        hash_map.insert("CEvent::Type", "EventType");
-        hash_map
+        HashMap::from([
+            ("IBaseObject::Type", "BaseObjectType"),
+            ("IColShape::ColShapeType", "ColShapeType"),
+            ("IBlip::BlipType", "BlipType"),
+            ("CWeaponDamageEvent::BodyPart", "WeaponDamageEventBodyPart"),
+            ("CEvent::Type", "EventType"),
+        ])
     };
 }
 
