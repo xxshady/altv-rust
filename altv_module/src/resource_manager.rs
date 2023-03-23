@@ -3,7 +3,7 @@ use std::{
     collections::{hash_map, HashMap, HashSet},
 };
 
-use core_module::ResourceForModule;
+use core_module::{ResourceForModule, ResourceMainPath};
 
 thread_local! {
     pub static RESOURCE_MANAGER_INSTANCE: RefCell<ResourceManager> = RefCell::new(ResourceManager::default());
@@ -24,12 +24,10 @@ impl ResourceController {
     }
 }
 
-pub type ResourceFullMainPath = String;
-
 #[derive(Debug, Default)]
 pub struct ResourceManager {
-    resources: HashMap<ResourceFullMainPath, ResourceController>,
-    pending_start_resources: HashSet<ResourceFullMainPath>,
+    resources: HashMap<ResourceMainPath, ResourceController>,
+    pending_start_resources: HashSet<ResourceMainPath>,
 }
 
 impl ResourceManager {
@@ -37,7 +35,7 @@ impl ResourceManager {
         self.resources.iter()
     }
 
-    pub fn add_pending_status(&mut self, full_main_path: String) {
+    pub fn add_pending_status(&mut self, full_main_path: ResourceMainPath) {
         self.pending_start_resources.insert(full_main_path);
     }
 
@@ -49,7 +47,7 @@ impl ResourceManager {
         self.pending_start_resources.contains(full_main_path)
     }
 
-    pub fn add(&mut self, full_main_path: String, resource: ResourceController) {
+    pub fn add(&mut self, full_main_path: ResourceMainPath, resource: ResourceController) {
         self.resources.insert(full_main_path, resource);
     }
 

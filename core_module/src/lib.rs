@@ -1,4 +1,4 @@
-pub use core_shared::ResourceHandlers;
+pub use core_shared::*;
 
 #[derive(Debug)]
 pub struct ResourceForModule {

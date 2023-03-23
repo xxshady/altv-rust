@@ -114,9 +114,9 @@ pub fn main() {
     //     )
     // });
 
-    alt::events::on_console_command(|alt::events::ConsoleCommandController { name, args }| {
-        alt::log_warn!("on_console_command name: {name:?} args: {args:?}");
-    });
+    // alt::events::on_console_command(|alt::events::ConsoleCommandController { name, args }| {
+    //     alt::log_warn!("on_console_command name: {name:?} args: {args:?}");
+    // });
 
     // TODO: check resource restart with created vehicle here:
     // let vehicle = alt::Vehicle::new(alt::hash("sultan"), 0.into(), 0.into()).unwrap();
@@ -667,21 +667,38 @@ pub fn main() {
 
     // dbg!(alt::events::emit!("test", alt::Vector2::new(0.0, 1.0)));
 
-    let col_shape = alt::ColShape::new_circle(0.into(), 10.0);
+    // let col_shape = alt::ColShape::new_circle(0.into(), 10.0);
 
-    let veh = alt::Vehicle::new(alt::hash("sultan"), 0.into(), 0.into()).unwrap();
-    dbg!(veh);
+    // let veh = alt::Vehicle::new(alt::hash("sultan"), 0.into(), 0.into()).unwrap();
+    // dbg!(veh);
 
-    alt::events::on_vehicle_enter_col_shape(|controller| {
-        alt::log!(
-            "on_vehicle_enter_col_shape: {:?}, {:?}",
-            controller.col_shape,
-            controller.vehicle
-        );
-    });
+    // alt::events::on_vehicle_enter_col_shape(|controller| {
+    //     alt::log!(
+    //         "on_vehicle_enter_col_shape: {:?}, {:?}",
+    //         controller.col_shape,
+    //         controller.vehicle
+    //     );
+    // });
 
     // col_shape.borrow_mut().destroy().unwrap();
     // col_shape.borrow_mut().destroy().unwrap();
 
     // alt::log!("colshape destroyed");
+
+    // alt::events::add_handler(
+    //     alt::events::SupportedEventType::ServerStarted,
+    //     alt::events::SDKHandler::ServerStarted(Box::new(|c| {
+    //         dbg!(c);
+    //     })),
+    // );
+
+    // alt::events::add_handler(
+    //     alt::events::SupportedEventType::PlayerConnect,
+    //     alt::events::SDKHandler::PlayerConnect(Box::new(|c| {
+    //         let player = c.player.borrow();
+    //         dbg!(player.name().unwrap());
+    //     })),
+    // );
+
+    alt::log!("~gl~TEST");
 }

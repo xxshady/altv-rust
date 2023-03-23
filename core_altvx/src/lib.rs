@@ -1,4 +1,4 @@
-pub use core_shared::ResourceHandlers;
+pub use core_shared::*;
 
 pub use anyhow;
 
@@ -8,6 +8,7 @@ use resource::Resource;
 pub mod base_object;
 mod base_object_maps;
 pub mod client_events;
+pub mod col_shape;
 pub mod entity;
 pub mod events;
 mod helpers;
@@ -19,13 +20,16 @@ pub mod timers;
 pub mod vector;
 pub mod vehicle;
 pub mod world_object;
-pub mod col_shape;
 
-pub fn init(resource_handlers: &mut ResourceHandlers) {
+pub fn init(
+    full_main_path: ResourceMainPath,
+    resource_handlers: &mut ResourceHandlers,
+    module_handlers: ModuleHandlers,
+) {
     logger::init().unwrap();
     logger::debug!("init");
 
-    Resource::init();
+    Resource::init(full_main_path, module_handlers);
 
     macro_rules! set_callback {
         ($name: ident, $closure: expr) => {

@@ -1,42 +1,11 @@
 use crate::{
-    base_object_maps::BaseObjectMap, col_shape::ColShapeContainer, entity::EntityWrapper,
-    helpers::get_player_from_event, mvalue, player::PlayerContainer, resource::Resource,
-    script_events::ScriptEventManager, vehicle::VehicleContainer,
+    base_object_maps::BaseObjectMap, col_shape::ColShapeContainer, helpers::get_player_from_event,
+    mvalue, player::PlayerContainer, resource::Resource, script_events::ScriptEventManager,
+    vehicle::VehicleContainer,
 };
 use altv_sdk::ffi as sdk;
 pub use altv_sdk::EventType as SDKEventType;
 use std::collections::{HashMap, HashSet};
-
-#[derive(Debug, Eq, PartialEq, Hash, PartialOrd, Ord)]
-#[repr(u16)]
-pub enum PublicEventType {
-    ServerStarted,
-    PlayerConnect,
-    PlayerDisconnect,
-    ResourceStop,
-    BaseObjectCreate,
-    ConsoleCommand,
-    ServerScriptEvent,
-    ColShape,
-}
-
-impl From<SDKEventType> for PublicEventType {
-    fn from(sdk_type: SDKEventType) -> Self {
-        use SDKEventType::*;
-        match sdk_type {
-            SERVER_STARTED => Self::ServerStarted,
-            PLAYER_CONNECT => Self::PlayerConnect,
-            PLAYER_DISCONNECT => Self::PlayerDisconnect,
-            RESOURCE_STOP => Self::ResourceStop,
-            CONSOLE_COMMAND_EVENT => Self::ConsoleCommand,
-            SERVER_SCRIPT_EVENT => Self::ServerScriptEvent,
-            COLSHAPE_EVENT => Self::ColShape,
-            _ => {
-                panic!("Cannot convert sdk event type: {sdk_type:?} to PublicEventType");
-            }
-        }
-    }
-}
 
 #[derive(Debug)]
 pub struct ServerStartedController {}
@@ -75,9 +44,6 @@ pub enum Event {
     BaseObjectCreate(Box<dyn FnMut(BaseObjectCreateController)>),
     ConsoleCommand(Box<dyn FnMut(ConsoleCommandController)>),
     ResourceStop(fn()),
-
-    // handler of this event should not be handled by user!!! its intended for extra events
-    ColShape,
 }
 
 impl std::fmt::Debug for Event {
@@ -105,7 +71,7 @@ impl std::fmt::Debug for ExtraEvent {
 
 #[derive(Debug, Default)]
 pub struct EventManager {
-    public_handlers: HashMap<PublicEventType, Vec<Event>>,
+    public_handlers: HashMap<SDKEventType, Vec<Event>>,
     extra_public_handlers: HashMap<ExtraEventType, Vec<ExtraEvent>>,
     enabled_sdk_events: HashSet<SDKEventType>,
 }
@@ -167,8 +133,66 @@ impl EventManager {
                     );
                 }
             }
+            SDKEventType::COLSHAPE_EVENT => {
+                let event = unsafe { sdk::events::to_CColShapeEvent(event) };
+                let state = unsafe { sdk::CColShapeEvent::GetState(event) };
+
+                let col_shape = unsafe { sdk::CColShapeEvent::GetTarget(event) };
+                if col_shape.is_null() {
+                    panic!("sdk::CColShapeEvent::GetTarget returned null");
+                }
+
+                let entity = unsafe { sdk::CColShapeEvent::GetEntity(event) };
+                if entity.is_null() {
+                    panic!("sdk::CColShapeEvent::GetEntity returned null");
+                }
+
+                let entity_base_type = unsafe {
+                    altv_sdk::helpers::get_base_object_type(sdk::entity::to_base_object(entity))
+                };
+
+                match (state, entity_base_type) {
+                    (true, altv_sdk::BaseObjectType::VEHICLE) => {
+                        let vehicle = resource
+                            .vehicle_base_object_map
+                            .borrow()
+                            .get_by_base_object_ptr(unsafe { sdk::entity::to_base_object(entity) })
+                            .unwrap();
+                        let col_shape = resource
+                            .col_shape_base_object_map
+                            .borrow()
+                            .get_by_base_object_ptr(unsafe {
+                                sdk::col_shape::to_base_object(col_shape)
+                            })
+                            .unwrap();
+
+                        let extra_event = &ExtraEventType::VehicleEnterColShape;
+
+                        if let Some(handlers) = self.extra_public_handlers.get_mut(extra_event) {
+                            for h in handlers {
+                                match h {
+                                    ExtraEvent::VehicleEnterColShape(callback) => {
+                                        callback(VehicleEnterColShapeController {
+                                            vehicle: vehicle.clone(),
+                                            col_shape: col_shape.clone(),
+                                        })
+                                    }
+                                }
+                            }
+                        } else {
+                            logger::debug!(
+                                "[on_sdk_event] received extra event without handlers: {extra_event:?}",
+                            );
+                        }
+                    }
+                    _ => {
+                        // TODO:
+                        panic!("unknown col_shape event params: state: {state:?} entity_base_type: {entity_base_type:?}");
+                    }
+                }
+            }
             _ => {
-                let handlers = self.public_handlers.get_mut(&event_type.into());
+                let handlers = self.public_handlers.get_mut(&event_type);
 
                 if let Some(handlers) = handlers {
                     // TODO: get event payload before loop for better performance
@@ -208,74 +232,6 @@ impl EventManager {
                                         .collect(),
                                 }
                             }),
-                            ColShape => {
-                                let event = unsafe { sdk::events::to_CColShapeEvent(event) };
-                                let state = unsafe { sdk::CColShapeEvent::GetState(event) };
-
-                                let col_shape = unsafe { sdk::CColShapeEvent::GetTarget(event) };
-                                if col_shape.is_null() {
-                                    panic!("sdk::CColShapeEvent::GetTarget returned null");
-                                }
-
-                                let entity = unsafe { sdk::CColShapeEvent::GetEntity(event) };
-                                if entity.is_null() {
-                                    panic!("sdk::CColShapeEvent::GetEntity returned null");
-                                }
-
-                                let entity_base_type = unsafe {
-                                    altv_sdk::helpers::get_base_object_type(
-                                        sdk::entity::to_base_object(entity),
-                                    )
-                                };
-
-                                match (state, entity_base_type) {
-                                    (true, altv_sdk::BaseObjectType::VEHICLE) => {
-                                        let vehicle = resource
-                                            .vehicle_base_object_map
-                                            .borrow()
-                                            .get_by_base_object_ptr(unsafe {
-                                                sdk::entity::to_base_object(entity)
-                                            })
-                                            .unwrap();
-                                        let col_shape = resource
-                                            .col_shape_base_object_map
-                                            .borrow()
-                                            .get_by_base_object_ptr(unsafe {
-                                                sdk::col_shape::to_base_object(col_shape)
-                                            })
-                                            .unwrap();
-
-                                        let extra_event = &ExtraEventType::VehicleEnterColShape;
-
-                                        if let Some(handlers) =
-                                            self.extra_public_handlers.get_mut(extra_event)
-                                        {
-                                            for h in handlers {
-                                                match h {
-                                                    ExtraEvent::VehicleEnterColShape(callback) => {
-                                                        callback(VehicleEnterColShapeController {
-                                                            vehicle: vehicle.clone(),
-                                                            col_shape: col_shape.clone(),
-                                                        })
-                                                    }
-                                                }
-                                            }
-                                        } else {
-                                            logger::debug!(
-                                                "[on_sdk_event] received extra event without handlers: {extra_event:?}",
-                                            );
-                                        }
-                                    }
-                                    _ => {
-                                        // TODO:
-                                        panic!("unknown col_shape event params: state: {state:?} entity_base_type: {entity_base_type:?}");
-                                    }
-                                }
-
-                                // let vehicle_enter = self
-                                //     .public_handlers
-                                //     .get_mut(&PublicEventType::VehicleEnterColShape);
-                            }
                             event => panic!("unknown event: {event:?}"),
                         }
                     }
@@ -288,13 +244,8 @@ impl EventManager {
         }
     }
 
-    pub fn add_handler(
-        &mut self,
-        public_type: PublicEventType,
-        sdk_type: SDKEventType,
-        event: Event,
-    ) {
-        logger::debug!("events add_handler event public_type: {public_type:?}");
+    pub fn add_handler(&mut self, sdk_type: SDKEventType, event: Event) {
+        logger::debug!("events add_handler event sdk_type: {sdk_type:?}");
 
         if sdk_type != SDKEventType::NONE && self.enabled_sdk_events.get(&sdk_type).is_none() {
             logger::debug!("sdk_type: {sdk_type:?} | enabling it in sdk");
@@ -305,7 +256,7 @@ impl EventManager {
             }
         }
 
-        let handlers = self.public_handlers.entry(public_type).or_insert(vec![]);
+        let handlers = self.public_handlers.entry(sdk_type).or_insert(vec![]);
         handlers.push(event);
     }
 
@@ -333,13 +284,13 @@ impl EventManager {
             .or_insert(vec![]);
         handlers.push(event);
 
-        self.add_handler(PublicEventType::ColShape, sdk_type, public_event);
+        self.add_handler(sdk_type, public_event);
     }
 }
 
-pub fn add_handler(public_type: PublicEventType, sdk_type: SDKEventType, event: Event) {
+pub fn add_handler(sdk_type: SDKEventType, event: Event) {
     Resource::with_events_mut(|mut events, _| {
-        events.add_handler(public_type, sdk_type, event);
+        events.add_handler(sdk_type, event);
     });
 }
 
