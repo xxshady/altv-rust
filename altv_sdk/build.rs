@@ -128,7 +128,6 @@ fn generate_rust_enum_from_cpp(
 
     for (idx, char) in chars.iter().enumerate() {
         if open_brace {
-            // println!("");
             if *char == b'}' {
                 end_idx = idx - 1;
                 break;
@@ -147,12 +146,21 @@ fn generate_rust_enum_from_cpp(
         panic!("cannot find open brace of {str_to_find:?}")
     }
 
-    let result_string = String::from_utf8_lossy(&chars[start_idx..=end_idx])
+    let mut result_string = String::from_utf8_lossy(&chars[start_idx..=end_idx])
         .to_string()
         .split('\n')
-        .filter_map(|val| val.get(2..))
-        .collect::<Vec<&str>>()
+        .filter_map(|val| {
+            val.get(2..)
+                .map(|v| v.trim())
+                .and_then(|v| if v.is_empty() { None } else { Some(v) })
+        })
+        .map(|v| format!("    {}", upper_to_pascal_case(v)))
+        .collect::<Vec<String>>()
         .join("\n");
+
+    if result_string.ends_with(',') {
+        result_string.remove(result_string.len() - 1);
+    }
 
     fs::write(
         write_to,
@@ -166,4 +174,27 @@ fn generate_rust_enum_from_cpp(
         ),
     )
     .unwrap();
+}
+
+fn upper_to_pascal_case(s: &str) -> String {
+    let mut result = String::new();
+    let mut chars = s.chars();
+    result.push(chars.next().unwrap().to_ascii_uppercase());
+
+    let mut next_char_upper = false;
+    for c in chars {
+        if next_char_upper {
+            next_char_upper = false;
+            result.push(c.to_ascii_uppercase());
+            continue;
+        }
+
+        if c == '_' {
+            next_char_upper = true;
+            continue;
+        }
+
+        result.push(c.to_ascii_lowercase());
+    }
+    result
 }

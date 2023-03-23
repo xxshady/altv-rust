@@ -68,6 +68,6 @@ pub fn create_col_shape_circle(
 pub fn create_col_shape_container(raw_ptr: altv_sdk::IBaseObjectMutPtr) -> ColShapeContainer {
     Rc::new(RefCell::new(ColShape {
         ptr: BaseObjectPointer::new(raw_ptr),
-        base_type: altv_sdk::BaseObjectType::COLSHAPE,
+        base_type: altv_sdk::BaseObjectType::Colshape,
     }))
 }
