@@ -3,7 +3,7 @@
 #include "shared.h"
 #include <filesystem>
 
-class RustRuntime : public alt::IScriptRuntime {
+class RustRuntime: public alt::IScriptRuntime {
 private:
     static RustRuntime*& _instance() {
         static RustRuntime* instance = nullptr;
@@ -24,7 +24,7 @@ public:
     }
     static void set_instance(RustRuntime* rust_runtime) { _instance() = rust_runtime; }
 
-    class RustResource : public alt::IResource::Impl {
+    class RustResource: public alt::IResource::Impl {
         RustRuntime* runtime;
         alt::IResource* resource;
         std::string full_main_path;
@@ -34,7 +34,7 @@ public:
             RustRuntime* runtime,
             alt::IResource* resource,
             const std::string&& full_main_path
-        ) :
+        ):
             runtime(runtime),
             resource(resource),
             full_main_path(full_main_path)
@@ -43,8 +43,6 @@ public:
         ~RustResource() = default;
 
         bool Start() override {
-            assert(runtime->resource_start_callback != nullptr);
-            runtime->resource_start_callback(full_main_path);
             return true;
         }
 
@@ -90,6 +88,9 @@ public:
             resource,
             std::move(full_main_path)
         );
+
+        assert(resource_start_callback != nullptr);
+        resource_start_callback(full_main_path);
 
         return static_cast<alt::IResource::Impl*>(resource_impl);
     }
