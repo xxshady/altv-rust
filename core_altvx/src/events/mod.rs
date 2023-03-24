@@ -1,98 +1,229 @@
-use std::collections::HashMap;
+use std::{fmt::Debug, collections::HashMap};
+use crate::{resource::Resource};
 
-mod controllers;
-mod parsers;
-mod sdk;
+pub use altv_sdk::EventType as SDKEventType;
 
-use crate::resource::Resource;
-use parsers::{CustomEvent, SDKEvent};
-use sdk::SDKEventType;
+mod sdk_controllers;
+mod custom_controllers;
 
-pub use sdk::SupportedEventType;
-
-macro_rules! event_parser_enum {
-    ($parser_enum_name: ident, $event_type_enum: ty, $parser_trait: ty, $handler_enum_name: ident [ $( $parser_name: ident ),+ ]) => {
-        enum $parser_enum_name {
-            $( $parser_name(parsers::$parser_name), )+
+macro_rules! supported_sdk_events {
+    ( $( $event_name: ident, )+ ) => {
+    paste::paste! {
+        #[derive(Debug, Eq, PartialEq, Hash, Clone, Copy)]
+        pub enum SupportedEventType {
+            $( $event_name, )+
         }
 
-        impl $parser_trait for $parser_enum_name {
-            fn handle(&self, event: altv_sdk::CEventPtr, handlers: &mut [$handler_enum_name], resource: &Resource) {
-                match self {
-                    $(
-                        Self::$parser_name(parser) => parser.handle(event, handlers, resource),
-                    )+
-                }
-            }
-        }
-
-        impl From<$event_type_enum> for $parser_enum_name {
-            fn from(value: $event_type_enum) -> Self {
+        impl TryFrom<SDKEventType> for SupportedEventType {
+            type Error = anyhow::Error;
+            fn try_from(value: SDKEventType) -> anyhow::Result<Self> {
                 match value {
                     $(
-                        <$event_type_enum>::$parser_name => Self::$parser_name(parsers::$parser_name {}),
+                        SDKEventType::$event_name => Ok(Self::$event_name),
                     )+
+                    event => {
+                        anyhow::bail!("unsupported cpp sdk event type: {event:?}")
+                    }
                 }
             }
         }
 
-        pub enum $handler_enum_name {
-            $( $parser_name(Box<dyn FnMut(&controllers::$parser_name)>), )+
+        impl Into<SDKEventType> for SupportedEventType {
+            fn into(self) -> SDKEventType {
+                match self { $(
+                    Self::$event_name => SDKEventType::$event_name,
+                )+ }
+            }
         }
 
-        impl std::fmt::Debug for $handler_enum_name {
+        pub enum SDKController {
+            $( $event_name(sdk_controllers::$event_name), )+
+        }
+
+        impl std::fmt::Debug for SDKController {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 let str = format!("{}", match self {
-                    $( $handler_enum_name::$parser_name(_) => stringify!($handler_enum_name::$parser_name), )+
+                    $( Self::$event_name(_) => stringify!(SDKController::$event_name), )+
                 });
 
                 f.write_str(&str)
             }
         }
+
+        pub enum SDKHandler { $(
+            $event_name(Box<dyn FnMut(&sdk_controllers::$event_name) + 'static>),
+        )+ }
+
+        impl SDKHandler {
+            pub fn to_event_type(&self) -> SupportedEventType {
+                match self { $(
+                    Self::$event_name(_) => SupportedEventType::$event_name,
+                )+ }
+            }
+        }
+        
+        impl std::fmt::Debug for SDKHandler {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                let str = format!("{}", match self {
+                    $( Self::$event_name(_) => stringify!(SDKHandler::$event_name), )+
+                });
+
+                f.write_str(&str)
+            }
+        }
+
+        pub fn sdk_controller_from_supported_event_type(
+            event_type: SupportedEventType, 
+            event_ptr: altv_sdk::CEventPtr,
+            resource: &Resource,
+        ) -> SDKController {
+            match event_type { $(
+                SupportedEventType::$event_name => 
+                    SDKController::$event_name(sdk_controllers::$event_name::new(event_ptr, resource)),
+            )+ }
+        }
+
+        pub fn call_user_sdk_handlers(controller: &SDKController, handlers: &mut [SDKHandler]) {
+            for h in handlers {
+                match h { $(
+                    SDKHandler::$event_name(h) => h(
+                        if let SDKController::$event_name(controller) = controller {
+                            controller
+                        } else {
+                            // this should never happen because SDKHandler gets converted to SupportedEventType
+                            // automatically with `to_event_type()`
+                            panic!("expected SDKController: {}, received: {controller:?}", stringify!($event_name))
+                        }
+                    ),
+                )+ }
+            }
+        }
+    }
     };
 }
 
 macro_rules! custom_events {
-    ($event_type_enum_name: ident, $parser_enum_name: ident, $parser_trait: ty, $handler_enum_name: ident [ $( $parser_name: ident ),+ ] ) => {
+    ( $(
+        $sdk_event_name: ident: [ $( $custom_event_name: ident, )+ ],
+    )+ ) => {
+    paste::paste! {
         #[derive(Debug, Eq, PartialEq, Hash, Clone, Copy)]
-        pub enum $event_type_enum_name {
-            $( $parser_name, )+
+        pub enum CustomEventType { $($(
+            $custom_event_name,
+        )+)+ }
+
+        impl Into<SupportedEventType> for CustomEventType {
+            fn into(self) -> SupportedEventType {
+                match self { $($(
+                        Self::$custom_event_name => SupportedEventType::$sdk_event_name,
+                )+)+ }
+            }
         }
 
-        event_parser_enum!(
-            $parser_enum_name,
-            $event_type_enum_name,
-            $parser_trait,
-            $handler_enum_name
-            [
-                $( $parser_name ),+
-            ]
-        );
+        pub enum CustomController { $($(
+            $custom_event_name(custom_controllers::$custom_event_name),
+        )+)+ }
+        
+        impl CustomController {
+            pub fn to_event_type(&self) -> CustomEventType {
+                match self { $($(
+                    CustomController::$custom_event_name(_) => CustomEventType::$custom_event_name,
+                )+)+ }
+            }
+        }
+
+        impl std::fmt::Debug for CustomController {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                let str = format!("{}", match self {
+                    $($( Self::$custom_event_name(_) => stringify!(CustomController::$custom_event_name), )+)+
+                });
+
+                f.write_str(&str)
+            }
+        }
+
+        pub enum CustomHandler { $($(
+            $custom_event_name(Box<dyn FnMut(&custom_controllers::$custom_event_name) + 'static>),
+        )+)+ }
+
+        impl CustomHandler {
+            pub fn to_event_type(&self) -> CustomEventType {
+                match self { $($(
+                    CustomHandler::$custom_event_name(_) => CustomEventType::$custom_event_name,
+                )+)+ }
+            }
+        }
+
+        impl std::fmt::Debug for CustomHandler {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                let str = format!("{}", match self {
+                    $($( Self::$custom_event_name(_) => stringify!(CustomHandler::$custom_event_name), )+)+
+                });
+
+                f.write_str(&str)
+            }
+        }
+
+        pub fn custom_controller_from_event_type(
+            event_type: CustomEventType,
+            controller: &SDKController,
+            resource: &Resource,
+        ) -> Option<CustomController> {
+            match (controller, event_type) { $($(
+                (SDKController::$sdk_event_name(controller), CustomEventType::$custom_event_name) => 
+                    Some(
+                        CustomController::$custom_event_name(custom_controllers::$custom_event_name::new(controller, resource)),
+                    ),
+                )+)+
+                _ => None,
+            }
+        }
+
+        pub fn call_user_custom_handlers(controller: &CustomController, handlers: &mut [CustomHandler]) {
+            for h in handlers {
+                match h { $($(
+                    CustomHandler::$custom_event_name(h) => h(
+                        if let CustomController::$custom_event_name(controller) = controller {
+                            controller
+                        } else {
+                            // this shit should never happen
+                            panic!("expected CustomController: {}, received: {controller:?}", stringify!($custom_event_name))
+                        }
+                    ),
+                )+)+ }
+            }
+        }
+
+        pub fn get_custom_event_types_from_sdk_type<'a>(sdk_event_type: SupportedEventType) -> Option<&'a[CustomEventType]> {
+            match sdk_event_type {
+            $(
+                SupportedEventType::$sdk_event_name => Some(&[$(
+                    CustomEventType::$custom_event_name,
+                )+]),
+            )+
+            _ => None,
+         }
+        }
+    }
     };
 }
 
-event_parser_enum!(
-    SDKParsers,
-    SupportedEventType,
-    parsers::SDKEvent,
-    SDKHandler[ServerStarted, ColshapeEvent, PlayerConnect]
+supported_sdk_events!(
+    ServerStarted,
+    PlayerConnect,
+    ColshapeEvent,
 );
 
 custom_events!(
-    CustomEventType,
-    CustomParsers,
-    parsers::CustomEvent,
-    CustomHandler[VehicleEnterColShape]
+    ColshapeEvent: [VehicleEnterColShape,],
 );
 
 #[derive(Default, Debug)]
 pub struct EventManager {
-    handled_custom_sdk_events: HashMap<SupportedEventType, CustomEventType>,
     user_sdk_handlers: HashMap<SupportedEventType, Vec<SDKHandler>>,
     user_custom_handlers: HashMap<CustomEventType, Vec<CustomHandler>>,
 }
 
-// TODO: event cancellation implementation + player damage event SetDamageValue!!
 impl EventManager {
     pub fn on_sdk_event(
         &mut self,
@@ -102,72 +233,63 @@ impl EventManager {
     ) {
         match SupportedEventType::try_from(sdk_event_type) {
             Err(err) => logger::error!("{:?}", err),
-            Ok(event_type) => self.on_supported_event(event_type, event, resource),
+            Ok(event_type) => self.on_supported_sdk_event(event_type, event, resource),
         };
     }
 
-    fn on_supported_event(
-        &mut self,
-        event_type: SupportedEventType,
-        event: altv_sdk::CEventPtr,
-        resource: &Resource,
-    ) {
-        let parser = SDKParsers::from(event_type);
+    pub fn on_supported_sdk_event(&mut self, event_type: SupportedEventType, event_ptr: altv_sdk::CEventPtr, resource: &Resource) {
+        let controller = sdk_controller_from_supported_event_type(event_type, event_ptr, resource);
+
         if let Some(handlers) = self.user_sdk_handlers.get_mut(&event_type) {
-            parser.handle(event, handlers, resource);
+            call_user_sdk_handlers(&controller, handlers);
         } else {
-            println!("no user sdk handlers for event: {event_type:?}");
+            logger::debug!("no user sdk handlers for event: {event_type:?}");
         }
+        
+        self.handle_custom_event_type(event_type, controller, resource);
+    }
 
-        if let Some(custom_type) = self.handled_custom_sdk_events.get(&event_type) {
-            let parser = CustomParsers::from(*custom_type);
+    fn handle_custom_event_type(&mut self, event_type: SupportedEventType, controller: SDKController, resource: &Resource) {
+        let Some(custom_types) = get_custom_event_types_from_sdk_type(event_type) else {
+            logger::debug!("no custom sdk handlers for event: {event_type:?}");
+            return;
+        };
 
-            if let Some(handlers) = self.user_custom_handlers.get_mut(custom_type) {
-                parser.handle(event, handlers, resource);
-            } else {
-                logger::error!("no user custom handlers for custom event: {custom_type:?}");
-            }
-        } else {
-            println!("no custom sdk handlers for event: {event_type:?}");
+        for custom_type in custom_types {
+            let Some(handlers) = self.user_custom_handlers.get_mut(&custom_type) else {
+                logger::debug!("user sdk event: {event_type:?} is unhandled");
+                continue;
+            };
+
+            let controller = custom_controller_from_event_type(*custom_type, &controller, resource);
+            let Some(controller) = controller else {
+                logger::debug!("custom event: {custom_type:?} no custom controllers");
+                continue;  
+            };
+
+            call_user_custom_handlers(&controller, handlers);
         }
     }
 
-    // TODO: toggle sdk event
-    pub fn add_sdk_handler(&mut self, event_type: SupportedEventType, handler: SDKHandler) {
+    pub fn add_sdk_handler(&mut self, handler: SDKHandler) {
+        let event_type = handler.to_event_type();
         self.user_sdk_handlers
             .entry(event_type)
-            .or_insert(vec![])
+            .or_default()
             .push(handler);
 
         self.toggle_sdk_event(event_type, true);
     }
 
-    // TODO: toggle sdk event
-    pub fn add_custom_handler(
-        &mut self,
-        custom_event_type: CustomEventType,
-        handler: CustomHandler,
-    ) {
+    pub fn add_custom_handler(&mut self, handler: CustomHandler) {
+        let custom_event_type = handler.to_event_type();
+
         self.user_custom_handlers
             .entry(custom_event_type)
             .or_insert(vec![])
             .push(handler);
 
-        let mut enable_event = |event_type, custom_event_type| {
-            self.handled_custom_sdk_events
-                .entry(event_type)
-                .or_insert(custom_event_type);
-            self.toggle_sdk_event(event_type, true);
-        };
-
-        match custom_event_type {
-            CustomEventType::VehicleEnterColShape => {
-                enable_event(
-                    SupportedEventType::ServerStarted,
-                    CustomEventType::VehicleEnterColShape,
-                );
-            }
-        }
+        self.toggle_sdk_event(custom_event_type.into(), true);
     }
 
     fn toggle_sdk_event(&self, event_type: SupportedEventType, state: bool) {
@@ -181,19 +303,8 @@ impl EventManager {
     }
 }
 
-pub fn add_handler(event_type: SupportedEventType, handler: SDKHandler) {
+pub fn add_handler(handler: SDKHandler) {
     Resource::with_events_mut(|mut events, _| {
-        events.add_sdk_handler(event_type, handler);
+        events.add_sdk_handler(handler);
     });
 }
-
-// pub fn add_extra_handler(
-//     public_event: Event,
-//     extra_type: ExtraEventType,
-//     sdk_type: SDKEventType,
-//     event: ExtraEvent,
-// ) {
-//     Resource::with_events_mut(|mut events, _| {
-//         events.add_extra_handler(public_event, extra_type, sdk_type, event);
-//     });
-// }

@@ -685,20 +685,12 @@ pub fn main() {
 
     // alt::log!("colshape destroyed");
 
-    // alt::events::add_handler(
-    //     alt::events::SupportedEventType::ServerStarted,
-    //     alt::events::SDKHandler::ServerStarted(Box::new(|c| {
-    //         dbg!(c);
-    //     })),
-    // );
+    alt::events::add_handler(alt::events::SDKHandler::ServerStarted(Box::new(|c| {
+        dbg!(c);
+    })));
 
-    // alt::events::add_handler(
-    //     alt::events::SupportedEventType::PlayerConnect,
-    //     alt::events::SDKHandler::PlayerConnect(Box::new(|c| {
-    //         let player = c.player.borrow();
-    //         dbg!(player.name().unwrap());
-    //     })),
-    // );
-
-    alt::log!("~gl~TEST");
+    alt::events::add_handler(alt::events::SDKHandler::PlayerConnect(Box::new(|c| {
+        let player = c.player.borrow();
+        dbg!(player.name().unwrap());
+    })));
 }
