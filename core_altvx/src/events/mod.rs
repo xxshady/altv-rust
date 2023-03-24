@@ -6,6 +6,14 @@ pub use altv_sdk::EventType as SDKEventType;
 mod sdk_controllers;
 mod custom_controllers;
 
+macro_rules! log_user_handler_error {
+    ($event_name: expr, $result: expr) => {
+        if let Err(err) = $result {
+            logger::error!("handler of event {:?} failed with error: {:?}", stringify!($event_name), err);
+        }
+    };
+}
+
 macro_rules! supported_sdk_events {
     ( $( $event_name: ident, )+ ) => {
     paste::paste! {
@@ -51,7 +59,7 @@ macro_rules! supported_sdk_events {
         }
 
         pub enum SDKHandler { $(
-            $event_name(Box<dyn FnMut(&sdk_controllers::$event_name) + 'static>),
+            $event_name(Box<dyn FnMut(&sdk_controllers::$event_name) -> anyhow::Result<()> + 'static>),
         )+ }
 
         impl SDKHandler {
@@ -86,15 +94,18 @@ macro_rules! supported_sdk_events {
         pub fn call_user_sdk_handlers(controller: &SDKController, handlers: &mut [SDKHandler]) {
             for h in handlers {
                 match h { $(
-                    SDKHandler::$event_name(h) => h(
-                        if let SDKController::$event_name(controller) = controller {
-                            controller
-                        } else {
-                            // this should never happen because SDKHandler gets converted to SupportedEventType
-                            // automatically with `to_event_type()`
-                            panic!("expected SDKController: {}, received: {controller:?}", stringify!($event_name))
-                        }
-                    ),
+                    SDKHandler::$event_name(h) => {
+                        let result = h(
+                            if let SDKController::$event_name(controller) = controller {
+                                controller
+                            } else {
+                                // this should never happen because SDKHandler gets converted to SupportedEventType
+                                // automatically with `to_event_type()`
+                                panic!("expected SDKController: {}, received: {controller:?}", stringify!($event_name))
+                            }
+                        );
+                        log_user_handler_error!($event_name, result);
+                    }
                 )+ }
             }
         }
@@ -143,7 +154,7 @@ macro_rules! custom_events {
         }
 
         pub enum CustomHandler { $($(
-            $custom_event_name(Box<dyn FnMut(&custom_controllers::$custom_event_name) + 'static>),
+            $custom_event_name(Box<dyn FnMut(&custom_controllers::$custom_event_name) -> anyhow::Result<()> + 'static>),
         )+)+ }
 
         impl CustomHandler {
@@ -182,14 +193,17 @@ macro_rules! custom_events {
         pub fn call_user_custom_handlers(controller: &CustomController, handlers: &mut [CustomHandler]) {
             for h in handlers {
                 match h { $($(
-                    CustomHandler::$custom_event_name(h) => h(
-                        if let CustomController::$custom_event_name(controller) = controller {
-                            controller
-                        } else {
-                            // this shit should never happen
-                            panic!("expected CustomController: {}, received: {controller:?}", stringify!($custom_event_name))
-                        }
-                    ),
+                    CustomHandler::$custom_event_name(h) => {
+                        let result = h(
+                            if let CustomController::$custom_event_name(controller) = controller {
+                                controller
+                            } else {
+                                // this shit should never happen
+                                panic!("expected CustomController: {}, received: {controller:?}", stringify!($custom_event_name))
+                            }
+                        );
+                        log_user_handler_error!($custom_event_name, result);
+                    }
                 )+)+ }
             }
         }
@@ -256,7 +270,7 @@ impl EventManager {
         };
 
         for custom_type in custom_types {
-            let Some(handlers) = self.user_custom_handlers.get_mut(&custom_type) else {
+            let Some(handlers) = self.user_custom_handlers.get_mut(custom_type) else {
                 logger::debug!("user sdk event: {event_type:?} is unhandled");
                 continue;
             };

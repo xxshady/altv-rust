@@ -687,10 +687,11 @@ pub fn main() {
 
     alt::events::add_handler(alt::events::SDKHandler::ServerStarted(Box::new(|c| {
         dbg!(c);
+        alt::anyhow::bail!("errr")
     })));
 
-    alt::events::add_handler(alt::events::SDKHandler::PlayerConnect(Box::new(|c| {
-        let player = c.player.borrow();
-        dbg!(player.name().unwrap());
-    })));
+    // alt::events::add_handler(alt::events::SDKHandler::PlayerConnect(Box::new(|c| {
+    //     let player = c.player.borrow();
+    //     dbg!(player.name().unwrap());
+    // })));
 }
