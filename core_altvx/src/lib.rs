@@ -62,4 +62,6 @@ pub fn init(
             resource.on_base_object_destroy(base_object);
         });
     });
+
+    script_events::LocalEventManager::init();
 }

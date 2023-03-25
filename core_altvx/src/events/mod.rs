@@ -3,8 +3,8 @@ use crate::{resource::Resource};
 
 pub use altv_sdk::EventType as SDKEventType;
 
-mod sdk_controllers;
-mod custom_controllers;
+pub mod sdk_controllers;
+pub mod custom_controllers;
 
 macro_rules! log_user_handler_error {
     ($event_name: expr, $result: expr) => {
@@ -228,6 +228,7 @@ supported_sdk_events!(
     ServerStarted,
     PlayerConnect,
     ColshapeEvent,
+    ServerScriptEvent,
 );
 
 custom_events!(

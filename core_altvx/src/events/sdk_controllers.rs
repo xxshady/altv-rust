@@ -1,6 +1,7 @@
 use altv_sdk::ffi as sdk;
+use lazycell::LazyCell;
 
-use crate::{helpers::get_player_from_event, player::PlayerContainer, resource::Resource};
+use crate::{helpers::get_player_from_event, mvalue, player::PlayerContainer, resource::Resource};
 
 #[derive(Debug)]
 pub struct PlayerConnect {
@@ -55,6 +56,37 @@ impl ColshapeEvent {
             col_shape,
             entity,
             state,
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct ServerScriptEvent {
+    pub name: String,
+    event: *const sdk::alt::CServerScriptEvent,
+    args: LazyCell<mvalue::MValueList>,
+}
+
+impl ServerScriptEvent {
+    pub fn new(event: altv_sdk::CEventPtr, _: &Resource) -> Self {
+        let event = unsafe { sdk::events::to_CServerScriptEvent(event) };
+        let name = unsafe { sdk::CServerScriptEvent::GetName(event) }.to_string();
+        Self {
+            name,
+            event,
+            args: LazyCell::new(),
+        }
+    }
+
+    pub fn args(&self) -> &mvalue::MValueList {
+        if self.args.filled() {
+            self.args.borrow().unwrap()
+        } else {
+            let args = unsafe { sdk::CServerScriptEvent::GetArgs(self.event) };
+            self.args
+                .fill(Resource::with(|v| mvalue::deserialize_mvalue_args(args, v)))
+                .unwrap();
+            self.args.borrow().unwrap()
         }
     }
 }

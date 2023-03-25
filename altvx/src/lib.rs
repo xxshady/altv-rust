@@ -20,9 +20,7 @@ pub mod prelude {
     pub use core_altvx::world_object::WorldObject;
 }
 
-// TEST
-// pub mod events;
-pub use core_altvx::events;
+pub mod events;
 
 // macros
 pub use core_altvx::log;

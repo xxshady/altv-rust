@@ -658,74 +658,85 @@ pub fn main() {
 
     // vector2 & vector3 mvalue
 
-    // alt::events::on("test".to_string(), |args| {
-    //     dbg!(args);
-    //     Ok(())
-    // });
+    alt::events::on("test".to_string(), |args| {
+        dbg!(args);
+        Ok(())
+    });
 
-    // dbg!(alt::events::emit!("test", alt::Vector3::new(0.0, 1.0, 2.0)));
+    alt::events::on("test".to_string(), |args| {
+        alt::log!("second local event test handler");
+        dbg!(args);
+        Ok(())
+    });
 
-    // dbg!(alt::events::emit!("test", alt::Vector2::new(0.0, 1.0)));
+    dbg!(alt::events::emit!("test", alt::Vector3::new(0.0, 1.0, 2.0)));
 
-    let mut col_shape = alt::ColShape::new_circle(0.into(), 10.0);
+    dbg!(alt::events::emit!("test", alt::Vector2::new(0.0, 1.0)));
 
-    let veh = alt::Vehicle::new(alt::hash("sultan"), 0.into(), 0.into()).unwrap();
-    dbg!(veh);
+    dbg!(alt::events::emit!(
+        "testdddddddd",
+        alt::Vector2::new(0.0, 1.0)
+    ));
 
-    use alt::events;
+    // let mut col_shape = alt::ColShape::new_circle(0.into(), 10.0);
 
-    events::add_custom_handler(events::CustomHandler::VehicleEnterColShape(Box::new(
-        |controller| {
-            alt::log!(
-                "VehicleEnterColShape: {:?}, {:?}",
-                controller.col_shape,
-                controller.vehicle
-            );
-            Ok(())
-        },
-    )));
+    // let veh = alt::Vehicle::new(alt::hash("sultan"), 0.into(), 0.into()).unwrap();
+    // dbg!(veh);
 
-    events::add_custom_handler(events::CustomHandler::VehicleLeaveColShape(Box::new(
-        |controller| {
-            alt::log!(
-                "VehicleLeaveColShape: {:?}, {:?}",
-                controller.col_shape,
-                controller.vehicle
-            );
-            Ok(())
-        },
-    )));
+    // use alt::events;
 
-    let col = col_shape.clone();
-    alt::set_timeout(
-        move || {
-            dbg!();
-            col.try_borrow()?.set_pos(11.0.into())?;
-            Ok(())
-        },
-        500,
-    );
+    // events::add_custom_handler(events::CustomHandler::VehicleEnterColShape(Box::new(
+    //     |controller| {
+    //         alt::log!(
+    //             "VehicleEnterColShape: {:?}, {:?}",
+    //             controller.col_shape,
+    //             controller.vehicle
+    //         );
+    //         Ok(())
+    //     },
+    // )));
 
-    let col = col_shape.clone();
-    alt::set_timeout(
-        move || {
-            dbg!();
-            col.try_borrow()?.set_pos(0.0.into())?;
+    // events::add_custom_handler(events::CustomHandler::VehicleLeaveColShape(Box::new(
+    //     |controller| {
+    //         alt::log!(
+    //             "VehicleLeaveColShape: {:?}, {:?}",
+    //             controller.col_shape,
+    //             controller.vehicle
+    //         );
+    //         Ok(())
+    //     },
+    // )));
 
-            Ok(())
-        },
-        1000,
-    );
+    // let col = col_shape.clone();
+    // alt::set_timeout(
+    //     move || {
+    //         dbg!();
+    //         col.try_borrow()?.set_pos(11.0.into())?;
+    //         Ok(())
+    //     },
+    //     500,
+    // );
 
-    let col = col_shape.clone();
-    alt::set_timeout(
-        move || {
-            dbg!();
-            col.try_borrow_mut()?.destroy()?;
-            Ok(())
-        },
-        1500,
-    );
+    // let col = col_shape.clone();
+    // alt::set_timeout(
+    //     move || {
+    //         dbg!();
+    //         col.try_borrow()?.set_pos(0.0.into())?;
+
+    //         Ok(())
+    //     },
+    //     1000,
+    // );
+
+    // let col = col_shape.clone();
+    // alt::set_timeout(
+    //     move || {
+    //         dbg!();
+    //         col.try_borrow_mut()?.destroy()?;
+    //         Ok(())
+    //     },
+    //     1500,
+    // );
 
     // alt::events::add_handler(alt::events::SDKHandler::ServerStarted(Box::new(|c| {
     //     dbg!(c);
