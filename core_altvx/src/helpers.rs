@@ -1,6 +1,6 @@
 use crate::{
     base_object::BaseObject,
-    base_object_maps::BaseObjectMap,
+    base_object_maps::{self, BaseObjectMap},
     player::{self, PlayerContainer},
     resource::Resource,
     vector::{Vector2, Vector3},
@@ -37,8 +37,7 @@ pub fn get_player_from_event<T>(
         unsafe { sdk::player::to_base_object(player_raw_ptr) }
     };
 
-    let players = resource.player_base_object_map.borrow();
-    players.get_by_base_object_ptr(raw_ptr).unwrap()
+    base_object_maps::get_player!(raw_ptr, resource).unwrap()
 }
 
 pub fn get_player_raw_ptr(

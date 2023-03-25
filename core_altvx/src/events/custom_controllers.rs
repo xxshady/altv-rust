@@ -22,11 +22,13 @@ impl VehicleEnterColShape {
             col_shape: base_object_maps::get_col_shape!(
                 unsafe { sdk::col_shape::to_base_object(controller.col_shape) },
                 resource
-            ),
+            )
+            .unwrap(),
             vehicle: base_object_maps::get_vehicle!(
                 unsafe { sdk::entity::to_base_object(controller.entity) },
                 resource
-            ),
+            )
+            .unwrap(),
         })
     }
 }
@@ -45,11 +47,13 @@ impl VehicleLeaveColShape {
             col_shape: base_object_maps::get_col_shape!(
                 unsafe { sdk::col_shape::to_base_object(controller.col_shape) },
                 resource
-            ),
+            )
+            .unwrap(),
             vehicle: base_object_maps::get_vehicle!(
                 unsafe { sdk::entity::to_base_object(controller.entity) },
                 resource
-            ),
+            )
+            .unwrap(),
         })
     }
 }

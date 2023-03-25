@@ -43,7 +43,6 @@ macro_rules! base_object_map {
                         .[<$name:snake:lower _base_object_map>]
                         .borrow()
                         .get_by_base_object_ptr($ptr)
-                        .unwrap()
                 };
             }
             pub use [<base_object_maps_get_ $name:snake:lower>] as [<get_ $name:snake:lower>];
