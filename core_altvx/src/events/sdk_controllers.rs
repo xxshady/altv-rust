@@ -23,16 +23,38 @@ impl PlayerConnect {
 pub struct ServerStarted {}
 
 impl ServerStarted {
-    pub fn new(event_ptr: altv_sdk::CEventPtr, _: &Resource) -> Self {
+    pub fn new(_: altv_sdk::CEventPtr, _: &Resource) -> Self {
         Self {}
     }
 }
 
 #[derive(Debug)]
-pub struct ColshapeEvent {}
+pub struct ColshapeEvent {
+    pub col_shape: *mut sdk::alt::IColShape,
+    pub entity: *mut sdk::alt::IEntity,
+    pub state: bool,
+}
 
 impl ColshapeEvent {
-    pub fn new(event_ptr: altv_sdk::CEventPtr, _: &Resource) -> Self {
-        Self {}
+    pub fn new(event: altv_sdk::CEventPtr, _: &Resource) -> Self {
+        let event = unsafe { sdk::events::to_CColShapeEvent(event) };
+
+        let state = unsafe { sdk::CColShapeEvent::GetState(event) };
+
+        let col_shape = unsafe { sdk::CColShapeEvent::GetTarget(event) };
+        if col_shape.is_null() {
+            panic!("sdk::CColShapeEvent::GetTarget returned null");
+        }
+
+        let entity = unsafe { sdk::CColShapeEvent::GetEntity(event) };
+        if entity.is_null() {
+            panic!("sdk::CColShapeEvent::GetEntity returned null");
+        }
+
+        Self {
+            col_shape,
+            entity,
+            state,
+        }
     }
 }

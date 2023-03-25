@@ -667,28 +667,70 @@ pub fn main() {
 
     // dbg!(alt::events::emit!("test", alt::Vector2::new(0.0, 1.0)));
 
-    // let col_shape = alt::ColShape::new_circle(0.into(), 10.0);
+    let mut col_shape = alt::ColShape::new_circle(0.into(), 10.0);
 
-    // let veh = alt::Vehicle::new(alt::hash("sultan"), 0.into(), 0.into()).unwrap();
-    // dbg!(veh);
+    let veh = alt::Vehicle::new(alt::hash("sultan"), 0.into(), 0.into()).unwrap();
+    dbg!(veh);
 
-    // alt::events::on_vehicle_enter_col_shape(|controller| {
-    //     alt::log!(
-    //         "on_vehicle_enter_col_shape: {:?}, {:?}",
-    //         controller.col_shape,
-    //         controller.vehicle
-    //     );
-    // });
+    use alt::events;
 
-    // col_shape.borrow_mut().destroy().unwrap();
-    // col_shape.borrow_mut().destroy().unwrap();
+    events::add_custom_handler(events::CustomHandler::VehicleEnterColShape(Box::new(
+        |controller| {
+            alt::log!(
+                "VehicleEnterColShape: {:?}, {:?}",
+                controller.col_shape,
+                controller.vehicle
+            );
+            Ok(())
+        },
+    )));
 
-    // alt::log!("colshape destroyed");
+    events::add_custom_handler(events::CustomHandler::VehicleLeaveColShape(Box::new(
+        |controller| {
+            alt::log!(
+                "VehicleLeaveColShape: {:?}, {:?}",
+                controller.col_shape,
+                controller.vehicle
+            );
+            Ok(())
+        },
+    )));
 
-    alt::events::add_handler(alt::events::SDKHandler::ServerStarted(Box::new(|c| {
-        dbg!(c);
-        alt::anyhow::bail!("errr")
-    })));
+    let col = col_shape.clone();
+    alt::set_timeout(
+        move || {
+            dbg!();
+            col.try_borrow()?.set_pos(11.0.into())?;
+            Ok(())
+        },
+        500,
+    );
+
+    let col = col_shape.clone();
+    alt::set_timeout(
+        move || {
+            dbg!();
+            col.try_borrow()?.set_pos(0.0.into())?;
+
+            Ok(())
+        },
+        1000,
+    );
+
+    let col = col_shape.clone();
+    alt::set_timeout(
+        move || {
+            dbg!();
+            col.try_borrow_mut()?.destroy()?;
+            Ok(())
+        },
+        1500,
+    );
+
+    // alt::events::add_handler(alt::events::SDKHandler::ServerStarted(Box::new(|c| {
+    //     dbg!(c);
+    //     alt::anyhow::bail!("errr")
+    // })));
 
     // alt::events::add_handler(alt::events::SDKHandler::PlayerConnect(Box::new(|c| {
     //     let player = c.player.borrow();

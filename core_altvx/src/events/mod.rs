@@ -16,7 +16,6 @@ macro_rules! log_user_handler_error {
 
 macro_rules! supported_sdk_events {
     ( $( $event_name: ident, )+ ) => {
-    paste::paste! {
         #[derive(Debug, Eq, PartialEq, Hash, Clone, Copy)]
         pub enum SupportedEventType {
             $( $event_name, )+
@@ -36,6 +35,7 @@ macro_rules! supported_sdk_events {
             }
         }
 
+        #[allow(clippy::from_over_into)]
         impl Into<SDKEventType> for SupportedEventType {
             fn into(self) -> SDKEventType {
                 match self { $(
@@ -110,19 +110,18 @@ macro_rules! supported_sdk_events {
             }
         }
     }
-    };
 }
 
 macro_rules! custom_events {
     ( $(
         $sdk_event_name: ident: [ $( $custom_event_name: ident, )+ ],
     )+ ) => {
-    paste::paste! {
         #[derive(Debug, Eq, PartialEq, Hash, Clone, Copy)]
         pub enum CustomEventType { $($(
             $custom_event_name,
         )+)+ }
 
+        #[allow(clippy::from_over_into)]
         impl Into<SupportedEventType> for CustomEventType {
             fn into(self) -> SupportedEventType {
                 match self { $($(
@@ -180,11 +179,15 @@ macro_rules! custom_events {
             controller: &SDKController,
             resource: &Resource,
         ) -> Option<CustomController> {
-            match (controller, event_type) { $($(
-                (SDKController::$sdk_event_name(controller), CustomEventType::$custom_event_name) => 
-                    Some(
-                        CustomController::$custom_event_name(custom_controllers::$custom_event_name::new(controller, resource)),
-                    ),
+            match (controller, event_type) {
+                $($(
+                    (SDKController::$sdk_event_name(controller), CustomEventType::$custom_event_name) => {
+                        if let Some(c) = custom_controllers::$custom_event_name::new(controller, resource) {
+                            Some(CustomController::$custom_event_name(c))
+                        } else {
+                            None
+                        }
+                    }
                 )+)+
                 _ => None,
             }
@@ -219,7 +222,6 @@ macro_rules! custom_events {
          }
         }
     }
-    };
 }
 
 supported_sdk_events!(
@@ -229,7 +231,10 @@ supported_sdk_events!(
 );
 
 custom_events!(
-    ColshapeEvent: [VehicleEnterColShape,],
+    ColshapeEvent: [
+        VehicleEnterColShape, 
+        VehicleLeaveColShape,
+    ],
 );
 
 #[derive(Default, Debug)]
@@ -277,7 +282,7 @@ impl EventManager {
 
             let controller = custom_controller_from_event_type(*custom_type, &controller, resource);
             let Some(controller) = controller else {
-                logger::debug!("custom event: {custom_type:?} no custom controllers");
+                logger::debug!("custom event: {custom_type:?} controller does not exist or event should not be called now");
                 continue;  
             };
 
@@ -320,5 +325,11 @@ impl EventManager {
 pub fn add_handler(handler: SDKHandler) {
     Resource::with_events_mut(|mut events, _| {
         events.add_sdk_handler(handler);
+    });
+}
+
+pub fn add_custom_handler(handler: CustomHandler) {
+    Resource::with_events_mut(|mut events, _| {
+        events.add_custom_handler(handler);
     });
 }

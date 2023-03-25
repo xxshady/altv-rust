@@ -9,33 +9,48 @@ pub trait BaseObjectMap<Container> {
 
 macro_rules! base_object_map {
     ($name: ident, $container: ty) => {
-        #[derive(Debug, Default)]
-        pub struct $name {
-            base_objects: HashMap<altv_sdk::IBaseObjectMutPtr, $container>,
-        }
-
-        impl BaseObjectMap<$container> for $name {
-            fn add_base_object(&mut self, base_object: $container) {
-                self.base_objects.insert(
-                    base_object.borrow().ptr().get().unwrap(),
-                    Rc::clone(&base_object),
-                );
+        paste::paste! {
+            #[derive(Debug, Default)]
+            pub struct [<$name BaseObjectMap>] {
+                base_objects: HashMap<altv_sdk::IBaseObjectMutPtr, $container>,
             }
 
-            fn remove_base_object(&mut self, raw_ptr: altv_sdk::IBaseObjectMutPtr) {
-                self.base_objects.remove(&raw_ptr);
+            impl BaseObjectMap<$container> for [<$name BaseObjectMap>] {
+                fn add_base_object(&mut self, base_object: $container) {
+                    self.base_objects.insert(
+                        base_object.borrow().ptr().get().unwrap(),
+                        Rc::clone(&base_object),
+                    );
+                }
+
+                fn remove_base_object(&mut self, raw_ptr: altv_sdk::IBaseObjectMutPtr) {
+                    self.base_objects.remove(&raw_ptr);
+                }
+
+                fn get_by_base_object_ptr(
+                    &self,
+                    raw_ptr: altv_sdk::IBaseObjectMutPtr,
+                ) -> Option<$container> {
+                    self.base_objects.get(&raw_ptr).cloned()
+                }
             }
 
-            fn get_by_base_object_ptr(
-                &self,
-                raw_ptr: altv_sdk::IBaseObjectMutPtr,
-            ) -> Option<$container> {
-                self.base_objects.get(&raw_ptr).cloned()
+            /// params: (*mut base_object, &resource)
+            #[macro_export]
+            macro_rules! [<base_object_maps_get_ $name:snake:lower>] {
+                ($ptr: expr, $resource: expr) => {
+                    $resource
+                        .[<$name:snake:lower _base_object_map>]
+                        .borrow()
+                        .get_by_base_object_ptr($ptr)
+                        .unwrap()
+                };
             }
+            pub use [<base_object_maps_get_ $name:snake:lower>] as [<get_ $name:snake:lower>];
         }
     };
 }
 
-base_object_map!(PlayerBaseObjectMap, player::PlayerContainer);
-base_object_map!(VehicleBaseObjectMap, vehicle::VehicleContainer);
-base_object_map!(ColShapeBaseObjectMap, col_shape::ColShapeContainer);
+base_object_map!(Player, player::PlayerContainer);
+base_object_map!(Vehicle, vehicle::VehicleContainer);
+base_object_map!(ColShape, col_shape::ColShapeContainer);
