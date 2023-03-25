@@ -64,4 +64,5 @@ pub fn init(
     });
 
     script_events::LocalEventManager::init();
+    script_events::ClientEventManager::init();
 }

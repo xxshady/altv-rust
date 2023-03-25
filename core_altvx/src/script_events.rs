@@ -137,6 +137,24 @@ pub struct ClientEventManager {
 }
 
 impl ClientEventManager {
+    pub fn init() {
+        use crate::events;
+
+        events::add_handler(events::SDKHandler::ClientScriptEvent(Box::new(|c| {
+            let events::sdk_controllers::ClientScriptEvent { name, player, .. } = c;
+
+            Resource::with_client_script_events_mut(|mut events, _| {
+                if !events.is_event_handled(name) {
+                    logger::debug!("client event is unhandled: {name}");
+                    return;
+                }
+                events.handle_event(name, player.clone(), c.args());
+            });
+
+            Ok(())
+        })));
+    }
+
     pub fn handle_event(
         &mut self,
         event_name: &str,

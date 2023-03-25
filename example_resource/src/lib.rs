@@ -718,4 +718,8 @@ pub fn main() {
             Ok(())
         },
     );
+
+    events::on_client("test".to_string(), |player, args| {
+        args.get_vector3_at(index)
+    });
 }

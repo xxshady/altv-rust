@@ -230,6 +230,7 @@ supported_sdk_events!(
     PlayerDisconnect,
     ColshapeEvent,
     ServerScriptEvent,
+    ClientScriptEvent,
     ConsoleCommandEvent,
 );
 

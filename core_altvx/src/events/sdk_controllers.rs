@@ -108,6 +108,45 @@ impl ServerScriptEvent {
 }
 
 #[derive(Debug)]
+pub struct ClientScriptEvent {
+    pub name: String,
+    pub player: PlayerContainer,
+    event: *const sdk::alt::CClientScriptEvent,
+    args: LazyCell<mvalue::MValueList>,
+}
+
+impl ClientScriptEvent {
+    pub fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = unsafe { sdk::events::to_CClientScriptEvent(event) };
+        let name = unsafe { sdk::CClientScriptEvent::GetName(event) }.to_string();
+        let player = get_player_from_event(
+            event,
+            resource,
+            sdk::CClientScriptEvent::GetTarget,
+        );
+
+        Self {
+            name,
+            event,
+            player,
+            args: LazyCell::new(),
+        }
+    }
+
+    pub fn args(&self) -> &mvalue::MValueList {
+        if self.args.filled() {
+            self.args.borrow().unwrap()
+        } else {
+            let args = unsafe { sdk::CClientScriptEvent::GetArgs(self.event) };
+            self.args
+                .fill(Resource::with(|v| mvalue::deserialize_mvalue_args(args, v)))
+                .unwrap();
+            self.args.borrow().unwrap()
+        }
+    }
+}
+
+#[derive(Debug)]
 pub struct ConsoleCommandEvent {
     pub name: String,
     pub args: Vec<String>,
