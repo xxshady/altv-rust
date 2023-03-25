@@ -45,64 +45,54 @@ pub fn main() {
     //     1000,
     // );
 
-    // alt::events::on_server_started(|controller| {
-    //     alt::log_warn!("example resource on_server_started controller: {controller:?}");
-    // });
+    alt::events::on_server_started(|controller| {
+        alt::log_warn!("example resource on_server_started controller: {controller:?}");
+        Ok(())
+    });
 
-    // alt::events::on_player_connect(|alt::events::PlayerConnectController { player }| {
-    //     {
-    //         let mut player = player.try_borrow_mut().unwrap();
-    //         let id = player.id().unwrap();
+    alt::events::on_player_connect(|alt::events::sdk_controllers::PlayerConnect { player }| {
+        {
+            let mut player = player.try_borrow_mut()?;
+            let id = player.id()?;
 
-    //         alt::log!(
-    //             "example resource on_player_connect name: {} id: {}",
-    //             player.name().unwrap(),
-    //             id
-    //         );
-    //         unsafe {
-    //             alt::ffi::IPlayer::Spawn(
-    //                 player.ptr_mut().to_player().unwrap(),
-    //                 0 as f32,
-    //                 0 as f32,
-    //                 72 as f32,
-    //                 0,
-    //             );
-    //             alt::ffi::IPlayer::SetModel(
-    //                 player.ptr_mut().to_player().unwrap(),
-    //                 alt::hash("mp_f_freemode_01"),
-    //             );
-    //         }
-    //     }
+            alt::log!(
+                "example resource on_player_connect name: {} id: {}",
+                player.name().unwrap(),
+                id
+            );
+        }
 
-    //     // alt::set_interval(
-    //     //     move || {
-    //     //         let vehicle = alt::Vehicle::new(alt::hash("sultan2"), 0.into(), 0.into()).unwrap();
-    //     //         alt::events::emit_client!(
-    //     //             "test",
-    //     //             player.clone(),
-    //     //             "test",
-    //     //             123u64,
-    //     //             alt::events::list![vehicle].unwrap()
-    //     //         )
-    //     //         .unwrap();
+        // alt::set_interval(
+        //     move || {
+        //         let vehicle = alt::Vehicle::new(alt::hash("sultan2"), 0.into(), 0.into()).unwrap();
+        //         alt::events::emit_client!(
+        //             "test",
+        //             player.clone(),
+        //             "test",
+        //             123u64,
+        //             alt::events::list![vehicle].unwrap()
+        //         )
+        //         .unwrap();
 
-    //     //         alt::events::emit_client!("test", player.clone()).unwrap();
+        //         alt::events::emit_client!("test", player.clone()).unwrap();
 
-    //     //         alt::events::emit_all_clients!("test", "emit all", player.clone()).unwrap();
+        //         alt::events::emit_all_clients!("test", "emit all", player.clone()).unwrap();
 
-    //     //         alt::events::emit_some_clients!(
-    //     //             "test",
-    //     //             vec![player.clone()],
-    //     //             "emit some",
-    //     //             player.clone()
-    //     //         )
-    //     //         .unwrap();
+        //         alt::events::emit_some_clients!(
+        //             "test",
+        //             vec![player.clone()],
+        //             "emit some",
+        //             player.clone()
+        //         )
+        //         .unwrap();
 
-    //     //         Ok(())
-    //     //     },
-    //     //     1000,
-    //     // );
-    // });
+        //         Ok(())
+        //     },
+        //     1000,
+        // );
+
+        Ok(())
+    });
 
     // alt::events::on_player_disconnect(|PlayerDisconnectController { player, reason }| {
     //     let player = player.borrow();
@@ -678,73 +668,51 @@ pub fn main() {
         alt::Vector2::new(0.0, 1.0)
     ));
 
-    // let mut col_shape = alt::ColShape::new_circle(0.into(), 10.0);
+    let mut col_shape = alt::ColShape::new_circle(0.into(), 10.0);
 
-    // let veh = alt::Vehicle::new(alt::hash("sultan"), 0.into(), 0.into()).unwrap();
-    // dbg!(veh);
+    let veh = alt::Vehicle::new(alt::hash("sultan"), 0.into(), 0.into()).unwrap();
+    dbg!(veh);
 
-    // use alt::events;
+    use alt::events;
 
-    // events::add_custom_handler(events::CustomHandler::VehicleEnterColShape(Box::new(
-    //     |controller| {
-    //         alt::log!(
-    //             "VehicleEnterColShape: {:?}, {:?}",
-    //             controller.col_shape,
-    //             controller.vehicle
-    //         );
-    //         Ok(())
-    //     },
-    // )));
+    events::on_vehicle_enter_col_shape(|c| {
+        alt::log!("~gl~vehicle enter colshape");
+        Ok(())
+    });
 
-    // events::add_custom_handler(events::CustomHandler::VehicleLeaveColShape(Box::new(
-    //     |controller| {
-    //         alt::log!(
-    //             "VehicleLeaveColShape: {:?}, {:?}",
-    //             controller.col_shape,
-    //             controller.vehicle
-    //         );
-    //         Ok(())
-    //     },
-    // )));
+    events::on_vehicle_leave_col_shape(|c| {
+        alt::log!("~rl~vehicle leave colshape");
+        Ok(())
+    });
 
-    // let col = col_shape.clone();
-    // alt::set_timeout(
-    //     move || {
-    //         dbg!();
-    //         col.try_borrow()?.set_pos(11.0.into())?;
-    //         Ok(())
-    //     },
-    //     500,
-    // );
+    let col = col_shape.clone();
+    alt::set_timeout(
+        move || {
+            dbg!();
+            col.try_borrow()?.set_pos(11.0.into())?;
+            Ok(())
+        },
+        500,
+    );
 
-    // let col = col_shape.clone();
-    // alt::set_timeout(
-    //     move || {
-    //         dbg!();
-    //         col.try_borrow()?.set_pos(0.0.into())?;
+    let col = col_shape.clone();
+    alt::set_timeout(
+        move || {
+            dbg!();
+            col.try_borrow()?.set_pos(0.0.into())?;
 
-    //         Ok(())
-    //     },
-    //     1000,
-    // );
+            Ok(())
+        },
+        1000,
+    );
 
-    // let col = col_shape.clone();
-    // alt::set_timeout(
-    //     move || {
-    //         dbg!();
-    //         col.try_borrow_mut()?.destroy()?;
-    //         Ok(())
-    //     },
-    //     1500,
-    // );
-
-    // alt::events::add_handler(alt::events::SDKHandler::ServerStarted(Box::new(|c| {
-    //     dbg!(c);
-    //     alt::anyhow::bail!("errr")
-    // })));
-
-    // alt::events::add_handler(alt::events::SDKHandler::PlayerConnect(Box::new(|c| {
-    //     let player = c.player.borrow();
-    //     dbg!(player.name().unwrap());
-    // })));
+    let col = col_shape.clone();
+    alt::set_timeout(
+        move || {
+            dbg!();
+            col.try_borrow_mut()?.destroy()?;
+            Ok(())
+        },
+        1500,
+    );
 }
