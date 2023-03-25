@@ -21,6 +21,22 @@ impl PlayerConnect {
 }
 
 #[derive(Debug)]
+pub struct PlayerDisconnect {
+    pub player: PlayerContainer,
+    pub reason: String,
+}
+
+impl PlayerDisconnect {
+    pub fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = unsafe { sdk::events::to_CPlayerDisconnectEvent(event) };
+        Self {
+            player: get_player_from_event(event, resource, sdk::CPlayerDisconnectEvent::GetTarget),
+            reason: unsafe { sdk::CPlayerDisconnectEvent::GetReason(event) }.to_string(),
+        }
+    }
+}
+
+#[derive(Debug)]
 pub struct ServerStarted {}
 
 impl ServerStarted {
@@ -87,6 +103,25 @@ impl ServerScriptEvent {
                 .fill(Resource::with(|v| mvalue::deserialize_mvalue_args(args, v)))
                 .unwrap();
             self.args.borrow().unwrap()
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct ConsoleCommandEvent {
+    pub name: String,
+    pub args: Vec<String>,
+}
+
+impl ConsoleCommandEvent {
+    pub fn new(event: altv_sdk::CEventPtr, _: &Resource) -> Self {
+        let event = unsafe { sdk::events::to_CConsoleCommandEvent(event) };
+        Self {
+            name: unsafe { sdk::CConsoleCommandEvent::GetName(event) }.to_string(),
+            args: unsafe { sdk::CConsoleCommandEvent::GetArgs(event) }
+                .iter()
+                .map(|s| s.to_string())
+                .collect(),
         }
     }
 }

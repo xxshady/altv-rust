@@ -227,8 +227,10 @@ macro_rules! custom_events {
 supported_sdk_events!(
     ServerStarted,
     PlayerConnect,
+    PlayerDisconnect,
     ColshapeEvent,
     ServerScriptEvent,
+    ConsoleCommandEvent,
 );
 
 custom_events!(

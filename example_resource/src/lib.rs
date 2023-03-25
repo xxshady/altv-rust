@@ -104,10 +104,6 @@ pub fn main() {
     //     )
     // });
 
-    // alt::events::on_console_command(|alt::events::ConsoleCommandController { name, args }| {
-    //     alt::log_warn!("on_console_command name: {name:?} args: {args:?}");
-    // });
-
     // TODO: check resource restart with created vehicle here:
     // let vehicle = alt::Vehicle::new(alt::hash("sultan"), 0.into(), 0.into()).unwrap();
     // dbg!(&vehicle);
@@ -714,5 +710,12 @@ pub fn main() {
             Ok(())
         },
         1500,
+    );
+
+    events::on_console_command(
+        |events::sdk_controllers::ConsoleCommandEvent { name, args }| {
+            alt::log!("on_console_command name: {name:?} args: {args:?}");
+            Ok(())
+        },
     );
 }
