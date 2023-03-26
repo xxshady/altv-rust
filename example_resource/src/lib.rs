@@ -50,58 +50,48 @@ pub fn main() {
         Ok(())
     });
 
-    alt::events::on_player_connect(|alt::events::sdk_controllers::PlayerConnect { player }| {
-        {
-            let mut player = player.try_borrow_mut()?;
-            let id = player.id()?;
+    // alt::events::on_player_connect(|alt::events::sdk_controllers::PlayerConnect { player }| {
+    //     {
+    //         let mut player = player.try_borrow_mut()?;
+    //         let id = player.id()?;
 
-            alt::log!(
-                "example resource on_player_connect name: {} id: {}",
-                player.name().unwrap(),
-                id
-            );
-        }
+    //         alt::log!(
+    //             "example resource on_player_connect name: {} id: {}",
+    //             player.name().unwrap(),
+    //             id
+    //         );
+    //     }
 
-        // alt::set_interval(
-        //     move || {
-        //         let vehicle = alt::Vehicle::new(alt::hash("sultan2"), 0.into(), 0.into()).unwrap();
-        //         alt::events::emit_client!(
-        //             "test",
-        //             player.clone(),
-        //             "test",
-        //             123u64,
-        //             alt::events::list![vehicle].unwrap()
-        //         )
-        //         .unwrap();
+    //     // alt::set_interval(
+    //     //     move || {
+    //     //         let vehicle = alt::Vehicle::new(alt::hash("sultan2"), 0.into(), 0.into()).unwrap();
+    //     //         alt::events::emit_client!(
+    //     //             "test",
+    //     //             player.clone(),
+    //     //             "test",
+    //     //             123u64,
+    //     //             alt::events::list![vehicle].unwrap()
+    //     //         )
+    //     //         .unwrap();
 
-        //         alt::events::emit_client!("test", player.clone()).unwrap();
+    //     //         alt::events::emit_client!("test", player.clone()).unwrap();
 
-        //         alt::events::emit_all_clients!("test", "emit all", player.clone()).unwrap();
+    //     //         alt::events::emit_all_clients!("test", "emit all", player.clone()).unwrap();
 
-        //         alt::events::emit_some_clients!(
-        //             "test",
-        //             vec![player.clone()],
-        //             "emit some",
-        //             player.clone()
-        //         )
-        //         .unwrap();
+    //     //         alt::events::emit_some_clients!(
+    //     //             "test",
+    //     //             vec![player.clone()],
+    //     //             "emit some",
+    //     //             player.clone()
+    //     //         )
+    //     //         .unwrap();
 
-        //         Ok(())
-        //     },
-        //     1000,
-        // );
+    //     //         Ok(())
+    //     //     },
+    //     //     1000,
+    //     // );
 
-        Ok(())
-    });
-
-    // alt::events::on_player_disconnect(|PlayerDisconnectController { player, reason }| {
-    //     let player = player.borrow();
-    //     alt::log_warn!(
-    //         "on_player_disconnect player: {} [{}], reason: {}",
-    //         player.name().unwrap(),
-    //         player.id().unwrap(),
-    //         reason
-    //     )
+    //     Ok(())
     // });
 
     // TODO: check resource restart with created vehicle here:
@@ -720,6 +710,33 @@ pub fn main() {
     );
 
     events::on_client("test".to_string(), |player, args| {
-        args.get_vector3_at(index)
+        dbg!(player, args);
+        Ok(())
     });
+
+    events::on_player_connect(|events::sdk_controllers::PlayerConnect { player }| {
+        let player = player.borrow();
+        alt::log!(
+            "on_player_connect player: {} [{}]",
+            player.name()?,
+            player.id()?,
+        );
+        let model = alt::hash("mp_m_freemode_01");
+        player.spawn(model, alt::Vector3::new(0., 0., 72.))?;
+        dbg!(player.model()? == model);
+        Ok(())
+    });
+
+    events::on_player_disconnect(
+        |events::sdk_controllers::PlayerDisconnect { player, reason }| {
+            let player = player.borrow();
+            alt::log!(
+                "on_player_disconnect player: {} [{}], reason: {}",
+                player.name()?,
+                player.id()?,
+                reason
+            );
+            Ok(())
+        },
+    );
 }
