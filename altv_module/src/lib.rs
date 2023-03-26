@@ -1,16 +1,20 @@
 use altv_sdk::ffi as sdk;
+use core_module::ResourceMainPath;
 use libloading::Library;
 use resource_manager::ResourceController;
 use std::path::PathBuf;
 
-use crate::resource_manager::RESOURCE_MANAGER_INSTANCE;
+use crate::{event_manager::EVENT_MANAGER_INSTANCE, resource_manager::RESOURCE_MANAGER_INSTANCE};
 
+mod event_manager;
 mod helpers;
 mod resource_manager;
 
 type ResourceMainFn = unsafe extern "C" fn(
     core: *mut sdk::alt::ICore,
+    full_main_path: ResourceMainPath,
     resource_handlers: &mut core_module::ResourceHandlers,
+    module_handlers: core_module::ModuleHandlers,
 );
 
 #[allow(improper_ctypes_definitions)]
@@ -20,9 +24,10 @@ extern "C" fn resource_start(full_main_path: &str) {
 
     let core_ptr = unsafe { sdk::get_alt_core() };
 
-    let resource_handlers = core_module::ResourceHandlers::new();
-    let mut resource_for_module = core_module::ResourceForModule::new(resource_handlers);
+    let module_handlers = core_module::ModuleHandlers::new(toggle_resource_event_type);
 
+    let resource_handlers = core_module::ResourceHandlers::default();
+    let mut resource_for_module = core_module::ResourceForModule::new(resource_handlers);
     let lib = unsafe { Library::new(PathBuf::from(&full_main_path)) }.unwrap();
     let main_fn: ResourceMainFn = unsafe { *lib.get(b"main\0").unwrap() };
 
@@ -31,7 +36,14 @@ extern "C" fn resource_start(full_main_path: &str) {
             .borrow_mut()
             .add_pending_status(full_main_path.clone());
 
-        unsafe { main_fn(core_ptr, &mut resource_for_module.handlers) };
+        unsafe {
+            main_fn(
+                core_ptr,
+                full_main_path.clone(),
+                &mut resource_for_module.handlers,
+                module_handlers,
+            )
+        };
 
         manager.borrow_mut().remove_pending_status(&full_main_path);
 
@@ -51,6 +63,22 @@ extern "C" fn resource_stop(full_main_path: &str) {
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
         manager.borrow_mut().remove(&full_main_path);
     });
+    EVENT_MANAGER_INSTANCE.with(|manager| {
+        manager.borrow_mut().resource_stopped(&full_main_path);
+    });
+}
+
+fn toggle_resource_event_type(
+    full_main_path: ResourceMainPath,
+    event_type: altv_sdk::EventType,
+    state: bool,
+) {
+    logger::debug!("toggle_resource_event_type {event_type:?} {state:?} (from: {full_main_path})");
+
+    EVENT_MANAGER_INSTANCE.with(|v| {
+        v.borrow_mut()
+            .toggle_event(full_main_path, event_type, state);
+    })
 }
 
 #[allow(improper_ctypes_definitions)]
@@ -76,7 +104,6 @@ extern "C" fn resource_on_event(full_main_path: &str, event: altv_sdk::CEventPtr
     }
 
     let raw_type = unsafe { sdk::CEvent::GetType(event) };
-    logger::debug!("resource_on_event {raw_type:?}");
 
     let event_type = altv_sdk::EventType::from(raw_type).unwrap();
 
@@ -87,8 +114,8 @@ extern "C" fn resource_on_event(full_main_path: &str, event: altv_sdk::CEventPtr
     );
 
     // heron said it will be removed
-    if event_type == altv_sdk::EventType::PLAYER_BEFORE_CONNECT {
-        logger::info!("ignoring PLAYER_BEFORE_CONNECT");
+    if event_type == altv_sdk::EventType::PlayerBeforeConnect {
+        logger::info!("ignoring PlayerBeforeConnect");
         return;
     }
 

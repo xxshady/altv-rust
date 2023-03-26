@@ -1,9 +1,9 @@
-use core_altvx::events::*;
+use core_altvx::events;
 
-pub use core_altvx::events::{
-    ConsoleCommandController, PlayerConnectController, PlayerDisconnectController,
-    ServerStartedController,
-};
+use crate::anyhow;
+
+pub use core_altvx::events::custom_controllers;
+pub use core_altvx::events::sdk_controllers;
 
 pub use core_altvx::emit_local_event as emit;
 pub use core_altvx::mvalue::MValue;
@@ -17,68 +17,31 @@ pub use core_altvx::emit_all_clients;
 pub use core_altvx::emit_client;
 pub use core_altvx::emit_some_clients;
 
-macro_rules! on_event {
-    ($func_name: ident, $event_path: path, $controller: ty, $public_type: path, $sdk_type: path) => {
-        pub fn $func_name(handler: impl FnMut($controller) + 'static) {
-            core_altvx::events::add_handler(
-                $public_type,
-                $sdk_type,
-                $event_path(Box::new(handler)),
-            );
+macro_rules! on_sdk_event {
+    ($func_name: ident, $event_name: ident) => {
+        pub fn $func_name(
+            handler: impl FnMut(&events::sdk_controllers::$event_name) -> anyhow::Result<()> + 'static,
+        ) {
+            events::add_handler(events::SDKHandler::$event_name(Box::new(handler)));
         }
     };
 }
 
-macro_rules! on_extra_event {
-    ($func_name: ident, $event_path: path, $controller: ty, $public_event: expr, $extra_type: path, $sdk_type: path) => {
-        pub fn $func_name(handler: impl FnMut($controller) + 'static) {
-            core_altvx::events::add_extra_handler(
-                $public_event,
-                $extra_type,
-                $sdk_type,
-                $event_path(Box::new(handler)),
-            );
+macro_rules! on_custom_event {
+    ($func_name: ident, $event_name: ident) => {
+        pub fn $func_name(
+            handler: impl FnMut(&events::custom_controllers::$event_name) -> anyhow::Result<()>
+                + 'static,
+        ) {
+            events::add_custom_handler(events::CustomHandler::$event_name(Box::new(handler)));
         }
     };
 }
 
-on_event!(
-    on_server_started,
-    Event::ServerStarted,
-    ServerStartedController,
-    PublicEventType::ServerStarted,
-    SDKEventType::SERVER_STARTED
-);
+on_sdk_event!(on_server_started, ServerStarted);
+on_sdk_event!(on_player_connect, PlayerConnect);
+on_sdk_event!(on_player_disconnect, PlayerDisconnect);
+on_sdk_event!(on_console_command, ConsoleCommandEvent);
 
-on_event!(
-    on_player_connect,
-    Event::PlayerConnect,
-    PlayerConnectController,
-    PublicEventType::PlayerConnect,
-    SDKEventType::PLAYER_CONNECT
-);
-
-on_event!(
-    on_player_disconnect,
-    Event::PlayerDisconnect,
-    PlayerDisconnectController,
-    PublicEventType::PlayerDisconnect,
-    SDKEventType::PLAYER_DISCONNECT
-);
-
-on_event!(
-    on_console_command,
-    Event::ConsoleCommand,
-    ConsoleCommandController,
-    PublicEventType::ConsoleCommand,
-    SDKEventType::CONSOLE_COMMAND_EVENT
-);
-
-on_extra_event!(
-    on_vehicle_enter_col_shape,
-    ExtraEvent::VehicleEnterColShape,
-    VehicleEnterColShapeController,
-    Event::ColShape,
-    ExtraEventType::VehicleEnterColShape,
-    SDKEventType::COLSHAPE_EVENT
-);
+on_custom_event!(on_vehicle_enter_col_shape, VehicleEnterColShape);
+on_custom_event!(on_vehicle_leave_col_shape, VehicleLeaveColShape);

@@ -1,4 +1,4 @@
-#[allow(clippy::missing_safety_doc)]
+#![allow(clippy::missing_safety_doc)]
 
 pub mod ffi {
     use autocxx::prelude::*;

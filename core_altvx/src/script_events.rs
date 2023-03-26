@@ -80,10 +80,28 @@ pub struct LocalEventManager {
 }
 
 impl LocalEventManager {
-    pub fn handle_event(&mut self, event_name: &str, args: EventArgs) {
+    pub fn init() {
+        use crate::events;
+
+        events::add_handler(events::SDKHandler::ServerScriptEvent(Box::new(|c| {
+            let events::sdk_controllers::ServerScriptEvent { name, .. } = c;
+
+            Resource::with_local_script_events_mut(|mut events, _| {
+                if !events.is_event_handled(name) {
+                    logger::debug!("local event is unhandled: {name}");
+                    return;
+                }
+                events.handle_event(name, c.args());
+            });
+
+            Ok(())
+        })));
+    }
+
+    fn handle_event(&mut self, event_name: &str, args: EventArgs) {
         if let Some(handlers) = self.get_handlers_for_event(event_name) {
             for h in handlers {
-                if let Err(error) = h(&args) {
+                if let Err(error) = h(args) {
                     logger::error!("handler of event: {event_name:?} failed with error: {error:?}");
                 } else {
                     logger::debug!("handler of event: {event_name:?} called successfully");
@@ -119,6 +137,24 @@ pub struct ClientEventManager {
 }
 
 impl ClientEventManager {
+    pub fn init() {
+        use crate::events;
+
+        events::add_handler(events::SDKHandler::ClientScriptEvent(Box::new(|c| {
+            let events::sdk_controllers::ClientScriptEvent { name, player, .. } = c;
+
+            Resource::with_client_script_events_mut(|mut events, _| {
+                if !events.is_event_handled(name) {
+                    logger::debug!("client event is unhandled: {name}");
+                    return;
+                }
+                events.handle_event(name, player.clone(), c.args());
+            });
+
+            Ok(())
+        })));
+    }
+
     pub fn handle_event(
         &mut self,
         event_name: &str,
@@ -127,7 +163,7 @@ impl ClientEventManager {
     ) {
         if let Some(handlers) = self.get_handlers_for_event(event_name) {
             for h in handlers {
-                if let Err(error) = h(player.clone(), &args) {
+                if let Err(error) = h(player.clone(), args) {
                     logger::error!(
                         "handler of client event: {event_name:?} failed with error: {error:?}"
                     );

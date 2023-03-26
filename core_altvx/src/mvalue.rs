@@ -238,19 +238,19 @@ fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Resource) -> 
     use altv_sdk::MValueType::*;
 
     match mvalue_type {
-        BOOL => MValue::Bool(unsafe { sdk::get_mvalue_bool(cpp_wrapper) }),
-        DOUBLE => MValue::F64(unsafe { sdk::get_mvalue_double(cpp_wrapper) }),
-        STRING => MValue::String(unsafe { sdk::get_mvalue_string(cpp_wrapper).to_string() }),
-        NIL | NONE => MValue::None,
-        INT => MValue::I64(unsafe { sdk::get_mvalue_int(cpp_wrapper) }),
-        UINT => MValue::U64(unsafe { sdk::get_mvalue_uint(cpp_wrapper) }),
-        LIST => MValue::List(MValueList::new(
+        Bool => MValue::Bool(unsafe { sdk::get_mvalue_bool(cpp_wrapper) }),
+        Double => MValue::F64(unsafe { sdk::get_mvalue_double(cpp_wrapper) }),
+        String => MValue::String(unsafe { sdk::get_mvalue_string(cpp_wrapper).to_string() }),
+        Nil | None => MValue::None,
+        Int => MValue::I64(unsafe { sdk::get_mvalue_int(cpp_wrapper) }),
+        Uint => MValue::U64(unsafe { sdk::get_mvalue_uint(cpp_wrapper) }),
+        List => MValue::List(MValueList::new(
             unsafe { sdk::get_mvalue_list(cpp_wrapper) }
                 .iter()
                 .map(|v| deserialize_mvalue(v, resource))
                 .collect(),
         )),
-        DICT => MValue::Dict({
+        Dict => MValue::Dict({
             let mut hash_map = HashMap::new();
 
             unsafe { sdk::get_mvalue_dict(cpp_wrapper) }
@@ -265,7 +265,7 @@ fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Resource) -> 
 
             hash_map
         }),
-        BASE_OBJECT => {
+        BaseObject => {
             let raw_ptr = unsafe { sdk::get_mvalue_base_object(cpp_wrapper) };
             logger::debug!("deserializing BASE_OBJECT raw ptr: {raw_ptr:?}");
             if raw_ptr.is_null() {
@@ -298,15 +298,15 @@ fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Resource) -> 
                 }
 
                 match base_obj.borrow().base_type() {
-                    VEHICLE => {
+                    Vehicle => {
                         deserialize_base_object!("vehicle", Vehicle, vehicle_base_object_map)
                     }
-                    PLAYER => {
+                    Player => {
                         deserialize_base_object!("player", Player, player_base_object_map)
                     }
-                    base_type => {
+                    unknown_base_type => {
                         logger::error!(
-                            "[deserialize_mvalue] unknown baseobject type: {base_type:?}"
+                            "[deserialize_mvalue] unknown baseobject type: {unknown_base_type:?}"
                         );
                         MValue::InvalidBaseObject
                     }
@@ -316,10 +316,10 @@ fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Resource) -> 
                 MValue::InvalidBaseObject
             }
         }
-        VECTOR3 => MValue::Vector3(read_cpp_vector3(
+        Vector3 => MValue::Vector3(read_cpp_vector3(
             unsafe { sdk::get_mvalue_vector3(cpp_wrapper) }.within_unique_ptr(),
         )),
-        VECTOR2 => MValue::Vector2(read_cpp_vector2(
+        Vector2 => MValue::Vector2(read_cpp_vector2(
             unsafe { sdk::get_mvalue_vector2(cpp_wrapper) }.within_unique_ptr(),
         )),
         _ => {
