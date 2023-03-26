@@ -144,8 +144,7 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
         #define ALT_SERVER_API\n\
         #include \"alt_bridge.h\"\n\n\
         namespace {class_name} {{\n\n"
-    )
-    .to_string();
+    );
 
     let mut cpp_method_to_rust = |method: String| match cpp_method_to_rust_compatible_func(
         class_name,
@@ -169,11 +168,11 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
         let mut line = line.trim();
         // dbg!(line);
 
-        if multiline_method.len() > 0 {
+        if !multiline_method.is_empty() {
             // println!("multiline_method line: {:#?}", line);
-            multiline_method += line.replace("\n", " ").as_str();
+            multiline_method += line.replace('\n', " ").as_str();
 
-            if line.ends_with(";") {
+            if line.ends_with(';') {
                 // println!("multiline end");
                 // println!("full multiline:\n{multiline_method}");
 
@@ -222,23 +221,44 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
             line = line.get("virtual ".len()..).unwrap();
             // dbg!(line);
         }
-        if !(SUPPORTED_CPP_TYPES
-            .keys()
-            .any(|v| line.starts_with(v) || line.starts_with(&format!("const {v}")))
-            || SUPPORTED_CPP_TYPES_IN_CLASSES.keys().any(|v| {
+
+        // lets fuck up this shit coded mess even more
+        {
+            let check_weird_pointer_type = |cpp_type: &str| {
+                let mut cpp_type = cpp_type.to_string();
+                if !cpp_type.ends_with('*') {
+                    return false;
+                }
+
+                let cpp_pointer = &format!("{} *", {
+                    cpp_type.remove(cpp_type.len() - 1);
+                    cpp_type
+                });
+                line.starts_with(cpp_pointer)
+            };
+
+            if !(SUPPORTED_CPP_TYPES.keys().any(|cpp_type| {
+                let cpp_type = cpp_type.to_string();
+                if check_weird_pointer_type(&cpp_type) {
+                    return true;
+                }
+                line.starts_with(&cpp_type) || line.starts_with(&format!("const {cpp_type}"))
+            }) || SUPPORTED_CPP_TYPES_IN_CLASSES.keys().any(|v| {
                 let cpp_type = v.replace(&format!("{class_name}::"), "");
                 // println!("SUPPORTED_CPP_TYPES_IN_CLASSES check class_name: {class_name} cpp_type: {cpp_type} line: {line}");
-
+                if check_weird_pointer_type(&cpp_type) {
+                    return true;
+                }
                 line.starts_with(&cpp_type) || line.starts_with(&format!("const {v}"))
-            }))
-        {
-            println!("either its not method or unsupported cpp type: {line}");
-            continue;
+            })) {
+                println!("either its not method or unsupported cpp type: {line}");
+                continue;
+            }
         }
 
         // println!("line: {line:#?}");
 
-        if line.ends_with(",") {
+        if line.ends_with(',') {
             multiline_method = line.to_string();
             // println!("multiline start!");
             continue;
@@ -364,49 +384,60 @@ fn parse_cpp_method(class_name: &str, method: String) -> anyhow::Result<CppMetho
     let mut proc_parameters: Vec<ProcParam> = vec![];
     let mut next_param_word_ignored = false;
     let mut pointer_param = false;
+    let mut pointer_return_type = false;
 
-    while let Some(char) = method_parser.next_char().map(|v| *v) {
+    while let Some(char) = method_parser.next_char().copied() {
         if in_word {
             if parameters_parsing && char == b' ' && method_parser.is_next_char('*') {
                 // println!("parameters_parsing pointer type: {current_word:?}");
                 pointer_param = true;
                 continue;
+            } else if return_type.type_name.is_none() // return type parsing
+                && char == b' ' && method_parser.is_next_char('*')
+            {
+                // println!("return type parsing pointer type: {current_word:?}");
+                pointer_return_type = true;
+                continue;
             }
 
-            if is_it_delimiter_char(char) || pointer_param {
+            if is_it_delimiter_char(char) || pointer_param || pointer_return_type {
                 if pointer_param {
                     // println!("word end pointer_param");
                     pointer_param = false;
                     current_word.add_char(b'*');
+                } else if pointer_return_type {
+                    // println!("word end pointer_return_type");
+                    current_word.add_char(b'*');
+                    pointer_return_type = false;
                 }
 
                 let word = current_word.reset();
                 println!("word: {word:?}");
 
                 if return_type.is_const && return_type.type_name.is_none() {
-                    println!("const return type set type value: {:?}", word);
+                    // println!("const return type set type value: {word:?}");
                     return_type.type_name.replace(word);
                 } else if !return_type.is_const && return_type.type_name.is_none() {
                     if word == "const" {
-                        println!("const return type");
+                        // println!("const return type");
                         return_type.is_const = true;
                     } else {
-                        println!("non-const return type");
-                        return_type.type_name = Some(word);
+                        // println!("non-const return type");
+                        return_type.type_name.replace(word);
                     }
                 } else if method_name.is_none() {
-                    println!("set method_name");
+                    // println!("set method_name");
                     method_name = Some(word);
 
                     if char == b'(' && method_parser.is_next_char(')') {
-                        println!("no parameters");
-                        println!("parameters end");
+                        // println!("no parameters");
+                        // println!("parameters end");
                         parameters_parsing = false;
                         in_word = false;
                         continue;
                     }
 
-                    println!("parameters_parsing start");
+                    // println!("parameters_parsing start");
                     parameters_parsing = true;
                 } else if parameters_parsing {
                     macro_rules! push_new_param {
@@ -435,16 +466,14 @@ fn parse_cpp_method(class_name: &str, method: String) -> anyhow::Result<CppMetho
                                 continue;
                             }
                             push_new_param!();
-                        } else {
-                            if p.is_const {
-                                if p.type_name.is_none() {
-                                    p.type_name.replace(word);
-                                } else {
-                                    p.name.replace(word);
-                                }
+                        } else if p.is_const {
+                            if p.type_name.is_none() {
+                                p.type_name.replace(word);
                             } else {
                                 p.name.replace(word);
                             }
+                        } else {
+                            p.name.replace(word);
                         }
                     } else {
                         push_new_param!();
