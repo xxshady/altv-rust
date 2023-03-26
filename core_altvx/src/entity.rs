@@ -35,12 +35,6 @@ pub struct EntityManager {
 }
 
 impl EntityManager {
-    pub fn new() -> Self {
-        Self {
-            entities: HashMap::new(),
-        }
-    }
-
     pub fn get_by_id(&self, id: EntityId) -> Option<&EntityWrapper> {
         self.entities.get(&id)
     }
