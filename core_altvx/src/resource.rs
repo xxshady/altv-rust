@@ -3,6 +3,8 @@ use std::{
     rc::Rc,
 };
 
+use core_shared::{ModuleHandlers, ResourceMainPath};
+
 use crate::{
     base_object,
     base_object_maps::{self, BaseObjectMap},
@@ -18,6 +20,9 @@ thread_local! {
 
 #[derive(Debug, Default)]
 pub struct Resource {
+    pub full_main_path: ResourceMainPath,
+    pub module_handlers: ModuleHandlers,
+
     pub timers: RefCell<timers::TimerManager>,
     pub timer_schedule: RefCell<timers::ScheduleState>,
     pub base_objects: RefCell<base_object::BaseObjectManager>,
@@ -71,9 +76,13 @@ macro_rules! impl_borrow_mut_fn {
 }
 
 impl Resource {
-    pub fn init() {
+    pub fn init(full_main_path: ResourceMainPath, module_handlers: ModuleHandlers) {
         RESOURCE.with(|container| {
-            container.replace(Some(Resource::default()));
+            container.replace(Some(Resource {
+                full_main_path,
+                module_handlers,
+                ..Default::default()
+            }));
         });
     }
 
@@ -107,7 +116,7 @@ impl Resource {
 
         use altv_sdk::BaseObjectType::*;
         let base_object: base_object::BaseObjectContainer = match base_object_type {
-            VEHICLE => {
+            Vehicle => {
                 let vehicle = vehicle::create_vehicle_container(raw_ptr);
                 add_entity_to_pool(entity::EntityWrapper::Vehicle(Rc::clone(&vehicle)));
                 self.vehicle_base_object_map
@@ -116,7 +125,7 @@ impl Resource {
 
                 vehicle
             }
-            PLAYER => {
+            Player => {
                 let player = player::create_player_container(raw_ptr);
                 add_entity_to_pool(entity::EntityWrapper::Player(Rc::clone(&player)));
                 self.player_base_object_map
@@ -125,7 +134,7 @@ impl Resource {
 
                 player
             }
-            COLSHAPE => {
+            Colshape => {
                 let col_shape = col_shape::create_col_shape_container(raw_ptr);
                 self.col_shape_base_object_map
                     .borrow_mut()
@@ -160,19 +169,19 @@ impl Resource {
 
             use altv_sdk::BaseObjectType::*;
             match base_object_borrow.base_type() {
-                PLAYER => {
+                Player => {
                     remove_entity_from_pool(&base_object_borrow);
                     self.player_base_object_map
                         .borrow_mut()
                         .remove_base_object(base_object_borrow.ptr().get().unwrap());
                 }
-                VEHICLE => {
+                Vehicle => {
                     remove_entity_from_pool(&base_object_borrow);
                     self.vehicle_base_object_map
                         .borrow_mut()
                         .remove_base_object(base_object_borrow.ptr().get().unwrap());
                 }
-                COLSHAPE => {
+                Colshape => {
                     self.col_shape_base_object_map
                         .borrow_mut()
                         .remove_base_object(base_object_borrow.ptr().get().unwrap());

@@ -101,5 +101,6 @@
   "rust-analyzer.trace.extension": true,
   "rust-analyzer.check.extraEnv": {
     "LOG_LEVEL": "debug"
-  }
+  },
+  "rust-analyzer.check.command": "clippy"
 }

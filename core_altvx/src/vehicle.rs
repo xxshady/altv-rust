@@ -91,6 +91,6 @@ pub fn create_vehicle(
 pub fn create_vehicle_container(raw_ptr: altv_sdk::IBaseObjectMutPtr) -> VehicleContainer {
     Rc::new(RefCell::new(Vehicle {
         ptr: BaseObjectPointer::new(raw_ptr),
-        base_type: altv_sdk::BaseObjectType::VEHICLE,
+        base_type: altv_sdk::BaseObjectType::Vehicle,
     }))
 }

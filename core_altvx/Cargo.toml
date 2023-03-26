@@ -12,3 +12,4 @@ altv_sdk = { path = "../altv_sdk" }
 anyhow = { workspace = true }
 autocxx = { workspace = true }
 paste = { workspace = true }
+lazycell = "1.3.0"

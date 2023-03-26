@@ -9,13 +9,36 @@ pub struct ResourceHandlers {
     pub on_base_object_destroy: Option<Box<dyn Fn(altv_sdk::IBaseObjectMutPtr) + 'static>>,
 }
 
-impl ResourceHandlers {
-    pub fn new() -> Self {
-        Self::default()
+impl Debug for ResourceHandlers {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ResourceHandlers {{todo}}")
     }
 }
 
-impl Debug for ResourceHandlers {
+pub type ResourceMainPath = String;
+type ToggleEventTypeFn = fn(ResourceMainPath, altv_sdk::EventType, bool);
+
+pub struct ModuleHandlers {
+    pub toggle_event_type: ToggleEventTypeFn,
+}
+
+// this shit is here for derive(Default) of core_altvx Resource
+impl Default for ModuleHandlers {
+    fn default() -> Self {
+        fn placeholder(_: ResourceMainPath, _: altv_sdk::EventType, _: bool) {}
+        Self {
+            toggle_event_type: placeholder,
+        }
+    }
+}
+
+impl ModuleHandlers {
+    pub fn new(toggle_event_type: ToggleEventTypeFn) -> Self {
+        Self { toggle_event_type }
+    }
+}
+
+impl Debug for ModuleHandlers {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "ResourceHandlers {{todo}}")
     }

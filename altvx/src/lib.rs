@@ -4,10 +4,14 @@ pub use resource_main_macro::resource_main_func as main;
 pub mod __internal {
     pub use altv_sdk::ffi::{alt::ICore, set_alt_core};
 
-    pub use core_altvx::{init as core_init, ResourceHandlers};
+    pub use core_altvx::{init as core_init, ModuleHandlers, ResourceHandlers};
 
-    pub fn init(resource_state: &mut ResourceHandlers) {
-        core_init(resource_state)
+    pub fn init(
+        full_main_path: String,
+        resource_state: &mut ResourceHandlers,
+        module_handlers: ModuleHandlers,
+    ) {
+        core_init(full_main_path, resource_state, module_handlers);
     }
 }
 

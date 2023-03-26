@@ -19,7 +19,7 @@ macro_rules! on_base_object_event {
                     panic!("{} base_object is null", stringified_method_name);
                 }
 
-                let base_object_type = altv_sdk::helpers::get_base_object_type($base_object);
+                let base_object_type = unsafe { altv_sdk::helpers::get_base_object_type($base_object) };
 
                 logger::debug!(
                     "{} type: {:?}",
