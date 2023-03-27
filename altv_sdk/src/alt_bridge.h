@@ -437,6 +437,14 @@ namespace base_object
         return dynamic_cast<alt::IWorldObject*>(base_object);
     }
 
+    alt::IVirtualEntity* to_virtual_entity(alt::IBaseObject* base_object) {
+        return dynamic_cast<alt::IVirtualEntity*>(base_object);
+    }
+
+    alt::IVirtualEntityGroup* to_virtual_entity_group(alt::IBaseObject* base_object) {
+        return dynamic_cast<alt::IVirtualEntityGroup*>(base_object);
+    }
+
     alt::IEntity* to_entity(alt::IBaseObject* base_object) {
         return dynamic_cast<alt::IEntity*>(base_object);
     }
@@ -489,6 +497,20 @@ namespace vehicle
         return static_cast<alt::IEntity*>(vehicle);
     }
 } // namespace vehicle
+
+namespace virtual_entity
+{
+    alt::IBaseObject* to_base_object(alt::IVirtualEntity* vehicle) {
+        return static_cast<alt::IBaseObject*>(vehicle);
+    }
+} // namespace virtual_entity
+
+namespace virtual_entity_group
+{
+    alt::IBaseObject* to_base_object(alt::IVirtualEntityGroup* vehicle) {
+        return static_cast<alt::IBaseObject*>(vehicle);
+    }
+} // namespace virtual_entity_group
 
 void read_alt_prop(const alt::Prop& prop, u16* out_drawable, u8* out_texture) {
     *out_drawable = prop.drawableId;

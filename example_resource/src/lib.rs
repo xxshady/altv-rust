@@ -45,11 +45,6 @@ pub fn main() {
     //     1000,
     // );
 
-    alt::events::on_server_started(|controller| {
-        alt::log_warn!("example resource on_server_started controller: {controller:?}");
-        Ok(())
-    });
-
     // alt::events::on_player_connect(|alt::events::sdk_controllers::PlayerConnect { player }| {
     //     {
     //         let mut player = player.try_borrow_mut()?;
@@ -634,85 +629,98 @@ pub fn main() {
 
     // vector2 & vector3 mvalue
 
-    alt::events::on("test".to_string(), |args| {
-        dbg!(args);
-        Ok(())
-    });
+    // alt::events::on("test".to_string(), |args| {
+    //     dbg!(args);
+    //     Ok(())
+    // });
 
-    alt::events::on("test".to_string(), |args| {
-        alt::log!("second local event test handler");
-        dbg!(args);
-        Ok(())
-    });
+    // alt::events::on("test".to_string(), |args| {
+    //     alt::log!("second local event test handler");
+    //     dbg!(args);
+    //     Ok(())
+    // });
 
-    dbg!(alt::events::emit!("test", alt::Vector3::new(0.0, 1.0, 2.0)));
+    // dbg!(alt::events::emit!("test", alt::Vector3::new(0.0, 1.0, 2.0)));
 
-    dbg!(alt::events::emit!("test", alt::Vector2::new(0.0, 1.0)));
+    // dbg!(alt::events::emit!("test", alt::Vector2::new(0.0, 1.0)));
 
-    dbg!(alt::events::emit!(
-        "testdddddddd",
-        alt::Vector2::new(0.0, 1.0)
-    ));
+    // dbg!(alt::events::emit!(
+    //     "testdddddddd",
+    //     alt::Vector2::new(0.0, 1.0)
+    // ));
 
-    let mut col_shape = alt::ColShape::new_circle(0.into(), 10.0);
+    // let mut col_shape = alt::ColShape::new_circle(0.into(), 10.0);
 
-    let veh = alt::Vehicle::new(alt::hash("sultan"), 0.into(), 0.into()).unwrap();
-    dbg!(veh);
+    // let veh = alt::Vehicle::new(alt::hash("sultan"), 0.into(), 0.into()).unwrap();
+    // dbg!(veh);
 
     use alt::events;
 
-    events::on_vehicle_enter_col_shape(|c| {
-        alt::log!("~gl~vehicle enter colshape");
-        Ok(())
-    });
+    // events::on_vehicle_enter_col_shape(|c| {
+    //     alt::log!("~gl~vehicle enter colshape");
+    //     Ok(())
+    // });
 
-    events::on_vehicle_leave_col_shape(|c| {
-        alt::log!("~rl~vehicle leave colshape");
-        Ok(())
-    });
+    // events::on_vehicle_leave_col_shape(|c| {
+    //     alt::log!("~rl~vehicle leave colshape");
+    //     Ok(())
+    // });
 
-    let col = col_shape.clone();
-    alt::set_timeout(
-        move || {
-            dbg!();
-            col.try_borrow()?.set_pos(11.0.into())?;
-            Ok(())
-        },
-        500,
-    );
+    // let col = col_shape.clone();
+    // alt::set_timeout(
+    //     move || {
+    //         dbg!();
+    //         col.try_borrow()?.set_pos(11.0.into())?;
+    //         Ok(())
+    //     },
+    //     500,
+    // );
 
-    let col = col_shape.clone();
-    alt::set_timeout(
-        move || {
-            dbg!();
-            col.try_borrow()?.set_pos(0.0.into())?;
+    // let col = col_shape.clone();
+    // alt::set_timeout(
+    //     move || {
+    //         dbg!();
+    //         col.try_borrow()?.set_pos(0.0.into())?;
 
-            Ok(())
-        },
-        1000,
-    );
+    //         Ok(())
+    //     },
+    //     1000,
+    // );
 
-    let col = col_shape.clone();
-    alt::set_timeout(
-        move || {
-            dbg!();
-            col.try_borrow_mut()?.destroy()?;
-            Ok(())
-        },
-        1500,
-    );
+    // let col = col_shape.clone();
+    // alt::set_timeout(
+    //     move || {
+    //         dbg!();
+    //         col.try_borrow_mut()?.destroy()?;
+    //         Ok(())
+    //     },
+    //     1500,
+    // );
 
-    events::on_console_command(
-        |events::sdk_controllers::ConsoleCommandEvent { name, args }| {
+    alt::events::on_console_command(
+        |alt::events::sdk_controllers::ConsoleCommandEvent { name, args }| {
             alt::log!("on_console_command name: {name:?} args: {args:?}");
+
+            if name.as_str() == "get-veh" {
+                let id = args.get(0).ok_or(alt::anyhow::anyhow!("expected id"))?;
+                let id: alt::EntityId = id.parse()?;
+                let veh = alt::Vehicle::get_by_id(id).ok_or(alt::anyhow::anyhow!("no veh"))?;
+                alt::log!("veh: {veh:?}");
+            }
+
             Ok(())
         },
     );
 
-    events::on_client("test".to_string(), |player, args| {
-        dbg!(player, args);
-        Ok(())
-    });
+    // events::on_client("test".to_string(), |player, args| {
+    //     dbg!(player, args);
+    //     Ok(())
+    // });
+
+    // events::on_server_started(|controller| {
+    //     alt::log_warn!("example resource on_server_started controller: {controller:?}");
+    //     Ok(())
+    // });
 
     events::on_player_connect(|events::sdk_controllers::PlayerConnect { player }| {
         let player = player.borrow();
@@ -727,16 +735,22 @@ pub fn main() {
         Ok(())
     });
 
-    events::on_player_disconnect(
-        |events::sdk_controllers::PlayerDisconnect { player, reason }| {
-            let player = player.borrow();
-            alt::log!(
-                "on_player_disconnect player: {} [{}], reason: {}",
-                player.name()?,
-                player.id()?,
-                reason
-            );
-            Ok(())
-        },
-    );
+    // events::on_player_disconnect(
+    //     |events::sdk_controllers::PlayerDisconnect { player, reason }| {
+    //         let player = player.borrow();
+    //         alt::log!(
+    //             "on_player_disconnect player: {} [{}], reason: {}",
+    //             player.name()?,
+    //             player.id()?,
+    //             reason
+    //         );
+    //         Ok(())
+    //     },
+    // );
+
+    let group = alt::VirtualEntityGroup::new(10);
+    let entity = alt::VirtualEntity::new(group.clone(), alt::Vector3::new(0., 0., 72.), 5).unwrap();
+
+    dbg!(entity.borrow().group().unwrap().borrow().id());
+    dbg!(group.borrow().id());
 }

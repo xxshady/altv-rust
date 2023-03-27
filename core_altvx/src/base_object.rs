@@ -56,6 +56,14 @@ impl BaseObjectPointer {
     pub fn to_player(&self) -> anyhow::Result<*mut sdk::alt::IPlayer> {
         convert_ptr_to!(self, sdk::base_object::to_player)
     }
+
+    pub fn to_virtual_entity(&self) -> anyhow::Result<*mut sdk::alt::IVirtualEntity> {
+        convert_ptr_to!(self, sdk::base_object::to_virtual_entity)
+    }
+
+    pub fn to_virtual_entity_group(&self) -> anyhow::Result<*mut sdk::alt::IVirtualEntityGroup> {
+        convert_ptr_to!(self, sdk::base_object::to_virtual_entity_group)
+    }
 }
 
 pub trait BaseObject {

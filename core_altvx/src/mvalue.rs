@@ -12,7 +12,7 @@ use anyhow::Context;
 use autocxx::{cxx::CxxVector, prelude::*};
 use std::{collections::HashMap, fmt::Debug};
 
-pub struct Serializable(UniquePtr<sdk::MValueMutWrapper>);
+pub struct Serializable(pub(crate) UniquePtr<sdk::MValueMutWrapper>);
 
 macro_rules! impl_serializable {
     (@internal $value_type: ty, $create_mvalue: expr) => {
@@ -231,7 +231,7 @@ pub fn deserialize_mvalue_args(
     deserialized_args
 }
 
-fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Resource) -> MValue {
+pub(crate) fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Resource) -> MValue {
     let mvalue_type = unsafe { sdk::get_mvalue_type(cpp_wrapper) };
     let mvalue_type = altv_sdk::MValueType::from(mvalue_type).unwrap();
 

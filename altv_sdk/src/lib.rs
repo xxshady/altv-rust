@@ -23,6 +23,8 @@ pub mod ffi {
         #include "alt_classes/CPlayerConnectEvent.h"
         #include "alt_classes/CPlayerDisconnectEvent.h"
         #include "alt_classes/CColShapeEvent.h"
+        #include "alt_classes/IVirtualEntity.h"
+        #include "alt_classes/IVirtualEntityGroup.h"
 
         name!(alt_bridge)
 
@@ -42,6 +44,8 @@ pub mod ffi {
         generate_ns!("CPlayerConnectEvent")
         generate_ns!("CPlayerDisconnectEvent")
         generate_ns!("CColShapeEvent")
+        generate_ns!("IVirtualEntity")
+        generate_ns!("IVirtualEntityGroup")
 
         // defined in alt_bridge
         generate_ns!("events")
@@ -96,6 +100,8 @@ pub mod ffi {
         generate_ns!("player")
         generate_ns!("vehicle")
         generate_ns!("col_shape")
+        generate_ns!("virtual_entity")
+        generate_ns!("virtual_entity_group")
 
         // alt::Prop
         generate!("read_alt_prop")

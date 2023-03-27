@@ -10,7 +10,7 @@ use crate::{
     base_object_maps::{self, BaseObjectMap},
     col_shape,
     entity::{self, Entity},
-    events, player, script_events, timers, vehicle,
+    events, player, script_events, timers, vehicle, virtual_entity, virtual_entity_group,
 };
 
 thread_local! {
@@ -35,6 +35,9 @@ pub struct Resource {
     pub player_base_object_map: RefCell<base_object_maps::PlayerBaseObjectMap>,
     pub vehicle_base_object_map: RefCell<base_object_maps::VehicleBaseObjectMap>,
     pub col_shape_base_object_map: RefCell<base_object_maps::ColShapeBaseObjectMap>,
+    pub virtual_entity_base_object_map: RefCell<base_object_maps::VirtualEntityBaseObjectMap>,
+    pub virtual_entity_group_base_object_map:
+        RefCell<base_object_maps::VirtualEntityGroupBaseObjectMap>,
 }
 
 macro_rules! with_resource {
@@ -142,6 +145,23 @@ impl Resource {
 
                 col_shape
             }
+            VirtualEntity => {
+                let virtual_entity = virtual_entity::create_virtual_entity_container(raw_ptr);
+                self.virtual_entity_base_object_map
+                    .borrow_mut()
+                    .add_base_object(Rc::clone(&virtual_entity));
+
+                virtual_entity
+            }
+            VirtualEntityGroup => {
+                let virtual_entity_group =
+                    virtual_entity_group::create_virtual_entity_group_container(raw_ptr);
+                self.virtual_entity_group_base_object_map
+                    .borrow_mut()
+                    .add_base_object(Rc::clone(&virtual_entity_group));
+
+                virtual_entity_group
+            }
             _ => todo!(),
         };
 
@@ -186,6 +206,16 @@ impl Resource {
                         .borrow_mut()
                         .remove_base_object(base_object_borrow.ptr().get().unwrap());
                 }
+                VirtualEntity => {
+                    self.virtual_entity_base_object_map
+                        .borrow_mut()
+                        .remove_base_object(base_object_borrow.ptr().get().unwrap());
+                }
+                VirtualEntityGroup => {
+                    self.virtual_entity_group_base_object_map
+                        .borrow_mut()
+                        .remove_base_object(base_object_borrow.ptr().get().unwrap());
+                }
                 _ => todo!(),
             };
             drop(base_object_borrow);
@@ -216,5 +246,13 @@ impl Resource {
     impl_borrow_mut_fn!(
         col_shape_base_object_map,
         base_object_maps::ColShapeBaseObjectMap
+    );
+    impl_borrow_mut_fn!(
+        virtual_entity_base_object_map,
+        base_object_maps::VirtualEntityBaseObjectMap
+    );
+    impl_borrow_mut_fn!(
+        virtual_entity_group_base_object_map,
+        base_object_maps::VirtualEntityGroupBaseObjectMap
     );
 }

@@ -43,6 +43,9 @@ alt::IResource* GetResource(const StdStringClone name) {
 alt::IEntity* GetEntityByID(u16 id) {
     return alt::ICore::Instance().GetEntityByID(id);
 }
+std::vector<alt::IVirtualEntity*> GetVirtualEntities() {
+    return alt::ICore::Instance().GetVirtualEntities();
+}
 bool HasMetaData(const StdStringClone key) {
     return alt::ICore::Instance().HasMetaData(key);
 }
@@ -97,6 +100,12 @@ void DeleteSyncedMetaData(const StdStringClone key) {
 }
 alt::IVehicle* CreateVehicle(u32 model, f32 pos_x, f32 pos_y, f32 pos_z, f32 rot_x, f32 rot_y, f32 rot_z) {
     return alt::ICore::Instance().CreateVehicle(model, { pos_x, pos_y, pos_z }, { rot_x, rot_y, rot_z });
+}
+alt::IVirtualEntity* CreateVirtualEntity(alt::IVirtualEntityGroup* group, f32 pos_x, f32 pos_y, f32 pos_z, u32 streamingDistance) {
+    return alt::ICore::Instance().CreateVirtualEntity(group, { pos_x, pos_y, pos_z }, streamingDistance);
+}
+alt::IVirtualEntityGroup* CreateVirtualEntityGroup(u32 streamingRangeLimit) {
+    return alt::ICore::Instance().CreateVirtualEntityGroup(streamingRangeLimit);
 }
 alt::IColShape* CreateColShapeCylinder(f32 pos_x, f32 pos_y, f32 pos_z, f32 radius, f32 height) {
     return alt::ICore::Instance().CreateColShapeCylinder({ pos_x, pos_y, pos_z }, radius, height);

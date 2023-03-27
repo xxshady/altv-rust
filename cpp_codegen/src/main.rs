@@ -39,6 +39,8 @@ lazy_static::lazy_static! {
             ("IColShape*", "alt::IColShape*"),
             ("IResource*", "alt::IResource*"),
             ("ICore*", "alt::ICore*"),
+            ("IVirtualEntityGroup*", "alt::IVirtualEntityGroup*"),
+            ("IVirtualEntity*", "alt::IVirtualEntity*"),
 
             ("alt::Prop", "alt::Prop"),
             ("alt::DlcProp", "alt::DlcProp"),
@@ -58,6 +60,11 @@ lazy_static::lazy_static! {
             ("std::vector<std::string>", "std::vector<std::string>"),
             ("std::vector<Weapon>", "std::vector<WeaponWrapper>"),
             ("std::vector<std::string>&", "std::vector<std::string>"),
+
+            // TODO: wrappers for these
+            // ("std::vector<IVirtualEntity*>", "std::vector<alt::IVirtualEntity*>"),
+            // ("std::vector<IVirtualEntityGroup*>", "std::vector<alt::IVirtualEntityGroup*>"),
+
             ("Rotation", "Vector3Wrapper"),
             ("bool*", "bool*"),
         ])
@@ -98,6 +105,14 @@ fn main() {
     gen_default(
         "ICheckpoint",
         "../altv_sdk/cpp-sdk/script-objects/ICheckpoint.h",
+    );
+    gen_default(
+        "IVirtualEntityGroup",
+        "../altv_sdk/cpp-sdk/script-objects/IVirtualEntityGroup.h",
+    );
+    gen_default(
+        "IVirtualEntity",
+        "../altv_sdk/cpp-sdk/script-objects/IVirtualEntity.h",
     );
 
     // events

@@ -1,4 +1,6 @@
-use crate::{base_object::BaseObject, col_shape, player, vehicle};
+use crate::{
+    base_object::BaseObject, col_shape, player, vehicle, virtual_entity, virtual_entity_group,
+};
 use std::{collections::HashMap, rc::Rc};
 
 pub trait BaseObjectMap<Container> {
@@ -53,3 +55,8 @@ macro_rules! base_object_map {
 base_object_map!(Player, player::PlayerContainer);
 base_object_map!(Vehicle, vehicle::VehicleContainer);
 base_object_map!(ColShape, col_shape::ColShapeContainer);
+base_object_map!(VirtualEntity, virtual_entity::VirtualEntityContainer);
+base_object_map!(
+    VirtualEntityGroup,
+    virtual_entity_group::VirtualEntityGroupContainer
+);

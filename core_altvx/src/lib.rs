@@ -19,6 +19,8 @@ pub mod script_events;
 pub mod timers;
 pub mod vector;
 pub mod vehicle;
+pub mod virtual_entity;
+pub mod virtual_entity_group;
 pub mod world_object;
 
 pub fn init(
