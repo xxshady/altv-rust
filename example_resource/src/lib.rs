@@ -616,12 +616,12 @@ pub fn main() {
 
     // world object stuff
 
-    // let veh = alt::Vehicle::new(alt::hash("sultan3"), 0.into(), 0.into()).unwrap();
-    // let veh = veh.borrow();
+    let veh = alt::Vehicle::new(alt::hash("sultan3"), 0.into(), 0.into()).unwrap();
+    let veh = veh.borrow();
 
-    // dbg!(veh.pos());
-    // dbg!(veh.set_pos(alt::Vector3::new(1.0, 2.0, 3.0)));
-    // dbg!(veh.pos());
+    dbg!(veh.pos());
+    dbg!(veh.set_pos(alt::Vector3::new(1.0, 2.0, 3.0)));
+    dbg!(veh.pos());
 
     // dbg!(veh.dimension());
     // dbg!(veh.set_dimension(1));
@@ -753,4 +753,6 @@ pub fn main() {
 
     dbg!(entity.borrow().group().unwrap().borrow().id());
     dbg!(group.borrow().id());
+
+    dbg!(entity.borrow().pos());
 }
