@@ -84,7 +84,7 @@ pub fn create_virtual_entity(
             group.try_borrow()?.raw_ptr()?,
             pos.x(),
             pos.y(),
-            0.0,
+            pos.z(),
             streaming_distance,
         )
     };

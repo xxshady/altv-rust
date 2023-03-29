@@ -749,7 +749,7 @@ pub fn main() {
     // );
 
     let group = alt::VirtualEntityGroup::new(10);
-    let entity = alt::VirtualEntity::new(group.clone(), alt::Vector3::new(0., 0., 72.), 5).unwrap();
+    let entity = alt::VirtualEntity::new(group.clone(), alt::Vector3::new(1., 1., 72.), 5).unwrap();
 
     dbg!(entity.borrow().group().unwrap().borrow().id());
     dbg!(group.borrow().id());
