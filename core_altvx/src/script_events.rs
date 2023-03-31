@@ -2,7 +2,6 @@ use std::{collections::HashMap, fmt::Debug};
 
 use crate::{
     mvalue::{self, convert_vec_to_mvalue_vec, Serializable},
-    player,
     resource::Resource,
 };
 use altv_sdk::ffi as sdk;
@@ -49,8 +48,6 @@ macro_rules! emit_local_event {
 
 pub type EventArgs<'a> = &'a mvalue::MValueList;
 pub type LocalEventHandler = Box<dyn FnMut(EventArgs) -> anyhow::Result<()>>;
-pub type ClientEventHandler =
-    Box<dyn FnMut(player::PlayerContainer, EventArgs) -> anyhow::Result<()>>;
 
 pub trait ScriptEventManager {
     type Handler;
@@ -131,84 +128,11 @@ impl Debug for LocalEventManager {
     }
 }
 
-#[derive(Default)]
-pub struct ClientEventManager {
-    handlers: HashMap<String, Vec<ClientEventHandler>>,
-}
-
-impl ClientEventManager {
-    pub fn init() {
-        use crate::events;
-
-        events::add_handler(events::SDKHandler::ClientScriptEvent(Box::new(|c| {
-            let events::sdk_controllers::ClientScriptEvent { name, player, .. } = c;
-
-            Resource::with_client_script_events_mut(|mut events, _| {
-                if !events.is_event_handled(name) {
-                    logger::debug!("client event is unhandled: {name}");
-                    return;
-                }
-                events.handle_event(name, player.clone(), c.args());
-            });
-
-            Ok(())
-        })));
-    }
-
-    pub fn handle_event(
-        &mut self,
-        event_name: &str,
-        player: player::PlayerContainer,
-        args: EventArgs,
-    ) {
-        if let Some(handlers) = self.get_handlers_for_event(event_name) {
-            for h in handlers {
-                if let Err(error) = h(player.clone(), args) {
-                    logger::error!(
-                        "handler of client event: {event_name:?} failed with error: {error:?}"
-                    );
-                } else {
-                    logger::debug!("handler of client event: {event_name:?} called successfully");
-                }
-            }
-        } else {
-            logger::debug!("handle_event no handlers for client event: {event_name:?}")
-        }
-    }
-}
-
-impl ScriptEventManager for ClientEventManager {
-    type Handler = ClientEventHandler;
-
-    fn handlers(&self) -> &HashMap<String, Vec<Self::Handler>> {
-        &self.handlers
-    }
-
-    fn handlers_mut(&mut self) -> &mut HashMap<String, Vec<Self::Handler>> {
-        &mut self.handlers
-    }
-}
-
-impl Debug for ClientEventManager {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "LocalEventManager{{todo}}")
-    }
-}
-
 pub fn add_local_handler(
     event_name: String,
     handler: impl FnMut(EventArgs) -> anyhow::Result<()> + 'static,
 ) {
     Resource::with_local_script_events_mut(|mut local_events, _| {
         local_events.add_handler(event_name, Box::new(handler))
-    });
-}
-
-pub fn add_client_handler(
-    event_name: String,
-    handler: impl FnMut(player::PlayerContainer, EventArgs) -> anyhow::Result<()> + 'static,
-) {
-    Resource::with_client_script_events_mut(|mut client_events, _| {
-        client_events.add_handler(event_name, Box::new(handler))
     });
 }

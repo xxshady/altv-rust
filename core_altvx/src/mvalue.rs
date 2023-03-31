@@ -1,11 +1,7 @@
 use crate::{
-    base_object::BaseObject,
-    base_object_maps::BaseObjectMap,
-    helpers::{get_player_raw_ptr, read_cpp_vector2, read_cpp_vector3},
-    player,
+    helpers::{read_cpp_vector2, read_cpp_vector3},
     resource::Resource,
     vector::{Vector2, Vector3},
-    vehicle,
 };
 use altv_sdk::ffi as sdk;
 use anyhow::Context;
@@ -93,9 +89,6 @@ macro_rules! impl_serializable_base_object {
     };
 }
 
-impl_serializable_base_object!(vehicle::VehicleContainer, "vehicle");
-impl_serializable_base_object!(player::PlayerContainer, "player");
-
 // TODO: fix this none/null/nil shit
 /// alias for `MValue::None`
 #[derive(Debug)]
@@ -124,20 +117,6 @@ pub fn convert_vec_to_mvalue_vec(
     mvalue_vec
 }
 
-pub fn convert_player_vec_to_cpp_vec(
-    vec: Vec<player::PlayerContainer>,
-) -> anyhow::Result<UniquePtr<CxxVector<sdk::PlayerPtrWrapper>>> {
-    let mut cpp_vec = unsafe { sdk::create_player_vec() };
-
-    for player in vec {
-        unsafe {
-            sdk::push_to_player_vec(cpp_vec.as_mut().unwrap(), get_player_raw_ptr(player)?);
-        }
-    }
-
-    Ok(cpp_vec)
-}
-
 #[derive(Debug)]
 pub enum MValue {
     Bool(bool),
@@ -148,8 +127,7 @@ pub enum MValue {
     U64(u64),
     List(MValueList),
     Dict(HashMap<String, MValue>),
-    Vehicle(vehicle::VehicleContainer),
-    Player(player::PlayerContainer),
+
     InvalidBaseObject,
     Vector3(Vector3),
     Vector2(Vector2),
@@ -204,8 +182,6 @@ impl MValueList {
     get_mvalue_type_at!(get_dict_at, HashMap<String, MValue>, MValue::Dict);
     get_mvalue_type_at!(get_vector3_at, Vector3, MValue::Vector3);
     get_mvalue_type_at!(get_vector2_at, Vector2, MValue::Vector2);
-    get_mvalue_type_at!(get_player_at, player::PlayerContainer, MValue::Player);
-    get_mvalue_type_at!(get_vehicle_at, vehicle::VehicleContainer, MValue::Vehicle);
 
     pub fn push(&mut self, mvalue: MValue) {
         self.vec.push(mvalue);
@@ -298,12 +274,6 @@ pub(crate) fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Re
                 }
 
                 match base_obj.borrow().base_type() {
-                    Vehicle => {
-                        deserialize_base_object!("vehicle", Vehicle, vehicle_base_object_map)
-                    }
-                    Player => {
-                        deserialize_base_object!("player", Player, player_base_object_map)
-                    }
                     unknown_base_type => {
                         logger::error!(
                             "[deserialize_mvalue] unknown baseobject type: {unknown_base_type:?}"

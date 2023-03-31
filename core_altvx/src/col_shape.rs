@@ -1,6 +1,5 @@
 use crate::{
     base_object::{BaseObject, BaseObjectManager, BaseObjectPointer},
-    base_object_maps::BaseObjectMap,
     impl_base_object_for,
     resource::Resource,
     vector::Vector2,

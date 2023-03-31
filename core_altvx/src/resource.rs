@@ -5,13 +5,7 @@ use std::{
 
 use core_shared::{ModuleHandlers, ResourceMainPath};
 
-use crate::{
-    base_object,
-    base_object_maps::{self, BaseObjectMap},
-    col_shape,
-    entity::{self, Entity},
-    events, player, script_events, timers, vehicle, virtual_entity, virtual_entity_group,
-};
+use crate::{base_object, col_shape, events, script_events, timers};
 
 thread_local! {
     pub static RESOURCE: Rc<RefCell<Option<Resource>>> =
@@ -28,16 +22,9 @@ pub struct Resource {
     pub base_objects: RefCell<base_object::BaseObjectManager>,
     pub base_object_deletion: RefCell<base_object::PendingBaseObjectDeletion>,
     pub base_object_creation: RefCell<base_object::PendingBaseObjectCreation>,
-    pub entities: RefCell<entity::EntityManager>,
     pub events: RefCell<events::EventManager>,
     pub local_script_events: RefCell<script_events::LocalEventManager>,
     pub client_script_events: RefCell<script_events::ClientEventManager>,
-    pub player_base_object_map: RefCell<base_object_maps::PlayerBaseObjectMap>,
-    pub vehicle_base_object_map: RefCell<base_object_maps::VehicleBaseObjectMap>,
-    pub col_shape_base_object_map: RefCell<base_object_maps::ColShapeBaseObjectMap>,
-    pub virtual_entity_base_object_map: RefCell<base_object_maps::VirtualEntityBaseObjectMap>,
-    pub virtual_entity_group_base_object_map:
-        RefCell<base_object_maps::VirtualEntityGroupBaseObjectMap>,
 }
 
 macro_rules! with_resource {
@@ -107,36 +94,8 @@ impl Resource {
             return;
         }
 
-        let add_entity_to_pool = |entity: entity::EntityWrapper| {
-            self.entities.borrow_mut().on_create(
-                match &entity {
-                    entity::EntityWrapper::Player(p) => p.borrow().id().unwrap(),
-                    entity::EntityWrapper::Vehicle(p) => p.borrow().id().unwrap(),
-                },
-                entity,
-            )
-        };
-
         use altv_sdk::BaseObjectType::*;
         let base_object: base_object::BaseObjectContainer = match base_object_type {
-            Vehicle => {
-                let vehicle = vehicle::create_vehicle_container(raw_ptr);
-                add_entity_to_pool(entity::EntityWrapper::Vehicle(Rc::clone(&vehicle)));
-                self.vehicle_base_object_map
-                    .borrow_mut()
-                    .add_base_object(Rc::clone(&vehicle));
-
-                vehicle
-            }
-            Player => {
-                let player = player::create_player_container(raw_ptr);
-                add_entity_to_pool(entity::EntityWrapper::Player(Rc::clone(&player)));
-                self.player_base_object_map
-                    .borrow_mut()
-                    .add_base_object(Rc::clone(&player));
-
-                player
-            }
             Colshape => {
                 let col_shape = col_shape::create_col_shape_container(raw_ptr);
                 self.col_shape_base_object_map
@@ -144,23 +103,6 @@ impl Resource {
                     .add_base_object(Rc::clone(&col_shape));
 
                 col_shape
-            }
-            VirtualEntity => {
-                let virtual_entity = virtual_entity::create_virtual_entity_container(raw_ptr);
-                self.virtual_entity_base_object_map
-                    .borrow_mut()
-                    .add_base_object(Rc::clone(&virtual_entity));
-
-                virtual_entity
-            }
-            VirtualEntityGroup => {
-                let virtual_entity_group =
-                    virtual_entity_group::create_virtual_entity_group_container(raw_ptr);
-                self.virtual_entity_group_base_object_map
-                    .borrow_mut()
-                    .add_base_object(Rc::clone(&virtual_entity_group));
-
-                virtual_entity_group
             }
             _ => todo!(),
         };
@@ -189,30 +131,8 @@ impl Resource {
 
             use altv_sdk::BaseObjectType::*;
             match base_object_borrow.base_type() {
-                Player => {
-                    remove_entity_from_pool(&base_object_borrow);
-                    self.player_base_object_map
-                        .borrow_mut()
-                        .remove_base_object(base_object_borrow.ptr().get().unwrap());
-                }
-                Vehicle => {
-                    remove_entity_from_pool(&base_object_borrow);
-                    self.vehicle_base_object_map
-                        .borrow_mut()
-                        .remove_base_object(base_object_borrow.ptr().get().unwrap());
-                }
                 Colshape => {
                     self.col_shape_base_object_map
-                        .borrow_mut()
-                        .remove_base_object(base_object_borrow.ptr().get().unwrap());
-                }
-                VirtualEntity => {
-                    self.virtual_entity_base_object_map
-                        .borrow_mut()
-                        .remove_base_object(base_object_borrow.ptr().get().unwrap());
-                }
-                VirtualEntityGroup => {
-                    self.virtual_entity_group_base_object_map
                         .borrow_mut()
                         .remove_base_object(base_object_borrow.ptr().get().unwrap());
                 }
@@ -230,29 +150,7 @@ impl Resource {
     impl_borrow_mut_fn!(base_objects, base_object::BaseObjectManager);
     impl_borrow_mut_fn!(base_object_deletion, base_object::PendingBaseObjectDeletion);
     impl_borrow_mut_fn!(base_object_creation, base_object::PendingBaseObjectCreation);
-    impl_borrow_fn!(entities, entity::EntityManager);
-    impl_borrow_mut_fn!(entities, entity::EntityManager);
     impl_borrow_mut_fn!(events, events::EventManager);
     impl_borrow_mut_fn!(local_script_events, script_events::LocalEventManager);
     impl_borrow_mut_fn!(client_script_events, script_events::ClientEventManager);
-    impl_borrow_mut_fn!(
-        player_base_object_map,
-        base_object_maps::PlayerBaseObjectMap
-    );
-    impl_borrow_mut_fn!(
-        vehicle_base_object_map,
-        base_object_maps::VehicleBaseObjectMap
-    );
-    impl_borrow_mut_fn!(
-        col_shape_base_object_map,
-        base_object_maps::ColShapeBaseObjectMap
-    );
-    impl_borrow_mut_fn!(
-        virtual_entity_base_object_map,
-        base_object_maps::VirtualEntityBaseObjectMap
-    );
-    impl_borrow_mut_fn!(
-        virtual_entity_group_base_object_map,
-        base_object_maps::VirtualEntityGroupBaseObjectMap
-    );
 }

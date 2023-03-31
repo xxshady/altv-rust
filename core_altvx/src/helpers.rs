@@ -1,10 +1,4 @@
-use crate::{
-    base_object::BaseObject,
-    base_object_maps::{self, BaseObjectMap},
-    player::{self, PlayerContainer},
-    resource::Resource,
-    vector::{Vector2, Vector3},
-};
+use crate::vector::{Vector2, Vector3};
 use altv_sdk::ffi as sdk;
 use autocxx::prelude::*;
 
@@ -20,30 +14,6 @@ macro_rules! get_entity_by_id {
             }
         })
     };
-}
-
-pub fn get_player_from_event<T>(
-    event: *const T,
-    resource: &Resource,
-    get_target: unsafe fn(*const T) -> *mut sdk::alt::IPlayer,
-) -> PlayerContainer {
-    let raw_ptr = {
-        let player_raw_ptr = unsafe { get_target(event) };
-
-        if player_raw_ptr.is_null() {
-            panic!("get_event_player_target returned null player ptr");
-        }
-
-        unsafe { sdk::player::to_base_object(player_raw_ptr) }
-    };
-
-    base_object_maps::get_player!(raw_ptr, resource).unwrap()
-}
-
-pub fn get_player_raw_ptr(
-    player: player::PlayerContainer,
-) -> anyhow::Result<*mut sdk::alt::IPlayer> {
-    player.try_borrow_mut()?.ptr_mut().to_player()
 }
 
 pub fn read_cpp_vector3(cpp_vector: UniquePtr<sdk::Vector3Wrapper>) -> Vector3 {
