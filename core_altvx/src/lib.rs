@@ -1,11 +1,15 @@
 pub use core_shared::*;
 
 pub use anyhow;
+type VoidResult = anyhow::Result<()>;
+type SomeResult<V> = anyhow::Result<V>;
+
+use altv_sdk::ffi as sdk;
 
 mod resource;
 use resource::Resource;
 
-pub mod base_object;
+mod base_object;
 pub mod col_shape;
 pub mod events;
 mod helpers;
@@ -52,9 +56,9 @@ pub fn init(
         });
     });
 
-    set_callback!(on_base_object_destroy, |base_object| {
+    set_callback!(on_base_object_destroy, |base_object, base_object_type| {
         Resource::with(|resource| {
-            resource.on_base_object_destroy(base_object);
+            resource.on_base_object_destroy(base_object, base_object_type);
         });
     });
 

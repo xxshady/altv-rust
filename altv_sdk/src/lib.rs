@@ -1,5 +1,7 @@
 #![allow(clippy::missing_safety_doc)]
 
+use std::ptr::NonNull;
+
 pub mod ffi {
     use autocxx::prelude::*;
     use cxx::{type_id, ExternType};
@@ -202,8 +204,10 @@ pub mod ffi {
     pub use callbacks::*;
 }
 
-pub type CEventPtr = *const ffi::alt::CEvent;
-pub type IBaseObjectMutPtr = *mut ffi::alt::IBaseObject;
+pub type CEventPtr = *const ffi::alt::CEvent; // TODO: use NonNull
+
+pub type BaseObjectMutPtr = NonNull<ffi::alt::IBaseObject>;
+pub type BaseObjectRawMutPtr = *mut ffi::alt::IBaseObject;
 
 pub mod helpers;
 

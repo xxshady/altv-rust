@@ -1,4 +1,5 @@
 use crate::{
+    base_object::{AnyBaseObject, ColShapeContainer},
     helpers::{read_cpp_vector2, read_cpp_vector3},
     resource::Resource,
     vector::{Vector2, Vector3},
@@ -6,7 +7,7 @@ use crate::{
 use altv_sdk::ffi as sdk;
 use anyhow::Context;
 use autocxx::{cxx::CxxVector, prelude::*};
-use std::{collections::HashMap, fmt::Debug};
+use std::{collections::HashMap, fmt::Debug, ptr::NonNull};
 
 pub struct Serializable(pub(crate) UniquePtr<sdk::MValueMutWrapper>);
 
@@ -127,10 +128,11 @@ pub enum MValue {
     U64(u64),
     List(MValueList),
     Dict(HashMap<String, MValue>),
-
-    InvalidBaseObject,
     Vector3(Vector3),
     Vector2(Vector2),
+
+    ColShape(ColShapeContainer),
+    InvalidBaseObject,
 }
 
 macro_rules! get_mvalue_type_at {
@@ -242,13 +244,14 @@ pub(crate) fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Re
             hash_map
         }),
         BaseObject => {
-            let raw_ptr = unsafe { sdk::get_mvalue_base_object(cpp_wrapper) };
-            logger::debug!("deserializing BASE_OBJECT raw ptr: {raw_ptr:?}");
-            if raw_ptr.is_null() {
-                return MValue::InvalidBaseObject;
-            }
+            let ptr = unsafe { sdk::get_mvalue_base_object(cpp_wrapper) };
+            logger::debug!("deserializing BASE_OBJECT raw ptr: {ptr:?}");
 
-            let base_obj = resource.base_objects.borrow().get_by_raw_ptr(raw_ptr);
+            let Some(ptr) = NonNull::new(ptr) else {
+                return MValue::InvalidBaseObject;
+            };
+
+            let base_obj = resource.base_objects.borrow().get_by_ptr(ptr);
             if let Some(base_obj) = base_obj {
                 use altv_sdk::BaseObjectType::*;
 
@@ -260,20 +263,21 @@ pub(crate) fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Re
                             .borrow()
                             .get_by_base_object_ptr(raw_ptr);
 
-                        if let Some(base_obj) = base_obj {
-                            MValue::$mvalue_item(base_obj)
-                        } else {
-                            logger::error!(
-                                "[deserialize_mvalue] {0} baseobject pointer is not null, but {0} is not in pool",
-                                stringify!($base_object_name)
-                            );
-                            MValue::InvalidBaseObject
-                        }
+                            if let Some(base_obj) = base_obj {
+                                MValue::$mvalue_item(base_obj)
+                            } else {
+                                logger::error!(
+                                    "[deserialize_mvalue] {0} baseobject pointer is not null, but {0} is not in pool",
+                                    stringify!($base_object_name)
+                                );
+                                MValue::InvalidBaseObject
+                            }
                         }
                     }};
                 }
 
-                match base_obj.borrow().base_type() {
+                match base_obj {
+                    AnyBaseObject::ColShape(c) => MValue::ColShape(c),
                     unknown_base_type => {
                         logger::error!(
                             "[deserialize_mvalue] unknown baseobject type: {unknown_base_type:?}"
