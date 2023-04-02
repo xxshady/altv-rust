@@ -7,41 +7,49 @@ use super::BaseObjectContainer;
 use super::BaseObjectManager;
 
 macro_rules! base_objects {
-    ( $( $name: ident: [$base_type: path, $new_func: path], ),+ ) => {
+    (@internal $(
+        $name_snake: ident
+        $name_struct: ident
+        $name_container: ident
+        $name: ident: [
+            $base_type: path,
+            $new_func: path
+        ],
+    ),+ ) => {
         paste::paste! {
             $(
-                pub type [<$name Struct>] = sdk::alt::[<I $name>];
-                pub type $name = BaseObject<[<$name Struct>]>;
-                pub type [<$name Container>] = BaseObjectContainer<[<$name Struct>]>;
+                pub type $name = BaseObject<$name_struct>;
+                pub type $name_struct = sdk::alt::[<I $name>];
+                pub type $name_container = BaseObjectContainer<$name_struct>;
             ),+
 
             #[derive(Debug)]
             pub enum AnyBaseObject { $(
-                $name([<$name Container>]),
+                $name($name_container),
             )+ }
 
             #[derive(Default)]
             pub struct Store {
             $(
-                $name: BaseObjectManager<[<$name Struct>]>,
+                $name_snake: BaseObjectManager<$name_struct>,
             ),+
             }
 
             impl Store {
             $(
-                pub fn [<create_ $name:snake>](
+                pub fn [<create_ $name_snake>](
                     &mut self,
-                    ptr: NonNull<[<$name Struct>]>,
-                    base_object: [<$name Container>],
+                    ptr: NonNull<$name_struct>,
+                    base_object: $name_container,
                 ) {
-                    self.[<$name>].add(ptr, base_object);
+                    self.[<$name_snake>].add(ptr, base_object);
                 }
 
-                pub fn [<remove_ $name:snake>](
+                pub fn [<remove_ $name_snake>](
                     &mut self,
-                    ptr: NonNull<[<$name Struct>]>,
+                    ptr: NonNull<$name_struct>,
                 ) {
-                    self.[<$name>].remove(ptr).unwrap();
+                    self.[<$name_snake>].remove(ptr).unwrap();
                 }
             ),+
 
@@ -53,14 +61,14 @@ macro_rules! base_objects {
                     match base_object_type {
                     $(
                         $base_type => {
-                            let ptr = NonNull::new(unsafe { sdk::base_object::[<to_ $name:snake>](base_ptr.as_ptr()) }).unwrap();
+                            let ptr = NonNull::new(unsafe { sdk::base_object::[<to_ $name_snake>](base_ptr.as_ptr()) }).unwrap();
 
-                            if self.[<$name>].has(ptr) {
-                                logger::error!("base object: {base_object_type:?} {ptr:?} already added");
+                            if self.[<$name_snake>].has(ptr) {
+                                logger::debug!("base object: {base_object_type:?} {ptr:?} already added");
                                 return;
                             }
 
-                            self.[<$name>].add(
+                            self.[<$name_snake>].add(
                                 ptr,
                                 $new_func(ptr, base_ptr)
                             )
@@ -80,9 +88,9 @@ macro_rules! base_objects {
                     match base_object_type {
                     $(
                         $base_type => {
-                            let ptr = NonNull::new(unsafe { sdk::base_object::[<to_ $name:snake>](base_ptr.as_ptr()) }).unwrap();
+                            let ptr = NonNull::new(unsafe { sdk::base_object::[<to_ $name_snake>](base_ptr.as_ptr()) }).unwrap();
                             // TEST unwrap
-                            self.[<$name>].remove_externally(ptr).unwrap();
+                            self.[<$name_snake>].remove_externally(ptr).unwrap();
                         }
                     ),+
                         _ => {
@@ -100,8 +108,8 @@ macro_rules! base_objects {
                     match base_object_type {
                     $(
                         $base_type => {
-                            let ptr = NonNull::new(unsafe { sdk::base_object::[<to_ $name:snake>](base_ptr.as_ptr()) }).unwrap();
-                            let base_object = self.[<$name>].get_by_ptr(ptr);
+                            let ptr = NonNull::new(unsafe { sdk::base_object::[<to_ $name_snake>](base_ptr.as_ptr()) }).unwrap();
+                            let base_object = self.[<$name_snake>].get_by_ptr(ptr);
                             if let Some(base_object) = base_object {
                                 Some(AnyBaseObject::$name(base_object))
                             } else {
@@ -117,6 +125,25 @@ macro_rules! base_objects {
                     }
                 }
             }
+        }
+    };
+
+    ( $(
+        $name: ident: [
+            $base_type: path,
+            $new_func: path
+        ],
+    ),+ ) => {
+        paste::paste! {
+            base_objects!(@internal $(
+                [<$name:snake>]
+                [<$name Struct>]
+                [<$name Container>]
+                $name: [
+                    $base_type,
+                    $new_func
+                ],
+            ),+ );
         }
     };
 }
