@@ -30,7 +30,7 @@ impl<BaseObjectStruct> BaseObject<BaseObjectStruct> {
         self.ptr.is_some()
     }
 
-    pub(crate) fn _destroy(&mut self) -> VoidResult {
+    pub(crate) fn internal_destroy(&mut self) -> VoidResult {
         let Some(base_ptr) = self.base_ptr else {
             anyhow::bail!("base_object already destroyed");
         };

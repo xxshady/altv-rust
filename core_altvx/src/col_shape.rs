@@ -29,7 +29,7 @@ impl ColShape {
             Ok(())
         })?;
 
-        self._destroy()
+        self.internal_destroy()
     }
 }
 
