@@ -1,6 +1,4 @@
-use crate::{
-    base_objects::virtual_entity_group, sdk, world_object::WorldObject, SomeResult, VoidResult,
-};
+use crate::{base_objects::virtual_entity_group, sdk, world_object::WorldObject, SomeResult};
 use std::ptr::NonNull;
 
 impl virtual_entity_group::VirtualEntityGroup {
@@ -17,10 +15,11 @@ impl virtual_entity_group::VirtualEntityGroup {
         Ok(unsafe { sdk::IVirtualEntityGroup::GetID(self.raw_ptr()?) })
     }
 
-    pub fn destroy(&mut self) -> VoidResult {
-        virtual_entity_group::remove_from_pool!(self)?;
-        self.internal_destroy()
-    }
+    // cannot be destroyed
+    // pub fn destroy(&mut self) -> VoidResult {
+    //     virtual_entity_group::remove_from_pool!(self)?;
+    //     self.internal_destroy()
+    // }
 }
 
 impl WorldObject for virtual_entity_group::VirtualEntityGroup {}
