@@ -15,6 +15,10 @@ impl virtual_entity_group::VirtualEntityGroup {
         Ok(unsafe { sdk::IVirtualEntityGroup::GetID(self.raw_ptr()?) })
     }
 
+    pub fn max_entities_in_stream(&self) -> SomeResult<u32> {
+        Ok(unsafe { sdk::IVirtualEntityGroup::GetStreamingRangeLimit(self.raw_ptr()?) })
+    }
+
     // cannot be destroyed
     // pub fn destroy(&mut self) -> VoidResult {
     //     virtual_entity_group::remove_from_pool!(self)?;
