@@ -21,6 +21,7 @@ pub struct Resource {
     pub timer_schedule: RefCell<timers::ScheduleState>,
     pub events: RefCell<events::EventManager>,
     pub local_script_events: RefCell<script_events::LocalEventManager>,
+    pub client_script_events: RefCell<script_events::ClientEventManager>,
     pub base_objects: RefCell<base_object::Store>,
     pub pending_base_object_destroy_or_creation: RefCell<base_object::PendingDestroyOrCreation>,
     pub extra_base_object_pools: RefCell<base_object::extra_pools::ExtraPools>,
@@ -96,11 +97,6 @@ impl Resource {
     ) {
         logger::debug!("on_base_object_create {ptr:?} {base_object_type:?}");
 
-        logger::debug!(
-            "Custom backtrace: {}",
-            std::backtrace::Backtrace::force_capture()
-        );
-
         if self.pending_base_object_destroy_or_creation() {
             logger::debug!("pending_base_object_destroy_or_creation -> skip");
             return;
@@ -161,6 +157,7 @@ impl Resource {
     impl_borrow_mut_fn!(timer_schedule, timers::ScheduleState);
     impl_borrow_mut_fn!(events, events::EventManager);
     impl_borrow_mut_fn!(local_script_events, script_events::LocalEventManager);
+    impl_borrow_mut_fn!(client_script_events, script_events::ClientEventManager);
     impl_borrow_mut_fn!(base_objects, base_object::Store);
     impl_borrow_mut_fn!(
         pending_base_object_destroy_or_creation,

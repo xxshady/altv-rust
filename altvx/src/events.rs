@@ -10,12 +10,12 @@ pub use core_altvx::mvalue::MValue;
 pub use core_altvx::mvalue::MValueNone;
 pub use core_altvx::mvalue_dict as dict;
 pub use core_altvx::mvalue_list as list;
-// pub use core_altvx::script_events::add_client_handler as on_client;
+pub use core_altvx::script_events::add_client_handler as on_client;
 pub use core_altvx::script_events::add_local_handler as on;
 
-// pub use core_altvx::emit_all_clients;
-// pub use core_altvx::emit_client;
-// pub use core_altvx::emit_some_clients;
+pub use core_altvx::__emit_all_clients as emit_all_clients;
+pub use core_altvx::__emit_client as emit_client;
+pub use core_altvx::__emit_some_clients as emit_some_clients;
 
 macro_rules! on_sdk_event {
     ($func_name: ident, $event_name: ident) => {

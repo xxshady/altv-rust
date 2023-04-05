@@ -1,10 +1,10 @@
 use crate::{
-    base_object::{col_shape::ColShapeContainer, player, vehicle, AnyBaseObject, BasePtr},
-    helpers::{read_cpp_vector2, read_cpp_vector3},
+    base_object::{col_shape, player, vehicle, AnyBaseObject, BasePtr},
+    helpers::{get_player_raw_ptr, read_cpp_vector2, read_cpp_vector3},
     resource::Resource,
     vector::{Vector2, Vector3},
 };
-use altv_sdk::ffi as sdk;
+use altv_sdk::{ffi as sdk, helpers::get_base_object_type};
 use anyhow::Context;
 use autocxx::{cxx::CxxVector, prelude::*};
 use std::{collections::HashMap, fmt::Debug, ptr::NonNull};
@@ -73,9 +73,8 @@ macro_rules! impl_serializable_base_object {
             fn try_from(base_object: $base_object) -> anyhow::Result<Self> {
                 let base_object = base_object.try_borrow_mut()?;
                 let Ok(ptr) = base_object.base_ptr() else {
-                            anyhow::bail!("{} base object is destroyed", $short_name);
-                        };
-
+                                    anyhow::bail!("{} base object is destroyed", $short_name);
+                                };
                 Ok(Self(
                     unsafe { sdk::create_mvalue_base_object(ptr.as_ptr()) }.within_unique_ptr(),
                 ))
@@ -86,6 +85,7 @@ macro_rules! impl_serializable_base_object {
 
 impl_serializable_base_object!(vehicle::VehicleContainer, "vehicle");
 impl_serializable_base_object!(player::PlayerContainer, "player");
+impl_serializable_base_object!(col_shape::ColShapeContainer, "col_shape");
 
 // TODO: fix this none/null/nil shit
 /// alias for `MValue::None`
@@ -115,6 +115,20 @@ pub fn convert_vec_to_mvalue_vec(
     mvalue_vec
 }
 
+pub fn convert_player_vec_to_cpp_vec(
+    vec: Vec<player::PlayerContainer>,
+) -> anyhow::Result<UniquePtr<CxxVector<sdk::PlayerPtrWrapper>>> {
+    let mut cpp_vec = unsafe { sdk::create_player_vec() };
+
+    for player in vec {
+        unsafe {
+            sdk::push_to_player_vec(cpp_vec.as_mut().unwrap(), get_player_raw_ptr(player)?);
+        }
+    }
+
+    Ok(cpp_vec)
+}
+
 #[derive(Debug)]
 pub enum MValue {
     Bool(bool),
@@ -128,7 +142,9 @@ pub enum MValue {
     Vector3(Vector3),
     Vector2(Vector2),
 
-    ColShape(ColShapeContainer),
+    ColShape(col_shape::ColShapeContainer),
+    Vehicle(vehicle::VehicleContainer),
+    Player(player::PlayerContainer),
     InvalidBaseObject,
 }
 
@@ -242,49 +258,23 @@ pub(crate) fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Re
         }),
         BaseObject => {
             let ptr = unsafe { sdk::get_mvalue_base_object(cpp_wrapper) };
-            logger::debug!("deserializing BASE_OBJECT raw ptr: {ptr:?}");
+            logger::debug!("deserializing baseobject raw ptr: {ptr:?}");
 
             let Some(ptr) = NonNull::new(ptr) else {
                 return MValue::InvalidBaseObject;
             };
 
             let base_obj = resource.base_objects.borrow().get_by_ptr(ptr);
-            if let Some(base_obj) = base_obj {
-                use altv_sdk::BaseObjectType::*;
+            let Some(base_obj) = base_obj else {
+                let base_type = unsafe { get_base_object_type(ptr.as_ptr()) };
+                logger::error!("[deserialize_mvalue] baseobject pointer is not null, but baseobject is not in pool (probably type is unknown? {base_type:?})");
+                return MValue::InvalidBaseObject;
+            };
 
-                macro_rules! deserialize_base_object {
-                    ($base_object_name: literal, $mvalue_item: path, $resource_impl_base_obj_map: path) => {{
-                        paste::paste! {
-                            let base_obj = resource
-                            .[<$resource_impl_base_obj_map>]
-                            .borrow()
-                            .get_by_base_object_ptr(raw_ptr);
-
-                            if let Some(base_obj) = base_obj {
-                                MValue::$mvalue_item(base_obj)
-                            } else {
-                                logger::error!(
-                                    "[deserialize_mvalue] {0} baseobject pointer is not null, but {0} is not in pool",
-                                    stringify!($base_object_name)
-                                );
-                                MValue::InvalidBaseObject
-                            }
-                        }
-                    }};
-                }
-
-                match base_obj {
-                    AnyBaseObject::ColShape(c) => MValue::ColShape(c),
-                    unknown_base_type => {
-                        logger::error!(
-                            "[deserialize_mvalue] unknown baseobject type: {unknown_base_type:?}"
-                        );
-                        MValue::InvalidBaseObject
-                    }
-                }
-            } else {
-                logger::error!("[deserialize_mvalue] baseobject pointer is not null, but baseobject is not in pool");
-                MValue::InvalidBaseObject
+            match base_obj {
+                AnyBaseObject::ColShape(c) => MValue::ColShape(c),
+                AnyBaseObject::Vehicle(c) => MValue::Vehicle(c),
+                AnyBaseObject::Player(c) => MValue::Player(c),
             }
         }
         Vector3 => MValue::Vector3(read_cpp_vector3(

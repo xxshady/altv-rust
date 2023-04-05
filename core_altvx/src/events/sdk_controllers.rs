@@ -1,19 +1,28 @@
 use altv_sdk::ffi as sdk;
 use lazycell::LazyCell;
 
-use crate::{mvalue, resource::Resource};
+use crate::{base_object::player, helpers::get_player_from_event, mvalue, resource::Resource};
 
 #[derive(Debug)]
-pub struct PlayerConnect {}
+pub struct PlayerConnect {
+    pub player: player::PlayerContainer,
+}
 
 impl PlayerConnect {
     pub fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
-        Self {}
+        Self {
+            player: get_player_from_event(
+                unsafe { sdk::events::to_CPlayerConnectEvent(event) },
+                resource,
+                sdk::CPlayerConnectEvent::GetTarget,
+            ),
+        }
     }
 }
 
 #[derive(Debug)]
 pub struct PlayerDisconnect {
+    pub player: player::PlayerContainer,
     pub reason: String,
 }
 
@@ -21,6 +30,7 @@ impl PlayerDisconnect {
     pub fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
         let event = unsafe { sdk::events::to_CPlayerDisconnectEvent(event) };
         Self {
+            player: get_player_from_event(event, resource, sdk::CPlayerDisconnectEvent::GetTarget),
             reason: unsafe { sdk::CPlayerDisconnectEvent::GetReason(event) }.to_string(),
         }
     }
@@ -100,6 +110,7 @@ impl ServerScriptEvent {
 #[derive(Debug)]
 pub struct ClientScriptEvent {
     pub name: String,
+    pub player: player::PlayerContainer,
     event: *const sdk::alt::CClientScriptEvent,
     args: LazyCell<mvalue::MValueList>,
 }
@@ -108,10 +119,12 @@ impl ClientScriptEvent {
     pub fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
         let event = unsafe { sdk::events::to_CClientScriptEvent(event) };
         let name = unsafe { sdk::CClientScriptEvent::GetName(event) }.to_string();
+        let player = get_player_from_event(event, resource, sdk::CClientScriptEvent::GetTarget);
 
         Self {
             name,
             event,
+            player,
             args: LazyCell::new(),
         }
     }

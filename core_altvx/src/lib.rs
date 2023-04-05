@@ -1,8 +1,8 @@
 pub use core_shared::*;
 
 pub use anyhow;
-type VoidResult = anyhow::Result<()>;
-type SomeResult<V> = anyhow::Result<V>;
+pub type VoidResult = anyhow::Result<()>;
+pub type SomeResult<V> = anyhow::Result<V>;
 
 use altv_sdk::ffi as sdk;
 
@@ -10,6 +10,7 @@ mod resource;
 use resource::Resource;
 
 mod base_object;
+pub mod client_events;
 pub mod col_shape;
 pub mod events;
 mod helpers;
@@ -78,4 +79,5 @@ pub fn init(
     });
 
     script_events::LocalEventManager::init();
+    script_events::ClientEventManager::init();
 }

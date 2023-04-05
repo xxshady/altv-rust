@@ -94,12 +94,11 @@ macro_rules! base_objects {
                     $(
                         $base_type => {
                             let ptr = NonNull::new(unsafe { sdk::base_object::[<to_ $manager_name_snake>](base_ptr.as_ptr()) }).unwrap();
-
-                            logger::debug!("Custom backtrace: {}", std::backtrace::Backtrace::force_capture());
                             if self.[<$manager_name_snake>].has(ptr) {
                                 logger::debug!("base object: {base_object_type:?} {ptr:?} already added");
                                 return;
                             }
+
                             let container = $manager_name_snake::$manager_name::_new(ptr, base_ptr);
 
                             self.[<$manager_name_snake>].add(
