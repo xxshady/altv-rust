@@ -1,36 +1,19 @@
-pub use crate::base_object::ColShape;
 use crate::{
-    base_object::ColShapeContainer, resource::Resource, sdk, vector::Vector2,
-    world_object::WorldObject, VoidResult,
+    base_object::col_shape, sdk, vector::IntoVector2, world_object::WorldObject, VoidResult,
 };
 use std::ptr::NonNull;
 
-impl ColShape {
-    pub fn new_circle(pos: Vector2, radius: f32) -> ColShapeContainer {
+impl col_shape::ColShape {
+    pub fn new_circle(pos: impl IntoVector2, radius: f32) -> col_shape::ColShapeContainer {
+        let pos = pos.into_vector2();
         let ptr = unsafe { sdk::ICore::CreateColShapeCircle(pos.x(), pos.y(), 0.0, radius) };
-        let ptr: NonNull<sdk::alt::IColShape> = NonNull::new(ptr).unwrap();
-
-        let container = Self::_new(
-            ptr,
-            NonNull::new(unsafe { sdk::col_shape::to_base_object(ptr.as_ptr()) }).unwrap(),
-        );
-
-        Resource::with_base_objects_mut(|mut v, _| {
-            v.create_col_shape(ptr, container.clone());
-        });
-
-        container
+        col_shape::add_to_pool!(NonNull::new(ptr).unwrap())
     }
 
     pub fn destroy(&mut self) -> VoidResult {
-        Resource::with_base_objects_mut(|mut v, _| -> VoidResult {
-            // TODO: move it to BaseObject
-            v.remove_col_shape(self.ptr()?);
-            Ok(())
-        })?;
-
+        col_shape::remove_from_pool!(self)?;
         self.internal_destroy()
     }
 }
 
-impl WorldObject for ColShape {}
+impl WorldObject for col_shape::ColShape {}

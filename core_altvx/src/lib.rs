@@ -15,10 +15,25 @@ pub mod events;
 mod helpers;
 pub mod logging;
 pub mod mvalue;
+mod player;
 pub mod script_events;
 pub mod timers;
 pub mod vector;
-pub mod world_object;
+mod vehicle;
+mod world_object;
+
+pub use base_object::col_shape::ColShape;
+pub use base_object::col_shape::ColShapeContainer;
+pub use base_object::extra_pools::Entity;
+pub use base_object::extra_pools::EntityId;
+pub use base_object::player::Player;
+pub use base_object::player::PlayerContainer;
+pub use base_object::vehicle::Vehicle;
+pub use base_object::vehicle::VehicleContainer;
+pub use base_object::ValidBaseObject;
+pub use world_object::WorldObject;
+
+pub use helpers::hash;
 
 pub fn init(
     full_main_path: ResourceMainPath,

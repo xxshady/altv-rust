@@ -5,7 +5,7 @@ use super::base_object::BaseObjectContainer;
 
 #[derive(Debug)]
 pub(crate) struct BaseObjectManager<BaseObjectStruct> {
-    objects: HashMap<NonNull<BaseObjectStruct>, BaseObjectContainer<BaseObjectStruct>>,
+    pub(crate) objects: HashMap<NonNull<BaseObjectStruct>, BaseObjectContainer<BaseObjectStruct>>,
 }
 
 impl<BaseObjectStruct> BaseObjectManager<BaseObjectStruct> {

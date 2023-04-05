@@ -1,11 +1,11 @@
 use std::{
-    cell::{Ref, RefCell, RefMut},
+    cell::{RefCell, RefMut},
     rc::Rc,
 };
 
 use core_shared::{ModuleHandlers, ResourceMainPath};
 
-use crate::{base_object, col_shape, events, script_events, timers};
+use crate::{base_object, events, script_events, timers};
 
 thread_local! {
     pub static RESOURCE: Rc<RefCell<Option<Resource>>> =
@@ -22,7 +22,8 @@ pub struct Resource {
     pub events: RefCell<events::EventManager>,
     pub local_script_events: RefCell<script_events::LocalEventManager>,
     pub base_objects: RefCell<base_object::Store>,
-    pub pending_base_object_destroy: RefCell<base_object::PendingDestroy>,
+    pub pending_base_object_destroy_or_creation: RefCell<base_object::PendingDestroyOrCreation>,
+    pub extra_base_object_pools: RefCell<base_object::extra_pools::ExtraPools>,
 }
 
 macro_rules! with_resource {
@@ -81,6 +82,12 @@ impl Resource {
         RESOURCE.with(|v| f(v.borrow().as_ref().unwrap()))
     }
 
+    fn pending_base_object_destroy_or_creation(&self) -> bool {
+        self.pending_base_object_destroy_or_creation
+            .try_borrow_mut()
+            .is_err()
+    }
+
     #[allow(clippy::not_unsafe_ptr_arg_deref)]
     pub fn on_base_object_create(
         &self,
@@ -89,9 +96,21 @@ impl Resource {
     ) {
         logger::debug!("on_base_object_create {ptr:?} {base_object_type:?}");
 
-        self.base_objects
-            .borrow_mut()
-            .on_create(ptr, base_object_type);
+        logger::debug!(
+            "Custom backtrace: {}",
+            std::backtrace::Backtrace::force_capture()
+        );
+
+        if self.pending_base_object_destroy_or_creation() {
+            logger::debug!("pending_base_object_destroy_or_creation -> skip");
+            return;
+        }
+
+        self.base_objects.borrow_mut().on_create(
+            ptr,
+            base_object_type,
+            self.extra_base_object_pools.borrow_mut(),
+        );
     }
 
     pub fn on_base_object_destroy(
@@ -101,14 +120,16 @@ impl Resource {
     ) {
         logger::debug!("on_base_object_destroy {ptr:?} {base_object_type:?}");
 
-        if self.pending_base_object_destroy.try_borrow_mut().is_err() {
-            logger::debug!("base object destroying -> skip");
+        if self.pending_base_object_destroy_or_creation() {
+            logger::debug!("pending_base_object_destroy_or_creation -> skip");
             return;
         }
 
-        self.base_objects
-            .borrow_mut()
-            .on_remove(ptr, base_object_type);
+        self.base_objects.borrow_mut().on_remove(
+            ptr,
+            base_object_type,
+            self.extra_base_object_pools.borrow_mut(),
+        );
         // let remove_entity_from_pool = |base_object_borrow: &Ref<dyn base_object::BaseObject>| {
         //     self.entities
         //         .borrow_mut()
@@ -141,5 +162,12 @@ impl Resource {
     impl_borrow_mut_fn!(events, events::EventManager);
     impl_borrow_mut_fn!(local_script_events, script_events::LocalEventManager);
     impl_borrow_mut_fn!(base_objects, base_object::Store);
-    impl_borrow_mut_fn!(pending_base_object_destroy, base_object::PendingDestroy);
+    impl_borrow_mut_fn!(
+        pending_base_object_destroy_or_creation,
+        base_object::PendingDestroyOrCreation
+    );
+    impl_borrow_mut_fn!(
+        extra_base_object_pools,
+        base_object::extra_pools::ExtraPools
+    );
 }

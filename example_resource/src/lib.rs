@@ -1,7 +1,4 @@
-use std::borrow::Borrow;
-
 pub use alt::prelude::*;
-use autocxx::prelude::*;
 
 #[alt::main(crate_name = "alt")]
 pub fn main() {
@@ -9,14 +6,31 @@ pub fn main() {
 
     alt::set_timeout(
         move || {
-            let colshape = alt::ColShape::new_circle(alt::Vector2::new(2., 1.), 5.);
-            alt::log!("~gl~created colshape {colshape:?}");
+            let vehicle = alt::Vehicle::new("sultan2", 3, 0).unwrap();
+            let id = vehicle.borrow().id().unwrap();
+            alt::log!("~gl~id: {id}");
+            let valid = vehicle.borrow().valid();
+            alt::log!("~gl~valid: {valid}");
+            alt::log!("~gl~created entity {vehicle:?}");
 
-            alt::log!("pos {:?}", colshape.try_borrow()?.pos()?);
+            alt::log!("pos {:?}", vehicle.try_borrow()?.pos()?);
 
             alt::set_timeout(
                 move || {
-                    colshape.borrow_mut().destroy();
+                    let vehicle = dbg!(alt::Vehicle::get_by_id(id))?;
+
+                    vehicle.borrow_mut().destroy();
+                    alt::events::emit!("destroy-veh", vehicle.clone())?;
+
+                    alt::set_timeout(
+                        move || {
+                            dbg!(alt::Vehicle::get_by_id(id));
+                            dbg!(vehicle.borrow().id());
+                            Ok(())
+                        },
+                        300,
+                    );
+
                     Ok(())
                 },
                 300,

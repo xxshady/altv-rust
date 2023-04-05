@@ -4,17 +4,15 @@ use crate::{resource::Resource, sdk, SomeResult, VoidResult};
 
 pub(crate) type BaseObjectContainer<BaseObjectStruct> = Rc<RefCell<BaseObject<BaseObjectStruct>>>;
 
-pub(crate) type BaseObjectRawPtr = NonNull<sdk::alt::IBaseObject>;
-
 pub struct BaseObject<BaseObjectStruct> {
     ptr: Option<NonNull<BaseObjectStruct>>,
-    base_ptr: Option<BaseObjectRawPtr>,
+    base_ptr: Option<altv_sdk::BaseObjectMutPtr>,
 }
 
 impl<BaseObjectStruct> BaseObject<BaseObjectStruct> {
     pub(crate) fn _new(
         ptr: NonNull<BaseObjectStruct>,
-        base_ptr: BaseObjectRawPtr,
+        base_ptr: altv_sdk::BaseObjectMutPtr,
     ) -> BaseObjectContainer<BaseObjectStruct> {
         Rc::new(RefCell::new(Self {
             ptr: Some(ptr),
@@ -26,16 +24,12 @@ impl<BaseObjectStruct> BaseObject<BaseObjectStruct> {
         self.ptr.ok_or(anyhow::anyhow!("base object ptr is none"))
     }
 
-    pub(crate) fn valid(&self) -> bool {
-        self.ptr.is_some()
-    }
-
     pub(crate) fn internal_destroy(&mut self) -> VoidResult {
         let Some(base_ptr) = self.base_ptr else {
             anyhow::bail!("base_object already destroyed");
         };
 
-        Resource::with_pending_base_object_destroy_mut(|_, _| unsafe {
+        Resource::with_pending_base_object_destroy_or_creation_mut(|_, _| unsafe {
             sdk::ICore::DestroyBaseObject(base_ptr.as_ptr())
         });
 
@@ -56,13 +50,24 @@ impl<T> Debug for BaseObject<T> {
     }
 }
 
+pub trait BasePtr {
+    fn base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectMutPtr>;
+}
+
 impl<BaseObjectStruct> BasePtr for BaseObject<BaseObjectStruct> {
-    fn base_ptr(&self) -> SomeResult<BaseObjectRawPtr> {
-        self.base_ptr
-            .ok_or(anyhow::anyhow!("base object base_ptr is none"))
+    fn base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectMutPtr> {
+        if let Some(base_ptr) = self.base_ptr {
+            Ok(base_ptr)
+        } else {
+            anyhow::bail!("base object base_ptr is none")
+        }
     }
 }
 
-pub trait BasePtr {
-    fn base_ptr(&self) -> SomeResult<BaseObjectRawPtr>;
+pub trait ValidBaseObject: BasePtr {
+    fn valid(&self) -> bool {
+        self.base_ptr().is_ok()
+    }
 }
+
+impl<BaseObjectStruct> ValidBaseObject for BaseObject<BaseObjectStruct> {}

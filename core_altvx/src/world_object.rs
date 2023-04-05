@@ -3,13 +3,17 @@ use crate::{
 };
 use altv_sdk::ffi as sdk;
 use autocxx::prelude::*;
-use std::fmt::Debug;
+use std::{fmt::Debug, ptr::NonNull};
 
 pub type WorldObjectRawPtr = *mut sdk::alt::IWorldObject;
 
 pub trait WorldObject: BasePtr {
     fn ptr(&self) -> SomeResult<WorldObjectRawPtr> {
-        Ok(unsafe { sdk::base_object::to_world_object(self.base_ptr()?.as_ptr()) })
+        Ok(
+            NonNull::new(unsafe { sdk::base_object::to_world_object(self.base_ptr()?.as_ptr()) })
+                .unwrap()
+                .as_ptr(),
+        )
     }
 
     fn pos(&self) -> anyhow::Result<Vector3> {
@@ -19,7 +23,8 @@ pub trait WorldObject: BasePtr {
     }
 
     fn set_pos(&self, pos: Vector3) -> VoidResult {
-        Ok(unsafe { sdk::IWorldObject::SetPosition(self.ptr()?, pos.x(), pos.y(), pos.z()) })
+        unsafe { sdk::IWorldObject::SetPosition(self.ptr()?, pos.x(), pos.y(), pos.z()) }
+        Ok(())
     }
 
     fn dimension(&self) -> anyhow::Result<i32> {
@@ -27,7 +32,8 @@ pub trait WorldObject: BasePtr {
     }
 
     fn set_dimension(&self, value: i32) -> VoidResult {
-        Ok(unsafe { sdk::IWorldObject::SetDimension(self.ptr()?, value) })
+        unsafe { sdk::IWorldObject::SetDimension(self.ptr()?, value) }
+        Ok(())
     }
 }
 

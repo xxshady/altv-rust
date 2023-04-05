@@ -1,5 +1,5 @@
 use crate::{
-    base_object::{AnyBaseObject, ColShapeContainer},
+    base_object::{col_shape::ColShapeContainer, player, vehicle, AnyBaseObject, BasePtr},
     helpers::{read_cpp_vector2, read_cpp_vector3},
     resource::Resource,
     vector::{Vector2, Vector3},
@@ -71,24 +71,21 @@ macro_rules! impl_serializable_base_object {
             type Error = anyhow::Error;
 
             fn try_from(base_object: $base_object) -> anyhow::Result<Self> {
-                let mut borrowed = base_object.borrow_mut();
-                let ptr = borrowed.ptr_mut();
-                if ptr.valid() {
-                    Ok(Self(
-                        unsafe {
-                            sdk::create_mvalue_base_object(
-                                ptr.get().expect("this shit should never happen"),
-                            )
-                        }
-                        .within_unique_ptr(),
-                    ))
-                } else {
-                    anyhow::bail!("{} base object is destroyed", $short_name)
-                }
+                let base_object = base_object.try_borrow_mut()?;
+                let Ok(ptr) = base_object.base_ptr() else {
+                            anyhow::bail!("{} base object is destroyed", $short_name);
+                        };
+
+                Ok(Self(
+                    unsafe { sdk::create_mvalue_base_object(ptr.as_ptr()) }.within_unique_ptr(),
+                ))
             }
         }
     };
 }
+
+impl_serializable_base_object!(vehicle::VehicleContainer, "vehicle");
+impl_serializable_base_object!(player::PlayerContainer, "player");
 
 // TODO: fix this none/null/nil shit
 /// alias for `MValue::None`
