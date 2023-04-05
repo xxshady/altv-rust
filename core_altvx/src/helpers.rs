@@ -62,18 +62,18 @@ pub fn get_player_from_event<T>(
     get_target: unsafe fn(*const T) -> *mut sdk::alt::IPlayer,
 ) -> player::PlayerContainer {
     let ptr = unsafe { get_target(event) };
-    let ptr = NonNull::new(unsafe { sdk::player::to_base_object(ptr) }).unwrap();
+    let ptr = NonNull::new(ptr).unwrap();
 
-    let base_object = resource.base_objects.borrow().get_by_ptr(ptr).unwrap();
-    if let AnyBaseObject::Player(p) = base_object {
-        p
-    } else {
-        unreachable!()
-    }
+    resource
+        .base_objects
+        .borrow()
+        .player
+        .get_by_ptr(ptr)
+        .unwrap()
 }
 
 pub fn get_player_raw_ptr(player: player::PlayerContainer) -> SomeResult<*mut sdk::alt::IPlayer> {
-    Ok(player.try_borrow()?.ptr()?.as_ptr())
+    player.try_borrow()?.raw_ptr()
 }
 
 pub trait IntoString {

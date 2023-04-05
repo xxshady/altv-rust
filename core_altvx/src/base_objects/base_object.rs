@@ -56,6 +56,7 @@ impl<T> Debug for BaseObject<T> {
 
 pub trait BasePtr {
     fn base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectMutPtr>;
+    fn raw_base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectRawMutPtr>;
 }
 
 impl<BaseObjectStruct> BasePtr for BaseObject<BaseObjectStruct> {
@@ -65,6 +66,10 @@ impl<BaseObjectStruct> BasePtr for BaseObject<BaseObjectStruct> {
         } else {
             anyhow::bail!("base object base_ptr is none")
         }
+    }
+
+    fn raw_base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectRawMutPtr> {
+        Ok(self.base_ptr()?.as_ptr())
     }
 }
 

@@ -11,7 +11,7 @@ pub type EntityRawPtr = *mut sdk::alt::IEntity;
 pub trait Entity: BasePtr {
     fn ptr(&self) -> SomeResult<EntityRawPtr> {
         Ok(
-            NonNull::new(unsafe { sdk::base_object::to_entity(self.base_ptr()?.as_ptr()) })
+            NonNull::new(unsafe { sdk::base_object::to_entity(self.raw_base_ptr()?) })
                 .unwrap()
                 .as_ptr(),
         )

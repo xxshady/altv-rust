@@ -10,7 +10,7 @@ pub type WorldObjectRawPtr = *mut sdk::alt::IWorldObject;
 pub trait WorldObject: BasePtr {
     fn ptr(&self) -> SomeResult<WorldObjectRawPtr> {
         Ok(
-            NonNull::new(unsafe { sdk::base_object::to_world_object(self.base_ptr()?.as_ptr()) })
+            NonNull::new(unsafe { sdk::base_object::to_world_object(self.raw_base_ptr()?) })
                 .unwrap()
                 .as_ptr(),
         )
