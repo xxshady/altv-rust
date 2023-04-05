@@ -60,11 +60,14 @@ pub fn main() {
         let p = p.clone();
         alt::set_timeout(
             move || {
-                p.borrow().spawn("player_two", 500);
+                p.borrow().spawn("player_two", alt::Vector3::new(0., 0., 72.));
                 Ok(())
             },
             2000,
         );
         Ok(())
     });
+
+    let group = alt::VirtualEntityGroup::new(3).unwrap();
+    let entity = alt::VirtualEntity::new(group, 0, 1000).unwrap();
 }

@@ -1,5 +1,7 @@
 use crate::{
-    base_objects::{col_shape, player, vehicle, AnyBaseObject, BasePtr},
+    base_objects::{
+        col_shape, player, vehicle, virtual_entity, virtual_entity_group, AnyBaseObject, BasePtr,
+    },
     helpers::{get_player_raw_ptr, read_cpp_vector2, read_cpp_vector3},
     resource::Resource,
     vector::{Vector2, Vector3},
@@ -145,6 +147,8 @@ pub enum MValue {
     ColShape(col_shape::ColShapeContainer),
     Vehicle(vehicle::VehicleContainer),
     Player(player::PlayerContainer),
+    VirtualEntity(virtual_entity::VirtualEntityContainer),
+    VirtualEntityGroup(virtual_entity_group::VirtualEntityGroupContainer),
     InvalidBaseObject,
 }
 
@@ -275,6 +279,8 @@ pub(crate) fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Re
                 AnyBaseObject::ColShape(c) => MValue::ColShape(c),
                 AnyBaseObject::Vehicle(c) => MValue::Vehicle(c),
                 AnyBaseObject::Player(c) => MValue::Player(c),
+                AnyBaseObject::VirtualEntity(c) => MValue::VirtualEntity(c),
+                AnyBaseObject::VirtualEntityGroup(c) => MValue::VirtualEntityGroup(c),
             }
         }
         Vector3 => MValue::Vector3(read_cpp_vector3(

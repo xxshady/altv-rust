@@ -21,6 +21,7 @@ pub mod script_events;
 pub mod timers;
 pub mod vector;
 mod vehicle;
+mod virtual_entities;
 mod world_object;
 
 pub use base_objects::col_shape::ColShape;
@@ -31,6 +32,10 @@ pub use base_objects::player::Player;
 pub use base_objects::player::PlayerContainer;
 pub use base_objects::vehicle::Vehicle;
 pub use base_objects::vehicle::VehicleContainer;
+pub use base_objects::virtual_entity::VirtualEntity;
+pub use base_objects::virtual_entity::VirtualEntityContainer;
+pub use base_objects::virtual_entity_group::VirtualEntityGroup;
+pub use base_objects::virtual_entity_group::VirtualEntityGroupContainer;
 pub use base_objects::ValidBaseObject;
 pub use world_object::WorldObject;
 

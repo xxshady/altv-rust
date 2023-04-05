@@ -205,6 +205,12 @@ base_objects!(
         altv_sdk::BaseObjectType::Player,
         Entity
     ],
+    VirtualEntity: [
+        altv_sdk::BaseObjectType::VirtualEntity,
+    ],
+    VirtualEntityGroup: [
+        altv_sdk::BaseObjectType::VirtualEntityGroup,
+    ],
 );
 
 impl std::fmt::Debug for Store {

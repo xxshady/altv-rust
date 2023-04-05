@@ -38,9 +38,8 @@ pub use core_altvx::ColShape;
 pub use core_altvx::EntityId;
 pub use core_altvx::Player;
 pub use core_altvx::Vehicle;
-
-// TEST
-pub use altv_sdk::ffi;
+pub use core_altvx::VirtualEntity;
+pub use core_altvx::VirtualEntityGroup;
 
 pub use anyhow;
 
