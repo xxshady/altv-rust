@@ -204,7 +204,7 @@ pub mod ffi {
     pub use callbacks::*;
 }
 
-pub type CEventPtr = *const ffi::alt::CEvent; // TODO: use NonNull
+pub type CEventPtr = *const ffi::alt::CEvent;
 
 pub type BaseObjectMutPtr = NonNull<ffi::alt::IBaseObject>;
 pub type BaseObjectRawMutPtr = *mut ffi::alt::IBaseObject;
