@@ -54,6 +54,17 @@ pub fn main() {
         alt::events::emit_client!("test", p.clone(), "emit single")?;
         alt::events::emit_some_clients!("test", vec![p.clone(), p.clone()], "emit some")?;
         alt::events::emit_all_clients!("test", "emit all")?;
+
+        player.spawn(alt::hash("player_one"), 500);
+
+        let p = p.clone();
+        alt::set_timeout(
+            move || {
+                p.borrow().spawn("player_two", 500);
+                Ok(())
+            },
+            2000,
+        );
         Ok(())
     });
 }

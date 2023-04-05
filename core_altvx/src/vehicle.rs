@@ -5,7 +5,7 @@ use crate::{
         extra_pools::{get_entity_by_id, wrappers::AnyEntity, Entity, EntityId},
         vehicle,
     },
-    helpers,
+    helpers::{self, IntoModelHash},
     resource::Resource,
     sdk,
     vector::IntoVector3,
@@ -13,25 +13,9 @@ use crate::{
     SomeResult, VoidResult,
 };
 
-pub trait IntoVehicleModel {
-    fn into_vehicle_model(self) -> u32;
-}
-
-impl IntoVehicleModel for u32 {
-    fn into_vehicle_model(self) -> u32 {
-        self
-    }
-}
-
-impl IntoVehicleModel for &str {
-    fn into_vehicle_model(self) -> u32 {
-        helpers::hash(self)
-    }
-}
-
 impl vehicle::Vehicle {
     pub fn new(
-        model: impl IntoVehicleModel,
+        model: impl IntoModelHash,
         pos: impl IntoVector3,
         rot: impl IntoVector3,
     ) -> SomeResult<vehicle::VehicleContainer> {
@@ -41,7 +25,7 @@ impl vehicle::Vehicle {
         // TODO: check model before creation
         let ptr = Resource::with_pending_base_object_destroy_or_creation_mut(|_, _| unsafe {
             sdk::ICore::CreateVehicle(
-                model.into_vehicle_model(),
+                model.into_model_hash(),
                 pos.x(),
                 pos.y(),
                 pos.z(),

@@ -1,7 +1,7 @@
 use std::{collections::HashMap, ptr::NonNull};
 
 use super::{super::BasePtr, wrappers::AnyEntity, ExtraPool};
-use crate::{sdk, SomeResult};
+use crate::{helpers::ModelHash, sdk, SomeResult};
 
 pub type EntityId = u16;
 pub type EntityPool = ExtraPool<HashMap<EntityId, AnyEntity>>;
@@ -19,6 +19,10 @@ pub trait Entity: BasePtr {
 
     fn id(&self) -> SomeResult<EntityId> {
         Ok(unsafe { sdk::IEntity::GetID(self.ptr()?) })
+    }
+
+    fn model(&self) -> SomeResult<ModelHash> {
+        Ok(unsafe { sdk::IEntity::GetModel(self.ptr()?) })
     }
 }
 

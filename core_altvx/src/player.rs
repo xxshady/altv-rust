@@ -3,6 +3,7 @@ use crate::{
         extra_pools::{get_entity_by_id, wrappers::AnyEntity, Entity, EntityId},
         player,
     },
+    helpers::IntoModelHash,
     sdk,
     vector::IntoVector3,
     world_object::WorldObject,
@@ -18,15 +19,15 @@ impl player::Player {
         Ok(unsafe { sdk::IPlayer::GetName(self.ptr()?.as_ptr()) }.to_string())
     }
 
-    pub fn spawn(&self, model: u32, pos: impl IntoVector3) -> VoidResult {
+    pub fn spawn(&self, model: impl IntoModelHash, pos: impl IntoVector3) -> VoidResult {
         self.set_model(model)?;
         let pos = pos.into_vector3();
         unsafe { sdk::IPlayer::Spawn(self.ptr()?.as_ptr(), pos.x(), pos.y(), pos.z(), 0) }
         Ok(())
     }
 
-    pub fn set_model(&self, model: u32) -> VoidResult {
-        unsafe { sdk::IPlayer::SetModel(self.ptr()?.as_ptr(), model) }
+    pub fn set_model(&self, model: impl IntoModelHash) -> VoidResult {
+        unsafe { sdk::IPlayer::SetModel(self.ptr()?.as_ptr(), model.into_model_hash()) }
         Ok(())
     }
 }

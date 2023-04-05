@@ -39,6 +39,7 @@ pub fn read_cpp_vector2(cpp_vector: UniquePtr<sdk::Vector2Wrapper>) -> Vector2 {
 
 // credits to altv-rs creator
 // https://github.com/justdimaa/altv-rs/blob/f5cf1733493466634793804dfb1ca6d387fbe687/altv-sdk/src/lib.rs#L24
+/// joaat hash function
 pub fn hash(str: &str) -> u32 {
     let bytes = str.as_bytes();
     let mut num: std::num::Wrapping<u32> = std::num::Wrapping(0u32);
@@ -88,5 +89,23 @@ impl IntoString for String {
 impl IntoString for &str {
     fn into_string(self) -> String {
         self.to_string()
+    }
+}
+
+pub type ModelHash = u32;
+
+pub trait IntoModelHash {
+    fn into_model_hash(self) -> ModelHash;
+}
+
+impl IntoModelHash for ModelHash {
+    fn into_model_hash(self) -> ModelHash {
+        self
+    }
+}
+
+impl IntoModelHash for &str {
+    fn into_model_hash(self) -> ModelHash {
+        hash(self)
     }
 }
