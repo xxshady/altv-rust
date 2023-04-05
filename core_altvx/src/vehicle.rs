@@ -5,7 +5,7 @@ use crate::{
         extra_pools::{get_entity_by_id, wrappers::AnyEntity, Entity, EntityId},
         vehicle,
     },
-    helpers::{self, IntoModelHash},
+    helpers::IntoModelHash,
     resource::Resource,
     sdk,
     vector::IntoVector3,

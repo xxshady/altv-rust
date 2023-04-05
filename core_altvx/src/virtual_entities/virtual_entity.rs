@@ -1,5 +1,6 @@
 use crate::{
     base_objects::{virtual_entity, virtual_entity_group},
+    resource::Resource,
     sdk,
     vector::IntoVector3,
     world_object::WorldObject,
@@ -24,6 +25,24 @@ impl virtual_entity::VirtualEntity {
             )
         };
         Ok(virtual_entity::add_to_pool!(NonNull::new(ptr).unwrap()))
+    }
+
+    pub fn id(&self) -> SomeResult<u32> {
+        Ok(unsafe { sdk::IVirtualEntity::GetID(self.raw_ptr()?) })
+    }
+
+    pub fn streaming_distance(&self) -> SomeResult<u32> {
+        Ok(unsafe { sdk::IVirtualEntity::GetStreamingDistance(self.raw_ptr()?) })
+    }
+
+    pub fn group(&self) -> SomeResult<virtual_entity_group::VirtualEntityGroupContainer> {
+        let group_ptr = unsafe { sdk::IVirtualEntity::GetGroup(self.raw_ptr()?) };
+        let group_ptr = NonNull::new(group_ptr).unwrap();
+
+        let Some(group) = Resource::with_base_objects_mut(|v, _| v.virtual_entity_group.get_by_ptr(group_ptr)) else {
+            anyhow::bail!("VirtualEntityGroup not found in the pool (usually this should never happen)")
+        };
+        Ok(group)
     }
 
     pub fn destroy(&mut self) -> VoidResult {

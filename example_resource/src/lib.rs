@@ -55,12 +55,13 @@ pub fn main() {
         alt::events::emit_some_clients!("test", vec![p.clone(), p.clone()], "emit some")?;
         alt::events::emit_all_clients!("test", "emit all")?;
 
-        player.spawn(alt::hash("player_one"), 500);
+        player.spawn(alt::hash("player_one"), 500)?;
 
         let p = p.clone();
         alt::set_timeout(
             move || {
-                p.borrow().spawn("player_two", alt::Vector3::new(0., 0., 72.));
+                p.borrow()
+                    .spawn("player_two", alt::Vector3::new(0., 0., 72.))?;
                 Ok(())
             },
             2000,
@@ -69,5 +70,7 @@ pub fn main() {
     });
 
     let group = alt::VirtualEntityGroup::new(3).unwrap();
-    let entity = alt::VirtualEntity::new(group, 0, 1000).unwrap();
+    let entity = alt::VirtualEntity::new(group.clone(), 0, 1000).unwrap();
+    let entity_group_id = entity.borrow().group().unwrap().borrow().id().unwrap();
+    dbg!(entity_group_id, group.borrow().id());
 }

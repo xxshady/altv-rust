@@ -13,6 +13,10 @@ impl virtual_entity_group::VirtualEntityGroup {
         ))
     }
 
+    pub fn id(&self) -> SomeResult<u32> {
+        Ok(unsafe { sdk::IVirtualEntityGroup::GetID(self.raw_ptr()?) })
+    }
+
     pub fn destroy(&mut self) -> VoidResult {
         virtual_entity_group::remove_from_pool!(self)?;
         self.internal_destroy()

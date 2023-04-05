@@ -24,6 +24,10 @@ impl<BaseObjectStruct> BaseObject<BaseObjectStruct> {
         self.ptr.ok_or(anyhow::anyhow!("base object ptr is none"))
     }
 
+    pub(crate) fn raw_ptr(&self) -> SomeResult<*mut BaseObjectStruct> {
+        Ok(self.ptr()?.as_ptr())
+    }
+
     pub(crate) fn internal_destroy(&mut self) -> VoidResult {
         let Some(base_ptr) = self.base_ptr else {
             anyhow::bail!("base_object already destroyed");

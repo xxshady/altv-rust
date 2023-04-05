@@ -16,18 +16,18 @@ impl player::Player {
     }
 
     pub fn name(&self) -> SomeResult<String> {
-        Ok(unsafe { sdk::IPlayer::GetName(self.ptr()?.as_ptr()) }.to_string())
+        Ok(unsafe { sdk::IPlayer::GetName(self.raw_ptr()?) }.to_string())
     }
 
     pub fn spawn(&self, model: impl IntoModelHash, pos: impl IntoVector3) -> VoidResult {
         self.set_model(model)?;
         let pos = pos.into_vector3();
-        unsafe { sdk::IPlayer::Spawn(self.ptr()?.as_ptr(), pos.x(), pos.y(), pos.z(), 0) }
+        unsafe { sdk::IPlayer::Spawn(self.raw_ptr()?, pos.x(), pos.y(), pos.z(), 0) }
         Ok(())
     }
 
     pub fn set_model(&self, model: impl IntoModelHash) -> VoidResult {
-        unsafe { sdk::IPlayer::SetModel(self.ptr()?.as_ptr(), model.into_model_hash()) }
+        unsafe { sdk::IPlayer::SetModel(self.raw_ptr()?, model.into_model_hash()) }
         Ok(())
     }
 }
