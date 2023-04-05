@@ -126,31 +126,6 @@ impl Resource {
             base_object_type,
             self.extra_base_object_pools.borrow_mut(),
         );
-        // let remove_entity_from_pool = |base_object_borrow: &Ref<dyn base_objects::BaseObject>| {
-        //     self.entities
-        //         .borrow_mut()
-        //         .on_destroy(base_object_borrow.ptr().to_entity().unwrap());
-        // };
-
-        // let mut base_objects = self.base_objects.borrow_mut();
-        // let base_object = base_objects.get_by_raw_ptr(raw_ptr);
-        // if let Some(base_object) = base_object {
-        //     let base_object_borrow = base_object.borrow();
-
-        //     use altv_sdk::BaseObjectType::*;
-        //     match base_object_borrow.base_type() {
-        //         Colshape => {
-        //             self.col_shape_base_object_map
-        //                 .borrow_mut()
-        //                 .remove_base_object(base_object_borrow.ptr().get().unwrap());
-        //         }
-        //         _ => todo!(),
-        //     };
-        //     drop(base_object_borrow);
-        //     base_objects.on_destroy(Rc::clone(&base_object));
-        // } else {
-        //     logger::error!("on_base_object_destroy unknown base object: {raw_ptr:?}");
-        // }
     }
 
     impl_borrow_mut_fn!(timers, timers::TimerManager);
