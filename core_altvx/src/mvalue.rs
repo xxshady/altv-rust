@@ -201,6 +201,23 @@ impl MValueList {
     get_mvalue_type_at!(get_dict_at, HashMap<String, MValue>, MValue::Dict);
     get_mvalue_type_at!(get_vector3_at, Vector3, MValue::Vector3);
     get_mvalue_type_at!(get_vector2_at, Vector2, MValue::Vector2);
+    get_mvalue_type_at!(get_player_at, player::PlayerContainer, MValue::Player);
+    get_mvalue_type_at!(get_vehicle_at, vehicle::VehicleContainer, MValue::Vehicle);
+    get_mvalue_type_at!(
+        get_col_shape_at,
+        col_shape::ColShapeContainer,
+        MValue::ColShape
+    );
+    get_mvalue_type_at!(
+        get_virtual_entity_at,
+        virtual_entity::VirtualEntityContainer,
+        MValue::VirtualEntity
+    );
+    get_mvalue_type_at!(
+        get_virtual_entity_group_at,
+        virtual_entity_group::VirtualEntityGroupContainer,
+        MValue::VirtualEntityGroup
+    );
 
     pub fn push(&mut self, mvalue: MValue) {
         self.vec.push(mvalue);
