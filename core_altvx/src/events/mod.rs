@@ -236,8 +236,10 @@ supported_sdk_events!(
 
 custom_events!(
     ColshapeEvent: [
-        VehicleEnterColShape, 
+        VehicleEnterColShape,
         VehicleLeaveColShape,
+        PlayerEnterColShape,
+        PlayerLeaveColShape,
     ],
 );
 

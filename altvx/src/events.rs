@@ -45,3 +45,5 @@ on_sdk_event!(on_console_command, ConsoleCommandEvent);
 
 on_custom_event!(on_vehicle_enter_col_shape, VehicleEnterColShape);
 on_custom_event!(on_vehicle_leave_col_shape, VehicleLeaveColShape);
+on_custom_event!(on_player_enter_col_shape, PlayerEnterColShape);
+on_custom_event!(on_player_leave_col_shape, PlayerLeaveColShape);

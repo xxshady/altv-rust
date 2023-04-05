@@ -10,6 +10,7 @@ macro_rules! base_objects {
         $manager_name_snake: ident
         $name_struct: ident
         $name_container: ident
+        $name_ptr: ident
         $manager_name: ident: [
             $base_type: path,
             $( $extra_pool: ident )?
@@ -23,6 +24,8 @@ macro_rules! base_objects {
                 pub type $manager_name = BaseObject<$name_struct>;
                 pub type $name_struct = sdk::alt::[<I $manager_name>];
                 pub type $name_container = BaseObjectContainer<$name_struct>;
+                #[allow(dead_code)]
+                pub type $name_ptr = NonNull<$name_struct>;
 
                 #[macro_export]
                 macro_rules! [<__ $manager_name_snake _remove_from_pool>] {
@@ -40,6 +43,7 @@ macro_rules! base_objects {
                         })
                     };
                 }
+
                 pub(crate) use [<__ $manager_name_snake _remove_from_pool>] as remove_from_pool;
 
                 #[macro_export]
@@ -67,6 +71,7 @@ macro_rules! base_objects {
                         })
                     };
                 }
+
                 pub(crate) use [<__ $manager_name_snake _add_to_pool>] as add_to_pool;
             }
         )+
@@ -184,6 +189,7 @@ macro_rules! base_objects {
                 [<$manager_name:snake>]
                 [<$manager_name Struct>]
                 [<$manager_name Container>]
+                [<$manager_name MutPtr>]
                 $manager_name: [
                     $base_type,
                     $( $extra_pool )?

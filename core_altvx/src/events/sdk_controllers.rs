@@ -1,7 +1,14 @@
+use std::ptr::NonNull;
+
 use altv_sdk::ffi as sdk;
 use lazycell::LazyCell;
 
-use crate::{base_objects::player, helpers::get_player_from_event, mvalue, resource::Resource};
+use crate::{
+    base_objects::{col_shape, player},
+    helpers::get_player_from_event,
+    mvalue,
+    resource::Resource,
+};
 
 #[derive(Debug)]
 pub struct PlayerConnect {
@@ -47,8 +54,8 @@ impl ServerStarted {
 
 #[derive(Debug)]
 pub struct ColshapeEvent {
-    pub col_shape: *mut sdk::alt::IColShape,
-    pub entity: *mut sdk::alt::IEntity,
+    pub col_shape: col_shape::ColShapeMutPtr,
+    pub entity: altv_sdk::BaseObjectMutPtr,
     pub state: bool,
 }
 
@@ -59,14 +66,12 @@ impl ColshapeEvent {
         let state = unsafe { sdk::CColShapeEvent::GetState(event) };
 
         let col_shape = unsafe { sdk::CColShapeEvent::GetTarget(event) };
-        if col_shape.is_null() {
-            panic!("sdk::CColShapeEvent::GetTarget returned null");
-        }
+        let col_shape = NonNull::new(col_shape).unwrap();
 
         let entity = unsafe { sdk::CColShapeEvent::GetEntity(event) };
-        if entity.is_null() {
-            panic!("sdk::CColShapeEvent::GetEntity returned null");
-        }
+        let entity = NonNull::new(entity).unwrap();
+        let entity = unsafe { sdk::entity::to_base_object(entity.as_ptr()) };
+        let entity = NonNull::new(entity).unwrap();
 
         Self {
             col_shape,
