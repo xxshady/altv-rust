@@ -1,7 +1,7 @@
 use std::{collections::HashMap, fmt::Debug};
 
 use crate::{
-    base_object::player,
+    base_objects::player,
     helpers::IntoString,
     mvalue::{self, convert_vec_to_mvalue_vec, Serializable},
     resource::Resource,

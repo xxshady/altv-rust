@@ -1,4 +1,3 @@
-#[allow(clippy::module_inception)]
 mod base_object;
 pub(crate) mod extra_pools;
 mod manager;

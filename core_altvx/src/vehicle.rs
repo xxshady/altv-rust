@@ -1,7 +1,7 @@
 use std::ptr::NonNull;
 
 use crate::{
-    base_object::{
+    base_objects::{
         extra_pools::{get_entity_by_id, wrappers::AnyEntity, Entity, EntityId},
         vehicle,
     },

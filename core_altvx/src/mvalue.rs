@@ -1,5 +1,5 @@
 use crate::{
-    base_object::{col_shape, player, vehicle, AnyBaseObject, BasePtr},
+    base_objects::{col_shape, player, vehicle, AnyBaseObject, BasePtr},
     helpers::{get_player_raw_ptr, read_cpp_vector2, read_cpp_vector3},
     resource::Resource,
     vector::{Vector2, Vector3},

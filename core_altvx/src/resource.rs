@@ -5,7 +5,7 @@ use std::{
 
 use core_shared::{ModuleHandlers, ResourceMainPath};
 
-use crate::{base_object, events, script_events, timers};
+use crate::{base_objects, events, script_events, timers};
 
 thread_local! {
     pub static RESOURCE: Rc<RefCell<Option<Resource>>> =
@@ -22,9 +22,9 @@ pub struct Resource {
     pub events: RefCell<events::EventManager>,
     pub local_script_events: RefCell<script_events::LocalEventManager>,
     pub client_script_events: RefCell<script_events::ClientEventManager>,
-    pub base_objects: RefCell<base_object::Store>,
-    pub pending_base_object_destroy_or_creation: RefCell<base_object::PendingDestroyOrCreation>,
-    pub extra_base_object_pools: RefCell<base_object::extra_pools::ExtraPools>,
+    pub base_objects: RefCell<base_objects::Store>,
+    pub pending_base_object_destroy_or_creation: RefCell<base_objects::PendingDestroyOrCreation>,
+    pub extra_base_object_pools: RefCell<base_objects::extra_pools::ExtraPools>,
 }
 
 macro_rules! with_resource {
@@ -126,7 +126,7 @@ impl Resource {
             base_object_type,
             self.extra_base_object_pools.borrow_mut(),
         );
-        // let remove_entity_from_pool = |base_object_borrow: &Ref<dyn base_object::BaseObject>| {
+        // let remove_entity_from_pool = |base_object_borrow: &Ref<dyn base_objects::BaseObject>| {
         //     self.entities
         //         .borrow_mut()
         //         .on_destroy(base_object_borrow.ptr().to_entity().unwrap());
@@ -158,13 +158,13 @@ impl Resource {
     impl_borrow_mut_fn!(events, events::EventManager);
     impl_borrow_mut_fn!(local_script_events, script_events::LocalEventManager);
     impl_borrow_mut_fn!(client_script_events, script_events::ClientEventManager);
-    impl_borrow_mut_fn!(base_objects, base_object::Store);
+    impl_borrow_mut_fn!(base_objects, base_objects::Store);
     impl_borrow_mut_fn!(
         pending_base_object_destroy_or_creation,
-        base_object::PendingDestroyOrCreation
+        base_objects::PendingDestroyOrCreation
     );
     impl_borrow_mut_fn!(
         extra_base_object_pools,
-        base_object::extra_pools::ExtraPools
+        base_objects::extra_pools::ExtraPools
     );
 }

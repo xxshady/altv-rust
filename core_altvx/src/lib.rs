@@ -9,7 +9,7 @@ use altv_sdk::ffi as sdk;
 mod resource;
 use resource::Resource;
 
-mod base_object;
+mod base_objects;
 pub mod client_events;
 pub mod col_shape;
 pub mod events;
@@ -23,15 +23,15 @@ pub mod vector;
 mod vehicle;
 mod world_object;
 
-pub use base_object::col_shape::ColShape;
-pub use base_object::col_shape::ColShapeContainer;
-pub use base_object::extra_pools::Entity;
-pub use base_object::extra_pools::EntityId;
-pub use base_object::player::Player;
-pub use base_object::player::PlayerContainer;
-pub use base_object::vehicle::Vehicle;
-pub use base_object::vehicle::VehicleContainer;
-pub use base_object::ValidBaseObject;
+pub use base_objects::col_shape::ColShape;
+pub use base_objects::col_shape::ColShapeContainer;
+pub use base_objects::extra_pools::Entity;
+pub use base_objects::extra_pools::EntityId;
+pub use base_objects::player::Player;
+pub use base_objects::player::PlayerContainer;
+pub use base_objects::vehicle::Vehicle;
+pub use base_objects::vehicle::VehicleContainer;
+pub use base_objects::ValidBaseObject;
 pub use world_object::WorldObject;
 
 pub use helpers::hash;

@@ -1,7 +1,7 @@
 use altv_sdk::ffi as sdk;
 use lazycell::LazyCell;
 
-use crate::{base_object::player, helpers::get_player_from_event, mvalue, resource::Resource};
+use crate::{base_objects::player, helpers::get_player_from_event, mvalue, resource::Resource};
 
 #[derive(Debug)]
 pub struct PlayerConnect {

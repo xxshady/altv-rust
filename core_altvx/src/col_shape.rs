@@ -1,5 +1,5 @@
 use crate::{
-    base_object::col_shape, sdk, vector::IntoVector2, world_object::WorldObject, VoidResult,
+    base_objects::col_shape, sdk, vector::IntoVector2, world_object::WorldObject, VoidResult,
 };
 use std::ptr::NonNull;
 

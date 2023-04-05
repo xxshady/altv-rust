@@ -1,5 +1,5 @@
 use crate::{
-    base_object::player,
+    base_objects::player,
     helpers::get_player_raw_ptr,
     mvalue::{convert_player_vec_to_cpp_vec, convert_vec_to_mvalue_vec, Serializable},
     VoidResult,

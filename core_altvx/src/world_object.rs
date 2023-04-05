@@ -1,5 +1,5 @@
 use crate::{
-    base_object::BasePtr, helpers::read_cpp_vector3, vector::Vector3, SomeResult, VoidResult,
+    base_objects::BasePtr, helpers::read_cpp_vector3, vector::Vector3, SomeResult, VoidResult,
 };
 use altv_sdk::ffi as sdk;
 use autocxx::prelude::*;

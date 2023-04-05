@@ -1,4 +1,4 @@
-use crate::base_object::extra_pools::ExtraPools;
+use crate::base_objects::extra_pools::ExtraPools;
 use std::cell::RefMut;
 use std::ptr::NonNull;
 
@@ -31,7 +31,7 @@ macro_rules! base_objects {
                             v.[<$manager_name_snake>].remove($base_object.ptr()?)?;
                             $(
                                 $crate::resource::Resource::with_extra_base_object_pools_mut(|mut v, _| -> VoidResult {
-                                    use $crate::base_object::BasePtr;
+                                    use $crate::base_objects::BasePtr;
                                     v.[<$extra_pool:snake>].remove($base_object.base_ptr()?);
                                     Ok(())
                                 })?;
@@ -56,7 +56,7 @@ macro_rules! base_objects {
                             $(
                                 $crate::resource::Resource::with_extra_base_object_pools_mut(|mut v, _| {
                                     v.[<$extra_pool:snake>].add(
-                                        $crate::base_object::extra_pools::wrappers::[<Any $extra_pool>]::$manager_name(
+                                        $crate::base_objects::extra_pools::wrappers::[<Any $extra_pool>]::$manager_name(
                                             container.clone()
                                         )
                                     );

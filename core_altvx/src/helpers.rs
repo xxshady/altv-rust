@@ -1,7 +1,7 @@
 use std::ptr::NonNull;
 
 use crate::{
-    base_object::{player, AnyBaseObject},
+    base_objects::{player, AnyBaseObject},
     resource::Resource,
     vector::{Vector2, Vector3},
     SomeResult,
