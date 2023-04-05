@@ -20,7 +20,7 @@ impl ResourceForModule {
 
     pub fn on_base_object_create(
         &self,
-        base_object: altv_sdk::IBaseObjectMutPtr,
+        base_object: altv_sdk::BaseObjectMutPtr,
         base_object_type: altv_sdk::BaseObjectType,
     ) {
         self.handlers.on_base_object_create.as_ref().unwrap()(base_object, base_object_type);
@@ -28,9 +28,9 @@ impl ResourceForModule {
 
     pub fn on_base_object_destroy(
         &self,
-        base_object: altv_sdk::IBaseObjectMutPtr,
-        _: altv_sdk::BaseObjectType,
+        base_object: altv_sdk::BaseObjectMutPtr,
+        base_object_type: altv_sdk::BaseObjectType,
     ) {
-        self.handlers.on_base_object_destroy.as_ref().unwrap()(base_object);
+        self.handlers.on_base_object_destroy.as_ref().unwrap()(base_object, base_object_type);
     }
 }

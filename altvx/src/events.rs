@@ -13,9 +13,9 @@ pub use core_altvx::mvalue_list as list;
 pub use core_altvx::script_events::add_client_handler as on_client;
 pub use core_altvx::script_events::add_local_handler as on;
 
-pub use core_altvx::emit_all_clients;
-pub use core_altvx::emit_client;
-pub use core_altvx::emit_some_clients;
+pub use core_altvx::__emit_all_clients as emit_all_clients;
+pub use core_altvx::__emit_client as emit_client;
+pub use core_altvx::__emit_some_clients as emit_some_clients;
 
 macro_rules! on_sdk_event {
     ($func_name: ident, $event_name: ident) => {
@@ -45,3 +45,5 @@ on_sdk_event!(on_console_command, ConsoleCommandEvent);
 
 on_custom_event!(on_vehicle_enter_col_shape, VehicleEnterColShape);
 on_custom_event!(on_vehicle_leave_col_shape, VehicleLeaveColShape);
+on_custom_event!(on_player_enter_col_shape, PlayerEnterColShape);
+on_custom_event!(on_player_leave_col_shape, PlayerLeaveColShape);

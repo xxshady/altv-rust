@@ -1,8 +1,9 @@
 use std::{collections::HashMap, fmt::Debug};
 
 use crate::{
+    base_objects::player,
+    helpers::IntoString,
     mvalue::{self, convert_vec_to_mvalue_vec, Serializable},
-    player,
     resource::Resource,
 };
 use altv_sdk::ffi as sdk;
@@ -191,24 +192,24 @@ impl ScriptEventManager for ClientEventManager {
 
 impl Debug for ClientEventManager {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "LocalEventManager{{todo}}")
+        write!(f, "ClientEventManager {{todo}} ")
     }
 }
 
 pub fn add_local_handler(
-    event_name: String,
+    event_name: impl IntoString,
     handler: impl FnMut(EventArgs) -> anyhow::Result<()> + 'static,
 ) {
     Resource::with_local_script_events_mut(|mut local_events, _| {
-        local_events.add_handler(event_name, Box::new(handler))
+        local_events.add_handler(event_name.into_string(), Box::new(handler))
     });
 }
 
 pub fn add_client_handler(
-    event_name: String,
+    event_name: impl IntoString,
     handler: impl FnMut(player::PlayerContainer, EventArgs) -> anyhow::Result<()> + 'static,
 ) {
     Resource::with_client_script_events_mut(|mut client_events, _| {
-        client_events.add_handler(event_name, Box::new(handler))
+        client_events.add_handler(event_name.into_string(), Box::new(handler))
     });
 }

@@ -456,6 +456,10 @@ namespace base_object
     alt::IPlayer* to_player(alt::IBaseObject* base_object) {
         return dynamic_cast<alt::IPlayer*>(base_object);
     }
+
+    alt::IColShape* to_col_shape(alt::IBaseObject* base_object) {
+        return dynamic_cast<alt::IColShape*>(base_object);
+    }
 } // namespace base_object
 
 namespace world_object

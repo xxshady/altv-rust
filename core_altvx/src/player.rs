@@ -1,48 +1,36 @@
 use crate::{
-    base_object::{BaseObject, BaseObjectPointer},
-    entity::{Entity, EntityId, EntityWrapper},
-    impl_base_object_for,
-    vector::Vector3,
+    base_objects::{
+        extra_pools::{get_entity_by_id, wrappers::AnyEntity, Entity, EntityId},
+        player,
+    },
+    helpers::IntoModelHash,
+    sdk,
+    vector::IntoVector3,
     world_object::WorldObject,
+    SomeResult, VoidResult,
 };
-use altv_sdk::ffi as sdk;
-use std::{cell::RefCell, rc::Rc};
 
-pub type PlayerContainer = Rc<RefCell<Player>>;
-
-#[derive(Debug)]
-pub struct Player {
-    ptr: BaseObjectPointer,
-    base_type: altv_sdk::BaseObjectType,
-}
-
-impl Player {
-    pub fn get_by_id(id: EntityId) -> Option<PlayerContainer> {
-        crate::get_entity_by_id!(EntityWrapper::Player, id)
+impl player::Player {
+    pub fn get_by_id(id: EntityId) -> SomeResult<player::PlayerContainer> {
+        get_entity_by_id!(AnyEntity::Player, id).ok_or(anyhow::anyhow!("No player with id: {id}"))
     }
 
-    pub fn name(&self) -> anyhow::Result<String> {
-        Ok(unsafe { sdk::IPlayer::GetName(self.ptr.to_player()?) }.to_string())
+    pub fn name(&self) -> SomeResult<String> {
+        Ok(unsafe { sdk::IPlayer::GetName(self.raw_ptr()?) }.to_string())
     }
 
-    pub fn spawn(&self, model: u32, pos: Vector3) -> anyhow::Result<()> {
+    pub fn spawn(&self, model: impl IntoModelHash, pos: impl IntoVector3) -> VoidResult {
         self.set_model(model)?;
-        Ok(unsafe { sdk::IPlayer::Spawn(self.ptr.to_player()?, pos.x(), pos.y(), pos.z(), 0) })
+        let pos = pos.into_vector3();
+        unsafe { sdk::IPlayer::Spawn(self.raw_ptr()?, pos.x(), pos.y(), pos.z(), 0) }
+        Ok(())
     }
 
-    pub fn set_model(&self, model: u32) -> anyhow::Result<()> {
-        Ok(unsafe { sdk::IPlayer::SetModel(self.ptr.to_player()?, model) })
+    pub fn set_model(&self, model: impl IntoModelHash) -> VoidResult {
+        unsafe { sdk::IPlayer::SetModel(self.raw_ptr()?, model.into_model_hash()) }
+        Ok(())
     }
 }
 
-impl_base_object_for!(Player);
-impl WorldObject for Player {}
-impl Entity for Player {}
-
-#[allow(clippy::not_unsafe_ptr_arg_deref)]
-pub fn create_player_container(raw_ptr: altv_sdk::IBaseObjectMutPtr) -> PlayerContainer {
-    Rc::new(RefCell::new(Player {
-        ptr: BaseObjectPointer::new(raw_ptr),
-        base_type: altv_sdk::BaseObjectType::Player,
-    }))
-}
+impl WorldObject for player::Player {}
+impl Entity for player::Player {}

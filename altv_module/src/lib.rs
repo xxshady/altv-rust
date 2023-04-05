@@ -2,7 +2,7 @@ use altv_sdk::ffi as sdk;
 use core_module::ResourceMainPath;
 use libloading::Library;
 use resource_manager::ResourceController;
-use std::path::PathBuf;
+use std::{path::PathBuf, ptr::NonNull};
 
 use crate::{event_manager::EVENT_MANAGER_INSTANCE, resource_manager::RESOURCE_MANAGER_INSTANCE};
 
@@ -133,19 +133,27 @@ extern "C" fn resource_on_event(full_main_path: &str, event: altv_sdk::CEventPtr
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_on_create_base_object(
     full_main_path: &str,
-    base_object: altv_sdk::IBaseObjectMutPtr,
+    base_object: altv_sdk::BaseObjectRawMutPtr,
 ) {
     let full_main_path = full_main_path.to_string();
-    on_base_object_event!(on_base_object_create, &full_main_path, base_object);
+    on_base_object_event!(
+        on_base_object_create,
+        &full_main_path,
+        NonNull::new(base_object).unwrap()
+    );
 }
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_on_remove_base_object(
     full_main_path: &str,
-    base_object: altv_sdk::IBaseObjectMutPtr,
+    base_object: altv_sdk::BaseObjectRawMutPtr,
 ) {
     let full_main_path = full_main_path.to_string();
-    on_base_object_event!(on_base_object_destroy, &full_main_path, base_object);
+    on_base_object_event!(
+        on_base_object_destroy,
+        &full_main_path,
+        NonNull::new(base_object).unwrap()
+    );
 }
 
 #[no_mangle]

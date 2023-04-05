@@ -15,11 +15,7 @@ macro_rules! on_base_object_event {
                     return;
                 }
 
-                if $base_object.is_null() {
-                    panic!("{} base_object is null", stringified_method_name);
-                }
-
-                let base_object_type = unsafe { altv_sdk::helpers::get_base_object_type($base_object) };
+                let base_object_type = unsafe { altv_sdk::helpers::get_base_object_type($base_object.as_ptr()) };
 
                 logger::debug!(
                     "{} type: {:?}",
