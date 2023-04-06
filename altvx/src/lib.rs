@@ -29,6 +29,8 @@ pub use exports::{
 pub mod events;
 pub mod mvalue;
 
+pub use altv_sdk::ColShapeType;
+
 pub mod prelude {
     pub use super::exports::{Entity, ValidBaseObject, WorldObject};
 }
