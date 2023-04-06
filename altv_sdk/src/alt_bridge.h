@@ -158,6 +158,31 @@ void read_vector2(const Vector2Wrapper& vector2, f32* out_x, f32* out_y) {
     *out_y = vector2.y;
 }
 
+class Vector2Vec {
+public:
+    std::vector<Vector2Wrapper> vec{};
+
+    std::vector<alt::Vector2f> into_alt_vec() {
+        std::vector<alt::Vector2f> alt_vec;
+
+        alt_vec.reserve(this->vec.size());
+        for (const auto& e : this->vec) {
+            alt_vec.push_back({ e.x, e.y });
+        }
+        this->vec.clear();
+
+        return alt_vec;
+    }
+};
+
+Vector2Vec create_vector2_vec() {
+    return Vector2Vec{};
+}
+
+void push_to_vector2_vec(Vector2Vec& vec, f32 x, f32 y) {
+    vec.vec.push_back({ x, y });
+}
+
 class RGBAWrapper {
 public:
     u8 r = 0;

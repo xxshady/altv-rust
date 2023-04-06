@@ -60,6 +60,7 @@ lazy_static::lazy_static! {
             ("std::vector<std::string>", "std::vector<std::string>"),
             ("std::vector<Weapon>", "std::vector<WeaponWrapper>"),
             ("std::vector<std::string>&", "std::vector<std::string>"),
+            ("std::vector<Vector2f>", "Vector2Vec"),
 
             // TODO: wrappers for these
             // ("std::vector<IVirtualEntity*>", "std::vector<alt::IVirtualEntity*>"),
@@ -600,6 +601,7 @@ fn cpp_method_to_rust_compatible_func(
                     "---WeaponDamageEventBodyPart is not implemented as param".to_string()
                 }
                 "EventType" => format!("u16 {name}"),
+                "Vector2Vec" => format!("Vector2Vec {name}"),
                 _ => format!(
                     "{}{type_name} {name}",
                     (if *is_const { "const " } else { "" }),
@@ -634,6 +636,7 @@ fn cpp_method_to_rust_compatible_func(
                     "---WeaponDamageEventBodyPart is not implemented as passed param".to_string()
                 }
                 "EventType" => format!("static_cast<alt::CEvent::Type>({name})"),
+                "Vector2Vec" => format!("{name}.into_alt_vec()"),
                 _ => name.to_string(),
             }
         })

@@ -139,6 +139,9 @@ pub mod ffi {
 
         generate!("create_player_vec")
         generate!("push_to_player_vec")
+
+        generate!("create_vector2_vec")
+        generate!("push_to_vector2_vec")
     }
     pub use alt_bridge::*;
 
