@@ -1,5 +1,5 @@
 use std::{fmt::Debug, collections::HashMap};
-use crate::{resource::Resource};
+use crate::{resource::Resource, VoidResult, SomeResult};
 
 pub use altv_sdk::EventType as SDKEventType;
 
@@ -23,7 +23,7 @@ macro_rules! supported_sdk_events {
 
         impl TryFrom<SDKEventType> for SupportedEventType {
             type Error = anyhow::Error;
-            fn try_from(value: SDKEventType) -> anyhow::Result<Self> {
+            fn try_from(value: SDKEventType) -> SomeResult<Self> {
                 match value {
                     $(
                         SDKEventType::$event_name => Ok(Self::$event_name),
@@ -59,7 +59,7 @@ macro_rules! supported_sdk_events {
         }
 
         pub enum SDKHandler { $(
-            $event_name(Box<dyn FnMut(&sdk_controllers::$event_name) -> anyhow::Result<()> + 'static>),
+            $event_name(Box<dyn FnMut(&sdk_controllers::$event_name) -> VoidResult + 'static>),
         )+ }
 
         impl SDKHandler {
@@ -153,7 +153,7 @@ macro_rules! custom_events {
         }
 
         pub enum CustomHandler { $($(
-            $custom_event_name(Box<dyn FnMut(&custom_controllers::$custom_event_name) -> anyhow::Result<()> + 'static>),
+            $custom_event_name(Box<dyn FnMut(&custom_controllers::$custom_event_name) -> VoidResult + 'static>),
         )+)+ }
 
         impl CustomHandler {

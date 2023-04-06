@@ -1,9 +1,9 @@
 use std::{cell::RefMut, fmt::Debug};
 
-use crate::resource::Resource;
+use crate::{resource::Resource, VoidResult};
 
 pub type TimerId = u32;
-pub type TimerCallback = dyn FnMut() -> anyhow::Result<()> + 'static;
+pub type TimerCallback = dyn FnMut() -> VoidResult + 'static;
 
 struct Timer {
     callback: Box<TimerCallback>,
@@ -83,10 +83,6 @@ impl TimerManager {
     }
 }
 
-pub fn create_timer(
-    callback: Box<dyn FnMut() -> anyhow::Result<()> + 'static>,
-    millis: u64,
-    once: bool,
-) {
+pub fn create_timer(callback: Box<dyn FnMut() -> VoidResult + 'static>, millis: u64, once: bool) {
     Resource::with_timer_schedule_mut(|mut t, _| t.create(callback, millis, once));
 }

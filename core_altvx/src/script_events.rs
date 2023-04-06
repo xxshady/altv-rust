@@ -5,6 +5,7 @@ use crate::{
     helpers::IntoString,
     mvalue::{self, convert_vec_to_mvalue_vec, Serializable},
     resource::Resource,
+    VoidResult,
 };
 use altv_sdk::ffi as sdk;
 
@@ -17,9 +18,8 @@ pub fn emit_local_event_without_args(event_name: &str) {
 }
 
 pub type EventArgs<'a> = &'a mvalue::MValueList;
-pub type LocalEventHandler = Box<dyn FnMut(EventArgs) -> anyhow::Result<()>>;
-pub type ClientEventHandler =
-    Box<dyn FnMut(player::PlayerContainer, EventArgs) -> anyhow::Result<()>>;
+pub type LocalEventHandler = Box<dyn FnMut(EventArgs) -> VoidResult>;
+pub type ClientEventHandler = Box<dyn FnMut(player::PlayerContainer, EventArgs) -> VoidResult>;
 
 pub trait ScriptEventManager {
     type Handler;
@@ -166,7 +166,7 @@ impl Debug for ClientEventManager {
 
 pub fn add_local_handler(
     event_name: impl IntoString,
-    handler: impl FnMut(EventArgs) -> anyhow::Result<()> + 'static,
+    handler: impl FnMut(EventArgs) -> VoidResult + 'static,
 ) {
     Resource::with_local_script_events_mut(|mut local_events, _| {
         local_events.add_handler(event_name.into_string(), Box::new(handler))
@@ -175,7 +175,7 @@ pub fn add_local_handler(
 
 pub fn add_client_handler(
     event_name: impl IntoString,
-    handler: impl FnMut(player::PlayerContainer, EventArgs) -> anyhow::Result<()> + 'static,
+    handler: impl FnMut(player::PlayerContainer, EventArgs) -> VoidResult + 'static,
 ) {
     Resource::with_client_script_events_mut(|mut client_events, _| {
         client_events.add_handler(event_name.into_string(), Box::new(handler))

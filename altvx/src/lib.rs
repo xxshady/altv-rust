@@ -1,4 +1,4 @@
-use core_altvx::exports;
+use core_altvx::{exports, VoidResult};
 
 #[rustfmt::skip]
 pub use exports::{
@@ -31,11 +31,11 @@ pub mod prelude {
     pub use super::exports::{Entity, ValidBaseObject, WorldObject};
 }
 
-pub fn set_timeout(callback: impl FnMut() -> anyhow::Result<()> + 'static, millis: u64) {
+pub fn set_timeout(callback: impl FnMut() -> VoidResult + 'static, millis: u64) {
     exports::create_timer(Box::new(callback), millis, true);
 }
 
-pub fn set_interval(callback: impl FnMut() -> anyhow::Result<()> + 'static, millis: u64) {
+pub fn set_interval(callback: impl FnMut() -> VoidResult + 'static, millis: u64) {
     exports::create_timer(Box::new(callback), millis, false);
 }
 

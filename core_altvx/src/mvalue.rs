@@ -5,6 +5,7 @@ use crate::{
     helpers::{get_player_raw_ptr, read_cpp_vector2, read_cpp_vector3},
     resource::Resource,
     vector::{Vector2, Vector3},
+    SomeResult,
 };
 use altv_sdk::{ffi as sdk, helpers::get_base_object_type};
 use anyhow::Context;
@@ -17,7 +18,7 @@ macro_rules! impl_serializable {
     (@internal $value_type: ty, $create_mvalue: expr) => {
         impl TryFrom<$value_type> for Serializable {
             type Error = anyhow::Error;
-            fn try_from(value: $value_type) -> anyhow::Result<Self> {
+            fn try_from(value: $value_type) -> SomeResult<Self> {
                 Ok(Self(unsafe { $create_mvalue(value) }))
             }
         }
@@ -72,7 +73,7 @@ macro_rules! impl_serializable_base_object {
         impl TryFrom<$base_object> for Serializable {
             type Error = anyhow::Error;
 
-            fn try_from(base_object: $base_object) -> anyhow::Result<Self> {
+            fn try_from(base_object: $base_object) -> SomeResult<Self> {
                 let base_object = base_object.try_borrow_mut()?;
                 let Ok(ptr) = base_object.base_ptr() else {
                                     anyhow::bail!("{} base object is destroyed", $short_name);
@@ -96,7 +97,7 @@ pub struct MValueNone;
 
 impl TryFrom<MValueNone> for Serializable {
     type Error = anyhow::Error;
-    fn try_from(_: MValueNone) -> anyhow::Result<Self> {
+    fn try_from(_: MValueNone) -> SomeResult<Self> {
         Ok(Self(
             unsafe { sdk::create_mvalue_nil() }.within_unique_ptr(),
         ))
@@ -119,7 +120,7 @@ pub fn convert_vec_to_mvalue_vec(
 
 pub fn convert_player_vec_to_cpp_vec(
     vec: Vec<player::PlayerContainer>,
-) -> anyhow::Result<UniquePtr<CxxVector<sdk::PlayerPtrWrapper>>> {
+) -> SomeResult<UniquePtr<CxxVector<sdk::PlayerPtrWrapper>>> {
     let mut cpp_vec = unsafe { sdk::create_player_vec() };
 
     for player in vec {
@@ -154,7 +155,7 @@ pub enum MValue {
 
 macro_rules! get_mvalue_type_at {
     ($method_name: ident, $type_name: ty, $mvalue_type: path) => {
-        pub fn $method_name(&self, index: usize) -> anyhow::Result<&$type_name> {
+        pub fn $method_name(&self, index: usize) -> SomeResult<&$type_name> {
             let value = self.get(index).with_context(|| {
                 format!(
                     "MValueArgs {} index: {index} does not exists",
@@ -186,7 +187,7 @@ impl MValueList {
         Self { vec }
     }
 
-    pub fn get(&self, index: usize) -> anyhow::Result<&MValue> {
+    pub fn get(&self, index: usize) -> SomeResult<&MValue> {
         self.vec
             .get(index)
             .ok_or(anyhow::anyhow!("MValueArgs get({index}) does not exists"))

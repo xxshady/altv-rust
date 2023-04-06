@@ -16,7 +16,7 @@ pub trait WorldObject: BasePtr {
         )
     }
 
-    fn pos(&self) -> anyhow::Result<Vector3> {
+    fn pos(&self) -> SomeResult<Vector3> {
         Ok(read_cpp_vector3(unsafe {
             sdk::IWorldObject::GetPosition(self.ptr()?).within_unique_ptr()
         }))
@@ -27,7 +27,7 @@ pub trait WorldObject: BasePtr {
         Ok(())
     }
 
-    fn dimension(&self) -> anyhow::Result<i32> {
+    fn dimension(&self) -> SomeResult<i32> {
         Ok(unsafe { sdk::IWorldObject::GetDimension(self.ptr()?) })
     }
 
