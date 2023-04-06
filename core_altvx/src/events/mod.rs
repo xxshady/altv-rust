@@ -328,7 +328,7 @@ impl EventManager {
     }
 }
 
-pub fn add_handler(handler: SDKHandler) {
+pub fn add_sdk_handler(handler: SDKHandler) {
     Resource::with_events_mut(|mut events, _| {
         events.add_sdk_handler(handler);
     });

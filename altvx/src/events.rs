@@ -1,28 +1,17 @@
-use core_altvx::events;
+use core_altvx::exports::events;
+pub use events::{
+    add_client_handler as on_client, add_local_handler as on, custom_controllers, emit,
+    emit_all_clients, emit_client, emit_some_clients, sdk_controllers,
+};
 
 use crate::anyhow;
-
-pub use core_altvx::events::custom_controllers;
-pub use core_altvx::events::sdk_controllers;
-
-pub use core_altvx::emit_local_event as emit;
-pub use core_altvx::mvalue::MValue;
-pub use core_altvx::mvalue::MValueNone;
-pub use core_altvx::mvalue_dict as dict;
-pub use core_altvx::mvalue_list as list;
-pub use core_altvx::script_events::add_client_handler as on_client;
-pub use core_altvx::script_events::add_local_handler as on;
-
-pub use core_altvx::__emit_all_clients as emit_all_clients;
-pub use core_altvx::__emit_client as emit_client;
-pub use core_altvx::__emit_some_clients as emit_some_clients;
 
 macro_rules! on_sdk_event {
     ($func_name: ident, $event_name: ident) => {
         pub fn $func_name(
             handler: impl FnMut(&events::sdk_controllers::$event_name) -> anyhow::Result<()> + 'static,
         ) {
-            events::add_handler(events::SDKHandler::$event_name(Box::new(handler)));
+            events::add_sdk_handler(events::SDKHandler::$event_name(Box::new(handler)));
         }
     };
 }

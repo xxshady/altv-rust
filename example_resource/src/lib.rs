@@ -40,13 +40,19 @@ pub fn main() {
     //     300,
     // );
 
-    // alt::events::on("test", |args| {
-    //     dbg!(args.get(0));
-    //     dbg!(args.get(1));
-    //     Ok(())
-    // });
+    alt::events::on("test", |args| {
+        alt::log!("args: {:?}", args);
+        Ok(())
+    });
 
-    // alt::events::emit!("test", 123i64, alt::ColShape::new_circle(0, 10.0)).unwrap();
+    alt::events::emit!(
+        "test",
+        123i64,
+        alt::ColShape::new_circle(0, 10.0),
+        alt::mvalue::dict!{ "123" => true }.unwrap(),
+        alt::mvalue::list![false, true].unwrap()
+    )
+    .unwrap();
 
     alt::events::on_client("test", |player, _args| {
         let p = player;

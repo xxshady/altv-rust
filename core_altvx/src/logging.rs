@@ -17,24 +17,3 @@ pub fn log_warn(str: &str) {
         sdk::ICore::LogWarning(str, std::ptr::null_mut());
     }
 }
-
-#[macro_export]
-macro_rules! log {
-    ($($arg:tt)*) => {{
-        $crate::logging::log(&format!($($arg)*))
-    }}
-}
-
-#[macro_export]
-macro_rules! log_error {
-    ($($arg:tt)*) => {{
-        $crate::logging::log_error(&format!($($arg)*))
-    }}
-}
-
-#[macro_export]
-macro_rules! log_warn {
-    ($($arg:tt)*) => {{
-        $crate::logging::log_warn(&format!($($arg)*))
-    }}
-}

@@ -314,16 +314,16 @@ pub(crate) fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Re
 }
 
 #[macro_export]
-macro_rules! serialize_mvalue {
+macro_rules! __serialize_mvalue {
     ($value: expr, $vec: expr) => {
-        let serializable = $crate::mvalue::Serializable::try_from($value);
+        let serializable = $crate::exports::mvalue::__internal::Serializable::try_from($value);
 
         match serializable {
             Ok(serialized) => {
                 $vec.push(serialized);
             }
             Err(error) => {
-                $crate::anyhow::bail!(
+                $crate::exports::anyhow::bail!(
                     "Failed to convert value: {} to mvalue, error: {}",
                     stringify!($value),
                     error
@@ -333,40 +333,4 @@ macro_rules! serialize_mvalue {
     };
 }
 
-#[macro_export]
-macro_rules! mvalue_list {
-    ($($arg: expr),+ $(,)*) => {
-        (|| {
-            let mut vec = vec![];
-            $(
-                $crate::serialize_mvalue!($arg, vec);
-            )+
-            Ok(vec)
-        })()
-    };
-}
-
-#[macro_export]
-macro_rules! mvalue_dict {
-    ($($key: expr => $value: expr),+ $(,)*) => {
-        (||{
-            let mut hash_map = std::collections::HashMap::new();
-            $(
-                let serializable = $crate::mvalue::Serializable::try_from($value);
-                match serializable {
-                    Ok(serialized) => {
-                        hash_map.insert($key.to_string(), serialized);
-                    }
-                    Err(error) => {
-                        $crate::anyhow::bail!(
-                            "Failed to convert value: {} to mvalue, error: {}",
-                            stringify!($value),
-                            error
-                        );
-                    }
-                }
-            )+
-            Ok(hash_map)
-        })()
-    };
-}
+pub use __serialize_mvalue as serialize_mvalue;

@@ -16,38 +16,6 @@ pub fn emit_local_event_without_args(event_name: &str) {
     unsafe { sdk::trigger_local_event(event_name, sdk::create_mvalue_vec()) };
 }
 
-/// Examples
-///
-/// ```rust
-/// altvx::events::emit!("example").unwrap();
-/// ```
-///
-/// Sending primitives
-/// ```rust
-/// altvx::events::emit!("example", 1, 2, 3).unwrap();
-/// ```
-///
-/// Sending lists
-/// ```rust
-/// altvx::events::emit!("example", altvx::events::list![1, 2, 3]).unwrap();
-/// ```
-#[macro_export]
-macro_rules! emit_local_event {
-    ($event_name: expr) => {
-        unsafe { $crate::script_events::emit_local_event_without_args($event_name) };
-    };
-    ($event_name: expr, $($arg: expr),+ $(,)*) => {
-        (|| -> $crate::anyhow::Result<()> {
-            let vec = $crate::mvalue_list!($( $arg ),+)?;
-            $crate::script_events::emit_local_event(
-                $event_name,
-                vec
-            );
-            Ok(())
-        })()
-    };
-}
-
 pub type EventArgs<'a> = &'a mvalue::MValueList;
 pub type LocalEventHandler = Box<dyn FnMut(EventArgs) -> anyhow::Result<()>>;
 pub type ClientEventHandler =
@@ -84,7 +52,7 @@ impl LocalEventManager {
     pub fn init() {
         use crate::events;
 
-        events::add_handler(events::SDKHandler::ServerScriptEvent(Box::new(|c| {
+        events::add_sdk_handler(events::SDKHandler::ServerScriptEvent(Box::new(|c| {
             let events::sdk_controllers::ServerScriptEvent { name, .. } = c;
 
             Resource::with_local_script_events_mut(|mut events, _| {
@@ -141,7 +109,7 @@ impl ClientEventManager {
     pub fn init() {
         use crate::events;
 
-        events::add_handler(events::SDKHandler::ClientScriptEvent(Box::new(|c| {
+        events::add_sdk_handler(events::SDKHandler::ClientScriptEvent(Box::new(|c| {
             let events::sdk_controllers::ClientScriptEvent { name, player, .. } = c;
 
             Resource::with_client_script_events_mut(|mut events, _| {
