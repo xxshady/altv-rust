@@ -14,11 +14,13 @@ pub use exports::{
     ColShape,
     EntityId,
     Player,
+    PlayerContainer,
     Vector2,
     Vector3,
     Vehicle,
     VirtualEntity,
     VirtualEntityGroup,
+    AnyEntity,
 
     anyhow,
     hash,

@@ -4,6 +4,7 @@ const CPP_SDK_VERSION_DIR: &str = "cpp-sdk/version";
 const BASE_OBJECT_TYPE_ENUM_FILE: &str = "cpp-sdk/objects/IBaseObject.h";
 const EVENT_TYPE_ENUM_FILE: &str = "cpp-sdk/events/CEvent.h";
 const MVALUE_TYPE_ENUM_FILE: &str = "cpp-sdk/types/MValue.h";
+const COL_SHAPE_TYPE_ENUM_FILE: &str = "cpp-sdk/script-objects/IColShape.h";
 
 fn main() -> miette::Result<()> {
     generate_cpp_to_rust_bindings();
@@ -14,6 +15,7 @@ fn main() -> miette::Result<()> {
         "src/base_object_type.rs",
         "src/event_type.rs",
         "src/mvalue_type.rs",
+        "src/col_shape_type.rs",
     ])
     .expect("rerun_except failed");
 
@@ -85,6 +87,14 @@ fn generate_cpp_to_rust_bindings() {
         MVALUE_TYPE_ENUM_FILE,
         "enum class Type : uint8_t",
         "src/mvalue_type.rs",
+    );
+
+    generate_rust_enum_from_cpp(
+        "ColShapeType",
+        "u8",
+        COL_SHAPE_TYPE_ENUM_FILE,
+        "enum class ColShapeType : uint8_t",
+        "src/col_shape_type.rs",
     );
 }
 

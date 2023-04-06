@@ -3,11 +3,13 @@ pub use core_shared::*;
 
 pub use crate::{
     base_objects::{
-        col_shape::ColShape, col_shape::ColShapeContainer, extra_pools::Entity,
-        extra_pools::EntityId, player::Player, player::PlayerContainer, vehicle::Vehicle,
-        vehicle::VehicleContainer, virtual_entity::VirtualEntity,
-        virtual_entity::VirtualEntityContainer, virtual_entity_group::VirtualEntityGroup,
-        virtual_entity_group::VirtualEntityGroupContainer, ValidBaseObject,
+        col_shape::{ColShape, ColShapeContainer},
+        extra_pools::{wrappers::AnyEntity, Entity, EntityId},
+        player::{Player, PlayerContainer},
+        vehicle::{Vehicle, VehicleContainer},
+        virtual_entity::{VirtualEntity, VirtualEntityContainer},
+        virtual_entity_group::{VirtualEntityGroup, VirtualEntityGroupContainer},
+        ValidBaseObject,
     },
     helpers::hash,
     init,

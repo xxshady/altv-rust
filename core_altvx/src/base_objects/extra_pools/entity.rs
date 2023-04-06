@@ -8,13 +8,19 @@ pub type EntityPool = ExtraPool<HashMap<EntityId, AnyEntity>>;
 
 pub type EntityRawPtr = *mut sdk::alt::IEntity;
 
+pub fn base_ptr_to_entity_raw_ptr(
+    base_ptr: altv_sdk::BaseObjectMutPtr,
+) -> SomeResult<EntityRawPtr> {
+    Ok(
+        NonNull::new(unsafe { sdk::base_object::to_entity(base_ptr.as_ptr()) })
+            .unwrap()
+            .as_ptr(),
+    )
+}
+
 pub trait Entity: BasePtr {
     fn ptr(&self) -> SomeResult<EntityRawPtr> {
-        Ok(
-            NonNull::new(unsafe { sdk::base_object::to_entity(self.raw_base_ptr()?) })
-                .unwrap()
-                .as_ptr(),
-        )
+        base_ptr_to_entity_raw_ptr(self.base_ptr()?)
     }
 
     fn id(&self) -> SomeResult<EntityId> {

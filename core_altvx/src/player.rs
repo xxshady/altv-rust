@@ -1,6 +1,10 @@
 use crate::{
     base_objects::{
-        extra_pools::{get_entity_by_id, wrappers::AnyEntity, Entity, EntityId},
+        extra_pools::{
+            get_entity_by_id,
+            wrappers::{AnyEntity, IntoAnyEntity},
+            Entity, EntityId,
+        },
         player,
     },
     helpers::IntoModelHash,
@@ -34,3 +38,9 @@ impl player::Player {
 
 impl WorldObject for player::Player {}
 impl Entity for player::Player {}
+
+impl IntoAnyEntity for player::PlayerContainer {
+    fn into_any_entity(self) -> AnyEntity {
+        AnyEntity::Player(self)
+    }
+}

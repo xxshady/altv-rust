@@ -227,3 +227,6 @@ pub use event_type::EventType;
 
 mod mvalue_type;
 pub use mvalue_type::MValueType;
+
+mod col_shape_type;
+pub use col_shape_type::ColShapeType;

@@ -16,7 +16,12 @@ pub struct ExtraPools {
 }
 
 pub mod wrappers {
-    use super::super::*;
+    use crate::SomeResult;
+
+    use super::{
+        super::*,
+        entity::{base_ptr_to_entity_raw_ptr, EntityRawPtr},
+    };
     use player::PlayerContainer;
     use vehicle::VehicleContainer;
 
@@ -24,5 +29,22 @@ pub mod wrappers {
     pub enum AnyEntity {
         Vehicle(VehicleContainer),
         Player(PlayerContainer),
+    }
+
+    impl AnyEntity {
+        pub(crate) fn raw_ptr(&self) -> SomeResult<EntityRawPtr> {
+            match self {
+                AnyEntity::Player(e) => base_ptr_to_entity_raw_ptr(e.try_borrow()?.base_ptr()?),
+                AnyEntity::Vehicle(e) => base_ptr_to_entity_raw_ptr(e.try_borrow()?.base_ptr()?),
+            }
+        }
+    }
+
+    pub trait IntoAnyEntity {
+        fn into_any_entity(self) -> AnyEntity;
+    }
+
+    impl IntoAnyEntity for AnyEntity {
+        fn into_any_entity(self) -> AnyEntity { self }
     }
 }
