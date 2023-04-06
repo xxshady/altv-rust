@@ -185,7 +185,7 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
         // dbg!(line);
 
         if !multiline_method.is_empty() {
-            // println!("multiline_method line: {:#?}", line);
+            // println!("multiline_method line: {line:#?}");
             multiline_method += line.replace('\n', " ").as_str();
 
             if line.ends_with(';') {
@@ -199,7 +199,7 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
         }
 
         if line.is_empty() {
-            println!("empty line");
+            // println!("empty line");
             continue;
         }
 
@@ -215,7 +215,7 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
                     "server_api" => {
                         if line.starts_with(CPP_CODE_ELSE_DIRECTIVE) {
                             cpp_if_directive = "client_api";
-                            println!("CPP_CODE_CLIENT_API_START");
+                            // println!("CPP_CODE_CLIENT_API_START");
                             continue;
                         }
                     }
@@ -226,11 +226,11 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
 
         if line.starts_with(CPP_CODE_CLIENT_API_START) {
             cpp_if_directive = "client_api";
-            println!("CPP_CODE_CLIENT_API_START");
+            // println!("CPP_CODE_CLIENT_API_START");
             continue;
         } else if line.starts_with(CPP_CODE_SERVER_API_START) {
             cpp_if_directive = "server_api";
-            println!("CPP_CODE_SERVER_API_START");
+            // println!("CPP_CODE_SERVER_API_START");
         }
 
         if line.starts_with("virtual ") {
@@ -267,7 +267,7 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
                 }
                 line.starts_with(&cpp_type) || line.starts_with(&format!("const {v}"))
             })) {
-                println!("either its not method or unsupported cpp type: {line}");
+                // println!("either its not method or unsupported cpp type: {line}");
                 continue;
             }
         }
@@ -281,9 +281,10 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
         }
         if !(
             // pure virtual method of object class
-            line.ends_with("= 0;") ||
+            (line.ends_with("= 0;") ||
             // normal method of event class
-            line.ends_with("; }") || line.ends_with("; };")
+            line.ends_with("; }") || line.ends_with("; };"))
+                || line.ends_with(')')
         ) {
             // println!("seems like its property? skipping");
             continue;
@@ -428,7 +429,7 @@ fn parse_cpp_method(class_name: &str, method: String) -> anyhow::Result<CppMetho
                 }
 
                 let word = current_word.reset();
-                println!("word: {word:?}");
+                // println!("word: {word:?}");
 
                 if return_type.is_const && return_type.type_name.is_none() {
                     // println!("const return type set type value: {word:?}");
@@ -496,15 +497,15 @@ fn parse_cpp_method(class_name: &str, method: String) -> anyhow::Result<CppMetho
                     }
 
                     if char == b')' {
-                        println!("parameters end");
+                        // println!("parameters end");
                         parameters_parsing = false;
                     }
                 } else {
                     if word == "const" {
-                        println!("const method");
+                        // println!("const method");
                         is_const_method = true;
                     }
-                    println!("method parsing end");
+                    // println!("method parsing end");
                     break;
                 }
 
@@ -513,10 +514,10 @@ fn parse_cpp_method(class_name: &str, method: String) -> anyhow::Result<CppMetho
             }
             current_word.add_char(char);
         } else if !in_word && !is_it_delimiter_char(char) {
-            println!(
-                "starting word with {:?}",
-                std::str::from_utf8(&[char]).unwrap()
-            );
+            // println!(
+            //     "starting word with {:?}",
+            //     std::str::from_utf8(&[char]).unwrap()
+            // );
             current_word.add_char(char);
             in_word = true;
         }

@@ -1,6 +1,6 @@
 use crate::{
     base_objects::{col_shape, extra_pools::wrappers::IntoAnyEntity},
-    exports::{EntityId, Vector2},
+    exports::EntityId,
     sdk,
     vector::{IntoVector2, IntoVector3},
     world_object::WorldObject,
