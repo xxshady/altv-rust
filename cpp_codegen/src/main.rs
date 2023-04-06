@@ -19,7 +19,7 @@ lazy_static::lazy_static! {
 
             ("int8_t", "i8"),
             ("int16_t", "i16"),
-            ("int", "cpp_int"), // why? for some reason sdk uses int and uint32_t at the same time
+            ("int", "cpp_int"), // why? for some reason sdk uses int and int32_t at the same time
             ("int32_t", "i32"),
             ("int64_t", "i64"),
 
