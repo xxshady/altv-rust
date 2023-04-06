@@ -319,5 +319,11 @@ void SetSendNames(alt::IPlayer* ptr, bool state) {
 bool GetSendNames(const alt::IPlayer* ptr) {
     return ptr->GetSendNames();
 }
+void PlayAnimation(alt::IPlayer* ptr, const StdStringClone animDict, const StdStringClone animName, f32 blendInSpeed, f32 blendOutSpeed, cpp_int duration, cpp_int flags, f32 playbackRate, bool lockX, bool lockY, bool lockZ) {
+    return ptr->PlayAnimation(animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, playbackRate, lockX, lockY, lockZ);
+}
+void ClearTasks(alt::IPlayer* ptr) {
+    return ptr->ClearTasks();
+}
 
 } // namespace

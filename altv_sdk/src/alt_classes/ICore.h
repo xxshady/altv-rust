@@ -43,9 +43,6 @@ alt::IResource* GetResource(const StdStringClone name) {
 alt::IEntity* GetEntityByID(u16 id) {
     return alt::ICore::Instance().GetEntityByID(id);
 }
-std::vector<alt::IVirtualEntity*> GetVirtualEntities() {
-    return alt::ICore::Instance().GetVirtualEntities();
-}
 bool HasMetaData(const StdStringClone key) {
     return alt::ICore::Instance().HasMetaData(key);
 }
@@ -60,6 +57,9 @@ void SetMetaData(const StdStringClone key, MValueMutWrapper val) {
 void DeleteMetaData(const StdStringClone key) {
     return alt::ICore::Instance().DeleteMetaData(key);
 }
+std::vector<std::string> GetMetaDataKeys() {
+    return alt::ICore::Instance().GetMetaDataKeys();
+}
 bool HasSyncedMetaData(const StdStringClone key) {
     return alt::ICore::Instance().HasSyncedMetaData(key);
 }
@@ -67,6 +67,9 @@ MValueWrapper GetSyncedMetaData(const StdStringClone key) {
     MValueWrapper wrapper;
     wrapper.ptr = std::make_shared<alt::MValueConst>(alt::ICore::Instance().GetSyncedMetaData(key));
     return wrapper;
+}
+std::vector<std::string> GetSyncedMetaDataKeys() {
+    return alt::ICore::Instance().GetSyncedMetaDataKeys();
 }
 void DestroyBaseObject(alt::IBaseObject* handle) {
     return alt::ICore::Instance().DestroyBaseObject(handle);
@@ -121,6 +124,9 @@ alt::IColShape* CreateColShapeCube(f32 pos_x, f32 pos_y, f32 pos_z, f32 pos2_x, 
 }
 alt::IColShape* CreateColShapeRectangle(f32 x1, f32 y1, f32 x2, f32 y2, f32 z) {
     return alt::ICore::Instance().CreateColShapeRectangle(x1, y1, x2, y2, z);
+}
+alt::IColShape* CreateColShapePolygon(f32 minZ, f32 maxZ, Vector2Vec points) {
+    return alt::ICore::Instance().CreateColShapePolygon(minZ, maxZ, points.into_alt_vec());
 }
 u32 GetNetTime() {
     return alt::ICore::Instance().GetNetTime();
