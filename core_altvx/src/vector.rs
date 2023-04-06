@@ -61,6 +61,18 @@ impl IntoVector3 for f32 {
     }
 }
 
+impl IntoVector3 for (f32, f32, f32) {
+    fn into_vector3(self) -> Vector3 {
+        Vector3::new(self.0, self.1, self.2)
+    }
+}
+
+impl IntoVector3 for (i32, i32, i32) {
+    fn into_vector3(self) -> Vector3 {
+        Vector3::new(self.0 as f32, self.1 as f32, self.2 as f32)
+    }
+}
+
 #[derive(Debug)]
 pub struct Vector2 {
     x: f32,
@@ -115,5 +127,17 @@ impl IntoVector2 for i32 {
 impl IntoVector2 for f32 {
     fn into_vector2(self) -> Vector2 {
         Vector2::new(self, self)
+    }
+}
+
+impl IntoVector2 for (f32, f32) {
+    fn into_vector2(self) -> Vector2 {
+        Vector2::new(self.0, self.1)
+    }
+}
+
+impl IntoVector2 for (i32, i32) {
+    fn into_vector2(self) -> Vector2 {
+        Vector2::new(self.0 as f32, self.1 as f32)
     }
 }

@@ -122,15 +122,7 @@ pub fn main() {
 
     // let _vehicle = alt::Vehicle::new("sultan2", alt::Vector3::new(0., 2., 72.), 0).unwrap();
 
-    let poly = alt::ColShape::new_polygon(
-        70.,
-        80.,
-        vec![
-            alt::Vector2::new(0., 0.),
-            alt::Vector2::new(0., 3.),
-            alt::Vector2::new(3., 0.),
-        ],
-    );
+    let poly = alt::ColShape::new_polygon(70., 80., vec![(0., 0.), (0., 3.), (3., 0.)]);
     alt::ColShape::new_cuboid(
         alt::Vector3::new(0., 4., 70.),
         alt::Vector3::new(5., 9., 80.),
@@ -139,7 +131,8 @@ pub fn main() {
     alt::ColShape::new_rectangle(alt::Vector2::new(9., 9.), alt::Vector2::new(15., 15.));
     // poly.borrow().set_players_only(true).unwrap();
 
-    alt::ColShape::new_cylinder(alt::Vector3::new(9., 5., 70.), 1., 5.);
+    alt::ColShape::new_cylinder((9., 5., 70.), 1., 5.);
+    alt::ColShape::new_cylinder((9, 5, 70), 1., 5.);
 
     let veh = alt::Vehicle::new("sultan2", alt::Vector3::new(0., 2., 72.), 0).unwrap();
 

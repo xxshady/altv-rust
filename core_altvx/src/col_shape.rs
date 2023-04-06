@@ -74,10 +74,11 @@ impl col_shape::ColShape {
     pub fn new_polygon(
         min_z: f32,
         max_z: f32,
-        points: Vec<Vector2>,
+        points: Vec<impl IntoVector2>,
     ) -> col_shape::ColShapeContainer {
         let mut cpp_points = unsafe { sdk::create_vector2_vec() }.within_unique_ptr();
         for p in points {
+            let p = p.into_vector2();
             unsafe { sdk::push_to_vector2_vec(cpp_points.as_mut().unwrap(), p.x(), p.y()) };
         }
 
