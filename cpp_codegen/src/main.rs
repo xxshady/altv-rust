@@ -197,12 +197,12 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
             continue;
         }
 
-        if line.len() == 0 {
+        if line.is_empty() {
             println!("empty line");
             continue;
         }
 
-        if cpp_if_directive.len() > 0 {
+        if !cpp_if_directive.is_empty() {
             if line.starts_with(CPP_CODE_ENDIF_DIRECTIVE) {
                 // println!("CPP_CODE_CLIENT_API_END");
                 cpp_if_directive = "";
@@ -305,7 +305,7 @@ struct MethodParser {
     current_idx: usize,
 }
 
-impl<'a> MethodParser {
+impl MethodParser {
     pub fn new(content: String) -> Self {
         Self {
             current_idx: 0,
@@ -340,7 +340,7 @@ impl CurrentWord {
     }
 
     pub fn reset(&mut self) -> String {
-        std::mem::replace(&mut self.content, Default::default())
+        std::mem::take(&mut self.content)
     }
 
     pub fn add_char(&mut self, char: u8) {
@@ -370,7 +370,7 @@ struct ProcReturnType {
 
 #[derive(Debug)]
 struct ReturnType {
-    pub is_const: bool,
+    // pub is_const: bool,
     pub type_name: String,
 }
 
@@ -526,16 +526,20 @@ fn parse_cpp_method(class_name: &str, method: String) -> anyhow::Result<CppMetho
     for p in proc_parameters {
         result_parameters.push(CompletedParam {
             is_const: p.is_const,
-            name: p.name.clone().expect(&format!(
-                "param name is none (type: {:?}, is_const: {:?})",
-                p.type_name, p.is_const
-            )),
+            name: p.name.clone().unwrap_or_else(|| {
+                panic!(
+                    "param name is none (type: {:?}, is_const: {:?})",
+                    p.type_name, p.is_const
+                )
+            }),
             type_name: cpp_to_rust_type(
                 class_name,
-                &&p.type_name.expect(&format!(
-                    "param type is none (name: {:?}, is_const: {:?})",
-                    p.name, p.is_const
-                )),
+                &p.type_name.unwrap_or_else(|| {
+                    panic!(
+                        "param type is none (name: {:?}, is_const: {:?})",
+                        p.name, p.is_const
+                    )
+                }),
             )?,
         })
     }
@@ -543,7 +547,7 @@ fn parse_cpp_method(class_name: &str, method: String) -> anyhow::Result<CppMetho
     Ok(CppMethod {
         name: method_name.unwrap(),
         return_type: ReturnType {
-            is_const: return_type.is_const,
+            // is_const: return_type.is_const,
             type_name: cpp_to_rust_type(class_name, &return_type.type_name.unwrap())?,
         },
         parameters: result_parameters,
@@ -587,19 +591,13 @@ fn cpp_method_to_rust_compatible_func(
                 "Vector2Wrapper" => format!("f32 {name}_x, f32 {name}_y"),
                 "RGBAWrapper" => format!("u8 {name}_r, u8 {name}_g, u8 {name}_b, u8 {name}_a"),
                 "std::vector<WeaponWrapper>" => {
-                    format!("---std::vector<WeaponWrapper> is not implemented as param")
+                    "---std::vector<WeaponWrapper> is not implemented as param".to_string()
                 }
-                "BaseObjectType" => {
-                    format!("---BaseObjectType is not implemented as param")
-                }
-                "ColShapeType" => {
-                    format!("---ColShapeType is not implemented as param")
-                }
-                "BlipType" => {
-                    format!("---BlipType is not implemented as param")
-                }
+                "BaseObjectType" => "---BaseObjectType is not implemented as param".to_string(),
+                "ColShapeType" => "---ColShapeType is not implemented as param".to_string(),
+                "BlipType" => "---BlipType is not implemented as param".to_string(),
                 "WeaponDamageEventBodyPart" => {
-                    format!("---WeaponDamageEventBodyPart is not implemented as param")
+                    "---WeaponDamageEventBodyPart is not implemented as param".to_string()
                 }
                 "EventType" => format!("u16 {name}"),
                 _ => format!(
@@ -625,27 +623,23 @@ fn cpp_method_to_rust_compatible_func(
                 "Vector2Wrapper" => format!("{{ {name}_x, {name}_y }}"),
                 "RGBAWrapper" => format!("{{ {name}_r, {name}_g, {name}_b, {name}_a }}"),
                 "std::vector<WeaponWrapper>" => {
-                    format!("---std::vector<WeaponWrapper> is not implemented as passed param")
+                    "---std::vector<WeaponWrapper> is not implemented as passed param".to_string()
                 }
                 "BaseObjectType" => {
-                    format!("---BaseObjectType is not implemented as passed param")
+                    "---BaseObjectType is not implemented as passed param".to_string()
                 }
-                "ColShapeType" => {
-                    format!("---ColShapeType is not implemented as passed param")
-                }
-                "BlipType" => {
-                    format!("---BlipType is not implemented as passed param")
-                }
+                "ColShapeType" => "---ColShapeType is not implemented as passed param".to_string(),
+                "BlipType" => "---BlipType is not implemented as passed param".to_string(),
                 "WeaponDamageEventBodyPart" => {
-                    format!("---WeaponDamageEventBodyPart is not implemented as passed param")
+                    "---WeaponDamageEventBodyPart is not implemented as passed param".to_string()
                 }
                 "EventType" => format!("static_cast<alt::CEvent::Type>({name})"),
-                _ => format!("{}", name),
+                _ => name.to_string(),
             }
         })
         .collect::<Vec<String>>()
         .join(", ");
-    let params_content = if params.len() > 0 {
+    let params_content = if !params.is_empty() {
         params
     } else {
         "".to_string()
@@ -732,7 +726,7 @@ fn cpp_method_to_rust_compatible_func(
     } else {
         return_value = format!("ptr->{method_calling}");
         const_method_ptr_content = if parsed_method.is_const { "const " } else { "" };
-        comma_between_ptr_and_params = if params_content.len() > 0 { ", " } else { "" };
+        comma_between_ptr_and_params = if !params_content.is_empty() { ", " } else { "" };
         ptr_content = format!("{const_method_ptr_content}alt::{class_name}* ptr");
     }
 

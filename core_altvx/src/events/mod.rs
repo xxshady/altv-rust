@@ -80,14 +80,14 @@ macro_rules! supported_sdk_events {
             }
         }
 
-        pub fn sdk_controller_from_supported_event_type(
+        pub(crate) fn sdk_controller_from_supported_event_type(
             event_type: SupportedEventType, 
             event_ptr: altv_sdk::CEventPtr,
             resource: &Resource,
         ) -> SDKController {
             match event_type { $(
                 SupportedEventType::$event_name => 
-                    SDKController::$event_name(sdk_controllers::$event_name::new(event_ptr, resource)),
+                    SDKController::$event_name(unsafe { sdk_controllers::$event_name::new(event_ptr, resource) }),
             )+ }
         }
 

@@ -16,10 +16,10 @@ pub struct PlayerConnect {
 }
 
 impl PlayerConnect {
-    pub fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
         Self {
             player: get_player_from_event(
-                unsafe { sdk::events::to_CPlayerConnectEvent(event) },
+                sdk::events::to_CPlayerConnectEvent(event),
                 resource,
                 sdk::CPlayerConnectEvent::GetTarget,
             ),
@@ -34,11 +34,11 @@ pub struct PlayerDisconnect {
 }
 
 impl PlayerDisconnect {
-    pub fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
-        let event = unsafe { sdk::events::to_CPlayerDisconnectEvent(event) };
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = sdk::events::to_CPlayerDisconnectEvent(event);
         Self {
             player: get_player_from_event(event, resource, sdk::CPlayerDisconnectEvent::GetTarget),
-            reason: unsafe { sdk::CPlayerDisconnectEvent::GetReason(event) }.to_string(),
+            reason: sdk::CPlayerDisconnectEvent::GetReason(event).to_string(),
         }
     }
 }
@@ -47,7 +47,7 @@ impl PlayerDisconnect {
 pub struct ServerStarted {}
 
 impl ServerStarted {
-    pub fn new(_: altv_sdk::CEventPtr, _: &Resource) -> Self {
+    pub(crate) unsafe fn new(_: altv_sdk::CEventPtr, _: &Resource) -> Self {
         Self {}
     }
 }
@@ -60,17 +60,17 @@ pub struct ColshapeEvent {
 }
 
 impl ColshapeEvent {
-    pub fn new(event: altv_sdk::CEventPtr, _: &Resource) -> Self {
-        let event = unsafe { sdk::events::to_CColShapeEvent(event) };
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, _: &Resource) -> Self {
+        let event = sdk::events::to_CColShapeEvent(event);
 
-        let state = unsafe { sdk::CColShapeEvent::GetState(event) };
+        let state = sdk::CColShapeEvent::GetState(event);
 
-        let col_shape = unsafe { sdk::CColShapeEvent::GetTarget(event) };
+        let col_shape = sdk::CColShapeEvent::GetTarget(event);
         let col_shape = NonNull::new(col_shape).unwrap();
 
-        let entity = unsafe { sdk::CColShapeEvent::GetEntity(event) };
+        let entity = sdk::CColShapeEvent::GetEntity(event);
         let entity = NonNull::new(entity).unwrap();
-        let entity = unsafe { sdk::entity::to_base_object(entity.as_ptr()) };
+        let entity = sdk::entity::to_base_object(entity.as_ptr());
         let entity = NonNull::new(entity).unwrap();
 
         Self {
@@ -89,9 +89,9 @@ pub struct ServerScriptEvent {
 }
 
 impl ServerScriptEvent {
-    pub fn new(event: altv_sdk::CEventPtr, _: &Resource) -> Self {
-        let event = unsafe { sdk::events::to_CServerScriptEvent(event) };
-        let name = unsafe { sdk::CServerScriptEvent::GetName(event) }.to_string();
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, _: &Resource) -> Self {
+        let event = sdk::events::to_CServerScriptEvent(event);
+        let name = sdk::CServerScriptEvent::GetName(event).to_string();
         Self {
             name,
             event,
@@ -121,9 +121,9 @@ pub struct ClientScriptEvent {
 }
 
 impl ClientScriptEvent {
-    pub fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
-        let event = unsafe { sdk::events::to_CClientScriptEvent(event) };
-        let name = unsafe { sdk::CClientScriptEvent::GetName(event) }.to_string();
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = sdk::events::to_CClientScriptEvent(event);
+        let name = sdk::CClientScriptEvent::GetName(event).to_string();
         let player = get_player_from_event(event, resource, sdk::CClientScriptEvent::GetTarget);
 
         Self {
@@ -154,11 +154,11 @@ pub struct ConsoleCommandEvent {
 }
 
 impl ConsoleCommandEvent {
-    pub fn new(event: altv_sdk::CEventPtr, _: &Resource) -> Self {
-        let event = unsafe { sdk::events::to_CConsoleCommandEvent(event) };
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, _: &Resource) -> Self {
+        let event = sdk::events::to_CConsoleCommandEvent(event);
         Self {
-            name: unsafe { sdk::CConsoleCommandEvent::GetName(event) }.to_string(),
-            args: unsafe { sdk::CConsoleCommandEvent::GetArgs(event) }
+            name: sdk::CConsoleCommandEvent::GetName(event).to_string(),
+            args: sdk::CConsoleCommandEvent::GetArgs(event)
                 .iter()
                 .map(|s| s.to_string())
                 .collect(),
