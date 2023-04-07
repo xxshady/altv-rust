@@ -1,13 +1,16 @@
-use std::ptr::NonNull;
+use std::{cell::RefCell, ptr::NonNull};
 
 use altv_sdk::ffi as sdk;
+use autocxx::prelude::*;
 use lazycell::LazyCell;
 
 use crate::{
     base_objects::{col_shape, player},
-    helpers::get_player_from_event,
+    exports::{AnyEntity, Vector3},
+    helpers::{get_entity_from_event, get_player_from_event, read_cpp_vector3, Hash},
     mvalue,
     resource::Resource,
+    VoidResult,
 };
 
 #[derive(Debug)]
@@ -55,12 +58,12 @@ impl ServerStarted {
 #[derive(Debug)]
 pub struct ColshapeEvent {
     pub col_shape: col_shape::ColShapeMutPtr,
-    pub entity: altv_sdk::BaseObjectMutPtr,
+    pub entity: AnyEntity,
     pub state: bool,
 }
 
 impl ColshapeEvent {
-    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, _: &Resource) -> Self {
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
         let event = sdk::events::to_CColShapeEvent(event);
 
         let state = sdk::CColShapeEvent::GetState(event);
@@ -68,14 +71,9 @@ impl ColshapeEvent {
         let col_shape = sdk::CColShapeEvent::GetTarget(event);
         let col_shape = NonNull::new(col_shape).unwrap();
 
-        let entity = sdk::CColShapeEvent::GetEntity(event);
-        let entity = NonNull::new(entity).unwrap();
-        let entity = sdk::entity::to_base_object(entity.as_ptr());
-        let entity = NonNull::new(entity).unwrap();
-
         Self {
             col_shape,
-            entity,
+            entity: get_entity_from_event(event, resource, sdk::CColShapeEvent::GetEntity),
             state,
         }
     }
@@ -162,6 +160,74 @@ impl ConsoleCommandEvent {
                 .iter()
                 .map(|s| s.to_string())
                 .collect(),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct WeaponDamageEvent {
+    pub source: player::PlayerContainer,
+    pub target: AnyEntity,
+    pub weapon_hash: Hash,
+    pub body_part: altv_sdk::PlayerBodyPart,
+    pub damage: u32,
+    pub shot_offset: Vector3,
+
+    event: *mut sdk::alt::CWeaponDamageEvent,
+    base_event: altv_sdk::CEventPtr,
+    custom_damage_set: RefCell<bool>,
+}
+
+impl WeaponDamageEvent {
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let weapon_event = sdk::events::to_CWeaponDamageEvent(event);
+        let weapon_event = NonNull::new(weapon_event).unwrap();
+        let weapon_event = weapon_event.as_ptr();
+
+        Self {
+            source: get_player_from_event(
+                weapon_event,
+                resource,
+                sdk::CWeaponDamageEvent::GetSource,
+            ),
+            target: get_entity_from_event(
+                weapon_event,
+                resource,
+                sdk::CWeaponDamageEvent::GetTarget,
+            ),
+            weapon_hash: sdk::CWeaponDamageEvent::GetWeaponHash(weapon_event),
+            body_part: {
+                let raw = sdk::CWeaponDamageEvent::GetBodyPart(weapon_event);
+                altv_sdk::PlayerBodyPart::from(raw).unwrap()
+            },
+            damage: sdk::CWeaponDamageEvent::GetDamageValue(weapon_event),
+            shot_offset: {
+                let raw = sdk::CWeaponDamageEvent::GetShotOffset(weapon_event).within_unique_ptr();
+                read_cpp_vector3(raw)
+            },
+
+            // internal properties
+            base_event: event,
+            event: weapon_event,
+            custom_damage_set: RefCell::new(false),
+        }
+    }
+
+    pub fn set_damage(&self, value: u32) -> VoidResult {
+        if *self.custom_damage_set.try_borrow()? {
+            anyhow::bail!("Damage cannot be set multiple times")
+        }
+        *self.custom_damage_set.try_borrow_mut()? = true;
+        unsafe { sdk::CWeaponDamageEvent::SetDamageValue(self.event, value) }
+        Ok(())
+    }
+
+    pub fn cancel(&self) -> VoidResult {
+        if unsafe { sdk::CEvent::WasCancelled(self.base_event) } {
+            anyhow::bail!("Event cannot be cancelled multiple times")
+        } else {
+            unsafe { sdk::CEvent::Cancel(self.base_event) }
+            Ok(())
         }
     }
 }

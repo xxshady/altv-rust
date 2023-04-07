@@ -232,6 +232,7 @@ supported_sdk_events!(
     ServerScriptEvent,
     ClientScriptEvent,
     ConsoleCommandEvent,
+    WeaponDamageEvent,
 );
 
 custom_events!(

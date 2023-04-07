@@ -1,7 +1,8 @@
 use std::ptr::NonNull;
 
 use crate::{
-    base_objects::player,
+    base_objects::{extra_pools::EntityRawPtr, player, AnyBaseObject},
+    exports::AnyEntity,
     resource::Resource,
     vector::{Vector2, Vector3},
     SomeResult,
@@ -70,6 +71,26 @@ pub fn get_player_from_event<T>(
         .player
         .get_by_ptr(ptr)
         .unwrap()
+}
+
+pub fn get_entity_from_event<T>(
+    event: *const T,
+    resource: &Resource,
+    get_target: unsafe fn(*const T) -> EntityRawPtr,
+) -> AnyEntity {
+    let entity = unsafe { get_target(event) };
+    let entity = NonNull::new(entity).unwrap();
+    let entity = unsafe { sdk::entity::to_base_object(entity.as_ptr()) };
+    let entity = NonNull::new(entity).unwrap();
+    let entity = resource.base_objects.borrow().get_by_ptr(entity).unwrap();
+
+    match entity {
+        AnyBaseObject::Player(p) => AnyEntity::Player(p),
+        AnyBaseObject::Vehicle(v) => AnyEntity::Vehicle(v),
+        _ => {
+            unreachable!()
+        }
+    }
 }
 
 pub fn get_player_raw_ptr(player: player::PlayerContainer) -> SomeResult<*mut sdk::alt::IPlayer> {

@@ -4,7 +4,8 @@ pub use alt::prelude::*;
 
 #[alt::main(crate_name = "alt")]
 pub fn main() {
-    std::env::set_var("RUST_BACKTRACE", "full");
+    // TODO: fix backtrace panic
+    std::env::set_var("RUST_BACKTRACE", "0");
 
     // alt::set_timeout(
     //     move || {
@@ -149,6 +150,28 @@ pub fn main() {
             ))?,
             poly.try_borrow()?.is_entity_in(veh.clone())?
         );
+
+        Ok(())
+    });
+
+    alt::events::on_weapon_damage(|c| {
+        let target = match &c.target {
+            alt::AnyEntity::Player(p) => p.try_borrow()?.name()?,
+            _ => unreachable!(),
+        };
+        let source = c.source.try_borrow()?.name()?;
+
+        dbg!(
+            "weapon damage",
+            source,
+            target,
+            c.weapon_hash,
+            c.damage,
+            c.body_part,
+            &c.shot_offset,
+        );
+
+        c.set_damage(10)?;
 
         Ok(())
     });

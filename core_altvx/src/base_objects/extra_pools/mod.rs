@@ -4,6 +4,7 @@ use entity::EntityPool;
 pub(crate) use entity::get_entity_by_id;
 pub use entity::Entity;
 pub use entity::EntityId;
+pub use entity::EntityRawPtr;
 
 #[derive(Debug, Default)]
 pub struct ExtraPool<T> {
@@ -45,6 +46,8 @@ pub mod wrappers {
     }
 
     impl IntoAnyEntity for AnyEntity {
-        fn into_any_entity(self) -> AnyEntity { self }
+        fn into_any_entity(self) -> AnyEntity {
+            self
+        }
     }
 }

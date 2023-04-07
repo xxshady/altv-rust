@@ -1,30 +1,26 @@
 use crate::{
-    base_objects::{col_shape, player, vehicle, AnyBaseObject},
+    base_objects::{col_shape, player, vehicle},
+    exports::AnyEntity,
     resource::Resource,
 };
 
 use super::sdk_controllers::ColshapeEvent;
 
 macro_rules! entity_enter_or_leave_col_shape {
-    ($bool_state: literal, $key_name: ident, $any_base_object: path) => {
-        pub fn new(controller: &ColshapeEvent, resource: &Resource) -> Option<Self> {
-            let $bool_state = controller.state else { return None };
-
-            let $key_name = resource.base_objects.borrow().get_by_ptr(controller.entity);
-            let Some($key_name) = $key_name else { unreachable!() };
-
-            let $key_name = match $key_name {
-                $any_base_object(v) => Some(v),
-                other => {
-                    logger::debug!(
-                        "{}_enter_or_leave_col_shape received {other:?} -> skip",
-                        stringify!($key_name)
-                    );
-                    None
-                }
+    ($bool_state: literal, $key_name: ident, $any_entity: path) => {
+        pub fn new(controller: &ColshapeEvent, _: &Resource) -> Option<Self> {
+            if controller.state != $bool_state {
+                return None;
             };
 
-            let Some($key_name) = $key_name else { return None; };
+            let $any_entity($key_name) = &controller.entity else {
+                        logger::debug!(
+                            "{}_enter_or_leave_col_shape received {:?} -> skip",
+                            stringify!($key_name), &controller.entity
+                        );
+                        return None;
+                    };
+            let $key_name = $key_name.clone();
 
             Some(Self {
                 col_shape: Resource::with_base_objects_mut(|v, _| {
@@ -44,7 +40,7 @@ pub struct VehicleEnterColShape {
 }
 
 impl VehicleEnterColShape {
-    entity_enter_or_leave_col_shape!(true, vehicle, AnyBaseObject::Vehicle);
+    entity_enter_or_leave_col_shape!(true, vehicle, AnyEntity::Vehicle);
 }
 
 #[derive(Debug)]
@@ -54,7 +50,7 @@ pub struct VehicleLeaveColShape {
 }
 
 impl VehicleLeaveColShape {
-    entity_enter_or_leave_col_shape!(false, vehicle, AnyBaseObject::Vehicle);
+    entity_enter_or_leave_col_shape!(false, vehicle, AnyEntity::Vehicle);
 }
 
 #[derive(Debug)]
@@ -64,7 +60,7 @@ pub struct PlayerEnterColShape {
 }
 
 impl PlayerEnterColShape {
-    entity_enter_or_leave_col_shape!(true, player, AnyBaseObject::Player);
+    entity_enter_or_leave_col_shape!(true, player, AnyEntity::Player);
 }
 
 #[derive(Debug)]
@@ -74,5 +70,5 @@ pub struct PlayerLeaveColShape {
 }
 
 impl PlayerLeaveColShape {
-    entity_enter_or_leave_col_shape!(false, player, AnyBaseObject::Player);
+    entity_enter_or_leave_col_shape!(false, player, AnyEntity::Player);
 }

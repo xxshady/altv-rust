@@ -27,6 +27,7 @@ pub mod ffi {
         #include "alt_classes/CColShapeEvent.h"
         #include "alt_classes/IVirtualEntity.h"
         #include "alt_classes/IVirtualEntityGroup.h"
+        #include "alt_classes/CWeaponDamageEvent.h"
 
         name!(alt_bridge)
 
@@ -45,6 +46,7 @@ pub mod ffi {
         generate_ns!("CClientScriptEvent")
         generate_ns!("CPlayerConnectEvent")
         generate_ns!("CPlayerDisconnectEvent")
+        generate_ns!("CWeaponDamageEvent")
         generate_ns!("CColShapeEvent")
         generate_ns!("IVirtualEntity")
         generate_ns!("IVirtualEntityGroup")
@@ -230,3 +232,6 @@ pub use mvalue_type::MValueType;
 
 mod col_shape_type;
 pub use col_shape_type::ColShapeType;
+
+mod player_body_part;
+pub use player_body_part::PlayerBodyPart;

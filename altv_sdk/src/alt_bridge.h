@@ -635,8 +635,9 @@ namespace events
         return static_cast<const alt::CColShapeEvent*>(event);
     }
 
-    const alt::CWeaponDamageEvent* to_CWeaponDamageEvent(const alt::CEvent* event) {
+    // mutable pointer because of SetDamageValue
+    alt::CWeaponDamageEvent* to_CWeaponDamageEvent(const alt::CEvent* event) {
         assert(event->GetType() == alt::CEvent::Type::WEAPON_DAMAGE_EVENT);
-        return static_cast<const alt::CWeaponDamageEvent*>(event);
+        return static_cast<alt::CWeaponDamageEvent*>(const_cast<alt::CEvent*>(event));
     }
 } // namespace events
