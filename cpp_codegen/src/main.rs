@@ -78,6 +78,7 @@ lazy_static::lazy_static! {
             ("IBlip::BlipType", "BlipType"),
             ("CWeaponDamageEvent::BodyPart", "WeaponDamageEventBodyPart"),
             ("CEvent::Type", "EventType"),
+            ("CPlayerConnectDeniedEvent::Reason", "PlayerConnectDeniedReason"),
         ])
     };
 }
@@ -127,14 +128,6 @@ fn main() {
         "../altv_sdk/cpp-sdk/events/CColShapeEvent.h",
     );
     gen_default(
-        "CPlayerConnectEvent",
-        "../altv_sdk/cpp-sdk/events/CPlayerConnectEvent.h",
-    );
-    gen_default(
-        "CPlayerDisconnectEvent",
-        "../altv_sdk/cpp-sdk/events/CPlayerDisconnectEvent.h",
-    );
-    gen_default(
         "CConsoleCommandEvent",
         "../altv_sdk/cpp-sdk/events/CConsoleCommandEvent.h",
     );
@@ -145,6 +138,72 @@ fn main() {
     gen_default(
         "CServerScriptEvent",
         "../altv_sdk/cpp-sdk/events/CServerScriptEvent.h",
+    );
+
+    // player
+    gen_default(
+        "CPlayerConnectEvent",
+        "../altv_sdk/cpp-sdk/events/CPlayerConnectEvent.h",
+    );
+    gen_default(
+        "CPlayerDisconnectEvent",
+        "../altv_sdk/cpp-sdk/events/CPlayerDisconnectEvent.h",
+    );
+    gen_default(
+        "CPlayerDeathEvent",
+        "../altv_sdk/cpp-sdk/events/CPlayerDeathEvent.h",
+    );
+    gen_default(
+        "CPlayerDamageEvent",
+        "../altv_sdk/cpp-sdk/events/CPlayerDamageEvent.h",
+    );
+    gen_default(
+        "CPlayerEnteringVehicleEvent",
+        "../altv_sdk/cpp-sdk/events/CPlayerEnteringVehicleEvent.h",
+    );
+    gen_default(
+        "CPlayerEnterVehicleEvent",
+        "../altv_sdk/cpp-sdk/events/CPlayerEnterVehicleEvent.h",
+    );
+    gen_default(
+        "CPlayerLeaveVehicleEvent",
+        "../altv_sdk/cpp-sdk/events/CPlayerLeaveVehicleEvent.h",
+    );
+    gen_default(
+        "CPlayerChangeAnimationEvent",
+        "../altv_sdk/cpp-sdk/events/CPlayerChangeAnimationEvent.h",
+    );
+    gen_default(
+        "CPlayerChangeVehicleSeatEvent",
+        "../altv_sdk/cpp-sdk/events/CPlayerChangeVehicleSeatEvent.h",
+    );
+    gen_default(
+        "CPlayerWeaponChangeEvent",
+        "../altv_sdk/cpp-sdk/events/CPlayerWeaponChangeEvent.h",
+    );
+    gen_default(
+        "CPlayerConnectDeniedEvent",
+        "../altv_sdk/cpp-sdk/events/CPlayerConnectDeniedEvent.h",
+    );
+    gen_default(
+        "CPlayerSpawnEvent",
+        "../altv_sdk/cpp-sdk/events/CPlayerSpawnEvent.h",
+    );
+    gen_default(
+        "CStartProjectileEvent",
+        "../altv_sdk/cpp-sdk/events/CStartProjectileEvent.h",
+    );
+    gen_default(
+        "CPlayerRequestControlEvent",
+        "../altv_sdk/cpp-sdk/events/CPlayerRequestControlEvent.h",
+    );
+    gen_default(
+        "CPlayerDimensionChangeEvent",
+        "../altv_sdk/cpp-sdk/events/CPlayerDimensionChangeEvent.h",
+    );
+    gen_default(
+        "CPlayerChangeInteriorEvent",
+        "../altv_sdk/cpp-sdk/events/CPlayerChangeInteriorEvent.h",
     );
 }
 
@@ -603,6 +662,9 @@ fn cpp_method_to_rust_compatible_func(
                 }
                 "EventType" => format!("u16 {name}"),
                 "Vector2Vec" => format!("Vector2Vec {name}"),
+                "PlayerConnectDeniedReason" => {
+                    "---PlayerConnectDeniedReason is not implemented as param".to_string()
+                }
                 _ => format!(
                     "{}{type_name} {name}",
                     (if *is_const { "const " } else { "" }),
@@ -638,6 +700,9 @@ fn cpp_method_to_rust_compatible_func(
                 }
                 "EventType" => format!("static_cast<alt::CEvent::Type>({name})"),
                 "Vector2Vec" => format!("{name}.into_alt_vec()"),
+                "PlayerConnectDeniedReason" => {
+                    "---PlayerConnectDeniedReason is not implemented as passed param".to_string()
+                }
                 _ => name.to_string(),
             }
         })
@@ -713,6 +778,7 @@ fn cpp_method_to_rust_compatible_func(
                 return mvalue_vec"
             )
         },
+        "PlayerConnectDeniedReason" => |v: &str| format!("return static_cast<uint8_t>({v})"),
         _ => |v: &str| format!("return {v}"),
     };
 
