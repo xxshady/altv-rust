@@ -9,7 +9,7 @@ use crate::{
         },
         vehicle,
     },
-    helpers::IntoModelHash,
+    helpers::IntoHash,
     resource::Resource,
     sdk,
     vector::IntoVector3,
@@ -19,7 +19,7 @@ use crate::{
 
 impl vehicle::Vehicle {
     pub fn new(
-        model: impl IntoModelHash,
+        model: impl IntoHash,
         pos: impl IntoVector3,
         rot: impl IntoVector3,
     ) -> SomeResult<vehicle::VehicleContainer> {
@@ -29,7 +29,7 @@ impl vehicle::Vehicle {
         // TODO: check model before creation
         let ptr = Resource::with_pending_base_object_destroy_or_creation_mut(|_, _| unsafe {
             sdk::ICore::CreateVehicle(
-                model.into_model_hash(),
+                model.into_hash(),
                 pos.x(),
                 pos.y(),
                 pos.z(),

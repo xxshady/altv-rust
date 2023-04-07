@@ -7,7 +7,7 @@ use crate::{
         },
         player,
     },
-    helpers::IntoModelHash,
+    helpers::IntoHash,
     sdk,
     vector::IntoVector3,
     world_object::WorldObject,
@@ -23,15 +23,15 @@ impl player::Player {
         Ok(unsafe { sdk::IPlayer::GetName(self.raw_ptr()?) }.to_string())
     }
 
-    pub fn spawn(&self, model: impl IntoModelHash, pos: impl IntoVector3) -> VoidResult {
+    pub fn spawn(&self, model: impl IntoHash, pos: impl IntoVector3) -> VoidResult {
         self.set_model(model)?;
         let pos = pos.into_vector3();
         unsafe { sdk::IPlayer::Spawn(self.raw_ptr()?, pos.x(), pos.y(), pos.z(), 0) }
         Ok(())
     }
 
-    pub fn set_model(&self, model: impl IntoModelHash) -> VoidResult {
-        unsafe { sdk::IPlayer::SetModel(self.raw_ptr()?, model.into_model_hash()) }
+    pub fn set_model(&self, model: impl IntoHash) -> VoidResult {
+        unsafe { sdk::IPlayer::SetModel(self.raw_ptr()?, model.into_hash()) }
         Ok(())
     }
 }

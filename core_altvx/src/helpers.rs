@@ -92,20 +92,20 @@ impl IntoString for &str {
     }
 }
 
-pub type ModelHash = u32;
+pub type Hash = u32;
 
-pub trait IntoModelHash {
-    fn into_model_hash(self) -> ModelHash;
+pub trait IntoHash {
+    fn into_hash(self) -> Hash;
 }
 
-impl IntoModelHash for ModelHash {
-    fn into_model_hash(self) -> ModelHash {
+impl IntoHash for Hash {
+    fn into_hash(self) -> Hash {
         self
     }
 }
 
-impl IntoModelHash for &str {
-    fn into_model_hash(self) -> ModelHash {
+impl IntoHash for &str {
+    fn into_hash(self) -> Hash {
         hash(self)
     }
 }
