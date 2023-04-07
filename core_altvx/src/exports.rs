@@ -11,7 +11,7 @@ pub use crate::{
         virtual_entity_group::{VirtualEntityGroup, VirtualEntityGroupContainer},
         ValidBaseObject,
     },
-    helpers::hash,
+    helpers::{hash, Hash},
     init,
     timers::create_timer,
     vector::{Vector2, Vector3},

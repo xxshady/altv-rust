@@ -24,6 +24,7 @@ pub use exports::{
 
     anyhow,
     hash,
+    Hash
 };
 
 pub mod events;
