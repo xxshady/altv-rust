@@ -7,7 +7,10 @@ use lazycell::LazyCell;
 use crate::{
     base_objects::{col_shape, player},
     exports::{AnyEntity, Vector3},
-    helpers::{get_entity_from_event, get_player_from_event, read_cpp_vector3, Hash},
+    helpers::{
+        get_entity_from_event, get_non_null_entity_from_event, get_player_from_event,
+        read_cpp_vector3, Hash,
+    },
     mvalue,
     resource::Resource,
     VoidResult,
@@ -73,7 +76,7 @@ impl ColshapeEvent {
 
         Self {
             col_shape,
-            entity: get_entity_from_event(event, resource, sdk::CColShapeEvent::GetEntity),
+            entity: get_non_null_entity_from_event(event, resource, sdk::CColShapeEvent::GetEntity),
             state,
         }
     }
@@ -190,7 +193,7 @@ impl WeaponDamageEvent {
                 resource,
                 sdk::CWeaponDamageEvent::GetSource,
             ),
-            target: get_entity_from_event(
+            target: get_non_null_entity_from_event(
                 weapon_event,
                 resource,
                 sdk::CWeaponDamageEvent::GetTarget,
@@ -228,6 +231,33 @@ impl WeaponDamageEvent {
         } else {
             unsafe { sdk::CEvent::Cancel(self.base_event) }
             Ok(())
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct PlayerDeath {
+    pub player: player::PlayerContainer,
+    // TODO: test when killer is none
+    pub killer: Option<AnyEntity>,
+    pub weapon_hash: Hash,
+}
+
+impl PlayerDeath {
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = sdk::events::to_CPlayerDeathEvent(event);
+        if event.is_null() {
+            panic!("null event");
+        }
+
+        Self {
+            player: get_player_from_event(event, resource, sdk::CPlayerDeathEvent::GetTarget),
+            killer: get_entity_from_event(
+                sdk::CPlayerDeathEvent::GetKiller(event),
+                event,
+                resource,
+            ),
+            weapon_hash: sdk::CPlayerDeathEvent::GetWeapon(event),
         }
     }
 }

@@ -73,24 +73,37 @@ pub fn get_player_from_event<T>(
         .unwrap()
 }
 
-pub fn get_entity_from_event<T>(
+pub fn get_non_null_entity_from_event<T>(
     event: *const T,
     resource: &Resource,
     get_target: unsafe fn(*const T) -> EntityRawPtr,
 ) -> AnyEntity {
     let entity = unsafe { get_target(event) };
-    let entity = NonNull::new(entity).unwrap();
-    let entity = unsafe { sdk::entity::to_base_object(entity.as_ptr()) };
-    let entity = NonNull::new(entity).unwrap();
-    let entity = resource.base_objects.borrow().get_by_ptr(entity).unwrap();
+    let entity = NonNull::new(entity).unwrap().as_ptr();
+    get_entity_from_event(entity, event, resource).unwrap()
+}
 
-    match entity {
+pub fn get_entity_from_event<T>(
+    entity: EntityRawPtr,
+    event: *const T,
+    resource: &Resource,
+) -> Option<AnyEntity> {
+    if entity.is_null() {
+        return None;
+    }
+    let entity = unsafe { sdk::entity::to_base_object(entity) };
+    let Some(entity) = NonNull::new(entity) else {
+        return None;
+    };
+    let entity = resource.base_objects.borrow().get_by_ptr(entity).unwrap();
+    let entity = match entity {
         AnyBaseObject::Player(p) => AnyEntity::Player(p),
         AnyBaseObject::Vehicle(v) => AnyEntity::Vehicle(v),
         _ => {
             unreachable!()
         }
-    }
+    };
+    Some(entity)
 }
 
 pub fn get_player_raw_ptr(player: player::PlayerContainer) -> SomeResult<*mut sdk::alt::IPlayer> {

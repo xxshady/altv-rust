@@ -14,12 +14,12 @@ macro_rules! entity_enter_or_leave_col_shape {
             };
 
             let $any_entity($key_name) = &controller.entity else {
-                        logger::debug!(
-                            "{}_enter_or_leave_col_shape received {:?} -> skip",
-                            stringify!($key_name), &controller.entity
-                        );
-                        return None;
-                    };
+                                logger::debug!(
+                                    "{}_enter_or_leave_col_shape received {:?} -> skip",
+                                    stringify!($key_name), &controller.entity
+                                );
+                                return None;
+                            };
             let $key_name = $key_name.clone();
 
             Some(Self {

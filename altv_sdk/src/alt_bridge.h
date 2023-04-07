@@ -641,4 +641,9 @@ namespace events
         assert(event->GetType() == alt::CEvent::Type::WEAPON_DAMAGE_EVENT);
         return static_cast<alt::CWeaponDamageEvent*>(const_cast<alt::CEvent*>(event));
     }
+
+    const alt::CPlayerDeathEvent* to_CPlayerDeathEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::PLAYER_DEATH);
+        return static_cast<const alt::CPlayerDeathEvent*>(event);
+    }
 } // namespace events
