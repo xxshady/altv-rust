@@ -68,7 +68,7 @@ pub fn main() {
         alt::events::emit_some_clients!("test", vec![p.clone(), p.clone()], "emit some")?;
         alt::events::emit_all_clients!("test", "emit all")?;
 
-        player.spawn("player_two", alt::Vector3::new(0., 0., 72.))?;
+        player.spawn("player_two", (0, 0, 72))?;
         Ok(())
     });
 
@@ -172,6 +172,37 @@ pub fn main() {
         );
 
         c.set_damage(10)?;
+
+        Ok(())
+    });
+
+    alt::events::on_player_death(|c| {
+        let player = c.player.try_borrow()?;
+
+        let killer = match &c.killer {
+            None => "None".to_string(),
+            Some(alt::AnyEntity::Player(p)) => format!("player: {}", p.try_borrow()?.name()?),
+            Some(alt::AnyEntity::Vehicle(_)) => "vehicle".to_string(),
+        };
+
+        alt::log!(
+            "player death: {:?} killer: {} weapon: {}",
+            player.name()?,
+            killer,
+            c.weapon_hash
+        );
+
+        alt::log!("respawning in 2.5 seconds...");
+        let player = c.player.clone();
+        alt::set_timeout(
+            move || {
+                let player = player.try_borrow()?;
+                player.spawn(player.model()?, (0, 0, 72))?;
+                alt::log!("~gl~respawned");
+                Ok(())
+            },
+            2500,
+        );
 
         Ok(())
     });
