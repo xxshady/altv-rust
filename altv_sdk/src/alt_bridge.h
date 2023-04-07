@@ -32,6 +32,7 @@ using ColShapeType = uint8_t;
 using BlipType = uint8_t;
 using WeaponDamageEventBodyPart = int8_t;
 using EventType = uint16_t;
+using PlayerConnectDeniedReason = uint8_t;
 
 // used for const std::string& return values in altv event classes
 using StdStringClone = std::string;

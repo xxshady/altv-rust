@@ -29,6 +29,22 @@ pub mod ffi {
         #include "alt_classes/IVirtualEntityGroup.h"
         #include "alt_classes/CWeaponDamageEvent.h"
 
+        // player
+        #include "alt_classes/CPlayerDeathEvent.h"
+        #include "alt_classes/CPlayerDamageEvent.h"
+        #include "alt_classes/CPlayerEnteringVehicleEvent.h"
+        #include "alt_classes/CPlayerEnterVehicleEvent.h"
+        #include "alt_classes/CPlayerLeaveVehicleEvent.h"
+        #include "alt_classes/CPlayerChangeAnimationEvent.h"
+        #include "alt_classes/CPlayerChangeVehicleSeatEvent.h"
+        #include "alt_classes/CPlayerWeaponChangeEvent.h"
+        #include "alt_classes/CPlayerConnectDeniedEvent.h"
+        #include "alt_classes/CPlayerSpawnEvent.h"
+        #include "alt_classes/CStartProjectileEvent.h"
+        #include "alt_classes/CPlayerRequestControlEvent.h"
+        #include "alt_classes/CPlayerDimensionChangeEvent.h"
+        #include "alt_classes/CPlayerChangeInteriorEvent.h"
+
         name!(alt_bridge)
 
         generate_ns!("ICore")
@@ -50,6 +66,21 @@ pub mod ffi {
         generate_ns!("CColShapeEvent")
         generate_ns!("IVirtualEntity")
         generate_ns!("IVirtualEntityGroup")
+
+        generate_ns!("CPlayerDeathEvent")
+        generate_ns!("CPlayerDamageEvent")
+        generate_ns!("CPlayerEnteringVehicleEvent")
+        generate_ns!("CPlayerEnterVehicleEvent")
+        generate_ns!("CPlayerLeaveVehicleEvent")
+        generate_ns!("CPlayerChangeAnimationEvent")
+        generate_ns!("CPlayerChangeVehicleSeatEvent")
+        generate_ns!("CPlayerWeaponChangeEvent")
+        generate_ns!("CPlayerConnectDeniedEvent")
+        generate_ns!("CPlayerSpawnEvent")
+        generate_ns!("CStartProjectileEvent")
+        generate_ns!("CPlayerRequestControlEvent")
+        generate_ns!("CPlayerDimensionChangeEvent")
+        generate_ns!("CPlayerChangeInteriorEvent")
 
         // defined in alt_bridge
         generate_ns!("events")
@@ -235,3 +266,6 @@ pub use col_shape_type::ColShapeType;
 
 mod player_body_part;
 pub use player_body_part::PlayerBodyPart;
+
+mod player_connect_denied_reason;
+pub use player_connect_denied_reason::PlayerConnectDeniedReason;
