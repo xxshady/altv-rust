@@ -135,14 +135,6 @@ macro_rules! custom_events {
             $custom_event_name(custom_controllers::$custom_event_name),
         )+)+ }
         
-        impl CustomController {
-            pub fn to_event_type(&self) -> CustomEventType {
-                match self { $($(
-                    CustomController::$custom_event_name(_) => CustomEventType::$custom_event_name,
-                )+)+ }
-            }
-        }
-
         impl std::fmt::Debug for CustomController {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 let str = format!("{}", match self {
