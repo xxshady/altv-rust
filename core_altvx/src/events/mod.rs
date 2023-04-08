@@ -233,6 +233,7 @@ supported_sdk_events!(
     PlayerLeaveVehicle,
     PlayerChangeVehicleSeat,
     PlayerWeaponChange,
+    PlayerConnectDenied,
 );
 
 custom_events!(

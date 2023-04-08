@@ -206,4 +206,10 @@ pub fn main() {
 
         Ok(())
     });
+
+    alt::events::on_player_connect_denied(|c| {
+        alt::log!("on_player_connect_denied");
+        dbg!(c);
+        Ok(())
+    });
 }

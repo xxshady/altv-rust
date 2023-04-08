@@ -366,3 +366,38 @@ impl PlayerWeaponChange {
         }
     }
 }
+
+#[derive(Debug)]
+pub struct PlayerConnectDenied {
+    pub reason: altv_sdk::PlayerConnectDeniedReason,
+    pub name: String,
+    pub ip: String,
+    pub password_hash: u64,
+    pub is_debug: bool,
+    pub branch: String,
+    pub major_version: u32,
+    pub cdn_url: String,
+    pub discord_id: i64,
+}
+
+impl PlayerConnectDenied {
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, _: &Resource) -> Self {
+        let event = base_event_to_specific!(event, CPlayerConnectDeniedEvent);
+
+        use sdk::CPlayerConnectDeniedEvent::*;
+        Self {
+            reason: {
+                let raw = GetReason(event);
+                altv_sdk::PlayerConnectDeniedReason::from(raw).unwrap()
+            },
+            name: GetName(event).to_string(),
+            ip: GetIp(event).to_string(),
+            password_hash: GetPasswordHash(event),
+            is_debug: IsDebug(event),
+            branch: GetBranch(event).to_string(),
+            major_version: GetMajorVersion(event),
+            cdn_url: GetCdnUrl(event).to_string(),
+            discord_id: GetDiscordId(event),
+        }
+    }
+}

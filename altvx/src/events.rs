@@ -37,6 +37,7 @@ on_sdk_event!(on_player_enter_vehicle, PlayerEnterVehicle);
 on_sdk_event!(on_player_leave_vehicle, PlayerLeaveVehicle);
 on_sdk_event!(on_player_change_vehicle_seat, PlayerChangeVehicleSeat);
 on_sdk_event!(on_player_weapon_change, PlayerWeaponChange);
+on_sdk_event!(on_player_connect_denied, PlayerConnectDenied);
 
 on_custom_event!(on_vehicle_enter_col_shape, VehicleEnterColShape);
 on_custom_event!(on_vehicle_leave_col_shape, VehicleLeaveColShape);
