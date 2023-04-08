@@ -401,3 +401,18 @@ impl PlayerConnectDenied {
         }
     }
 }
+
+#[derive(Debug)]
+pub struct PlayerSpawn {
+    pub player: player::PlayerContainer,
+}
+
+impl PlayerSpawn {
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(event, CPlayerSpawnEvent);
+
+        Self {
+            player: get_player_from_event(sdk::CPlayerSpawnEvent::GetPlayer(event), resource),
+        }
+    }
+}
