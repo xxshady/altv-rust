@@ -227,6 +227,7 @@ supported_sdk_events!(
     ConsoleCommandEvent,
     WeaponDamageEvent,
     PlayerDeath,
+    PlayerDamage,
 );
 
 custom_events!(

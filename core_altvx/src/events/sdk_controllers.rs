@@ -253,3 +253,24 @@ impl PlayerDeath {
         }
     }
 }
+
+#[derive(Debug)]
+pub struct PlayerDamage {
+    pub player: player::PlayerContainer,
+    pub attacker: Option<AnyEntity>,
+    pub health_damage: u16,
+    pub armour_damage: u16,
+}
+
+impl PlayerDamage {
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(event, CPlayerDamageEvent);
+
+        Self {
+            player: get_player_from_event(event, resource, sdk::CPlayerDamageEvent::GetTarget),
+            attacker: get_entity_from_event(sdk::CPlayerDamageEvent::GetAttacker(event), resource),
+            health_damage: sdk::CPlayerDamageEvent::GetHealthDamage(event),
+            armour_damage: sdk::CPlayerDamageEvent::GetArmourDamage(event),
+        }
+    }
+}
