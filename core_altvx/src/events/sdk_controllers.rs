@@ -25,12 +25,9 @@ pub struct PlayerConnect {
 
 impl PlayerConnect {
     pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(event, CPlayerConnectEvent);
         Self {
-            player: get_player_from_event(
-                sdk::events::to_CPlayerConnectEvent(event),
-                resource,
-                sdk::CPlayerConnectEvent::GetTarget,
-            ),
+            player: get_player_from_event(sdk::CPlayerConnectEvent::GetTarget(event), resource),
         }
     }
 }
@@ -45,7 +42,7 @@ impl PlayerDisconnect {
     pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
         let event = sdk::events::to_CPlayerDisconnectEvent(event);
         Self {
-            player: get_player_from_event(event, resource, sdk::CPlayerDisconnectEvent::GetTarget),
+            player: get_player_from_event(sdk::CPlayerDisconnectEvent::GetTarget(event), resource),
             reason: sdk::CPlayerDisconnectEvent::GetReason(event).to_string(),
         }
     }
@@ -127,7 +124,7 @@ impl ClientScriptEvent {
     pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
         let event = base_event_to_specific!(event, CClientScriptEvent);
         let name = sdk::CClientScriptEvent::GetName(event).to_string();
-        let player = get_player_from_event(event, resource, sdk::CClientScriptEvent::GetTarget);
+        let player = get_player_from_event(sdk::CClientScriptEvent::GetTarget(event), resource);
 
         Self {
             name,
@@ -189,9 +186,8 @@ impl WeaponDamageEvent {
 
         Self {
             source: get_player_from_event(
-                weapon_event,
+                sdk::CWeaponDamageEvent::GetSource(weapon_event),
                 resource,
-                sdk::CWeaponDamageEvent::GetSource,
             ),
             target: get_non_null_entity_from_event(
                 weapon_event,
@@ -247,7 +243,7 @@ impl PlayerDeath {
         let event = base_event_to_specific!(event, CPlayerDeathEvent);
 
         Self {
-            player: get_player_from_event(event, resource, sdk::CPlayerDeathEvent::GetTarget),
+            player: get_player_from_event(sdk::CPlayerDeathEvent::GetTarget(event), resource),
             killer: get_entity_from_event(sdk::CPlayerDeathEvent::GetKiller(event), resource),
             weapon_hash: sdk::CPlayerDeathEvent::GetWeapon(event),
         }
@@ -267,7 +263,7 @@ impl PlayerDamage {
         let event = base_event_to_specific!(event, CPlayerDamageEvent);
 
         Self {
-            player: get_player_from_event(event, resource, sdk::CPlayerDamageEvent::GetTarget),
+            player: get_player_from_event(sdk::CPlayerDamageEvent::GetTarget(event), resource),
             attacker: get_entity_from_event(sdk::CPlayerDamageEvent::GetAttacker(event), resource),
             health_damage: sdk::CPlayerDamageEvent::GetHealthDamage(event),
             armour_damage: sdk::CPlayerDamageEvent::GetArmourDamage(event),
@@ -281,7 +277,7 @@ macro_rules! player_enter_or_leave_vehicle {
             let event = base_event_to_specific!(event, $event);
 
             Self {
-                player: get_player_from_event(event, resource, sdk::$event::GetPlayer),
+                player: get_player_from_event(sdk::$event::GetPlayer(event), resource),
                 vehicle: get_vehicle_from_event(sdk::$event::GetTarget(event), resource),
                 seat: sdk::$event::GetSeat(event),
             }
@@ -336,9 +332,8 @@ impl PlayerChangeVehicleSeat {
 
         Self {
             player: get_player_from_event(
-                event,
+                sdk::CPlayerChangeVehicleSeatEvent::GetPlayer(event),
                 resource,
-                sdk::CPlayerChangeVehicleSeatEvent::GetPlayer,
             ),
             vehicle: get_vehicle_from_event(
                 sdk::CPlayerChangeVehicleSeatEvent::GetTarget(event),
@@ -346,6 +341,28 @@ impl PlayerChangeVehicleSeat {
             ),
             new_seat: sdk::CPlayerChangeVehicleSeatEvent::GetNewSeat(event),
             old_seat: sdk::CPlayerChangeVehicleSeatEvent::GetOldSeat(event),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct PlayerWeaponChange {
+    pub player: player::PlayerContainer,
+    pub new_weapon_hash: Hash,
+    pub old_weapon_hash: Hash,
+}
+
+impl PlayerWeaponChange {
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(event, CPlayerWeaponChangeEvent);
+
+        Self {
+            player: get_player_from_event(
+                sdk::CPlayerWeaponChangeEvent::GetTarget(event),
+                resource,
+            ),
+            new_weapon_hash: sdk::CPlayerWeaponChangeEvent::GetNewWeapon(event),
+            old_weapon_hash: sdk::CPlayerWeaponChangeEvent::GetOldWeapon(event),
         }
     }
 }
