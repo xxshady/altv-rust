@@ -228,6 +228,10 @@ supported_sdk_events!(
     WeaponDamageEvent,
     PlayerDeath,
     PlayerDamage,
+    PlayerEnteringVehicle,
+    PlayerEnterVehicle,
+    PlayerLeaveVehicle,
+    PlayerChangeVehicleSeat,
 );
 
 custom_events!(

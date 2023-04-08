@@ -1,7 +1,7 @@
 use std::ptr::NonNull;
 
 use crate::{
-    base_objects::{extra_pools::EntityRawPtr, player, AnyBaseObject},
+    base_objects::{extra_pools::EntityRawPtr, player, vehicle, AnyBaseObject},
     exports::AnyEntity,
     resource::Resource,
     sdk,
@@ -31,6 +31,20 @@ pub fn get_player_from_event<T>(
         .base_objects
         .borrow()
         .player
+        .get_by_ptr(ptr)
+        .unwrap()
+}
+
+pub fn get_vehicle_from_event(
+    ptr: *mut sdk::alt::IVehicle,
+    resource: &Resource,
+) -> vehicle::VehicleContainer {
+    let ptr = NonNull::new(ptr).unwrap();
+
+    resource
+        .base_objects
+        .borrow()
+        .vehicle
         .get_by_ptr(ptr)
         .unwrap()
 }

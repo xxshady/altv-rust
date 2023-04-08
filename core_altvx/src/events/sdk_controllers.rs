@@ -5,7 +5,7 @@ use autocxx::prelude::*;
 use lazycell::LazyCell;
 
 use crate::{
-    base_objects::{col_shape, player},
+    base_objects::{col_shape, player, vehicle},
     exports::{AnyEntity, Vector3},
     helpers::{read_cpp_vector3, Hash},
     mvalue,
@@ -15,7 +15,7 @@ use crate::{
 
 use super::helpers::{
     base_event_to_specific, get_entity_from_event, get_non_null_entity_from_event,
-    get_player_from_event,
+    get_player_from_event, get_vehicle_from_event,
 };
 
 #[derive(Debug)]
@@ -271,6 +271,81 @@ impl PlayerDamage {
             attacker: get_entity_from_event(sdk::CPlayerDamageEvent::GetAttacker(event), resource),
             health_damage: sdk::CPlayerDamageEvent::GetHealthDamage(event),
             armour_damage: sdk::CPlayerDamageEvent::GetArmourDamage(event),
+        }
+    }
+}
+
+macro_rules! player_enter_or_leave_vehicle {
+    ($event: ident) => {
+        pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+            let event = base_event_to_specific!(event, $event);
+
+            Self {
+                player: get_player_from_event(event, resource, sdk::$event::GetPlayer),
+                vehicle: get_vehicle_from_event(sdk::$event::GetTarget(event), resource),
+                seat: sdk::$event::GetSeat(event),
+            }
+        }
+    };
+}
+
+#[derive(Debug)]
+pub struct PlayerEnteringVehicle {
+    pub player: player::PlayerContainer,
+    pub vehicle: vehicle::VehicleContainer,
+    pub seat: u8,
+}
+
+impl PlayerEnteringVehicle {
+    player_enter_or_leave_vehicle!(CPlayerEnteringVehicleEvent);
+}
+
+#[derive(Debug)]
+pub struct PlayerEnterVehicle {
+    pub player: player::PlayerContainer,
+    pub vehicle: vehicle::VehicleContainer,
+    pub seat: u8,
+}
+
+impl PlayerEnterVehicle {
+    player_enter_or_leave_vehicle!(CPlayerEnterVehicleEvent);
+}
+
+#[derive(Debug)]
+pub struct PlayerLeaveVehicle {
+    pub player: player::PlayerContainer,
+    pub vehicle: vehicle::VehicleContainer,
+    pub seat: u8,
+}
+
+impl PlayerLeaveVehicle {
+    player_enter_or_leave_vehicle!(CPlayerLeaveVehicleEvent);
+}
+
+#[derive(Debug)]
+pub struct PlayerChangeVehicleSeat {
+    pub player: player::PlayerContainer,
+    pub vehicle: vehicle::VehicleContainer,
+    pub new_seat: u8,
+    pub old_seat: u8,
+}
+
+impl PlayerChangeVehicleSeat {
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(event, CPlayerChangeVehicleSeatEvent);
+
+        Self {
+            player: get_player_from_event(
+                event,
+                resource,
+                sdk::CPlayerChangeVehicleSeatEvent::GetPlayer,
+            ),
+            vehicle: get_vehicle_from_event(
+                sdk::CPlayerChangeVehicleSeatEvent::GetTarget(event),
+                resource,
+            ),
+            new_seat: sdk::CPlayerChangeVehicleSeatEvent::GetNewSeat(event),
+            old_seat: sdk::CPlayerChangeVehicleSeatEvent::GetOldSeat(event),
         }
     }
 }
