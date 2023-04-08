@@ -446,3 +446,27 @@ impl StartProjectileEvent {
         }
     }
 }
+
+#[derive(Debug)]
+pub struct PlayerRequestControl {
+    pub player: player::PlayerContainer,
+    pub entity: AnyEntity,
+}
+
+impl PlayerRequestControl {
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(event, CPlayerRequestControlEvent);
+
+        Self {
+            player: get_player_from_event(
+                sdk::CPlayerRequestControlEvent::GetPlayer(event),
+                resource,
+            ),
+            entity: get_non_null_entity_from_event(
+                event,
+                resource,
+                sdk::CPlayerRequestControlEvent::GetTarget,
+            ),
+        }
+    }
+}

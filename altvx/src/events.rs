@@ -39,6 +39,8 @@ on_sdk_event!(on_player_change_vehicle_seat, PlayerChangeVehicleSeat);
 on_sdk_event!(on_player_weapon_change, PlayerWeaponChange);
 on_sdk_event!(on_player_connect_denied, PlayerConnectDenied);
 on_sdk_event!(on_player_spawn, PlayerSpawn);
+on_sdk_event!(on_player_request_control, PlayerRequestControl);
+
 on_sdk_event!(on_start_projectile, StartProjectileEvent);
 
 on_custom_event!(on_vehicle_enter_col_shape, VehicleEnterColShape);
