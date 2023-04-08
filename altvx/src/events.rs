@@ -41,6 +41,7 @@ on_sdk_event!(on_player_connect_denied, PlayerConnectDenied);
 on_sdk_event!(on_player_spawn, PlayerSpawn);
 on_sdk_event!(on_player_request_control, PlayerRequestControl);
 on_sdk_event!(on_player_dimension_change, PlayerDimensionChange);
+on_sdk_event!(on_player_interior_change, PlayerChangeInteriorEvent);
 
 on_sdk_event!(on_start_projectile, StartProjectileEvent);
 

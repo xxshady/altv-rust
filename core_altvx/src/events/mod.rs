@@ -238,6 +238,7 @@ supported_sdk_events!(
     StartProjectileEvent,
     PlayerRequestControl,
     PlayerDimensionChange,
+    PlayerChangeInteriorEvent,
 );
 
 custom_events!(

@@ -492,3 +492,25 @@ impl PlayerDimensionChange {
         }
     }
 }
+
+#[derive(Debug)]
+pub struct PlayerChangeInteriorEvent {
+    pub player: player::PlayerContainer,
+    pub new_interior: u32,
+    pub old_interior: u32,
+}
+
+impl PlayerChangeInteriorEvent {
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(event, CPlayerChangeInteriorEvent);
+
+        Self {
+            player: get_player_from_event(
+                sdk::CPlayerChangeInteriorEvent::GetTarget(event),
+                resource,
+            ),
+            new_interior: sdk::CPlayerChangeInteriorEvent::GetNewInteriorLocation(event),
+            old_interior: sdk::CPlayerChangeInteriorEvent::GetOldInteriorLocation(event),
+        }
+    }
+}
