@@ -416,3 +416,33 @@ impl PlayerSpawn {
         }
     }
 }
+
+#[derive(Debug)]
+pub struct StartProjectileEvent {
+    pub player: player::PlayerContainer,
+    pub weapon_hash: Hash,
+    pub ammo_hash: Hash,
+    pub pos: Vector3,
+    pub dir: Vector3,
+}
+
+impl StartProjectileEvent {
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(event, CStartProjectileEvent);
+
+        use sdk::CStartProjectileEvent::*;
+        Self {
+            player: get_player_from_event(GetSource(event), resource),
+            weapon_hash: GetWeaponHash(event),
+            ammo_hash: GetAmmoHash(event),
+            pos: {
+                let raw = GetStartPosition(event).within_unique_ptr();
+                read_cpp_vector3(raw)
+            },
+            dir: {
+                let raw = GetDirection(event).within_unique_ptr();
+                read_cpp_vector3(raw)
+            },
+        }
+    }
+}

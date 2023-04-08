@@ -235,6 +235,7 @@ supported_sdk_events!(
     PlayerWeaponChange,
     PlayerConnectDenied,
     PlayerSpawn,
+    StartProjectileEvent,
 );
 
 custom_events!(
