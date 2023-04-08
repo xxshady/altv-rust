@@ -19,12 +19,10 @@ macro_rules! __base_event_to_specific {
 }
 pub use __base_event_to_specific as base_event_to_specific;
 
-pub fn get_player_from_event<T>(
-    event: *const T,
+pub fn get_player_from_event(
+    ptr: *mut sdk::alt::IPlayer,
     resource: &Resource,
-    get_target: unsafe fn(*const T) -> *mut sdk::alt::IPlayer,
 ) -> player::PlayerContainer {
-    let ptr = unsafe { get_target(event) };
     let ptr = NonNull::new(ptr).unwrap();
 
     resource
