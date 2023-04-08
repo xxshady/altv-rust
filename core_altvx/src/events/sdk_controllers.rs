@@ -13,9 +13,12 @@ use crate::{
     VoidResult,
 };
 
-use super::helpers::{
-    base_event_to_specific, get_entity_from_event, get_non_null_entity_from_event,
-    get_player_from_event, get_vehicle_from_event,
+use super::{
+    cancellable::CancellableEvent,
+    helpers::{
+        base_event_to_specific, get_entity_from_event, get_non_null_entity_from_event,
+        get_player_from_event, get_vehicle_from_event,
+    },
 };
 
 #[derive(Debug)]
@@ -176,7 +179,7 @@ pub struct WeaponDamageEvent {
     pub shot_offset: Vector3,
 
     event: *mut sdk::alt::CWeaponDamageEvent,
-    base_event: altv_sdk::CEventPtr,
+    cancellable: CancellableEvent,
     custom_damage_set: RefCell<bool>,
 }
 
@@ -206,7 +209,7 @@ impl WeaponDamageEvent {
             },
 
             // internal properties
-            base_event: event,
+            cancellable: CancellableEvent::new(event),
             event: weapon_event,
             custom_damage_set: RefCell::new(false),
         }
@@ -222,12 +225,7 @@ impl WeaponDamageEvent {
     }
 
     pub fn cancel(&self) -> VoidResult {
-        if unsafe { sdk::CEvent::WasCancelled(self.base_event) } {
-            anyhow::bail!("Event cannot be cancelled multiple times")
-        } else {
-            unsafe { sdk::CEvent::Cancel(self.base_event) }
-            Ok(())
-        }
+        self.cancellable.cancel()
     }
 }
 
@@ -350,11 +348,13 @@ pub struct PlayerWeaponChange {
     pub player: player::PlayerContainer,
     pub new_weapon_hash: Hash,
     pub old_weapon_hash: Hash,
+
+    cancellable: CancellableEvent,
 }
 
 impl PlayerWeaponChange {
-    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
-        let event = base_event_to_specific!(event, CPlayerWeaponChangeEvent);
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CPlayerWeaponChangeEvent);
 
         Self {
             player: get_player_from_event(
@@ -363,7 +363,13 @@ impl PlayerWeaponChange {
             ),
             new_weapon_hash: sdk::CPlayerWeaponChangeEvent::GetNewWeapon(event),
             old_weapon_hash: sdk::CPlayerWeaponChangeEvent::GetOldWeapon(event),
+
+            cancellable: CancellableEvent::new(base_event),
         }
+    }
+
+    pub fn cancel(&self) -> VoidResult {
+        self.cancellable.cancel()
     }
 }
 
@@ -424,11 +430,13 @@ pub struct StartProjectileEvent {
     pub ammo_hash: Hash,
     pub pos: Vector3,
     pub dir: Vector3,
+
+    cancellable: CancellableEvent,
 }
 
 impl StartProjectileEvent {
-    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
-        let event = base_event_to_specific!(event, CStartProjectileEvent);
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CStartProjectileEvent);
 
         use sdk::CStartProjectileEvent::*;
         Self {
@@ -443,7 +451,13 @@ impl StartProjectileEvent {
                 let raw = GetDirection(event).within_unique_ptr();
                 read_cpp_vector3(raw)
             },
+
+            cancellable: CancellableEvent::new(base_event),
         }
+    }
+
+    pub fn cancel(&self) -> VoidResult {
+        self.cancellable.cancel()
     }
 }
 

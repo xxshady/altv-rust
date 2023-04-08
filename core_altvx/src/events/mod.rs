@@ -6,6 +6,7 @@ pub use altv_sdk::EventType as SDKEventType;
 pub mod sdk_controllers;
 pub mod custom_controllers;
 pub(self) mod helpers;
+pub(self) mod cancellable;
 
 macro_rules! log_user_handler_error {
     ($event_name: expr, $result: expr) => {
