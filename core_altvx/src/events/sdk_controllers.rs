@@ -470,3 +470,25 @@ impl PlayerRequestControl {
         }
     }
 }
+
+#[derive(Debug)]
+pub struct PlayerDimensionChange {
+    pub player: player::PlayerContainer,
+    pub new_dimension: i32,
+    pub old_dimension: i32,
+}
+
+impl PlayerDimensionChange {
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(event, CPlayerDimensionChangeEvent);
+
+        Self {
+            player: get_player_from_event(
+                sdk::CPlayerDimensionChangeEvent::GetTarget(event),
+                resource,
+            ),
+            new_dimension: sdk::CPlayerDimensionChangeEvent::GetNewDimension(event),
+            old_dimension: sdk::CPlayerDimensionChangeEvent::GetOldDimension(event),
+        }
+    }
+}
