@@ -651,4 +651,64 @@ namespace events
         assert(event->GetType() == alt::CEvent::Type::PLAYER_DAMAGE);
         return static_cast<const alt::CPlayerDamageEvent*>(event);
     }
+
+    const alt::CPlayerEnteringVehicleEvent* to_CPlayerEnteringVehicleEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::PLAYER_ENTERING_VEHICLE);
+        return static_cast<const alt::CPlayerEnteringVehicleEvent*>(event);
+    }
+
+    const alt::CPlayerEnterVehicleEvent* to_CPlayerEnterVehicleEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::PLAYER_ENTER_VEHICLE);
+        return static_cast<const alt::CPlayerEnterVehicleEvent*>(event);
+    }
+
+    const alt::CPlayerLeaveVehicleEvent* to_CPlayerLeaveVehicleEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::PLAYER_LEAVE_VEHICLE);
+        return static_cast<const alt::CPlayerLeaveVehicleEvent*>(event);
+    }
+
+    const alt::CPlayerChangeAnimationEvent* to_CPlayerChangeAnimationEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::PLAYER_CHANGE_ANIMATION_EVENT);
+        return static_cast<const alt::CPlayerChangeAnimationEvent*>(event);
+    }
+
+    const alt::CPlayerChangeVehicleSeatEvent* to_CPlayerChangeVehicleSeatEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::PLAYER_CHANGE_VEHICLE_SEAT);
+        return static_cast<const alt::CPlayerChangeVehicleSeatEvent*>(event);
+    }
+
+    const alt::CPlayerWeaponChangeEvent* to_CPlayerWeaponChangeEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::PLAYER_WEAPON_CHANGE);
+        return static_cast<const alt::CPlayerWeaponChangeEvent*>(event);
+    }
+
+    const alt::CPlayerConnectDeniedEvent* to_CPlayerConnectDeniedEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::PLAYER_CONNECT_DENIED);
+        return static_cast<const alt::CPlayerConnectDeniedEvent*>(event);
+    }
+
+    const alt::CPlayerSpawnEvent* to_CPlayerSpawnEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::PLAYER_SPAWN);
+        return static_cast<const alt::CPlayerSpawnEvent*>(event);
+    }
+
+    const alt::CStartProjectileEvent* to_CStartProjectileEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::START_PROJECTILE_EVENT);
+        return static_cast<const alt::CStartProjectileEvent*>(event);
+    }
+
+    const alt::CPlayerRequestControlEvent* to_CPlayerRequestControlEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::PLAYER_REQUEST_CONTROL);
+        return static_cast<const alt::CPlayerRequestControlEvent*>(event);
+    }
+
+    const alt::CPlayerDimensionChangeEvent* to_CPlayerDimensionChangeEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::PLAYER_DIMENSION_CHANGE);
+        return static_cast<const alt::CPlayerDimensionChangeEvent*>(event);
+    }
+
+    const alt::CPlayerChangeInteriorEvent* to_CPlayerChangeInteriorEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::PLAYER_CHANGE_INTERIOR_EVENT);
+        return static_cast<const alt::CPlayerChangeInteriorEvent*>(event);
+    }
 } // namespace events
