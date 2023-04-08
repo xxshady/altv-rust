@@ -36,5 +36,25 @@ void SetColor(alt::ICheckpoint* ptr, u8 color_r, u8 color_g, u8 color_b, u8 colo
 void SetNextPosition(alt::ICheckpoint* ptr, f32 pos_x, f32 pos_y, f32 pos_z) {
     return ptr->SetNextPosition({ pos_x, pos_y, pos_z });
 }
+bool HasStreamSyncedMetaData(const alt::ICheckpoint* ptr, const StdStringClone key) {
+    return ptr->HasStreamSyncedMetaData(key);
+}
+MValueWrapper GetStreamSyncedMetaData(const alt::ICheckpoint* ptr, const StdStringClone key) {
+    MValueWrapper wrapper;
+    wrapper.ptr = std::make_shared<alt::MValueConst>(ptr->GetStreamSyncedMetaData(key));
+    return wrapper;
+}
+std::vector<std::string> GetStreamSyncedMetaDataKeys(const alt::ICheckpoint* ptr) {
+    return ptr->GetStreamSyncedMetaDataKeys();
+}
+u32 GetStreamingDistance(const alt::ICheckpoint* ptr) {
+    return ptr->GetStreamingDistance();
+}
+void SetStreamSyncedMetaData(alt::ICheckpoint* ptr, const StdStringClone key, MValueMutWrapper val) {
+    return ptr->SetStreamSyncedMetaData(key, *(val.ptr));
+}
+void DeleteStreamSyncedMetaData(alt::ICheckpoint* ptr, const StdStringClone key) {
+    return ptr->DeleteStreamSyncedMetaData(key);
+}
 
 } // namespace
