@@ -27,7 +27,7 @@ pub use exports::{
     Hash
 };
 
-pub use altv_sdk::{ColShapeType, PlayerBodyPart, PlayerConnectDeniedReason};
+pub use altv_sdk::{ColShapeType, ExplosionType, PlayerBodyPart, PlayerConnectDeniedReason};
 
 pub mod events;
 pub mod mvalue;

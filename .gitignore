@@ -7,4 +7,5 @@
 /altv_sdk/src/event_type.rs
 /altv_sdk/src/mvalue_type.rs
 /altv_sdk/src/col_shape_type.rs
+/altv_sdk/src/explosion_type.rs
 /cpp_codegen/out

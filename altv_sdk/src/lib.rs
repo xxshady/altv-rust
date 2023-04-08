@@ -40,10 +40,13 @@ pub mod ffi {
         #include "alt_classes/CPlayerWeaponChangeEvent.h"
         #include "alt_classes/CPlayerConnectDeniedEvent.h"
         #include "alt_classes/CPlayerSpawnEvent.h"
-        #include "alt_classes/CStartProjectileEvent.h"
         #include "alt_classes/CPlayerRequestControlEvent.h"
         #include "alt_classes/CPlayerDimensionChangeEvent.h"
         #include "alt_classes/CPlayerChangeInteriorEvent.h"
+
+        #include "alt_classes/CStartProjectileEvent.h"
+        #include "alt_classes/CFireEvent.h"
+        #include "alt_classes/CExplosionEvent.h"
 
         name!(alt_bridge)
 
@@ -77,10 +80,13 @@ pub mod ffi {
         generate_ns!("CPlayerWeaponChangeEvent")
         generate_ns!("CPlayerConnectDeniedEvent")
         generate_ns!("CPlayerSpawnEvent")
-        generate_ns!("CStartProjectileEvent")
         generate_ns!("CPlayerRequestControlEvent")
         generate_ns!("CPlayerDimensionChangeEvent")
         generate_ns!("CPlayerChangeInteriorEvent")
+
+        generate_ns!("CStartProjectileEvent")
+        generate_ns!("CExplosionEvent")
+        generate_ns!("CFireEvent")
 
         // defined in alt_bridge
         generate_ns!("events")
@@ -269,3 +275,6 @@ pub use player_body_part::PlayerBodyPart;
 
 mod player_connect_denied_reason;
 pub use player_connect_denied_reason::PlayerConnectDeniedReason;
+
+mod explosion_type;
+pub use explosion_type::ExplosionType;

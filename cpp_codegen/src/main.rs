@@ -79,6 +79,7 @@ lazy_static::lazy_static! {
             ("CWeaponDamageEvent::BodyPart", "WeaponDamageEventBodyPart"),
             ("CEvent::Type", "EventType"),
             ("CPlayerConnectDeniedEvent::Reason", "PlayerConnectDeniedReason"),
+            ("CExplosionEvent::ExplosionType", "ExplosionType"),
         ])
     };
 }
@@ -190,10 +191,6 @@ fn main() {
         "../altv_sdk/cpp-sdk/events/CPlayerSpawnEvent.h",
     );
     gen_default(
-        "CStartProjectileEvent",
-        "../altv_sdk/cpp-sdk/events/CStartProjectileEvent.h",
-    );
-    gen_default(
         "CPlayerRequestControlEvent",
         "../altv_sdk/cpp-sdk/events/CPlayerRequestControlEvent.h",
     );
@@ -204,6 +201,16 @@ fn main() {
     gen_default(
         "CPlayerChangeInteriorEvent",
         "../altv_sdk/cpp-sdk/events/CPlayerChangeInteriorEvent.h",
+    );
+
+    gen_default(
+        "CStartProjectileEvent",
+        "../altv_sdk/cpp-sdk/events/CStartProjectileEvent.h",
+    );
+    gen_default("CFireEvent", "../altv_sdk/cpp-sdk/events/CFireEvent.h");
+    gen_default(
+        "CExplosionEvent",
+        "../altv_sdk/cpp-sdk/events/CExplosionEvent.h",
     );
 }
 
@@ -665,6 +672,7 @@ fn cpp_method_to_rust_compatible_func(
                 "PlayerConnectDeniedReason" => {
                     "---PlayerConnectDeniedReason is not implemented as param".to_string()
                 }
+                "ExplosionType" => "---ExplosionType is not implemented as param".to_string(),
                 _ => format!(
                     "{}{type_name} {name}",
                     (if *is_const { "const " } else { "" }),
@@ -702,6 +710,9 @@ fn cpp_method_to_rust_compatible_func(
                 "Vector2Vec" => format!("{name}.into_alt_vec()"),
                 "PlayerConnectDeniedReason" => {
                     "---PlayerConnectDeniedReason is not implemented as passed param".to_string()
+                }
+                "ExplosionType" => {
+                    "---ExplosionType is not implemented as passed param".to_string()
                 }
                 _ => name.to_string(),
             }
@@ -779,6 +790,7 @@ fn cpp_method_to_rust_compatible_func(
             )
         },
         "PlayerConnectDeniedReason" => |v: &str| format!("return static_cast<uint8_t>({v})"),
+        "ExplosionType" => |v: &str| format!("return static_cast<int8_t>({v})"),
         _ => |v: &str| format!("return {v}"),
     };
 

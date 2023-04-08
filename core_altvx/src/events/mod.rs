@@ -220,12 +220,13 @@ macro_rules! custom_events {
 
 supported_sdk_events!(
     ServerStarted,
-    PlayerConnect,
-    PlayerDisconnect,
     ColshapeEvent,
     ServerScriptEvent,
     ClientScriptEvent,
     ConsoleCommandEvent,
+    
+    PlayerConnect,
+    PlayerDisconnect,
     WeaponDamageEvent,
     PlayerDeath,
     PlayerDamage,
@@ -236,10 +237,12 @@ supported_sdk_events!(
     PlayerWeaponChange,
     PlayerConnectDenied,
     PlayerSpawn,
-    StartProjectileEvent,
     PlayerRequestControl,
     PlayerDimensionChange,
     PlayerChangeInteriorEvent,
+
+    StartProjectileEvent,
+    ExplosionEvent,
 );
 
 custom_events!(

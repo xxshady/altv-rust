@@ -424,44 +424,6 @@ impl PlayerSpawn {
 }
 
 #[derive(Debug)]
-pub struct StartProjectileEvent {
-    pub player: player::PlayerContainer,
-    pub weapon_hash: Hash,
-    pub ammo_hash: Hash,
-    pub pos: Vector3,
-    pub dir: Vector3,
-
-    cancellable: CancellableEvent,
-}
-
-impl StartProjectileEvent {
-    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
-        let event = base_event_to_specific!(base_event, CStartProjectileEvent);
-
-        use sdk::CStartProjectileEvent::*;
-        Self {
-            player: get_player_from_event(GetSource(event), resource),
-            weapon_hash: GetWeaponHash(event),
-            ammo_hash: GetAmmoHash(event),
-            pos: {
-                let raw = GetStartPosition(event).within_unique_ptr();
-                read_cpp_vector3(raw)
-            },
-            dir: {
-                let raw = GetDirection(event).within_unique_ptr();
-                read_cpp_vector3(raw)
-            },
-
-            cancellable: CancellableEvent::new(base_event),
-        }
-    }
-
-    pub fn cancel(&self) -> VoidResult {
-        self.cancellable.cancel()
-    }
-}
-
-#[derive(Debug)]
 pub struct PlayerRequestControl {
     pub player: player::PlayerContainer,
     pub entity: AnyEntity,
@@ -526,5 +488,81 @@ impl PlayerChangeInteriorEvent {
             new_interior: sdk::CPlayerChangeInteriorEvent::GetNewInteriorLocation(event),
             old_interior: sdk::CPlayerChangeInteriorEvent::GetOldInteriorLocation(event),
         }
+    }
+}
+
+#[derive(Debug)]
+pub struct StartProjectileEvent {
+    pub player: player::PlayerContainer,
+    pub weapon_hash: Hash,
+    pub ammo_hash: Hash,
+    pub pos: Vector3,
+    pub dir: Vector3,
+
+    cancellable: CancellableEvent,
+}
+
+impl StartProjectileEvent {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CStartProjectileEvent);
+
+        use sdk::CStartProjectileEvent::*;
+        Self {
+            player: get_player_from_event(GetSource(event), resource),
+            weapon_hash: GetWeaponHash(event),
+            ammo_hash: GetAmmoHash(event),
+            pos: {
+                let raw = GetStartPosition(event).within_unique_ptr();
+                read_cpp_vector3(raw)
+            },
+            dir: {
+                let raw = GetDirection(event).within_unique_ptr();
+                read_cpp_vector3(raw)
+            },
+
+            cancellable: CancellableEvent::new(base_event),
+        }
+    }
+
+    pub fn cancel(&self) -> VoidResult {
+        self.cancellable.cancel()
+    }
+}
+
+#[derive(Debug)]
+pub struct ExplosionEvent {
+    pub player: player::PlayerContainer,
+    pub target: Option<AnyEntity>,
+    pub pos: Vector3,
+    pub explosion_type: altv_sdk::ExplosionType,
+    pub explosion_fx: u32,
+
+    cancellable: CancellableEvent,
+}
+
+impl ExplosionEvent {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CExplosionEvent);
+
+        use sdk::CExplosionEvent::*;
+        Self {
+            player: get_player_from_event(GetSource(event), resource),
+            target: get_entity_from_event(GetTarget(event), resource),
+            pos: {
+                let raw = GetPosition(event).within_unique_ptr();
+                read_cpp_vector3(raw)
+            },
+            explosion_type: {
+                let raw = GetExplosionType(event);
+                altv_sdk::ExplosionType::from(raw).unwrap()
+            },
+            explosion_fx: GetExplosionFX(event),
+
+            cancellable: CancellableEvent::new(base_event),
+        }
+    }
+
+    pub fn cancel(&self) -> VoidResult {
+        self.cancellable.cancel()
     }
 }

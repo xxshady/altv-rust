@@ -33,6 +33,7 @@ using BlipType = uint8_t;
 using WeaponDamageEventBodyPart = int8_t;
 using EventType = uint16_t;
 using PlayerConnectDeniedReason = uint8_t;
+using ExplosionType = int8_t;
 
 // used for const std::string& return values in altv event classes
 using StdStringClone = std::string;
@@ -710,5 +711,10 @@ namespace events
     const alt::CPlayerChangeInteriorEvent* to_CPlayerChangeInteriorEvent(const alt::CEvent* event) {
         assert(event->GetType() == alt::CEvent::Type::PLAYER_CHANGE_INTERIOR_EVENT);
         return static_cast<const alt::CPlayerChangeInteriorEvent*>(event);
+    }
+
+    const alt::CExplosionEvent* to_CExplosionEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::EXPLOSION_EVENT);
+        return static_cast<const alt::CExplosionEvent*>(event);
     }
 } // namespace events

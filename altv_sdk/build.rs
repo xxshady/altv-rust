@@ -7,6 +7,7 @@ const MVALUE_TYPE_ENUM_FILE: &str = "cpp-sdk/types/MValue.h";
 const COL_SHAPE_TYPE_ENUM_FILE: &str = "cpp-sdk/script-objects/IColShape.h";
 const PLAYER_BODY_PART_ENUM_FILE: &str = "cpp-sdk/events/CWeaponDamageEvent.h";
 const PLAYER_CONNECT_DENIED_REASON_ENUM_FILE: &str = "cpp-sdk/events/CPlayerConnectDeniedEvent.h";
+const EXPLOSION_TYPE_ENUM_FILE: &str = "cpp-sdk/events/CExplosionEvent.h";
 
 fn main() -> miette::Result<()> {
     generate_cpp_to_rust_bindings();
@@ -20,6 +21,7 @@ fn main() -> miette::Result<()> {
         "src/col_shape_type.rs",
         "src/player_body_part.rs",
         "src/player_connect_denied_reason.rs",
+        "src/explosion_type.rs",
     ])
     .expect("rerun_except failed");
 
@@ -115,6 +117,14 @@ fn generate_cpp_to_rust_bindings() {
         PLAYER_CONNECT_DENIED_REASON_ENUM_FILE,
         "enum Reason: uint8_t",
         "src/player_connect_denied_reason.rs",
+    );
+
+    generate_rust_enum_from_cpp(
+        "ExplosionType",
+        "i8",
+        EXPLOSION_TYPE_ENUM_FILE,
+        "enum class ExplosionType : int8_t",
+        "src/explosion_type.rs",
     );
 }
 
