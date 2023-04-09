@@ -228,6 +228,25 @@ std::vector<u32> read_weapon_components(const WeaponWrapper& weapon) {
     return weapon.components;
 }
 
+class FireInfoWrapper {
+public:
+    Vector3Wrapper pos;
+    u32 weapon_hash;
+
+    FireInfoWrapper(Vector3Wrapper _pos, u32 _weapon_hash):
+        pos(_pos),
+        weapon_hash(_weapon_hash)
+    {}
+};
+
+Vector3Wrapper read_fire_info_pos(const FireInfoWrapper& fire) {
+    return fire.pos;
+}
+
+u32 read_fire_info_weapon_hash(const FireInfoWrapper& fire) {
+    return fire.weapon_hash;
+}
+
 using MValueWrapperVec = std::vector<MValueWrapper>;
 
 MValueWrapperVec create_mvalue_vec() {
@@ -716,5 +735,10 @@ namespace events
     const alt::CExplosionEvent* to_CExplosionEvent(const alt::CEvent* event) {
         assert(event->GetType() == alt::CEvent::Type::EXPLOSION_EVENT);
         return static_cast<const alt::CExplosionEvent*>(event);
+    }
+
+    const alt::CFireEvent* to_CFireEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::FIRE_EVENT);
+        return static_cast<const alt::CFireEvent*>(event);
     }
 } // namespace events

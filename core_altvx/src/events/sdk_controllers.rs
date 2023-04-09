@@ -19,6 +19,7 @@ use super::{
         base_event_to_specific, get_entity_from_event, get_non_null_entity_from_event,
         get_player_from_event, get_vehicle_from_event,
     },
+    structs,
 };
 
 #[derive(Debug)]
@@ -518,6 +519,44 @@ impl StartProjectileEvent {
             dir: {
                 let raw = GetDirection(event).within_unique_ptr();
                 read_cpp_vector3(raw)
+            },
+
+            cancellable: CancellableEvent::new(base_event),
+        }
+    }
+
+    pub fn cancel(&self) -> VoidResult {
+        self.cancellable.cancel()
+    }
+}
+
+pub struct FireEvent {
+    pub player: player::PlayerContainer,
+    pub fires: Vec<structs::FireInfo>,
+
+    cancellable: CancellableEvent,
+}
+
+impl FireEvent {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CFireEvent);
+
+        use sdk::CFireEvent::*;
+        Self {
+            player: get_player_from_event(GetSource(event), resource),
+            fires: {
+                GetFires(event)
+                    .iter()
+                    .map(|fire| {
+                        let pos = sdk::read_fire_info_pos(fire).within_unique_ptr();
+                        let pos = read_cpp_vector3(pos);
+
+                        structs::FireInfo {
+                            pos,
+                            weapon_hash: sdk::read_fire_info_weapon_hash(fire),
+                        }
+                    })
+                    .collect()
             },
 
             cancellable: CancellableEvent::new(base_event),

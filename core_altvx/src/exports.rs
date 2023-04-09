@@ -63,7 +63,7 @@ pub mod events {
         client_events::emit_all_clients,
         events::{
             add_custom_handler, add_sdk_handler, custom_controllers, sdk_controllers,
-            CustomHandler, SDKHandler,
+            structs::FireInfo, CustomHandler, SDKHandler,
         },
         script_events::{add_client_handler, add_local_handler},
     };

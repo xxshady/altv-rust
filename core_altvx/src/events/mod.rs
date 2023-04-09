@@ -7,6 +7,7 @@ pub mod sdk_controllers;
 pub mod custom_controllers;
 pub(self) mod helpers;
 pub(self) mod cancellable;
+pub mod structs;
 
 macro_rules! log_user_handler_error {
     ($event_name: expr, $result: expr) => {
@@ -242,6 +243,7 @@ supported_sdk_events!(
     PlayerChangeInteriorEvent,
 
     StartProjectileEvent,
+    FireEvent,
     ExplosionEvent,
 );
 

@@ -1,7 +1,7 @@
 use core_altvx::{exports::events, VoidResult};
 pub use events::{
     add_client_handler as on_client, add_local_handler as on, custom_controllers, emit,
-    emit_all_clients, emit_client, emit_some_clients, sdk_controllers,
+    emit_all_clients, emit_client, emit_some_clients, sdk_controllers, FireInfo,
 };
 
 macro_rules! on_sdk_event {
@@ -44,6 +44,7 @@ on_sdk_event!(on_player_dimension_change, PlayerDimensionChange);
 on_sdk_event!(on_player_interior_change, PlayerChangeInteriorEvent);
 
 on_sdk_event!(on_start_projectile, StartProjectileEvent);
+on_sdk_event!(on_start_fire, FireEvent);
 on_sdk_event!(on_explosion, ExplosionEvent);
 
 on_custom_event!(on_vehicle_enter_col_shape, VehicleEnterColShape);

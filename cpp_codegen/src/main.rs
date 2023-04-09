@@ -61,6 +61,7 @@ lazy_static::lazy_static! {
             ("std::vector<Weapon>", "std::vector<WeaponWrapper>"),
             ("std::vector<std::string>&", "std::vector<std::string>"),
             ("std::vector<Vector2f>", "Vector2Vec"),
+            ("Array<FireInfo>&", "std::vector<FireInfoWrapper>"),
 
             // TODO: wrappers for these
             // ("std::vector<IVirtualEntity*>", "std::vector<alt::IVirtualEntity*>"),
@@ -791,6 +792,17 @@ fn cpp_method_to_rust_compatible_func(
         },
         "PlayerConnectDeniedReason" => |v: &str| format!("return static_cast<uint8_t>({v})"),
         "ExplosionType" => |v: &str| format!("return static_cast<int8_t>({v})"),
+        "std::vector<FireInfoWrapper>" => |v: &str| {
+            format!(
+                "auto alt_array = {v};\n    \
+                std::vector<FireInfoWrapper> vec {{}};\n    \
+                vec.reserve(alt_array.GetSize());\n    \
+                for (const auto& e : alt_array) {{\n        \
+                    vec.push_back({{ {{ e.position[0], e.position[1], e.position[2] }}, e.weaponHash }});\n    \
+                }}\n    \
+                return vec"
+            )
+        },
         _ => |v: &str| format!("return {v}"),
     };
 

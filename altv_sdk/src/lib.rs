@@ -176,6 +176,10 @@ pub mod ffi {
         generate!("read_weapon")
         generate!("read_weapon_components")
 
+        generate!("FireInfoWrapper")
+        generate!("read_fire_info_pos")
+        generate!("read_fire_info_weapon_hash")
+
         generate!("create_player_vec")
         generate!("push_to_player_vec")
 
