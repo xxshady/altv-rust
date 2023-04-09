@@ -125,7 +125,7 @@ pub mod events {
     /// Examples
     ///
     /// ```rust
-    /// altvx::events::emit!("example").unwrap();
+    /// altvx::events::emit!("example");
     /// ```
     ///
     /// Sending primitives
@@ -140,7 +140,7 @@ pub mod events {
     #[macro_export]
     macro_rules! __emit {
         ($event_name: expr) => {
-            unsafe { $crate::script_events::emit_local_event_without_args($event_name) };
+            unsafe { $crate::exports::events::__internal::emit_local_event_without_args($event_name) };
         };
         ($event_name: expr, $($arg: expr),+ $(,)*) => {
             (|| -> $crate::exports::VoidResult {
