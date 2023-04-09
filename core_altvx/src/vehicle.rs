@@ -18,6 +18,14 @@ use crate::{
 };
 
 impl vehicle::Vehicle {
+    pub fn all() -> Vec<vehicle::VehicleContainer> {
+        Resource::with_base_objects_ref(|v, _| v.vehicle.all())
+    }
+
+    pub fn get_by_id(id: EntityId) -> SomeResult<vehicle::VehicleContainer> {
+        get_entity_by_id!(AnyEntity::Vehicle, id).ok_or(anyhow::anyhow!("No vehicle with id: {id}"))
+    }
+
     pub fn new(
         model: impl IntoHash,
         pos: impl IntoVector3,
@@ -43,10 +51,6 @@ impl vehicle::Vehicle {
         };
 
         Ok(vehicle::add_to_pool!(ptr))
-    }
-
-    pub fn get_by_id(id: EntityId) -> SomeResult<vehicle::VehicleContainer> {
-        get_entity_by_id!(AnyEntity::Vehicle, id).ok_or(anyhow::anyhow!("No vehicle with id: {id}"))
     }
 
     pub fn destroy(&self) -> VoidResult {

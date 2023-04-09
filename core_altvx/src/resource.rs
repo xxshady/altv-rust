@@ -1,5 +1,5 @@
 use std::{
-    cell::{RefCell, RefMut},
+    cell::{Ref, RefCell, RefMut},
     rc::Rc,
 };
 
@@ -134,6 +134,7 @@ impl Resource {
     impl_borrow_mut_fn!(local_script_events, script_events::LocalEventManager);
     impl_borrow_mut_fn!(client_script_events, script_events::ClientEventManager);
     impl_borrow_mut_fn!(base_objects, base_objects::Store);
+    impl_borrow_fn!(base_objects, base_objects::Store);
     impl_borrow_mut_fn!(
         pending_base_object_destroy_or_creation,
         base_objects::PendingDestroyOrCreation

@@ -4,7 +4,7 @@ use std::{collections::HashMap, fmt::Debug, ptr::NonNull};
 use super::base_object::BaseObjectContainer;
 
 pub(crate) struct BaseObjectManager<T> {
-    pub(crate) objects: HashMap<NonNull<T>, BaseObjectContainer<T>>,
+    objects: HashMap<NonNull<T>, BaseObjectContainer<T>>,
 }
 
 impl<T> BaseObjectManager<T> {
@@ -36,6 +36,11 @@ impl<T> BaseObjectManager<T> {
 
     pub fn has(&self, ptr: NonNull<T>) -> bool {
         self.objects.contains_key(&ptr)
+    }
+
+    pub fn all(&self) -> Vec<BaseObjectContainer<T>> {
+        // TODO: dont clone it on every access?
+        self.objects.values().cloned().collect()
     }
 }
 

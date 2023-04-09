@@ -1,8 +1,4 @@
-use crate::{
-    base_objects::player,
-    vector::{Vector2, Vector3},
-    SomeResult,
-};
+use crate::vector::{Vector2, Vector3};
 use altv_sdk::ffi as sdk;
 use autocxx::prelude::*;
 
