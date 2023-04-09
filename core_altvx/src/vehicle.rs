@@ -49,7 +49,7 @@ impl vehicle::Vehicle {
         get_entity_by_id!(AnyEntity::Vehicle, id).ok_or(anyhow::anyhow!("No vehicle with id: {id}"))
     }
 
-    pub fn destroy(&mut self) -> VoidResult {
+    pub fn destroy(&self) -> VoidResult {
         vehicle::remove_from_pool!(self)?;
         self.internal_destroy()
     }

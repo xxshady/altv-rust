@@ -117,7 +117,7 @@ impl col_shape::ColShape {
         Ok(altv_sdk::ColShapeType::from(raw).unwrap())
     }
 
-    pub fn destroy(&mut self) -> VoidResult {
+    pub fn destroy(&self) -> VoidResult {
         col_shape::remove_from_pool!(self)?;
         self.internal_destroy()
     }

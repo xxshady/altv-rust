@@ -45,7 +45,7 @@ impl virtual_entity::VirtualEntity {
         Ok(group)
     }
 
-    pub fn destroy(&mut self) -> VoidResult {
+    pub fn destroy(&self) -> VoidResult {
         virtual_entity::remove_from_pool!(self)?;
         self.internal_destroy()
     }

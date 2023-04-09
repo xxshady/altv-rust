@@ -20,7 +20,7 @@ impl virtual_entity_group::VirtualEntityGroup {
     }
 
     // cannot be destroyed
-    // pub fn destroy(&mut self) -> VoidResult {
+    // pub fn destroy(&self) -> VoidResult {
     //     virtual_entity_group::remove_from_pool!(self)?;
     //     self.internal_destroy()
     // }
