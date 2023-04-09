@@ -530,6 +530,7 @@ impl StartProjectileEvent {
     }
 }
 
+#[derive(Debug)]
 pub struct FireEvent {
     pub player: player::PlayerContainer,
     pub fires: Vec<structs::FireInfo>,
