@@ -349,8 +349,6 @@ pub struct PlayerWeaponChange {
     pub player: player::PlayerContainer,
     pub new_weapon_hash: Hash,
     pub old_weapon_hash: Hash,
-
-    cancellable: CancellableEvent,
 }
 
 impl PlayerWeaponChange {
@@ -364,13 +362,7 @@ impl PlayerWeaponChange {
             ),
             new_weapon_hash: sdk::CPlayerWeaponChangeEvent::GetNewWeapon(event),
             old_weapon_hash: sdk::CPlayerWeaponChangeEvent::GetOldWeapon(event),
-
-            cancellable: CancellableEvent::new(base_event),
         }
-    }
-
-    pub fn cancel(&self) -> VoidResult {
-        self.cancellable.cancel()
     }
 }
 
