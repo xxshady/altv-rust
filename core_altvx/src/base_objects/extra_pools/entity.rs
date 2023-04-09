@@ -35,10 +35,10 @@ pub trait Entity: BasePtr {
 impl EntityPool {
     pub fn add(&mut self, entity: AnyEntity) {
         let id = match &entity {
-            AnyEntity::Player(p) => p.borrow().id(),
-            AnyEntity::Vehicle(v) => v.borrow().id(),
-        };
-        let id = id.unwrap();
+            AnyEntity::Player(p) => p.id(),
+            AnyEntity::Vehicle(v) => v.id(),
+        }
+        .unwrap();
         logger::debug!("add entity id: {id}");
 
         self.base_objects.insert(id, entity);

@@ -5,7 +5,7 @@ pub use alt::prelude::*;
 #[alt::main(crate_name = "alt")]
 pub fn main() {
     // TODO: fix backtrace panic
-    std::env::set_var("RUST_BACKTRACE", "0");
+    std::env::set_var("RUST_BACKTRACE", "full");
 
     // alt::set_timeout(
     //     move || {
@@ -16,7 +16,7 @@ pub fn main() {
     //         alt::log!("~gl~valid: {valid}");
     //         alt::log!("~gl~created entity {vehicle:?}");
 
-    //         alt::log!("pos {:?}", vehicle.try_borrow()?.pos()?);
+    //         alt::log!("pos {:?}", vehicle.pos()?);
 
     //         alt::set_timeout(
     //             move || {
@@ -57,18 +57,35 @@ pub fn main() {
     // )
     // .unwrap();
 
-    let maybe_player: Rc<RefCell<Option<alt::PlayerContainer>>> = Rc::new(RefCell::new(None));
+    let maybe_player: RefCell<Option<alt::PlayerContainer>> = RefCell::new(None);
 
     let maybe_p = maybe_player.clone();
     alt::events::on_client("test", move |player, _args| {
         maybe_p.borrow_mut().replace(player.clone());
-        let p = player;
-        let player = p.borrow();
-        alt::events::emit_client!("test", p.clone(), "emit single")?;
-        alt::events::emit_some_clients!("test", vec![p.clone(), p.clone()], "emit some")?;
+        alt::events::emit_client!("test", player.clone(), "emit single")?;
+        alt::events::emit_some_clients!("test", vec![player.clone(), player.clone()], "emit some")?;
         alt::events::emit_all_clients!("test", "emit all")?;
 
         player.spawn("player_two", (0, 0, 72))?;
+
+        let p = player.clone();
+        alt::set_timeout(
+            move || {
+                p.set_dimension(1)?;
+                Ok(())
+            },
+            1500,
+        );
+
+        let p = player.clone();
+        alt::set_timeout(
+            move || {
+                p.set_dimension(0)?;
+                Ok(())
+            },
+            2500,
+        );
+
         Ok(())
     });
 
@@ -81,8 +98,8 @@ pub fn main() {
     alt::events::on_vehicle_enter_col_shape(|c| {
         alt::log!(
             "on_vehicle_enter_col_shape: {:?} {}",
-            c.col_shape.try_borrow()?.col_shape_type()?,
-            c.vehicle.borrow().id().unwrap()
+            c.col_shape.col_shape_type()?,
+            c.vehicle.id().unwrap()
         );
         Ok(())
     });
@@ -90,32 +107,30 @@ pub fn main() {
     alt::events::on_vehicle_leave_col_shape(|c| {
         alt::log!(
             "on_vehicle_leave_col_shape: {:?} {}",
-            c.col_shape.try_borrow()?.col_shape_type()?,
-            c.vehicle.borrow().id().unwrap()
+            c.col_shape.col_shape_type()?,
+            c.vehicle.id().unwrap()
         );
 
         Ok(())
     });
 
     alt::events::on_player_enter_col_shape(|c| {
-        let p = c.player.borrow();
         alt::log!(
             "on_player_enter_col_shape: {:?} {} {:?}",
-            c.col_shape.try_borrow()?.col_shape_type()?,
-            p.name()?,
-            p.pos()?
+            c.col_shape.col_shape_type()?,
+            c.player.name()?,
+            c.player.pos()?
         );
 
         Ok(())
     });
 
     alt::events::on_player_leave_col_shape(|c| {
-        let p = c.player.borrow();
         alt::log!(
             "on_player_leave_col_shape: {:?} {} {:?}",
-            c.col_shape.try_borrow()?.col_shape_type()?,
-            p.name()?,
-            p.pos()?
+            c.col_shape.col_shape_type()?,
+            c.player.name()?,
+            c.player.pos()?
         );
 
         Ok(())
@@ -130,12 +145,13 @@ pub fn main() {
     );
 
     alt::ColShape::new_rectangle(alt::Vector2::new(9., 9.), alt::Vector2::new(15., 15.));
-    // poly.borrow().set_players_only(true).unwrap();
+    // poly.set_players_only(true).unwrap();
 
     alt::ColShape::new_cylinder((9., 5., 70.), 1., 5.);
     alt::ColShape::new_cylinder((9, 5, 70), 1., 5.);
 
     let veh = alt::Vehicle::new("sultan2", alt::Vector3::new(0., 2., 72.), 0).unwrap();
+    let _veh = alt::Vehicle::new("towtruck", alt::Vector3::new(0., 2., 72.), 0).unwrap();
 
     alt::events::on_console_command(move |c| {
         let "isin" = c.name.as_str() else {
@@ -145,10 +161,10 @@ pub fn main() {
 
         alt::log!(
             "player is in: {} veh is in: {}",
-            poly.try_borrow()?.is_entity_in(alt::AnyEntity::Player(
+            poly.is_entity_in(alt::AnyEntity::Player(
                 maybe_player.borrow().as_ref().unwrap().clone()
             ))?,
-            poly.try_borrow()?.is_entity_in(veh.clone())?
+            poly.is_entity_in(veh.clone())?
         );
 
         Ok(())
@@ -156,10 +172,10 @@ pub fn main() {
 
     alt::events::on_weapon_damage(|c| {
         let target = match &c.target {
-            alt::AnyEntity::Player(p) => p.try_borrow()?.name()?,
+            alt::AnyEntity::Player(p) => p.name()?,
             _ => unreachable!(),
         };
-        let source = c.source.try_borrow()?.name()?;
+        let source = c.source.name()?;
 
         dbg!(
             "weapon damage",
@@ -177,11 +193,11 @@ pub fn main() {
     });
 
     alt::events::on_player_death(|c| {
-        let player = c.player.try_borrow()?;
+        let player = c.player.clone();
 
         let killer = match &c.killer {
             None => "None".to_string(),
-            Some(alt::AnyEntity::Player(p)) => format!("player: {}", p.try_borrow()?.name()?),
+            Some(alt::AnyEntity::Player(p)) => format!("player: {}", p.name()?),
             Some(alt::AnyEntity::Vehicle(_)) => "vehicle".to_string(),
         };
 
@@ -196,7 +212,6 @@ pub fn main() {
         let player = c.player.clone();
         alt::set_timeout(
             move || {
-                let player = player.try_borrow()?;
                 player.spawn(player.model()?, (0, 0, 72))?;
                 alt::log!("~gl~respawned");
                 Ok(())
@@ -210,6 +225,53 @@ pub fn main() {
     alt::events::on_player_connect_denied(|c| {
         alt::log!("on_player_connect_denied");
         dbg!(c);
+        Ok(())
+    });
+
+    macro_rules! ev {
+        ($event: ident) => {
+            alt::events::$event(|c| {
+                alt::log!("{}", stringify!($event));
+                dbg!(c);
+                Ok(())
+            });
+        };
+    }
+
+    macro_rules! ev_cancel {
+        ($event: ident) => {
+            alt::events::$event(|c| {
+                alt::log!("{}", stringify!($event));
+                dbg!(c);
+                c.cancel()?;
+                Ok(())
+            });
+        };
+    }
+
+    ev_cancel!(on_explosion);
+    ev_cancel!(on_start_fire);
+    ev_cancel!(on_start_projectile);
+    ev!(on_player_weapon_change);
+    ev!(on_player_spawn);
+    ev!(on_player_damage);
+    ev!(on_player_dimension_change);
+    ev!(on_player_interior_change);
+    ev!(on_player_request_control);
+    ev!(on_player_enter_vehicle);
+
+    alt::events::on_player_disconnect(|c| {
+        alt::log!("player ~rl~disconnect~w~: {}", c.player.name()?);
+
+        let p = c.player.clone();
+        alt::set_interval(
+            move || {
+                alt::log!("player name: {}", p.name()?);
+                Ok(())
+            },
+            3000,
+        );
+
         Ok(())
     });
 }

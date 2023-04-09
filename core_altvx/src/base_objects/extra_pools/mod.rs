@@ -35,8 +35,8 @@ pub mod wrappers {
     impl AnyEntity {
         pub(crate) fn raw_ptr(&self) -> SomeResult<EntityRawPtr> {
             match self {
-                AnyEntity::Player(e) => base_ptr_to_entity_raw_ptr(e.try_borrow()?.base_ptr()?),
-                AnyEntity::Vehicle(e) => base_ptr_to_entity_raw_ptr(e.try_borrow()?.base_ptr()?),
+                AnyEntity::Player(e) => base_ptr_to_entity_raw_ptr(e.base_ptr()?),
+                AnyEntity::Vehicle(e) => base_ptr_to_entity_raw_ptr(e.base_ptr()?),
             }
         }
     }

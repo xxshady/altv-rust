@@ -2,29 +2,17 @@ use std::{cell::RefCell, fmt::Debug, ptr::NonNull, rc::Rc};
 
 use crate::{resource::Resource, sdk, SomeResult, VoidResult};
 
-pub(crate) type BaseObjectContainer<BaseObjectStruct> = Rc<RefCell<BaseObject<BaseObjectStruct>>>;
-
-pub struct BaseObject<BaseObjectStruct> {
-    ptr: Option<NonNull<BaseObjectStruct>>,
+pub struct BaseObject<T> {
+    ptr: Option<NonNull<T>>,
     base_ptr: Option<altv_sdk::BaseObjectMutPtr>,
 }
 
-impl<BaseObjectStruct> BaseObject<BaseObjectStruct> {
-    pub(crate) fn _new(
-        ptr: NonNull<BaseObjectStruct>,
-        base_ptr: altv_sdk::BaseObjectMutPtr,
-    ) -> BaseObjectContainer<BaseObjectStruct> {
-        Rc::new(RefCell::new(Self {
-            ptr: Some(ptr),
-            base_ptr: Some(base_ptr),
-        }))
-    }
-
-    pub(crate) fn ptr(&self) -> SomeResult<NonNull<BaseObjectStruct>> {
+impl<T> BaseObject<T> {
+    pub(crate) fn ptr(&self) -> SomeResult<NonNull<T>> {
         self.ptr.ok_or(anyhow::anyhow!("base object ptr is none"))
     }
 
-    pub(crate) fn raw_ptr(&self) -> SomeResult<*mut BaseObjectStruct> {
+    pub(crate) fn raw_ptr(&self) -> SomeResult<*mut T> {
         Ok(self.ptr()?.as_ptr())
     }
 
@@ -59,7 +47,7 @@ pub trait BasePtr {
     fn raw_base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectRawMutPtr>;
 }
 
-impl<BaseObjectStruct> BasePtr for BaseObject<BaseObjectStruct> {
+impl<T> BasePtr for BaseObject<T> {
     fn base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectMutPtr> {
         if let Some(base_ptr) = self.base_ptr {
             Ok(base_ptr)
@@ -79,4 +67,47 @@ pub trait ValidBaseObject: BasePtr {
     }
 }
 
-impl<BaseObjectStruct> ValidBaseObject for BaseObject<BaseObjectStruct> {}
+impl<T> ValidBaseObject for BaseObject<T> {}
+
+pub(crate) type BaseObjectContainer<T> = Rc<BaseObjectWrapper<T>>;
+
+pub struct BaseObjectWrapper<T> {
+    pub(crate) value: RefCell<BaseObject<T>>,
+}
+
+impl<T> BaseObjectWrapper<T> {
+    pub(crate) fn _new(
+        ptr: NonNull<T>,
+        base_ptr: altv_sdk::BaseObjectMutPtr,
+    ) -> BaseObjectContainer<T> {
+        Rc::new(Self {
+            value: RefCell::new(BaseObject {
+                ptr: Some(ptr),
+                base_ptr: Some(base_ptr),
+            }),
+        })
+    }
+
+    pub(crate) fn ptr(&self) -> SomeResult<NonNull<T>> {
+        self.value.try_borrow()?.ptr()
+    }
+
+    pub(crate) fn raw_ptr(&self) -> SomeResult<*mut T> {
+        self.value.try_borrow()?.raw_ptr()
+    }
+
+    pub(crate) fn internal_destroy(&self) -> VoidResult {
+        self.value.try_borrow_mut()?.internal_destroy()
+    }
+}
+
+impl<T> BasePtr for BaseObjectWrapper<T> {
+    fn base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectMutPtr> {
+        self.value.try_borrow()?.base_ptr()
+    }
+
+    fn raw_base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectRawMutPtr> {
+        self.value.try_borrow()?.raw_base_ptr()
+    }
+}
+impl<T> ValidBaseObject for BaseObjectWrapper<T> {}

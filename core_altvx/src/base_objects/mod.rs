@@ -3,8 +3,8 @@ pub(crate) mod extra_pools;
 mod manager;
 mod objects;
 
-pub(crate) use base_object::BaseObject;
 pub(crate) use base_object::BaseObjectContainer;
+pub(crate) use base_object::BaseObjectWrapper;
 pub(crate) use base_object::BasePtr;
 pub use base_object::ValidBaseObject;
 pub(crate) use manager::BaseObjectManager;

@@ -1,8 +1,8 @@
 use crate::base_objects::extra_pools::ExtraPools;
-use std::cell::RefMut;
 use std::ptr::NonNull;
+use std::{cell::RefMut, fmt::Debug};
 
-use super::{BaseObject, BaseObjectContainer, BaseObjectManager};
+use super::{BaseObjectContainer, BaseObjectManager, BaseObjectWrapper};
 use crate::sdk;
 
 macro_rules! base_objects {
@@ -21,11 +21,17 @@ macro_rules! base_objects {
             pub mod $manager_name_snake {
                 use super::*;
 
-                pub type $manager_name = BaseObject<$name_struct>;
+                pub type $manager_name = BaseObjectWrapper<$name_struct>;
                 pub type $name_struct = sdk::alt::[<I $manager_name>];
                 pub type $name_container = BaseObjectContainer<$name_struct>;
                 #[allow(dead_code)]
                 pub type $name_ptr = NonNull<$name_struct>;
+
+                impl Debug for $manager_name {
+                    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(f, "{} {{ ... }}", stringify!($manager_name))
+                    }
+                }
 
                 #[macro_export]
                 macro_rules! [<__ $manager_name_snake _remove_from_pool>] {
@@ -219,7 +225,7 @@ base_objects!(
     ],
 );
 
-impl std::fmt::Debug for Store {
+impl Debug for Store {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "base objects Store")
     }

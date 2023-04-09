@@ -17,7 +17,7 @@ impl virtual_entity::VirtualEntity {
         let pos = pos.into_vector3();
         let ptr = unsafe {
             sdk::ICore::CreateVirtualEntity(
-                group.try_borrow()?.ptr()?.as_ptr(),
+                group.raw_ptr()?,
                 pos.x(),
                 pos.y(),
                 pos.z(),

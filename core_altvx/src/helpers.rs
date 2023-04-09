@@ -53,10 +53,6 @@ pub fn hash(str: &str) -> u32 {
     (num + (num << 15)).0
 }
 
-pub fn get_player_raw_ptr(player: player::PlayerContainer) -> SomeResult<*mut sdk::alt::IPlayer> {
-    player.try_borrow()?.raw_ptr()
-}
-
 pub trait IntoString {
     fn into_string(self) -> String;
 }

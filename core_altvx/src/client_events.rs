@@ -1,6 +1,5 @@
 use crate::{
     base_objects::player,
-    helpers::get_player_raw_ptr,
     mvalue::{convert_player_vec_to_cpp_vec, convert_vec_to_mvalue_vec, Serializable},
     VoidResult,
 };
@@ -54,7 +53,7 @@ pub fn emit_client(
 ) -> VoidResult {
     unsafe {
         sdk::trigger_client_event(
-            get_player_raw_ptr(player)?,
+            player.raw_ptr()?,
             event_name,
             convert_vec_to_mvalue_vec(args),
         );
@@ -64,11 +63,7 @@ pub fn emit_client(
 
 pub fn emit_client_without_args(event_name: &str, player: player::PlayerContainer) -> VoidResult {
     unsafe {
-        sdk::trigger_client_event(
-            get_player_raw_ptr(player)?,
-            event_name,
-            sdk::create_mvalue_vec(),
-        );
+        sdk::trigger_client_event(player.raw_ptr()?, event_name, sdk::create_mvalue_vec());
     }
     Ok(())
 }

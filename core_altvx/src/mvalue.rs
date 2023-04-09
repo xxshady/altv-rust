@@ -2,7 +2,7 @@ use crate::{
     base_objects::{
         col_shape, player, vehicle, virtual_entity, virtual_entity_group, AnyBaseObject, BasePtr,
     },
-    helpers::{get_player_raw_ptr, read_cpp_vector2, read_cpp_vector3},
+    helpers::{read_cpp_vector2, read_cpp_vector3},
     resource::Resource,
     vector::{Vector2, Vector3},
     SomeResult,
@@ -74,7 +74,6 @@ macro_rules! impl_serializable_base_object {
             type Error = anyhow::Error;
 
             fn try_from(base_object: $base_object) -> SomeResult<Self> {
-                let base_object = base_object.try_borrow_mut()?;
                 let Ok(ptr) = base_object.base_ptr() else {
                                     anyhow::bail!("{} base object is destroyed", $short_name);
                                 };
@@ -125,7 +124,7 @@ pub fn convert_player_vec_to_cpp_vec(
 
     for player in vec {
         unsafe {
-            sdk::push_to_player_vec(cpp_vec.as_mut().unwrap(), get_player_raw_ptr(player)?);
+            sdk::push_to_player_vec(cpp_vec.as_mut().unwrap(), player.raw_ptr()?);
         }
     }
 
