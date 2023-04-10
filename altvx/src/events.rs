@@ -28,6 +28,8 @@ macro_rules! on_custom_event {
 on_sdk_event!(on_server_started, ServerStarted);
 on_sdk_event!(on_console_command, ConsoleCommandEvent);
 
+on_sdk_event!(on_net_owner_change, NetownerChange);
+
 on_sdk_event!(on_weapon_damage, WeaponDamageEvent);
 on_sdk_event!(on_player_connect, PlayerConnect);
 on_sdk_event!(on_player_disconnect, PlayerDisconnect);

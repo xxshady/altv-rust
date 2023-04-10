@@ -6,6 +6,7 @@ use lazycell::LazyCell;
 
 use crate::{
     base_objects::{col_shape, player, vehicle},
+    events::helpers::get_player_from_event,
     exports::{AnyEntity, Vector3},
     helpers::{read_cpp_vector3, Hash},
     mvalue,
@@ -18,7 +19,7 @@ use super::{
     connection_queue::{ConnectionQueueController, ConnectionQueueInfo},
     helpers::{
         base_event_to_specific, get_entity_from_event, get_non_null_entity_from_event,
-        get_player_from_event, get_vehicle_from_event,
+        get_non_null_player_from_event, get_vehicle_from_event,
     },
     structs,
 };
@@ -32,7 +33,10 @@ impl PlayerConnect {
     pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
         let event = base_event_to_specific!(event, CPlayerConnectEvent);
         Self {
-            player: get_player_from_event(sdk::CPlayerConnectEvent::GetTarget(event), resource),
+            player: get_non_null_player_from_event(
+                sdk::CPlayerConnectEvent::GetTarget(event),
+                resource,
+            ),
         }
     }
 }
@@ -47,7 +51,10 @@ impl PlayerDisconnect {
     pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
         let event = sdk::events::to_CPlayerDisconnectEvent(event);
         Self {
-            player: get_player_from_event(sdk::CPlayerDisconnectEvent::GetTarget(event), resource),
+            player: get_non_null_player_from_event(
+                sdk::CPlayerDisconnectEvent::GetTarget(event),
+                resource,
+            ),
             reason: sdk::CPlayerDisconnectEvent::GetReason(event).to_string(),
         }
     }
@@ -129,7 +136,8 @@ impl ClientScriptEvent {
     pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
         let event = base_event_to_specific!(event, CClientScriptEvent);
         let name = sdk::CClientScriptEvent::GetName(event).to_string();
-        let player = get_player_from_event(sdk::CClientScriptEvent::GetTarget(event), resource);
+        let player =
+            get_non_null_player_from_event(sdk::CClientScriptEvent::GetTarget(event), resource);
 
         Self {
             name,
@@ -190,7 +198,7 @@ impl WeaponDamageEvent {
         let weapon_event = base_event_to_specific!(event, CWeaponDamageEvent);
 
         Self {
-            source: get_player_from_event(
+            source: get_non_null_player_from_event(
                 sdk::CWeaponDamageEvent::GetSource(weapon_event),
                 resource,
             ),
@@ -243,7 +251,10 @@ impl PlayerDeath {
         let event = base_event_to_specific!(event, CPlayerDeathEvent);
 
         Self {
-            player: get_player_from_event(sdk::CPlayerDeathEvent::GetTarget(event), resource),
+            player: get_non_null_player_from_event(
+                sdk::CPlayerDeathEvent::GetTarget(event),
+                resource,
+            ),
             killer: get_entity_from_event(sdk::CPlayerDeathEvent::GetKiller(event), resource),
             weapon_hash: sdk::CPlayerDeathEvent::GetWeapon(event),
         }
@@ -263,7 +274,10 @@ impl PlayerDamage {
         let event = base_event_to_specific!(event, CPlayerDamageEvent);
 
         Self {
-            player: get_player_from_event(sdk::CPlayerDamageEvent::GetTarget(event), resource),
+            player: get_non_null_player_from_event(
+                sdk::CPlayerDamageEvent::GetTarget(event),
+                resource,
+            ),
             attacker: get_entity_from_event(sdk::CPlayerDamageEvent::GetAttacker(event), resource),
             health_damage: sdk::CPlayerDamageEvent::GetHealthDamage(event),
             armour_damage: sdk::CPlayerDamageEvent::GetArmourDamage(event),
@@ -277,7 +291,7 @@ macro_rules! player_enter_or_leave_vehicle {
             let event = base_event_to_specific!(event, $event);
 
             Self {
-                player: get_player_from_event(sdk::$event::GetPlayer(event), resource),
+                player: get_non_null_player_from_event(sdk::$event::GetPlayer(event), resource),
                 vehicle: get_vehicle_from_event(sdk::$event::GetTarget(event), resource),
                 seat: sdk::$event::GetSeat(event),
             }
@@ -331,7 +345,7 @@ impl PlayerChangeVehicleSeat {
         let event = base_event_to_specific!(event, CPlayerChangeVehicleSeatEvent);
 
         Self {
-            player: get_player_from_event(
+            player: get_non_null_player_from_event(
                 sdk::CPlayerChangeVehicleSeatEvent::GetPlayer(event),
                 resource,
             ),
@@ -357,7 +371,7 @@ impl PlayerWeaponChange {
         let event = base_event_to_specific!(base_event, CPlayerWeaponChangeEvent);
 
         Self {
-            player: get_player_from_event(
+            player: get_non_null_player_from_event(
                 sdk::CPlayerWeaponChangeEvent::GetTarget(event),
                 resource,
             ),
@@ -412,7 +426,10 @@ impl PlayerSpawn {
         let event = base_event_to_specific!(event, CPlayerSpawnEvent);
 
         Self {
-            player: get_player_from_event(sdk::CPlayerSpawnEvent::GetPlayer(event), resource),
+            player: get_non_null_player_from_event(
+                sdk::CPlayerSpawnEvent::GetPlayer(event),
+                resource,
+            ),
         }
     }
 }
@@ -428,7 +445,7 @@ impl PlayerRequestControl {
         let event = base_event_to_specific!(event, CPlayerRequestControlEvent);
 
         Self {
-            player: get_player_from_event(
+            player: get_non_null_player_from_event(
                 sdk::CPlayerRequestControlEvent::GetPlayer(event),
                 resource,
             ),
@@ -453,7 +470,7 @@ impl PlayerDimensionChange {
         let event = base_event_to_specific!(event, CPlayerDimensionChangeEvent);
 
         Self {
-            player: get_player_from_event(
+            player: get_non_null_player_from_event(
                 sdk::CPlayerDimensionChangeEvent::GetTarget(event),
                 resource,
             ),
@@ -475,7 +492,7 @@ impl PlayerChangeInteriorEvent {
         let event = base_event_to_specific!(event, CPlayerChangeInteriorEvent);
 
         Self {
-            player: get_player_from_event(
+            player: get_non_null_player_from_event(
                 sdk::CPlayerChangeInteriorEvent::GetTarget(event),
                 resource,
             ),
@@ -502,7 +519,7 @@ impl StartProjectileEvent {
 
         use sdk::CStartProjectileEvent::*;
         Self {
-            player: get_player_from_event(GetSource(event), resource),
+            player: get_non_null_player_from_event(GetSource(event), resource),
             weapon_hash: GetWeaponHash(event),
             ammo_hash: GetAmmoHash(event),
             pos: {
@@ -537,7 +554,7 @@ impl FireEvent {
 
         use sdk::CFireEvent::*;
         Self {
-            player: get_player_from_event(GetSource(event), resource),
+            player: get_non_null_player_from_event(GetSource(event), resource),
             fires: {
                 GetFires(event)
                     .iter()
@@ -579,7 +596,7 @@ impl ExplosionEvent {
 
         use sdk::CExplosionEvent::*;
         Self {
-            player: get_player_from_event(GetSource(event), resource),
+            player: get_non_null_player_from_event(GetSource(event), resource),
             target: get_entity_from_event(GetTarget(event), resource),
             pos: {
                 let raw = GetPosition(event).within_unique_ptr();
@@ -767,7 +784,7 @@ impl VehicleHorn {
         use sdk::CVehicleHornEvent::*;
         Self {
             vehicle: get_vehicle_from_event(GetTarget(event), resource),
-            player: get_player_from_event(GetReporter(event), resource),
+            player: get_non_null_player_from_event(GetReporter(event), resource),
             state: GetToggle(event),
         }
     }
@@ -786,6 +803,26 @@ impl VehicleSiren {
         Self {
             vehicle: get_vehicle_from_event(sdk::CVehicleSirenEvent::GetTarget(event), resource),
             state: sdk::CVehicleSirenEvent::GetToggle(event),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct NetownerChange {
+    pub entity: AnyEntity,
+    pub new_net_owner: Option<player::PlayerContainer>,
+    pub old_net_owner: Option<player::PlayerContainer>,
+}
+
+impl NetownerChange {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CNetOwnerChangeEvent);
+
+        use sdk::CNetOwnerChangeEvent::*;
+        Self {
+            entity: get_non_null_entity_from_event(event, resource, GetTarget),
+            new_net_owner: get_player_from_event(GetNewOwner(event), resource),
+            old_net_owner: get_player_from_event(GetOldOwner(event), resource),
         }
     }
 }

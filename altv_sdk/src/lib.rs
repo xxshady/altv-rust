@@ -29,6 +29,9 @@ pub mod ffi {
         #include "alt_classes/IVirtualEntityGroup.h"
         #include "alt_classes/CWeaponDamageEvent.h"
 
+        // entity
+        #include "alt_classes/CNetOwnerChangeEvent.h"
+
         // player
         #include "alt_classes/CPlayerDeathEvent.h"
         #include "alt_classes/CPlayerDamageEvent.h"
@@ -81,6 +84,8 @@ pub mod ffi {
         generate_ns!("CColShapeEvent")
         generate_ns!("IVirtualEntity")
         generate_ns!("IVirtualEntityGroup")
+
+        generate_ns!("CNetOwnerChangeEvent")
 
         generate_ns!("CPlayerDeathEvent")
         generate_ns!("CPlayerDamageEvent")

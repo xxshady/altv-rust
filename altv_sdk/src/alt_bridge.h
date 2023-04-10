@@ -781,4 +781,9 @@ namespace events
         assert(event->GetType() == alt::CEvent::Type::VEHICLE_SIREN);
         return static_cast<const alt::CVehicleSirenEvent*>(event);
     }
+
+    const alt::CNetOwnerChangeEvent* to_CNetOwnerChangeEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::NETOWNER_CHANGE);
+        return static_cast<const alt::CNetOwnerChangeEvent*>(event);
+    }
 } // namespace events

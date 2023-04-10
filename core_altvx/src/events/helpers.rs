@@ -19,18 +19,28 @@ macro_rules! __base_event_to_specific {
 }
 pub use __base_event_to_specific as base_event_to_specific;
 
-pub fn get_player_from_event(
+pub fn get_non_null_player_from_event(
     ptr: *mut sdk::alt::IPlayer,
     resource: &Resource,
 ) -> player::PlayerContainer {
-    let ptr = NonNull::new(ptr).unwrap();
+    get_player_from_event(ptr, resource).unwrap()
+}
 
-    resource
+pub fn get_player_from_event(
+    ptr: *mut sdk::alt::IPlayer,
+    resource: &Resource,
+) -> Option<player::PlayerContainer> {
+    let Some(ptr) = NonNull::new(ptr) else {
+        return None;
+    };
+
+    let player = resource
         .base_objects
         .borrow()
         .player
         .get_by_ptr(ptr)
-        .unwrap()
+        .unwrap();
+    Some(player)
 }
 
 pub fn get_vehicle_from_event(

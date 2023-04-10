@@ -156,6 +156,12 @@ fn main() {
         "../altv_sdk/cpp-sdk/events/CConnectionQueueRemoveEvent.h",
     );
 
+    // entity
+    gen_default(
+        "CNetOwnerChangeEvent",
+        "../altv_sdk/cpp-sdk/events/CNetOwnerChangeEvent.h",
+    );
+
     // player
     gen_default(
         "CPlayerConnectEvent",

@@ -226,6 +226,8 @@ supported_sdk_events!(
     ServerScriptEvent,
     ClientScriptEvent,
     ConsoleCommandEvent,
+
+    NetownerChange,
     
     PlayerConnect,
     PlayerDisconnect,
