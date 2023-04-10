@@ -751,4 +751,34 @@ namespace events
         assert(event->GetType() == alt::CEvent::Type::CONNECTION_QUEUE_REMOVE);
         return static_cast<const alt::CConnectionQueueRemoveEvent*>(event);
     }
+
+    const alt::CVehicleAttachEvent* to_CVehicleAttachEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::VEHICLE_ATTACH);
+        return static_cast<const alt::CVehicleAttachEvent*>(event);
+    }
+
+    const alt::CVehicleDetachEvent* to_CVehicleDetachEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::VEHICLE_DETACH);
+        return static_cast<const alt::CVehicleDetachEvent*>(event);
+    }
+
+    const alt::CVehicleDestroyEvent* to_CVehicleDestroyEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::VEHICLE_DESTROY);
+        return static_cast<const alt::CVehicleDestroyEvent*>(event);
+    }
+
+    const alt::CVehicleDamageEvent* to_CVehicleDamageEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::VEHICLE_DAMAGE);
+        return static_cast<const alt::CVehicleDamageEvent*>(event);
+    }
+
+    const alt::CVehicleHornEvent* to_CVehicleHornEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::VEHICLE_HORN);
+        return static_cast<const alt::CVehicleHornEvent*>(event);
+    }
+
+    const alt::CVehicleSirenEvent* to_CVehicleSirenEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::VEHICLE_SIREN);
+        return static_cast<const alt::CVehicleSirenEvent*>(event);
+    }
 } // namespace events

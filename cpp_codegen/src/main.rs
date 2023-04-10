@@ -218,11 +218,41 @@ fn main() {
         "../altv_sdk/cpp-sdk/events/CPlayerChangeInteriorEvent.h",
     );
 
+    // vehicle
+    gen_default(
+        "CVehicleAttachEvent",
+        "../altv_sdk/cpp-sdk/events/CVehicleAttachEvent.h",
+    );
+    gen_default(
+        "CVehicleDamageEvent",
+        "../altv_sdk/cpp-sdk/events/CVehicleDamageEvent.h",
+    );
+    gen_default(
+        "CVehicleDestroyEvent",
+        "../altv_sdk/cpp-sdk/events/CVehicleDestroyEvent.h",
+    );
+    gen_default(
+        "CVehicleDetachEvent",
+        "../altv_sdk/cpp-sdk/events/CVehicleDetachEvent.h",
+    );
+    gen_default(
+        "CVehicleHornEvent",
+        "../altv_sdk/cpp-sdk/events/CVehicleHornEvent.h",
+    );
+    gen_default(
+        "CVehicleSirenEvent",
+        "../altv_sdk/cpp-sdk/events/CVehicleSirenEvent.h",
+    );
+
     gen_default(
         "CStartProjectileEvent",
         "../altv_sdk/cpp-sdk/events/CStartProjectileEvent.h",
     );
     gen_default("CFireEvent", "../altv_sdk/cpp-sdk/events/CFireEvent.h");
+    gen_default(
+        "CExplosionEvent",
+        "../altv_sdk/cpp-sdk/events/CExplosionEvent.h",
+    );
     gen_default(
         "CExplosionEvent",
         "../altv_sdk/cpp-sdk/events/CExplosionEvent.h",

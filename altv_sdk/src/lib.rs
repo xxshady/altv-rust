@@ -46,6 +46,13 @@ pub mod ffi {
         #include "alt_classes/CConnectionQueueAddEvent.h"
         #include "alt_classes/CConnectionQueueRemoveEvent.h"
 
+        #include "alt_classes/CVehicleAttachEvent.h"
+        #include "alt_classes/CVehicleDetachEvent.h"
+        #include "alt_classes/CVehicleDestroyEvent.h"
+        #include "alt_classes/CVehicleDamageEvent.h"
+        #include "alt_classes/CVehicleHornEvent.h"
+        #include "alt_classes/CVehicleSirenEvent.h"
+
         #include "alt_classes/CStartProjectileEvent.h"
         #include "alt_classes/CFireEvent.h"
         #include "alt_classes/CExplosionEvent.h"
@@ -90,6 +97,13 @@ pub mod ffi {
         generate_ns!("CPlayerChangeInteriorEvent")
         generate_ns!("CConnectionQueueAddEvent")
         generate_ns!("CConnectionQueueRemoveEvent")
+
+        generate_ns!("CVehicleAttachEvent")
+        generate_ns!("CVehicleDetachEvent")
+        generate_ns!("CVehicleDestroyEvent")
+        generate_ns!("CVehicleDamageEvent")
+        generate_ns!("CVehicleHornEvent")
+        generate_ns!("CVehicleSirenEvent")
 
         generate_ns!("CStartProjectileEvent")
         generate_ns!("CExplosionEvent")

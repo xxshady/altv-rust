@@ -243,6 +243,13 @@ supported_sdk_events!(
     PlayerDimensionChange,
     PlayerChangeInteriorEvent,
 
+    VehicleAttach,
+    VehicleDetach,
+    VehicleDestroy,
+    VehicleDamage,
+    VehicleHorn,
+    VehicleSiren,
+
     StartProjectileEvent,
     FireEvent,
     ExplosionEvent,

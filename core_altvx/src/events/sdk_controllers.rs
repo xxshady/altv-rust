@@ -669,3 +669,123 @@ impl ConnectionQueueRemove {
         self.info.borrow().unwrap()
     }
 }
+
+#[derive(Debug)]
+pub struct VehicleAttach {
+    pub vehicle: vehicle::VehicleContainer,
+    pub attached: vehicle::VehicleContainer,
+}
+
+impl VehicleAttach {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CVehicleAttachEvent);
+
+        Self {
+            vehicle: get_vehicle_from_event(sdk::CVehicleAttachEvent::GetTarget(event), resource),
+            attached: get_vehicle_from_event(
+                sdk::CVehicleAttachEvent::GetAttached(event),
+                resource,
+            ),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct VehicleDetach {
+    pub vehicle: vehicle::VehicleContainer,
+    pub detached: vehicle::VehicleContainer,
+}
+
+impl VehicleDetach {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CVehicleDetachEvent);
+
+        Self {
+            vehicle: get_vehicle_from_event(sdk::CVehicleDetachEvent::GetTarget(event), resource),
+            detached: get_vehicle_from_event(
+                sdk::CVehicleDetachEvent::GetDetached(event),
+                resource,
+            ),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct VehicleDestroy {
+    pub vehicle: vehicle::VehicleContainer,
+}
+
+impl VehicleDestroy {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CVehicleDestroyEvent);
+
+        Self {
+            vehicle: get_vehicle_from_event(sdk::CVehicleDestroyEvent::GetTarget(event), resource),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct VehicleDamage {
+    pub vehicle: vehicle::VehicleContainer,
+    pub damager: Option<AnyEntity>,
+    pub body_health_damage: u32,
+    pub body_additional_health_damage: u32,
+    pub engine_health_damage: u32,
+    pub petrol_tank_health_damage: u32,
+    pub weapon: u32,
+}
+
+impl VehicleDamage {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CVehicleDamageEvent);
+
+        use sdk::CVehicleDamageEvent::*;
+        Self {
+            vehicle: get_vehicle_from_event(GetTarget(event), resource),
+            damager: get_entity_from_event(GetDamager(event), resource),
+            body_health_damage: GetBodyHealthDamage(event),
+            body_additional_health_damage: GetBodyAdditionalHealthDamage(event),
+            engine_health_damage: GetEngineHealthDamage(event),
+            petrol_tank_health_damage: GetPetrolTankHealthDamage(event),
+            weapon: GetDamagedWith(event),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct VehicleHorn {
+    pub vehicle: vehicle::VehicleContainer,
+    pub player: player::PlayerContainer,
+    pub state: bool,
+}
+
+impl VehicleHorn {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CVehicleHornEvent);
+
+        use sdk::CVehicleHornEvent::*;
+        Self {
+            vehicle: get_vehicle_from_event(GetTarget(event), resource),
+            player: get_player_from_event(GetReporter(event), resource),
+            state: GetToggle(event),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct VehicleSiren {
+    pub vehicle: vehicle::VehicleContainer,
+    pub state: bool,
+}
+
+impl VehicleSiren {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CVehicleSirenEvent);
+
+        Self {
+            vehicle: get_vehicle_from_event(sdk::CVehicleSirenEvent::GetTarget(event), resource),
+            state: sdk::CVehicleSirenEvent::GetToggle(event),
+        }
+    }
+}

@@ -44,6 +44,13 @@ on_sdk_event!(on_player_request_control, PlayerRequestControl);
 on_sdk_event!(on_player_dimension_change, PlayerDimensionChange);
 on_sdk_event!(on_player_interior_change, PlayerChangeInteriorEvent);
 
+on_sdk_event!(on_vehicle_attach, VehicleAttach);
+on_sdk_event!(on_vehicle_detach, VehicleDetach);
+on_sdk_event!(on_vehicle_destroy, VehicleDestroy);
+on_sdk_event!(on_vehicle_damage, VehicleDamage);
+on_sdk_event!(on_vehicle_horn, VehicleHorn);
+on_sdk_event!(on_vehicle_siren, VehicleSiren);
+
 on_sdk_event!(on_start_projectile, StartProjectileEvent);
 on_sdk_event!(on_start_fire, FireEvent);
 on_sdk_event!(on_explosion, ExplosionEvent);
