@@ -334,3 +334,10 @@ macro_rules! __serialize_mvalue {
 }
 
 pub use __serialize_mvalue as serialize_mvalue;
+
+pub(crate) fn deserialize_from_sdk(
+    value: impl autocxx::moveit::New<Output = sdk::MValueWrapper>,
+    resource: &Resource,
+) -> MValue {
+    deserialize_mvalue(value.within_unique_ptr().as_ref().unwrap(), resource)
+}

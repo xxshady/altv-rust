@@ -62,6 +62,12 @@ pub mod ffi {
 
         #include "alt_classes/IConnectionInfo.h"
 
+        #include "alt_classes/CMetaChangeEvent.h"
+        #include "alt_classes/CGlobalMetaDataChangeEvent.h"
+        #include "alt_classes/CGlobalSyncedMetaDataChangeEvent.h"
+        #include "alt_classes/CSyncedMetaDataChangeEvent.h"
+        #include "alt_classes/CStreamSyncedMetaDataChangeEvent.h"
+        #include "alt_classes/CLocalMetaDataChangeEvent.h"
 
         name!(alt_bridge)
 
@@ -115,6 +121,13 @@ pub mod ffi {
         generate_ns!("CFireEvent")
 
         generate_ns!("IConnectionInfo")
+
+        generate_ns!("CMetaChangeEvent")
+        generate_ns!("CGlobalMetaDataChangeEvent")
+        generate_ns!("CGlobalSyncedMetaDataChangeEvent")
+        generate_ns!("CSyncedMetaDataChangeEvent")
+        generate_ns!("CStreamSyncedMetaDataChangeEvent")
+        generate_ns!("CLocalMetaDataChangeEvent")
 
         // defined in alt_bridge
         generate_ns!("events")

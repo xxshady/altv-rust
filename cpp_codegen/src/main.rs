@@ -263,6 +263,32 @@ fn main() {
         "CExplosionEvent",
         "../altv_sdk/cpp-sdk/events/CExplosionEvent.h",
     );
+
+    // meta
+    gen_default(
+        "CMetaChangeEvent",
+        "../altv_sdk/cpp-sdk/events/CMetaDataChangeEvent.h",
+    );
+    gen_default(
+        "CGlobalMetaDataChangeEvent",
+        "../altv_sdk/cpp-sdk/events/CGlobalMetaDataChangeEvent.h",
+    );
+    gen_default(
+        "CGlobalSyncedMetaDataChangeEvent",
+        "../altv_sdk/cpp-sdk/events/CGlobalSyncedMetaDataChangeEvent.h",
+    );
+    gen_default(
+        "CSyncedMetaDataChangeEvent",
+        "../altv_sdk/cpp-sdk/events/CSyncedMetaDataChangeEvent.h",
+    );
+    gen_default(
+        "CStreamSyncedMetaDataChangeEvent",
+        "../altv_sdk/cpp-sdk/events/CStreamSyncedMetaDataChangeEvent.h",
+    );
+    gen_default(
+        "CLocalMetaDataChangeEvent",
+        "../altv_sdk/cpp-sdk/events/CLocalMetaDataChangeEvent.h",
+    );
 }
 
 // below is the most shit coded mess ever...

@@ -24,4 +24,29 @@ pub fn main() {
         dbg!(c.info());
         Ok(())
     });
+
+    alt::events::on_global_meta_change(|c| {
+        dbg!(c);
+        Ok(())
+    });
+
+    alt::events::on_global_synced_meta_change(|c| {
+        dbg!(c);
+        Ok(())
+    });
+
+    alt::events::on_synced_meta_change(|c| {
+        dbg!(c);
+        Ok(())
+    });
+
+    alt::events::on_stream_synced_meta_change(|c| {
+        dbg!(c);
+        Ok(())
+    });
+
+    alt::events::on_local_meta_change(|c| {
+        dbg!(c);
+        Ok(())
+    });
 }

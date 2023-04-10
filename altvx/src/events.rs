@@ -60,6 +60,12 @@ on_sdk_event!(on_explosion, ExplosionEvent);
 on_sdk_event!(on_connection_queue_add, ConnectionQueueAdd);
 on_sdk_event!(on_connection_queue_remove, ConnectionQueueRemove);
 
+on_sdk_event!(on_global_meta_change, GlobalMetaChange);
+on_sdk_event!(on_global_synced_meta_change, GlobalSyncedMetaChange);
+on_sdk_event!(on_synced_meta_change, SyncedMetaChange);
+on_sdk_event!(on_stream_synced_meta_change, StreamSyncedMetaChange);
+on_sdk_event!(on_local_meta_change, LocalSyncedMetaChange);
+
 on_custom_event!(on_vehicle_enter_col_shape, VehicleEnterColShape);
 on_custom_event!(on_vehicle_leave_col_shape, VehicleLeaveColShape);
 on_custom_event!(on_player_enter_col_shape, PlayerEnterColShape);

@@ -5,11 +5,11 @@ use autocxx::prelude::*;
 use lazycell::LazyCell;
 
 use crate::{
-    base_objects::{col_shape, player, vehicle},
-    events::helpers::get_player_from_event,
+    base_objects::{col_shape, player, vehicle, AnyBaseObject},
+    events::helpers::{get_non_null_base_object_from_event, get_player_from_event},
     exports::{AnyEntity, Vector3},
     helpers::{read_cpp_vector3, Hash},
-    mvalue,
+    mvalue::{self, MValue},
     resource::Resource,
     VoidResult,
 };
@@ -821,6 +821,112 @@ impl NetownerChange {
             entity: get_non_null_entity_from_event(GetTarget(event), resource),
             new_net_owner: get_player_from_event(GetNewOwner(event), resource),
             old_net_owner: get_player_from_event(GetOldOwner(event), resource),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct GlobalMetaChange {
+    pub key: String,
+    pub new_value: mvalue::MValue,
+    pub old_value: mvalue::MValue,
+}
+
+impl GlobalMetaChange {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CGlobalMetaDataChangeEvent);
+
+        use sdk::CGlobalMetaDataChangeEvent::*;
+        Self {
+            key: GetKey(event).to_string(),
+            new_value: mvalue::deserialize_from_sdk(GetVal(event), resource),
+            old_value: mvalue::deserialize_from_sdk(GetOldVal(event), resource),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct GlobalSyncedMetaChange {
+    pub key: String,
+    pub new_value: mvalue::MValue,
+    pub old_value: mvalue::MValue,
+}
+
+impl GlobalSyncedMetaChange {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CGlobalSyncedMetaDataChangeEvent);
+
+        use sdk::CGlobalSyncedMetaDataChangeEvent::*;
+        Self {
+            key: GetKey(event).to_string(),
+            new_value: mvalue::deserialize_from_sdk(GetVal(event), resource),
+            old_value: mvalue::deserialize_from_sdk(GetOldVal(event), resource),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct SyncedMetaChange {
+    pub key: String,
+    pub entity: AnyEntity,
+    pub new_value: mvalue::MValue,
+    pub old_value: mvalue::MValue,
+}
+
+impl SyncedMetaChange {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CSyncedMetaDataChangeEvent);
+
+        use sdk::CSyncedMetaDataChangeEvent::*;
+        Self {
+            key: GetKey(event).to_string(),
+            new_value: mvalue::deserialize_from_sdk(GetVal(event), resource),
+            entity: get_non_null_entity_from_event(GetTarget(event), resource),
+            old_value: mvalue::deserialize_from_sdk(GetOldVal(event), resource),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct StreamSyncedMetaChange {
+    pub key: String,
+    pub base_object: AnyBaseObject,
+    pub new_value: mvalue::MValue,
+    pub old_value: mvalue::MValue,
+}
+
+impl StreamSyncedMetaChange {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CStreamSyncedMetaDataChangeEvent);
+
+        use sdk::CStreamSyncedMetaDataChangeEvent::*;
+        Self {
+            key: GetKey(event).to_string(),
+            base_object: get_non_null_base_object_from_event(GetTarget(event), resource),
+            new_value: mvalue::deserialize_from_sdk(GetVal(event), resource),
+            old_value: mvalue::deserialize_from_sdk(GetOldVal(event), resource),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct LocalSyncedMetaChange {
+    pub key: String,
+    pub player: player::PlayerContainer,
+    pub new_value: mvalue::MValue,
+    pub old_value: mvalue::MValue,
+}
+
+impl LocalSyncedMetaChange {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CLocalMetaDataChangeEvent);
+
+        use sdk::CLocalMetaDataChangeEvent::*;
+        Self {
+            key: GetKey(event).to_string(),
+            player: get_non_null_player_from_event(GetTarget(event), resource),
+            new_value: mvalue::deserialize_from_sdk(GetVal(event), resource),
+            old_value: mvalue::deserialize_from_sdk(GetOldVal(event), resource),
         }
     }
 }

@@ -258,6 +258,12 @@ supported_sdk_events!(
 
     ConnectionQueueAdd,
     ConnectionQueueRemove,
+
+    GlobalMetaChange,
+    GlobalSyncedMetaChange,
+    SyncedMetaChange,
+    StreamSyncedMetaChange,
+    LocalSyncedMetaChange,
 );
 
 custom_events!(

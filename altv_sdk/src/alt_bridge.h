@@ -786,4 +786,34 @@ namespace events
         assert(event->GetType() == alt::CEvent::Type::NETOWNER_CHANGE);
         return static_cast<const alt::CNetOwnerChangeEvent*>(event);
     }
+
+    const alt::CMetaChangeEvent* to_CMetaChangeEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::META_CHANGE);
+        return static_cast<const alt::CMetaChangeEvent*>(event);
+    }
+
+    const alt::CGlobalMetaDataChangeEvent* to_CGlobalMetaDataChangeEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::GLOBAL_META_CHANGE);
+        return static_cast<const alt::CGlobalMetaDataChangeEvent*>(event);
+    }
+
+    const alt::CGlobalSyncedMetaDataChangeEvent* to_CGlobalSyncedMetaDataChangeEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::GLOBAL_SYNCED_META_CHANGE);
+        return static_cast<const alt::CGlobalSyncedMetaDataChangeEvent*>(event);
+    }
+
+    const alt::CSyncedMetaDataChangeEvent* to_CSyncedMetaDataChangeEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::SYNCED_META_CHANGE);
+        return static_cast<const alt::CSyncedMetaDataChangeEvent*>(event);
+    }
+
+    const alt::CStreamSyncedMetaDataChangeEvent* to_CStreamSyncedMetaDataChangeEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::STREAM_SYNCED_META_CHANGE);
+        return static_cast<const alt::CStreamSyncedMetaDataChangeEvent*>(event);
+    }
+
+    const alt::CLocalMetaDataChangeEvent* to_CLocalMetaDataChangeEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::LOCAL_SYNCED_META_CHANGE);
+        return static_cast<const alt::CLocalMetaDataChangeEvent*>(event);
+    }
 } // namespace events
