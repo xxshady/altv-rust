@@ -57,13 +57,8 @@ pub fn get_vehicle_from_event(
         .unwrap()
 }
 
-pub fn get_non_null_entity_from_event<T>(
-    event: *const T,
-    resource: &Resource,
-    get_target: unsafe fn(*const T) -> EntityRawPtr,
-) -> AnyEntity {
-    let entity = unsafe { get_target(event) };
-    let entity = NonNull::new(entity).unwrap().as_ptr();
+pub fn get_non_null_entity_from_event(ptr: EntityRawPtr, resource: &Resource) -> AnyEntity {
+    let entity = NonNull::new(ptr).unwrap().as_ptr();
     get_entity_from_event(entity, resource).unwrap()
 }
 

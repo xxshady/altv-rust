@@ -87,7 +87,7 @@ impl ColshapeEvent {
 
         Self {
             col_shape,
-            entity: get_non_null_entity_from_event(event, resource, sdk::CColShapeEvent::GetEntity),
+            entity: get_non_null_entity_from_event(sdk::CColShapeEvent::GetEntity(event), resource),
             state,
         }
     }
@@ -203,9 +203,8 @@ impl WeaponDamageEvent {
                 resource,
             ),
             target: get_non_null_entity_from_event(
-                weapon_event,
+                sdk::CWeaponDamageEvent::GetTarget(weapon_event),
                 resource,
-                sdk::CWeaponDamageEvent::GetTarget,
             ),
             weapon_hash: sdk::CWeaponDamageEvent::GetWeaponHash(weapon_event),
             body_part: {
@@ -450,9 +449,8 @@ impl PlayerRequestControl {
                 resource,
             ),
             entity: get_non_null_entity_from_event(
-                event,
+                sdk::CPlayerRequestControlEvent::GetTarget(event),
                 resource,
-                sdk::CPlayerRequestControlEvent::GetTarget,
             ),
         }
     }
@@ -820,7 +818,7 @@ impl NetownerChange {
 
         use sdk::CNetOwnerChangeEvent::*;
         Self {
-            entity: get_non_null_entity_from_event(event, resource, GetTarget),
+            entity: get_non_null_entity_from_event(GetTarget(event), resource),
             new_net_owner: get_player_from_event(GetNewOwner(event), resource),
             old_net_owner: get_player_from_event(GetOldOwner(event), resource),
         }
