@@ -43,10 +43,15 @@ pub mod ffi {
         #include "alt_classes/CPlayerRequestControlEvent.h"
         #include "alt_classes/CPlayerDimensionChangeEvent.h"
         #include "alt_classes/CPlayerChangeInteriorEvent.h"
+        #include "alt_classes/CConnectionQueueAddEvent.h"
+        #include "alt_classes/CConnectionQueueRemoveEvent.h"
 
         #include "alt_classes/CStartProjectileEvent.h"
         #include "alt_classes/CFireEvent.h"
         #include "alt_classes/CExplosionEvent.h"
+
+        #include "alt_classes/IConnectionInfo.h"
+
 
         name!(alt_bridge)
 
@@ -83,10 +88,14 @@ pub mod ffi {
         generate_ns!("CPlayerRequestControlEvent")
         generate_ns!("CPlayerDimensionChangeEvent")
         generate_ns!("CPlayerChangeInteriorEvent")
+        generate_ns!("CConnectionQueueAddEvent")
+        generate_ns!("CConnectionQueueRemoveEvent")
 
         generate_ns!("CStartProjectileEvent")
         generate_ns!("CExplosionEvent")
         generate_ns!("CFireEvent")
+
+        generate_ns!("IConnectionInfo")
 
         // defined in alt_bridge
         generate_ns!("events")

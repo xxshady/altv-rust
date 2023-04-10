@@ -1,5 +1,3 @@
-use std::{cell::RefCell, rc::Rc};
-
 pub use alt::prelude::*;
 
 #[alt::main(crate_name = "alt")]
@@ -7,34 +5,23 @@ pub fn main() {
     // TODO: fix backtrace panic
     std::env::set_var("RUST_BACKTRACE", "full");
 
-    alt::Vehicle::new("sultan", 0, 0).unwrap();
-    alt::Vehicle::new("sultan", 0, 0).unwrap();
-    alt::Vehicle::new("sultan", 0, 0).unwrap();
+    alt::events::on_connection_queue_add(|c| {
+        alt::log!("on_connection_queue_add");
+        dbg!(c.info());
+        let controller = c.controller();
+        alt::set_timeout(
+            move || {
+                dbg!(controller.decline("лох"));
+                Ok(())
+            },
+            3000,
+        );
+        Ok(())
+    });
 
-    // assert_eq!(alt::Vehicle::all().len(), 3);
-
-    // alt::Vehicle::all()
-    //     .iter()
-    //     .try_for_each(|v| v.destroy())
-    //     .unwrap();
-
-    // dbg!(alt::Vehicle::all());
-    // assert_eq!(alt::Vehicle::all().len(), 0);
-
-    alt::set_timeout(
-        || {
-            dbg!(alt::Vehicle::all());
-            alt::events::emit!("destroy-vehs");
-            Ok(())
-        },
-        100,
-    );
-
-    alt::set_timeout(
-        || {
-            dbg!(alt::Vehicle::all());
-            Ok(())
-        },
-        200,
-    );
+    alt::events::on_connection_queue_remove(|c| {
+        alt::log!("on_connection_queue_remove");
+        dbg!(c.info());
+        Ok(())
+    });
 }

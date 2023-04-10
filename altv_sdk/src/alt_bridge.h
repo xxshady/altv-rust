@@ -741,4 +741,14 @@ namespace events
         assert(event->GetType() == alt::CEvent::Type::FIRE_EVENT);
         return static_cast<const alt::CFireEvent*>(event);
     }
+
+    const alt::CConnectionQueueAddEvent* to_CConnectionQueueAddEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::CONNECTION_QUEUE_ADD);
+        return static_cast<const alt::CConnectionQueueAddEvent*>(event);
+    }
+
+    const alt::CConnectionQueueRemoveEvent* to_CConnectionQueueRemoveEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::CONNECTION_QUEUE_REMOVE);
+        return static_cast<const alt::CConnectionQueueRemoveEvent*>(event);
+    }
 } // namespace events

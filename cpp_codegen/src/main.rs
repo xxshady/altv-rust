@@ -41,6 +41,7 @@ lazy_static::lazy_static! {
             ("ICore*", "alt::ICore*"),
             ("IVirtualEntityGroup*", "alt::IVirtualEntityGroup*"),
             ("IVirtualEntity*", "alt::IVirtualEntity*"),
+            ("IConnectionInfo*", "alt::IConnectionInfo*"),
 
             ("alt::Prop", "alt::Prop"),
             ("alt::DlcProp", "alt::DlcProp"),
@@ -119,6 +120,11 @@ fn main() {
         "../altv_sdk/cpp-sdk/script-objects/IVirtualEntity.h",
     );
 
+    gen_default(
+        "IConnectionInfo",
+        "../altv_sdk/cpp-sdk/types/IConnectionInfo.h",
+    );
+
     // events
     gen_default("CEvent", "../altv_sdk/cpp-sdk/events/CEvent.h");
     gen_default(
@@ -140,6 +146,14 @@ fn main() {
     gen_default(
         "CServerScriptEvent",
         "../altv_sdk/cpp-sdk/events/CServerScriptEvent.h",
+    );
+    gen_default(
+        "CConnectionQueueAddEvent",
+        "../altv_sdk/cpp-sdk/events/CConnectionQueueAddEvent.h",
+    );
+    gen_default(
+        "CConnectionQueueRemoveEvent",
+        "../altv_sdk/cpp-sdk/events/CConnectionQueueRemoveEvent.h",
     );
 
     // player

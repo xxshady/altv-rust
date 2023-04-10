@@ -5,7 +5,11 @@ use std::{
 
 use core_shared::{ModuleHandlers, ResourceMainPath};
 
-use crate::{base_objects, events, script_events, timers};
+use crate::{
+    base_objects,
+    events::{self, connection_queue},
+    script_events, timers,
+};
 
 thread_local! {
     pub static RESOURCE: Rc<RefCell<Option<Resource>>> =
@@ -25,6 +29,7 @@ pub struct Resource {
     pub base_objects: RefCell<base_objects::Store>,
     pub pending_base_object_destroy_or_creation: RefCell<base_objects::PendingDestroyOrCreation>,
     pub extra_base_object_pools: RefCell<base_objects::extra_pools::ExtraPools>,
+    pub connection_queue: RefCell<connection_queue::ConnectionQueueManager>,
 }
 
 macro_rules! with_resource {
@@ -143,4 +148,5 @@ impl Resource {
         extra_base_object_pools,
         base_objects::extra_pools::ExtraPools
     );
+    impl_borrow_mut_fn!(connection_queue, connection_queue::ConnectionQueueManager);
 }

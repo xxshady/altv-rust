@@ -7,6 +7,7 @@ pub mod sdk_controllers;
 pub mod custom_controllers;
 pub(self) mod helpers;
 pub(self) mod cancellable;
+pub(crate) mod connection_queue;
 pub mod structs;
 
 macro_rules! log_user_handler_error {
@@ -245,6 +246,9 @@ supported_sdk_events!(
     StartProjectileEvent,
     FireEvent,
     ExplosionEvent,
+
+    ConnectionQueueAdd,
+    ConnectionQueueRemove,
 );
 
 custom_events!(
