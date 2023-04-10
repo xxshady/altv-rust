@@ -1,5 +1,6 @@
 use std::{cell::RefCell, fmt::Debug, ptr::NonNull, rc::Rc};
 
+use super::meta::impl_meta_type_for;
 use crate::{resource::Resource, sdk, SomeResult, VoidResult};
 
 pub struct BaseObject<T> {
@@ -111,3 +112,11 @@ impl<T> BasePtr for BaseObjectWrapper<T> {
     }
 }
 impl<T> ValidBaseObject for BaseObjectWrapper<T> {}
+
+impl_meta_type_for!(
+    Meta,
+    BaseObjectWrapper<T>,
+    sdk::IBaseObject,
+    BaseObjectWrapper::raw_base_ptr,
+    T
+);

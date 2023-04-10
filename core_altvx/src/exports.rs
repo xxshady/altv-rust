@@ -5,6 +5,7 @@ pub use crate::{
     base_objects::{
         col_shape::{ColShape, ColShapeContainer},
         extra_pools::{wrappers::AnyEntity, Entity, EntityId},
+        meta::{BaseObjectMeta, LocalMeta, StreamSyncedMeta, SyncedMeta},
         player::{Player, PlayerContainer},
         vehicle::{Vehicle, VehicleContainer},
         virtual_entity::{VirtualEntity, VirtualEntityContainer},

@@ -1,6 +1,7 @@
 mod base_object;
 pub(crate) mod extra_pools;
 mod manager;
+pub(crate) mod meta;
 mod objects;
 
 pub(crate) use base_object::BaseObjectContainer;

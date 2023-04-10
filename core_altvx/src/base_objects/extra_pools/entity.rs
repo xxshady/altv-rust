@@ -19,16 +19,16 @@ pub fn base_ptr_to_entity_raw_ptr(
 }
 
 pub trait Entity: BasePtr {
-    fn ptr(&self) -> SomeResult<EntityRawPtr> {
+    fn raw_ptr(&self) -> SomeResult<EntityRawPtr> {
         base_ptr_to_entity_raw_ptr(self.base_ptr()?)
     }
 
     fn id(&self) -> SomeResult<EntityId> {
-        Ok(unsafe { sdk::IEntity::GetID(self.ptr()?) })
+        Ok(unsafe { sdk::IEntity::GetID(self.raw_ptr()?) })
     }
 
     fn model(&self) -> SomeResult<Hash> {
-        Ok(unsafe { sdk::IEntity::GetModel(self.ptr()?) })
+        Ok(unsafe { sdk::IEntity::GetModel(self.raw_ptr()?) })
     }
 }
 

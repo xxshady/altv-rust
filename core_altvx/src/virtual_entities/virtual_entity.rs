@@ -1,5 +1,5 @@
 use crate::{
-    base_objects::{virtual_entity, virtual_entity_group},
+    base_objects::{meta, virtual_entity, virtual_entity_group},
     resource::Resource,
     sdk,
     vector::IntoVector3,
@@ -52,3 +52,10 @@ impl virtual_entity::VirtualEntity {
 }
 
 impl WorldObject for virtual_entity::VirtualEntity {}
+
+meta::impl_meta_type_for!(
+    StreamSyncedMeta,
+    virtual_entity::VirtualEntity,
+    sdk::IVirtualEntity,
+    virtual_entity::VirtualEntity::raw_ptr
+);

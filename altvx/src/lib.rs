@@ -33,7 +33,10 @@ pub mod events;
 pub mod mvalue;
 
 pub mod prelude {
-    pub use super::exports::{Entity, ValidBaseObject, WorldObject};
+    pub use super::exports::{
+        BaseObjectMeta, Entity, LocalMeta, StreamSyncedMeta, SyncedMeta,
+        ValidBaseObject, WorldObject,
+    };
 }
 
 pub fn set_timeout(callback: impl FnMut() -> VoidResult + 'static, millis: u64) {

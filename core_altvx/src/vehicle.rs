@@ -7,7 +7,7 @@ use crate::{
             wrappers::{AnyEntity, IntoAnyEntity},
             Entity, EntityId,
         },
-        vehicle,
+        meta, vehicle,
     },
     helpers::IntoHash,
     resource::Resource,
@@ -67,3 +67,6 @@ impl IntoAnyEntity for vehicle::VehicleContainer {
         AnyEntity::Vehicle(self)
     }
 }
+
+meta::impl_entity_meta_for!(StreamSyncedMeta, vehicle::Vehicle);
+meta::impl_entity_meta_for!(SyncedMeta, vehicle::Vehicle);
