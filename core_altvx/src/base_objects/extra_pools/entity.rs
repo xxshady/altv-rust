@@ -1,9 +1,7 @@
 use std::{collections::HashMap, ptr::NonNull};
 
 use super::{super::BasePtr, wrappers::AnyEntity, ExtraPool};
-use crate::{
-    helpers::Hash, sdk, structs, vector::IntoVector3, SomeResult, VoidResult,
-};
+use crate::{helpers::Hash, sdk, structs, vector::IntoVector3, SomeResult, VoidResult};
 
 pub type EntityId = u16;
 pub type EntityPool = ExtraPool<HashMap<EntityId, AnyEntity>>;
@@ -48,8 +46,6 @@ pub trait Entity: BasePtr {
         } = attach;
 
         let entity = entity.into();
-        let pos = pos.into_vector3();
-        let rot = rot.into_vector3();
         unsafe {
             sdk::IEntity::AttachToEntity(
                 self.raw_ptr()?,
@@ -84,8 +80,6 @@ pub trait Entity: BasePtr {
         } = attach;
 
         let entity = entity.into();
-        let pos = pos.into_vector3();
-        let rot = rot.into_vector3();
         unsafe {
             sdk::IEntity::AttachToEntity1(
                 self.raw_ptr()?,
