@@ -35,6 +35,11 @@ impl player::Player {
         Ok(())
     }
 
+    pub fn despawn(&self) -> VoidResult {
+        unsafe { sdk::IPlayer::Despawn(self.raw_ptr()?) }
+        Ok(())
+    }
+
     pub fn set_model(&self, model: impl IntoHash) -> VoidResult {
         unsafe { sdk::IPlayer::SetModel(self.raw_ptr()?, model.into_hash()) }
         Ok(())
