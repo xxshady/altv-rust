@@ -46,6 +46,21 @@ bool IsShooting(const alt::IPlayer* ptr) {
 bool IsReloading(const alt::IPlayer* ptr) {
     return ptr->IsReloading();
 }
+bool IsEnteringVehicle(const alt::IPlayer* ptr) {
+    return ptr->IsEnteringVehicle();
+}
+bool IsLeavingVehicle(const alt::IPlayer* ptr) {
+    return ptr->IsLeavingVehicle();
+}
+bool IsOnLadder(const alt::IPlayer* ptr) {
+    return ptr->IsOnLadder();
+}
+bool IsInMelee(const alt::IPlayer* ptr) {
+    return ptr->IsInMelee();
+}
+bool IsInCover(const alt::IPlayer* ptr) {
+    return ptr->IsInCover();
+}
 u16 GetArmour(const alt::IPlayer* ptr) {
     return ptr->GetArmour();
 }

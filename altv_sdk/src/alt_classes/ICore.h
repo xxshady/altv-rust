@@ -31,6 +31,24 @@ alt::IVirtualEntity* CreateVirtualEntity(alt::IVirtualEntityGroup* group, f32 po
 alt::IVirtualEntityGroup* CreateVirtualEntityGroup(u32 streamingRangeLimit) {
     return alt::ICore::Instance().CreateVirtualEntityGroup(streamingRangeLimit);
 }
+alt::IColShape* CreateColShapeCylinder(f32 pos_x, f32 pos_y, f32 pos_z, f32 radius, f32 height) {
+    return alt::ICore::Instance().CreateColShapeCylinder({ pos_x, pos_y, pos_z }, radius, height);
+}
+alt::IColShape* CreateColShapeSphere(f32 pos_x, f32 pos_y, f32 pos_z, f32 radius) {
+    return alt::ICore::Instance().CreateColShapeSphere({ pos_x, pos_y, pos_z }, radius);
+}
+alt::IColShape* CreateColShapeCircle(f32 pos_x, f32 pos_y, f32 pos_z, f32 radius) {
+    return alt::ICore::Instance().CreateColShapeCircle({ pos_x, pos_y, pos_z }, radius);
+}
+alt::IColShape* CreateColShapeCube(f32 pos_x, f32 pos_y, f32 pos_z, f32 pos2_x, f32 pos2_y, f32 pos2_z) {
+    return alt::ICore::Instance().CreateColShapeCube({ pos_x, pos_y, pos_z }, { pos2_x, pos2_y, pos2_z });
+}
+alt::IColShape* CreateColShapeRectangle(f32 x1, f32 y1, f32 x2, f32 y2, f32 z) {
+    return alt::ICore::Instance().CreateColShapeRectangle(x1, y1, x2, y2, z);
+}
+alt::IColShape* CreateColShapePolygon(f32 minZ, f32 maxZ, Vector2Vec points) {
+    return alt::ICore::Instance().CreateColShapePolygon(minZ, maxZ, points.into_alt_vec());
+}
 bool IsDebug() {
     return alt::ICore::Instance().IsDebug();
 }
@@ -109,24 +127,6 @@ void DeleteSyncedMetaData(const StdStringClone key) {
 }
 alt::IVehicle* CreateVehicle(u32 model, f32 pos_x, f32 pos_y, f32 pos_z, f32 rot_x, f32 rot_y, f32 rot_z) {
     return alt::ICore::Instance().CreateVehicle(model, { pos_x, pos_y, pos_z }, { rot_x, rot_y, rot_z });
-}
-alt::IColShape* CreateColShapeCylinder(f32 pos_x, f32 pos_y, f32 pos_z, f32 radius, f32 height) {
-    return alt::ICore::Instance().CreateColShapeCylinder({ pos_x, pos_y, pos_z }, radius, height);
-}
-alt::IColShape* CreateColShapeSphere(f32 pos_x, f32 pos_y, f32 pos_z, f32 radius) {
-    return alt::ICore::Instance().CreateColShapeSphere({ pos_x, pos_y, pos_z }, radius);
-}
-alt::IColShape* CreateColShapeCircle(f32 pos_x, f32 pos_y, f32 pos_z, f32 radius) {
-    return alt::ICore::Instance().CreateColShapeCircle({ pos_x, pos_y, pos_z }, radius);
-}
-alt::IColShape* CreateColShapeCube(f32 pos_x, f32 pos_y, f32 pos_z, f32 pos2_x, f32 pos2_y, f32 pos2_z) {
-    return alt::ICore::Instance().CreateColShapeCube({ pos_x, pos_y, pos_z }, { pos2_x, pos2_y, pos2_z });
-}
-alt::IColShape* CreateColShapeRectangle(f32 x1, f32 y1, f32 x2, f32 y2, f32 z) {
-    return alt::ICore::Instance().CreateColShapeRectangle(x1, y1, x2, y2, z);
-}
-alt::IColShape* CreateColShapePolygon(f32 minZ, f32 maxZ, Vector2Vec points) {
-    return alt::ICore::Instance().CreateColShapePolygon(minZ, maxZ, points.into_alt_vec());
 }
 u32 GetNetTime() {
     return alt::ICore::Instance().GetNetTime();
