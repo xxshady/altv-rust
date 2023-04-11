@@ -29,3 +29,16 @@ pub struct PlayerDateTime {
     pub minute: i32,
     pub second: i32,
 }
+
+#[derive(Debug, Default)]
+pub struct PlayerHeadBlendData {
+    pub shape_first_id: u32,
+    pub shape_second_id: u32,
+    pub shape_third_id: u32,
+    pub skin_first_id: u32,
+    pub skin_second_id: u32,
+    pub skin_third_id: u32,
+    pub shape_mix: f32,
+    pub skin_mix: f32,
+    pub third_mix: f32,
+}

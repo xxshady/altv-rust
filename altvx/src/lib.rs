@@ -24,7 +24,8 @@ pub use exports::{
     AttachToEntityBoneIndex,
     AttachToEntityBoneName,
     PlayerDateTime,
-
+    PlayerHeadBlendData,
+    
     anyhow,
     hash,
     Hash,

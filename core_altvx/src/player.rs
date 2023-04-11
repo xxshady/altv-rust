@@ -10,6 +10,7 @@ use crate::{
     world_object::WorldObject,
     SomeResult, VoidResult,
 };
+use autocxx::prelude::*;
 
 impl player::Player {
     pub fn all() -> Vec<player::PlayerContainer> {
@@ -61,6 +62,78 @@ impl player::Player {
                 second.into(),
             );
         }
+        Ok(())
+    }
+
+    pub fn get_head_blend_data(&self) -> SomeResult<structs::PlayerHeadBlendData> {
+        let raw = unsafe { sdk::IPlayer::GetHeadBlendData(self.raw_ptr()?) }.within_unique_ptr();
+
+        let mut shape_first_id = 0u32;
+        let mut shape_second_id = 0u32;
+        let mut shape_third_id = 0u32;
+        let mut skin_first_id = 0u32;
+        let mut skin_second_id = 0u32;
+        let mut skin_third_id = 0u32;
+        let mut shape_mix = 0f32;
+        let mut skin_mix = 0f32;
+        let mut third_mix = 0f32;
+
+        unsafe {
+            sdk::read_alt_head_blend_data(
+                raw.as_ref().unwrap(),
+                &mut shape_first_id as *mut u32,
+                &mut shape_second_id as *mut u32,
+                &mut shape_third_id as *mut u32,
+                &mut skin_first_id as *mut u32,
+                &mut skin_second_id as *mut u32,
+                &mut skin_third_id as *mut u32,
+                &mut shape_mix as *mut f32,
+                &mut skin_mix as *mut f32,
+                &mut third_mix as *mut f32,
+            )
+        }
+
+        Ok(structs::PlayerHeadBlendData {
+            shape_first_id,
+            shape_second_id,
+            shape_third_id,
+            skin_first_id,
+            skin_second_id,
+            skin_third_id,
+            shape_mix,
+            skin_mix,
+            third_mix,
+        })
+    }
+
+    pub fn set_head_blend_data(&self, data: structs::PlayerHeadBlendData) -> VoidResult {
+        let structs::PlayerHeadBlendData {
+            shape_first_id,
+            shape_second_id,
+            shape_third_id,
+            skin_first_id,
+            skin_second_id,
+            skin_third_id,
+            shape_mix,
+            skin_mix,
+            third_mix,
+        } = data;
+
+        unsafe {
+            sdk::IPlayer::SetHeadBlendData(
+                self.raw_ptr()?,
+                shape_first_id,
+                shape_second_id,
+                shape_third_id,
+                skin_first_id,
+                skin_second_id,
+                skin_third_id,
+                shape_mix,
+                skin_mix,
+                third_mix,
+            )
+        }
+
         Ok(())
     }
 }
