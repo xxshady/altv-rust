@@ -515,7 +515,7 @@ struct ProcReturnType {
 
 #[derive(Debug)]
 struct ReturnType {
-    // pub is_const: bool,
+    pub is_const: bool,
     pub type_name: String,
 }
 
@@ -692,7 +692,7 @@ fn parse_cpp_method(class_name: &str, method: String) -> anyhow::Result<CppMetho
     Ok(CppMethod {
         name: method_name.unwrap(),
         return_type: ReturnType {
-            // is_const: return_type.is_const,
+            is_const: return_type.is_const,
             type_name: cpp_to_rust_type(class_name, &return_type.type_name.unwrap())?,
         },
         parameters: result_parameters,
@@ -902,8 +902,14 @@ fn cpp_method_to_rust_compatible_func(
 
     return_value = extra_wrapper_for_return(&return_value);
 
+    let return_type_const_content = if parsed_method.return_type.is_const {
+        "const "
+    } else {
+        ""
+    };
+
     Ok(format!(
-        "{return_type} {method_name}(\
+        "{return_type_const_content}{return_type} {method_name}(\
                 {ptr_content}\
                 {comma_between_ptr_and_params}\
                 {params_content}\
