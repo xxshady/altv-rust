@@ -1,10 +1,6 @@
 mod entity;
-use entity::EntityPool;
-
-pub(crate) use entity::get_entity_by_id;
-pub use entity::Entity;
-pub use entity::EntityId;
-pub use entity::EntityRawPtr;
+pub(crate) use entity::{get_entity_by_id, EntityPool};
+pub use entity::{Entity, EntityId, EntityRawPtr};
 
 #[derive(Debug, Default)]
 pub struct ExtraPool<T> {
@@ -41,13 +37,15 @@ pub mod wrappers {
         }
     }
 
-    pub trait IntoAnyEntity {
-        fn into_any_entity(self) -> AnyEntity;
+    impl From<VehicleContainer> for AnyEntity {
+        fn from(value: VehicleContainer) -> Self {
+            AnyEntity::Vehicle(value)
+        }
     }
 
-    impl IntoAnyEntity for AnyEntity {
-        fn into_any_entity(self) -> AnyEntity {
-            self
+    impl From<PlayerContainer> for AnyEntity {
+        fn from(value: PlayerContainer) -> Self {
+            AnyEntity::Player(value)
         }
     }
 }

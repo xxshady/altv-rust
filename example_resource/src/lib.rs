@@ -25,6 +25,15 @@ pub fn main() {
         dbg!(veh.set_meta("test", 123i64));
         dbg!(veh.get_meta("test"));
         dbg!(veh.get_meta_keys());
+
+        veh.attach_to_entity_bone_index(
+            veh.clone(),
+            alt::AttachToEntityBoneIndex {
+                collision: true,
+                ..Default::default()
+            },
+        )?;
+
         Ok(())
     });
 }

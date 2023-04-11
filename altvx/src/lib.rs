@@ -21,10 +21,12 @@ pub use exports::{
     VirtualEntity,
     VirtualEntityGroup,
     AnyEntity,
+    AttachToEntityBoneIndex,
+    AttachToEntityBoneName,
 
     anyhow,
     hash,
-    Hash
+    Hash,
 };
 
 pub use altv_sdk::{ColShapeType, ExplosionType, PlayerBodyPart, PlayerConnectDeniedReason};
@@ -34,8 +36,8 @@ pub mod mvalue;
 
 pub mod prelude {
     pub use super::exports::{
-        BaseObjectMeta, Entity, LocalMeta, StreamSyncedMeta, SyncedMeta,
-        ValidBaseObject, WorldObject,
+        BaseObjectMeta, Entity, LocalMeta, StreamSyncedMeta, SyncedMeta, ValidBaseObject,
+        WorldObject,
     };
 }
 

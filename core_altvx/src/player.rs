@@ -1,10 +1,6 @@
 use crate::{
     base_objects::{
-        extra_pools::{
-            get_entity_by_id,
-            wrappers::{AnyEntity, IntoAnyEntity},
-            Entity, EntityId,
-        },
+        extra_pools::{get_entity_by_id, wrappers::AnyEntity, Entity, EntityId},
         meta, player,
     },
     helpers::IntoHash,
@@ -48,12 +44,6 @@ impl player::Player {
 
 impl WorldObject for player::Player {}
 impl Entity for player::Player {}
-
-impl IntoAnyEntity for player::PlayerContainer {
-    fn into_any_entity(self) -> AnyEntity {
-        AnyEntity::Player(self)
-    }
-}
 
 meta::impl_entity_meta_for!(StreamSyncedMeta, player::Player);
 meta::impl_entity_meta_for!(SyncedMeta, player::Player);

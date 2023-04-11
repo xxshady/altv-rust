@@ -2,11 +2,7 @@ use std::ptr::NonNull;
 
 use crate::{
     base_objects::{
-        extra_pools::{
-            get_entity_by_id,
-            wrappers::{AnyEntity, IntoAnyEntity},
-            Entity, EntityId,
-        },
+        extra_pools::{get_entity_by_id, wrappers::AnyEntity, Entity, EntityId},
         meta, vehicle,
     },
     helpers::IntoHash,
@@ -61,12 +57,6 @@ impl vehicle::Vehicle {
 
 impl WorldObject for vehicle::Vehicle {}
 impl Entity for vehicle::Vehicle {}
-
-impl IntoAnyEntity for vehicle::VehicleContainer {
-    fn into_any_entity(self) -> AnyEntity {
-        AnyEntity::Vehicle(self)
-    }
-}
 
 meta::impl_entity_meta_for!(StreamSyncedMeta, vehicle::Vehicle);
 meta::impl_entity_meta_for!(SyncedMeta, vehicle::Vehicle);

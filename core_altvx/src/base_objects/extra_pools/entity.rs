@@ -1,7 +1,9 @@
 use std::{collections::HashMap, ptr::NonNull};
 
 use super::{super::BasePtr, wrappers::AnyEntity, ExtraPool};
-use crate::{helpers::Hash, sdk, SomeResult};
+use crate::{
+    helpers::Hash, sdk, structs, vector::IntoVector3, SomeResult, VoidResult,
+};
 
 pub type EntityId = u16;
 pub type EntityPool = ExtraPool<HashMap<EntityId, AnyEntity>>;
@@ -29,6 +31,78 @@ pub trait Entity: BasePtr {
 
     fn model(&self) -> SomeResult<Hash> {
         Ok(unsafe { sdk::IEntity::GetModel(self.raw_ptr()?) })
+    }
+
+    fn attach_to_entity_bone_index(
+        &self,
+        entity: impl Into<AnyEntity>,
+        attach: structs::AttachToEntityBoneIndex,
+    ) -> VoidResult {
+        let structs::AttachToEntityBoneIndex {
+            other_bone_index,
+            my_bone_index,
+            pos,
+            rot,
+            collision,
+            no_fixed_rotation,
+        } = attach;
+
+        let entity = entity.into();
+        let pos = pos.into_vector3();
+        let rot = rot.into_vector3();
+        unsafe {
+            sdk::IEntity::AttachToEntity(
+                self.raw_ptr()?,
+                entity.raw_ptr()?,
+                other_bone_index,
+                my_bone_index,
+                pos.x(),
+                pos.y(),
+                pos.z(),
+                rot.x(),
+                rot.y(),
+                rot.z(),
+                collision,
+                no_fixed_rotation,
+            )
+        }
+        Ok(())
+    }
+
+    fn attach_to_entity_bone_name(
+        &self,
+        entity: impl Into<AnyEntity>,
+        attach: structs::AttachToEntityBoneName,
+    ) -> VoidResult {
+        let structs::AttachToEntityBoneName {
+            other_bone_name,
+            my_bone_name,
+            pos,
+            rot,
+            collision,
+            no_fixed_rotation,
+        } = attach;
+
+        let entity = entity.into();
+        let pos = pos.into_vector3();
+        let rot = rot.into_vector3();
+        unsafe {
+            sdk::IEntity::AttachToEntity1(
+                self.raw_ptr()?,
+                entity.raw_ptr()?,
+                other_bone_name,
+                my_bone_name,
+                pos.x(),
+                pos.y(),
+                pos.z(),
+                rot.x(),
+                rot.y(),
+                rot.z(),
+                collision,
+                no_fixed_rotation,
+            )
+        }
+        Ok(())
     }
 }
 

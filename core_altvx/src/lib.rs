@@ -21,6 +21,7 @@ mod vector;
 mod vehicle;
 mod virtual_entities;
 mod world_object;
+mod structs;
 
 pub mod exports;
 
