@@ -23,6 +23,7 @@ pub use exports::{
     AnyEntity,
     AttachToEntityBoneIndex,
     AttachToEntityBoneName,
+    PlayerDateTime,
 
     anyhow,
     hash,

@@ -5,7 +5,7 @@ use crate::{
     },
     helpers::IntoHash,
     resource::Resource,
-    sdk,
+    sdk, structs,
     vector::IntoVector3,
     world_object::WorldObject,
     SomeResult, VoidResult,
@@ -38,6 +38,29 @@ impl player::Player {
 
     pub fn set_model(&self, model: impl IntoHash) -> VoidResult {
         unsafe { sdk::IPlayer::SetModel(self.raw_ptr()?, model.into_hash()) }
+        Ok(())
+    }
+
+    pub fn set_date_time(&self, date_time: structs::PlayerDateTime) -> VoidResult {
+        let structs::PlayerDateTime {
+            day,
+            month,
+            year,
+            hour,
+            minute,
+            second,
+        } = date_time;
+        unsafe {
+            sdk::IPlayer::SetDateTime(
+                self.raw_ptr()?,
+                day.into(),
+                month.into(),
+                year.into(),
+                hour.into(),
+                minute.into(),
+                second.into(),
+            );
+        }
         Ok(())
     }
 }

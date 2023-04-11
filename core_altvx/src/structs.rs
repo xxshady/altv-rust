@@ -19,3 +19,13 @@ pub struct AttachToEntityBoneName {
     pub collision: bool,
     pub no_fixed_rotation: bool,
 }
+
+#[derive(Debug, Default)]
+pub struct PlayerDateTime {
+    pub day: i32,
+    pub month: i32,
+    pub year: i32,
+    pub hour: i32,
+    pub minute: i32,
+    pub second: i32,
+}

@@ -36,4 +36,12 @@ pub fn main() {
 
         Ok(())
     });
+
+    alt::events::on_client("test", |player, _| {
+        player.set_date_time(alt::PlayerDateTime {
+            hour: 4,
+            ..Default::default()
+        })?;
+        Ok(())
+    });
 }
