@@ -424,10 +424,12 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
         }
         if !(
             // pure virtual method of object class
-            (line.ends_with("= 0;") ||
+            line.ends_with("= 0;") ||
             // normal method of event class
-            line.ends_with("; }") || line.ends_with("; };"))
-                || line.ends_with(')')
+            line.ends_with("; }") || 
+            line.ends_with("; };") ||
+            line.ends_with(')') ||
+            line.ends_with(") const")
         ) {
             // println!("seems like its property? skipping");
             continue;
