@@ -14,6 +14,7 @@ pub use crate::{
     },
     helpers::{hash, Hash},
     init,
+    ped_model_info::PedModelInfo,
     structs::{
         AttachToEntityBoneIndex, AttachToEntityBoneName, PlayerDateTime, PlayerHeadBlendData,
     },

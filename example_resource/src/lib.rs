@@ -43,4 +43,7 @@ pub fn main() {
         let info = alt::VehicleModelInfo::get_by_hash(veh).unwrap();
         dbg!(info.title);
     }
+
+    dbg!(alt::PedModelInfo::get_by_hash("mp_m_freemode_01"));
+    dbg!(alt::PedModelInfo::get_by_hash("mp_m_freemode_01dd"));
 }

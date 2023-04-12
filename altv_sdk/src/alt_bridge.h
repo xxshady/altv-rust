@@ -679,6 +679,38 @@ std::vector<alt::BoneInfo> read_vehicle_model_info_bones(const alt::VehicleModel
     return ptr->bones;
 }
 
+bool is_ped_model_info_valid(const alt::PedModelInfo* ptr) {
+    return ptr->hash != 0;
+}
+
+std::vector<alt::BoneInfo> read_ped_model_info_bones(const alt::PedModelInfo* ptr) {
+    return ptr->bones;
+}
+
+u32 read_ped_model_info_hash(const alt::PedModelInfo* ptr) {
+    return ptr->hash;
+}
+
+std::string read_ped_model_info_name(const alt::PedModelInfo* ptr) {
+    return ptr->name;
+}
+
+std::string read_ped_model_info_type(const alt::PedModelInfo* ptr) {
+    return ptr->type;
+}
+
+std::string read_ped_model_info_dlc_name(const alt::PedModelInfo* ptr) {
+    return ptr->dlcName;
+}
+
+std::string read_ped_model_info_movement_clip_set(const alt::PedModelInfo* ptr) {
+    return ptr->movementClipSet;
+}
+
+std::string read_ped_model_info_default_unarmed_weapon(const alt::PedModelInfo* ptr) {
+    return ptr->defaultUnarmedWeapon;
+}
+
 namespace events
 {
     const alt::CConsoleCommandEvent* to_CConsoleCommandEvent(const alt::CEvent* event) {

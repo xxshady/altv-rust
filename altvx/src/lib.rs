@@ -29,6 +29,7 @@ pub use exports::{
     hash,
     Hash,
     VehicleModelInfo,
+    PedModelInfo,
 };
 
 pub use altv_sdk::{

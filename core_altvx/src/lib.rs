@@ -14,6 +14,7 @@ mod events;
 mod helpers;
 mod logging;
 mod mvalue;
+mod ped_model_info;
 mod player;
 mod script_events;
 mod structs;

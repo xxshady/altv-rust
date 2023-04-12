@@ -143,6 +143,9 @@ void StopServer() {
 const alt::VehicleModelInfo* GetVehicleModelByHash(u32 hash) {
     return &alt::ICore::Instance().GetVehicleModelByHash(hash);
 }
+const alt::PedModelInfo* GetPedModelByHash(u32 hash) {
+    return &alt::ICore::Instance().GetPedModelByHash(hash);
+}
 void SetWorldProfiler(bool state) {
     return alt::ICore::Instance().SetWorldProfiler(state);
 }

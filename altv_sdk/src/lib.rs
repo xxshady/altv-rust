@@ -62,6 +62,7 @@ pub mod ffi {
 
         #include "alt_classes/IConnectionInfo.h"
         #include "alt_classes/VehicleModelInfo.h"
+        #include "alt_classes/PedModelInfo.h"
 
         #include "alt_classes/CMetaChangeEvent.h"
         #include "alt_classes/CGlobalMetaDataChangeEvent.h"
@@ -232,6 +233,17 @@ pub mod ffi {
         // alt::BoneInfo
         generate!("read_bone_info")
         generate!("read_bone_info_name")
+
+        // alt::PedModelInfo
+        generate_ns!("PedModelInfo")
+        generate!("is_ped_model_info_valid")
+        generate!("read_ped_model_info_bones")
+        generate!("read_ped_model_info_hash")
+        generate!("read_ped_model_info_name")
+        generate!("read_ped_model_info_type")
+        generate!("read_ped_model_info_dlc_name")
+        generate!("read_ped_model_info_movement_clip_set")
+        generate!("read_ped_model_info_default_unarmed_weapon")
 
         generate!("create_player_vec")
         generate!("push_to_player_vec")

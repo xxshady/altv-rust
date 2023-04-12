@@ -43,6 +43,7 @@ lazy_static::lazy_static! {
             ("IVirtualEntity*", "alt::IVirtualEntity*"),
             ("IConnectionInfo*", "alt::IConnectionInfo*"),
             ("VehicleModelInfo&", "alt::VehicleModelInfo*"),
+            ("PedModelInfo&", "alt::PedModelInfo*"),
 
             ("alt::Prop", "alt::Prop"),
             ("alt::DlcProp", "alt::DlcProp"),
@@ -130,6 +131,8 @@ fn main() {
         "VehicleModelInfo",
         "../altv_sdk/cpp-sdk/types/VehicleModelInfo.h",
     );
+
+    gen_default("PedModelInfo", "../altv_sdk/cpp-sdk/types/PedModelInfo.h");
 
     // events
     gen_default("CEvent", "../altv_sdk/cpp-sdk/events/CEvent.h");
@@ -899,6 +902,7 @@ fn cpp_method_to_rust_compatible_func(
             )
         },
         "alt::VehicleModelInfo*" => |v: &str| format!("return &{v}"),
+        "alt::PedModelInfo*" => |v: &str| format!("return &{v}"),
         _ => |v: &str| format!("return {v}"),
     };
 
