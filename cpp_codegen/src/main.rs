@@ -42,6 +42,7 @@ lazy_static::lazy_static! {
             ("IVirtualEntityGroup*", "alt::IVirtualEntityGroup*"),
             ("IVirtualEntity*", "alt::IVirtualEntity*"),
             ("IConnectionInfo*", "alt::IConnectionInfo*"),
+            ("VehicleModelInfo&", "alt::VehicleModelInfo*"),
 
             ("alt::Prop", "alt::Prop"),
             ("alt::DlcProp", "alt::DlcProp"),
@@ -123,6 +124,11 @@ fn main() {
     gen_default(
         "IConnectionInfo",
         "../altv_sdk/cpp-sdk/types/IConnectionInfo.h",
+    );
+
+    gen_default(
+        "VehicleModelInfo",
+        "../altv_sdk/cpp-sdk/types/VehicleModelInfo.h",
     );
 
     // events
@@ -472,6 +478,10 @@ impl MethodParser {
         }
         false
     }
+
+    pub fn is_it_last_char(&self) -> bool {
+        self.current_idx == self.content.len()
+    }
 }
 
 #[derive(Debug)]
@@ -549,6 +559,7 @@ fn parse_cpp_method(class_name: &str, method: String) -> anyhow::Result<CppMetho
     let mut pointer_return_type = false;
 
     while let Some(char) = method_parser.next_char().copied() {
+        // dbg!(char as char);
         if in_word {
             if parameters_parsing && char == b' ' && method_parser.is_next_char('*') {
                 // println!("parameters_parsing pointer type: {current_word:?}");
@@ -562,7 +573,11 @@ fn parse_cpp_method(class_name: &str, method: String) -> anyhow::Result<CppMetho
                 continue;
             }
 
-            if is_it_delimiter_char(char) || pointer_param || pointer_return_type {
+            if is_it_delimiter_char(char)
+                || pointer_param
+                || pointer_return_type
+                || method_parser.is_it_last_char()
+            {
                 if pointer_param {
                     // println!("word end pointer_param");
                     pointer_param = false;
@@ -575,6 +590,11 @@ fn parse_cpp_method(class_name: &str, method: String) -> anyhow::Result<CppMetho
 
                 let word = current_word.reset();
                 // println!("word: {word:?}");
+
+                if method_parser.is_it_last_char() && word == "cons" && char == b't' {
+                    // println!("const method, end of parsing");
+                    is_const_method = true;
+                }
 
                 if return_type.is_const && return_type.type_name.is_none() {
                     // println!("const return type set type value: {word:?}");
@@ -659,10 +679,7 @@ fn parse_cpp_method(class_name: &str, method: String) -> anyhow::Result<CppMetho
             }
             current_word.add_char(char);
         } else if !in_word && !is_it_delimiter_char(char) {
-            // println!(
-            //     "starting word with {:?}",
-            //     std::str::from_utf8(&[char]).unwrap()
-            // );
+            // println!("starting word with {:?}", char as char);
             current_word.add_char(char);
             in_word = true;
         }
@@ -881,6 +898,7 @@ fn cpp_method_to_rust_compatible_func(
                 return vec"
             )
         },
+        "alt::VehicleModelInfo*" => |v: &str| format!("return &{v}"),
         _ => |v: &str| format!("return {v}"),
     };
 
