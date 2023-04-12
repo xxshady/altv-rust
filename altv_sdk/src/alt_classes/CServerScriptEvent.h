@@ -4,10 +4,10 @@
 
 namespace CServerScriptEvent {
 
-StdStringClone GetName(const alt::CServerScriptEvent* ptr) {
+const StdStringClone GetName(const alt::CServerScriptEvent* ptr) {
     return std::string { ptr->GetName() };
 }
-MValueWrapperVec GetArgs(const alt::CServerScriptEvent* ptr) {
+const MValueWrapperVec GetArgs(const alt::CServerScriptEvent* ptr) {
     auto args = ptr->GetArgs();
     auto mvalue_vec = create_mvalue_vec();
     auto size = args.GetSize();

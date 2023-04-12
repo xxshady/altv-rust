@@ -16,12 +16,13 @@ mod logging;
 mod mvalue;
 mod player;
 mod script_events;
+mod structs;
 mod timers;
 mod vector;
 mod vehicle;
+mod vehicle_model_info;
 mod virtual_entities;
 mod world_object;
-mod structs;
 
 pub mod exports;
 

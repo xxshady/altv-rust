@@ -42,3 +42,10 @@ pub struct PlayerHeadBlendData {
     pub skin_mix: f32,
     pub third_mix: f32,
 }
+
+#[derive(Debug)]
+pub struct BoneInfo {
+    pub id: u16,
+    pub index: u16,
+    pub name: String,
+}

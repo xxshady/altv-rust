@@ -25,13 +25,15 @@ pub use exports::{
     AttachToEntityBoneName,
     PlayerDateTime,
     PlayerHeadBlendData,
-    
     anyhow,
     hash,
     Hash,
+    VehicleModelInfo,
 };
 
-pub use altv_sdk::{ColShapeType, ExplosionType, PlayerBodyPart, PlayerConnectDeniedReason};
+pub use altv_sdk::{
+    ColShapeType, ExplosionType, PlayerBodyPart, PlayerConnectDeniedReason, VehicleModelType,
+};
 
 pub mod events;
 pub mod mvalue;

@@ -61,6 +61,7 @@ pub mod ffi {
         #include "alt_classes/CExplosionEvent.h"
 
         #include "alt_classes/IConnectionInfo.h"
+        #include "alt_classes/VehicleModelInfo.h"
 
         #include "alt_classes/CMetaChangeEvent.h"
         #include "alt_classes/CGlobalMetaDataChangeEvent.h"
@@ -221,6 +222,17 @@ pub mod ffi {
         generate!("read_fire_info_pos")
         generate!("read_fire_info_weapon_hash")
 
+        // alt::VehicleModelInfo
+        generate_ns!("VehicleModelInfo")
+        generate!("is_vehicle_model_info_valid")
+        generate!("read_vehicle_model_info")
+        generate!("read_vehicle_model_info_title")
+        generate!("read_vehicle_model_info_bones")
+
+        // alt::BoneInfo
+        generate!("read_bone_info")
+        generate!("read_bone_info_name")
+
         generate!("create_player_vec")
         generate!("push_to_player_vec")
 
@@ -323,3 +335,6 @@ pub use player_connect_denied_reason::PlayerConnectDeniedReason;
 
 mod explosion_type;
 pub use explosion_type::ExplosionType;
+
+mod vehicle_model_type;
+pub use vehicle_model_type::VehicleModelType;

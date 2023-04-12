@@ -7,7 +7,7 @@ namespace CFireEvent {
 alt::IPlayer* GetSource(const alt::CFireEvent* ptr) {
     return ptr->GetSource();
 }
-std::vector<FireInfoWrapper> GetFires(const alt::CFireEvent* ptr) {
+const std::vector<FireInfoWrapper> GetFires(const alt::CFireEvent* ptr) {
     auto alt_array = ptr->GetFires();
     std::vector<FireInfoWrapper> vec {};
     vec.reserve(alt_array.GetSize());

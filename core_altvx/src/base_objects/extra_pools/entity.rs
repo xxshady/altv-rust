@@ -1,7 +1,7 @@
 use std::{collections::HashMap, ptr::NonNull};
 
 use super::{super::BasePtr, wrappers::AnyEntity, ExtraPool};
-use crate::{helpers::Hash, sdk, structs, vector::IntoVector3, SomeResult, VoidResult};
+use crate::{helpers::Hash, sdk, structs, SomeResult, VoidResult};
 
 pub type EntityId = u16;
 pub type EntityPool = ExtraPool<HashMap<EntityId, AnyEntity>>;

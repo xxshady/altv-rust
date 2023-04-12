@@ -624,6 +624,61 @@ void read_alt_head_blend_data(
     *out_third_mix = blend_data.thirdMix;
 }
 
+void read_bone_info(const alt::BoneInfo& bone, u16* id, u16* index) {
+    *id = bone.id;
+    *index = bone.index;
+}
+
+std::string read_bone_info_name(const alt::BoneInfo& bone) {
+    return bone.name;
+}
+
+bool is_vehicle_model_info_valid(const alt::VehicleModelInfo* ptr) {
+    return ptr->modelType != alt::VehicleModelInfo::Type::INVALID;
+}
+
+void read_vehicle_model_info(
+    const alt::VehicleModelInfo* ptr,
+    u8* out_model_type,
+    u8* out_wheels_count,
+    bool* out_has_armored_windows,
+    u8* out_primary_color,
+    u8* out_secondary_color,
+    u8* out_pearl_color,
+    u8* out_wheels_color,
+    u8* out_interior_color,
+    u8* out_dashboard_color,
+    bool* out_modkits,
+    bool* out_has_auto_attach_trailer
+) {
+    *out_model_type = static_cast<u8>(ptr->modelType);
+    *out_wheels_count = ptr->wheelsCount;
+    *out_has_armored_windows = ptr->hasArmoredWindows;
+    *out_primary_color = ptr->primaryColor;
+    *out_secondary_color = ptr->secondaryColor;
+    *out_pearl_color = ptr->pearlColor;
+    *out_wheels_color = ptr->wheelsColor;
+    *out_interior_color = ptr->interiorColor;
+    *out_dashboard_color = ptr->dashboardColor;
+
+    size_t modkits_size = std::size(ptr->modkits);
+    for (size_t i = 0; i < modkits_size; ++i)
+    {
+        // wtf?
+        out_modkits[i] = ptr->modkits[i] != 0xFFFF;
+    }
+
+    *out_has_auto_attach_trailer = ptr->hasAutoAttachTrailer;
+}
+
+std::string read_vehicle_model_info_title(const alt::VehicleModelInfo* ptr) {
+    return ptr->title;
+}
+
+std::vector<alt::BoneInfo> read_vehicle_model_info_bones(const alt::VehicleModelInfo* ptr) {
+    return ptr->bones;
+}
+
 namespace events
 {
     const alt::CConsoleCommandEvent* to_CConsoleCommandEvent(const alt::CEvent* event) {

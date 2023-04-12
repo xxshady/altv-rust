@@ -9,7 +9,7 @@ use crate::{
     events::helpers::{get_non_null_base_object_from_event, get_player_from_event},
     exports::{AnyEntity, Vector3},
     helpers::{read_cpp_vector3, Hash},
-    mvalue::{self, MValue},
+    mvalue,
     resource::Resource,
     VoidResult,
 };

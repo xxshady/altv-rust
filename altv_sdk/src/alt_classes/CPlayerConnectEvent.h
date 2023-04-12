@@ -7,7 +7,7 @@ namespace CPlayerConnectEvent {
 alt::IPlayer* GetTarget(const alt::CPlayerConnectEvent* ptr) {
     return ptr->GetTarget();
 }
-StdStringClone GetReason(alt::CPlayerConnectEvent* ptr) {
+const StdStringClone GetReason(alt::CPlayerConnectEvent* ptr) {
     return std::string { ptr->GetReason() };
 }
 void Cancel(alt::CPlayerConnectEvent* ptr, const StdStringClone _reason) {

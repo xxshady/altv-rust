@@ -7,7 +7,7 @@ namespace CConsoleCommandEvent {
 std::string GetName(const alt::CConsoleCommandEvent* ptr) {
     return ptr->GetName();
 }
-std::vector<std::string> GetArgs(const alt::CConsoleCommandEvent* ptr) {
+const std::vector<std::string> GetArgs(const alt::CConsoleCommandEvent* ptr) {
     return ptr->GetArgs();
 }
 

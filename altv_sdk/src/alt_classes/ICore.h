@@ -107,7 +107,7 @@ bool IsEventEnabled(u16 type) {
 void ToggleEvent(u16 type, bool state) {
     return alt::ICore::Instance().ToggleEvent(static_cast<alt::CEvent::Type>(type), state);
 }
-StdStringClone GetRootDirectory() {
+const StdStringClone GetRootDirectory() {
     return std::string { alt::ICore::Instance().GetRootDirectory() };
 }
 alt::IResource* StartResource(const StdStringClone name) {
@@ -139,6 +139,9 @@ u64 HashServerPassword(const StdStringClone password) {
 }
 void StopServer() {
     return alt::ICore::Instance().StopServer();
+}
+const alt::VehicleModelInfo* GetVehicleModelByHash(u32 hash) {
+    return &alt::ICore::Instance().GetVehicleModelByHash(hash);
 }
 void SetWorldProfiler(bool state) {
     return alt::ICore::Instance().SetWorldProfiler(state);

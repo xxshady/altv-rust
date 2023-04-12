@@ -19,6 +19,7 @@ pub use crate::{
     },
     timers::create_timer,
     vector::{Vector2, Vector3},
+    vehicle_model_info::VehicleModelInfo,
     world_object::WorldObject,
     SomeResult, VoidResult,
 };
