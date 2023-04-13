@@ -144,10 +144,9 @@ impl Entity for player::Player {}
 meta::impl_entity_meta_for!(StreamSyncedMeta, player::Player);
 meta::impl_entity_meta_for!(SyncedMeta, player::Player);
 
-// TODO: https://github.com/altmp/cpp-sdk/pull/73
-// meta::impl_meta_type_for!(
-//     LocalMeta,
-//     player::Player,
-//     sdk::IPlayer,
-//     player::Player::raw_ptr
-// );
+meta::impl_meta_type_for!(
+    LocalMeta,
+    player::Player,
+    sdk::IPlayer,
+    player::Player::raw_ptr
+);
