@@ -16,7 +16,8 @@ pub use crate::{
     init,
     ped_model_info::PedModelInfo,
     structs::{
-        AttachToEntityBoneIndex, AttachToEntityBoneName, PlayerDateTime, PlayerHeadBlendData,
+        AnimationFlags, AttachToEntityBoneIndex, AttachToEntityBoneName, PlayerDateTime,
+        PlayerHeadBlendData, RGBA,
     },
     timers::create_timer,
     vector::{Vector2, Vector3},

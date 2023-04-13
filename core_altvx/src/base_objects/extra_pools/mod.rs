@@ -19,23 +19,49 @@ pub mod wrappers {
         super::*,
         entity::{base_ptr_to_entity_raw_ptr, EntityRawPtr},
     };
+    use objects::AnyBaseObject;
     use player::PlayerContainer;
     use vehicle::VehicleContainer;
 
-    #[derive(Debug)]
-    pub enum AnyEntity {
-        Vehicle(VehicleContainer),
-        Player(PlayerContainer),
+    macro_rules! extra_pool_enum {
+        (@internal $any_name: ident, $name: ident, $raw_ptr_type: ty: [ $( $variant: ident, $container: ty; )+ ]) => {
+            #[derive(Debug)]
+            pub enum $any_name { $(
+                $variant($container),
+            )+ }
+
+            impl $any_name {
+                pub(crate) fn raw_ptr(&self) -> SomeResult<$raw_ptr_type> {
+                    match self { $(
+                        $any_name::$variant(e) => base_ptr_to_entity_raw_ptr(e.base_ptr()?),
+                    )+}
+                }
+            }
+
+            impl TryFrom<AnyBaseObject> for AnyEntity {
+                type Error = anyhow::Error;
+                fn try_from(value: AnyBaseObject) -> Result<Self, Self::Error> {
+                    Ok(match value {
+                    $(
+                        AnyBaseObject::$variant(e) => AnyEntity::$variant(e),
+                    )+
+                        base_object => anyhow::bail!("cannot convert: {base_object:?} to AnyEntity"),
+                    })
+                }
+            }
+        };
+
+        ($name: ident, $raw_ptr_type: ty: [ $( $variant: ident, $container: ty; )+ ]) => {
+            paste::paste! {
+                extra_pool_enum!(@internal [<Any $name>], $name, $raw_ptr_type: [ $( $variant, $container; )+ ]);
+            }
+        };
     }
 
-    impl AnyEntity {
-        pub(crate) fn raw_ptr(&self) -> SomeResult<EntityRawPtr> {
-            match self {
-                AnyEntity::Player(e) => base_ptr_to_entity_raw_ptr(e.base_ptr()?),
-                AnyEntity::Vehicle(e) => base_ptr_to_entity_raw_ptr(e.base_ptr()?),
-            }
-        }
-    }
+    extra_pool_enum!(Entity, EntityRawPtr: [
+        Player, PlayerContainer;
+        Vehicle, VehicleContainer;
+    ]);
 
     impl From<VehicleContainer> for AnyEntity {
         fn from(value: VehicleContainer) -> Self {

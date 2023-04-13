@@ -30,6 +30,8 @@ pub use exports::{
     Hash,
     VehicleModelInfo,
     PedModelInfo,
+    RGBA,
+    AnimationFlags,
 };
 
 pub use altv_sdk::{

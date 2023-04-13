@@ -148,5 +148,9 @@ impl Resource {
         extra_base_object_pools,
         base_objects::extra_pools::ExtraPools
     );
+    impl_borrow_fn!(
+        extra_base_object_pools,
+        base_objects::extra_pools::ExtraPools
+    );
     impl_borrow_mut_fn!(connection_queue, connection_queue::ConnectionQueueManager);
 }

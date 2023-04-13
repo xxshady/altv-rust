@@ -4,8 +4,7 @@ use std::{collections::HashMap, ptr::NonNull};
 use super::{super::BasePtr, wrappers::AnyEntity, ExtraPool};
 use crate::{
     base_objects::player,
-    helpers::{read_cpp_vector3, Hash},
-    resource::Resource,
+    helpers::{self, read_cpp_vector3, Hash},
     sdk, structs,
     vector::{IntoVector3, Vector3},
     SomeResult, VoidResult,
@@ -115,13 +114,7 @@ pub trait Entity: BasePtr {
     }
 
     fn net_owner(&self) -> SomeResult<Option<player::PlayerContainer>> {
-        let ptr = unsafe { sdk::IEntity::GetNetworkOwner(self.raw_ptr()?) };
-        let Some(ptr) = NonNull::new(ptr) else {
-            return Ok(None);
-        };
-        Ok(Resource::with_base_objects_ref(|v, _| {
-            v.player.get_by_ptr(ptr)
-        }))
+        helpers::get_any_option_base_object!(sdk::IEntity::GetNetworkOwner(self.raw_ptr()?), player)
     }
 
     fn set_net_owner(&self, owner: player::PlayerContainer, disable_migration: bool) -> VoidResult {
@@ -220,7 +213,7 @@ impl EntityPool {
 #[macro_export]
 macro_rules! __get_entity_by_id {
     ($entity_type: path, $id: expr) => {
-        $crate::resource::Resource::with_extra_base_object_pools_mut(|v, _| {
+        $crate::resource::Resource::with_extra_base_object_pools_ref(|v, _| {
             match v.entity.get_by_id($id) {
                 Some(_wrapper @ $entity_type(entity)) => Some(std::rc::Rc::clone(entity)),
                 None | Some(_) => None,

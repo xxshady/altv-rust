@@ -1,8 +1,7 @@
 use std::ptr::NonNull;
 
 use crate::{
-    base_objects::{extra_pools::EntityRawPtr, player, vehicle, AnyBaseObject},
-    exports::AnyEntity,
+    base_objects::{player, vehicle, AnyBaseObject},
     resource::Resource,
     sdk,
 };
@@ -55,28 +54,6 @@ pub fn get_vehicle_from_event(
         .vehicle
         .get_by_ptr(ptr)
         .unwrap()
-}
-
-pub fn get_non_null_entity_from_event(ptr: EntityRawPtr, resource: &Resource) -> AnyEntity {
-    let entity = NonNull::new(ptr).unwrap().as_ptr();
-    get_entity_from_event(entity, resource).unwrap()
-}
-
-pub fn get_entity_from_event(entity: EntityRawPtr, resource: &Resource) -> Option<AnyEntity> {
-    if entity.is_null() {
-        return None;
-    }
-    let entity = unsafe { sdk::entity::to_base_object(entity) };
-    let entity = NonNull::new(entity).unwrap();
-    let entity = resource.base_objects.borrow().get_by_ptr(entity).unwrap();
-    let entity = match entity {
-        AnyBaseObject::Player(p) => AnyEntity::Player(p),
-        AnyBaseObject::Vehicle(v) => AnyEntity::Vehicle(v),
-        _ => {
-            unreachable!()
-        }
-    };
-    Some(entity)
 }
 
 pub fn get_non_null_base_object_from_event(

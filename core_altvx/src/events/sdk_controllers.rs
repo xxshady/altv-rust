@@ -8,7 +8,7 @@ use crate::{
     base_objects::{col_shape, player, vehicle, AnyBaseObject},
     events::helpers::{get_non_null_base_object_from_event, get_player_from_event},
     exports::{AnyEntity, Vector3},
-    helpers::{read_cpp_vector3, Hash},
+    helpers::{get_entity_by_ptr, get_non_null_entity_by_ptr, read_cpp_vector3, Hash},
     mvalue,
     resource::Resource,
     VoidResult,
@@ -17,10 +17,7 @@ use crate::{
 use super::{
     cancellable::CancellableEvent,
     connection_queue::{ConnectionQueueController, ConnectionQueueInfo},
-    helpers::{
-        base_event_to_specific, get_entity_from_event, get_non_null_entity_from_event,
-        get_non_null_player_from_event, get_vehicle_from_event,
-    },
+    helpers::{base_event_to_specific, get_non_null_player_from_event, get_vehicle_from_event},
     structs,
 };
 
@@ -87,7 +84,7 @@ impl ColshapeEvent {
 
         Self {
             col_shape,
-            entity: get_non_null_entity_from_event(sdk::CColShapeEvent::GetEntity(event), resource),
+            entity: get_non_null_entity_by_ptr(sdk::CColShapeEvent::GetEntity(event), resource),
             state,
         }
     }
@@ -202,7 +199,7 @@ impl WeaponDamageEvent {
                 sdk::CWeaponDamageEvent::GetSource(weapon_event),
                 resource,
             ),
-            target: get_non_null_entity_from_event(
+            target: get_non_null_entity_by_ptr(
                 sdk::CWeaponDamageEvent::GetTarget(weapon_event),
                 resource,
             ),
@@ -254,7 +251,7 @@ impl PlayerDeath {
                 sdk::CPlayerDeathEvent::GetTarget(event),
                 resource,
             ),
-            killer: get_entity_from_event(sdk::CPlayerDeathEvent::GetKiller(event), resource),
+            killer: get_entity_by_ptr(sdk::CPlayerDeathEvent::GetKiller(event), resource),
             weapon_hash: sdk::CPlayerDeathEvent::GetWeapon(event),
         }
     }
@@ -277,7 +274,7 @@ impl PlayerDamage {
                 sdk::CPlayerDamageEvent::GetTarget(event),
                 resource,
             ),
-            attacker: get_entity_from_event(sdk::CPlayerDamageEvent::GetAttacker(event), resource),
+            attacker: get_entity_by_ptr(sdk::CPlayerDamageEvent::GetAttacker(event), resource),
             health_damage: sdk::CPlayerDamageEvent::GetHealthDamage(event),
             armour_damage: sdk::CPlayerDamageEvent::GetArmourDamage(event),
         }
@@ -448,7 +445,7 @@ impl PlayerRequestControl {
                 sdk::CPlayerRequestControlEvent::GetPlayer(event),
                 resource,
             ),
-            entity: get_non_null_entity_from_event(
+            entity: get_non_null_entity_by_ptr(
                 sdk::CPlayerRequestControlEvent::GetTarget(event),
                 resource,
             ),
@@ -595,7 +592,7 @@ impl ExplosionEvent {
         use sdk::CExplosionEvent::*;
         Self {
             player: get_non_null_player_from_event(GetSource(event), resource),
-            target: get_entity_from_event(GetTarget(event), resource),
+            target: get_entity_by_ptr(GetTarget(event), resource),
             pos: {
                 let raw = GetPosition(event).within_unique_ptr();
                 read_cpp_vector3(raw)
@@ -758,7 +755,7 @@ impl VehicleDamage {
         use sdk::CVehicleDamageEvent::*;
         Self {
             vehicle: get_vehicle_from_event(GetTarget(event), resource),
-            damager: get_entity_from_event(GetDamager(event), resource),
+            damager: get_entity_by_ptr(GetDamager(event), resource),
             body_health_damage: GetBodyHealthDamage(event),
             body_additional_health_damage: GetBodyAdditionalHealthDamage(event),
             engine_health_damage: GetEngineHealthDamage(event),
@@ -818,7 +815,7 @@ impl NetownerChange {
 
         use sdk::CNetOwnerChangeEvent::*;
         Self {
-            entity: get_non_null_entity_from_event(GetTarget(event), resource),
+            entity: get_non_null_entity_by_ptr(GetTarget(event), resource),
             new_net_owner: get_player_from_event(GetNewOwner(event), resource),
             old_net_owner: get_player_from_event(GetOldOwner(event), resource),
         }
@@ -881,7 +878,7 @@ impl SyncedMetaChange {
         Self {
             key: GetKey(event).to_string(),
             new_value: mvalue::deserialize_from_sdk(GetVal(event), resource),
-            entity: get_non_null_entity_from_event(GetTarget(event), resource),
+            entity: get_non_null_entity_by_ptr(GetTarget(event), resource),
             old_value: mvalue::deserialize_from_sdk(GetOldVal(event), resource),
         }
     }
