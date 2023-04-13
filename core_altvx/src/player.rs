@@ -5,6 +5,7 @@ use crate::{
     },
     helpers::{self, read_cpp_vector3, Hash, IntoHash, IntoString},
     resource::Resource,
+    rgba::RGBA,
     sdk, structs,
     vector::IntoVector3,
     vector::Vector3,
@@ -716,8 +717,8 @@ impl player::Player {
         )
     }
 
-    pub fn get_head_blend_palette_color(&self, id: u8) -> SomeResult<structs::RGBA> {
-        Ok(helpers::read_rgba(
+    pub fn get_head_blend_palette_color(&self, id: u8) -> SomeResult<RGBA> {
+        Ok(helpers::read_cpp_rgba(
             unsafe { sdk::IPlayer::GetHeadBlendPaletteColor(self.raw_ptr()?, id) }
                 .within_unique_ptr(),
         ))

@@ -711,6 +711,13 @@ std::string read_ped_model_info_default_unarmed_weapon(const alt::PedModelInfo* 
     return ptr->defaultUnarmedWeapon;
 }
 
+void read_quaternion(const alt::Quaternion& quat, f32* out_x, f32* out_y, f32* out_z, f32* out_w) {
+    *out_x = quat.x;
+    *out_y = quat.y;
+    *out_z = quat.z;
+    *out_w = quat.w;
+}
+
 namespace events
 {
     const alt::CConsoleCommandEvent* to_CConsoleCommandEvent(const alt::CEvent* event) {

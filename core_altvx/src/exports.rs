@@ -15,9 +15,10 @@ pub use crate::{
     helpers::{hash, Hash},
     init,
     ped_model_info::PedModelInfo,
+    rgba::RGBA,
     structs::{
         AnimationFlags, AttachToEntityBoneIndex, AttachToEntityBoneName, PlayerDateTime,
-        PlayerHeadBlendData, RGBA,
+        PlayerHeadBlendData,
     },
     timers::create_timer,
     vector::{Vector2, Vector3},

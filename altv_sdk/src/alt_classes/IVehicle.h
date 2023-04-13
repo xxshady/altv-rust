@@ -591,5 +591,11 @@ u8 GetHybridExtraState(const alt::IVehicle* ptr) {
 void SetHybridExtraState(alt::IVehicle* ptr, u8 state) {
     return ptr->SetHybridExtraState(state);
 }
+alt::Quaternion GetQuaternion(const alt::IVehicle* ptr) {
+    return ptr->GetQuaternion();
+}
+void SetQuaternion(alt::IVehicle* ptr, f32 quaternion_x, f32 quaternion_y, f32 quaternion_z, f32 quaternion_w) {
+    return ptr->SetQuaternion({ quaternion_x, quaternion_y, quaternion_z, quaternion_w });
+}
 
 } // namespace

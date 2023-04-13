@@ -88,20 +88,6 @@ pub struct PlayerHeadOverlay {
 }
 
 #[derive(Debug)]
-pub struct RGBA {
-    pub r: u8,
-    pub g: u8,
-    pub b: u8,
-    pub a: u8,
-}
-
-impl RGBA {
-    pub fn new(r: u8, g: u8, b: u8, a: u8) -> Self {
-        Self { r, g, b, a }
-    }
-}
-
-#[derive(Debug)]
 pub struct Weapon {
     pub hash: Hash,
     pub tint_index: u8,
@@ -168,4 +154,12 @@ pub enum AnimationFlags {
     UseAlternativeFpAnim = 268435456,
     BlendoutWrtLastFrame = 536870912,
     UseFullBlending = 1073741824,
+}
+
+#[derive(Debug)]
+pub struct VehicleNeon {
+    pub left: bool,
+    pub right: bool,
+    pub front: bool,
+    pub back: bool,
 }

@@ -245,6 +245,9 @@ pub mod ffi {
         generate!("read_ped_model_info_movement_clip_set")
         generate!("read_ped_model_info_default_unarmed_weapon")
 
+        // alt::Quaternion
+        generate!("read_quaternion")
+
         generate!("create_player_vec")
         generate!("push_to_player_vec")
 

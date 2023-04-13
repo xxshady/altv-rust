@@ -2,8 +2,9 @@ use std::ptr::NonNull;
 
 use crate::{
     base_objects::extra_pools::{wrappers::AnyEntity, EntityRawPtr},
+    quaternion::Quaternion,
     resource::Resource,
-    structs,
+    rgba::RGBA,
     vector::{Vector2, Vector3},
 };
 use altv_sdk::ffi as sdk;
@@ -37,7 +38,7 @@ pub fn read_cpp_vector2(cpp_vector: UniquePtr<sdk::Vector2Wrapper>) -> Vector2 {
     Vector2::new(out_x, out_y)
 }
 
-pub fn read_rgba(cpp_rgba: UniquePtr<sdk::RGBAWrapper>) -> structs::RGBA {
+pub fn read_cpp_rgba(cpp_rgba: UniquePtr<sdk::RGBAWrapper>) -> RGBA {
     let mut r = 0u8;
     let mut g = 0u8;
     let mut b = 0u8;
@@ -53,6 +54,23 @@ pub fn read_rgba(cpp_rgba: UniquePtr<sdk::RGBAWrapper>) -> structs::RGBA {
     }
 
     RGBA::new(r, g, b, a)
+}
+
+pub fn read_cpp_quaternion(cpp_quaternion: UniquePtr<sdk::alt::Quaternion>) -> Quaternion {
+    let mut out_x = 0f32;
+    let mut out_y = 0f32;
+    let mut out_z = 0f32;
+    let mut out_w = 0f32;
+    unsafe {
+        sdk::read_quaternion(
+            cpp_quaternion.as_ref().unwrap(),
+            &mut out_x as *mut f32,
+            &mut out_y as *mut f32,
+            &mut out_z as *mut f32,
+            &mut out_w as *mut f32,
+        );
+    }
+    Quaternion::new(out_x, out_y, out_z, out_w)
 }
 
 // credits to altv-rs creator
@@ -123,7 +141,6 @@ macro_rules! __get_any_option_base_object {
     };
 }
 pub(crate) use __get_any_option_base_object as get_any_option_base_object;
-use structs::RGBA;
 
 pub(crate) fn get_non_null_entity_by_ptr(ptr: EntityRawPtr, resource: &Resource) -> AnyEntity {
     let entity = NonNull::new(ptr).unwrap().as_ptr();

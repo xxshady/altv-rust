@@ -27,7 +27,9 @@ pub fn main() {
         dbg!(player.get_prop(0)?);
 
         let vehicle = alt::Vehicle::new("bmx", alt::Vector3::new(5., 0., 71.), 0)?;
-        player.set_into_vehicle(vehicle, 1)?;
+        player.set_into_vehicle(vehicle.clone(), 1)?;
+
+        vehicle.set_quaternion(0)?;
 
         Ok(())
     });

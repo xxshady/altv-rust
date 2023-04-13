@@ -65,6 +65,7 @@ lazy_static::lazy_static! {
             ("std::vector<std::string>&", "std::vector<std::string>"),
             ("std::vector<Vector2f>", "Vector2Vec"),
             ("Array<FireInfo>&", "std::vector<FireInfoWrapper>"),
+            ("Quaternion", "alt::Quaternion"),
 
             // TODO: wrappers for these
             // ("std::vector<IVirtualEntity*>", "std::vector<alt::IVirtualEntity*>"),
@@ -756,6 +757,9 @@ fn cpp_method_to_rust_compatible_func(
             match type_name.as_str() {
                 "Vector3Wrapper" => format!("f32 {name}_x, f32 {name}_y, f32 {name}_z"),
                 "Vector2Wrapper" => format!("f32 {name}_x, f32 {name}_y"),
+                "alt::Quaternion" => {
+                    format!("f32 {name}_x, f32 {name}_y, f32 {name}_z, f32 {name}_w")
+                }
                 "RGBAWrapper" => format!("u8 {name}_r, u8 {name}_g, u8 {name}_b, u8 {name}_a"),
                 "std::vector<WeaponWrapper>" => {
                     "---std::vector<WeaponWrapper> is not implemented as param".to_string()
@@ -793,6 +797,7 @@ fn cpp_method_to_rust_compatible_func(
                 "MValueWrapper" => format!("*({name}.ptr)"),
                 "Vector3Wrapper" => format!("{{ {name}_x, {name}_y, {name}_z }}"),
                 "Vector2Wrapper" => format!("{{ {name}_x, {name}_y }}"),
+                "alt::Quaternion" => format!("{{ {name}_x, {name}_y, {name}_z, {name}_w }}"),
                 "RGBAWrapper" => format!("{{ {name}_r, {name}_g, {name}_b, {name}_a }}"),
                 "std::vector<WeaponWrapper>" => {
                     "---std::vector<WeaponWrapper> is not implemented as passed param".to_string()

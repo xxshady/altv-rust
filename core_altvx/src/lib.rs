@@ -16,6 +16,8 @@ mod logging;
 mod mvalue;
 mod ped_model_info;
 mod player;
+mod quaternion;
+mod rgba;
 mod script_events;
 mod structs;
 mod timers;
