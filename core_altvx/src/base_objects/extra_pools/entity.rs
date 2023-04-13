@@ -1,7 +1,15 @@
+use autocxx::prelude::*;
 use std::{collections::HashMap, ptr::NonNull};
 
 use super::{super::BasePtr, wrappers::AnyEntity, ExtraPool};
-use crate::{helpers::Hash, sdk, structs, SomeResult, VoidResult};
+use crate::{
+    base_objects::player,
+    helpers::{read_cpp_vector3, Hash},
+    resource::Resource,
+    sdk, structs,
+    vector::{IntoVector3, Vector3},
+    SomeResult, VoidResult,
+};
 
 pub type EntityId = u16;
 pub type EntityPool = ExtraPool<HashMap<EntityId, AnyEntity>>;
@@ -95,6 +103,87 @@ pub trait Entity: BasePtr {
                 collision,
                 no_fixed_rotation,
             )
+        }
+        Ok(())
+    }
+
+    fn detach(&self) -> VoidResult {
+        unsafe {
+            sdk::IEntity::Detach(self.raw_ptr()?);
+        }
+        Ok(())
+    }
+
+    fn net_owner(&self) -> SomeResult<Option<player::PlayerContainer>> {
+        let ptr = unsafe { sdk::IEntity::GetNetworkOwner(self.raw_ptr()?) };
+        let Some(ptr) = NonNull::new(ptr) else {
+            return Ok(None);
+        };
+        Ok(Resource::with_base_objects_ref(|v, _| {
+            v.player.get_by_ptr(ptr)
+        }))
+    }
+
+    fn set_net_owner(&self, owner: player::PlayerContainer, disable_migration: bool) -> VoidResult {
+        unsafe {
+            sdk::IEntity::SetNetworkOwner(self.raw_ptr()?, owner.raw_ptr()?, disable_migration);
+        }
+        Ok(())
+    }
+
+    fn rot(&self) -> SomeResult<Vector3> {
+        let raw = unsafe { sdk::IEntity::GetRotation(self.raw_ptr()?) }.within_unique_ptr();
+        Ok(read_cpp_vector3(raw))
+    }
+
+    fn set_rot(&self, rot: impl IntoVector3) -> VoidResult {
+        let rot = rot.into_vector3();
+        unsafe {
+            sdk::IEntity::SetRotation(self.raw_ptr()?, rot.x(), rot.y(), rot.z());
+        }
+        Ok(())
+    }
+
+    fn streamed(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IEntity::GetStreamed(self.raw_ptr()?) })
+    }
+
+    fn set_streamed(&self, toggle: bool) -> VoidResult {
+        unsafe {
+            sdk::IEntity::SetStreamed(self.raw_ptr()?, toggle);
+        }
+        Ok(())
+    }
+
+    fn visible(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IEntity::GetVisible(self.raw_ptr()?) })
+    }
+
+    fn set_visible(&self, toggle: bool) -> VoidResult {
+        unsafe {
+            sdk::IEntity::SetVisible(self.raw_ptr()?, toggle);
+        }
+        Ok(())
+    }
+
+    fn frozen(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IEntity::IsFrozen(self.raw_ptr()?) })
+    }
+
+    fn set_frozen(&self, toggle: bool) -> VoidResult {
+        unsafe {
+            sdk::IEntity::SetFrozen(self.raw_ptr()?, toggle);
+        }
+        Ok(())
+    }
+
+    fn collision(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IEntity::HasCollision(self.raw_ptr()?) })
+    }
+
+    fn set_collision(&self, toggle: bool) -> VoidResult {
+        unsafe {
+            sdk::IEntity::SetCollision(self.raw_ptr()?, toggle);
         }
         Ok(())
     }
