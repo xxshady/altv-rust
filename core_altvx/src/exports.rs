@@ -15,6 +15,7 @@ pub use crate::{
     helpers::{hash, Hash},
     init,
     ped_model_info::PedModelInfo,
+    quaternion::Quaternion,
     rgba::RGBA,
     structs::{
         AnimationFlags, AttachToEntityBoneIndex, AttachToEntityBoneName, PlayerDateTime,

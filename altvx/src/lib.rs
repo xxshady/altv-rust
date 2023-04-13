@@ -32,6 +32,7 @@ pub use exports::{
     PedModelInfo,
     RGBA,
     AnimationFlags,
+    Quaternion,
 };
 
 pub use altv_sdk::{
