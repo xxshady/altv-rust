@@ -4,7 +4,7 @@
 
 namespace CMetaChangeEvent {
 
-alt::IEntity* GetTarget(const alt::CMetaChangeEvent* ptr) {
+alt::IBaseObject* GetTarget(const alt::CMetaChangeEvent* ptr) {
     return ptr->GetTarget();
 }
 std::string GetKey(const alt::CMetaChangeEvent* ptr) {
