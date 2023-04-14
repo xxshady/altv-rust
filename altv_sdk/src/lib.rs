@@ -248,6 +248,9 @@ pub mod ffi {
         // alt::Quaternion
         generate!("read_quaternion")
 
+        generate!("read_base_object_ptr_wrapper")
+        generate!("create_base_object_vec")
+        generate!("push_to_base_object_vec")
         generate!("create_player_vec")
         generate!("push_to_player_vec")
 

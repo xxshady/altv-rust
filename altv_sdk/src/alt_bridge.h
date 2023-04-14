@@ -107,6 +107,35 @@ public:
     }
 };
 
+class BaseObjectPtrWrapper {
+public:
+    std::shared_ptr<alt::IBaseObject*> ptr;
+
+    BaseObjectPtrWrapper clone() {
+        BaseObjectPtrWrapper instance;
+        instance.ptr = this->ptr;
+
+        return instance;
+    }
+};
+
+using BaseObjectVector = std::vector<BaseObjectPtrWrapper>;
+
+alt::IBaseObject* read_base_object_ptr_wrapper(const BaseObjectPtrWrapper& wrapper) {
+    return *wrapper.ptr;
+}
+
+BaseObjectVector create_base_object_vec() {
+    BaseObjectVector vec;
+    return vec;
+}
+
+void push_to_base_object_vec(BaseObjectVector& base_object_vec, alt::IBaseObject* base_object) {
+    BaseObjectPtrWrapper wrapper;
+    wrapper.ptr = std::make_shared<alt::IBaseObject*>(base_object);
+    base_object_vec.push_back(wrapper.clone());
+}
+
 class PlayerPtrWrapper {
 public:
     std::shared_ptr<alt::IPlayer*> ptr;

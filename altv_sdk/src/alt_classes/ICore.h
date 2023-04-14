@@ -149,5 +149,38 @@ const alt::PedModelInfo* GetPedModelByHash(u32 hash) {
 void SetWorldProfiler(bool state) {
     return alt::ICore::Instance().SetWorldProfiler(state);
 }
+BaseObjectVector GetEntitiesInDimension(i32 dimension, u64 allowedTypes) {
+    auto alt_vec = alt::ICore::Instance().GetEntitiesInDimension(dimension, allowedTypes);
+    BaseObjectVector vec {};
+    vec.reserve(alt_vec.size());
+    for (const auto& e : alt_vec) {
+        BaseObjectPtrWrapper wrapper;
+        wrapper.ptr = std::make_shared<alt::IBaseObject*>(e);
+        vec.push_back(wrapper.clone());
+    }
+    return vec;
+}
+BaseObjectVector GetEntitiesInRange(f32 position_x, f32 position_y, f32 position_z, i32 range, i32 dimension, u64 allowedTypes) {
+    auto alt_vec = alt::ICore::Instance().GetEntitiesInRange({ position_x, position_y, position_z }, range, dimension, allowedTypes);
+    BaseObjectVector vec {};
+    vec.reserve(alt_vec.size());
+    for (const auto& e : alt_vec) {
+        BaseObjectPtrWrapper wrapper;
+        wrapper.ptr = std::make_shared<alt::IBaseObject*>(e);
+        vec.push_back(wrapper.clone());
+    }
+    return vec;
+}
+BaseObjectVector GetClosestEntities(f32 position_x, f32 position_y, f32 position_z, i32 range, i32 dimension, i32 limit, u64 allowedTypes) {
+    auto alt_vec = alt::ICore::Instance().GetClosestEntities({ position_x, position_y, position_z }, range, dimension, limit, allowedTypes);
+    BaseObjectVector vec {};
+    vec.reserve(alt_vec.size());
+    for (const auto& e : alt_vec) {
+        BaseObjectPtrWrapper wrapper;
+        wrapper.ptr = std::make_shared<alt::IBaseObject*>(e);
+        vec.push_back(wrapper.clone());
+    }
+    return vec;
+}
 
 } // namespace

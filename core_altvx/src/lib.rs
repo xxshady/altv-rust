@@ -10,6 +10,7 @@ use resource::Resource;
 mod base_objects;
 mod client_events;
 mod col_shape;
+mod core_funcs;
 mod events;
 mod helpers;
 mod logging;

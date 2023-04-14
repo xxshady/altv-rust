@@ -12,6 +12,7 @@ pub use crate::{
         virtual_entity_group::{VirtualEntityGroup, VirtualEntityGroupContainer},
         ValidBaseObject,
     },
+    core_funcs::{get_closest_entities, get_entities_in_dimension, get_entities_in_range},
     helpers::{hash, Hash},
     init,
     ped_model_info::PedModelInfo,

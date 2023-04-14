@@ -66,6 +66,7 @@ lazy_static::lazy_static! {
             ("std::vector<Vector2f>", "Vector2Vec"),
             ("Array<FireInfo>&", "std::vector<FireInfoWrapper>"),
             ("Quaternion", "alt::Quaternion"),
+            ("std::vector<IBaseObject*>", "BaseObjectVector"),
 
             // TODO: wrappers for these
             // ("std::vector<IVirtualEntity*>", "std::vector<alt::IVirtualEntity*>"),
@@ -908,6 +909,19 @@ fn cpp_method_to_rust_compatible_func(
         },
         "alt::VehicleModelInfo*" => |v: &str| format!("return &{v}"),
         "alt::PedModelInfo*" => |v: &str| format!("return &{v}"),
+        "BaseObjectVector" => |v: &str| {
+            format!(
+                "auto alt_vec = {v};\n    \
+                BaseObjectVector vec {{}};\n    \
+                vec.reserve(alt_vec.size());\n    \
+                for (const auto& e : alt_vec) {{\n        \
+                    BaseObjectPtrWrapper wrapper;\n        \
+                    wrapper.ptr = std::make_shared<alt::IBaseObject*>(e);\n        \
+                    vec.push_back(wrapper.clone());\n    \
+                }}\n    \
+                return vec"
+            )
+        },
         _ => |v: &str| format!("return {v}"),
     };
 

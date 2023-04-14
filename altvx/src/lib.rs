@@ -33,10 +33,14 @@ pub use exports::{
     RGBA,
     AnimationFlags,
     Quaternion,
+    get_closest_entities,
+    get_entities_in_range,
+    get_entities_in_dimension
 };
 
 pub use altv_sdk::{
-    ColShapeType, ExplosionType, PlayerBodyPart, PlayerConnectDeniedReason, VehicleModelType,
+    BaseObjectType, ColShapeType, ExplosionType, PlayerBodyPart, PlayerConnectDeniedReason,
+    VehicleModelType,
 };
 
 pub mod events;
