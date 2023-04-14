@@ -19,6 +19,8 @@ pub mod ffi {
         #include "alt_classes/IBlip.h"
         #include "alt_classes/ICheckpoint.h"
         #include "alt_classes/CEvent.h"
+        #include "alt_classes/IResource.h"
+
         #include "alt_classes/CConsoleCommandEvent.h"
         #include "alt_classes/CServerScriptEvent.h"
         #include "alt_classes/CClientScriptEvent.h"
@@ -71,6 +73,9 @@ pub mod ffi {
         #include "alt_classes/CStreamSyncedMetaDataChangeEvent.h"
         #include "alt_classes/CLocalMetaDataChangeEvent.h"
 
+        #include "alt_classes/CResourceStopEvent.h"
+        #include "alt_classes/CResourceStartEvent.h"
+
         name!(alt_bridge)
 
         generate_ns!("ICore")
@@ -92,6 +97,7 @@ pub mod ffi {
         generate_ns!("CColShapeEvent")
         generate_ns!("IVirtualEntity")
         generate_ns!("IVirtualEntityGroup")
+        generate_ns!("IResource")
 
         generate_ns!("CNetOwnerChangeEvent")
 
@@ -130,6 +136,9 @@ pub mod ffi {
         generate_ns!("CSyncedMetaDataChangeEvent")
         generate_ns!("CStreamSyncedMetaDataChangeEvent")
         generate_ns!("CLocalMetaDataChangeEvent")
+
+        generate_ns!("CResourceStopEvent")
+        generate_ns!("CResourceStartEvent")
 
         // defined in alt_bridge
         generate_ns!("events")

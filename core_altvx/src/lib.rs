@@ -7,6 +7,7 @@ use altv_sdk::ffi as sdk;
 
 mod resource;
 use resource::Resource;
+mod alt_resource;
 mod base_objects;
 mod client_events;
 mod col_shape;

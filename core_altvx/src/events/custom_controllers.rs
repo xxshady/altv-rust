@@ -4,7 +4,7 @@ use crate::{
     resource::Resource,
 };
 
-use super::sdk_controllers::ColshapeEvent;
+use super::sdk_controllers::{ColshapeEvent, ResourceStart, ResourceStop};
 
 macro_rules! entity_enter_or_leave_col_shape {
     ($bool_state: literal, $key_name: ident, $any_entity: path) => {
@@ -14,12 +14,12 @@ macro_rules! entity_enter_or_leave_col_shape {
             };
 
             let $any_entity($key_name) = &controller.entity else {
-                                logger::debug!(
-                                    "{}_enter_or_leave_col_shape received {:?} -> skip",
-                                    stringify!($key_name), &controller.entity
-                                );
-                                return None;
-                            };
+                                        logger::debug!(
+                                            "{}_enter_or_leave_col_shape received {:?} -> skip",
+                                            stringify!($key_name), &controller.entity
+                                        );
+                                        return None;
+                                    };
             let $key_name = $key_name.clone();
 
             Some(Self {
@@ -71,4 +71,32 @@ pub struct PlayerLeaveColShape {
 
 impl PlayerLeaveColShape {
     entity_enter_or_leave_col_shape!(false, player, AnyEntity::Player);
+}
+
+#[derive(Debug)]
+pub struct ThisResourceStart {}
+
+impl ThisResourceStart {
+    pub fn new(controller: &ResourceStart, _: &Resource) -> Option<Self> {
+        Resource::with(|v| {
+            if !v.full_main_path.ends_with(&controller.resource.name) {
+                return None;
+            }
+            Some(Self {})
+        })
+    }
+}
+
+#[derive(Debug)]
+pub struct ThisResourceStop {}
+
+impl ThisResourceStop {
+    pub fn new(controller: &ResourceStop, _: &Resource) -> Option<Self> {
+        Resource::with(|v| {
+            if !v.full_main_path.ends_with(&controller.resource.name) {
+                return None;
+            }
+            Some(Self {})
+        })
+    }
 }

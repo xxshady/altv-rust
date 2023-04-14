@@ -222,6 +222,9 @@ macro_rules! custom_events {
 
 supported_sdk_events!(
     ServerStarted,
+    ResourceStart,
+    ResourceStop,
+
     ColshapeEvent,
     ServerScriptEvent,
     ClientScriptEvent,
@@ -272,6 +275,12 @@ custom_events!(
         VehicleLeaveColShape,
         PlayerEnterColShape,
         PlayerLeaveColShape,
+    ],
+    ResourceStart: [
+        ThisResourceStart,
+    ],
+    ResourceStop: [
+        ThisResourceStop,
     ],
 );
 

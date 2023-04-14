@@ -300,6 +300,17 @@ fn main() {
         "CLocalMetaDataChangeEvent",
         "../altv_sdk/cpp-sdk/events/CLocalMetaDataChangeEvent.h",
     );
+
+    gen_default(
+        "CResourceStopEvent",
+        "../altv_sdk/cpp-sdk/events/CResourceStopEvent.h",
+    );
+    gen_default(
+        "CResourceStartEvent",
+        "../altv_sdk/cpp-sdk/events/CResourceStartEvent.h",
+    );
+
+    gen_default("IResource", "../altv_sdk/cpp-sdk/IResource.h");
 }
 
 // below is the most shit coded mess ever...

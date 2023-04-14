@@ -5,6 +5,7 @@ use autocxx::prelude::*;
 use lazycell::LazyCell;
 
 use crate::{
+    alt_resource::AltResource,
     base_objects::{col_shape, player, vehicle, AnyBaseObject},
     events::helpers::{get_non_null_base_object_from_event, get_player_from_event},
     exports::{AnyEntity, Vector3},
@@ -46,7 +47,7 @@ pub struct PlayerDisconnect {
 
 impl PlayerDisconnect {
     pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
-        let event = sdk::events::to_CPlayerDisconnectEvent(event);
+        let event = base_event_to_specific!(event, CPlayerDisconnectEvent);
         Self {
             player: get_non_null_player_from_event(
                 sdk::CPlayerDisconnectEvent::GetTarget(event),
@@ -63,6 +64,40 @@ pub struct ServerStarted {}
 impl ServerStarted {
     pub(crate) unsafe fn new(_: altv_sdk::CEventPtr, _: &Resource) -> Self {
         Self {}
+    }
+}
+
+#[derive(Debug)]
+pub struct ResourceStart {
+    pub resource: Rc<AltResource>,
+}
+
+impl ResourceStart {
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(event, CResourceStartEvent);
+
+        let resource_ptr = unsafe { sdk::CResourceStartEvent::GetResource(event) };
+        let resource_ptr = NonNull::new(resource_ptr).unwrap();
+        let resource = resource.alt_resources.borrow_mut().on_start(resource_ptr);
+
+        Self { resource }
+    }
+}
+
+#[derive(Debug)]
+pub struct ResourceStop {
+    pub resource: Rc<AltResource>,
+}
+
+impl ResourceStop {
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(event, CResourceStopEvent);
+
+        let resource_ptr = unsafe { sdk::CResourceStopEvent::GetResource(event) };
+        let resource_ptr = NonNull::new(resource_ptr).unwrap();
+        let resource = resource.alt_resources.borrow_mut().on_stop(resource_ptr);
+
+        Self { resource }
     }
 }
 
@@ -165,7 +200,7 @@ pub struct ConsoleCommandEvent {
 
 impl ConsoleCommandEvent {
     pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, _: &Resource) -> Self {
-        let event = sdk::events::to_CConsoleCommandEvent(event);
+        let event = base_event_to_specific!(event, CConsoleCommandEvent);
         Self {
             name: sdk::CConsoleCommandEvent::GetName(event).to_string(),
             args: sdk::CConsoleCommandEvent::GetArgs(event)

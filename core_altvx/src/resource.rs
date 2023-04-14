@@ -6,7 +6,7 @@ use std::{
 use core_shared::{ModuleHandlers, ResourceMainPath};
 
 use crate::{
-    base_objects,
+    alt_resource, base_objects,
     events::{self, connection_queue},
     script_events, timers,
 };
@@ -30,6 +30,7 @@ pub struct Resource {
     pub pending_base_object_destroy_or_creation: RefCell<base_objects::PendingDestroyOrCreation>,
     pub extra_base_object_pools: RefCell<base_objects::extra_pools::ExtraPools>,
     pub connection_queue: RefCell<connection_queue::ConnectionQueueManager>,
+    pub alt_resources: RefCell<alt_resource::AltResourceManager>,
 }
 
 macro_rules! with_resource {

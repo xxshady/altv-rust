@@ -939,4 +939,14 @@ namespace events
         assert(event->GetType() == alt::CEvent::Type::LOCAL_SYNCED_META_CHANGE);
         return static_cast<const alt::CLocalMetaDataChangeEvent*>(event);
     }
+
+    const alt::CResourceStopEvent* to_CResourceStopEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::RESOURCE_STOP);
+        return static_cast<const alt::CResourceStopEvent*>(event);
+    }
+
+    const alt::CResourceStartEvent* to_CResourceStartEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::RESOURCE_START);
+        return static_cast<const alt::CResourceStartEvent*>(event);
+    }
 } // namespace events
