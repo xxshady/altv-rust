@@ -334,6 +334,10 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
     let mut cpp_if_directive = "";
     let mut multiline_method: String = "".to_string();
 
+    let mut is_in_class_block = false;
+    let mut is_in_nested_class_block = false;
+    let mut nested_class_block_brace = 0;
+
     for line in content.lines() {
         let mut line = line.trim();
         // dbg!(line);
@@ -355,6 +359,28 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
         if line.is_empty() {
             // println!("empty line");
             continue;
+        }
+
+        if line.starts_with("class ") && !line.ends_with(';') {
+            if !is_in_class_block {
+                is_in_class_block = true;
+            } else {
+                // println!("skipping this nested class block");
+                is_in_nested_class_block = true;
+            }
+        } else if is_in_nested_class_block {
+            if line.starts_with('{') {
+                nested_class_block_brace += 1;
+            } else if line.starts_with('}') {
+                nested_class_block_brace -= 1;
+            }
+            if nested_class_block_brace == 0 {
+                // println!("end of this nested class block");
+                is_in_nested_class_block = false;
+            } else {
+                // println!("still in nested class block...");
+                continue;
+            }
         }
 
         if !cpp_if_directive.is_empty() {
