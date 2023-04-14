@@ -44,6 +44,7 @@ dependencies = [
  "altv_sdk",
  "autocxx",
  "core_module",
+ "lazy_static",
  "libloading",
  "logger",
  "paste",

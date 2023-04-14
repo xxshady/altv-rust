@@ -8,6 +8,7 @@ use crate::{event_manager::EVENT_MANAGER_INSTANCE, resource_manager::RESOURCE_MA
 
 mod event_manager;
 mod helpers;
+mod required_sdk_events;
 mod resource_manager;
 
 type ResourceMainFn = unsafe extern "C" fn(
@@ -184,6 +185,8 @@ pub unsafe extern "C" fn altMain(core: *mut sdk::alt::ICore) -> bool {
         sdk::ResourceOnCreateBaseObjectCallback(resource_on_create_base_object),
         sdk::ResourceOnRemoveBaseObjectCallback(resource_on_remove_base_object),
     );
+
+    required_sdk_events::enable();
 
     true
 }

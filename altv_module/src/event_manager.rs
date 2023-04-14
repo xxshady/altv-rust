@@ -6,6 +6,8 @@ use std::{
 
 use core_module::ResourceMainPath;
 
+use crate::required_sdk_events;
+
 thread_local! {
     pub static EVENT_MANAGER_INSTANCE: RefCell<EventManager> = RefCell::new(EventManager::default());
 }
@@ -58,13 +60,21 @@ impl EventManager {
         if increase {
             if *number == 0 {
                 logger::debug!("enabling event");
-                unsafe { sdk::ICore::ToggleEvent(event_u16, true) };
+                if !required_sdk_events::is_required(event_type) {
+                    unsafe { sdk::ICore::ToggleEvent(event_u16, true) };
+                } else {
+                    logger::debug!("event is required, do nothing");
+                }
             }
             *number += 1;
         } else {
             if *number == 1 {
                 logger::debug!("disabling event: {event_type:?}");
-                unsafe { sdk::ICore::ToggleEvent(event_u16, false) };
+                if !required_sdk_events::is_required(event_type) {
+                    unsafe { sdk::ICore::ToggleEvent(event_u16, false) };
+                } else {
+                    logger::debug!("event is required, do nothing");
+                }
             }
             *number -= 1;
         }
