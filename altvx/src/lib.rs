@@ -33,9 +33,7 @@ pub use exports::{
     RGBA,
     AnimationFlags,
     Quaternion,
-    get_closest_entities,
-    get_entities_in_range,
-    get_entities_in_dimension
+    core_funcs::*,
 };
 
 pub use altv_sdk::{

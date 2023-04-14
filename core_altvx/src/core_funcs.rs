@@ -44,6 +44,10 @@ pub fn get_entities_in_range(
     read_cpp_base_object_vec(raw)
 }
 
+pub fn stop_server() {
+    unsafe { sdk::ICore::StopServer() }
+}
+
 fn read_cpp_base_object_vec(
     cpp_vec: UniquePtr<CxxVector<sdk::BaseObjectPtrWrapper>>,
 ) -> Vec<AnyBaseObject> {
