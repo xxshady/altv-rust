@@ -260,8 +260,11 @@ pub mod ffi {
         generate!("read_base_object_ptr_wrapper")
         generate!("create_base_object_vec")
         generate!("push_to_base_object_vec")
+
         generate!("create_player_vec")
         generate!("push_to_player_vec")
+
+        generate!("read_resource_ptr_wrapper")
 
         generate!("create_vector2_vec")
         generate!("push_to_vector2_vec")

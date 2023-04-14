@@ -74,11 +74,15 @@ macro_rules! impl_borrow_mut_fn {
 impl Resource {
     pub fn init(resource_name: ResourceName, module_handlers: ModuleHandlers) {
         RESOURCE.with(|container| {
-            container.replace(Some(Resource {
+            let resource = Resource {
                 name: resource_name,
                 module_handlers,
                 ..Default::default()
-            }));
+            };
+
+            resource.alt_resources.borrow_mut().init(&resource.name);
+
+            container.replace(Some(resource));
         });
     }
 
@@ -154,4 +158,6 @@ impl Resource {
         base_objects::extra_pools::ExtraPools
     );
     impl_borrow_mut_fn!(connection_queue, connection_queue::ConnectionQueueManager);
+    impl_borrow_fn!(alt_resources, alt_resource::AltResourceManager);
+    impl_borrow_mut_fn!(alt_resources, alt_resource::AltResourceManager);
 }

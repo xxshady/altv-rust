@@ -2,6 +2,7 @@ pub use anyhow;
 pub use core_shared::*;
 
 pub use crate::{
+    alt_resource::AltResource as Resource,
     base_objects::{
         col_shape::{ColShape, ColShapeContainer},
         extra_pools::{wrappers::AnyEntity, Entity, EntityId},

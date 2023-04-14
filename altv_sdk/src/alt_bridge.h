@@ -161,6 +161,24 @@ void push_to_player_vec(PlayerVector& player_vec, alt::IPlayer* player) {
     player_vec.push_back(wrapper.clone());
 }
 
+class ResourcePtrWrapper {
+public:
+    std::shared_ptr<alt::IResource*> ptr;
+
+    ResourcePtrWrapper clone() {
+        ResourcePtrWrapper instance;
+        instance.ptr = this->ptr;
+
+        return instance;
+    }
+};
+
+using ResourceVector = std::vector<ResourcePtrWrapper>;
+
+alt::IResource* read_resource_ptr_wrapper(const ResourcePtrWrapper& wrapper) {
+    return *wrapper.ptr;
+}
+
 class Vector3Wrapper {
 public:
     f32 x = 0;

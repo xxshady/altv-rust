@@ -24,9 +24,12 @@ pub fn main() {
         Ok(())
     });
 
+    let resource = alt::Resource::current();
+
     alt::set_timeout(
         move || {
-            alt::stop_server();
+            dbg!(alt::Player::all());
+            resource.restart();
             Ok(())
         },
         1000,

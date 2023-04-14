@@ -34,6 +34,7 @@ pub use exports::{
     AnimationFlags,
     Quaternion,
     core_funcs::*,
+    Resource,
 };
 
 pub use altv_sdk::{

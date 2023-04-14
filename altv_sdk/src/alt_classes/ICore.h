@@ -98,6 +98,17 @@ std::vector<std::string> GetSyncedMetaDataKeys() {
 void DestroyBaseObject(alt::IBaseObject* handle) {
     return alt::ICore::Instance().DestroyBaseObject(handle);
 }
+const ResourceVector GetAllResources() {
+    auto alt_vec = alt::ICore::Instance().GetAllResources();
+    ResourceVector vec {};
+    vec.reserve(alt_vec.size());
+    for (const auto& e : alt_vec) {
+        ResourcePtrWrapper wrapper;
+        wrapper.ptr = std::make_shared<alt::IResource*>(e);
+        vec.push_back(wrapper.clone());
+    }
+    return vec;
+}
 std::string StringToSHA256(const StdStringClone str) {
     return alt::ICore::Instance().StringToSHA256(str);
 }
