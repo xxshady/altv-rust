@@ -27,17 +27,17 @@ public:
     class RustResource: public alt::IResource::Impl {
         RustRuntime* runtime;
         alt::IResource* resource;
-        std::string full_main_path;
+        std::string name;
 
     public:
         RustResource(
             RustRuntime* runtime,
             alt::IResource* resource,
-            const std::string&& full_main_path
+            std::string name
         ):
             runtime(runtime),
             resource(resource),
-            full_main_path(full_main_path)
+            name(name)
         {};
 
         ~RustResource() = default;
@@ -48,22 +48,22 @@ public:
 
         bool Stop() override {
             assert(runtime->resource_stop_callback != nullptr);
-            runtime->resource_stop_callback(full_main_path);
+            runtime->resource_stop_callback(name);
             return true;
         }
 
         void OnEvent(const alt::CEvent* event) override {
             assert(runtime->resource_on_event_callback != nullptr);
-            runtime->resource_on_event_callback(full_main_path, event);
+            runtime->resource_on_event_callback(name, event);
         }
 
         void OnCreateBaseObject(alt::IBaseObject* base_object) override {
             assert(runtime->resource_on_create_base_object_callback != nullptr);
-            runtime->resource_on_create_base_object_callback(full_main_path, base_object);
+            runtime->resource_on_create_base_object_callback(name, base_object);
         }
         void OnRemoveBaseObject(alt::IBaseObject* base_object) override {
             assert(runtime->resource_on_remove_base_object_callback != nullptr);
-            runtime->resource_on_remove_base_object_callback(full_main_path, base_object);
+            runtime->resource_on_remove_base_object_callback(name, base_object);
         }
 
         alt::IResource* GetIResource()
@@ -80,17 +80,18 @@ public:
     RustRuntime() {}
 
     alt::IResource::Impl* CreateImpl(alt::IResource* resource) override {
+        auto resource_name = resource->GetName();
         std::filesystem::path _full_main_path(std::filesystem::path(resource->GetPath()) / resource->GetMain());
         std::string full_main_path = _full_main_path.string();
 
         auto resource_impl = new RustRuntime::RustResource(
             this,
             resource,
-            std::move(full_main_path)
+            resource_name
         );
 
         assert(resource_start_callback != nullptr);
-        resource_start_callback(full_main_path);
+        resource_start_callback(resource_name, full_main_path);
 
         return static_cast<alt::IResource::Impl*>(resource_impl);
     }

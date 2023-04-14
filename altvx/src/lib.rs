@@ -63,14 +63,14 @@ pub use resource_main_macro::resource_main_func as main;
 // __internal is intended for resource_main_func proc macro ^
 #[doc(hidden)]
 pub mod __internal {
-    pub use super::exports::{init as core_init, ModuleHandlers, ResourceHandlers};
+    pub use super::exports::{init as core_init, ModuleHandlers, ResourceHandlers, ResourceName};
     pub use altv_sdk::ffi::{alt::ICore, set_alt_core};
 
     pub fn init(
-        full_main_path: String,
+        name: ResourceName,
         resource_state: &mut ResourceHandlers,
         module_handlers: ModuleHandlers,
     ) {
-        core_init(full_main_path, resource_state, module_handlers);
+        core_init(name, resource_state, module_handlers);
     }
 }

@@ -1,16 +1,16 @@
 #[macro_export]
 macro_rules! on_base_object_event {
-    ($method_name: ident, $full_main_path: expr, $base_object: expr) => {
+    ($method_name: ident, $resource_name: expr, $base_object: expr) => {
         paste::paste! {
             RESOURCE_MANAGER_INSTANCE.with(|manager| {
                 let stringified_method_name = stringify!([$method_name]);
 
                 let manager = manager.borrow();
-                if manager.is_pending(&$full_main_path) {
+                if manager.is_pending(&$resource_name) {
                     logger::debug!(
                         "{} resource start is pending: {}",
                         stringified_method_name,
-                        $full_main_path
+                        $resource_name
                     );
                     return;
                 }
@@ -24,9 +24,9 @@ macro_rules! on_base_object_event {
                 );
 
                 manager
-                    .get_resource_for_module_by_path($full_main_path)
+                    .get_resource_for_module_by_name($resource_name)
                     .unwrap_or_else(|| {
-                        panic!("{} resource: {:?} get_resource_for_module_by_path failed", stringified_method_name, $full_main_path);
+                        panic!("{} resource: {:?} get_resource_for_module_by_path failed", stringified_method_name, $resource_name);
                     })
                     .[<$method_name>]($base_object, base_object_type);
             });

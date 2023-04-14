@@ -16,8 +16,8 @@ impl Debug for ResourceHandlers {
     }
 }
 
-pub type ResourceMainPath = String;
-type ToggleEventTypeFn = fn(ResourceMainPath, altv_sdk::EventType, bool);
+pub type ResourceName = String;
+type ToggleEventTypeFn = fn(ResourceName, altv_sdk::EventType, bool);
 
 pub struct ModuleHandlers {
     pub toggle_event_type: ToggleEventTypeFn,
@@ -26,7 +26,7 @@ pub struct ModuleHandlers {
 // this shit is here for derive(Default) of core_altvx Resource
 impl Default for ModuleHandlers {
     fn default() -> Self {
-        fn placeholder(_: ResourceMainPath, _: altv_sdk::EventType, _: bool) {}
+        fn placeholder(_: ResourceName, _: altv_sdk::EventType, _: bool) {}
         Self {
             toggle_event_type: placeholder,
         }

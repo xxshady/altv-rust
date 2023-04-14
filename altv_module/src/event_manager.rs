@@ -4,7 +4,7 @@ use std::{
     collections::{HashMap, HashSet},
 };
 
-use core_module::ResourceMainPath;
+use core_module::ResourceName;
 
 use crate::required_sdk_events;
 
@@ -16,14 +16,14 @@ type NumberOfListeners = u32;
 
 #[derive(Debug, Default)]
 pub struct EventManager {
-    enabled_events: HashMap<ResourceMainPath, HashSet<altv_sdk::EventType>>,
+    enabled_events: HashMap<ResourceName, HashSet<altv_sdk::EventType>>,
     event_listeners: HashMap<altv_sdk::EventType, NumberOfListeners>,
 }
 
 impl EventManager {
     pub fn toggle_event(
         &mut self,
-        resource: ResourceMainPath,
+        resource: ResourceName,
         event_type: altv_sdk::EventType,
         state: bool,
     ) {
@@ -45,7 +45,7 @@ impl EventManager {
         }
     }
 
-    pub fn resource_stopped(&mut self, resource: &ResourceMainPath) {
+    pub fn resource_stopped(&mut self, resource: &ResourceName) {
         logger::debug!("resource_stopped {resource}");
 
         let events = self.enabled_events.remove(resource).unwrap_or_default();

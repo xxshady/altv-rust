@@ -32,14 +32,14 @@ mod world_object;
 pub mod exports;
 
 pub fn init(
-    full_main_path: ResourceMainPath,
+    resource_name: ResourceName,
     resource_handlers: &mut ResourceHandlers,
     module_handlers: ModuleHandlers,
 ) {
     logger::init().unwrap();
     logger::debug!("init");
 
-    Resource::init(full_main_path, module_handlers);
+    Resource::init(resource_name, module_handlers);
 
     macro_rules! set_callback {
         ($name: ident, $closure: expr) => {

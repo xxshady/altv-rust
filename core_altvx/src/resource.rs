@@ -3,7 +3,7 @@ use std::{
     rc::Rc,
 };
 
-use core_shared::{ModuleHandlers, ResourceMainPath};
+use core_shared::{ModuleHandlers, ResourceName};
 
 use crate::{
     alt_resource, base_objects,
@@ -18,7 +18,7 @@ thread_local! {
 
 #[derive(Debug, Default)]
 pub struct Resource {
-    pub full_main_path: ResourceMainPath,
+    pub name: ResourceName,
     pub module_handlers: ModuleHandlers,
 
     pub timers: RefCell<timers::TimerManager>,
@@ -72,10 +72,10 @@ macro_rules! impl_borrow_mut_fn {
 }
 
 impl Resource {
-    pub fn init(full_main_path: ResourceMainPath, module_handlers: ModuleHandlers) {
+    pub fn init(resource_name: ResourceName, module_handlers: ModuleHandlers) {
         RESOURCE.with(|container| {
             container.replace(Some(Resource {
-                full_main_path,
+                name: resource_name,
                 module_handlers,
                 ..Default::default()
             }));

@@ -79,7 +79,7 @@ pub struct ThisResourceStart {}
 impl ThisResourceStart {
     pub fn new(controller: &ResourceStart, _: &Resource) -> Option<Self> {
         Resource::with(|v| {
-            if !v.full_main_path.ends_with(&controller.resource.name) {
+            if v.name != controller.resource.name {
                 return None;
             }
             Some(Self {})
@@ -93,7 +93,7 @@ pub struct ThisResourceStop {}
 impl ThisResourceStop {
     pub fn new(controller: &ResourceStop, _: &Resource) -> Option<Self> {
         Resource::with(|v| {
-            if !v.full_main_path.ends_with(&controller.resource.name) {
+            if v.name != controller.resource.name {
                 return None;
             }
             Some(Self {})

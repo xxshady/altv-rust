@@ -65,12 +65,12 @@ pub fn resource_main_func(args: TokenStream, input: TokenStream) -> TokenStream 
         #[no_mangle]
         #(#attrs)* #vis fn main(
             core: usize, // workaround for the clippy unsafety error
-            full_main_path: String,
+            resource_name: String,
             resource_handlers: &mut #crate_name_ident::__internal::ResourceHandlers,
             module_handlers: #crate_name_ident::__internal::ModuleHandlers,
         ) {
             unsafe { #crate_name_ident::__internal::set_alt_core(core as *mut #crate_name_ident::__internal::ICore) };
-            #crate_name_ident::__internal::init(full_main_path, resource_handlers, module_handlers);
+            #crate_name_ident::__internal::init(resource_name, resource_handlers, module_handlers);
 
             #(#statements)*
         }

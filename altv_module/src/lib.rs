@@ -1,5 +1,5 @@
 use altv_sdk::ffi as sdk;
-use core_module::ResourceMainPath;
+use core_module::ResourceName;
 use libloading::Library;
 use resource_manager::ResourceController;
 use std::{path::PathBuf, ptr::NonNull};
@@ -13,15 +13,16 @@ mod resource_manager;
 
 type ResourceMainFn = unsafe extern "C" fn(
     core: *mut sdk::alt::ICore,
-    full_main_path: ResourceMainPath,
+    resource_name: ResourceName,
     resource_handlers: &mut core_module::ResourceHandlers,
     module_handlers: core_module::ModuleHandlers,
 );
 
 #[allow(improper_ctypes_definitions)]
-extern "C" fn resource_start(full_main_path: &str) {
+extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
     let full_main_path = full_main_path.to_string();
-    logger::debug!("resource_start: {full_main_path}");
+    let resource_name = resource_name.to_string();
+    logger::debug!("resource_start: {resource_name} ({full_main_path})");
 
     let core_ptr = unsafe { sdk::get_alt_core() };
 
@@ -35,50 +36,50 @@ extern "C" fn resource_start(full_main_path: &str) {
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
         manager
             .borrow_mut()
-            .add_pending_status(full_main_path.clone());
+            .add_pending_status(resource_name.clone());
 
         unsafe {
             main_fn(
                 core_ptr,
-                full_main_path.clone(),
+                resource_name.clone(),
                 &mut resource_for_module.handlers,
                 module_handlers,
             )
         };
 
-        manager.borrow_mut().remove_pending_status(&full_main_path);
+        manager.borrow_mut().remove_pending_status(&resource_name);
 
         let resource_controller = ResourceController::new(lib, resource_for_module);
 
-        manager
-            .borrow_mut()
-            .add(full_main_path, resource_controller);
+        manager.borrow_mut().add(resource_name, resource_controller);
     });
 }
 
 #[allow(improper_ctypes_definitions)]
-extern "C" fn resource_stop(full_main_path: &str) {
-    let full_main_path = full_main_path.to_string();
-    logger::debug!("resource_stop: {full_main_path}");
+extern "C" fn resource_stop(resource_name: &str) {
+    let resource_name = resource_name.to_string();
+    logger::debug!("resource_stop: {resource_name}");
 
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
-        manager.borrow_mut().remove(&full_main_path);
+        manager.borrow_mut().remove(&resource_name);
     });
     EVENT_MANAGER_INSTANCE.with(|manager| {
-        manager.borrow_mut().resource_stopped(&full_main_path);
+        manager.borrow_mut().resource_stopped(&resource_name);
     });
 }
 
 fn toggle_resource_event_type(
-    full_main_path: ResourceMainPath,
+    resource_name: ResourceName,
     event_type: altv_sdk::EventType,
     state: bool,
 ) {
-    logger::debug!("toggle_resource_event_type {event_type:?} {state:?} (from: {full_main_path})");
+    logger::debug!(
+        "toggle_resource_event_type {event_type:?} {state:?} (resource: {resource_name})"
+    );
 
     EVENT_MANAGER_INSTANCE.with(|v| {
         v.borrow_mut()
-            .toggle_event(full_main_path, event_type, state);
+            .toggle_event(resource_name, event_type, state);
     })
 }
 
@@ -97,8 +98,8 @@ extern "C" fn runtime_on_tick() {
 }
 
 #[allow(improper_ctypes_definitions)]
-extern "C" fn resource_on_event(full_main_path: &str, event: altv_sdk::CEventPtr) {
-    let full_main_path = full_main_path.to_string();
+extern "C" fn resource_on_event(resource_name: &str, event: altv_sdk::CEventPtr) {
+    let resource_name = resource_name.to_string();
 
     if event.is_null() {
         panic!("resource_on_event event is null");
@@ -109,8 +110,8 @@ extern "C" fn resource_on_event(full_main_path: &str, event: altv_sdk::CEventPtr
     let event_type = altv_sdk::EventType::from(raw_type).unwrap();
 
     logger::debug!(
-        "resource_on_event full_main_path: {}, event: {:?}",
-        full_main_path,
+        "resource_on_event resource_name: {}, event: {:?}",
+        resource_name,
         event_type
     );
 
@@ -123,9 +124,9 @@ extern "C" fn resource_on_event(full_main_path: &str, event: altv_sdk::CEventPtr
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
         let manager = manager.borrow();
         manager
-            .get_resource_for_module_by_path(&full_main_path)
+            .get_resource_for_module_by_name(&resource_name)
             .unwrap_or_else(|| {
-                panic!("[resource_on_event] failed to get resource by path: {full_main_path}");
+                panic!("[resource_on_event] failed to get resource: {resource_name}");
             })
             .on_sdk_event(event_type, event);
     });
@@ -133,26 +134,26 @@ extern "C" fn resource_on_event(full_main_path: &str, event: altv_sdk::CEventPtr
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_on_create_base_object(
-    full_main_path: &str,
+    resource_name: &str,
     base_object: altv_sdk::BaseObjectRawMutPtr,
 ) {
-    let full_main_path = full_main_path.to_string();
+    let resource_name = resource_name.to_string();
     on_base_object_event!(
         on_base_object_create,
-        &full_main_path,
+        &resource_name,
         NonNull::new(base_object).unwrap()
     );
 }
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_on_remove_base_object(
-    full_main_path: &str,
+    resource_name: &str,
     base_object: altv_sdk::BaseObjectRawMutPtr,
 ) {
-    let full_main_path = full_main_path.to_string();
+    let resource_name = resource_name.to_string();
     on_base_object_event!(
         on_base_object_destroy,
-        &full_main_path,
+        &resource_name,
         NonNull::new(base_object).unwrap()
     );
 }

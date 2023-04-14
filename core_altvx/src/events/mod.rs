@@ -361,7 +361,7 @@ impl EventManager {
     fn toggle_sdk_event(&self, event_type: SupportedEventType, state: bool) {
         Resource::with(|r| {
             (r.module_handlers.toggle_event_type)(
-                r.full_main_path.clone(),
+                r.name.clone(),
                 event_type.into(),
                 state,
             );
