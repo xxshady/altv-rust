@@ -34,7 +34,6 @@ impl vehicle::Vehicle {
         let pos = pos.into_vector3();
         let rot = rot.into_vector3();
 
-        // TODO: check model before creation
         let ptr = Resource::with_pending_base_object_destroy_or_creation_mut(|_, _| unsafe {
             sdk::ICore::CreateVehicle(
                 model.into_hash(),
