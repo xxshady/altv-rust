@@ -557,7 +557,9 @@ namespace base_object
 
 namespace world_object
 {
-
+    alt::IBaseObject* to_base_object(alt::IWorldObject* world_object) {
+        return static_cast<alt::IBaseObject*>(world_object);
+    }
 } // namespace base_object
 
 namespace entity

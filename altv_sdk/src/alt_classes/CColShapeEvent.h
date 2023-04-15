@@ -7,7 +7,7 @@ namespace CColShapeEvent {
 alt::IColShape* GetTarget(const alt::CColShapeEvent* ptr) {
     return ptr->GetTarget();
 }
-alt::IEntity* GetEntity(const alt::CColShapeEvent* ptr) {
+alt::IWorldObject* GetEntity(const alt::CColShapeEvent* ptr) {
     return ptr->GetEntity();
 }
 bool GetState(const alt::CColShapeEvent* ptr) {
