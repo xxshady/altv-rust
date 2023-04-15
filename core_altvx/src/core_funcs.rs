@@ -2,7 +2,9 @@ use std::ptr::NonNull;
 
 use autocxx::{cxx::CxxVector, prelude::*};
 
-use crate::{base_objects::AnyBaseObject, resource::Resource, sdk, vector::IntoVector3};
+use crate::{
+    base_objects::AnyBaseObject, helpers::IntoString, resource::Resource, sdk, vector::IntoVector3,
+};
 
 pub fn get_closest_entities(
     pos: impl IntoVector3,
@@ -46,6 +48,14 @@ pub fn get_entities_in_range(
 
 pub fn stop_server() {
     unsafe { sdk::ICore::StopServer() }
+}
+
+pub fn set_password(password: impl IntoString) {
+    unsafe { sdk::ICore::SetPassword(password.into_string()) }
+}
+
+pub fn hash_server_password(password: impl IntoString) -> u64 {
+    unsafe { sdk::ICore::HashServerPassword(password.into_string()) }
 }
 
 fn read_cpp_base_object_vec(
