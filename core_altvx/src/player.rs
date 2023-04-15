@@ -7,7 +7,6 @@ use crate::{
     resource::Resource,
     rgba::RGBA,
     sdk, structs,
-    vector::IntoVector3,
     vector::Vector3,
     world_object::WorldObject,
     SomeResult, VoidResult,
@@ -27,9 +26,9 @@ impl player::Player {
         Ok(unsafe { sdk::IPlayer::GetName(self.raw_ptr()?) }.to_string())
     }
 
-    pub fn spawn(&self, model: impl IntoHash, pos: impl IntoVector3) -> VoidResult {
+    pub fn spawn(&self, model: impl IntoHash, pos: impl Into<Vector3>) -> VoidResult {
         self.set_model(model)?;
-        let pos = pos.into_vector3();
+        let pos = pos.into();
         unsafe { sdk::IPlayer::Spawn(self.raw_ptr()?, pos.x(), pos.y(), pos.z(), 0) }
         Ok(())
     }

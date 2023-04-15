@@ -22,7 +22,8 @@ pub trait WorldObject: BasePtr {
         }))
     }
 
-    fn set_pos(&self, pos: Vector3) -> VoidResult {
+    fn set_pos(&self, pos: impl Into<Vector3>) -> VoidResult {
+        let pos = pos.into();
         unsafe { sdk::IWorldObject::SetPosition(self.ptr()?, pos.x(), pos.y(), pos.z()) }
         Ok(())
     }

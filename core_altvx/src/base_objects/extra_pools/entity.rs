@@ -6,7 +6,7 @@ use crate::{
     base_objects::player,
     helpers::{self, read_cpp_vector3, Hash},
     sdk, structs,
-    vector::{IntoVector3, Vector3},
+    vector::Vector3,
     SomeResult, VoidResult,
 };
 
@@ -129,8 +129,8 @@ pub trait Entity: BasePtr {
         Ok(read_cpp_vector3(raw))
     }
 
-    fn set_rot(&self, rot: impl IntoVector3) -> VoidResult {
-        let rot = rot.into_vector3();
+    fn set_rot(&self, rot: impl Into<Vector3>) -> VoidResult {
+        let rot = rot.into();
         unsafe {
             sdk::IEntity::SetRotation(self.raw_ptr()?, rot.x(), rot.y(), rot.z());
         }

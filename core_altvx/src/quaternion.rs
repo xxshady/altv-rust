@@ -1,3 +1,5 @@
+use crate::helpers::IntoF32;
+
 #[derive(Debug, Default)]
 pub struct Quaternion {
     x: f32,
@@ -7,12 +9,12 @@ pub struct Quaternion {
 }
 
 impl Quaternion {
-    pub fn new(x: impl Into<f32>, y: impl Into<f32>, z: impl Into<f32>, w: impl Into<f32>) -> Self {
+    pub fn new(x: impl IntoF32, y: impl IntoF32, z: impl IntoF32, w: impl IntoF32) -> Self {
         Self {
-            x: x.into(),
-            y: y.into(),
-            z: z.into(),
-            w: w.into(),
+            x: x.into_f32(),
+            y: y.into_f32(),
+            z: z.into_f32(),
+            w: w.into_f32(),
         }
     }
 
@@ -33,8 +35,20 @@ impl Quaternion {
     }
 }
 
-impl From<i32> for Quaternion {
-    fn from(value: i32) -> Self {
-        Self::new(value as f32, value as f32, value as f32, value as f32)
+impl<T: IntoF32> From<T> for Quaternion {
+    fn from(value: T) -> Self {
+        Self::new(value, value, value, value)
+    }
+}
+
+impl<X, Y, Z, W> From<(X, Y, Z, W)> for Quaternion
+where
+    X: IntoF32,
+    Y: IntoF32,
+    Z: IntoF32,
+    W: IntoF32,
+{
+    fn from((x, y, z, w): (X, Y, Z, W)) -> Self {
+        Self::new(x, y, z, w)
     }
 }

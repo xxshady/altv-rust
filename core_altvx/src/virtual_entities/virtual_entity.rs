@@ -2,7 +2,7 @@ use crate::{
     base_objects::{meta, virtual_entity, virtual_entity_group},
     resource::Resource,
     sdk,
-    vector::IntoVector3,
+    vector::Vector3,
     world_object::WorldObject,
     SomeResult, VoidResult,
 };
@@ -11,10 +11,10 @@ use std::ptr::NonNull;
 impl virtual_entity::VirtualEntity {
     pub fn new(
         group: virtual_entity_group::VirtualEntityGroupContainer,
-        pos: impl IntoVector3,
+        pos: impl Into<Vector3>,
         streaming_distance: u32,
     ) -> SomeResult<virtual_entity::VirtualEntityContainer> {
-        let pos = pos.into_vector3();
+        let pos = pos.into();
         let ptr = unsafe {
             sdk::ICore::CreateVirtualEntity(
                 group.raw_ptr()?,

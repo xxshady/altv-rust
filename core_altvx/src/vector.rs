@@ -1,3 +1,5 @@
+use crate::helpers::IntoF32;
+
 #[derive(Debug, Default)]
 pub struct Vector3 {
     x: f32,
@@ -6,11 +8,11 @@ pub struct Vector3 {
 }
 
 impl Vector3 {
-    pub fn new(x: impl Into<f32>, y: impl Into<f32>, z: impl Into<f32>) -> Self {
+    pub fn new(x: impl IntoF32, y: impl IntoF32, z: impl IntoF32) -> Self {
         Self {
-            x: x.into(),
-            y: y.into(),
-            z: z.into(),
+            x: x.into_f32(),
+            y: y.into_f32(),
+            z: z.into_f32(),
         }
     }
 
@@ -27,49 +29,20 @@ impl Vector3 {
     }
 }
 
-impl From<f32> for Vector3 {
-    fn from(value: f32) -> Self {
+impl<T: IntoF32> From<T> for Vector3 {
+    fn from(value: T) -> Self {
         Self::new(value, value, value)
     }
 }
 
-impl From<i32> for Vector3 {
-    fn from(value: i32) -> Self {
-        Self::new(value as f32, value as f32, value as f32)
-    }
-}
-
-pub trait IntoVector3 {
-    fn into_vector3(self) -> Vector3;
-}
-
-impl IntoVector3 for Vector3 {
-    fn into_vector3(self) -> Vector3 {
-        self
-    }
-}
-
-impl IntoVector3 for i32 {
-    fn into_vector3(self) -> Vector3 {
-        Vector3::new(self as f32, self as f32, self as f32)
-    }
-}
-
-impl IntoVector3 for f32 {
-    fn into_vector3(self) -> Vector3 {
-        Vector3::new(self, self, self)
-    }
-}
-
-impl IntoVector3 for (f32, f32, f32) {
-    fn into_vector3(self) -> Vector3 {
-        Vector3::new(self.0, self.1, self.2)
-    }
-}
-
-impl IntoVector3 for (i32, i32, i32) {
-    fn into_vector3(self) -> Vector3 {
-        Vector3::new(self.0 as f32, self.1 as f32, self.2 as f32)
+impl<X, Y, Z> From<(X, Y, Z)> for Vector3
+where
+    X: IntoF32,
+    Y: IntoF32,
+    Z: IntoF32,
+{
+    fn from((x, y, z): (X, Y, Z)) -> Self {
+        Self::new(x, y, z)
     }
 }
 
@@ -80,10 +53,10 @@ pub struct Vector2 {
 }
 
 impl Vector2 {
-    pub fn new(x: impl Into<f32>, y: impl Into<f32>) -> Self {
+    pub fn new(x: impl IntoF32, y: impl IntoF32) -> Self {
         Self {
-            x: x.into(),
-            y: y.into(),
+            x: x.into_f32(),
+            y: y.into_f32(),
         }
     }
 
@@ -96,48 +69,18 @@ impl Vector2 {
     }
 }
 
-impl From<f32> for Vector2 {
-    fn from(value: f32) -> Self {
+impl<T: IntoF32> From<T> for Vector2 {
+    fn from(value: T) -> Self {
         Self::new(value, value)
     }
 }
 
-impl From<i32> for Vector2 {
-    fn from(value: i32) -> Self {
-        Self::new(value as f32, value as f32)
-    }
-}
-
-pub trait IntoVector2 {
-    fn into_vector2(self) -> Vector2;
-}
-
-impl IntoVector2 for Vector2 {
-    fn into_vector2(self) -> Vector2 {
-        self
-    }
-}
-
-impl IntoVector2 for i32 {
-    fn into_vector2(self) -> Vector2 {
-        Vector2::new(self as f32, self as f32)
-    }
-}
-
-impl IntoVector2 for f32 {
-    fn into_vector2(self) -> Vector2 {
-        Vector2::new(self, self)
-    }
-}
-
-impl IntoVector2 for (f32, f32) {
-    fn into_vector2(self) -> Vector2 {
-        Vector2::new(self.0, self.1)
-    }
-}
-
-impl IntoVector2 for (i32, i32) {
-    fn into_vector2(self) -> Vector2 {
-        Vector2::new(self.0 as f32, self.1 as f32)
+impl<X, Y> From<(X, Y)> for Vector2
+where
+    X: IntoF32,
+    Y: IntoF32,
+{
+    fn from((x, y): (X, Y)) -> Self {
+        Self::new(x, y)
     }
 }

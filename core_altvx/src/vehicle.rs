@@ -12,7 +12,7 @@ use crate::{
     resource::Resource,
     rgba::RGBA,
     sdk, structs,
-    vector::{IntoVector3, Vector3},
+    vector::Vector3,
     world_object::WorldObject,
     SomeResult, VoidResult,
 };
@@ -28,11 +28,11 @@ impl vehicle::Vehicle {
 
     pub fn new(
         model: impl IntoHash,
-        pos: impl IntoVector3,
-        rot: impl IntoVector3,
+        pos: impl Into<Vector3>,
+        rot: impl Into<Vector3>,
     ) -> SomeResult<vehicle::VehicleContainer> {
-        let pos = pos.into_vector3();
-        let rot = rot.into_vector3();
+        let pos = pos.into();
+        let rot = rot.into();
 
         let ptr = Resource::with_pending_base_object_destroy_or_creation_mut(|_, _| unsafe {
             sdk::ICore::CreateVehicle(
@@ -809,7 +809,7 @@ impl vehicle::Vehicle {
     }
 
     pub fn set_quaternion(&self, quaternion: impl Into<Quaternion>) -> VoidResult {
-        let quat: Quaternion = quaternion.into();
+        let quat = quaternion.into();
         unsafe {
             sdk::IVehicle::SetQuaternion(self.raw_ptr()?, quat.x(), quat.y(), quat.z(), quat.w())
         }

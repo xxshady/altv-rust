@@ -3,17 +3,17 @@ use std::ptr::NonNull;
 use autocxx::{cxx::CxxVector, prelude::*};
 
 use crate::{
-    base_objects::AnyBaseObject, helpers::IntoString, resource::Resource, sdk, vector::IntoVector3,
+    base_objects::AnyBaseObject, helpers::IntoString, resource::Resource, sdk, vector::Vector3,
 };
 
 pub fn get_closest_entities(
-    pos: impl IntoVector3,
+    pos: impl Into<Vector3>,
     range: i32,
     dimension: i32,
     limit: i32,
     allowed_types: u64,
 ) -> Vec<AnyBaseObject> {
-    let pos = pos.into_vector3();
+    let pos = pos.into();
     let raw = unsafe {
         sdk::ICore::GetClosestEntities(
             pos.x(),
@@ -34,12 +34,12 @@ pub fn get_entities_in_dimension(dimension: i32, allowed_types: u64) -> Vec<AnyB
 }
 
 pub fn get_entities_in_range(
-    pos: impl IntoVector3,
+    pos: impl Into<Vector3>,
     range: i32,
     dimension: i32,
     allowed_types: u64,
 ) -> Vec<AnyBaseObject> {
-    let pos = pos.into_vector3();
+    let pos = pos.into();
     let raw = unsafe {
         sdk::ICore::GetEntitiesInRange(pos.x(), pos.y(), pos.z(), range, dimension, allowed_types)
     };

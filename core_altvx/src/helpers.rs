@@ -187,3 +187,19 @@ pub(crate) fn get_world_object_by_ptr(
     let world_object = base_object.try_into().unwrap();
     Some(world_object)
 }
+
+pub trait IntoF32: Copy {
+    fn into_f32(self) -> f32;
+}
+
+impl IntoF32 for f32 {
+    fn into_f32(self) -> f32 {
+        self
+    }
+}
+
+impl IntoF32 for i32 {
+    fn into_f32(self) -> f32 {
+        self as f32
+    }
+}
