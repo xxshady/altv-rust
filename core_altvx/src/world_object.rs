@@ -3,7 +3,7 @@ use crate::{
 };
 use altv_sdk::ffi as sdk;
 use autocxx::prelude::*;
-use std::{fmt::Debug, ptr::NonNull};
+use std::ptr::NonNull;
 
 pub type WorldObjectRawPtr = *mut sdk::alt::IWorldObject;
 
@@ -35,11 +35,5 @@ pub trait WorldObject: BasePtr {
     fn set_dimension(&self, value: i32) -> VoidResult {
         unsafe { sdk::IWorldObject::SetDimension(self.ptr()?, value) }
         Ok(())
-    }
-}
-
-impl Debug for dyn WorldObject {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "dyn WorldObject <any>")
     }
 }
