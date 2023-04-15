@@ -1,6 +1,5 @@
 use crate::{
-    base_objects::{col_shape, player, vehicle},
-    exports::AnyEntity,
+    base_objects::{col_shape, extra_pools::wrappers::AnyWorldObject, player, vehicle},
     resource::Resource,
 };
 
@@ -13,10 +12,10 @@ macro_rules! entity_enter_or_leave_col_shape {
                 return None;
             };
 
-            let $any_entity($key_name) = &controller.entity else {
+            let $any_entity($key_name) = &controller.world_object else {
                                         logger::debug!(
                                             "{}_enter_or_leave_col_shape received {:?} -> skip",
-                                            stringify!($key_name), &controller.entity
+                                            stringify!($key_name), &controller.world_object
                                         );
                                         return None;
                                     };
@@ -40,7 +39,7 @@ pub struct VehicleEnterColShape {
 }
 
 impl VehicleEnterColShape {
-    entity_enter_or_leave_col_shape!(true, vehicle, AnyEntity::Vehicle);
+    entity_enter_or_leave_col_shape!(true, vehicle, AnyWorldObject::Vehicle);
 }
 
 #[derive(Debug)]
@@ -50,7 +49,7 @@ pub struct VehicleLeaveColShape {
 }
 
 impl VehicleLeaveColShape {
-    entity_enter_or_leave_col_shape!(false, vehicle, AnyEntity::Vehicle);
+    entity_enter_or_leave_col_shape!(false, vehicle, AnyWorldObject::Vehicle);
 }
 
 #[derive(Debug)]
@@ -60,7 +59,7 @@ pub struct PlayerEnterColShape {
 }
 
 impl PlayerEnterColShape {
-    entity_enter_or_leave_col_shape!(true, player, AnyEntity::Player);
+    entity_enter_or_leave_col_shape!(true, player, AnyWorldObject::Player);
 }
 
 #[derive(Debug)]
@@ -70,7 +69,7 @@ pub struct PlayerLeaveColShape {
 }
 
 impl PlayerLeaveColShape {
-    entity_enter_or_leave_col_shape!(false, player, AnyEntity::Player);
+    entity_enter_or_leave_col_shape!(false, player, AnyWorldObject::Player);
 }
 
 #[derive(Debug)]

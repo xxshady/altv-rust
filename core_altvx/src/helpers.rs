@@ -1,11 +1,15 @@
 use std::ptr::NonNull;
 
 use crate::{
-    base_objects::extra_pools::{wrappers::AnyEntity, EntityRawPtr},
+    base_objects::extra_pools::{
+        wrappers::{AnyEntity, AnyWorldObject},
+        EntityRawPtr,
+    },
     quaternion::Quaternion,
     resource::Resource,
     rgba::RGBA,
     vector::{Vector2, Vector3},
+    world_object::WorldObjectRawPtr,
 };
 use altv_sdk::ffi as sdk;
 use autocxx::prelude::*;
@@ -156,4 +160,30 @@ pub(crate) fn get_entity_by_ptr(entity: EntityRawPtr, resource: &Resource) -> Op
     let base_object = resource.base_objects.borrow().get_by_ptr(entity).unwrap();
     let entity = base_object.try_into().unwrap();
     Some(entity)
+}
+
+pub(crate) fn get_non_null_world_object_by_ptr(
+    ptr: WorldObjectRawPtr,
+    resource: &Resource,
+) -> AnyWorldObject {
+    let world_object = NonNull::new(ptr).unwrap().as_ptr();
+    get_world_object_by_ptr(world_object, resource).unwrap()
+}
+
+pub(crate) fn get_world_object_by_ptr(
+    world_object: WorldObjectRawPtr,
+    resource: &Resource,
+) -> Option<AnyWorldObject> {
+    if world_object.is_null() {
+        return None;
+    }
+    let world_object = unsafe { sdk::world_object::to_base_object(world_object) };
+    let world_object = NonNull::new(world_object).unwrap();
+    let base_object = resource
+        .base_objects
+        .borrow()
+        .get_by_ptr(world_object)
+        .unwrap();
+    let world_object = base_object.try_into().unwrap();
+    Some(world_object)
 }

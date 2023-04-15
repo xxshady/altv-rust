@@ -6,10 +6,15 @@ use lazycell::LazyCell;
 
 use crate::{
     alt_resource::AltResource,
-    base_objects::{col_shape, player, vehicle, AnyBaseObject},
+    base_objects::{
+        col_shape, extra_pools::wrappers::AnyWorldObject, player, vehicle, AnyBaseObject,
+    },
     events::helpers::{get_non_null_base_object_from_event, get_player_from_event},
     exports::{AnyEntity, Vector3},
-    helpers::{get_entity_by_ptr, get_non_null_entity_by_ptr, read_cpp_vector3, Hash},
+    helpers::{
+        get_entity_by_ptr, get_non_null_entity_by_ptr, get_non_null_world_object_by_ptr,
+        read_cpp_vector3, Hash,
+    },
     mvalue,
     resource::Resource,
     VoidResult,
@@ -104,7 +109,7 @@ impl ResourceStop {
 #[derive(Debug)]
 pub struct ColshapeEvent {
     pub col_shape: col_shape::ColShapeMutPtr,
-    pub entity: AnyEntity,
+    pub world_object: AnyWorldObject,
     pub state: bool,
 }
 
@@ -119,7 +124,10 @@ impl ColshapeEvent {
 
         Self {
             col_shape,
-            entity: get_non_null_entity_by_ptr(sdk::CColShapeEvent::GetEntity(event), resource),
+            world_object: get_non_null_world_object_by_ptr(
+                sdk::CColShapeEvent::GetEntity(event),
+                resource,
+            ),
             state,
         }
     }

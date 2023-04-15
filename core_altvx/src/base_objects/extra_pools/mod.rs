@@ -13,40 +13,38 @@ pub struct ExtraPools {
 }
 
 pub mod wrappers {
-    use crate::SomeResult;
-
-    use super::{
-        super::*,
-        entity::{base_ptr_to_entity_raw_ptr, EntityRawPtr},
-    };
+    use super::{super::*, entity::EntityRawPtr};
+    use crate::{sdk, world_object::WorldObjectRawPtr, SomeResult};
     use objects::AnyBaseObject;
     use player::PlayerContainer;
     use vehicle::VehicleContainer;
 
     macro_rules! extra_pool_enum {
         (@internal $any_name: ident, $name: ident, $raw_ptr_type: ty: [ $( $variant: ident, $container: ty; )+ ]) => {
-            #[derive(Debug)]
-            pub enum $any_name { $(
-                $variant($container),
-            )+ }
+            paste::paste! {
+                #[derive(Debug)]
+                pub enum $any_name { $(
+                    $variant($container),
+                )+ }
 
-            impl $any_name {
-                pub(crate) fn raw_ptr(&self) -> SomeResult<$raw_ptr_type> {
-                    match self { $(
-                        $any_name::$variant(e) => base_ptr_to_entity_raw_ptr(e.base_ptr()?),
-                    )+}
+                impl $any_name {
+                    pub(crate) fn raw_ptr(&self) -> SomeResult<$raw_ptr_type> {
+                        match self { $(
+                            $any_name::$variant(e) => Ok(unsafe { sdk::base_object::[<to_ $name:snake>](e.raw_base_ptr()?) }),
+                        )+}
+                    }
                 }
-            }
 
-            impl TryFrom<AnyBaseObject> for AnyEntity {
-                type Error = anyhow::Error;
-                fn try_from(value: AnyBaseObject) -> Result<Self, Self::Error> {
-                    Ok(match value {
-                    $(
-                        AnyBaseObject::$variant(e) => AnyEntity::$variant(e),
-                    )+
-                        base_object => anyhow::bail!("cannot convert: {base_object:?} to AnyEntity"),
-                    })
+                impl TryFrom<AnyBaseObject> for $any_name {
+                    type Error = anyhow::Error;
+                    fn try_from(value: AnyBaseObject) -> Result<Self, Self::Error> {
+                        Ok(match value {
+                        $(
+                            AnyBaseObject::$variant(e) => $any_name::$variant(e),
+                        )+
+                            base_object => anyhow::bail!("cannot convert: {base_object:?} to AnyEntity"),
+                        })
+                    }
                 }
             }
         };
@@ -74,4 +72,9 @@ pub mod wrappers {
             AnyEntity::Player(value)
         }
     }
+
+    extra_pool_enum!(WorldObject, WorldObjectRawPtr: [
+        Player, PlayerContainer;
+        Vehicle, VehicleContainer;
+    ]);
 }
