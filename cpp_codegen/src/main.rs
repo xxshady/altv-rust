@@ -44,6 +44,7 @@ lazy_static::lazy_static! {
             ("IConnectionInfo*", "alt::IConnectionInfo*"),
             ("VehicleModelInfo&", "alt::VehicleModelInfo*"),
             ("PedModelInfo&", "alt::PedModelInfo*"),
+            ("IWorldObject*", "alt::IWorldObject*"),
 
             ("alt::Prop", "alt::Prop"),
             ("alt::DlcProp", "alt::DlcProp"),
