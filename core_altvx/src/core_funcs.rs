@@ -58,6 +58,14 @@ pub fn hash_server_password(password: impl IntoString) -> u64 {
     unsafe { sdk::ICore::HashServerPassword(password.into_string()) }
 }
 
+pub fn toggle_world_profiler(toggle: bool) {
+    unsafe { sdk::ICore::SetWorldProfiler(toggle) }
+}
+
+pub fn get_net_time() -> u32 {
+    unsafe { sdk::ICore::GetNetTime() }
+}
+
 fn read_cpp_base_object_vec(
     cpp_vec: UniquePtr<CxxVector<sdk::BaseObjectPtrWrapper>>,
 ) -> Vec<AnyBaseObject> {
