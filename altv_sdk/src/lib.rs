@@ -185,7 +185,9 @@ pub mod ffi {
         generate!("trigger_client_event")
         generate!("trigger_client_event_for_some")
         generate!("trigger_client_event_for_all")
-        generate!("trigger_local_event")
+        generate!("trigger_client_event_unreliable")
+        generate!("trigger_client_event_unreliable_for_some")
+        generate!("trigger_client_event_unreliable_for_all")
 
         generate_ns!("base_object")
         generate_ns!("world_object")

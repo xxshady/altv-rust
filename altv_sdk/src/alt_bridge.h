@@ -485,43 +485,54 @@ void trigger_local_event(std::string event_name, MValueWrapperVec mvalue_vec) {
     alt::ICore::Instance().TriggerLocalEvent(event_name, args);
 }
 
-void trigger_client_event(alt::IPlayer* player, std::string event_name, MValueWrapperVec mvalue_vec) {
+alt::MValueArgs mvalue_wrapper_vec_to_alt(MValueWrapperVec mvalue_vec) {
     alt::MValueArgs args;
     auto size = mvalue_vec.size();
-
     for (alt::Size i = 0; i < size; ++i) {
         args.Push(*(mvalue_vec[i].ptr));
     }
+    return args;
+}
 
-    alt::ICore::Instance().TriggerClientEvent(player, event_name, args);
+std::vector<alt::IPlayer*> player_wrapper_vec_to_alt(PlayerVector player_vec) {
+    std::vector<alt::IPlayer*> players;
+    for (auto& player : player_vec)
+    {
+        players.push_back(*player.ptr);
+    }
+    return players;
+}
+
+void trigger_client_event(alt::IPlayer* player, std::string event_name, MValueWrapperVec mvalue_vec) {
+    alt::ICore::Instance().TriggerClientEvent(player, event_name, mvalue_wrapper_vec_to_alt(mvalue_vec));
+}
+
+void trigger_client_event_unreliable(alt::IPlayer* player, std::string event_name, MValueWrapperVec mvalue_vec) {
+    alt::ICore::Instance().TriggerClientEventUnreliable(player, event_name, mvalue_wrapper_vec_to_alt(mvalue_vec));
 }
 
 void trigger_client_event_for_some(PlayerVector players, std::string event_name, MValueWrapperVec mvalue_vec) {
-    alt::MValueArgs args;
-    auto size = mvalue_vec.size();
+    alt::ICore::Instance().TriggerClientEvent(
+        player_wrapper_vec_to_alt(players),
+        event_name,
+        mvalue_wrapper_vec_to_alt(mvalue_vec)
+    );
+}
 
-    for (alt::Size i = 0; i < size; ++i) {
-        args.Push(*(mvalue_vec[i].ptr));
-    }
-
-    std::vector<alt::IPlayer*> normal_players_vec;
-    for (auto& player : players)
-    {
-        normal_players_vec.push_back(*player.ptr);
-    }
-
-    alt::ICore::Instance().TriggerClientEvent(normal_players_vec, event_name, args);
+void trigger_client_event_unreliable_for_some(PlayerVector players, std::string event_name, MValueWrapperVec mvalue_vec) {
+    alt::ICore::Instance().TriggerClientEventUnreliable(
+        player_wrapper_vec_to_alt(players),
+        event_name,
+        mvalue_wrapper_vec_to_alt(mvalue_vec)
+    );
 }
 
 void trigger_client_event_for_all(std::string event_name, MValueWrapperVec mvalue_vec) {
-    alt::MValueArgs args;
-    auto size = mvalue_vec.size();
+    alt::ICore::Instance().TriggerClientEventForAll(event_name, mvalue_wrapper_vec_to_alt(mvalue_vec));
+}
 
-    for (alt::Size i = 0; i < size; ++i) {
-        args.Push(*(mvalue_vec[i].ptr));
-    }
-
-    alt::ICore::Instance().TriggerClientEventForAll(event_name, args);
+void trigger_client_event_unreliable_for_all(std::string event_name, MValueWrapperVec mvalue_vec) {
+    alt::ICore::Instance().TriggerClientEventUnreliableForAll(event_name, mvalue_wrapper_vec_to_alt(mvalue_vec));
 }
 
 namespace base_object
