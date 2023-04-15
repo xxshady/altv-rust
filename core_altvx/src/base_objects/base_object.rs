@@ -120,3 +120,11 @@ impl_meta_type_for!(
     BaseObjectWrapper::raw_base_ptr,
     T
 );
+
+impl_meta_type_for!(
+    SyncedMeta,
+    BaseObjectWrapper<T>,
+    sdk::IBaseObject,
+    BaseObjectWrapper::raw_base_ptr,
+    T
+);

@@ -20,17 +20,6 @@ Vector3Wrapper GetRotation(const alt::IEntity* ptr) {
 void SetRotation(alt::IEntity* ptr, f32 rot_x, f32 rot_y, f32 rot_z) {
     return ptr->SetRotation({ rot_x, rot_y, rot_z });
 }
-bool HasSyncedMetaData(const alt::IEntity* ptr, const StdStringClone key) {
-    return ptr->HasSyncedMetaData(key);
-}
-MValueWrapper GetSyncedMetaData(const alt::IEntity* ptr, const StdStringClone key) {
-    MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(ptr->GetSyncedMetaData(key));
-    return wrapper;
-}
-std::vector<std::string> GetSyncedMetaDataKeys(const alt::IEntity* ptr) {
-    return ptr->GetSyncedMetaDataKeys();
-}
 bool HasStreamSyncedMetaData(const alt::IEntity* ptr, const StdStringClone key) {
     return ptr->HasStreamSyncedMetaData(key);
 }
@@ -47,12 +36,6 @@ bool GetVisible(const alt::IEntity* ptr) {
 }
 void SetNetworkOwner(alt::IEntity* ptr, alt::IPlayer* player, bool disableMigration) {
     return ptr->SetNetworkOwner(player, disableMigration);
-}
-void SetSyncedMetaData(alt::IEntity* ptr, const StdStringClone key, MValueMutWrapper val) {
-    return ptr->SetSyncedMetaData(key, *(val.ptr));
-}
-void DeleteSyncedMetaData(alt::IEntity* ptr, const StdStringClone key) {
-    return ptr->DeleteSyncedMetaData(key);
 }
 void SetStreamSyncedMetaData(alt::IEntity* ptr, const StdStringClone key, MValueMutWrapper val) {
     return ptr->SetStreamSyncedMetaData(key, *(val.ptr));

@@ -908,7 +908,7 @@ impl GlobalSyncedMetaChange {
 #[derive(Debug)]
 pub struct SyncedMetaChange {
     pub key: String,
-    pub entity: AnyEntity,
+    pub base_object: AnyBaseObject,
     pub new_value: mvalue::MValue,
     pub old_value: mvalue::MValue,
 }
@@ -921,7 +921,7 @@ impl SyncedMetaChange {
         Self {
             key: GetKey(event).to_string(),
             new_value: mvalue::deserialize_from_sdk(GetVal(event), resource),
-            entity: get_non_null_entity_by_ptr(GetTarget(event), resource),
+            base_object: get_non_null_base_object_from_event(GetTarget(event), resource),
             old_value: mvalue::deserialize_from_sdk(GetOldVal(event), resource),
         }
     }

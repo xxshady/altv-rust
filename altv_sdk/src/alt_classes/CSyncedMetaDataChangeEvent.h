@@ -4,7 +4,7 @@
 
 namespace CSyncedMetaDataChangeEvent {
 
-alt::IEntity* GetTarget(const alt::CSyncedMetaDataChangeEvent* ptr) {
+alt::IBaseObject* GetTarget(const alt::CSyncedMetaDataChangeEvent* ptr) {
     return ptr->GetTarget();
 }
 std::string GetKey(const alt::CSyncedMetaDataChangeEvent* ptr) {

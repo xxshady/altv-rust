@@ -812,7 +812,6 @@ impl WorldObject for player::Player {}
 impl Entity for player::Player {}
 
 meta::impl_entity_meta_for!(StreamSyncedMeta, player::Player);
-meta::impl_entity_meta_for!(SyncedMeta, player::Player);
 
 meta::impl_meta_type_for!(
     LocalMeta,
