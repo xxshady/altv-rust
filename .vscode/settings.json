@@ -83,7 +83,7 @@
   "cSpell.customDictionaries": {
     "custom-dictionary-workspace": {
       "name": "custom-dictionary-workspace",
-      "path": "${workspaceFolder:altv-xrust}/.cspell/custom-dictionary-workspace.txt",
+      "path": "${workspaceFolder:altv-rust}/.cspell/custom-dictionary-workspace.txt",
       "addWords": true,
       "scope": "workspace"
     }
