@@ -12,7 +12,7 @@ type AttributeArgs = syn::punctuated::Punctuated<syn::NestedMeta, syn::Token![,]
 /// This attribute can be used if crate is renamed in Cargo.toml using "package" option.
 /// ```rust
 ///
-/// #[altvxx::main(crate_name = "altvxx")]
+/// #[my_custom_name::main(crate_name = "my_custom_name")]
 /// pub fn main() {}
 /// ```
 #[proc_macro_attribute]
@@ -28,7 +28,7 @@ pub fn resource_main_func(args: TokenStream, input: TokenStream) -> TokenStream 
 
     let args = AttributeArgs::parse_terminated.parse(args).unwrap();
 
-    let mut crate_name = String::from("altvx");
+    let mut crate_name = String::from("altv");
 
     for arg in args {
         match arg {

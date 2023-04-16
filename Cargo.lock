@@ -38,6 +38,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "altv"
+version = "0.1.0"
+dependencies = [
+ "altv_sdk",
+ "anyhow",
+ "core_altv",
+ "resource_main_macro",
+]
+
+[[package]]
 name = "altv_module"
 version = "0.1.0"
 dependencies = [
@@ -62,16 +72,6 @@ dependencies = [
  "miette",
  "primitive_enum",
  "rerun_except",
-]
-
-[[package]]
-name = "altvx"
-version = "0.1.0"
-dependencies = [
- "altv_sdk",
- "anyhow",
- "core_altvx",
- "resource_main_macro",
 ]
 
 [[package]]
@@ -328,7 +328,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "core_altvx"
+name = "core_altv"
 version = "0.1.0"
 dependencies = [
  "altv_sdk",
@@ -427,8 +427,7 @@ dependencies = [
 name = "example_resource"
 version = "0.1.0"
 dependencies = [
- "altvx",
- "autocxx",
+ "altv",
  "rand",
 ]
 

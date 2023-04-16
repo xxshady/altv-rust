@@ -23,7 +23,7 @@ pub struct ModuleHandlers {
     pub toggle_event_type: ToggleEventTypeFn,
 }
 
-// this shit is here for derive(Default) of core_altvx Resource
+// this shit is here for derive(Default) of core_altv Resource
 impl Default for ModuleHandlers {
     fn default() -> Self {
         fn placeholder(_: ResourceName, _: altv_sdk::EventType, _: bool) {}

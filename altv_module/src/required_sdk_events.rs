@@ -1,7 +1,7 @@
 use altv_sdk::{ffi::ICore::ToggleEvent, EventType};
 use std::collections::HashSet;
 
-// these events are required for internal stuff of core_altvx
+// these events are required for internal stuff of core_altv
 lazy_static::lazy_static! {
     static ref REQUIRED_SDK_EVENTS: HashSet<EventType> = {
         HashSet::from([

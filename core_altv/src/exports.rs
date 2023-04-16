@@ -192,17 +192,17 @@ pub mod events {
     /// Examples
     ///
     /// ```rust
-    /// altvx::events::emit!("example");
+    /// altv::events::emit!("example");
     /// ```
     ///
     /// Sending primitives
     /// ```rust
-    /// altvx::events::emit!("example", 1, 2, 3).unwrap();
+    /// altv::events::emit!("example", 1, 2, 3).unwrap();
     /// ```
     ///
     /// Sending lists
     /// ```rust
-    /// altvx::events::emit!("example", altvx::events::list![1, 2, 3]).unwrap();
+    /// altv::events::emit!("example", altv::events::list![1, 2, 3]).unwrap();
     /// ```
     #[macro_export]
     macro_rules! __emit {
