@@ -1,6 +1,1 @@
 /target
-/example_resource/target
-/extern_type_callback_derive/target
-/altv_module/target
-/altv_sdk/src/cpp_sdk_version.rs
-/cpp_codegen/out
