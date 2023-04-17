@@ -356,29 +356,20 @@ pub mod helpers;
 
 // auto generated files:
 
-mod cpp_sdk_version;
-pub use cpp_sdk_version::ALT_SDK_VERSION;
+use primitive_enum::primitive_enum;
 
-mod base_object_type;
-pub use base_object_type::BaseObjectType;
+macro_rules! include_out_dir {
+    ($file_name: literal) => {
+        include!(concat!(env!("OUT_DIR"), $file_name));
+    };
+}
 
-mod event_type;
-pub use event_type::EventType;
-
-mod mvalue_type;
-pub use mvalue_type::MValueType;
-
-mod col_shape_type;
-pub use col_shape_type::ColShapeType;
-
-mod player_body_part;
-pub use player_body_part::PlayerBodyPart;
-
-mod player_connect_denied_reason;
-pub use player_connect_denied_reason::PlayerConnectDeniedReason;
-
-mod explosion_type;
-pub use explosion_type::ExplosionType;
-
-mod vehicle_model_type;
-pub use vehicle_model_type::VehicleModelType;
+include_out_dir!("/cpp_sdk_version.rs");
+include_out_dir!("/base_object_type.rs");
+include_out_dir!("/event_type.rs");
+include_out_dir!("/mvalue_type.rs");
+include_out_dir!("/col_shape_type.rs");
+include_out_dir!("/player_body_part.rs");
+include_out_dir!("/player_connect_denied_reason.rs");
+include_out_dir!("/explosion_type.rs");
+include_out_dir!("/vehicle_model_type.rs");

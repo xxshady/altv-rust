@@ -11,26 +11,14 @@ const EXPLOSION_TYPE_ENUM_FILE: &str = "cpp-sdk/events/CExplosionEvent.h";
 const VEHICLE_MODEL_TYPE_ENUM_FILE: &str = "cpp-sdk/types/VehicleModelInfo.h";
 
 fn main() -> miette::Result<()> {
-    generate_cpp_to_rust_bindings();
+    let out_dir = std::env::var("OUT_DIR").unwrap();
+    generate_cpp_to_rust_bindings(&out_dir);
     build_rust()?;
-
-    rerun_except::rerun_except(&[
-        "src/cpp_sdk_version.rs",
-        "src/base_object_type.rs",
-        "src/event_type.rs",
-        "src/mvalue_type.rs",
-        "src/col_shape_type.rs",
-        "src/player_body_part.rs",
-        "src/player_connect_denied_reason.rs",
-        "src/explosion_type.rs",
-        "src/vehicle_model_type.rs",
-    ])
-    .expect("rerun_except failed");
 
     Ok(())
 }
 
-fn generate_cpp_to_rust_bindings() {
+fn generate_cpp_to_rust_bindings(out_dir: &str) {
     let version_script_path = if cfg!(target_os = "windows") {
         std::fs::canonicalize(format!("{CPP_SDK_VERSION_DIR}/get-version.bat"))
             .unwrap()
@@ -70,7 +58,7 @@ fn generate_cpp_to_rust_bindings() {
         .expect("Unable to generate bindings for version.h");
 
     cpp_sdk_version_bindings
-        .write_to_file("src/cpp_sdk_version.rs")
+        .write_to_file(format!("{out_dir}/cpp_sdk_version.rs"))
         .expect("Couldn't write bindings!");
 
     generate_rust_enum_from_cpp(
@@ -78,7 +66,8 @@ fn generate_cpp_to_rust_bindings() {
         "u8",
         BASE_OBJECT_TYPE_ENUM_FILE,
         "enum class Type : uint8_t",
-        "src/base_object_type.rs",
+        "base_object_type.rs",
+        out_dir,
     );
 
     generate_rust_enum_from_cpp(
@@ -86,7 +75,8 @@ fn generate_cpp_to_rust_bindings() {
         "u16",
         EVENT_TYPE_ENUM_FILE,
         "enum class Type : uint16_t",
-        "src/event_type.rs",
+        "event_type.rs",
+        out_dir,
     );
 
     generate_rust_enum_from_cpp(
@@ -94,7 +84,8 @@ fn generate_cpp_to_rust_bindings() {
         "u8",
         MVALUE_TYPE_ENUM_FILE,
         "enum class Type : uint8_t",
-        "src/mvalue_type.rs",
+        "mvalue_type.rs",
+        out_dir,
     );
 
     generate_rust_enum_from_cpp(
@@ -102,7 +93,8 @@ fn generate_cpp_to_rust_bindings() {
         "u8",
         COL_SHAPE_TYPE_ENUM_FILE,
         "enum class ColShapeType : uint8_t",
-        "src/col_shape_type.rs",
+        "col_shape_type.rs",
+        out_dir,
     );
 
     generate_rust_enum_from_cpp(
@@ -110,7 +102,8 @@ fn generate_cpp_to_rust_bindings() {
         "i8",
         PLAYER_BODY_PART_ENUM_FILE,
         "enum class BodyPart : int8_t",
-        "src/player_body_part.rs",
+        "player_body_part.rs",
+        out_dir,
     );
 
     generate_rust_enum_from_cpp(
@@ -118,7 +111,8 @@ fn generate_cpp_to_rust_bindings() {
         "u8",
         PLAYER_CONNECT_DENIED_REASON_ENUM_FILE,
         "enum Reason: uint8_t",
-        "src/player_connect_denied_reason.rs",
+        "player_connect_denied_reason.rs",
+        out_dir,
     );
 
     generate_rust_enum_from_cpp(
@@ -126,7 +120,8 @@ fn generate_cpp_to_rust_bindings() {
         "i8",
         EXPLOSION_TYPE_ENUM_FILE,
         "enum class ExplosionType : int8_t",
-        "src/explosion_type.rs",
+        "explosion_type.rs",
+        out_dir,
     );
 
     generate_rust_enum_from_cpp(
@@ -134,7 +129,8 @@ fn generate_cpp_to_rust_bindings() {
         "u8",
         VEHICLE_MODEL_TYPE_ENUM_FILE,
         "enum class Type : uint8_t",
-        "src/vehicle_model_type.rs",
+        "vehicle_model_type.rs",
+        out_dir,
     );
 }
 
@@ -167,6 +163,7 @@ fn generate_rust_enum_from_cpp(
     path: &str,
     str_to_find: &str,
     write_to: &str,
+    out_dir: &str,
 ) {
     let content = String::from_utf8(fs::read(path).unwrap()).unwrap();
     let idx = content.find(str_to_find).unwrap();
@@ -213,10 +210,9 @@ fn generate_rust_enum_from_cpp(
     }
 
     fs::write(
-        write_to,
+        format!("{out_dir}/{write_to}"),
         format!(
             "// auto-generated from build.rs\n\n\
-            use primitive_enum::primitive_enum;\n\
             primitive_enum! {{ {enum_name} {enum_type} ;\n\
                 {result_string},\n\
             }}",
