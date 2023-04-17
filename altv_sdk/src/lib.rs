@@ -3,9 +3,9 @@
 use std::ptr::NonNull;
 
 pub mod ffi {
+    use crate::helpers::impl_extern_type_callback;
     use autocxx::prelude::*;
     use cxx::{type_id, ExternType};
-    use extern_type_callback_derive::ExternTypeCallback;
 
     include_cpp! {
         #include "alt_bridge.h"
@@ -273,38 +273,50 @@ pub mod ffi {
     }
     pub use alt_bridge::*;
 
-    #[derive(ExternTypeCallback)]
     #[repr(transparent)]
     pub struct ResourceStartCallback(pub extern "C" fn(name: &str, full_main_path: &str));
+    impl_extern_type_callback!(ResourceStartCallback, "callbacks::ResourceStartCallback");
 
-    #[derive(ExternTypeCallback)]
     #[repr(transparent)]
     pub struct ResourceStopCallback(pub extern "C" fn(name: &str));
+    impl_extern_type_callback!(ResourceStopCallback, "callbacks::ResourceStopCallback");
 
-    #[derive(ExternTypeCallback)]
     #[repr(transparent)]
     pub struct RuntimeResourceDestroyImplCallback(pub extern "C" fn());
+    impl_extern_type_callback!(
+        RuntimeResourceDestroyImplCallback,
+        "callbacks::RuntimeResourceDestroyImplCallback"
+    );
 
-    #[derive(ExternTypeCallback)]
     #[repr(transparent)]
     pub struct RuntimeOnTickCallback(pub extern "C" fn());
+    impl_extern_type_callback!(RuntimeOnTickCallback, "callbacks::RuntimeOnTickCallback");
 
-    #[derive(ExternTypeCallback)]
     #[repr(transparent)]
     pub struct ResourceOnEventCallback(
         pub extern "C" fn(name: &str, event: *const alt_bridge::alt::CEvent),
     );
+    impl_extern_type_callback!(
+        ResourceOnEventCallback,
+        "callbacks::ResourceOnEventCallback"
+    );
 
-    #[derive(ExternTypeCallback)]
     #[repr(transparent)]
     pub struct ResourceOnCreateBaseObjectCallback(
         pub extern "C" fn(name: &str, base_object: *mut alt_bridge::alt::IBaseObject),
     );
+    impl_extern_type_callback!(
+        ResourceOnCreateBaseObjectCallback,
+        "callbacks::ResourceOnCreateBaseObjectCallback"
+    );
 
-    #[derive(ExternTypeCallback)]
     #[repr(transparent)]
     pub struct ResourceOnRemoveBaseObjectCallback(
         pub extern "C" fn(name: &str, base_object: *mut alt_bridge::alt::IBaseObject),
+    );
+    impl_extern_type_callback!(
+        ResourceOnRemoveBaseObjectCallback,
+        "callbacks::ResourceOnRemoveBaseObjectCallback"
     );
 
     #[cxx::bridge(namespace = "callbacks")]

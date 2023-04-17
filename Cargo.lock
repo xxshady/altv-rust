@@ -68,7 +68,6 @@ dependencies = [
  "autocxx-build",
  "bindgen",
  "cxx",
- "extern_type_callback_derive",
  "miette",
  "primitive_enum",
  "rerun_except",
@@ -429,14 +428,6 @@ version = "0.1.0"
 dependencies = [
  "altv",
  "rand",
-]
-
-[[package]]
-name = "extern_type_callback_derive"
-version = "0.1.0"
-dependencies = [
- "quote",
- "syn",
 ]
 
 [[package]]

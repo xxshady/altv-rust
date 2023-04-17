@@ -4,7 +4,6 @@ members = [
     "core_shared",
     "core_module",
     "core_altv",
-    "extern_type_callback_derive",
     "resource_main_macro",
     "altv_sdk",
     "altv_module",
