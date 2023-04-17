@@ -48,14 +48,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "altv_internal_core_module"
-version = "0.3.1"
-dependencies = [
- "altv_internal_core_shared",
- "altv_internal_sdk",
-]
-
-[[package]]
 name = "altv_internal_core_resource"
 version = "0.3.1"
 dependencies = [
@@ -84,19 +76,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "altv_internal_module"
-version = "0.3.1"
-dependencies = [
- "altv_internal_core_module",
- "altv_internal_logger",
- "altv_internal_sdk",
- "autocxx",
- "lazy_static",
- "libloading",
- "paste",
-]
-
-[[package]]
 name = "altv_internal_resource_main_macro"
 version = "0.3.1"
 dependencies = [
@@ -114,6 +93,19 @@ dependencies = [
  "cxx",
  "miette",
  "primitive_enum",
+]
+
+[[package]]
+name = "altv_module"
+version = "0.3.1"
+dependencies = [
+ "altv_internal_logger",
+ "altv_internal_sdk",
+ "autocxx",
+ "core_module",
+ "lazy_static",
+ "libloading",
+ "paste",
 ]
 
 [[package]]
@@ -335,6 +327,14 @@ dependencies = [
  "atty",
  "lazy_static",
  "winapi",
+]
+
+[[package]]
+name = "core_module"
+version = "0.3.1"
+dependencies = [
+ "altv_internal_core_shared",
+ "altv_internal_sdk",
 ]
 
 [[package]]

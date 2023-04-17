@@ -1,6 +1,5 @@
 [package]
-name = "altv_internal_module"
-description = "An internal crate for alt:V module. Not intended for direct use."
+name = "altv_module"
 version = { workspace = true }
 rust-version = { workspace = true }
 edition = { workspace = true }
@@ -13,7 +12,7 @@ publish = false
 
 [dependencies]
 altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "0.3.0" }
-core_module = { path = "../core_module", package = "altv_internal_core_module", version = "0.3.0" }
+core_module = { path = "../core_module", version = "0.3.0" }
 logger = { path = "../logger", package = "altv_internal_logger", version = "0.3.0" }
 paste = { workspace = true }
 autocxx = { workspace = true }
