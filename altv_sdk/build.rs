@@ -19,47 +19,8 @@ fn main() -> miette::Result<()> {
 }
 
 fn generate_cpp_to_rust_bindings(out_dir: &str) {
-    let version_script_path = if cfg!(target_os = "windows") {
-        std::fs::canonicalize(format!("{CPP_SDK_VERSION_DIR}/get-version.bat"))
-            .unwrap()
-            .display()
-            .to_string()
-    } else if cfg!(target_os = "linux") {
-        "./get-version.sh".to_string()
-    } else {
-        panic!("unsupported target_os");
-    };
-
-    if cfg!(target_os = "linux") {
-        std::process::Command::new("chmod")
-            .current_dir(CPP_SDK_VERSION_DIR)
-            .arg("+x")
-            .arg(version_script_path.clone())
-            .output()
-            .unwrap_or_else(|e| {
-                panic!(
-                    "failed to run chmod +x for get-version script in: {version_script_path:?} {e}"
-                )
-            });
-    }
-
-    std::process::Command::new(version_script_path.clone())
-        .current_dir(CPP_SDK_VERSION_DIR)
-        .output()
-        .unwrap_or_else(|e| {
-            panic!("failed to run cpp-sdk get-version script in: {version_script_path:?} {e}")
-        });
-
-    let cpp_sdk_version_bindings = bindgen::Builder::default()
-        .header(format!("{CPP_SDK_VERSION_DIR}/version.h"))
-        .clang_arg("-std=c++17")
-        .clang_arg("-xc++")
-        .generate()
-        .expect("Unable to generate bindings for version.h");
-
-    cpp_sdk_version_bindings
-        .write_to_file(format!("{out_dir}/cpp_sdk_version.rs"))
-        .expect("Couldn't write bindings!");
+    let hash = get_sdk_hash();
+    write_sdk_hash(hash, out_dir);
 
     generate_rust_enum_from_cpp(
         "BaseObjectType",
@@ -242,4 +203,22 @@ fn upper_to_pascal_case(s: &str) -> String {
         result.push(c.to_ascii_lowercase());
     }
     result
+}
+
+fn get_sdk_hash() -> String {
+    let output = std::process::Command::new("git")
+        .current_dir("cpp-sdk")
+        .args(["rev-parse", "--short", "HEAD"])
+        .output()
+        .unwrap();
+
+    String::from_utf8_lossy(&output.stdout[..7]).to_string()
+}
+
+fn write_sdk_hash(hash: String, out_dir: &str) {
+    fs::write(
+        format!("{out_dir}/cpp_sdk_version.rs"),
+        format!("pub const ALT_SDK_VERSION: &[u8; 8usize] = b\"{hash}\\0\";"),
+    )
+    .unwrap();
 }

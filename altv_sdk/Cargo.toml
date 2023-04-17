@@ -14,6 +14,5 @@ autocxx = { workspace = true }
 primitive_enum = "1.0.2"
 
 [build-dependencies]
-bindgen = "0.63.0"
 autocxx-build = "0.24.0"
 miette = { version = "5", features = ["fancy"] }
