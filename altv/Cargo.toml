@@ -1,6 +1,6 @@
 [package]
 name = "altv"
-description = "An internal crate for alt:V module. Not intended for direct use."
+description = "Rust server-side API for writing your gamemodes on alt:V"
 version = { workspace = true }
 rust-version = { workspace = true }
 edition = { workspace = true }
