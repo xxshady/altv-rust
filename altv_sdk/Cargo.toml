@@ -9,7 +9,10 @@ repository = { workspace = true }
 readme = { workspace = true }
 
 include = [
-    "cpp-sdk/*"
+    "cpp-sdk/*",
+    "src/*",
+    "build.rs",
+    "Cargo.toml",
 ]
 
 [dependencies]
