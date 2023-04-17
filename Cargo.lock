@@ -39,30 +39,75 @@ dependencies = [
 
 [[package]]
 name = "altv"
-version = "0.1.0"
+version = "0.3.0"
 dependencies = [
- "altv_sdk",
+ "altv_internal_core_resource",
+ "altv_internal_resource_main_macro",
+ "altv_internal_sdk",
  "anyhow",
- "core_altv",
- "resource_main_macro",
 ]
 
 [[package]]
-name = "altv_module"
-version = "0.1.0"
+name = "altv_internal_core_module"
+version = "0.3.0"
 dependencies = [
- "altv_sdk",
+ "altv_internal_core_shared",
+ "altv_internal_sdk",
+]
+
+[[package]]
+name = "altv_internal_core_resource"
+version = "0.3.0"
+dependencies = [
+ "altv_internal_core_shared",
+ "altv_internal_logger",
+ "altv_internal_sdk",
+ "anyhow",
  "autocxx",
- "core_module",
- "lazy_static",
- "libloading",
- "logger",
+ "lazycell",
  "paste",
 ]
 
 [[package]]
-name = "altv_sdk"
-version = "0.0.0"
+name = "altv_internal_core_shared"
+version = "0.3.0"
+dependencies = [
+ "altv_internal_sdk",
+]
+
+[[package]]
+name = "altv_internal_logger"
+version = "0.3.0"
+dependencies = [
+ "colored",
+ "log",
+]
+
+[[package]]
+name = "altv_internal_module"
+version = "0.3.0"
+dependencies = [
+ "altv_internal_core_module",
+ "altv_internal_logger",
+ "altv_internal_sdk",
+ "autocxx",
+ "lazy_static",
+ "libloading",
+ "paste",
+]
+
+[[package]]
+name = "altv_internal_resource_main_macro"
+version = "0.3.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "altv_internal_sdk"
+version = "0.3.0"
 dependencies = [
  "autocxx",
  "autocxx-build",
@@ -327,36 +372,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "core_altv"
-version = "0.1.0"
-dependencies = [
- "altv_sdk",
- "anyhow",
- "autocxx",
- "core_shared",
- "lazycell",
- "logger",
- "paste",
-]
-
-[[package]]
-name = "core_module"
-version = "0.1.0"
-dependencies = [
- "altv_sdk",
- "core_shared",
-]
-
-[[package]]
-name = "core_shared"
-version = "0.1.0"
-dependencies = [
- "altv_sdk",
-]
-
-[[package]]
 name = "cpp_codegen"
-version = "0.1.0"
+version = "0.3.0"
 dependencies = [
  "anyhow",
  "lazy_static",
@@ -424,7 +441,7 @@ dependencies = [
 
 [[package]]
 name = "example_resource"
-version = "0.1.0"
+version = "0.3.0"
 dependencies = [
  "altv",
  "rand",
@@ -628,14 +645,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "abb12e687cfb44aa40f41fc3978ef76448f9b6038cad6aef4259d3c095a2382e"
 dependencies = [
  "cfg-if",
-]
-
-[[package]]
-name = "logger"
-version = "0.1.0"
-dependencies = [
- "colored",
- "log",
 ]
 
 [[package]]
@@ -878,15 +887,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "89974a5bef01d82b843f85cbab168e8554b3776f875dcc7a66bf03c757db5ab1"
 dependencies = [
  "ignore",
-]
-
-[[package]]
-name = "resource_main_macro"
-version = "0.1.0"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
 ]
 
 [[package]]

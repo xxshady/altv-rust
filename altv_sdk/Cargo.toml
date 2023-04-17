@@ -1,7 +1,12 @@
 [package]
-name = "altv_sdk"
-version = "0.0.0"
-edition = "2021"
+name = "altv_internal_sdk"
+description = "An internal crate for alt:V module. Not intended for direct use."
+version = { workspace = true }
+rust-version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+repository = { workspace = true }
+readme = { workspace = true }
 
 [dependencies]
 cxx = { workspace = true }

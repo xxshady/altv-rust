@@ -7,11 +7,19 @@ members = [
     "resource_main_macro",
     "altv_sdk",
     "altv_module",
+    "logger",
     "altv",
     "example_resource",
-    "logger",
     "cpp_codegen",
 ]
+
+[workspace.package]
+version = "0.3.0"
+rust-version = "1.68.2"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/xxshady/altv-rust"
+readme = "README.md"
 
 [workspace.dependencies]
 cxx = "1.0.91"

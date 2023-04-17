@@ -1,7 +1,12 @@
 [package]
-name = "resource_main_macro"
-version = "0.1.0"
-edition = "2021"
+name = "altv_internal_resource_main_macro"
+description = "A macro for declaring main function of alt:V Rust resource. Not intended for direct use."
+version = { workspace = true }
+rust-version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+repository = { workspace = true }
+readme = { workspace = true }
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

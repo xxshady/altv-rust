@@ -1,10 +1,15 @@
 [package]
-name = "core_module"
-version = "0.1.0"
-edition = "2021"
+name = "altv_internal_core_module"
+description = "An internal crate for alt:V module. Not intended for direct use."
+version = { workspace = true }
+rust-version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+repository = { workspace = true }
+readme = { workspace = true }
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-core_shared = { path = "../core_shared" }
-altv_sdk = { path = "../altv_sdk" }
+altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk" }
+core_shared = { path = "../core_shared", package = "altv_internal_core_shared" }
