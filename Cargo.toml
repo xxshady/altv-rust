@@ -3,7 +3,7 @@
 members = [
     "core_shared",
     "core_module",
-    "core_altv",
+    "core_resource",
     "resource_main_macro",
     "altv_sdk",
     "altv_module",

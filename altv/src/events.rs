@@ -1,4 +1,4 @@
-use core_altv::{exports::events, VoidResult};
+use core_resource::{exports::events, VoidResult};
 pub use events::{
     add_client_handler as on_client, add_local_handler as on, custom_controllers, emit,
     emit_all_clients, emit_all_clients_unreliable, emit_client, emit_client_unreliable,

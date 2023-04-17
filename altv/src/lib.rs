@@ -1,4 +1,4 @@
-use core_altv::{exports, VoidResult};
+use core_resource::{exports, VoidResult};
 
 #[rustfmt::skip]
 pub use exports::{
