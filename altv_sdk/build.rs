@@ -1,6 +1,5 @@
 use std::fs;
 
-const CPP_SDK_VERSION_DIR: &str = "cpp-sdk/version";
 const BASE_OBJECT_TYPE_ENUM_FILE: &str = "cpp-sdk/objects/IBaseObject.h";
 const EVENT_TYPE_ENUM_FILE: &str = "cpp-sdk/events/CEvent.h";
 const MVALUE_TYPE_ENUM_FILE: &str = "cpp-sdk/types/MValue.h";
@@ -208,7 +207,7 @@ fn upper_to_pascal_case(s: &str) -> String {
 fn get_sdk_hash() -> String {
     const SDH_HASH_STRING_START: &str = "ALT_SDK_VERSION \"";
 
-    let content = fs::read(format!("{CPP_SDK_VERSION_DIR}/version.h")).unwrap();
+    let content = fs::read("cpp-sdk-version.h").unwrap();
     let content = String::from_utf8_lossy(&content[..]).to_string();
 
     let idx = content.find(SDH_HASH_STRING_START).unwrap();
