@@ -8,13 +8,6 @@ license = { workspace = true }
 repository = { workspace = true }
 readme = { workspace = true }
 
-include = [
-    "cpp-sdk/*",
-    "src/*",
-    "build.rs",
-    "Cargo.toml",
-]
-
 [dependencies]
 cxx = { workspace = true }
 autocxx = { workspace = true }
