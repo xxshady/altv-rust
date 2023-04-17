@@ -27,3 +27,6 @@ autocxx = "0.24.0"
 anyhow = { version = "1.0.69", features = ["backtrace"] }
 paste = "1.0.11"
 lazy_static = "1.4.0"
+
+[workspace.metadata.release]
+pre-release-commit-message = "release"
