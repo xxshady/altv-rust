@@ -206,13 +206,16 @@ fn upper_to_pascal_case(s: &str) -> String {
 }
 
 fn get_sdk_hash() -> String {
-    let output = std::process::Command::new("git")
-        .current_dir("cpp-sdk")
-        .args(["rev-parse", "--short", "HEAD"])
-        .output()
-        .unwrap();
+    const SDH_HASH_STRING_START: &str = "ALT_SDK_VERSION \"";
 
-    String::from_utf8_lossy(&output.stdout[..7]).to_string()
+    let content = fs::read(format!("{CPP_SDK_VERSION_DIR}/version.h")).unwrap();
+    let content = String::from_utf8_lossy(&content[..]).to_string();
+
+    let idx = content.find(SDH_HASH_STRING_START).unwrap();
+    let start_of_hash = idx + SDH_HASH_STRING_START.len();
+    let end_of_hash = start_of_hash + 7;
+
+    content[start_of_hash..end_of_hash].to_string()
 }
 
 fn write_sdk_hash(hash: String, out_dir: &str) {
