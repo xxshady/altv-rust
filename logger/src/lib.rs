@@ -24,13 +24,13 @@ impl Log for Logger {
             _ => content.normal(),
         };
 
-        println!("{} {}", module_path, content);
+        println!("{module_path} {content}");
     }
     fn flush(&self) {}
 }
 
 pub fn init() -> Result<(), log::SetLoggerError> {
-    let log_level = env!("LOG_LEVEL");
-    log::set_max_level(LevelFilter::from_str(&log_level).unwrap());
+    let level = std::env::var("LOG_LEVEL").unwrap_or("info".to_string());
+    log::set_max_level(LevelFilter::from_str(&level).unwrap());
     log::set_logger(&Logger {})
 }

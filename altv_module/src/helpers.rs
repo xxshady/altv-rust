@@ -1,11 +1,35 @@
-pub fn get_base_object_type(
-    base_object: *const altv_sdk::ffi::alt::IBaseObject,
-) -> altv_sdk::BaseObjectType {
-    let raw_type = unsafe { altv_sdk::ffi::get_base_object_type(base_object) };
-    if raw_type == 255 {
-        panic!("resource_on_create_base_object base_object type is invalid");
-    }
+#[macro_export]
+macro_rules! on_base_object_event {
+    ($method_name: ident, $resource_name: expr, $base_object: expr) => {
+        paste::paste! {
+            RESOURCE_MANAGER_INSTANCE.with(|manager| {
+                let stringified_method_name = stringify!([$method_name]);
 
-    altv_sdk::BaseObjectType::from(raw_type)
-        .expect("failed to convert raw baseobj type to BaseObjectType")
+                let manager = manager.borrow();
+                if manager.is_pending(&$resource_name) {
+                    logger::debug!(
+                        "{} resource start is pending: {}",
+                        stringified_method_name,
+                        $resource_name
+                    );
+                    return;
+                }
+
+                let base_object_type = unsafe { altv_sdk::helpers::get_base_object_type($base_object.as_ptr()) };
+
+                logger::debug!(
+                    "{} type: {:?}",
+                    stringified_method_name,
+                    base_object_type
+                );
+
+                manager
+                    .get_resource_for_module_by_name($resource_name)
+                    .unwrap_or_else(|| {
+                        panic!("{} resource: {:?} get_resource_for_module_by_path failed", stringified_method_name, $resource_name);
+                    })
+                    .[<$method_name>]($base_object, base_object_type);
+            });
+        }
+    };
 }

@@ -1,16 +1,23 @@
 [package]
 name = "altv_module"
-version = "0.1.0"
-edition = "2021"
+version = { workspace = true }
+rust-version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+repository = { workspace = true }
+readme = { workspace = true }
+publish = false
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-altv_sdk = { path = "../altv_sdk" }
-resource_impl = { path = "../resource_impl" }
-logger = { path = "../logger" }
-libloading = "0.7.4"
+altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "15.0.0-dev.0" }
+core_module = { path = "../core_module", version = "15.0.0-dev.0" }
+logger = { path = "../logger", package = "altv_internal_logger", version = "15.0.0-dev.0" }
+paste = { workspace = true }
 autocxx = { workspace = true }
+lazy_static = { workspace = true }
+libloading = "0.7.4"
 
 [lib]
 crate-type = ["cdylib"]

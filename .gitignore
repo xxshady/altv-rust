@@ -1,8 +1,1 @@
 /target
-/example_resource/target
-/extern_type_callback_derive/target
-/altv_module/target
-/altv_sdk/src/cpp_sdk_version.rs
-/altv_sdk/src/base_object_type.rs
-/altv_sdk/src/event_type.rs
-/altv_sdk/src/mvalue_type.rs

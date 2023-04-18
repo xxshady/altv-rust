@@ -1,17 +1,33 @@
 [workspace]
 
 members = [
-    "extern_type_callback_derive",
+    "core_shared",
+    "core_module",
+    "core_resource",
     "resource_main_macro",
     "altv_sdk",
-    "resource_impl",
     "altv_module",
-    "altvx",
-    "example_resource",
     "logger",
+    "altv",
+    "example_resource",
+    "cpp_codegen",
 ]
+
+[workspace.package]
+version = "15.0.0-dev.0"
+rust-version = "1.68.2"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/xxshady/altv-rust"
+readme = "README.md"
 
 [workspace.dependencies]
 cxx = "1.0.91"
 autocxx = "0.24.0"
-anyhow = "1.0.69"
+anyhow = { version = "1.0.69", features = ["backtrace"] }
+paste = "1.0.11"
+lazy_static = "1.4.0"
+
+[workspace.metadata.release]
+pre-release-commit-message = "release {{version}}"
+tag-message = "release {{version}}"

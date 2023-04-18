@@ -1,16 +1,18 @@
 [package]
-name = "altv_sdk"
-version = "0.0.0"
-edition = "2021"
+name = "altv_internal_sdk"
+description = "An internal crate for alt:V module. Not intended for direct use."
+version = { workspace = true }
+rust-version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+repository = { workspace = true }
+readme = { workspace = true }
 
 [dependencies]
 cxx = { workspace = true }
 autocxx = { workspace = true }
-extern_type_callback_derive = { path = "../extern_type_callback_derive" }
 primitive_enum = "1.0.2"
 
 [build-dependencies]
-bindgen = "0.63.0"
-rerun_except = "1.0.0"
 autocxx-build = "0.24.0"
 miette = { version = "5", features = ["fancy"] }

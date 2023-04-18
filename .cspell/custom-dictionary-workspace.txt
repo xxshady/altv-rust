@@ -1,8 +1,8 @@
 -DALT_SERVER_API
 # Custom Dictionary Words
-altvx
+altv
 cxxbridge
 dlopen
 improper_ctypes_definitions
+libloading
 repr
-xrust

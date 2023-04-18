@@ -83,7 +83,7 @@
   "cSpell.customDictionaries": {
     "custom-dictionary-workspace": {
       "name": "custom-dictionary-workspace",
-      "path": "${workspaceFolder:altv-xrust}/.cspell/custom-dictionary-workspace.txt",
+      "path": "${workspaceFolder:altv-rust}/.cspell/custom-dictionary-workspace.txt",
       "addWords": true,
       "scope": "workspace"
     }
@@ -96,7 +96,9 @@
     "target/**/*": true
   },
   "editor.tabSize": 4,
-  "rust-analyzer.check.allTargets": false,
-  "rust-analyzer.check.targets": "x86_64-pc-windows-msvc",
-  "rust-analyzer.trace.extension": true
+  "rust-analyzer.check.extraEnv": {
+    "LOG_LEVEL": "debug"
+  },
+  "rust-analyzer.check.command": "clippy",
+  "rust-analyzer.showUnlinkedFileNotification": false
 }
