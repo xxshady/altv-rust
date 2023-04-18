@@ -50,6 +50,7 @@ macro_rules! base_objects {
                     };
                 }
 
+                #[allow(unused_imports)]
                 pub(crate) use [<__ $manager_name_snake _remove_from_pool>] as remove_from_pool;
 
                 #[macro_export]
@@ -78,6 +79,7 @@ macro_rules! base_objects {
                     };
                 }
 
+                #[allow(unused_imports)]
                 pub(crate) use [<__ $manager_name_snake _add_to_pool>] as add_to_pool;
             }
         )+

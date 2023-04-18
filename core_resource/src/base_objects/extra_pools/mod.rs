@@ -28,6 +28,7 @@ pub mod wrappers {
                 )+ }
 
                 impl $any_name {
+                    #[allow(dead_code)]
                     pub(crate) fn raw_ptr(&self) -> SomeResult<$raw_ptr_type> {
                         match self { $(
                             $any_name::$variant(e) => Ok(unsafe { sdk::base_object::[<to_ $name:snake>](e.raw_base_ptr()?) }),

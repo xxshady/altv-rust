@@ -1,6 +1,6 @@
 use std::{cell::RefCell, collections::HashMap, rc::Rc};
 
-use crate::{exports::EntityId, helpers::IntoString, sdk, VoidResult};
+use crate::{helpers::IntoString, sdk, VoidResult};
 
 pub(super) type InfoPtr = *mut sdk::alt::IConnectionInfo;
 
