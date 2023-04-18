@@ -107,7 +107,7 @@ u8 GetLivery(const alt::IVehicle* ptr) {
 u8 GetRoofLivery(const alt::IVehicle* ptr) {
     return ptr->GetRoofLivery();
 }
-std::string GetAppearanceDataBase64(alt::IVehicle* ptr) {
+std::string GetAppearanceDataBase64(const alt::IVehicle* ptr) {
     return ptr->GetAppearanceDataBase64();
 }
 bool IsEngineOn(const alt::IVehicle* ptr) {
@@ -149,7 +149,7 @@ bool IsFlamethrowerActive(const alt::IVehicle* ptr) {
 f32 GetLightsMultiplier(const alt::IVehicle* ptr) {
     return ptr->GetLightsMultiplier();
 }
-std::string GetGameStateBase64(alt::IVehicle* ptr) {
+std::string GetGameStateBase64(const alt::IVehicle* ptr) {
     return ptr->GetGameStateBase64();
 }
 i32 GetEngineHealth(const alt::IVehicle* ptr) {
@@ -185,7 +185,7 @@ u32 GetBodyHealth(const alt::IVehicle* ptr) {
 u32 GetBodyAdditionalHealth(const alt::IVehicle* ptr) {
     return ptr->GetBodyAdditionalHealth();
 }
-std::string GetHealthDataBase64(alt::IVehicle* ptr) {
+std::string GetHealthDataBase64(const alt::IVehicle* ptr) {
     return ptr->GetHealthDataBase64();
 }
 u8 GetPartDamageLevel(alt::IVehicle* ptr, u8 partId) {
@@ -215,13 +215,13 @@ u8 GetArmoredWindowShootCount(alt::IVehicle* ptr, u8 windowId) {
 u8 GetBumperDamageLevel(alt::IVehicle* ptr, u8 bumperId) {
     return ptr->GetBumperDamageLevel(bumperId);
 }
-std::string GetDamageDataBase64(alt::IVehicle* ptr) {
+std::string GetDamageDataBase64(const alt::IVehicle* ptr) {
     return ptr->GetDamageDataBase64();
 }
 bool IsManualEngineControl(const alt::IVehicle* ptr) {
     return ptr->IsManualEngineControl();
 }
-std::string GetScriptDataBase64(alt::IVehicle* ptr) {
+std::string GetScriptDataBase64(const alt::IVehicle* ptr) {
     return ptr->GetScriptDataBase64();
 }
 void ToggleExtra(alt::IVehicle* ptr, u8 extraID, bool state) {

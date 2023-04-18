@@ -133,6 +133,9 @@ std::string GetIP(const alt::IPlayer* ptr) {
 u64 GetSocialID(const alt::IPlayer* ptr) {
     return ptr->GetSocialID();
 }
+std::string GetSocialClubName(const alt::IPlayer* ptr) {
+    return ptr->GetSocialClubName();
+}
 u64 GetHwidHash(const alt::IPlayer* ptr) {
     return ptr->GetHwidHash();
 }

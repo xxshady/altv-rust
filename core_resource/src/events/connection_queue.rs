@@ -1,6 +1,6 @@
 use std::{cell::RefCell, collections::HashMap, rc::Rc};
 
-use crate::{helpers::IntoString, sdk, VoidResult};
+use crate::{exports::EntityId, helpers::IntoString, sdk, VoidResult};
 
 pub(super) type InfoPtr = *mut sdk::alt::IConnectionInfo;
 
@@ -15,7 +15,9 @@ pub(super) enum ConnectionQueueState {
 #[derive(Debug)]
 pub struct ConnectionQueueInfo {
     pub name: String,
+    pub id: u32, // TODO: why it returns u32 and not u16 (EntityId)?
     pub social_id: u64,
+    pub social_name: String,
     pub hw_id_hash: u64,
     pub hw_id_ex_hash: u64,
     pub auth_token: String,
@@ -33,7 +35,9 @@ impl ConnectionQueueInfo {
         use sdk::IConnectionInfo::*;
         Self {
             name: GetName(ptr).to_string(),
+            id: GetID(ptr),
             social_id: GetSocialId(ptr),
+            social_name: GetSocialName(ptr).to_string(),
             hw_id_hash: GetHwIdHash(ptr),
             hw_id_ex_hash: GetHwIdExHash(ptr),
             auth_token: GetAuthToken(ptr).to_string(),

@@ -4,11 +4,17 @@
 
 namespace IConnectionInfo {
 
+u32 GetID(const alt::IConnectionInfo* ptr) {
+    return ptr->GetID();
+}
 std::string GetName(const alt::IConnectionInfo* ptr) {
     return ptr->GetName();
 }
 u64 GetSocialId(const alt::IConnectionInfo* ptr) {
     return ptr->GetSocialId();
+}
+std::string GetSocialName(const alt::IConnectionInfo* ptr) {
+    return ptr->GetSocialName();
 }
 u64 GetHwIdHash(const alt::IConnectionInfo* ptr) {
     return ptr->GetHwIdHash();

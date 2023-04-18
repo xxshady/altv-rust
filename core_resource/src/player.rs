@@ -26,6 +26,10 @@ impl player::Player {
         Ok(unsafe { sdk::IPlayer::GetName(self.raw_ptr()?) }.to_string())
     }
 
+    pub fn social_name(&self) -> SomeResult<String> {
+        Ok(unsafe { sdk::IPlayer::GetSocialClubName(self.raw_ptr()?) }.to_string())
+    }
+
     pub fn spawn(&self, model: impl IntoHash, pos: impl Into<Vector3>) -> VoidResult {
         self.set_model(model)?;
         let pos = pos.into();
