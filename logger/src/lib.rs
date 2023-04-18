@@ -30,7 +30,7 @@ impl Log for Logger {
 }
 
 pub fn init() -> Result<(), log::SetLoggerError> {
-    let level = std::env::var("LOG_LEVEL").unwrap_or("info".to_string());
-    log::set_max_level(LevelFilter::from_str(&level).unwrap());
+    let level = option_env!("LOG_LEVEL").unwrap_or("info");
+    log::set_max_level(LevelFilter::from_str(level).unwrap());
     log::set_logger(&Logger {})
 }
