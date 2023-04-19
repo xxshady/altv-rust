@@ -23,7 +23,7 @@ jobs:
           path: target/release/libaltv_module.so
 
   build-windows:
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
         with:
