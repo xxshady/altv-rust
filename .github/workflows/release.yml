@@ -69,7 +69,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./libaltv_module.so
-          asset_name: libaltv_module.so
+          asset_name: librust-module.so
           asset_content_type: application/octet-stream
 
       - uses: actions/download-artifact@v2
@@ -84,5 +84,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./altv_module.dll
-          asset_name: altv_module.dll
+          asset_name: rust-module.dll
           asset_content_type: application/octet-stream
