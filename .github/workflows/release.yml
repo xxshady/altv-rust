@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - 'altv-v*'
 
 jobs:
   build-linux:
