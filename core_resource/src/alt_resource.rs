@@ -2,7 +2,7 @@ use std::{collections::HashMap, ptr::NonNull, rc::Rc};
 
 use core_shared::ResourceName;
 
-use crate::{helpers::IntoString, resource::Resource, sdk};
+use crate::{helpers::IntoString, resource::Resource, sdk, SomeResult};
 
 #[derive(Debug)]
 pub struct AltResource {
@@ -24,7 +24,7 @@ impl AltResource {
         Resource::with_alt_resources_ref(|v, _| v.this_resource.as_ref().unwrap().clone())
     }
 
-    pub fn get_by_name(name: &str) -> Option<Rc<AltResource>> {
+    pub fn get_by_name(name: &str) -> SomeResult<Rc<AltResource>> {
         Resource::with_alt_resources_ref(|v, _| v.get_by_name(name))
     }
 
@@ -112,8 +112,11 @@ impl AltResourceManager {
         instance
     }
 
-    pub fn get_by_name(&self, name: &str) -> Option<Rc<AltResource>> {
-        self.resources.get(name).cloned()
+    pub fn get_by_name(&self, name: &str) -> SomeResult<Rc<AltResource>> {
+        self.resources
+            .get(name)
+            .cloned()
+            .ok_or(anyhow::anyhow!("unknown resource name: {name}"))
     }
 }
 

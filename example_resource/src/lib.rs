@@ -4,6 +4,13 @@ pub use alt::prelude::*;
 pub fn main() {
     std::env::set_var("RUST_BACKTRACE", "full");
 
-    dbg!(alt::BaseObjectType::Player);
-    dbg!(alt::BaseObjectType::NetworkObject);
+    alt::set_timeout(
+        || {
+            dbg!(alt::Resource::get_by_name("test")?);
+            Ok(())
+        },
+        500,
+    );
+
+    alt::log!("rust resource started");
 }
