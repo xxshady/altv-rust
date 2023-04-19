@@ -20,7 +20,7 @@ pub fn resource_main_func(args: TokenStream, input: TokenStream) -> TokenStream 
     let input = syn::parse_macro_input!(input as ItemFn);
     let ItemFn {
         attrs,
-        vis,
+        vis: _,
         sig: _sig,
         block,
     } = input;
@@ -63,7 +63,7 @@ pub fn resource_main_func(args: TokenStream, input: TokenStream) -> TokenStream 
 
     quote! {
         #[no_mangle]
-        #(#attrs)* #vis fn main(
+        #(#attrs)* extern "C" fn main(
             core: usize, // workaround for the clippy unsafety error
             resource_name: String,
             resource_handlers: &mut #crate_name_ident::__internal::ResourceHandlers,
