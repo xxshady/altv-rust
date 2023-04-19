@@ -1,3 +1,5 @@
+#![allow(clippy::needless_doctest_main)]
+
 use proc_macro::TokenStream;
 use proc_macro2::Span;
 use quote::quote;
@@ -6,14 +8,32 @@ use syn::{parse::Parser, ItemFn};
 // copy-pasted from tokio
 type AttributeArgs = syn::punctuated::Punctuated<syn::NestedMeta, syn::Token![,]>;
 
-/// Converts the function to be compatible with the altv module.
+/// Converts the main function of your alt:V Rust resource
+/// for compatibility with the alt:V module.
+///
+/// ## Example
+/// ```
+/// #[altv::main]
+/// fn main() {
+///    altv::log!("hello world");
+/// }
+/// ```
 ///
 /// ## `crate_name`
-/// This attribute can be used if crate is renamed in Cargo.toml using "package" option.
-/// ```rust
+/// This attribute can be used if `altv` crate is renamed in Cargo.toml using "package" option.
 ///
+/// Cargo.toml
+/// ```toml
+/// [dependencies]
+/// my_custom_name = { version = "...", package = "altv" }
+/// ```
+///
+/// src/lib.rs
+/// ```rust
 /// #[my_custom_name::main(crate_name = "my_custom_name")]
-/// pub fn main() {}
+/// fn main() {
+///    my_custom_name::log!("hello world");
+/// }
 /// ```
 #[proc_macro_attribute]
 pub fn resource_main_func(args: TokenStream, input: TokenStream) -> TokenStream {

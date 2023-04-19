@@ -1,7 +1,7 @@
 pub use altv::prelude::*;
 
 #[altv::main(crate_name = "altv")]
-pub fn main() {
+fn main() {
     std::env::set_var("RUST_BACKTRACE", "full");
 
     altv::set_timeout(
