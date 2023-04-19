@@ -1,0 +1,84 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Build
+        run: cargo build --release
+
+      - uses: actions/upload-artifact@v3
+        name: Upload module-linux
+        with:
+          name: module-linux
+          path: target/release/libaltv_module.so
+
+  build-windows:
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Build
+        run: cargo build --release
+
+      - uses: actions/upload-artifact@v3
+        name: Upload module-windows
+        with:
+          name: module-windows
+          path: target/release/altv_module.dll
+
+  release:
+    runs-on: ubuntu-22.04
+    needs: [
+      build-linux,
+      build-windows
+    ]
+    steps:
+      - uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+
+      - uses: actions/download-artifact@v2
+        name: Download module-linux artifact
+        with:
+          name: module-linux
+
+      - uses: actions/upload-release-asset@v1
+        name: Upload module-linux
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./libaltv_module.so
+          asset_name: libaltv_module.so
+          asset_content_type: application/octet-stream
+
+      - uses: actions/download-artifact@v2
+        name: Download module-windows artifact
+        with:
+          name: module-windows
+
+      - uses: actions/upload-release-asset@v1
+        name: Upload module-windows
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./altv_module.dll
+          asset_name: altv_module.dll
+          asset_content_type: application/octet-stream
