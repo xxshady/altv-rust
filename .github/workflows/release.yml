@@ -14,7 +14,9 @@ jobs:
           submodules: recursive
 
       - name: Build
-        run: cargo build --release
+        run: |
+          cd altv_module
+          cargo build --release
 
       - uses: actions/upload-artifact@v3
         name: Upload module-linux
@@ -30,7 +32,9 @@ jobs:
           submodules: recursive
 
       - name: Build
-        run: cargo build --release
+        run: |
+          cd altv_module
+          cargo build --release
 
       - uses: actions/upload-artifact@v3
         name: Upload module-windows
