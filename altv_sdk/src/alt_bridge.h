@@ -474,24 +474,17 @@ MValueMutWrapper create_mvalue_vector2(f32 x, f32 y) {
 
 // events
 
-void trigger_local_event(std::string event_name, MValueWrapperVec mvalue_vec) {
-    alt::MValueArgs args;
-    auto size = mvalue_vec.size();
-
-    for (alt::Size i = 0; i < size; ++i) {
-        args.Push(*(mvalue_vec[i].ptr));
-    }
-
-    alt::ICore::Instance().TriggerLocalEvent(event_name, args);
-}
-
 alt::MValueArgs mvalue_wrapper_vec_to_alt(MValueWrapperVec mvalue_vec) {
     alt::MValueArgs args;
     auto size = mvalue_vec.size();
     for (alt::Size i = 0; i < size; ++i) {
-        args.Push(*(mvalue_vec[i].ptr));
+        args.push_back(*(mvalue_vec[i].ptr));
     }
     return args;
+}
+
+void trigger_local_event(std::string event_name, MValueWrapperVec mvalue_vec) {
+    alt::ICore::Instance().TriggerLocalEvent(event_name, mvalue_wrapper_vec_to_alt(mvalue_vec));
 }
 
 std::vector<alt::IPlayer*> player_wrapper_vec_to_alt(PlayerVector player_vec) {

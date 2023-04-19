@@ -19,6 +19,12 @@ const StdStringClone GetPath(const alt::IResource* ptr) {
 const StdStringClone GetMain(const alt::IResource* ptr) {
     return std::string { ptr->GetMain() };
 }
+const std::vector<std::string> GetDependencies(const alt::IResource* ptr) {
+    return ptr->GetDependencies();
+}
+const std::vector<std::string> GetDependants(const alt::IResource* ptr) {
+    return ptr->GetDependants();
+}
 std::string GetClientType(const alt::IResource* ptr) {
     return ptr->GetClientType();
 }

@@ -115,12 +115,6 @@ extern "C" fn resource_on_event(resource_name: &str, event: altv_sdk::CEventPtr)
         event_type
     );
 
-    // heron said it will be removed
-    if event_type == altv_sdk::EventType::PlayerBeforeConnect {
-        logger::info!("ignoring PlayerBeforeConnect");
-        return;
-    }
-
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
         let manager = manager.borrow();
         manager

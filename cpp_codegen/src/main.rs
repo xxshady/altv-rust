@@ -65,7 +65,7 @@ lazy_static::lazy_static! {
             ("std::vector<Weapon>", "std::vector<WeaponWrapper>"),
             ("std::vector<std::string>&", "std::vector<std::string>"),
             ("std::vector<Vector2f>", "Vector2Vec"),
-            ("Array<FireInfo>&", "std::vector<FireInfoWrapper>"),
+            ("std::vector<FireInfo>&", "std::vector<FireInfoWrapper>"),
             ("Quaternion", "alt::Quaternion"),
             ("std::vector<IBaseObject*>", "BaseObjectVector"),
             ("std::vector<IResource*>", "ResourceVector"),
@@ -924,10 +924,9 @@ fn cpp_method_to_rust_compatible_func(
             format!(
                 "auto args = {v};\n    \
                 auto mvalue_vec = create_mvalue_vec();\n    \
-                auto size = args.GetSize();\n    \
-                for (alt::Size i = 0; i < size; ++i) {{\n    \
+                for (const auto& e : args) {{\n    \
                     MValueWrapper wrapper;\n    \
-                    wrapper.ptr = std::make_shared<alt::MValueConst>(args[i]);\n    \
+                    wrapper.ptr = std::make_shared<alt::MValueConst>(e);\n    \
                     mvalue_vec.push_back(wrapper.clone());\n    \
                 }}\n    \
                 return mvalue_vec"
@@ -937,10 +936,10 @@ fn cpp_method_to_rust_compatible_func(
         "ExplosionType" => |v: &str| format!("return static_cast<int8_t>({v})"),
         "std::vector<FireInfoWrapper>" => |v: &str| {
             format!(
-                "auto alt_array = {v};\n    \
+                "auto alt_vec = {v};\n    \
                 std::vector<FireInfoWrapper> vec {{}};\n    \
-                vec.reserve(alt_array.GetSize());\n    \
-                for (const auto& e : alt_array) {{\n        \
+                vec.reserve(alt_vec.size());\n    \
+                for (const auto& e : alt_vec) {{\n        \
                     vec.push_back({{ {{ e.position[0], e.position[1], e.position[2] }}, e.weaponHash }});\n    \
                 }}\n    \
                 return vec"
