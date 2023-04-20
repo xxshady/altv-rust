@@ -197,6 +197,7 @@ pub mod ffi {
         generate_ns!("col_shape")
         generate_ns!("virtual_entity")
         generate_ns!("virtual_entity_group")
+        generate_ns!("blip")
 
         // alt::Prop
         generate!("read_alt_prop")
