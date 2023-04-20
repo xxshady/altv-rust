@@ -15,6 +15,8 @@ New server-side [Rust](https://www.rust-lang.org) module for [alt:V](https://alt
 Before start writing your server-side in Rust you need to [install LLVM](https://rust-lang.github.io/rust-bindgen/requirements.html#installing-clang)
 > if you are on Windows, don't forget to set `LIBCLANG_PATH` as an environment variable
 
+[Video format of this tutorial](https://youtu.be/PRIJsRdjiGg) if you are more into video tutorials
+
 1. Create new cargo package with `cargo new altv-resource --lib`
 
 2. Configure cargo to compile your crate as `cdylib` in your `Cargo.toml`
