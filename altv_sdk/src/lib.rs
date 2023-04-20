@@ -370,6 +370,7 @@ include_out_dir!("/base_object_type.rs");
 include_out_dir!("/event_type.rs");
 include_out_dir!("/mvalue_type.rs");
 include_out_dir!("/col_shape_type.rs");
+include_out_dir!("/blip_type.rs");
 include_out_dir!("/player_body_part.rs");
 include_out_dir!("/player_connect_denied_reason.rs");
 include_out_dir!("/explosion_type.rs");
