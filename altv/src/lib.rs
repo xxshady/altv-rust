@@ -1,3 +1,5 @@
+#![doc = include_str!("../../README.md")]
+
 use core_resource::{exports, VoidResult};
 
 #[rustfmt::skip]
