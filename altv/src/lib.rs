@@ -1,4 +1,6 @@
-#![doc = include_str!("../../README.md")]
+//! Server-side Rust API for alt:V
+//!
+//! [How to use?](https://github.com/xxshady/altv-rust#how-to-use)
 
 use core_resource::{exports, VoidResult};
 
