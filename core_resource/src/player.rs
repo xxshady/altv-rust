@@ -600,7 +600,7 @@ impl player::Player {
     }
 
     pub fn is_entity_in_streaming_range(&self, entity_id: EntityId) -> SomeResult<bool> {
-        Ok(unsafe { sdk::IPlayer::IsEntityInStreamingRange(self.raw_ptr()?, entity_id) })
+        Ok(unsafe { sdk::IPlayer::IsEntityInStreamingRange(self.raw_ptr()?, entity_id as u16) })
     }
 
     pub fn invincible(&self) -> SomeResult<bool> {

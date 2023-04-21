@@ -106,7 +106,7 @@ impl col_shape::ColShape {
     }
 
     pub fn is_entity_id_in(&self, id: EntityId) -> SomeResult<bool> {
-        Ok(unsafe { sdk::IColShape::IsEntityIdIn(self.raw_ptr()?, id) })
+        Ok(unsafe { sdk::IColShape::IsEntityIdIn(self.raw_ptr()?, id as u16) })
     }
 
     // TODO: cache colshape type somehow

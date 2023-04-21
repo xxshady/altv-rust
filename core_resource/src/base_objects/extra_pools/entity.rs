@@ -10,7 +10,7 @@ use crate::{
     SomeResult, VoidResult,
 };
 
-pub type EntityId = u16;
+pub type EntityId = u32;
 pub type EntityPool = ExtraPool<HashMap<EntityId, AnyEntity>>;
 
 pub type EntityRawPtr = *mut sdk::alt::IEntity;
@@ -32,6 +32,10 @@ pub trait Entity: BasePtr {
 
     fn id(&self) -> SomeResult<EntityId> {
         Ok(unsafe { sdk::IEntity::GetID(self.raw_ptr()?) })
+    }
+
+    fn sync_id(&self) -> SomeResult<u16> {
+        Ok(unsafe { sdk::IEntity::GetSyncID(self.raw_ptr()?) })
     }
 
     fn model(&self) -> SomeResult<Hash> {
