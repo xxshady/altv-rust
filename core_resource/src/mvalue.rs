@@ -1,6 +1,6 @@
 use crate::{
     base_objects::{
-        col_shape, player, vehicle, virtual_entity, virtual_entity_group, AnyBaseObject, BasePtr,
+        col_shape, player, vehicle, virtual_entity, virtual_entity_group, blip, AnyBaseObject, BasePtr,
     },
     helpers::{read_cpp_vector2, read_cpp_vector3},
     resource::Resource,
@@ -88,6 +88,7 @@ macro_rules! impl_serializable_base_object {
 impl_serializable_base_object!(vehicle::VehicleContainer, "vehicle");
 impl_serializable_base_object!(player::PlayerContainer, "player");
 impl_serializable_base_object!(col_shape::ColShapeContainer, "col_shape");
+impl_serializable_base_object!(blip::BlipContainer, "blip");
 
 // TODO: fix this none/null/nil shit
 /// alias for `MValue::None`
@@ -149,6 +150,7 @@ pub enum MValue {
     Player(player::PlayerContainer),
     VirtualEntity(virtual_entity::VirtualEntityContainer),
     VirtualEntityGroup(virtual_entity_group::VirtualEntityGroupContainer),
+    Blip(blip::BlipContainer),
     InvalidBaseObject,
 }
 
@@ -298,6 +300,7 @@ pub(crate) fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Re
                 AnyBaseObject::Player(c) => MValue::Player(c),
                 AnyBaseObject::VirtualEntity(c) => MValue::VirtualEntity(c),
                 AnyBaseObject::VirtualEntityGroup(c) => MValue::VirtualEntityGroup(c),
+                AnyBaseObject::Blip(c) => MValue::Blip(c),
             }
         }
         Vector3 => MValue::Vector3(read_cpp_vector3(

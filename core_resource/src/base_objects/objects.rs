@@ -225,6 +225,9 @@ base_objects!(
     VirtualEntityGroup: [
         altv_sdk::BaseObjectType::VirtualEntityGroup,
     ],
+    Blip: [
+        altv_sdk::BaseObjectType::Blip,
+    ],
 );
 
 impl Debug for Store {

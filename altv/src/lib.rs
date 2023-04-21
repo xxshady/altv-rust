@@ -24,6 +24,7 @@ pub use exports::{
     Vehicle,
     VirtualEntity,
     VirtualEntityGroup,
+    Blip,
     AnyEntity,
     AttachToEntityBoneIndex,
     AttachToEntityBoneName,
