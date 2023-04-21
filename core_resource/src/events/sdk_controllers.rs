@@ -13,7 +13,7 @@ use crate::{
     exports::{AnyEntity, Vector3},
     helpers::{
         get_entity_by_ptr, get_non_null_entity_by_ptr, get_non_null_world_object_by_ptr,
-        read_cpp_vector3, Hash,
+        read_cpp_str_vec, read_cpp_vector3, Hash,
     },
     mvalue,
     resource::Resource,
@@ -211,10 +211,7 @@ impl ConsoleCommandEvent {
         let event = base_event_to_specific!(event, CConsoleCommandEvent);
         Self {
             name: sdk::CConsoleCommandEvent::GetName(event).to_string(),
-            args: sdk::CConsoleCommandEvent::GetArgs(event)
-                .iter()
-                .map(|s| s.to_string())
-                .collect(),
+            args: read_cpp_str_vec(sdk::CConsoleCommandEvent::GetArgs(event)),
         }
     }
 }

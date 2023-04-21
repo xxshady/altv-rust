@@ -12,7 +12,10 @@ use crate::{
     world_object::WorldObjectRawPtr,
 };
 use altv_sdk::ffi as sdk;
-use autocxx::prelude::*;
+use autocxx::{
+    cxx::{CxxString, CxxVector},
+    prelude::*,
+};
 
 pub fn read_cpp_vector3(cpp_vector: UniquePtr<sdk::Vector3Wrapper>) -> Vector3 {
     let mut out_x = 0f32;
@@ -202,4 +205,8 @@ impl IntoF32 for i32 {
     fn into_f32(self) -> f32 {
         self as f32
     }
+}
+
+pub(crate) fn read_cpp_str_vec(cpp_vec: UniquePtr<CxxVector<CxxString>>) -> Vec<String> {
+    cpp_vec.into_iter().map(|v| v.to_string()).collect()
 }

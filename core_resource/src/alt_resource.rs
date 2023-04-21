@@ -2,7 +2,11 @@ use std::{collections::HashMap, ptr::NonNull, rc::Rc};
 
 use core_shared::ResourceName;
 
-use crate::{helpers::IntoString, resource::Resource, sdk, SomeResult};
+use crate::{
+    helpers::{read_cpp_str_vec, IntoString},
+    resource::Resource,
+    sdk, SomeResult,
+};
 
 #[derive(Debug)]
 pub struct AltResource {
@@ -13,6 +17,8 @@ pub struct AltResource {
     pub client_main: String,
     pub path: String,
     pub client_files: Vec<String>,
+    pub dependants: Vec<String>,
+    pub dependencies: Vec<String>,
 }
 
 impl AltResource {
@@ -95,17 +101,18 @@ impl AltResourceManager {
 
     pub fn add_resource(&mut self, name: ResourceName, ptr: ResourcePtr) -> Rc<AltResource> {
         use sdk::IResource::*;
+
+        let raw_ptr = ptr.as_ptr();
         let instance = Rc::new(AltResource {
             name: name.clone(),
-            resource_type: unsafe { GetType(ptr.as_ptr()) }.to_string(),
-            path: unsafe { GetPath(ptr.as_ptr()) }.to_string(),
-            main: unsafe { GetMain(ptr.as_ptr()) }.to_string(),
-            client_type: unsafe { GetClientType(ptr.as_ptr()) }.to_string(),
-            client_main: unsafe { GetClientMain(ptr.as_ptr()) }.to_string(),
-            client_files: unsafe { GetClientFiles(ptr.as_ptr()) }
-                .into_iter()
-                .map(|v| v.to_string())
-                .collect(),
+            resource_type: unsafe { GetType(raw_ptr) }.to_string(),
+            path: unsafe { GetPath(raw_ptr) }.to_string(),
+            main: unsafe { GetMain(raw_ptr) }.to_string(),
+            client_type: unsafe { GetClientType(raw_ptr) }.to_string(),
+            client_main: unsafe { GetClientMain(raw_ptr) }.to_string(),
+            client_files: read_cpp_str_vec(unsafe { GetClientFiles(raw_ptr) }),
+            dependants: read_cpp_str_vec(unsafe { GetDependants(raw_ptr) }),
+            dependencies: read_cpp_str_vec(unsafe { GetDependencies(raw_ptr) }),
         });
 
         self.resources.insert(name, instance.clone());
