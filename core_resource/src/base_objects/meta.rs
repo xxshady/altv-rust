@@ -110,10 +110,9 @@ macro_rules! __impl_meta_type_for {
 
                 fn [<get_ $meta_type:snake _keys>](&self) -> SomeResult<Vec<String>> {
                     Ok(
-                        unsafe { $sdk_namespace::[<Get $meta_type DataKeys>]($raw_ptr(self)?) }
-                            .into_iter()
-                            .map(|v| v.to_string())
-                            .collect(),
+                        $crate::helpers::read_cpp_str_vec(
+                            unsafe { $sdk_namespace::[<Get $meta_type DataKeys>]($raw_ptr(self)?) }
+                        )
                     )
                 }
             }

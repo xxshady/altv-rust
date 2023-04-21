@@ -19,3 +19,4 @@ pub(crate) use objects::player;
 pub(crate) use objects::vehicle;
 pub(crate) use objects::virtual_entity;
 pub(crate) use objects::virtual_entity_group;
+pub(crate) use objects::blip;

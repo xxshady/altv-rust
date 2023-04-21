@@ -4,6 +4,7 @@ pub use core_shared::*;
 pub use crate::{
     alt_resource::AltResource as Resource,
     base_objects::{
+        blip::{Blip, BlipContainer},
         col_shape::{ColShape, ColShapeContainer},
         extra_pools::{wrappers::AnyEntity, Entity, SyncId},
         meta::{BaseObjectMeta, LocalMeta, StreamSyncedMeta, SyncedMeta},
