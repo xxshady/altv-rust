@@ -44,7 +44,7 @@ impl blip::Blip {
         };
 
         let blip = blip::add_to_pool!(NonNull::new(ptr).unwrap());
-        blip.set_scale((radius, radius)).unwrap();
+        blip.set_scale(radius).unwrap();
         blip
     }
 
