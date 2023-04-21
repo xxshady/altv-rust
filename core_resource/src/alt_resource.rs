@@ -3,6 +3,7 @@ use std::{collections::HashMap, ptr::NonNull, rc::Rc};
 use core_shared::ResourceName;
 
 use crate::{
+    config_node::ResourceConfig,
     helpers::{read_cpp_str_vec, IntoString},
     resource::Resource,
     sdk, SomeResult,
@@ -19,6 +20,7 @@ pub struct AltResource {
     pub client_files: Vec<String>,
     pub dependants: Vec<String>,
     pub dependencies: Vec<String>,
+    pub config: ResourceConfig,
 }
 
 impl AltResource {
@@ -113,6 +115,7 @@ impl AltResourceManager {
             client_files: read_cpp_str_vec(unsafe { GetClientFiles(raw_ptr) }),
             dependants: read_cpp_str_vec(unsafe { GetDependants(raw_ptr) }),
             dependencies: read_cpp_str_vec(unsafe { GetDependencies(raw_ptr) }),
+            config: ResourceConfig::new(unsafe { GetConfig(raw_ptr) }),
         });
 
         self.resources.insert(name, instance.clone());

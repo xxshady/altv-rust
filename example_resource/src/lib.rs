@@ -4,13 +4,9 @@ pub use altv::prelude::*;
 fn main() {
     std::env::set_var("RUST_BACKTRACE", "full");
 
-    altv::set_timeout(
-        || {
-            dbg!(altv::Resource::get_by_name("test")?);
-            Ok(())
-        },
-        500,
-    );
+    let config = altv::ServerConfig::get();
+    dbg!(config);
 
-    altv::log!("rust resource started");
+    let res = altv::Resource::current();
+    dbg!(res.config.get_custom_key("type"));
 }

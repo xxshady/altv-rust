@@ -11,6 +11,7 @@ mod alt_resource;
 mod base_objects;
 mod client_events;
 mod col_shape;
+mod config_node;
 mod core_funcs;
 mod events;
 mod helpers;

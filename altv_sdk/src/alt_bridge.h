@@ -107,6 +107,20 @@ public:
     }
 };
 
+using ConfigDictPair = std::pair<std::string, Config::Value::ValuePtr>;
+
+class ConfigDictPairWrapper {
+public:
+    std::shared_ptr<ConfigDictPair> ptr;
+
+    ConfigDictPairWrapper clone() {
+        ConfigDictPairWrapper instance;
+        instance.ptr = this->ptr;
+
+        return instance;
+    }
+};
+
 class BaseObjectPtrWrapper {
 public:
     std::shared_ptr<alt::IBaseObject*> ptr;
@@ -974,3 +988,56 @@ namespace events
         return static_cast<const alt::CResourceStartEvent*>(event);
     }
 } // namespace events
+
+namespace config_node
+{
+    u8 get_type(const Config::Value::ValuePtr& node) {
+        return static_cast<u8>(node->GetType());
+    }
+
+    bool read_bool(Config::Value::ValuePtr node) {
+        assert(node->GetType() == Config::Value::Type::BOOL);
+        return node->AsBool();
+    }
+
+    f64 read_f64(Config::Value::ValuePtr node) {
+        assert(node->GetType() == Config::Value::Type::NUMBER);
+        return node->AsNumber();
+    }
+
+    std::string read_string(Config::Value::ValuePtr node) {
+        assert(node->GetType() == Config::Value::Type::STRING);
+        return node->AsString();
+    }
+
+    std::vector<Config::Value::ValuePtr> read_list(Config::Value::ValuePtr node) {
+        assert(node->GetType() == Config::Value::Type::LIST);
+        return node->AsList();
+    }
+
+    Config::Value::ValuePtr copy_value_ptr(const Config::Value::ValuePtr& node) {
+        return node;
+    }
+
+    std::vector<ConfigDictPairWrapper> read_dict(Config::Value::ValuePtr node) {
+        assert(node->GetType() == Config::Value::Type::DICT);
+        std::vector<ConfigDictPairWrapper> vec;
+
+        for (auto& pair : node->AsDict()) {
+            // TODO: handle empty/none node?
+            ConfigDictPairWrapper wrapper;
+            wrapper.ptr = std::make_shared<ConfigDictPair>(std::pair { pair.first, pair.second });
+            vec.push_back(wrapper.clone());
+        }
+
+        return vec;
+    }
+
+    std::string read_dict_pair_key(const ConfigDictPairWrapper& pair) {
+        return pair.ptr->first;
+    }
+
+    Config::Value::ValuePtr read_dict_pair_value(const ConfigDictPairWrapper& pair) {
+        return pair.ptr->second;
+    }
+} // namespace config

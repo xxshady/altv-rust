@@ -76,6 +76,8 @@ lazy_static::lazy_static! {
 
             ("Rotation", "Vector3Wrapper"),
             ("bool*", "bool*"),
+
+            ("Config::Value::ValuePtr", "Config::Value::ValuePtr"),
         ])
     };
 

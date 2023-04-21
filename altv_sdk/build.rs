@@ -1,5 +1,6 @@
 use std::fs;
 
+// TODO: remove these retarded constants
 const BASE_OBJECT_TYPE_ENUM_FILE: &str = "cpp-sdk/objects/IBaseObject.h";
 const EVENT_TYPE_ENUM_FILE: &str = "cpp-sdk/events/CEvent.h";
 const MVALUE_TYPE_ENUM_FILE: &str = "cpp-sdk/types/MValue.h";
@@ -90,6 +91,15 @@ fn generate_cpp_to_rust_bindings(out_dir: &str) {
         VEHICLE_MODEL_TYPE_ENUM_FILE,
         "enum class Type : uint8_t",
         "vehicle_model_type.rs",
+        out_dir,
+    );
+
+    generate_rust_enum_from_cpp(
+        "ConfigValueType",
+        "u8",
+        "cpp-sdk/deps/ConfigBase.h",
+        "enum class Type : uint8_t",
+        "config_value_type.rs",
         out_dir,
     );
 }

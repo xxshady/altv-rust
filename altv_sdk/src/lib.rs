@@ -270,6 +270,9 @@ pub mod ffi {
 
         generate!("create_vector2_vec")
         generate!("push_to_vector2_vec")
+
+        generate!("ConfigDictPairWrapper")
+        generate_ns!("config_node")
     }
     pub use alt_bridge::*;
 
@@ -373,3 +376,4 @@ include_out_dir!("/player_body_part.rs");
 include_out_dir!("/player_connect_denied_reason.rs");
 include_out_dir!("/explosion_type.rs");
 include_out_dir!("/vehicle_model_type.rs");
+include_out_dir!("/config_value_type.rs");

@@ -157,6 +157,9 @@ const alt::VehicleModelInfo* GetVehicleModelByHash(u32 hash) {
 const alt::PedModelInfo* GetPedModelByHash(u32 hash) {
     return &alt::ICore::Instance().GetPedModelByHash(hash);
 }
+Config::Value::ValuePtr GetServerConfig() {
+    return alt::ICore::Instance().GetServerConfig();
+}
 void SetWorldProfiler(bool state) {
     return alt::ICore::Instance().SetWorldProfiler(state);
 }
