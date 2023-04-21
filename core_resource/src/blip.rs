@@ -64,7 +64,7 @@ impl blip::Blip {
         blip::add_to_pool!(NonNull::new(ptr).unwrap())
     }
 
-    pub fn new_point1(entity: impl Into<AnyEntity>) -> blip::BlipContainer {
+    pub fn new_entity_point(entity: impl Into<AnyEntity>) -> blip::BlipContainer {
         let entity = entity.into();
 
         let ptr = unsafe {
@@ -198,7 +198,7 @@ impl blip::Blip {
         Ok(unsafe { sdk::IBlip::GetPriority(self.raw_ptr()?) }.into())
     }
 
-    pub fn rotation(&self) -> SomeResult<f32> {
+    pub fn rot(&self) -> SomeResult<f32> {
         Ok(unsafe { sdk::IBlip::GetRotation(self.raw_ptr()?) })
     }
 
@@ -262,7 +262,7 @@ impl blip::Blip {
     }
 
     pub fn set_color(&self, color: i32) -> VoidResult {
-        unsafe { sdk::IBlip::SetSprite(self.raw_ptr()?, color.into()) }
+        unsafe { sdk::IBlip::SetColor(self.raw_ptr()?, color.into()) }
         Ok(())
     }
 
@@ -271,14 +271,18 @@ impl blip::Blip {
         Ok(())
     }
 
-    pub fn set_route_color(&self, color: RGBA) -> VoidResult {
+    pub fn set_route_color(&self, color: impl Into<RGBA>) -> VoidResult {
+        let color = color.into();
+
         unsafe {
             sdk::IBlip::SetRouteColor(self.raw_ptr()?, color.r(), color.g(), color.b(), color.a())
         }
         Ok(())
     }
 
-    pub fn set_secondary_color(&self, color: RGBA) -> VoidResult {
+    pub fn set_secondary_color(&self, color: impl Into<RGBA>) -> VoidResult {
+        let color = color.into();
+
         unsafe {
             sdk::IBlip::SetSecondaryColor(
                 self.raw_ptr()?,
@@ -346,7 +350,7 @@ impl blip::Blip {
         Ok(())
     }
 
-    pub fn set_rotation(&self, rot: f32) -> VoidResult {
+    pub fn set_rot(&self, rot: f32) -> VoidResult {
         unsafe { sdk::IBlip::SetRotation(self.raw_ptr()?, rot) }
         Ok(())
     }
