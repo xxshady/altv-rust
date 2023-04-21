@@ -4,7 +4,7 @@ use autocxx::prelude::*;
 
 use crate::{
     base_objects::{
-        extra_pools::{get_entity_by_id, wrappers::AnyEntity, Entity, EntityId},
+        extra_pools::{get_entity_by_id, wrappers::AnyEntity, Entity, SyncId},
         meta, player, vehicle,
     },
     helpers::{self, IntoHash, IntoString},
@@ -22,7 +22,7 @@ impl vehicle::Vehicle {
         Resource::with_base_objects_ref(|v, _| v.vehicle.all())
     }
 
-    pub fn get_by_id(id: EntityId) -> SomeResult<vehicle::VehicleContainer> {
+    pub fn get_by_id(id: SyncId) -> SomeResult<vehicle::VehicleContainer> {
         get_entity_by_id!(AnyEntity::Vehicle, id).ok_or(anyhow::anyhow!("No vehicle with id: {id}"))
     }
 

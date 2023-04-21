@@ -10,8 +10,8 @@ use crate::{
     SomeResult, VoidResult,
 };
 
-pub type EntityId = u32;
-pub type EntityPool = ExtraPool<HashMap<EntityId, AnyEntity>>;
+pub type SyncId = u16;
+pub type EntityPool = ExtraPool<HashMap<SyncId, AnyEntity>>;
 
 pub type EntityRawPtr = *mut sdk::alt::IEntity;
 
@@ -30,11 +30,11 @@ pub trait Entity: BasePtr {
         base_ptr_to_entity_raw_ptr(self.base_ptr()?)
     }
 
-    fn id(&self) -> SomeResult<EntityId> {
+    fn id(&self) -> SomeResult<u32> {
         Ok(unsafe { sdk::IEntity::GetID(self.raw_ptr()?) })
     }
 
-    fn sync_id(&self) -> SomeResult<u16> {
+    fn sync_id(&self) -> SomeResult<SyncId> {
         Ok(unsafe { sdk::IEntity::GetSyncID(self.raw_ptr()?) })
     }
 
@@ -192,7 +192,7 @@ impl EntityPool {
             AnyEntity::Player(p) => p.id(),
             AnyEntity::Vehicle(v) => v.id(),
         }
-        .unwrap();
+        .unwrap() as u16;
         logger::debug!("add entity id: {id}");
 
         self.base_objects.insert(id, entity);
@@ -203,13 +203,13 @@ impl EntityPool {
         // when its mutably borrowed for .destroy() method
         let entity = unsafe { sdk::base_object::to_entity(base_object.as_ptr()) };
         let entity = NonNull::new(entity).unwrap();
-        let id = unsafe { sdk::IEntity::GetID(entity.as_ptr()) };
+        let id = unsafe { sdk::IEntity::GetID(entity.as_ptr()) as u16 };
         logger::debug!("remove entity id: {id}");
 
         self.base_objects.remove(&id);
     }
 
-    pub fn get_by_id(&self, id: EntityId) -> Option<&AnyEntity> {
+    pub fn get_by_id(&self, id: SyncId) -> Option<&AnyEntity> {
         self.base_objects.get(&id)
     }
 }

@@ -16,7 +16,7 @@ pub use exports::{
     },
 
     ColShape,
-    EntityId,
+    SyncId,
     Player,
     PlayerContainer,
     Vector2,

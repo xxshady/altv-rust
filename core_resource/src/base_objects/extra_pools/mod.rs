@@ -1,6 +1,6 @@
 mod entity;
 pub(crate) use entity::{get_entity_by_id, EntityPool};
-pub use entity::{Entity, EntityId, EntityRawPtr};
+pub use entity::{Entity, EntityRawPtr, SyncId};
 
 #[derive(Debug, Default)]
 pub struct ExtraPool<T> {
