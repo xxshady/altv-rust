@@ -11,9 +11,9 @@ readme = { workspace = true }
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-core_shared = { path = "../core_shared", package = "altv_internal_core_shared", version = "15.0.0-dev.1" }
-logger = { path = "../logger", package = "altv_internal_logger", version = "15.0.0-dev.1" }
-altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "15.0.0-dev.1" }
+core_shared = { path = "../core_shared", package = "altv_internal_core_shared", version = "15.0.0-dev3" }
+logger = { path = "../logger", package = "altv_internal_logger", version = "15.0.0-dev3" }
+altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "15.0.0-dev3" }
 anyhow = { workspace = true }
 autocxx = { workspace = true }
 paste = { workspace = true }
