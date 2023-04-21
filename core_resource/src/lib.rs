@@ -29,6 +29,7 @@ mod vehicle;
 mod vehicle_model_info;
 mod virtual_entities;
 mod world_object;
+mod blip;
 
 pub mod exports;
 

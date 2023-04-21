@@ -45,6 +45,8 @@ lazy_static::lazy_static! {
             ("VehicleModelInfo&", "alt::VehicleModelInfo*"),
             ("PedModelInfo&", "alt::PedModelInfo*"),
             ("IWorldObject*", "alt::IWorldObject*"),
+            ("IBlip*", "alt::IBlip*"),
+            ("IBlip::BlipType", "BlipType"),
 
             ("alt::Prop", "alt::Prop"),
             ("alt::DlcProp", "alt::DlcProp"),
@@ -808,7 +810,6 @@ fn cpp_method_to_rust_compatible_func(
                 }
                 "BaseObjectType" => "---BaseObjectType is not implemented as param".to_string(),
                 "ColShapeType" => "---ColShapeType is not implemented as param".to_string(),
-                "BlipType" => "---BlipType is not implemented as param".to_string(),
                 "WeaponDamageEventBodyPart" => {
                     "---WeaponDamageEventBodyPart is not implemented as param".to_string()
                 }
@@ -848,7 +849,7 @@ fn cpp_method_to_rust_compatible_func(
                     "---BaseObjectType is not implemented as passed param".to_string()
                 }
                 "ColShapeType" => "---ColShapeType is not implemented as passed param".to_string(),
-                "BlipType" => "---BlipType is not implemented as passed param".to_string(),
+                "BlipType" => format!("static_cast<alt::IBlip::BlipType>({name})"),
                 "WeaponDamageEventBodyPart" => {
                     "---WeaponDamageEventBodyPart is not implemented as passed param".to_string()
                 }

@@ -197,6 +197,7 @@ pub mod ffi {
         generate_ns!("col_shape")
         generate_ns!("virtual_entity")
         generate_ns!("virtual_entity_group")
+        generate_ns!("blip")
 
         // alt::Prop
         generate!("read_alt_prop")
@@ -372,6 +373,7 @@ include_out_dir!("/base_object_type.rs");
 include_out_dir!("/event_type.rs");
 include_out_dir!("/mvalue_type.rs");
 include_out_dir!("/col_shape_type.rs");
+include_out_dir!("/blip_type.rs");
 include_out_dir!("/player_body_part.rs");
 include_out_dir!("/player_connect_denied_reason.rs");
 include_out_dir!("/explosion_type.rs");

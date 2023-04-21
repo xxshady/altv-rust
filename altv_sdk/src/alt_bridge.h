@@ -571,6 +571,10 @@ namespace base_object
     alt::IColShape* to_col_shape(alt::IBaseObject* base_object) {
         return dynamic_cast<alt::IColShape*>(base_object);
     }
+
+    alt::IBlip* to_blip(alt::IBaseObject* base_object) {
+        return dynamic_cast<alt::IBlip*>(base_object);
+    }
 } // namespace base_object
 
 namespace world_object
@@ -628,6 +632,12 @@ namespace virtual_entity_group
         return static_cast<alt::IBaseObject*>(vehicle);
     }
 } // namespace virtual_entity_group
+
+namespace blip {
+    alt::IBaseObject* to_base_object(alt::IBlip* blip) {
+        return static_cast<alt::IBaseObject*>(blip);
+    }
+} // blip
 
 void read_alt_prop(const alt::Prop& prop, u16* out_drawable, u8* out_texture) {
     *out_drawable = prop.drawableId;

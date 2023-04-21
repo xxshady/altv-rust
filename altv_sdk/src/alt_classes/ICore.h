@@ -139,6 +139,12 @@ void DeleteSyncedMetaData(const StdStringClone key) {
 alt::IVehicle* CreateVehicle(u32 model, f32 pos_x, f32 pos_y, f32 pos_z, f32 rot_x, f32 rot_y, f32 rot_z) {
     return alt::ICore::Instance().CreateVehicle(model, { pos_x, pos_y, pos_z }, { rot_x, rot_y, rot_z });
 }
+alt::IBlip* CreateBlip(alt::IPlayer* target, BlipType type, f32 pos_x, f32 pos_y, f32 pos_z) {
+    return alt::ICore::Instance().CreateBlip(target, static_cast<alt::IBlip::BlipType>(type), { pos_x, pos_y, pos_z });
+}
+alt::IBlip* CreateBlip(alt::IPlayer* target, BlipType type, alt::IEntity* attachTo) {
+    return alt::ICore::Instance().CreateBlip(target, static_cast<alt::IBlip::BlipType>(type), attachTo);
+}
 u32 GetNetTime() {
     return alt::ICore::Instance().GetNetTime();
 }
