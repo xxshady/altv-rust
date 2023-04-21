@@ -23,9 +23,10 @@ impl blip::Blip {
                 pos.z(),
             )
         };
-        unsafe { sdk::IBlip::SetScaleXY(ptr, width, height) };
 
-        blip::add_to_pool!(NonNull::new(ptr).unwrap())
+        let blip = blip::add_to_pool!(NonNull::new(ptr).unwrap());
+        blip.set_scale((width, height)).unwrap();
+        blip
     }
 
     pub fn new_radius(pos: impl Into<Vector3>, radius: f32) -> blip::BlipContainer {
@@ -40,9 +41,10 @@ impl blip::Blip {
                 pos.z(),
             )
         };
-        unsafe { sdk::IBlip::SetScaleXY(ptr, radius, radius) };
 
-        blip::add_to_pool!(NonNull::new(ptr).unwrap())
+        let blip = blip::add_to_pool!(NonNull::new(ptr).unwrap());
+        blip.set_scale((radius, radius)).unwrap();
+        blip
     }
 
     pub fn new_point(pos: impl Into<Vector3>) -> blip::BlipContainer {
