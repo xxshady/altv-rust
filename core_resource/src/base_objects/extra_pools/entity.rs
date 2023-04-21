@@ -11,7 +11,7 @@ use crate::{
 };
 
 pub type SyncId = u16;
-pub type EntityPool = ExtraPool<HashMap<SyncId, AnyEntity>>;
+pub type EntityPool = ExtraPool<HashMap<u32, AnyEntity>>;
 
 pub type EntityRawPtr = *mut sdk::alt::IEntity;
 
@@ -192,7 +192,7 @@ impl EntityPool {
             AnyEntity::Player(p) => p.id(),
             AnyEntity::Vehicle(v) => v.id(),
         }
-        .unwrap() as u16;
+        .unwrap();
         logger::debug!("add entity id: {id}");
 
         self.base_objects.insert(id, entity);
@@ -203,13 +203,13 @@ impl EntityPool {
         // when its mutably borrowed for .destroy() method
         let entity = unsafe { sdk::base_object::to_entity(base_object.as_ptr()) };
         let entity = NonNull::new(entity).unwrap();
-        let id = unsafe { sdk::IEntity::GetID(entity.as_ptr()) as u16 };
+        let id = unsafe { sdk::IEntity::GetID(entity.as_ptr()) };
         logger::debug!("remove entity id: {id}");
 
         self.base_objects.remove(&id);
     }
 
-    pub fn get_by_id(&self, id: SyncId) -> Option<&AnyEntity> {
+    pub fn get_by_id(&self, id: u32) -> Option<&AnyEntity> {
         self.base_objects.get(&id)
     }
 }

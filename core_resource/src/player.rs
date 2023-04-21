@@ -18,7 +18,7 @@ impl player::Player {
         Resource::with_base_objects_ref(|v, _| v.player.all())
     }
 
-    pub fn get_by_id(id: SyncId) -> SomeResult<player::PlayerContainer> {
+    pub fn get_by_id(id: u32) -> SomeResult<player::PlayerContainer> {
         get_entity_by_id!(AnyEntity::Player, id).ok_or(anyhow::anyhow!("No player with id: {id}"))
     }
 
