@@ -343,5 +343,8 @@ void PlayAnimation(alt::IPlayer* ptr, const StdStringClone animDict, const StdSt
 void ClearTasks(alt::IPlayer* ptr) {
     return ptr->ClearTasks();
 }
+std::string GetCloudAuthHash(const alt::IPlayer* ptr) {
+    return ptr->GetCloudAuthHash();
+}
 
 } // namespace

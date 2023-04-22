@@ -52,6 +52,10 @@ impl player::Player {
         Ok(())
     }
 
+    pub fn cloud_auth_hash(&self) -> SomeResult<String> {
+        Ok(unsafe { sdk::IPlayer::GetCloudAuthHash(self.raw_ptr()?) }.to_string())
+    }
+
     pub fn set_model(&self, model: impl IntoHash) -> VoidResult {
         unsafe { sdk::IPlayer::SetModel(self.raw_ptr()?, model.into_hash()) }
         Ok(())
@@ -786,7 +790,7 @@ impl player::Player {
     ///     "cellphone@",
     ///     "cellphone_text_in",
     ///     altv::PlayAnimation {
-    ///         flags: altv::AnimationFlags::HoldLastFrame | AnimationFlags::AbortOnWeaponDamage,
+    ///         flags: altv::AnimationFlags::HoldLastFrame | alt::AnimationFlags::AbortOnWeaponDamage,
     ///         ..Default::default()
     ///     },
     /// )?;

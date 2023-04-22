@@ -28,6 +28,7 @@ pub struct ConnectionQueueInfo {
     pub password_hash: u64,
     pub ip: String,
     pub discord_user_id: i64,
+    pub cloud_auth_hash: String,
 }
 
 impl ConnectionQueueInfo {
@@ -48,6 +49,7 @@ impl ConnectionQueueInfo {
             password_hash: GetPasswordHash(ptr),
             ip: GetIp(ptr).to_string(),
             discord_user_id: GetDiscordUserID(ptr),
+            cloud_auth_hash: GetCloudAuthHash(ptr).to_string(),
         }
     }
 }
