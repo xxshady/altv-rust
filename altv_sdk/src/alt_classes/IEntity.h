@@ -4,8 +4,11 @@
 
 namespace IEntity {
 
-u16 GetID(const alt::IEntity* ptr) {
+u32 GetID(const alt::IEntity* ptr) {
     return ptr->GetID();
+}
+u16 GetSyncID(const alt::IEntity* ptr) {
+    return ptr->GetSyncID();
 }
 alt::IPlayer* GetNetworkOwner(const alt::IEntity* ptr) {
     return ptr->GetNetworkOwner();

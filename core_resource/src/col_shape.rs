@@ -1,6 +1,6 @@
 use crate::{
     base_objects::col_shape,
-    exports::{AnyEntity, EntityId},
+    exports::{AnyEntity, SyncId},
     sdk,
     vector::{Vector2, Vector3},
     world_object::WorldObject,
@@ -105,7 +105,7 @@ impl col_shape::ColShape {
         Ok(unsafe { sdk::IColShape::IsEntityIn(self.raw_ptr()?, entity.into().raw_ptr()?) })
     }
 
-    pub fn is_entity_id_in(&self, id: EntityId) -> SomeResult<bool> {
+    pub fn is_entity_id_in(&self, id: SyncId) -> SomeResult<bool> {
         Ok(unsafe { sdk::IColShape::IsEntityIdIn(self.raw_ptr()?, id) })
     }
 

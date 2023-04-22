@@ -1,6 +1,6 @@
 use crate::{
     base_objects::{
-        extra_pools::{get_entity_by_id, wrappers::AnyEntity, Entity, EntityId},
+        extra_pools::{get_entity_by_id, wrappers::AnyEntity, Entity, SyncId},
         meta, player, vehicle,
     },
     helpers::{self, read_cpp_vector3, Hash, IntoHash, IntoString},
@@ -18,7 +18,7 @@ impl player::Player {
         Resource::with_base_objects_ref(|v, _| v.player.all())
     }
 
-    pub fn get_by_id(id: EntityId) -> SomeResult<player::PlayerContainer> {
+    pub fn get_by_id(id: u32) -> SomeResult<player::PlayerContainer> {
         get_entity_by_id!(AnyEntity::Player, id).ok_or(anyhow::anyhow!("No player with id: {id}"))
     }
 
@@ -599,7 +599,7 @@ impl player::Player {
         Ok(())
     }
 
-    pub fn is_entity_in_streaming_range(&self, entity_id: EntityId) -> SomeResult<bool> {
+    pub fn is_entity_in_streaming_range(&self, entity_id: SyncId) -> SomeResult<bool> {
         Ok(unsafe { sdk::IPlayer::IsEntityInStreamingRange(self.raw_ptr()?, entity_id) })
     }
 

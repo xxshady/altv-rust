@@ -10,8 +10,8 @@ use crate::{
     SomeResult, VoidResult,
 };
 
-pub type EntityId = u16;
-pub type EntityPool = ExtraPool<HashMap<EntityId, AnyEntity>>;
+pub type SyncId = u16;
+pub type EntityPool = ExtraPool<HashMap<u32, AnyEntity>>;
 
 pub type EntityRawPtr = *mut sdk::alt::IEntity;
 
@@ -30,8 +30,12 @@ pub trait Entity: BasePtr {
         base_ptr_to_entity_raw_ptr(self.base_ptr()?)
     }
 
-    fn id(&self) -> SomeResult<EntityId> {
+    fn id(&self) -> SomeResult<u32> {
         Ok(unsafe { sdk::IEntity::GetID(self.raw_ptr()?) })
+    }
+
+    fn sync_id(&self) -> SomeResult<SyncId> {
+        Ok(unsafe { sdk::IEntity::GetSyncID(self.raw_ptr()?) })
     }
 
     fn model(&self) -> SomeResult<Hash> {
@@ -205,7 +209,7 @@ impl EntityPool {
         self.base_objects.remove(&id);
     }
 
-    pub fn get_by_id(&self, id: EntityId) -> Option<&AnyEntity> {
+    pub fn get_by_id(&self, id: u32) -> Option<&AnyEntity> {
         self.base_objects.get(&id)
     }
 }
