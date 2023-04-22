@@ -2,13 +2,9 @@ use crate::{base_objects::virtual_entity_group, sdk, world_object::WorldObject, 
 use std::ptr::NonNull;
 
 impl virtual_entity_group::VirtualEntityGroup {
-    pub fn new(
-        max_entities_in_stream: u32,
-    ) -> SomeResult<virtual_entity_group::VirtualEntityGroupContainer> {
+    pub fn new(max_entities_in_stream: u32) -> virtual_entity_group::VirtualEntityGroupContainer {
         let ptr = unsafe { sdk::ICore::CreateVirtualEntityGroup(max_entities_in_stream) };
-        Ok(virtual_entity_group::add_to_pool!(
-            NonNull::new(ptr).unwrap()
-        ))
+        virtual_entity_group::add_to_pool!(NonNull::new(ptr).unwrap())
     }
 
     pub fn id(&self) -> SomeResult<u32> {

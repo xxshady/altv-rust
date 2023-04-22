@@ -20,6 +20,7 @@ pub mod ffi {
         #include "alt_classes/ICheckpoint.h"
         #include "alt_classes/CEvent.h"
         #include "alt_classes/IResource.h"
+        #include "alt_classes/IVoiceChannel.h"
 
         #include "alt_classes/CConsoleCommandEvent.h"
         #include "alt_classes/CServerScriptEvent.h"
@@ -98,6 +99,7 @@ pub mod ffi {
         generate_ns!("IVirtualEntity")
         generate_ns!("IVirtualEntityGroup")
         generate_ns!("IResource")
+        generate_ns!("IVoiceChannel")
 
         generate_ns!("CNetOwnerChangeEvent")
 
@@ -198,6 +200,7 @@ pub mod ffi {
         generate_ns!("virtual_entity")
         generate_ns!("virtual_entity_group")
         generate_ns!("blip")
+        generate_ns!("voice_channel")
 
         // alt::Prop
         generate!("read_alt_prop")
@@ -264,6 +267,7 @@ pub mod ffi {
         generate!("create_base_object_vec")
         generate!("push_to_base_object_vec")
 
+        generate!("read_player_ptr_wrapper")
         generate!("create_player_vec")
         generate!("push_to_player_vec")
 

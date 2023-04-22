@@ -228,6 +228,9 @@ base_objects!(
     Blip: [
         altv_sdk::BaseObjectType::Blip,
     ],
+    VoiceChannel: [
+        altv_sdk::BaseObjectType::VoiceChannel,
+    ],
 );
 
 impl Debug for Store {

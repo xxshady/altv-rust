@@ -1,7 +1,7 @@
 use std::ptr::NonNull;
 
 use crate::{
-    base_objects::{player, vehicle, AnyBaseObject},
+    base_objects::{vehicle, AnyBaseObject},
     resource::Resource,
     sdk,
 };
@@ -17,30 +17,6 @@ macro_rules! __base_event_to_specific {
     };
 }
 pub use __base_event_to_specific as base_event_to_specific;
-
-pub fn get_non_null_player_from_event(
-    ptr: *mut sdk::alt::IPlayer,
-    resource: &Resource,
-) -> player::PlayerContainer {
-    get_player_from_event(ptr, resource).unwrap()
-}
-
-pub fn get_player_from_event(
-    ptr: *mut sdk::alt::IPlayer,
-    resource: &Resource,
-) -> Option<player::PlayerContainer> {
-    let Some(ptr) = NonNull::new(ptr) else {
-        return None;
-    };
-
-    let player = resource
-        .base_objects
-        .borrow()
-        .player
-        .get_by_ptr(ptr)
-        .unwrap();
-    Some(player)
-}
 
 pub fn get_vehicle_from_event(
     ptr: *mut sdk::alt::IVehicle,

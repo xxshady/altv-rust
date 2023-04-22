@@ -67,6 +67,17 @@ alt::IResource* GetResource(const StdStringClone name) {
 alt::IEntity* GetEntityByID(u16 id) {
     return alt::ICore::Instance().GetEntityByID(id);
 }
+PlayerVector GetPlayers() {
+    auto alt_vec = alt::ICore::Instance().GetPlayers();
+    PlayerVector vec {};
+    vec.reserve(alt_vec.size());
+    for (const auto& e : alt_vec) {
+        PlayerPtrWrapper wrapper;
+        wrapper.ptr = std::make_shared<alt::IPlayer*>(e);
+        vec.push_back(wrapper.clone());
+    }
+    return vec;
+}
 bool HasMetaData(const StdStringClone key) {
     return alt::ICore::Instance().HasMetaData(key);
 }
@@ -144,6 +155,20 @@ alt::IBlip* CreateBlip(alt::IPlayer* target, BlipType type, f32 pos_x, f32 pos_y
 }
 alt::IBlip* CreateBlip(alt::IPlayer* target, BlipType type, alt::IEntity* attachTo) {
     return alt::ICore::Instance().CreateBlip(target, static_cast<alt::IBlip::BlipType>(type), attachTo);
+}
+alt::IVoiceChannel* CreateVoiceChannel(bool spatial, f32 maxDistance) {
+    return alt::ICore::Instance().CreateVoiceChannel(spatial, maxDistance);
+}
+PlayerVector GetPlayersByName(const StdStringClone name) {
+    auto alt_vec = alt::ICore::Instance().GetPlayersByName(name);
+    PlayerVector vec {};
+    vec.reserve(alt_vec.size());
+    for (const auto& e : alt_vec) {
+        PlayerPtrWrapper wrapper;
+        wrapper.ptr = std::make_shared<alt::IPlayer*>(e);
+        vec.push_back(wrapper.clone());
+    }
+    return vec;
 }
 u32 GetNetTime() {
     return alt::ICore::Instance().GetNetTime();

@@ -96,7 +96,7 @@ pub trait Config: ConfigRootNodeStore {
     }
 }
 
-/// https://docs.altv.mp/articles/configs/server.html
+/// See alt:V docs: [link](https://docs.altv.mp/articles/configs/server.html)
 #[derive(Debug)]
 pub struct ServerConfig {
     pub modules: Vec<String>,
@@ -145,7 +145,7 @@ pub struct ServerConfig {
 }
 
 impl ServerConfig {
-    /// https://docs.altv.mp/articles/configs/server.html
+    /// See alt:V docs: [link](https://docs.altv.mp/articles/configs/server.html)
     pub fn get() -> Self {
         let node_ptr = unsafe { sdk::ICore::GetServerConfig() };
         let config = unsafe { read_config_node(node_ptr) };
@@ -208,14 +208,14 @@ impl ConfigRootNodeStore for ServerConfig {
 
 impl Config for ServerConfig {}
 
-/// https://docs.altv.mp/articles/configs/resource.html
+/// See alt:V docs: [link](https://docs.altv.mp/articles/configs/resource.html)
 #[derive(Debug)]
 pub struct ResourceConfig {
     root_node: config_type::Dict,
 }
 
 impl ResourceConfig {
-    /// https://docs.altv.mp/articles/configs/resource.html
+    /// See alt:V docs: [link](https://docs.altv.mp/articles/configs/resource.html)
     pub(crate) fn new(node_ptr: ConfigNodePtr) -> Self {
         let config = unsafe { read_config_node(node_ptr) };
         let config = config.as_dict().unwrap_or_else(|| {

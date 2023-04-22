@@ -162,6 +162,10 @@ public:
     }
 };
 
+alt::IPlayer* read_player_ptr_wrapper(const PlayerPtrWrapper& wrapper) {
+    return *wrapper.ptr;
+}
+
 using PlayerVector = std::vector<PlayerPtrWrapper>;
 
 PlayerVector create_player_vec() {
@@ -575,6 +579,10 @@ namespace base_object
     alt::IBlip* to_blip(alt::IBaseObject* base_object) {
         return dynamic_cast<alt::IBlip*>(base_object);
     }
+
+    alt::IVoiceChannel* to_voice_channel(alt::IBaseObject* base_object) {
+        return dynamic_cast<alt::IVoiceChannel*>(base_object);
+    }
 } // namespace base_object
 
 namespace world_object
@@ -637,7 +645,13 @@ namespace blip {
     alt::IBaseObject* to_base_object(alt::IBlip* blip) {
         return static_cast<alt::IBaseObject*>(blip);
     }
-} // blip
+} // namespace blip
+
+namespace voice_channel {
+    alt::IBaseObject* to_base_object(alt::IVoiceChannel* voice_channel) {
+        return static_cast<alt::IBaseObject*>(voice_channel);
+    }
+} // namespace voice_channel
 
 void read_alt_prop(const alt::Prop& prop, u16* out_drawable, u8* out_texture) {
     *out_drawable = prop.drawableId;

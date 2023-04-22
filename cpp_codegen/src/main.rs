@@ -46,7 +46,7 @@ lazy_static::lazy_static! {
             ("PedModelInfo&", "alt::PedModelInfo*"),
             ("IWorldObject*", "alt::IWorldObject*"),
             ("IBlip*", "alt::IBlip*"),
-            ("IBlip::BlipType", "BlipType"),
+            ("IVoiceChannel*", "alt::IVoiceChannel*"),
 
             ("alt::Prop", "alt::Prop"),
             ("alt::DlcProp", "alt::DlcProp"),
@@ -55,6 +55,7 @@ lazy_static::lazy_static! {
             ("HeadOverlay", "alt::HeadOverlay"),
             ("HeadBlendData", "alt::HeadBlendData"),
             ("alt::CEvent::Type", "EventType"),
+            ("IBlip::BlipType", "BlipType"),
 
             ("alt::Position", "Vector3Wrapper"),
             ("Position", "Vector3Wrapper"),
@@ -71,10 +72,7 @@ lazy_static::lazy_static! {
             ("Quaternion", "alt::Quaternion"),
             ("std::vector<IBaseObject*>", "BaseObjectVector"),
             ("std::vector<IResource*>", "ResourceVector"),
-
-            // TODO: wrappers for these
-            // ("std::vector<IVirtualEntity*>", "std::vector<alt::IVirtualEntity*>"),
-            // ("std::vector<IVirtualEntityGroup*>", "std::vector<alt::IVirtualEntityGroup*>"),
+            ("std::vector<IPlayer*>", "PlayerVector"),
 
             ("Rotation", "Vector3Wrapper"),
             ("bool*", "bool*"),
@@ -128,6 +126,10 @@ fn main() {
     gen_default(
         "IVirtualEntity",
         "../altv_sdk/cpp-sdk/script-objects/IVirtualEntity.h",
+    );
+    gen_default(
+        "IVoiceChannel",
+        "../altv_sdk/cpp-sdk/script-objects/IVoiceChannel.h",
     );
 
     gen_default(
@@ -971,6 +973,19 @@ fn cpp_method_to_rust_compatible_func(
                 for (const auto& e : alt_vec) {{\n        \
                     ResourcePtrWrapper wrapper;\n        \
                     wrapper.ptr = std::make_shared<alt::IResource*>(e);\n        \
+                    vec.push_back(wrapper.clone());\n    \
+                }}\n    \
+                return vec"
+            )
+        },
+        "PlayerVector" => |v: &str| {
+            format!(
+                "auto alt_vec = {v};\n    \
+                PlayerVector vec {{}};\n    \
+                vec.reserve(alt_vec.size());\n    \
+                for (const auto& e : alt_vec) {{\n        \
+                    PlayerPtrWrapper wrapper;\n        \
+                    wrapper.ptr = std::make_shared<alt::IPlayer*>(e);\n        \
                     vec.push_back(wrapper.clone());\n    \
                 }}\n    \
                 return vec"

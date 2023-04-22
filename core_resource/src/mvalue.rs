@@ -1,6 +1,7 @@
 use crate::{
     base_objects::{
-        col_shape, player, vehicle, virtual_entity, virtual_entity_group, blip, AnyBaseObject, BasePtr,
+        blip, col_shape, player, vehicle, virtual_entity, virtual_entity_group, voice_channel,
+        AnyBaseObject, BasePtr,
     },
     helpers::{read_cpp_vector2, read_cpp_vector3},
     resource::Resource,
@@ -151,6 +152,7 @@ pub enum MValue {
     VirtualEntity(virtual_entity::VirtualEntityContainer),
     VirtualEntityGroup(virtual_entity_group::VirtualEntityGroupContainer),
     Blip(blip::BlipContainer),
+    VoiceChannel(voice_channel::VoiceChannelContainer),
     InvalidBaseObject,
 }
 
@@ -301,6 +303,7 @@ pub(crate) fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Re
                 AnyBaseObject::VirtualEntity(c) => MValue::VirtualEntity(c),
                 AnyBaseObject::VirtualEntityGroup(c) => MValue::VirtualEntityGroup(c),
                 AnyBaseObject::Blip(c) => MValue::Blip(c),
+                AnyBaseObject::VoiceChannel(c) => MValue::VoiceChannel(c),
             }
         }
         Vector3 => MValue::Vector3(read_cpp_vector3(

@@ -9,6 +9,7 @@ mod resource;
 use resource::Resource;
 mod alt_resource;
 mod base_objects;
+mod blip;
 mod client_events;
 mod col_shape;
 mod config_node;
@@ -28,8 +29,8 @@ mod vector;
 mod vehicle;
 mod vehicle_model_info;
 mod virtual_entities;
+mod voice_channel;
 mod world_object;
-mod blip;
 
 pub mod exports;
 

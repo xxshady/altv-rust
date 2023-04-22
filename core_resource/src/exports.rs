@@ -12,6 +12,7 @@ pub use crate::{
         vehicle::{Vehicle, VehicleContainer},
         virtual_entity::{VirtualEntity, VirtualEntityContainer},
         virtual_entity_group::{VirtualEntityGroup, VirtualEntityGroupContainer},
+        voice_channel::{VoiceChannel, VoiceChannelContainer},
         ValidBaseObject,
     },
     helpers::{hash, Hash},
