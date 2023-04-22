@@ -39,6 +39,7 @@ pub use exports::{
     AnimationFlags,
     Quaternion,
     core_funcs::*,
+    config_node::*,
     Resource,
 };
 
@@ -52,8 +53,8 @@ pub mod mvalue;
 
 pub mod prelude {
     pub use super::exports::{
-        BaseObjectMeta, Entity, LocalMeta, StreamSyncedMeta, SyncedMeta, ValidBaseObject,
-        WorldObject,
+        config_node::Config, BaseObjectMeta, Entity, LocalMeta, StreamSyncedMeta, SyncedMeta,
+        ValidBaseObject, WorldObject,
     };
 }
 

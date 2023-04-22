@@ -276,3 +276,7 @@ pub mod mvalue {
 pub mod core_funcs {
     pub use crate::core_funcs::*;
 }
+
+pub mod config_node {
+    pub use crate::config_node::*;
+}

@@ -16,7 +16,7 @@ pub struct VehicleModelInfo {
     pub has_auto_attach_trailer: bool,
     pub bones: Vec<structs::BoneInfo>,
 
-    pub ptr: *const sdk::alt::VehicleModelInfo,
+    ptr: *const sdk::alt::VehicleModelInfo,
 }
 
 impl VehicleModelInfo {

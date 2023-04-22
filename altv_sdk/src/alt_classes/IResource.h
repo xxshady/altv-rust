@@ -34,5 +34,8 @@ std::string GetClientMain(const alt::IResource* ptr) {
 const std::vector<std::string> GetClientFiles(const alt::IResource* ptr) {
     return ptr->GetClientFiles();
 }
+Config::Value::ValuePtr GetConfig(const alt::IResource* ptr) {
+    return ptr->GetConfig();
+}
 
 } // namespace
