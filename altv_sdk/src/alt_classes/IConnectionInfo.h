@@ -46,6 +46,9 @@ std::string GetIp(const alt::IConnectionInfo* ptr) {
 i64 GetDiscordUserID(const alt::IConnectionInfo* ptr) {
     return ptr->GetDiscordUserID();
 }
+std::string GetCloudAuthHash(const alt::IConnectionInfo* ptr) {
+    return ptr->GetCloudAuthHash();
+}
 void Accept(alt::IConnectionInfo* ptr, bool sendNames) {
     return ptr->Accept(sendNames);
 }
