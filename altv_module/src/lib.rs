@@ -19,7 +19,7 @@ type ResourceMainFn = unsafe extern "C" fn(
     altv_module_version: String,
 );
 
-static ALTV_MODULE_VERSION: &str = "15.0.0-dev999";
+static ALTV_MODULE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
