@@ -121,6 +121,7 @@ impl Default for PlayAnimation {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum AnimationFlags {
     Default = 0,
     Looping = 1,
@@ -154,6 +155,27 @@ pub enum AnimationFlags {
     UseAlternativeFpAnim = 268435456,
     BlendoutWrtLastFrame = 536870912,
     UseFullBlending = 1073741824,
+}
+
+impl std::ops::BitOr for AnimationFlags {
+    type Output = i32;
+    fn bitor(self, rhs: Self) -> Self::Output {
+        (self as i32) | (rhs as i32)
+    }
+}
+
+impl std::ops::BitAnd for AnimationFlags {
+    type Output = i32;
+    fn bitand(self, rhs: Self) -> Self::Output {
+        (self as i32) & (rhs as i32)
+    }
+}
+
+impl std::ops::BitXor for AnimationFlags {
+    type Output = i32;
+    fn bitxor(self, rhs: Self) -> Self::Output {
+        (self as i32) ^ (rhs as i32)
+    }
 }
 
 #[derive(Debug)]

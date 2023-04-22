@@ -775,6 +775,22 @@ impl player::Player {
         Ok(())
     }
 
+    /// ### Examples
+    /// Using default options
+    /// ```rust
+    /// player.play_animation("cellphone@", "cellphone_text_in", Default::default()).unwrap();
+    /// ```
+    /// Custom flags
+    /// ```rust
+    /// player.play_animation(
+    ///     "cellphone@",
+    ///     "cellphone_text_in",
+    ///     altv::PlayAnimation {
+    ///         flags: altv::AnimationFlags::HoldLastFrame | AnimationFlags::AbortOnWeaponDamage,
+    ///         ..Default::default()
+    ///     },
+    /// )?;
+    /// ```
     pub fn play_animation(
         &self,
         dict: impl IntoString,
