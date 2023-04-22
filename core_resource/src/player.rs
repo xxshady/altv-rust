@@ -790,7 +790,7 @@ impl player::Player {
     ///     "cellphone@",
     ///     "cellphone_text_in",
     ///     altv::PlayAnimation {
-    ///         flags: altv::AnimationFlags::HoldLastFrame | alt::AnimationFlags::AbortOnWeaponDamage,
+    ///         flags: altv::AnimationFlags::HoldLastFrame | altv::AnimationFlags::AbortOnWeaponDamage,
     ///         ..Default::default()
     ///     },
     /// )?;
