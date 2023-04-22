@@ -1,9 +1,12 @@
 use std::ptr::NonNull;
 
 use crate::{
-    base_objects::extra_pools::{
-        wrappers::{AnyEntity, AnyWorldObject},
-        EntityRawPtr,
+    base_objects::{
+        extra_pools::{
+            wrappers::{AnyEntity, AnyWorldObject},
+            EntityRawPtr,
+        },
+        player,
     },
     quaternion::Quaternion,
     resource::Resource,
@@ -209,4 +212,28 @@ impl IntoF32 for i32 {
 
 pub(crate) fn read_cpp_str_vec(cpp_vec: UniquePtr<CxxVector<CxxString>>) -> Vec<String> {
     cpp_vec.into_iter().map(|v| v.to_string()).collect()
+}
+
+pub fn get_non_null_player(
+    ptr: *mut sdk::alt::IPlayer,
+    resource: &Resource,
+) -> player::PlayerContainer {
+    get_player(ptr, resource).unwrap()
+}
+
+pub fn get_player(
+    ptr: *mut sdk::alt::IPlayer,
+    resource: &Resource,
+) -> Option<player::PlayerContainer> {
+    let Some(ptr) = NonNull::new(ptr) else {
+        return None;
+    };
+
+    let player = resource
+        .base_objects
+        .borrow()
+        .player
+        .get_by_ptr(ptr)
+        .unwrap();
+    Some(player)
 }
