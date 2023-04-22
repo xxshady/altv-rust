@@ -4,5 +4,5 @@ pub use altv::prelude::*;
 fn main() {
     std::env::set_var("RUST_BACKTRACE", "full");
 
-    altv::log!("ok");
+    altv::log!("global dimension: {}", altv::GLOBAL_DIMENSION);
 }

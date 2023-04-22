@@ -50,6 +50,9 @@ pub use altv_sdk::{
     VehicleModelType,
 };
 
+pub const DEFAULT_DIMENSION: i32 = 0;
+pub const GLOBAL_DIMENSION: i32 = i32::MIN;
+
 pub mod events;
 pub mod mvalue;
 
