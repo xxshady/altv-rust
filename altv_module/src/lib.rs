@@ -12,11 +12,11 @@ mod required_sdk_events;
 mod resource_manager;
 
 type ResourceMainFn = unsafe extern "C" fn(
+    altv_module_version: String, // should always be FIRST arg for backward compatibility!!!
     core: *mut sdk::alt::ICore,
     resource_name: ResourceName,
     resource_handlers: &mut core_module::ResourceHandlers,
     module_handlers: core_module::ModuleHandlers,
-    altv_module_version: String,
 );
 
 const ALTV_MODULE_VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -43,11 +43,11 @@ extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
 
         unsafe {
             main_fn(
+                ALTV_MODULE_VERSION.to_string(),
                 core_ptr,
                 resource_name.clone(),
                 &mut resource_for_module.handlers,
                 module_handlers,
-                ALTV_MODULE_VERSION.to_string(),
             )
         };
 

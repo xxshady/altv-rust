@@ -84,11 +84,11 @@ pub fn resource_main_func(args: TokenStream, input: TokenStream) -> TokenStream 
     quote! {
         #[no_mangle]
         #(#attrs)* extern "C" fn main(
+            altv_module_version: String, // should always be FIRST arg for backward compatibility!!!
             core: usize, // workaround for the clippy unsafety error
             resource_name: String,
             resource_handlers: &mut #crate_name_ident::__internal::ResourceHandlers,
             module_handlers: #crate_name_ident::__internal::ModuleHandlers,
-            altv_module_version: String,
         ) {
             let resource_version = env!("CARGO_PKG_VERSION");
             if altv_module_version != resource_version {
