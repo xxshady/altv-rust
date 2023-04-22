@@ -16,7 +16,10 @@ type ResourceMainFn = unsafe extern "C" fn(
     resource_name: ResourceName,
     resource_handlers: &mut core_module::ResourceHandlers,
     module_handlers: core_module::ModuleHandlers,
+    altv_module_version: String,
 );
+
+static ALTV_MODULE_VERSION: &str = "15.0.0-dev999";
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
@@ -44,6 +47,7 @@ extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
                 resource_name.clone(),
                 &mut resource_for_module.handlers,
                 module_handlers,
+                ALTV_MODULE_VERSION.to_string(),
             )
         };
 
@@ -182,6 +186,8 @@ pub unsafe extern "C" fn altMain(core: *mut sdk::alt::ICore) -> bool {
     );
 
     required_sdk_events::enable();
+
+    logger::info!("{ALTV_MODULE_VERSION}");
 
     true
 }
