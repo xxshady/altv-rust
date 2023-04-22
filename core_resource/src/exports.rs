@@ -20,8 +20,8 @@ pub use crate::{
     quaternion::Quaternion,
     rgba::RGBA,
     structs::{
-        AnimationFlags, AttachToEntityBoneIndex, AttachToEntityBoneName, PlayerDateTime,
-        PlayerHeadBlendData,
+        AnimationFlags, AttachToEntityBoneIndex, AttachToEntityBoneName, PlayAnimation,
+        PlayerDateTime, PlayerHeadBlendData,
     },
     timers::create_timer,
     vector::{Vector2, Vector3},
