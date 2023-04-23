@@ -38,19 +38,30 @@ macro_rules! impl_serializable {
 }
 
 impl_serializable!(bool, sdk::create_mvalue_bool);
-impl_serializable!(f64, sdk::create_mvalue_double);
-impl_serializable!(i64, sdk::create_mvalue_int);
-impl_serializable!(u64, sdk::create_mvalue_uint);
 impl_serializable!(&str, sdk::create_mvalue_string);
+impl_serializable!(String, sdk::create_mvalue_string);
+
+impl_serializable!(i8, |value| sdk::create_mvalue_int(value as i64));
+impl_serializable!(i16, |value| sdk::create_mvalue_int(value as i64));
+impl_serializable!(i32, |value| sdk::create_mvalue_int(value as i64));
+impl_serializable!(i64, sdk::create_mvalue_int);
+
+impl_serializable!(f32, |value| sdk::create_mvalue_double(value as f64));
+impl_serializable!(f64, sdk::create_mvalue_double);
+
+impl_serializable!(u8, |value| sdk::create_mvalue_uint(value as u64));
+impl_serializable!(u16, |value| sdk::create_mvalue_uint(value as u64));
+impl_serializable!(u32, |value| sdk::create_mvalue_uint(value as u64));
+impl_serializable!(u64, sdk::create_mvalue_uint);
 
 impl_serializable!(Vec<Serializable>, |value| sdk::create_mvalue_list(
-    convert_vec_to_mvalue_vec(value)
+    convert_iter_to_mvalue_vec(value)
 ));
 
 impl_serializable!(@no_unique_ptr
     HashMap<String, Serializable>,
     |value: HashMap<String, Serializable>| {
-    let mut dict = sdk::create_mvalue_dict().within_unique_ptr();
+        let mut dict = sdk::create_mvalue_dict().within_unique_ptr();
         for (key, value) in value {
             sdk::push_to_mvalue_dict(dict.as_mut().unwrap(), key, value.0)
         }
@@ -105,12 +116,12 @@ impl TryFrom<MValueNone> for Serializable {
     }
 }
 
-pub fn convert_vec_to_mvalue_vec(
-    vec: Vec<Serializable>,
+pub fn convert_iter_to_mvalue_vec(
+    iter: impl IntoIterator<Item = Serializable>,
 ) -> UniquePtr<CxxVector<sdk::MValueWrapper>> {
     let mut mvalue_vec = unsafe { sdk::create_mvalue_vec() };
 
-    for value in vec {
+    for value in iter {
         unsafe {
             sdk::push_to_mvalue_vec(mvalue_vec.as_mut().unwrap(), value.0);
         }

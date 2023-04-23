@@ -1,19 +1,19 @@
 use crate::{
     base_objects::player,
-    mvalue::{convert_player_vec_to_cpp_vec, convert_vec_to_mvalue_vec, Serializable},
+    mvalue::{convert_iter_to_mvalue_vec, convert_player_vec_to_cpp_vec, Serializable},
     VoidResult,
 };
 use altv_sdk::ffi as sdk;
 
 pub fn emit_all_clients(event_name: &str, args: Vec<Serializable>) {
     unsafe {
-        sdk::trigger_client_event_for_all(event_name, convert_vec_to_mvalue_vec(args));
+        sdk::trigger_client_event_for_all(event_name, convert_iter_to_mvalue_vec(args));
     }
 }
 
 pub fn emit_all_clients_unreliable(event_name: &str, args: Vec<Serializable>) {
     unsafe {
-        sdk::trigger_client_event_unreliable_for_all(event_name, convert_vec_to_mvalue_vec(args));
+        sdk::trigger_client_event_unreliable_for_all(event_name, convert_iter_to_mvalue_vec(args));
     }
 }
 
@@ -38,7 +38,7 @@ pub fn emit_some_clients(
         sdk::trigger_client_event_for_some(
             convert_player_vec_to_cpp_vec(players)?,
             event_name,
-            convert_vec_to_mvalue_vec(args),
+            convert_iter_to_mvalue_vec(args),
         );
     }
     Ok(())
@@ -67,7 +67,7 @@ pub fn emit_some_clients_unreliable(
         sdk::trigger_client_event_unreliable_for_some(
             convert_player_vec_to_cpp_vec(players)?,
             event_name,
-            convert_vec_to_mvalue_vec(args),
+            convert_iter_to_mvalue_vec(args),
         );
     }
     Ok(())
@@ -96,7 +96,7 @@ pub fn emit_client(
         sdk::trigger_client_event(
             player.raw_ptr()?,
             event_name,
-            convert_vec_to_mvalue_vec(args),
+            convert_iter_to_mvalue_vec(args),
         );
     }
     Ok(())
@@ -118,7 +118,7 @@ pub fn emit_client_unreliable(
         sdk::trigger_client_event_unreliable(
             player.raw_ptr()?,
             event_name,
-            convert_vec_to_mvalue_vec(args),
+            convert_iter_to_mvalue_vec(args),
         );
     }
     Ok(())

@@ -3,14 +3,14 @@ use std::{collections::HashMap, fmt::Debug};
 use crate::{
     base_objects::player,
     helpers::IntoString,
-    mvalue::{self, convert_vec_to_mvalue_vec, Serializable},
+    mvalue::{self, convert_iter_to_mvalue_vec, Serializable},
     resource::Resource,
     VoidResult,
 };
 use altv_sdk::ffi as sdk;
 
 pub fn emit_local_event(event_name: &str, args: Vec<Serializable>) {
-    unsafe { sdk::trigger_local_event(event_name, convert_vec_to_mvalue_vec(args)) };
+    unsafe { sdk::trigger_local_event(event_name, convert_iter_to_mvalue_vec(args)) };
 }
 
 pub fn emit_local_event_without_args(event_name: &str) {

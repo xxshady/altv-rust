@@ -4,5 +4,17 @@ pub use altv::prelude::*;
 fn main() {
     std::env::set_var("RUST_BACKTRACE", "full");
 
-    altv::log!("global dimension: {}", altv::GLOBAL_DIMENSION);
+    altv::events::on("test", |args| {
+        dbg!(args);
+        Ok(())
+    });
+
+    altv::events::emit!(
+        "test",
+        123,
+        1.5,
+        "test".to_string(),
+        altv::mvalue::list![1, 2, 3].unwrap()
+    )
+    .unwrap();
 }
