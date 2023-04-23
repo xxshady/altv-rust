@@ -103,26 +103,22 @@ impl marker::Marker {
         }))
     }
 
-    pub fn set_rot(&self, rotation: impl Into<Vector3>) -> VoidResult {
-        let rotation = rotation.into();
+    pub fn set_rot(&self, rot: impl Into<Vector3>) -> VoidResult {
+        let rot = rot.into();
 
-        Ok(unsafe {
-            sdk::IMarker::SetRotation(self.raw_ptr()?, rotation.x(), rotation.y(), rotation.z())
-        })
+        Ok(unsafe { sdk::IMarker::SetRotation(self.raw_ptr()?, rot.x(), rot.y(), rot.z()) })
     }
 
-    pub fn dir&self) -> SomeResult<Vector3> {
+    pub fn dir(&self) -> SomeResult<Vector3> {
         Ok(helpers::read_cpp_vector3(unsafe {
             sdk::IMarker::GetDirection(self.raw_ptr()?).within_unique_ptr()
         }))
     }
 
-    pub fn set_dir(&self, direction: impl Into<Vector3>) -> VoidResult {
-        let direction = direction.into();
+    pub fn set_dir(&self, dir: impl Into<Vector3>) -> VoidResult {
+        let dir = dir.into();
 
-        Ok(unsafe {
-            sdk::IMarker::SetDirection(self.raw_ptr()?, direction.x(), direction.y(), direction.z())
-        })
+        Ok(unsafe { sdk::IMarker::SetDirection(self.raw_ptr()?, dir.x(), dir.y(), dir.z()) })
     }
 
     pub fn destroy(&self) -> VoidResult {
