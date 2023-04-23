@@ -47,6 +47,7 @@ lazy_static::lazy_static! {
             ("IWorldObject*", "alt::IWorldObject*"),
             ("IBlip*", "alt::IBlip*"),
             ("IVoiceChannel*", "alt::IVoiceChannel*"),
+            ("IMarker*", "alt::IMarker*"),
 
             ("alt::Prop", "alt::Prop"),
             ("alt::DlcProp", "alt::DlcProp"),
@@ -56,6 +57,7 @@ lazy_static::lazy_static! {
             ("HeadBlendData", "alt::HeadBlendData"),
             ("alt::CEvent::Type", "EventType"),
             ("IBlip::BlipType", "BlipType"),
+            ("IMarker::MarkerType", "MarkerType"),
 
             ("alt::Position", "Vector3Wrapper"),
             ("Position", "Vector3Wrapper"),
@@ -86,6 +88,7 @@ lazy_static::lazy_static! {
             ("IBaseObject::Type", "BaseObjectType"),
             ("IColShape::ColShapeType", "ColShapeType"),
             ("IBlip::BlipType", "BlipType"),
+            ("IMarker::MarkerType", "MarkerType"),
             ("CWeaponDamageEvent::BodyPart", "WeaponDamageEventBodyPart"),
             ("CEvent::Type", "EventType"),
             ("CPlayerConnectDeniedEvent::Reason", "PlayerConnectDeniedReason"),
@@ -131,6 +134,7 @@ fn main() {
         "IVoiceChannel",
         "../altv_sdk/cpp-sdk/script-objects/IVoiceChannel.h",
     );
+    gen_default("IMarker", "../altv_sdk/cpp-sdk/script-objects/IMarker.h");
 
     gen_default(
         "IConnectionInfo",
@@ -852,6 +856,7 @@ fn cpp_method_to_rust_compatible_func(
                 }
                 "ColShapeType" => "---ColShapeType is not implemented as passed param".to_string(),
                 "BlipType" => format!("static_cast<alt::IBlip::BlipType>({name})"),
+                "MarkerType" => format!("static_cast<alt::IMarker::MarkerType>({name})"),
                 "WeaponDamageEventBodyPart" => {
                     "---WeaponDamageEventBodyPart is not implemented as passed param".to_string()
                 }
@@ -922,6 +927,7 @@ fn cpp_method_to_rust_compatible_func(
         "BaseObjectType" => |v: &str| format!("return static_cast<uint8_t>({v})"),
         "ColShapeType" => |v: &str| format!("return static_cast<uint8_t>({v})"),
         "BlipType" => |v: &str| format!("return static_cast<uint8_t>({v})"),
+        "MarkerType" => |v: &str| format!("return static_cast<uint32_t>({v})"),
         "WeaponDamageEventBodyPart" => |v: &str| format!("return static_cast<int8_t>({v})"),
         "EventType" => |v: &str| format!("return static_cast<uint16_t>({v})"),
         "StdStringClone" => |v: &str| format!("return std::string {{ {v} }}"),

@@ -26,6 +26,7 @@ pub use exports::{
     VirtualEntityGroup,
     Blip,
     VoiceChannel,
+    Marker,
     AnyEntity,
     AttachToEntityBoneIndex,
     AttachToEntityBoneName,

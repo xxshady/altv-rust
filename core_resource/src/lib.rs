@@ -17,6 +17,7 @@ mod core_funcs;
 mod events;
 mod helpers;
 mod logging;
+mod marker;
 mod mvalue;
 mod ped_model_info;
 mod player;

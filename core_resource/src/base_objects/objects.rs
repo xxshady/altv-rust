@@ -231,6 +231,9 @@ base_objects!(
     VoiceChannel: [
         altv_sdk::BaseObjectType::VoiceChannel,
     ],
+    Marker: [
+        altv_sdk::BaseObjectType::Marker,
+    ],
 );
 
 impl Debug for Store {
