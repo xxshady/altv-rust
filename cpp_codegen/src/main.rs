@@ -48,6 +48,7 @@ lazy_static::lazy_static! {
             ("IBlip*", "alt::IBlip*"),
             ("IVoiceChannel*", "alt::IVoiceChannel*"),
             ("IMarker*", "alt::IMarker*"),
+            ("ICheckpoint*", "alt::ICheckpoint*"),
 
             ("alt::Prop", "alt::Prop"),
             ("alt::DlcProp", "alt::DlcProp"),
@@ -135,6 +136,10 @@ fn main() {
         "../altv_sdk/cpp-sdk/script-objects/IVoiceChannel.h",
     );
     gen_default("IMarker", "../altv_sdk/cpp-sdk/script-objects/IMarker.h");
+    gen_default(
+        "ICheckpoint",
+        "../altv_sdk/cpp-sdk/script-objects/ICheckpoint.h",
+    );
 
     gen_default(
         "IConnectionInfo",

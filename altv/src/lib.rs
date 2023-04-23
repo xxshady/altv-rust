@@ -27,6 +27,7 @@ pub use exports::{
     Blip,
     VoiceChannel,
     Marker,
+    Checkpoint,
     AnyEntity,
     AttachToEntityBoneIndex,
     AttachToEntityBoneName,

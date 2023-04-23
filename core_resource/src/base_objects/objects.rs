@@ -234,6 +234,9 @@ base_objects!(
     Marker: [
         altv_sdk::BaseObjectType::Marker,
     ],
+    Checkpoint: [
+        altv_sdk::BaseObjectType::Checkpoint,
+    ],
 );
 
 impl Debug for Store {

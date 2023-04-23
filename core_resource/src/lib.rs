@@ -10,6 +10,7 @@ use resource::Resource;
 mod alt_resource;
 mod base_objects;
 mod blip;
+mod checkpoint;
 mod client_events;
 mod col_shape;
 mod config_node;
