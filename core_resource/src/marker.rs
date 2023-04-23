@@ -1,26 +1,29 @@
 use crate::{
-    base_objects::{extra_pools::wrappers::AnyEntity, marker, player},
+    base_objects::{marker, player},
     helpers::{self},
     rgba::RGBA,
     sdk,
-    vector::{Vector2, Vector3},
+    vector::Vector3,
     world_object::WorldObject,
     SomeResult, VoidResult,
 };
 
-use crate::resource::Resource;
 use autocxx::prelude::*;
-use std::ptr::{null, NonNull};
+use std::ptr::NonNull;
 
 impl marker::Marker {
-    pub fn new(pos: impl Into<Vector3>, color: impl Into<RGBA>) -> marker::MarkerContainer {
+    pub fn new(
+        marker_type: altv_sdk::MarkerType,
+        pos: impl Into<Vector3>,
+        color: impl Into<RGBA>,
+    ) -> marker::MarkerContainer {
         let pos = pos.into();
         let color = color.into();
 
         let ptr = unsafe {
             sdk::ICore::CreateMarker(
                 std::ptr::null_mut(),
-                1,
+                marker_type as u32,
                 pos.x(),
                 pos.y(),
                 pos.z(),
@@ -28,7 +31,7 @@ impl marker::Marker {
                 color.g(),
                 color.b(),
                 color.a(),
-                std::ptr::null_mut(), //todo null?
+                std::ptr::null_mut(),
             )
         };
 
@@ -82,15 +85,45 @@ impl marker::Marker {
         Ok(())
     }
 
-    //todo
-    //virtual Position GetScale() const = 0;
-    //virtual void SetScale(Position scale) = 0;
+    pub fn scale(&self) -> SomeResult<Vector3> {
+        Ok(helpers::read_cpp_vector3(unsafe {
+            sdk::IMarker::GetScale(self.raw_ptr()?).within_unique_ptr()
+        }))
+    }
 
-    //virtual Rotation GetRotation() const = 0;
-    //virtual void SetRotation(Rotation _rot) = 0;
+    pub fn set_scale(&self, scale: impl Into<Vector3>) -> VoidResult {
+        let scale = scale.into();
 
-    //virtual Position GetDirection() const = 0;
-    //virtual void SetDirection(Position dir) = 0;
+        Ok(unsafe { sdk::IMarker::SetScale(self.raw_ptr()?, scale.x(), scale.y(), scale.z()) })
+    }
+
+    pub fn rotation(&self) -> SomeResult<Vector3> {
+        Ok(helpers::read_cpp_vector3(unsafe {
+            sdk::IMarker::GetRotation(self.raw_ptr()?).within_unique_ptr()
+        }))
+    }
+
+    pub fn set_rotation(&self, rotation: impl Into<Vector3>) -> VoidResult {
+        let rotation = rotation.into();
+
+        Ok(unsafe {
+            sdk::IMarker::SetRotation(self.raw_ptr()?, rotation.x(), rotation.y(), rotation.z())
+        })
+    }
+
+    pub fn direction(&self) -> SomeResult<Vector3> {
+        Ok(helpers::read_cpp_vector3(unsafe {
+            sdk::IMarker::GetDirection(self.raw_ptr()?).within_unique_ptr()
+        }))
+    }
+
+    pub fn set_direction(&self, direction: impl Into<Vector3>) -> VoidResult {
+        let direction = direction.into();
+
+        Ok(unsafe {
+            sdk::IMarker::SetDirection(self.raw_ptr()?, direction.x(), direction.y(), direction.z())
+        })
+    }
 
     pub fn destroy(&self) -> VoidResult {
         marker::remove_from_pool!(self)?;
