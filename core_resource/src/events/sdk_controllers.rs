@@ -237,7 +237,7 @@ impl WeaponDamageEvent {
             weapon_hash: sdk::CWeaponDamageEvent::GetWeaponHash(weapon_event),
             body_part: {
                 let raw = sdk::CWeaponDamageEvent::GetBodyPart(weapon_event);
-                altv_sdk::PlayerBodyPart::from(raw).unwrap()
+                altv_sdk::PlayerBodyPart::try_from(raw).unwrap()
             },
             damage: sdk::CWeaponDamageEvent::GetDamageValue(weapon_event),
             shot_offset: {
@@ -420,7 +420,7 @@ impl PlayerConnectDenied {
         Self {
             reason: {
                 let raw = GetReason(event);
-                altv_sdk::PlayerConnectDeniedReason::from(raw).unwrap()
+                altv_sdk::PlayerConnectDeniedReason::try_from(raw).unwrap()
             },
             name: GetName(event).to_string(),
             ip: GetIp(event).to_string(),
@@ -618,7 +618,7 @@ impl ExplosionEvent {
             },
             explosion_type: {
                 let raw = GetExplosionType(event);
-                altv_sdk::ExplosionType::from(raw).unwrap()
+                altv_sdk::ExplosionType::try_from(raw).unwrap()
             },
             explosion_fx: GetExplosionFX(event),
 

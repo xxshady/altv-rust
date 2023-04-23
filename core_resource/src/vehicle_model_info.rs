@@ -55,7 +55,7 @@ impl VehicleModelInfo {
                 &mut has_auto_attach_trailer as *mut bool,
             )
         };
-        let model_type = altv_sdk::VehicleModelType::from(model_type).unwrap();
+        let model_type = altv_sdk::VehicleModelType::try_from(model_type).unwrap();
 
         let title = unsafe { sdk::read_vehicle_model_info_title(ptr) }.to_string();
 

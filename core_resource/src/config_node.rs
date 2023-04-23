@@ -50,8 +50,8 @@ type ConfigNodePtr = UniquePtr<sdk::Config::Value_ValuePtr>;
 
 pub(crate) unsafe fn read_config_node(node: ConfigNodePtr) -> ConfigNode {
     let node_type = sdk::config_node::get_type(node.as_ref().unwrap());
-    let node_type = altv_sdk::ConfigValueType::from(node_type)
-        .unwrap_or_else(|| panic!("unknown config value type: {node_type}"));
+    let node_type = altv_sdk::ConfigValueType::try_from(node_type)
+        .unwrap_or_else(|_| panic!("unknown config value type: {node_type}"));
 
     {
         use altv_sdk::ConfigValueType;

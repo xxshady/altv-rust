@@ -112,7 +112,7 @@ impl col_shape::ColShape {
     // TODO: cache colshape type somehow
     pub fn col_shape_type(&self) -> SomeResult<altv_sdk::ColShapeType> {
         let raw = unsafe { sdk::IColShape::GetColshapeType(self.raw_ptr()?) };
-        Ok(altv_sdk::ColShapeType::from(raw).unwrap())
+        Ok(altv_sdk::ColShapeType::try_from(raw).unwrap())
     }
 
     pub fn destroy(&self) -> VoidResult {

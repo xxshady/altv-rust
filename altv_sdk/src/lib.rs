@@ -364,8 +364,6 @@ pub mod helpers;
 
 // auto generated files:
 
-use primitive_enum::primitive_enum;
-
 macro_rules! include_out_dir {
     ($file_name: literal) => {
         include!(concat!(env!("OUT_DIR"), $file_name));

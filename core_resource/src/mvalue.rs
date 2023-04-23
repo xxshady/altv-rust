@@ -249,7 +249,7 @@ pub fn deserialize_mvalue_args(
 
 pub(crate) fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Resource) -> MValue {
     let mvalue_type = unsafe { sdk::get_mvalue_type(cpp_wrapper) };
-    let mvalue_type = altv_sdk::MValueType::from(mvalue_type).unwrap();
+    let mvalue_type = altv_sdk::MValueType::try_from(mvalue_type).unwrap();
 
     use altv_sdk::MValueType::*;
 

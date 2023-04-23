@@ -11,12 +11,10 @@ const PLAYER_CONNECT_DENIED_REASON_ENUM_FILE: &str = "cpp-sdk/events/CPlayerConn
 const EXPLOSION_TYPE_ENUM_FILE: &str = "cpp-sdk/events/CExplosionEvent.h";
 const VEHICLE_MODEL_TYPE_ENUM_FILE: &str = "cpp-sdk/types/VehicleModelInfo.h";
 
-fn main() -> miette::Result<()> {
+fn main() {
     let out_dir = std::env::var("OUT_DIR").unwrap();
     generate_cpp_to_rust_bindings(&out_dir);
-    build_rust()?;
-
-    Ok(())
+    build_rust();
 }
 
 fn generate_cpp_to_rust_bindings(out_dir: &str) {
@@ -114,12 +112,13 @@ fn generate_cpp_to_rust_bindings(out_dir: &str) {
     );
 }
 
-fn build_rust() -> miette::Result<()> {
+fn build_rust() {
     let path = std::path::PathBuf::from("src");
 
     let mut build = autocxx_build::Builder::new("src/lib.rs", [&path])
         .extra_clang_args(&["-std=c++20"])
-        .build()?;
+        .build()
+        .unwrap();
 
     let flags = if cfg!(target_os = "windows") {
         ["/std:c++20"]
@@ -134,7 +133,6 @@ fn build_rust() -> miette::Result<()> {
     }
 
     build.compile("altv_sdk");
-    Ok(())
 }
 
 fn generate_rust_enum_from_cpp(
@@ -173,6 +171,7 @@ fn generate_rust_enum_from_cpp(
         panic!("cannot find open brace of {str_to_find:?}")
     }
 
+    let mut try_from_variants = vec![];
     let mut result_string = String::from_utf8_lossy(&chars[start_idx..=end_idx])
         .to_string()
         .split('\n')
@@ -181,7 +180,18 @@ fn generate_rust_enum_from_cpp(
                 .map(|v| v.trim())
                 .and_then(|v| if v.is_empty() { None } else { Some(v) })
         })
-        .map(|v| format!("    {}", upper_to_pascal_case(v)))
+        .map(|v| {
+            let pascal_case_variant = upper_to_pascal_case(v);
+
+            if !pascal_case_variant.starts_with("//") {
+                let v = pascal_case_variant.clone();
+                let v = v.split(',').next().unwrap().to_string();
+                let v = v.split(' ').next().unwrap().to_string();
+                try_from_variants.push(v);
+            }
+
+            format!("    {}", pascal_case_variant)
+        })
         .collect::<Vec<String>>()
         .join("\n");
 
@@ -189,13 +199,31 @@ fn generate_rust_enum_from_cpp(
         result_string.remove(result_string.len() - 1);
     }
 
+    let try_from_variants = try_from_variants
+        .into_iter()
+        .map(|v| format!("    v if v == Self::{v} as {enum_type} => Self::{v},"))
+        .collect::<Vec<String>>()
+        .join("\n");
+
     fs::write(
         format!("{out_dir}/{write_to}"),
         format!(
             "// auto-generated from build.rs\n\n\
-            primitive_enum! {{ {enum_name} {enum_type} ;\n\
+            #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
+            pub enum {enum_name} {{\n\
                 {result_string},\n\
-            }}",
+            }}\n\
+            \n\
+            impl TryFrom<{enum_type}> for {enum_name} {{\n\
+                type Error = ();\n\
+                fn try_from(v: {enum_type}) -> Result<Self, Self::Error> {{\n\
+                    Ok(match v {{\n\
+                        {try_from_variants}\
+                        _ => return Err(()),\n\
+                    }})\n\
+                }}\n\
+            }}\n\
+            ",
         ),
     )
     .unwrap();
