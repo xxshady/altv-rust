@@ -62,4 +62,4 @@ main = 'example.dll' # your compiled .dll or .so
 modules = ['rust-module']
 ```
 
-14. Now if you hade done everything correctly, you should see green "hello world" message in server console
+14. Now if you have done everything correctly, you should see green "hello world" message in server console

@@ -111,7 +111,7 @@ impl blip::Blip {
     // TODO: cache blip type somehow
     pub fn blip_type(&self) -> SomeResult<altv_sdk::BlipType> {
         let raw = unsafe { sdk::IBlip::GetBlipType(self.raw_ptr()?) };
-        Ok(altv_sdk::BlipType::from(raw).unwrap())
+        Ok(altv_sdk::BlipType::try_from(raw).unwrap())
     }
 
     pub fn scale(&self) -> SomeResult<Vector2> {
