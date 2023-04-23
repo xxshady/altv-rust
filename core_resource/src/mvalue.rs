@@ -1,7 +1,7 @@
 use crate::{
     base_objects::{
-        blip, col_shape, player, vehicle, virtual_entity, virtual_entity_group, voice_channel, marker
-        AnyBaseObject, BasePtr,
+        blip, col_shape, marker, player, vehicle, virtual_entity, virtual_entity_group,
+        voice_channel, AnyBaseObject, BasePtr,
     },
     helpers::{read_cpp_vector2, read_cpp_vector3},
     resource::Resource,
