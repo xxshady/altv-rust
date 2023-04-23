@@ -97,13 +97,13 @@ impl marker::Marker {
         Ok(unsafe { sdk::IMarker::SetScale(self.raw_ptr()?, scale.x(), scale.y(), scale.z()) })
     }
 
-    pub fn rotation(&self) -> SomeResult<Vector3> {
+    pub fn rot(&self) -> SomeResult<Vector3> {
         Ok(helpers::read_cpp_vector3(unsafe {
             sdk::IMarker::GetRotation(self.raw_ptr()?).within_unique_ptr()
         }))
     }
 
-    pub fn set_rotation(&self, rotation: impl Into<Vector3>) -> VoidResult {
+    pub fn set_rot(&self, rotation: impl Into<Vector3>) -> VoidResult {
         let rotation = rotation.into();
 
         Ok(unsafe {
@@ -111,13 +111,13 @@ impl marker::Marker {
         })
     }
 
-    pub fn direction(&self) -> SomeResult<Vector3> {
+    pub fn dir&self) -> SomeResult<Vector3> {
         Ok(helpers::read_cpp_vector3(unsafe {
             sdk::IMarker::GetDirection(self.raw_ptr()?).within_unique_ptr()
         }))
     }
 
-    pub fn set_direction(&self, direction: impl Into<Vector3>) -> VoidResult {
+    pub fn set_dir(&self, direction: impl Into<Vector3>) -> VoidResult {
         let direction = direction.into();
 
         Ok(unsafe {
