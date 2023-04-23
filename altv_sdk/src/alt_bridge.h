@@ -30,6 +30,7 @@ using f64 = double;
 using BaseObjectType = uint8_t;
 using ColShapeType = uint8_t;
 using BlipType = uint8_t;
+using MarkerType = uint32_t;
 using WeaponDamageEventBodyPart = int8_t;
 using EventType = uint16_t;
 using PlayerConnectDeniedReason = uint8_t;
@@ -583,6 +584,10 @@ namespace base_object
     alt::IVoiceChannel* to_voice_channel(alt::IBaseObject* base_object) {
         return dynamic_cast<alt::IVoiceChannel*>(base_object);
     }
+
+    alt::IMarker* to_marker(alt::IBaseObject* base_object) {
+        return dynamic_cast<alt::IMarker*>(base_object);
+    }
 } // namespace base_object
 
 namespace world_object
@@ -652,6 +657,12 @@ namespace voice_channel {
         return static_cast<alt::IBaseObject*>(voice_channel);
     }
 } // namespace voice_channel
+
+namespace marker {
+    alt::IBaseObject* to_base_object(alt::IMarker* marker) {
+        return static_cast<alt::IBaseObject*>(marker);
+    }
+} // namespace marker
 
 void read_alt_prop(const alt::Prop& prop, u16* out_drawable, u8* out_texture) {
     *out_drawable = prop.drawableId;

@@ -7,6 +7,7 @@ pub use crate::{
         blip::{Blip, BlipContainer},
         col_shape::{ColShape, ColShapeContainer},
         extra_pools::{wrappers::AnyEntity, Entity, SyncId},
+        marker::{Marker, MarkerContainer},
         meta::{BaseObjectMeta, LocalMeta, StreamSyncedMeta, SyncedMeta},
         player::{Player, PlayerContainer},
         vehicle::{Vehicle, VehicleContainer},

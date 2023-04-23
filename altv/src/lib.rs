@@ -26,6 +26,7 @@ pub use exports::{
     VirtualEntityGroup,
     Blip,
     VoiceChannel,
+    Marker,
     AnyEntity,
     AttachToEntityBoneIndex,
     AttachToEntityBoneName,
@@ -46,8 +47,8 @@ pub use exports::{
 };
 
 pub use altv_sdk::{
-    BaseObjectType, ColShapeType, ExplosionType, PlayerBodyPart, PlayerConnectDeniedReason,
-    VehicleModelType,
+    BaseObjectType, BlipType, ColShapeType, ExplosionType, MarkerType, PlayerBodyPart,
+    PlayerConnectDeniedReason, VehicleModelType,
 };
 
 pub const DEFAULT_DIMENSION: i32 = 0;

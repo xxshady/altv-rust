@@ -156,6 +156,9 @@ alt::IBlip* CreateBlip(alt::IPlayer* target, BlipType type, f32 pos_x, f32 pos_y
 alt::IBlip* CreateBlip(alt::IPlayer* target, BlipType type, alt::IEntity* attachTo) {
     return alt::ICore::Instance().CreateBlip(target, static_cast<alt::IBlip::BlipType>(type), attachTo);
 }
+alt::IMarker* CreateMarker(alt::IPlayer* target, MarkerType type, f32 position_x, f32 position_y, f32 position_z, u8 color_r, u8 color_g, u8 color_b, u8 color_a, alt::IResource* res) {
+    return alt::ICore::Instance().CreateMarker(target, static_cast<alt::IMarker::MarkerType>(type), { position_x, position_y, position_z }, { color_r, color_g, color_b, color_a }, res);
+}
 alt::IVoiceChannel* CreateVoiceChannel(bool spatial, f32 maxDistance) {
     return alt::ICore::Instance().CreateVoiceChannel(spatial, maxDistance);
 }

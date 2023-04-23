@@ -17,6 +17,7 @@ pub mod ffi {
         #include "alt_classes/IVehicle.h"
         #include "alt_classes/IColShape.h"
         #include "alt_classes/IBlip.h"
+        #include "alt_classes/IMarker.h"
         #include "alt_classes/ICheckpoint.h"
         #include "alt_classes/CEvent.h"
         #include "alt_classes/IResource.h"
@@ -100,6 +101,7 @@ pub mod ffi {
         generate_ns!("IVirtualEntityGroup")
         generate_ns!("IResource")
         generate_ns!("IVoiceChannel")
+        generate_ns!("IMarker")
 
         generate_ns!("CNetOwnerChangeEvent")
 
@@ -201,6 +203,7 @@ pub mod ffi {
         generate_ns!("virtual_entity_group")
         generate_ns!("blip")
         generate_ns!("voice_channel")
+        generate_ns!("marker")
 
         // alt::Prop
         generate!("read_alt_prop")
@@ -376,6 +379,7 @@ include_out_dir!("/event_type.rs");
 include_out_dir!("/mvalue_type.rs");
 include_out_dir!("/col_shape_type.rs");
 include_out_dir!("/blip_type.rs");
+include_out_dir!("/marker_type.rs");
 include_out_dir!("/player_body_part.rs");
 include_out_dir!("/player_connect_denied_reason.rs");
 include_out_dir!("/explosion_type.rs");

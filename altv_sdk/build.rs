@@ -6,6 +6,7 @@ const EVENT_TYPE_ENUM_FILE: &str = "cpp-sdk/events/CEvent.h";
 const MVALUE_TYPE_ENUM_FILE: &str = "cpp-sdk/types/MValue.h";
 const COL_SHAPE_TYPE_ENUM_FILE: &str = "cpp-sdk/script-objects/IColShape.h";
 const BLIP_TYPE_ENUM_FILE: &str = "cpp-sdk/script-objects/IBlip.h";
+const MARKER_TYPE_ENUM_FILE: &str = "cpp-sdk/script-objects/IMarker.h";
 const PLAYER_BODY_PART_ENUM_FILE: &str = "cpp-sdk/events/CWeaponDamageEvent.h";
 const PLAYER_CONNECT_DENIED_REASON_ENUM_FILE: &str = "cpp-sdk/events/CPlayerConnectDeniedEvent.h";
 const EXPLOSION_TYPE_ENUM_FILE: &str = "cpp-sdk/events/CExplosionEvent.h";
@@ -63,6 +64,15 @@ fn generate_cpp_to_rust_bindings(out_dir: &str) {
         BLIP_TYPE_ENUM_FILE,
         "enum class BlipType",
         "blip_type.rs",
+        out_dir,
+    );
+
+    generate_rust_enum_from_cpp(
+        "MarkerType",
+        "u32",
+        MARKER_TYPE_ENUM_FILE,
+        "enum class MarkerType",
+        "marker_type.rs",
         out_dir,
     );
 
