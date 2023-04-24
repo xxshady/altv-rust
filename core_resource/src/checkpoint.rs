@@ -1,6 +1,7 @@
 use crate::{
     base_objects::{checkpoint, meta},
     helpers::{self},
+    resource::Resource,
     rgba::RGBA,
     sdk,
     vector::Vector3,
