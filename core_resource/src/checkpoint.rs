@@ -103,4 +103,9 @@ impl checkpoint::Checkpoint {
 
 impl WorldObject for checkpoint::Checkpoint {}
 
-meta::impl_entity_meta_for!(StreamSyncedMeta, checkpoint::Checkpoint);
+meta::impl_meta_type_for!(
+    StreamSyncedMeta,
+    checkpoint::Checkpoint,
+    sdk::ICheckpoint,
+    checkpoint::Checkpoint::raw_ptr
+);
