@@ -1,5 +1,5 @@
 use crate::{
-    base_objects::checkpoint,
+    base_objects::{checkpoint, meta},
     helpers::{self},
     rgba::RGBA,
     sdk,
@@ -102,3 +102,5 @@ impl checkpoint::Checkpoint {
 }
 
 impl WorldObject for checkpoint::Checkpoint {}
+
+meta::impl_entity_meta_for!(StreamSyncedMeta, checkpoint::Checkpoint);
