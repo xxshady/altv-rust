@@ -19,6 +19,7 @@ impl checkpoint::Checkpoint {
         radius: f32,
         height: f32,
         color: impl Into<RGBA>,
+        streaming_distance: u32,
     ) -> checkpoint::CheckpointContainer {
         let pos = pos.into();
         let color = color.into();
@@ -35,6 +36,7 @@ impl checkpoint::Checkpoint {
                 color.g(),
                 color.b(),
                 color.a(),
+                streaming_distance,
             )
         };
 

@@ -15,16 +15,19 @@ impl virtual_entity::VirtualEntity {
         streaming_distance: u32,
     ) -> SomeResult<virtual_entity::VirtualEntityContainer> {
         let pos = pos.into();
-        let ptr = unsafe {
-            sdk::ICore::CreateVirtualEntity(
-                group.raw_ptr()?,
-                pos.x(),
-                pos.y(),
-                pos.z(),
-                streaming_distance,
-            )
-        };
-        Ok(virtual_entity::add_to_pool!(NonNull::new(ptr).unwrap()))
+        // let ptr = unsafe {
+        //     sdk::ICore::CreateVirtualEntity(
+        //         group.raw_ptr()?,
+        //         pos.x(),
+        //         pos.y(),
+        //         pos.z(),
+        //         streaming_distance,
+        //     )
+        // }; //todo
+        Ok(virtual_entity::add_to_pool!(NonNull::new(
+            std::ptr::null_mut()
+        )
+        .unwrap()))
     }
 
     pub fn id(&self) -> SomeResult<u32> {
