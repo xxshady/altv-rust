@@ -68,10 +68,6 @@ pub trait ValidBaseObject: BasePtr {
     }
 }
 
-pub trait SpecificPtr<T> {
-    fn raw_ptr(&self) -> SomeResult<*mut T>;
-}
-
 impl<T> ValidBaseObject for BaseObject<T> {}
 
 pub(crate) type BaseObjectContainer<T> = Rc<BaseObjectWrapper<T>>;
@@ -116,12 +112,6 @@ impl<T> BasePtr for BaseObjectWrapper<T> {
     }
 }
 impl<T> ValidBaseObject for BaseObjectWrapper<T> {}
-
-impl<T> SpecificPtr<T> for BaseObjectWrapper<T> {
-    fn raw_ptr(&self) -> SomeResult<*mut T> {
-        self.raw_ptr()
-    }
-}
 
 impl_meta_type_for!(
     Meta,
