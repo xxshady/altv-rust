@@ -4,17 +4,12 @@ pub use altv::prelude::*;
 fn main() {
     std::env::set_var("RUST_BACKTRACE", "full");
 
-    altv::events::on("test", |args| {
-        dbg!(args);
-        Ok(())
-    });
+    // Sending local "example" event with one dict as argument
+    altv::events::emit!("example", altv::mvalue::dict! { "example" => 123 }.unwrap()).unwrap();
 
-    altv::events::emit!(
-        "test",
-        123,
-        1.5,
-        "test".to_string(),
-        altv::mvalue::list![1, 2, 3].unwrap()
-    )
-    .unwrap();
+    // Applying a per-resource vehicle meta
+    let vehicle = altv::Vehicle::new("sultan", 0, 0).unwrap();
+    vehicle
+        .set_meta("example", altv::mvalue::dict! { "example" => 123 }.unwrap())
+        .unwrap();
 }
