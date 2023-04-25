@@ -16,6 +16,7 @@ pub use crate::{
         voice_channel::{VoiceChannel, VoiceChannelContainer},
         BaseObjectWrapper, ValidBaseObject,
     },
+    col_shape::ColShapy,
     helpers::{hash, Hash},
     init,
     ped_model_info::PedModelInfo,
