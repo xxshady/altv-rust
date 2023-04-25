@@ -1,6 +1,6 @@
 use crate::{
     base_objects::{marker, player},
-    helpers::{self},
+    helpers,
     rgba::RGBA,
     sdk,
     vector::Vector3,
@@ -94,7 +94,8 @@ impl marker::Marker {
     pub fn set_scale(&self, scale: impl Into<Vector3>) -> VoidResult {
         let scale = scale.into();
 
-        Ok(unsafe { sdk::IMarker::SetScale(self.raw_ptr()?, scale.x(), scale.y(), scale.z()) })
+        unsafe { sdk::IMarker::SetScale(self.raw_ptr()?, scale.x(), scale.y(), scale.z()) };
+        Ok(())
     }
 
     pub fn rot(&self) -> SomeResult<Vector3> {
@@ -105,8 +106,9 @@ impl marker::Marker {
 
     pub fn set_rot(&self, rot: impl Into<Vector3>) -> VoidResult {
         let rot = rot.into();
+        unsafe { sdk::IMarker::SetRotation(self.raw_ptr()?, rot.x(), rot.y(), rot.z()) };
 
-        Ok(unsafe { sdk::IMarker::SetRotation(self.raw_ptr()?, rot.x(), rot.y(), rot.z()) })
+        Ok(())
     }
 
     pub fn dir(&self) -> SomeResult<Vector3> {
@@ -117,8 +119,9 @@ impl marker::Marker {
 
     pub fn set_dir(&self, dir: impl Into<Vector3>) -> VoidResult {
         let dir = dir.into();
+        unsafe { sdk::IMarker::SetDirection(self.raw_ptr()?, dir.x(), dir.y(), dir.z()) };
 
-        Ok(unsafe { sdk::IMarker::SetDirection(self.raw_ptr()?, dir.x(), dir.y(), dir.z()) })
+        Ok(())
     }
 
     pub fn destroy(&self) -> VoidResult {
