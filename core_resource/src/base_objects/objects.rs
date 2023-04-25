@@ -20,9 +20,9 @@ macro_rules! base_objects {
         $(
             pub mod $manager_name_snake {
                 use super::*;
-
-                pub type $manager_name = BaseObjectWrapper<$name_struct>;
                 pub type $name_struct = sdk::alt::[<I $manager_name>];
+                #[doc = "[Methods](struct.BaseObjectWrapper.html#impl-BaseObjectWrapper<I" $manager_name ">)"]
+                pub type $manager_name = BaseObjectWrapper<$name_struct>;
                 pub type $name_container = BaseObjectContainer<$name_struct>;
                 #[allow(dead_code)]
                 pub type $name_ptr = NonNull<$name_struct>;

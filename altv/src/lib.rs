@@ -15,6 +15,7 @@ pub use exports::{
         log_error,
     },
 
+    BaseObjectWrapper,
     ColShape,
     SyncId,
     Player,
@@ -28,6 +29,7 @@ pub use exports::{
     VoiceChannel,
     Marker,
     AnyEntity,
+
     AttachToEntityBoneIndex,
     AttachToEntityBoneName,
     PlayerDateTime,
