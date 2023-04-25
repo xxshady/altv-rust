@@ -6,9 +6,21 @@
 # Server-side Rust API for alt:V
 [![crates.io](https://img.shields.io/crates/v/altv.svg)](https://crates.io/crates/altv)
 
+```rust
+altv::events::on_player_connect(|event| {
+    let name = event.player.name()?;
+    altv::log!("player with name: {name} connected!");
+    Ok(())
+});
+```
+
 New server-side [Rust](https://www.rust-lang.org) module for [alt:V](https://altv.mp) platform (WIP)
 
 **Big** thanks to the [creator](https://github.com/justdimaa) of the [first Rust module](https://github.com/justdimaa/altv-rs), as their work helped me understand how to start my own module
+
+## Docs
+
+API documentation can be found [here](https://docs.rs/altv)
 
 ## How to use
 
