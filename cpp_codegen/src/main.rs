@@ -80,6 +80,8 @@ lazy_static::lazy_static! {
             ("bool*", "bool*"),
 
             ("Config::Value::ValuePtr", "Config::Value::ValuePtr"),
+
+            ("std::unordered_map<std::string, MValue>", "MValueUnorderedMapWrapper"),
         ])
     };
 
@@ -611,9 +613,11 @@ fn parse_cpp_method(class_name: &str, method: String) -> anyhow::Result<CppMetho
     let mut next_param_word_ignored = false;
     let mut pointer_param = false;
     let mut pointer_return_type = false;
+    let mut generic_parameter_type = false;
 
     while let Some(char) = method_parser.next_char().copied() {
         // dbg!(char as char);
+
         if in_word {
             if parameters_parsing && char == b' ' && method_parser.is_next_char('*') {
                 // println!("parameters_parsing pointer type: {current_word:?}");
@@ -627,7 +631,16 @@ fn parse_cpp_method(class_name: &str, method: String) -> anyhow::Result<CppMetho
                 continue;
             }
 
-            if is_it_delimiter_char(char)
+            // dbg!(is_it_delimiter_char(char));
+            if generic_parameter_type && char == b'>' {
+                // println!("generic_parameter_type end");
+                generic_parameter_type = false;
+            } else if parameters_parsing && char == b'<' {
+                // println!("generic_parameter_type start");
+                generic_parameter_type = true;
+            }
+
+            if !generic_parameter_type && is_it_delimiter_char(char)
                 || pointer_param
                 || pointer_return_type
                 || method_parser.is_it_last_char()
@@ -825,6 +838,7 @@ fn cpp_method_to_rust_compatible_func(
                     "---PlayerConnectDeniedReason is not implemented as param".to_string()
                 }
                 "ExplosionType" => "---ExplosionType is not implemented as param".to_string(),
+                "MValueUnorderedMapWrapper" => format!("MValueUnorderedMapWrapper {name}"),
                 _ => format!(
                     "{}{type_name} {name}",
                     (if *is_const { "const " } else { "" }),
@@ -868,6 +882,7 @@ fn cpp_method_to_rust_compatible_func(
                 "ExplosionType" => {
                     "---ExplosionType is not implemented as passed param".to_string()
                 }
+                "MValueUnorderedMapWrapper" => format!("{name}.value"),
                 _ => name.to_string(),
             }
         })
