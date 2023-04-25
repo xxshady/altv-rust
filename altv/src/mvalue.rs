@@ -8,7 +8,7 @@
 //!
 //! # Examples
 //!
-//! `altv::mvalue::list` creates `MValue::Dict` (dynamic array or vector of mvalues).
+//! `altv::mvalue::list` creates `MValue::List` (dynamic array or vector of mvalues).
 //!
 //! ```rust
 //! // Sending local "example" event with one list as argument
