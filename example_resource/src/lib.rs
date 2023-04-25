@@ -1,15 +1,13 @@
 pub use altv::prelude::*;
 
-#[altv::main(crate_name = "altv")]
+#[altv::main]
 fn main() {
     std::env::set_var("RUST_BACKTRACE", "full");
 
-    // Sending local "example" event with one dict as argument
-    altv::events::emit!("example", altv::mvalue::dict! { "example" => 123 }.unwrap()).unwrap();
-
-    // Applying a per-resource vehicle meta
-    let vehicle = altv::Vehicle::new("sultan", 0, 0).unwrap();
-    vehicle
-        .set_meta("example", altv::mvalue::dict! { "example" => 123 }.unwrap())
-        .unwrap();
+    use altv::events;
+    events::on_player_connect(|events::PlayerConnect { player }| {
+        let name = player.name()?;
+        altv::log!("player with name: {name} connected!");
+        Ok(())
+    });
 }
