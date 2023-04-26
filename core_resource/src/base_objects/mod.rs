@@ -6,9 +6,11 @@ pub(crate) mod meta;
 mod objects;
 
 pub(crate) use base_object::BaseObjectContainer;
+pub use base_object::BaseObjectInner;
 pub use base_object::BaseObjectWrapper;
 pub(crate) use base_object::BasePtr;
 pub use base_object::ValidBaseObject;
+
 pub(crate) use manager::BaseObjectManager;
 pub(crate) use objects::Store;
 

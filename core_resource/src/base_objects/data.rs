@@ -11,3 +11,20 @@ impl Default for Marker {
         }
     }
 }
+
+pub struct ColShapy<Data: Default> {
+    pub(crate) col_shape_type: LazyCell<altv_sdk::ColShapeType>,
+
+    // TODO: should be used by checkpoint later
+    #[allow(dead_code)]
+    pub(crate) data: Data,
+}
+
+impl<Data: Default> Default for ColShapy<Data> {
+    fn default() -> Self {
+        Self {
+            col_shape_type: LazyCell::new(),
+            data: Data::default(),
+        }
+    }
+}

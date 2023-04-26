@@ -243,6 +243,7 @@ macro_rules! base_objects {
 base_objects!(
     ColShape: [
         altv_sdk::BaseObjectType::Colshape,
+        @base_object_data: data::ColShapy::<()>,
     ],
     Vehicle: [
         altv_sdk::BaseObjectType::Vehicle,

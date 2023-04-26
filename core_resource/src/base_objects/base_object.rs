@@ -108,10 +108,6 @@ impl<T, Data> BaseObjectWrapper<T, Data> {
     pub(crate) fn internal_destroy(&self) -> VoidResult {
         self.value.try_borrow_mut()?.internal_destroy()
     }
-
-    pub(crate) fn base_obj(&self) -> SomeResult<Ref<BaseObject<T, Data>>> {
-        Ok(self.value.try_borrow()?)
-    }
 }
 
 impl<T, Data> BasePtr for BaseObjectWrapper<T, Data> {
@@ -124,6 +120,16 @@ impl<T, Data> BasePtr for BaseObjectWrapper<T, Data> {
     }
 }
 impl<T, Data> ValidBaseObject for BaseObjectWrapper<T, Data> {}
+
+pub trait BaseObjectInner<T, Data> {
+    fn inner(&self) -> SomeResult<Ref<BaseObject<T, Data>>>;
+}
+
+impl<T, Data> BaseObjectInner<T, Data> for BaseObjectWrapper<T, Data> {
+    fn inner(&self) -> SomeResult<Ref<BaseObject<T, Data>>> {
+        Ok(self.value.try_borrow()?)
+    }
+}
 
 impl_meta_type_for!(
     Meta,

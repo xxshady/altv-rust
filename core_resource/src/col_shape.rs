@@ -1,7 +1,7 @@
 use crate::{
-    base_objects::col_shape,
+    base_objects::{col_shape, data, BaseObjectInner},
     exports::{AnyEntity, SyncId},
-    sdk,
+    helpers, sdk,
     vector::{Vector2, Vector3},
     world_object::WorldObject,
     SomeResult, VoidResult,
@@ -103,7 +103,7 @@ impl ColShapeRawPtr for col_shape::ColShape {
 }
 
 // intended for checkpoints
-pub trait ColShapeRawPtr {
+pub trait ColShapeRawPtr: BaseObjectInner<col_shape::ColShapeStruct, data::ColShapy<()>> {
     fn raw_ptr(&self) -> SomeResult<*mut col_shape::ColShapeStruct>;
 }
 
@@ -130,9 +130,11 @@ pub trait ColShapy: ColShapeRawPtr {
         Ok(unsafe { sdk::IColShape::IsEntityIdIn(self.raw_ptr()?, id) })
     }
 
-    // TODO: cache colshape type somehow
     fn col_shape_type(&self) -> SomeResult<altv_sdk::ColShapeType> {
-        let raw = unsafe { sdk::IColShape::GetColshapeType(self.raw_ptr()?) };
-        Ok(altv_sdk::ColShapeType::try_from(raw).unwrap())
+        helpers::init_or_get_lazycell(&self.inner()?.data.col_shape_type, || {
+            let raw = unsafe { sdk::IColShape::GetColshapeType(self.raw_ptr()?) };
+            Ok(altv_sdk::ColShapeType::try_from(raw).unwrap())
+        })
+        .copied()
     }
 }
