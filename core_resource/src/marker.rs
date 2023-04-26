@@ -75,7 +75,7 @@ impl marker::Marker {
     }
 
     pub fn marker_type(&self) -> SomeResult<altv_sdk::MarkerType> {
-        helpers::init_or_get_lazycell(&self.value.try_borrow()?.data.marker_type, || {
+        helpers::init_or_get_lazycell(&self.base_obj()?.data.marker_type, || {
             let raw = unsafe { sdk::IMarker::GetMarkerType(self.raw_ptr()?) };
             Ok(altv_sdk::MarkerType::try_from(raw).unwrap())
         })

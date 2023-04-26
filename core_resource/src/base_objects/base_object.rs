@@ -1,4 +1,9 @@
-use std::{cell::RefCell, fmt::Debug, ptr::NonNull, rc::Rc};
+use std::{
+    cell::{Ref, RefCell},
+    fmt::Debug,
+    ptr::NonNull,
+    rc::Rc,
+};
 
 use super::meta::impl_meta_type_for;
 use crate::{resource::Resource, sdk, SomeResult, VoidResult};
@@ -102,6 +107,10 @@ impl<T, Data> BaseObjectWrapper<T, Data> {
 
     pub(crate) fn internal_destroy(&self) -> VoidResult {
         self.value.try_borrow_mut()?.internal_destroy()
+    }
+
+    pub(crate) fn base_obj(&self) -> SomeResult<Ref<BaseObject<T, Data>>> {
+        Ok(self.value.try_borrow()?)
     }
 }
 
