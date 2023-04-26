@@ -3,12 +3,12 @@ use std::{collections::HashMap, fmt::Debug, ptr::NonNull};
 
 use super::base_object::BaseObjectContainer;
 
-pub(crate) struct BaseObjectManager<T> {
-    objects: HashMap<NonNull<T>, BaseObjectContainer<T>>,
+pub(crate) struct BaseObjectManager<T, Data = ()> {
+    objects: HashMap<NonNull<T>, BaseObjectContainer<T, Data>>,
 }
 
-impl<T> BaseObjectManager<T> {
-    pub fn add(&mut self, ptr: NonNull<T>, base_object: BaseObjectContainer<T>) {
+impl<T, Data> BaseObjectManager<T, Data> {
+    pub fn add(&mut self, ptr: NonNull<T>, base_object: BaseObjectContainer<T, Data>) {
         self.objects.insert(ptr, base_object);
     }
 
@@ -30,7 +30,7 @@ impl<T> BaseObjectManager<T> {
         }
     }
 
-    pub fn get_by_ptr(&self, ptr: NonNull<T>) -> Option<BaseObjectContainer<T>> {
+    pub fn get_by_ptr(&self, ptr: NonNull<T>) -> Option<BaseObjectContainer<T, Data>> {
         self.objects.get(&ptr).cloned()
     }
 
@@ -38,13 +38,13 @@ impl<T> BaseObjectManager<T> {
         self.objects.contains_key(&ptr)
     }
 
-    pub fn all(&self) -> Vec<BaseObjectContainer<T>> {
+    pub fn all(&self) -> Vec<BaseObjectContainer<T, Data>> {
         // TODO: dont clone it on every access?
         self.objects.values().cloned().collect()
     }
 }
 
-impl<T> Default for BaseObjectManager<T> {
+impl<T, Data> Default for BaseObjectManager<T, Data> {
     fn default() -> Self {
         Self {
             objects: Default::default(),
@@ -52,7 +52,7 @@ impl<T> Default for BaseObjectManager<T> {
     }
 }
 
-impl<T> Debug for BaseObjectManager<T> {
+impl<T, Data> Debug for BaseObjectManager<T, Data> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "BaseObjectManager<T>")
     }

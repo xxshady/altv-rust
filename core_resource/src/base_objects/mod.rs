@@ -1,11 +1,12 @@
 mod base_object;
+pub mod data;
 pub(crate) mod extra_pools;
 mod manager;
 pub(crate) mod meta;
 mod objects;
 
 pub(crate) use base_object::BaseObjectContainer;
-pub(crate) use base_object::BaseObjectWrapper;
+pub use base_object::BaseObjectWrapper;
 pub(crate) use base_object::BasePtr;
 pub use base_object::ValidBaseObject;
 pub(crate) use manager::BaseObjectManager;

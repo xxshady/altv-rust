@@ -281,6 +281,9 @@ pub mod ffi {
 
         generate!("ConfigDictPairWrapper")
         generate_ns!("config_node")
+
+        generate!("create_mvalue_unordered_map")
+        generate!("push_to_mvalue_unordered_map")
     }
     pub use alt_bridge::*;
 

@@ -237,3 +237,14 @@ pub fn get_player(
         .unwrap();
     Some(player)
 }
+
+#[macro_export]
+macro_rules! __if_not {
+    (() $code: block) => {
+        $code
+    };
+    (($( $target: tt )+) $code: block) => {
+        $( $target )+
+    };
+}
+pub use __if_not as if_not;

@@ -80,6 +80,7 @@ pub fn resource_main_func(args: TokenStream, input: TokenStream) -> TokenStream 
     }
 
     let crate_name_ident = syn::Ident::new(&crate_name, Span::call_site());
+    let resource_version = env!("CARGO_PKG_VERSION");
 
     quote! {
         #[no_mangle]
@@ -90,15 +91,14 @@ pub fn resource_main_func(args: TokenStream, input: TokenStream) -> TokenStream 
             resource_handlers: &mut #crate_name_ident::__internal::ResourceHandlers,
             module_handlers: #crate_name_ident::__internal::ModuleHandlers,
         ) {
-            let resource_version = env!("CARGO_PKG_VERSION");
-            if altv_module_version != resource_version {
+            if altv_module_version != #resource_version {
                 panic!(
                     "\n\n\
                     \x1b[31mRust module version ({}) does not match the version of the altv crate ({}) that you have installed!\n\
                     Update Rust module (.dll/.so) or altv crate\
                     \n\n\x1b[0m",
                     altv_module_version,
-                    resource_version
+                    #resource_version
                 );
             }
 

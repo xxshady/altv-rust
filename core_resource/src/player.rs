@@ -793,7 +793,7 @@ impl player::Player {
     ///         flags: altv::AnimationFlags::HoldLastFrame | altv::AnimationFlags::AbortOnWeaponDamage,
     ///         ..Default::default()
     ///     },
-    /// )?;
+    /// ).unwrap();
     /// ```
     pub fn play_animation(
         &self,

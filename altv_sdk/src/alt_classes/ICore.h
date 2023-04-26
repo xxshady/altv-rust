@@ -25,8 +25,8 @@ void LogError(const StdStringClone str, alt::IResource* resource) {
 void LogColored(const StdStringClone str, alt::IResource* resource) {
     return alt::ICore::Instance().LogColored(str, resource);
 }
-alt::IVirtualEntity* CreateVirtualEntity(alt::IVirtualEntityGroup* group, f32 pos_x, f32 pos_y, f32 pos_z, u32 streamingDistance) {
-    return alt::ICore::Instance().CreateVirtualEntity(group, { pos_x, pos_y, pos_z }, streamingDistance);
+alt::IVirtualEntity* CreateVirtualEntity(alt::IVirtualEntityGroup* group, f32 pos_x, f32 pos_y, f32 pos_z, u32 streamingDistance, MValueUnorderedMapWrapper data) {
+    return alt::ICore::Instance().CreateVirtualEntity(group, { pos_x, pos_y, pos_z }, streamingDistance, data.value);
 }
 alt::IVirtualEntityGroup* CreateVirtualEntityGroup(u32 streamingRangeLimit) {
     return alt::ICore::Instance().CreateVirtualEntityGroup(streamingRangeLimit);

@@ -1,6 +1,6 @@
 use crate::{
     base_objects::{marker, player},
-    helpers::{self},
+    helpers,
     rgba::RGBA,
     sdk,
     vector::Vector3,
@@ -74,10 +74,17 @@ impl marker::Marker {
         Ok(())
     }
 
-    // TODO: cache marker type somehow
     pub fn marker_type(&self) -> SomeResult<altv_sdk::MarkerType> {
+        let marker_type = &self.value.try_borrow()?.data.marker_type;
+        if marker_type.filled() {
+            return Ok(*marker_type.borrow().unwrap());
+        }
+
         let raw = unsafe { sdk::IMarker::GetMarkerType(self.raw_ptr()?) };
-        Ok(altv_sdk::MarkerType::try_from(raw).unwrap())
+        marker_type
+            .fill(altv_sdk::MarkerType::try_from(raw).unwrap())
+            .unwrap();
+        Ok(*marker_type.borrow().unwrap())
     }
 
     pub fn set_marker_type(&self, marker_type: altv_sdk::MarkerType) -> VoidResult {
@@ -94,7 +101,8 @@ impl marker::Marker {
     pub fn set_scale(&self, scale: impl Into<Vector3>) -> VoidResult {
         let scale = scale.into();
 
-        Ok(unsafe { sdk::IMarker::SetScale(self.raw_ptr()?, scale.x(), scale.y(), scale.z()) })
+        unsafe { sdk::IMarker::SetScale(self.raw_ptr()?, scale.x(), scale.y(), scale.z()) };
+        Ok(())
     }
 
     pub fn rot(&self) -> SomeResult<Vector3> {
@@ -105,8 +113,9 @@ impl marker::Marker {
 
     pub fn set_rot(&self, rot: impl Into<Vector3>) -> VoidResult {
         let rot = rot.into();
+        unsafe { sdk::IMarker::SetRotation(self.raw_ptr()?, rot.x(), rot.y(), rot.z()) };
 
-        Ok(unsafe { sdk::IMarker::SetRotation(self.raw_ptr()?, rot.x(), rot.y(), rot.z()) })
+        Ok(())
     }
 
     pub fn dir(&self) -> SomeResult<Vector3> {
@@ -117,8 +126,9 @@ impl marker::Marker {
 
     pub fn set_dir(&self, dir: impl Into<Vector3>) -> VoidResult {
         let dir = dir.into();
+        unsafe { sdk::IMarker::SetDirection(self.raw_ptr()?, dir.x(), dir.y(), dir.z()) };
 
-        Ok(unsafe { sdk::IMarker::SetDirection(self.raw_ptr()?, dir.x(), dir.y(), dir.z()) })
+        Ok(())
     }
 
     pub fn destroy(&self) -> VoidResult {
