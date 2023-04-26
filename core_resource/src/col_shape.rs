@@ -94,20 +94,17 @@ impl col_shape::ColShape {
 }
 
 impl WorldObject for col_shape::ColShape {}
-impl ColShapy for col_shape::ColShape {}
 
-impl ColShapeRawPtr for col_shape::ColShape {
+impl ColShapy<col_shape::ColShapeStruct> for col_shape::ColShape {
     fn raw_ptr(&self) -> SomeResult<*mut col_shape::ColShapeStruct> {
         self.raw_ptr()
     }
 }
 
-// intended for checkpoints
-pub trait ColShapeRawPtr: BaseObjectInner<col_shape::ColShapeStruct, data::ColShapy<()>> {
+// intended for checkpoints & colshapes
+pub trait ColShapy<T>: BaseObjectInner<T, data::ColShapy> {
     fn raw_ptr(&self) -> SomeResult<*mut col_shape::ColShapeStruct>;
-}
 
-pub trait ColShapy: ColShapeRawPtr {
     fn players_only(&self) -> SomeResult<bool> {
         Ok(unsafe { sdk::IColShape::IsPlayersOnly(self.raw_ptr()?) })
     }

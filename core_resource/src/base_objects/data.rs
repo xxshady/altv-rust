@@ -1,6 +1,6 @@
 use lazycell::LazyCell;
 
-pub struct ColShapy<Data: Default> {
+pub struct ColShapy<Data: Default = ()> {
     pub(crate) col_shape_type: LazyCell<altv_sdk::ColShapeType>,
 
     // TODO: should be used by checkpoint later
