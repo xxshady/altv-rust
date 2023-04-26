@@ -15,7 +15,7 @@ pub(super) enum ConnectionQueueState {
 #[derive(Debug)]
 pub struct ConnectionQueueInfo {
     pub name: String,
-    pub id: u32, // TODO: why it returns u32 and not u16 (EntityId)?
+    pub id: u32,
     pub social_id: u64,
     pub social_name: String,
     pub hw_id_hash: u64,

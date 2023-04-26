@@ -28,3 +28,15 @@ impl<Data: Default> Default for ColShapy<Data> {
         }
     }
 }
+
+pub struct Blip {
+    pub(crate) blip_type: LazyCell<altv_sdk::BlipType>,
+}
+
+impl Default for Blip {
+    fn default() -> Self {
+        Self {
+            blip_type: LazyCell::new(),
+        }
+    }
+}

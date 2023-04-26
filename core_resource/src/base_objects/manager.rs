@@ -39,7 +39,6 @@ impl<T, Data> BaseObjectManager<T, Data> {
     }
 
     pub fn all(&self) -> Vec<BaseObjectContainer<T, Data>> {
-        // TODO: dont clone it on every access?
         self.objects.values().cloned().collect()
     }
 }

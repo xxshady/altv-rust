@@ -261,6 +261,7 @@ base_objects!(
     ],
     Blip: [
         altv_sdk::BaseObjectType::Blip,
+        @base_object_data: data::Blip,
     ],
     VoiceChannel: [
         altv_sdk::BaseObjectType::VoiceChannel,

@@ -1,5 +1,5 @@
 use crate::{
-    base_objects::{blip, extra_pools::wrappers::AnyEntity, player},
+    base_objects::{blip, extra_pools::wrappers::AnyEntity, player, BaseObjectInner},
     helpers::{self},
     rgba::RGBA,
     sdk,
@@ -108,10 +108,12 @@ impl blip::Blip {
         Ok(())
     }
 
-    // TODO: cache blip type somehow
     pub fn blip_type(&self) -> SomeResult<altv_sdk::BlipType> {
-        let raw = unsafe { sdk::IBlip::GetBlipType(self.raw_ptr()?) };
-        Ok(altv_sdk::BlipType::try_from(raw).unwrap())
+        helpers::init_or_get_lazycell(&self.inner()?.data.blip_type, || {
+            let raw = unsafe { sdk::IBlip::GetBlipType(self.raw_ptr()?) };
+            Ok(altv_sdk::BlipType::try_from(raw).unwrap())
+        })
+        .copied()
     }
 
     pub fn scale(&self) -> SomeResult<Vector2> {
