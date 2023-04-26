@@ -1,17 +1,5 @@
 use lazycell::LazyCell;
 
-pub struct Marker {
-    pub(crate) marker_type: LazyCell<altv_sdk::MarkerType>,
-}
-
-impl Default for Marker {
-    fn default() -> Self {
-        Self {
-            marker_type: LazyCell::new(),
-        }
-    }
-}
-
 pub struct ColShapy<Data: Default> {
     pub(crate) col_shape_type: LazyCell<altv_sdk::ColShapeType>,
 

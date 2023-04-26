@@ -1,5 +1,5 @@
 use crate::{
-    base_objects::{marker, player, BaseObjectInner},
+    base_objects::{marker, player},
     helpers,
     rgba::RGBA,
     sdk,
@@ -75,11 +75,8 @@ impl marker::Marker {
     }
 
     pub fn marker_type(&self) -> SomeResult<altv_sdk::MarkerType> {
-        helpers::init_or_get_lazycell(&self.inner()?.data.marker_type, || {
-            let raw = unsafe { sdk::IMarker::GetMarkerType(self.raw_ptr()?) };
-            Ok(altv_sdk::MarkerType::try_from(raw).unwrap())
-        })
-        .copied()
+        let raw = unsafe { sdk::IMarker::GetMarkerType(self.raw_ptr()?) };
+        Ok(altv_sdk::MarkerType::try_from(raw).unwrap())
     }
 
     pub fn set_marker_type(&self, marker_type: altv_sdk::MarkerType) -> VoidResult {

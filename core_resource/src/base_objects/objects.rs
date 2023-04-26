@@ -268,7 +268,6 @@ base_objects!(
     ],
     Marker: [
         altv_sdk::BaseObjectType::Marker,
-        @base_object_data: data::Marker,
     ],
 );
 
