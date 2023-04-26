@@ -1,4 +1,4 @@
-use std::ptr::NonNull;
+use std::{fmt::Debug, ptr::NonNull};
 
 use crate::{
     base_objects::{
@@ -13,6 +13,7 @@ use crate::{
     rgba::RGBA,
     vector::{Vector2, Vector3},
     world_object::WorldObjectRawPtr,
+    SomeResult,
 };
 use altv_sdk::ffi as sdk;
 use autocxx::{
@@ -248,3 +249,18 @@ macro_rules! __if_not {
     };
 }
 pub use __if_not as if_not;
+use lazycell::LazyCell;
+
+pub fn init_or_get_lazycell<T: Debug>(
+    cell: &LazyCell<T>,
+    init: impl FnOnce() -> SomeResult<T>,
+) -> SomeResult<&T> {
+    if cell.filled() {
+        logger::debug!("lazycell filled");
+        return Ok(cell.borrow().unwrap());
+    }
+    logger::debug!("lazycell is not filled");
+
+    cell.fill(init()?).unwrap();
+    Ok(cell.borrow().unwrap())
+}

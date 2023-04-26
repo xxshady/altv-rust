@@ -15,7 +15,8 @@ use crate::{
     exports::{AnyEntity, Vector3},
     helpers::{
         get_entity_by_ptr, get_non_null_entity_by_ptr, get_non_null_player,
-        get_non_null_world_object_by_ptr, get_player, read_cpp_str_vec, read_cpp_vector3, Hash,
+        get_non_null_world_object_by_ptr, get_player, init_or_get_lazycell, read_cpp_str_vec,
+        read_cpp_vector3, Hash,
     },
     mvalue,
     resource::Resource,
@@ -147,15 +148,11 @@ impl ServerScriptEvent {
     }
 
     pub fn args(&self) -> &mvalue::MValueList {
-        if self.args.filled() {
-            self.args.borrow().unwrap()
-        } else {
+        init_or_get_lazycell(&self.args, || {
             let args = unsafe { sdk::CServerScriptEvent::GetArgs(self.event) };
-            self.args
-                .fill(Resource::with(|v| mvalue::deserialize_mvalue_args(args, v)))
-                .unwrap();
-            self.args.borrow().unwrap()
-        }
+            Ok(Resource::with(|v| mvalue::deserialize_mvalue_args(args, v)))
+        })
+        .unwrap()
     }
 }
 
@@ -182,15 +179,11 @@ impl ClientScriptEvent {
     }
 
     pub fn args(&self) -> &mvalue::MValueList {
-        if self.args.filled() {
-            self.args.borrow().unwrap()
-        } else {
+        init_or_get_lazycell(&self.args, || {
             let args = unsafe { sdk::CClientScriptEvent::GetArgs(self.event) };
-            self.args
-                .fill(Resource::with(|v| mvalue::deserialize_mvalue_args(args, v)))
-                .unwrap();
-            self.args.borrow().unwrap()
-        }
+            Ok(Resource::with(|v| mvalue::deserialize_mvalue_args(args, v)))
+        })
+        .unwrap()
     }
 }
 
@@ -657,13 +650,10 @@ impl ConnectionQueueAdd {
     }
 
     pub fn info(&self) -> &ConnectionQueueInfo {
-        if self.info.filled() {
-            return self.info.borrow().unwrap();
-        }
-        self.info
-            .fill(unsafe { ConnectionQueueInfo::new(self.info_ptr) })
-            .unwrap();
-        self.info.borrow().unwrap()
+        init_or_get_lazycell(&self.info, || {
+            Ok(unsafe { ConnectionQueueInfo::new(self.info_ptr) })
+        })
+        .unwrap()
     }
 
     pub fn controller(&self) -> Rc<ConnectionQueueController> {
@@ -691,13 +681,10 @@ impl ConnectionQueueRemove {
     }
 
     pub fn info(&self) -> &ConnectionQueueInfo {
-        if self.info.filled() {
-            return self.info.borrow().unwrap();
-        }
-        self.info
-            .fill(unsafe { ConnectionQueueInfo::new(self.info_ptr) })
-            .unwrap();
-        self.info.borrow().unwrap()
+        init_or_get_lazycell(&self.info, || {
+            Ok(unsafe { ConnectionQueueInfo::new(self.info_ptr) })
+        })
+        .unwrap()
     }
 }
 

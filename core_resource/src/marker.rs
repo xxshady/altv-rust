@@ -75,16 +75,11 @@ impl marker::Marker {
     }
 
     pub fn marker_type(&self) -> SomeResult<altv_sdk::MarkerType> {
-        let marker_type = &self.value.try_borrow()?.data.marker_type;
-        if marker_type.filled() {
-            return Ok(*marker_type.borrow().unwrap());
-        }
-
-        let raw = unsafe { sdk::IMarker::GetMarkerType(self.raw_ptr()?) };
-        marker_type
-            .fill(altv_sdk::MarkerType::try_from(raw).unwrap())
-            .unwrap();
-        Ok(*marker_type.borrow().unwrap())
+        helpers::init_or_get_lazycell(&self.value.try_borrow()?.data.marker_type, || {
+            let raw = unsafe { sdk::IMarker::GetMarkerType(self.raw_ptr()?) };
+            Ok(altv_sdk::MarkerType::try_from(raw).unwrap())
+        })
+        .copied()
     }
 
     pub fn set_marker_type(&self, marker_type: altv_sdk::MarkerType) -> VoidResult {
