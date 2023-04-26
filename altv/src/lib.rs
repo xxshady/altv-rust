@@ -67,10 +67,30 @@ pub mod prelude {
     };
 }
 
+/// # Examples
+/// ```rust
+/// altv::set_timeout(
+///     move || {
+///         altv::log!("this message will be printed once, after 1.5s");
+///         Ok(())
+///     },
+///     1500,
+/// );
+/// ```
 pub fn set_timeout(callback: impl FnMut() -> VoidResult + 'static, millis: u64) {
     exports::create_timer(Box::new(callback), millis, true);
 }
 
+/// # Examples
+/// ```rust
+/// altv::set_interval(
+///     move || {
+///         altv::log!("this message will be printed every 1.5s");
+///         Ok(())
+///     },
+///     1500,
+/// );
+/// ```
 pub fn set_interval(callback: impl FnMut() -> VoidResult + 'static, millis: u64) {
     exports::create_timer(Box::new(callback), millis, false);
 }
