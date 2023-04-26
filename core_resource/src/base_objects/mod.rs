@@ -1,4 +1,5 @@
 mod base_object;
+pub mod data;
 pub(crate) mod extra_pools;
 mod manager;
 pub(crate) mod meta;

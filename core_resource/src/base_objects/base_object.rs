@@ -3,12 +3,13 @@ use std::{cell::RefCell, fmt::Debug, ptr::NonNull, rc::Rc};
 use super::meta::impl_meta_type_for;
 use crate::{resource::Resource, sdk, SomeResult, VoidResult};
 
-pub struct BaseObject<T> {
+pub struct BaseObject<T, Data> {
     ptr: Option<NonNull<T>>,
     base_ptr: Option<altv_sdk::BaseObjectMutPtr>,
+    pub(crate) data: Data,
 }
 
-impl<T> BaseObject<T> {
+impl<T, Data> BaseObject<T, Data> {
     pub(crate) fn ptr(&self) -> SomeResult<NonNull<T>> {
         self.ptr.ok_or(anyhow::anyhow!("base object ptr is none"))
     }
@@ -37,7 +38,7 @@ impl<T> BaseObject<T> {
     }
 }
 
-impl<T> Debug for BaseObject<T> {
+impl<T, Data> Debug for BaseObject<T, Data> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "BaseObject<T>")
     }
@@ -48,7 +49,7 @@ pub trait BasePtr {
     fn raw_base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectRawMutPtr>;
 }
 
-impl<T> BasePtr for BaseObject<T> {
+impl<T, Data> BasePtr for BaseObject<T, Data> {
     fn base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectMutPtr> {
         if let Some(base_ptr) = self.base_ptr {
             Ok(base_ptr)
@@ -68,23 +69,25 @@ pub trait ValidBaseObject: BasePtr {
     }
 }
 
-impl<T> ValidBaseObject for BaseObject<T> {}
+impl<T, Data> ValidBaseObject for BaseObject<T, Data> {}
 
-pub(crate) type BaseObjectContainer<T> = Rc<BaseObjectWrapper<T>>;
+pub(crate) type BaseObjectContainer<T, Data = ()> = Rc<BaseObjectWrapper<T, Data>>;
 
-pub struct BaseObjectWrapper<T> {
-    pub(crate) value: RefCell<BaseObject<T>>,
+pub struct BaseObjectWrapper<T, Data = ()> {
+    pub(crate) value: RefCell<BaseObject<T, Data>>,
 }
 
-impl<T> BaseObjectWrapper<T> {
+impl<T, Data> BaseObjectWrapper<T, Data> {
     pub(crate) fn _new(
         ptr: NonNull<T>,
         base_ptr: altv_sdk::BaseObjectMutPtr,
-    ) -> BaseObjectContainer<T> {
+        data: Data,
+    ) -> BaseObjectContainer<T, Data> {
         Rc::new(Self {
             value: RefCell::new(BaseObject {
                 ptr: Some(ptr),
                 base_ptr: Some(base_ptr),
+                data,
             }),
         })
     }
@@ -102,7 +105,7 @@ impl<T> BaseObjectWrapper<T> {
     }
 }
 
-impl<T> BasePtr for BaseObjectWrapper<T> {
+impl<T, Data> BasePtr for BaseObjectWrapper<T, Data> {
     fn base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectMutPtr> {
         self.value.try_borrow()?.base_ptr()
     }
@@ -111,20 +114,20 @@ impl<T> BasePtr for BaseObjectWrapper<T> {
         self.value.try_borrow()?.raw_base_ptr()
     }
 }
-impl<T> ValidBaseObject for BaseObjectWrapper<T> {}
+impl<T, Data> ValidBaseObject for BaseObjectWrapper<T, Data> {}
 
 impl_meta_type_for!(
     Meta,
-    BaseObjectWrapper<T>,
+    BaseObjectWrapper<T, Data>,
     sdk::IBaseObject,
     BaseObjectWrapper::raw_base_ptr,
-    T
+    @generics: [T, Data,]
 );
 
 impl_meta_type_for!(
     SyncedMeta,
-    BaseObjectWrapper<T>,
+    BaseObjectWrapper<T, Data>,
     sdk::IBaseObject,
     BaseObjectWrapper::raw_base_ptr,
-    T
+    @generics: [T, Data,]
 );

@@ -13,7 +13,8 @@ macro_rules! base_objects {
         $name_ptr: ident
         $manager_name: ident: [
             $base_type: path,
-            $( $extra_pool: ident )?
+            $( @extra_pool: $extra_pool: ident, )?
+            $( @base_object_data: $base_object_data: ty, )?
         ],
     )+ ) => {
         paste::paste! {
@@ -22,8 +23,14 @@ macro_rules! base_objects {
                 use super::*;
                 pub type $name_struct = sdk::alt::[<I $manager_name>];
                 #[doc = "[Methods](struct.BaseObjectWrapper.html#impl-BaseObjectWrapper<I" $manager_name ">)"]
-                pub type $manager_name = BaseObjectWrapper<$name_struct>;
-                pub type $name_container = BaseObjectContainer<$name_struct>;
+                pub type $manager_name = BaseObjectWrapper<
+                    $name_struct
+                    $(, $crate::base_objects::$base_object_data )?
+                >;
+                pub type $name_container = BaseObjectContainer<
+                    $name_struct
+                    $(, $crate::base_objects::$base_object_data )?
+                >;
                 #[allow(dead_code)]
                 pub type $name_ptr = NonNull<$name_struct>;
 
@@ -61,7 +68,14 @@ macro_rules! base_objects {
                                 $crate::sdk::$manager_name_snake::to_base_object($ptr.as_ptr())
                             }).unwrap();
 
-                            let container = Self::_new($ptr, base_ptr);
+                            let base_object_data = $crate::helpers::if_not!(
+                                ($(
+                                    $crate::base_objects::$base_object_data::default()
+                                )?) {}
+                            );
+
+                            let container = Self::_new($ptr, base_ptr, base_object_data);
+
                             v.[<$manager_name_snake>].add($ptr, container.clone());
 
                             $(
@@ -92,7 +106,10 @@ macro_rules! base_objects {
             #[derive(Default)]
             pub struct Store {
             $(
-                pub(crate) $manager_name_snake: BaseObjectManager<$manager_name_snake::$name_struct>,
+                pub(crate) $manager_name_snake: BaseObjectManager<
+                    $manager_name_snake::$name_struct
+                    $(, $crate::base_objects::$base_object_data )?
+                >,
             )+
             }
 
@@ -106,13 +123,25 @@ macro_rules! base_objects {
                     match base_object_type {
                     $(
                         $base_type => {
-                            let ptr = NonNull::new(unsafe { sdk::base_object::[<to_ $manager_name_snake>](base_ptr.as_ptr()) }).unwrap();
+                            let ptr = NonNull::new(unsafe {
+                                sdk::base_object::[<to_ $manager_name_snake>](base_ptr.as_ptr())
+                            }).unwrap();
                             if self.[<$manager_name_snake>].has(ptr) {
                                 logger::debug!("base object: {base_object_type:?} {ptr:?} already added");
                                 return;
                             }
 
-                            let container = $manager_name_snake::$manager_name::_new(ptr, base_ptr);
+                            let base_object_data = $crate::helpers::if_not!(
+                                ($(
+                                    $crate::base_objects::$base_object_data::default()
+                                )?) {}
+                            );
+
+                            let container = $manager_name_snake::$manager_name::_new(
+                                ptr,
+                                base_ptr,
+                                base_object_data
+                            );
 
                             self.[<$manager_name_snake>].add(
                                 ptr,
@@ -141,7 +170,9 @@ macro_rules! base_objects {
                     match base_object_type {
                     $(
                         $base_type => {
-                            let ptr = NonNull::new(unsafe { sdk::base_object::[<to_ $manager_name_snake>](base_ptr.as_ptr()) }).unwrap();
+                            let ptr = NonNull::new(unsafe {
+                                sdk::base_object::[<to_ $manager_name_snake>](base_ptr.as_ptr())
+                            }).unwrap();
                             // TEST unwrap
                             self.[<$manager_name_snake>].remove_externally(ptr).unwrap();
                         $(
@@ -189,7 +220,8 @@ macro_rules! base_objects {
     ( $(
         $manager_name: ident: [
             $base_type: path,
-            $( $extra_pool: ident )?
+            $( @extra_pool: $extra_pool: ident, )?
+            $( @base_object_data: $base_object_data: ty, )?
         ],
     )+ ) => {
         paste::paste! {
@@ -200,7 +232,8 @@ macro_rules! base_objects {
                 [<$manager_name MutPtr>]
                 $manager_name: [
                     $base_type,
-                    $( $extra_pool )?
+                    $( @extra_pool: $extra_pool, )?
+                    $( @base_object_data: $base_object_data, )?
                 ],
             )+ );
         }
@@ -213,11 +246,11 @@ base_objects!(
     ],
     Vehicle: [
         altv_sdk::BaseObjectType::Vehicle,
-        Entity
+        @extra_pool: Entity,
     ],
     Player: [
         altv_sdk::BaseObjectType::Player,
-        Entity
+        @extra_pool: Entity,
     ],
     VirtualEntity: [
         altv_sdk::BaseObjectType::VirtualEntity,
@@ -233,6 +266,7 @@ base_objects!(
     ],
     Marker: [
         altv_sdk::BaseObjectType::Marker,
+        @base_object_data: data::Marker,
     ],
 );
 

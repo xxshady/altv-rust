@@ -15,4 +15,24 @@ fn main() {
     )
     .unwrap();
     dbg!(&entity);
+
+    altv::events::on_player_connect(|c| {
+        c.player.spawn("mp_m_freemode_01", (0, 0, 72))?;
+        Ok(())
+    });
+
+    let m = altv::Marker::new(altv::MarkerType::Markerarrow, 0, (255, 0, 0));
+
+    altv::set_interval(
+        move || {
+            let now = std::time::Instant::now();
+            for _ in 0..100_000 {
+                m.marker_type().unwrap();
+            }
+            dbg!(now.elapsed());
+
+            Ok(())
+        },
+        1500,
+    );
 }
