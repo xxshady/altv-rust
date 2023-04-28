@@ -264,3 +264,25 @@ pub fn init_or_get_lazycell<T: Debug>(
     cell.fill(init()?).unwrap();
     Ok(cell.borrow().unwrap())
 }
+
+#[macro_export]
+macro_rules! __base_ptr_to {
+    ($base_ptr: expr, $target_type: ident) => {
+        paste::paste! {
+            unsafe {
+                std::ptr::NonNull::new($crate::sdk::base_object::[<to_ $target_type>]($base_ptr)).unwrap()
+            }
+        }
+    };
+}
+
+pub use __base_ptr_to as base_ptr_to;
+
+#[macro_export]
+macro_rules! __base_ptr_to_raw {
+    ($base_ptr: expr, $target_type: ident) => {
+        $crate::helpers::base_ptr_to!($base_ptr, $target_type).as_ptr()
+    };
+}
+
+pub use __base_ptr_to_raw as base_ptr_to_raw;

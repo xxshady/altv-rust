@@ -7,7 +7,6 @@ use crate::{
     resource::Resource,
     sdk,
     vector::Vector3,
-    world_object::WorldObject,
     SomeResult, VoidResult,
 };
 use std::{collections::HashMap, ptr::NonNull};
@@ -131,8 +130,6 @@ impl virtual_entity::VirtualEntity {
         self.internal_destroy()
     }
 }
-
-impl WorldObject for virtual_entity::VirtualEntity {}
 
 meta::impl_meta_type_for!(
     StreamSyncedMeta,

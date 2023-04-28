@@ -4,7 +4,6 @@ use crate::{
     rgba::RGBA,
     sdk,
     vector::Vector3,
-    world_object::WorldObject,
     SomeResult, VoidResult,
 };
 
@@ -128,5 +127,3 @@ impl marker::Marker {
         self.internal_destroy()
     }
 }
-
-impl WorldObject for marker::Marker {}

@@ -1,4 +1,4 @@
-use crate::{base_objects::virtual_entity_group, sdk, world_object::WorldObject, SomeResult};
+use crate::{base_objects::virtual_entity_group, sdk, SomeResult};
 use std::ptr::NonNull;
 
 impl virtual_entity_group::VirtualEntityGroup {
@@ -21,5 +21,3 @@ impl virtual_entity_group::VirtualEntityGroup {
     //     self.internal_destroy()
     // }
 }
-
-impl WorldObject for virtual_entity_group::VirtualEntityGroup {}

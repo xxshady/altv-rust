@@ -1,20 +1,18 @@
-use std::{
-    cell::{Ref, RefCell},
-    fmt::Debug,
-    ptr::NonNull,
-    rc::Rc,
-};
+use std::{cell::RefCell, fmt::Debug, ptr::NonNull, rc::Rc};
 
 use super::meta::impl_meta_type_for;
 use crate::{resource::Resource, sdk, SomeResult, VoidResult};
 
-pub struct BaseObject<T, Data> {
+pub struct BaseObject<T, InheritPtrs: Clone> {
     ptr: Option<NonNull<T>>,
     base_ptr: Option<altv_sdk::BaseObjectMutPtr>,
-    pub(crate) data: Data,
+
+    /// pointers of inherited classes between `ptr` and `base_ptr` <br>
+    /// for example inherited classes of Vehicle would be: WorldObject, Entity
+    inherit_ptrs: Option<InheritPtrs>,
 }
 
-impl<T, Data> BaseObject<T, Data> {
+impl<T, InheritPtrs: Clone> BaseObject<T, InheritPtrs> {
     pub(crate) fn ptr(&self) -> SomeResult<NonNull<T>> {
         self.ptr.ok_or(anyhow::anyhow!("base object ptr is none"))
     }
@@ -40,10 +38,11 @@ impl<T, Data> BaseObject<T, Data> {
     pub(crate) fn clear_pointers(&mut self) {
         self.ptr.take();
         self.base_ptr.take();
+        self.inherit_ptrs.take();
     }
 }
 
-impl<T, Data> Debug for BaseObject<T, Data> {
+impl<T, InheritPtrs: Clone> Debug for BaseObject<T, InheritPtrs> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "BaseObject<T>")
     }
@@ -54,17 +53,26 @@ pub trait BasePtr {
     fn raw_base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectRawMutPtr>;
 }
 
-impl<T, Data> BasePtr for BaseObject<T, Data> {
+impl<T, InheritPtrs: Clone> BasePtr for BaseObject<T, InheritPtrs> {
     fn base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectMutPtr> {
-        if let Some(base_ptr) = self.base_ptr {
-            Ok(base_ptr)
-        } else {
-            anyhow::bail!("base object base_ptr is none")
-        }
+        self.base_ptr
+            .ok_or(anyhow::anyhow!("base object base_ptr is none"))
     }
 
     fn raw_base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectRawMutPtr> {
         Ok(self.base_ptr()?.as_ptr())
+    }
+}
+
+pub trait BaseObjectInheritPtrs<InheritPtrs> {
+    fn inherit_ptrs(&self) -> SomeResult<InheritPtrs>;
+}
+
+impl<T, InheritPtrs: Clone> BaseObjectInheritPtrs<InheritPtrs> for BaseObject<T, InheritPtrs> {
+    fn inherit_ptrs(&self) -> SomeResult<InheritPtrs> {
+        self.inherit_ptrs
+            .clone()
+            .ok_or(anyhow::anyhow!("base object inherit_ptrs is none"))
     }
 }
 
@@ -74,25 +82,25 @@ pub trait ValidBaseObject: BasePtr {
     }
 }
 
-impl<T, Data> ValidBaseObject for BaseObject<T, Data> {}
+impl<T, InheritPtrs: Clone> ValidBaseObject for BaseObject<T, InheritPtrs> {}
 
-pub(crate) type BaseObjectContainer<T, Data = ()> = Rc<BaseObjectWrapper<T, Data>>;
+pub(crate) type BaseObjectContainer<T, InheritPtrs = ()> = Rc<BaseObjectWrapper<T, InheritPtrs>>;
 
-pub struct BaseObjectWrapper<T, Data = ()> {
-    pub(crate) value: RefCell<BaseObject<T, Data>>,
+pub struct BaseObjectWrapper<T, InheritPtrs: Clone = ()> {
+    pub(crate) value: RefCell<BaseObject<T, InheritPtrs>>,
 }
 
-impl<T, Data> BaseObjectWrapper<T, Data> {
+impl<T, InheritPtrs: Clone> BaseObjectWrapper<T, InheritPtrs> {
     pub(crate) fn _new(
         ptr: NonNull<T>,
         base_ptr: altv_sdk::BaseObjectMutPtr,
-        data: Data,
-    ) -> BaseObjectContainer<T, Data> {
+        inherit_ptrs: InheritPtrs,
+    ) -> BaseObjectContainer<T, InheritPtrs> {
         Rc::new(Self {
             value: RefCell::new(BaseObject {
                 ptr: Some(ptr),
                 base_ptr: Some(base_ptr),
-                data,
+                inherit_ptrs: Some(inherit_ptrs),
             }),
         })
     }
@@ -110,7 +118,7 @@ impl<T, Data> BaseObjectWrapper<T, Data> {
     }
 }
 
-impl<T, Data> BasePtr for BaseObjectWrapper<T, Data> {
+impl<T, InheritPtrs: Clone> BasePtr for BaseObjectWrapper<T, InheritPtrs> {
     fn base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectMutPtr> {
         self.value.try_borrow()?.base_ptr()
     }
@@ -119,30 +127,29 @@ impl<T, Data> BasePtr for BaseObjectWrapper<T, Data> {
         self.value.try_borrow()?.raw_base_ptr()
     }
 }
-impl<T, Data> ValidBaseObject for BaseObjectWrapper<T, Data> {}
 
-pub trait BaseObjectInner<T, Data> {
-    fn inner(&self) -> SomeResult<Ref<BaseObject<T, Data>>>;
-}
-
-impl<T, Data> BaseObjectInner<T, Data> for BaseObjectWrapper<T, Data> {
-    fn inner(&self) -> SomeResult<Ref<BaseObject<T, Data>>> {
-        Ok(self.value.try_borrow()?)
+impl<T, InheritPtrs: Clone> BaseObjectInheritPtrs<InheritPtrs>
+    for BaseObjectWrapper<T, InheritPtrs>
+{
+    fn inherit_ptrs(&self) -> SomeResult<InheritPtrs> {
+        self.value.try_borrow()?.inherit_ptrs()
     }
 }
 
+impl<T, InheritPtrs: Clone> ValidBaseObject for BaseObjectWrapper<T, InheritPtrs> {}
+
 impl_meta_type_for!(
     Meta,
-    BaseObjectWrapper<T, Data>,
+    BaseObjectWrapper<T, InheritPtrs>,
     sdk::IBaseObject,
     BaseObjectWrapper::raw_base_ptr,
-    @generics: [T, Data,]
+    @generics: [T, InheritPtrs: Clone,]
 );
 
 impl_meta_type_for!(
     SyncedMeta,
-    BaseObjectWrapper<T, Data>,
+    BaseObjectWrapper<T, InheritPtrs>,
     sdk::IBaseObject,
     BaseObjectWrapper::raw_base_ptr,
-    @generics: [T, Data,]
+    @generics: [T, InheritPtrs: Clone,]
 );
