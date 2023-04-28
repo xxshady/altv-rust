@@ -13,25 +13,6 @@ pub(crate) mod traits {
     }
 }
 
-pub struct Entity {
-    entity: EntityRawPtr,
-}
-
-impl Entity {
-    pub(crate) unsafe fn new(base_raw_ptr: altv_sdk::BaseObjectRawMutPtr) -> Self {
-        // TODO: null check
-        Self {
-            entity: sdk::base_object::to_entity(base_raw_ptr),
-        }
-    }
-}
-
-impl traits::Entity for Entity {
-    fn entity(&self) -> EntityRawPtr {
-        self.entity
-    }
-}
-
 #[derive(Clone)]
 pub struct WorldObject {
     world_object: WorldObjectRawPtr,
@@ -52,6 +33,7 @@ impl traits::WorldObject for WorldObject {
     }
 }
 
+#[derive(Clone)]
 pub struct WorldEntity {
     world_object: WorldObjectRawPtr,
     entity: EntityRawPtr,

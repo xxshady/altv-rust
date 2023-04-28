@@ -13,7 +13,6 @@ use crate::{
     rgba::RGBA,
     sdk, structs,
     vector::Vector3,
-    world_object::WorldObject,
     SomeResult, VoidResult,
 };
 
@@ -831,8 +830,5 @@ impl vehicle::Vehicle {
         Ok(unsafe { sdk::IVehicle::SetMod(self.raw_ptr()?, category, id) })
     }
 }
-
-// impl WorldObject for vehicle::Vehicle {}
-impl Entity for vehicle::Vehicle {}
 
 meta::impl_entity_meta_for!(StreamSyncedMeta, vehicle::Vehicle);

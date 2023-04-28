@@ -1,8 +1,10 @@
-use crate::base_objects::extra_pools::ExtraPools;
 use std::ptr::NonNull;
 use std::{cell::RefMut, fmt::Debug};
 
-use super::{BaseObjectContainer, BaseObjectManager, BaseObjectWrapper};
+use super::{
+    extra_pools::{Entity, ExtraPools},
+    BaseObjectContainer, BaseObjectManager, BaseObjectWrapper,
+};
 use crate::sdk;
 
 use crate::world_object::WorldObject;
@@ -263,10 +265,18 @@ base_objects!(
     Vehicle: [
         altv_sdk::BaseObjectType::Vehicle,
         @extra_pool: Entity,
+        @inherit_classes: inherit_ptrs::WorldEntity, [
+            WorldObject,
+            Entity,
+        ],
     ],
     Player: [
         altv_sdk::BaseObjectType::Player,
         @extra_pool: Entity,
+        @inherit_classes: inherit_ptrs::WorldEntity, [
+            WorldObject,
+            Entity,
+        ],
     ],
     VirtualEntity: [
         altv_sdk::BaseObjectType::VirtualEntity,

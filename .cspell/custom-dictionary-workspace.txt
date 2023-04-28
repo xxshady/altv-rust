@@ -6,6 +6,7 @@ cxxbridge
 dlopen
 improper_ctypes_definitions
 inherit_ptrs
+InheritPtrs
 lazycell
 libloading
 repr

@@ -5,8 +5,15 @@ fn main() {
     // std::env::set_var("RUST_BACKTRACE", "full");
 
     let group = altv::VirtualEntityGroup::new(10);
-    let ent = altv::VirtualEntity::new(group, (1, 2, 3), 10).unwrap();
-    dbg!(ent.pos());
-    ent.destroy().unwrap();
-    dbg!(ent.pos());
+    let ve = altv::VirtualEntity::new(group, (1, 2, 3), 10).unwrap();
+    dbg!(ve.pos());
+
+    let vehicle = altv::Vehicle::new("sultan", 0, 0).unwrap();
+    dbg!(vehicle.pos());
+
+    let vehicle2 = altv::Vehicle::new("sultan", 0, 0).unwrap();
+
+    dbg!(ve.id());
+    dbg!(vehicle.id());
+    dbg!(vehicle2.id());
 }

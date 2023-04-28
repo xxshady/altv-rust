@@ -4,7 +4,6 @@ use crate::{
     rgba::RGBA,
     sdk,
     vector::Vector3,
-    world_object::WorldObject,
     SomeResult, VoidResult,
 };
 

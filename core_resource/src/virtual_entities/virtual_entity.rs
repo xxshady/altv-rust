@@ -1,13 +1,12 @@
 use autocxx::WithinUniquePtr;
 
 use crate::{
-    base_objects::{inherit_ptrs, meta, virtual_entity, virtual_entity_group},
+    base_objects::{meta, virtual_entity, virtual_entity_group},
     helpers::IntoString,
     mvalue,
     resource::Resource,
     sdk,
     vector::Vector3,
-    world_object::WorldObject,
     SomeResult, VoidResult,
 };
 use std::{collections::HashMap, ptr::NonNull};
