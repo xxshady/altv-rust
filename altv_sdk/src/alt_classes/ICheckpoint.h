@@ -39,6 +39,12 @@ void SetNextPosition(alt::ICheckpoint* ptr, f32 pos_x, f32 pos_y, f32 pos_z) {
 u32 GetStreamingDistance(const alt::ICheckpoint* ptr) {
     return ptr->GetStreamingDistance();
 }
+void SetVisible(alt::ICheckpoint* ptr, bool toggle) {
+    return ptr->SetVisible(toggle);
+}
+bool IsVisible(const alt::ICheckpoint* ptr) {
+    return ptr->IsVisible();
+}
 bool HasStreamSyncedMetaData(const alt::ICheckpoint* ptr, const StdStringClone key) {
     return ptr->HasStreamSyncedMetaData(key);
 }
