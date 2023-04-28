@@ -1,7 +1,7 @@
 use autocxx::WithinUniquePtr;
 
 use crate::{
-    base_objects::{meta, virtual_entity, virtual_entity_group},
+    base_objects::{inherit_ptrs, meta, virtual_entity, virtual_entity_group},
     helpers::IntoString,
     mvalue,
     resource::Resource,
@@ -123,7 +123,7 @@ impl virtual_entity::VirtualEntity {
     }
 }
 
-impl WorldObject for virtual_entity::VirtualEntity {}
+impl WorldObject<inherit_ptrs::WorldObject> for virtual_entity::VirtualEntity {}
 
 meta::impl_meta_type_for!(
     StreamSyncedMeta,

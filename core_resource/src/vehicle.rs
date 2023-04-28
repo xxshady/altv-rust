@@ -832,7 +832,7 @@ impl vehicle::Vehicle {
     }
 }
 
-impl WorldObject for vehicle::Vehicle {}
+// impl WorldObject for vehicle::Vehicle {}
 impl Entity for vehicle::Vehicle {}
 
 meta::impl_entity_meta_for!(StreamSyncedMeta, vehicle::Vehicle);

@@ -46,7 +46,7 @@ pub use exports::{
     core_funcs::*,
     config_node::*,
     Resource,
-    ColShapy,
+    // ColShapy,
 };
 
 pub use altv_sdk::{
@@ -62,8 +62,15 @@ pub mod mvalue;
 
 pub mod prelude {
     pub use super::exports::{
-        config_node::Config, BaseObjectMeta, ColShapy, Entity, LocalMeta, StreamSyncedMeta,
-        SyncedMeta, ValidBaseObject, WorldObject,
+        config_node::Config,
+        BaseObjectMeta,
+        // ColShapy,
+        Entity,
+        LocalMeta,
+        StreamSyncedMeta,
+        SyncedMeta,
+        ValidBaseObject,
+        WorldObject,
     };
 }
 

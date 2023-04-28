@@ -58,11 +58,11 @@ macro_rules! __impl_meta_type_for {
         $sdk_namespace: path,
         $raw_ptr: expr
         $(, @generics: [ $(
-            $generic_param: ident,
+            $generic_param: ident $(: $generic_param_trait: ty )?,
         )+ ] )?
     ) => {
         paste::paste! {
-            impl $( < $( $generic_param, )+ > )? $crate::base_objects::meta::[<$meta_type>] for $entity {
+            impl $( < $( $generic_param $( : $generic_param_trait  )?, )+ > )? $crate::base_objects::meta::[<$meta_type>] for $entity {
                 fn [<has_ $meta_type:snake>](&self, key: impl $crate::helpers::IntoString) -> SomeResult<bool> {
                     Ok(unsafe {
                         $sdk_namespace::[<Has $meta_type Data>]($raw_ptr(self)?, key.into_string())

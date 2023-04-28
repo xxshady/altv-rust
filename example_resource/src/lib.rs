@@ -4,16 +4,9 @@ pub use altv::prelude::*;
 fn main() {
     // std::env::set_var("RUST_BACKTRACE", "full");
 
-    altv::events::on("test", |args| {
-        dbg!(args);
-        Ok(())
-    });
-
-    altv::events::on("test", |args| {
-        dbg!(args);
-        Ok(())
-    });
-
-    altv::events::emit!("test", 1, 2, 3).unwrap();
-    altv::events::emit!("test3", 1, 2, 3).unwrap();
+    let group = altv::VirtualEntityGroup::new(10);
+    let ent = altv::VirtualEntity::new(group, (1, 2, 3), 10).unwrap();
+    dbg!(ent.pos());
+    ent.destroy().unwrap();
+    dbg!(ent.pos());
 }

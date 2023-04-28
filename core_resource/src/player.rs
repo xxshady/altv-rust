@@ -832,7 +832,7 @@ impl player::Player {
     }
 }
 
-impl WorldObject for player::Player {}
+// impl WorldObject for player::Player {}
 impl Entity for player::Player {}
 
 meta::impl_entity_meta_for!(StreamSyncedMeta, player::Player);

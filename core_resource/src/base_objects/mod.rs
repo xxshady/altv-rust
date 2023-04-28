@@ -1,12 +1,12 @@
 mod base_object;
-pub mod data;
 pub(crate) mod extra_pools;
+pub(crate) mod inherit_ptrs;
 mod manager;
 pub(crate) mod meta;
 mod objects;
 
 pub(crate) use base_object::BaseObjectContainer;
-pub use base_object::BaseObjectInner;
+pub use base_object::BaseObjectInheritPtrs;
 pub use base_object::BaseObjectWrapper;
 pub(crate) use base_object::BasePtr;
 pub use base_object::ValidBaseObject;

@@ -129,4 +129,4 @@ impl marker::Marker {
     }
 }
 
-impl WorldObject for marker::Marker {}
+// impl WorldObject for marker::Marker {}

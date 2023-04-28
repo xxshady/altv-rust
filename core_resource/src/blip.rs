@@ -1,10 +1,9 @@
 use crate::{
-    base_objects::{blip, extra_pools::wrappers::AnyEntity, player, BaseObjectInner},
-    helpers::{self},
+    base_objects::{blip, extra_pools::wrappers::AnyEntity, player},
+    helpers,
     rgba::RGBA,
     sdk,
     vector::{Vector2, Vector3},
-    world_object::WorldObject,
     SomeResult, VoidResult,
 };
 
@@ -109,11 +108,8 @@ impl blip::Blip {
     }
 
     pub fn blip_type(&self) -> SomeResult<altv_sdk::BlipType> {
-        helpers::init_or_get_lazycell(&self.inner()?.data.blip_type, || {
-            let raw = unsafe { sdk::IBlip::GetBlipType(self.raw_ptr()?) };
-            Ok(altv_sdk::BlipType::try_from(raw).unwrap())
-        })
-        .copied()
+        let raw = unsafe { sdk::IBlip::GetBlipType(self.raw_ptr()?) };
+        Ok(altv_sdk::BlipType::try_from(raw).unwrap())
     }
 
     pub fn scale(&self) -> SomeResult<Vector2> {
@@ -428,4 +424,4 @@ impl blip::Blip {
     }
 }
 
-impl WorldObject for blip::Blip {}
+// impl WorldObject for blip::Blip {}
