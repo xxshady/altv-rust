@@ -24,4 +24,11 @@ fn main() {
     dbg!(colp.pos());
 
     dbg!(colp.is_point_in(9));
+
+    let checkp = altv::Checkpoint::new(0, 0, 10.0, 10.0, (255, 255, 255), 10);
+
+    dbg!(checkp.is_point_in(0).unwrap());
+    dbg!(checkp.pos().unwrap());
+    dbg!(checkp.checkpoint_type().unwrap());
+    dbg!(checkp.col_shape_type().unwrap());
 }
