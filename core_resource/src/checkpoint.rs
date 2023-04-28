@@ -1,11 +1,10 @@
 use crate::{
     base_objects::{checkpoint, meta},
-    helpers::{self},
+    helpers,
     resource::Resource,
     rgba::RGBA,
     sdk,
     vector::Vector3,
-    world_object::WorldObject,
     SomeResult, VoidResult,
 };
 
@@ -103,8 +102,6 @@ impl checkpoint::Checkpoint {
         self.internal_destroy()
     }
 }
-
-impl WorldObject for checkpoint::Checkpoint {}
 
 meta::impl_meta_type_for!(
     StreamSyncedMeta,

@@ -302,6 +302,10 @@ base_objects!(
     ],
     Checkpoint: [
         altv_sdk::BaseObjectType::Checkpoint,
+        @inherit_classes: inherit_ptrs::WorldColShape, [
+            WorldObject,
+            ColShapy,
+        ],
     ],
 );
 
