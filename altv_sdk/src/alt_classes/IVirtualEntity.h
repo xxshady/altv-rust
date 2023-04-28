@@ -24,6 +24,12 @@ std::vector<std::string> GetStreamSyncedMetaDataKeys(const alt::IVirtualEntity* 
 u32 GetStreamingDistance(const alt::IVirtualEntity* ptr) {
     return ptr->GetStreamingDistance();
 }
+void SetVisible(alt::IVirtualEntity* ptr, bool toggle) {
+    return ptr->SetVisible(toggle);
+}
+bool IsVisible(const alt::IVirtualEntity* ptr) {
+    return ptr->IsVisible();
+}
 void SetStreamSyncedMetaData(alt::IVirtualEntity* ptr, const StdStringClone key, MValueMutWrapper val) {
     return ptr->SetStreamSyncedMetaData(key, *(val.ptr));
 }

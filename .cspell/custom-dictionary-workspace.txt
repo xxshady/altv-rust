@@ -1,8 +1,12 @@
 -DALT_SERVER_API
 # Custom Dictionary Words
 altv
+ColShapy
 cxxbridge
 dlopen
 improper_ctypes_definitions
+inherit_ptrs
+InheritPtrs
+lazycell
 libloading
 repr

@@ -1,10 +1,9 @@
 use crate::{
     base_objects::{blip, extra_pools::wrappers::AnyEntity, player},
-    helpers::{self},
+    helpers,
     rgba::RGBA,
     sdk,
     vector::{Vector2, Vector3},
-    world_object::WorldObject,
     SomeResult, VoidResult,
 };
 
@@ -108,7 +107,6 @@ impl blip::Blip {
         Ok(())
     }
 
-    // TODO: cache blip type somehow
     pub fn blip_type(&self) -> SomeResult<altv_sdk::BlipType> {
         let raw = unsafe { sdk::IBlip::GetBlipType(self.raw_ptr()?) };
         Ok(altv_sdk::BlipType::try_from(raw).unwrap())
@@ -425,5 +423,3 @@ impl blip::Blip {
         self.internal_destroy()
     }
 }
-
-impl WorldObject for blip::Blip {}

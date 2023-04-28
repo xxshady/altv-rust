@@ -1,6 +1,6 @@
 [package]
 name = "example_resource"
-version = { workspace = true }
+version = "15.0.0-dev.12"
 rust-version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }

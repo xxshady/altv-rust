@@ -25,6 +25,9 @@ void LogError(const StdStringClone str, alt::IResource* resource) {
 void LogColored(const StdStringClone str, alt::IResource* resource) {
     return alt::ICore::Instance().LogColored(str, resource);
 }
+alt::IVirtualEntity* CreateVirtualEntity(alt::IVirtualEntityGroup* group, f32 pos_x, f32 pos_y, f32 pos_z, u32 streamingDistance, MValueUnorderedMapWrapper data) {
+    return alt::ICore::Instance().CreateVirtualEntity(group, { pos_x, pos_y, pos_z }, streamingDistance, data.value);
+}
 alt::IVirtualEntityGroup* CreateVirtualEntityGroup(u32 streamingRangeLimit) {
     return alt::ICore::Instance().CreateVirtualEntityGroup(streamingRangeLimit);
 }
@@ -146,9 +149,6 @@ void DeleteSyncedMetaData(const StdStringClone key) {
 }
 alt::IVehicle* CreateVehicle(u32 model, f32 pos_x, f32 pos_y, f32 pos_z, f32 rot_x, f32 rot_y, f32 rot_z) {
     return alt::ICore::Instance().CreateVehicle(model, { pos_x, pos_y, pos_z }, { rot_x, rot_y, rot_z });
-}
-alt::ICheckpoint* CreateCheckpoint(u8 type, f32 pos_x, f32 pos_y, f32 pos_z, f32 radius, f32 height, u8 color_r, u8 color_g, u8 color_b, u8 color_a, u32 streamingDistance) {
-    return alt::ICore::Instance().CreateCheckpoint(type, { pos_x, pos_y, pos_z }, radius, height, { color_r, color_g, color_b, color_a }, streamingDistance);
 }
 alt::IBlip* CreateBlip(alt::IPlayer* target, BlipType type, f32 pos_x, f32 pos_y, f32 pos_z) {
     return alt::ICore::Instance().CreateBlip(target, static_cast<alt::IBlip::BlipType>(type), { pos_x, pos_y, pos_z });

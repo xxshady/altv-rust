@@ -313,6 +313,21 @@ u32 read_fire_info_weapon_hash(const FireInfoWrapper& fire) {
     return fire.weapon_hash;
 }
 
+using UnorderedMValueMap = std::unordered_map<std::string, alt::MValue>;
+
+class MValueUnorderedMapWrapper {
+public:
+    UnorderedMValueMap value{};
+};
+
+MValueUnorderedMapWrapper create_mvalue_unordered_map() {
+    return {};
+}
+
+void push_to_mvalue_unordered_map(MValueUnorderedMapWrapper& map, std::string key, MValueMutWrapper value) {
+    map.value.insert({ key, *value.ptr });
+}
+
 using MValueWrapperVec = std::vector<MValueWrapper>;
 
 MValueWrapperVec create_mvalue_vec() {

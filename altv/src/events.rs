@@ -1,10 +1,12 @@
 use core_resource::{exports::events, VoidResult};
 pub use events::{
-    add_client_handler as on_client, add_local_handler as on, custom_controllers, emit,
-    emit_all_clients, emit_all_clients_unreliable, emit_client, emit_client_unreliable,
-    emit_some_clients, emit_some_clients_unreliable, sdk_controllers, ConnectionQueueInfo,
-    FireInfo,
+    add_client_handler as on_client, add_local_handler as on, emit, emit_all_clients,
+    emit_all_clients_unreliable, emit_client, emit_client_unreliable, emit_some_clients,
+    emit_some_clients_unreliable, ConnectionQueueInfo, FireInfo,
 };
+
+pub use events::custom_controllers::*;
+pub use events::sdk_controllers::*;
 
 macro_rules! on_sdk_event {
     ($func_name: ident, $event_name: ident) => {

@@ -14,7 +14,7 @@ pub struct ExtraPools {
 
 pub mod wrappers {
     use super::{super::*, entity::EntityRawPtr};
-    use crate::{sdk, world_object::WorldObjectRawPtr, SomeResult};
+    use crate::{world_object::WorldObjectRawPtr, SomeResult};
     use objects::AnyBaseObject;
     use player::PlayerContainer;
     use vehicle::VehicleContainer;
@@ -31,7 +31,7 @@ pub mod wrappers {
                     #[allow(dead_code)]
                     pub(crate) fn raw_ptr(&self) -> SomeResult<$raw_ptr_type> {
                         match self { $(
-                            $any_name::$variant(e) => Ok(unsafe { sdk::base_object::[<to_ $name:snake>](e.raw_base_ptr()?) }),
+                            $any_name::$variant(e) => Ok($crate::helpers::base_ptr_to_raw!(e.raw_base_ptr()?, [<$name:snake>])),
                         )+}
                     }
                 }

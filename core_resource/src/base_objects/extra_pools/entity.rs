@@ -1,9 +1,9 @@
 use autocxx::prelude::*;
 use std::{collections::HashMap, ptr::NonNull};
 
-use super::{super::BasePtr, wrappers::AnyEntity, ExtraPool};
+use super::{wrappers::AnyEntity, ExtraPool};
 use crate::{
-    base_objects::player,
+    base_objects::{inherit_ptrs, player, BaseObjectInheritPtrs},
     helpers::{self, read_cpp_vector3, Hash},
     sdk, structs,
     vector::Vector3,
@@ -12,22 +12,13 @@ use crate::{
 
 pub type SyncId = u16;
 pub type EntityPool = ExtraPool<HashMap<u32, AnyEntity>>;
-
 pub type EntityRawPtr = *mut sdk::alt::IEntity;
 
-pub fn base_ptr_to_entity_raw_ptr(
-    base_ptr: altv_sdk::BaseObjectMutPtr,
-) -> SomeResult<EntityRawPtr> {
-    Ok(
-        NonNull::new(unsafe { sdk::base_object::to_entity(base_ptr.as_ptr()) })
-            .unwrap()
-            .as_ptr(),
-    )
-}
-
-pub trait Entity: BasePtr {
+pub trait Entity<InheritPtrs: inherit_ptrs::traits::Entity>:
+    BaseObjectInheritPtrs<InheritPtrs>
+{
     fn raw_ptr(&self) -> SomeResult<EntityRawPtr> {
-        base_ptr_to_entity_raw_ptr(self.base_ptr()?)
+        Ok(self.inherit_ptrs()?.entity())
     }
 
     fn id(&self) -> SomeResult<u32> {

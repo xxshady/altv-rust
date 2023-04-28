@@ -8,7 +8,6 @@ use crate::{
     rgba::RGBA,
     sdk, structs,
     vector::Vector3,
-    world_object::WorldObject,
     SomeResult, VoidResult,
 };
 use autocxx::prelude::*;
@@ -793,7 +792,7 @@ impl player::Player {
     ///         flags: altv::AnimationFlags::HoldLastFrame | altv::AnimationFlags::AbortOnWeaponDamage,
     ///         ..Default::default()
     ///     },
-    /// )?;
+    /// ).unwrap();
     /// ```
     pub fn play_animation(
         &self,
@@ -831,9 +830,6 @@ impl player::Player {
         Ok(())
     }
 }
-
-impl WorldObject for player::Player {}
-impl Entity for player::Player {}
 
 meta::impl_entity_meta_for!(StreamSyncedMeta, player::Player);
 

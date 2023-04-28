@@ -1,4 +1,4 @@
-use std::ptr::NonNull;
+use std::{fmt::Debug, ptr::NonNull};
 
 use crate::{
     base_objects::{
@@ -13,6 +13,7 @@ use crate::{
     rgba::RGBA,
     vector::{Vector2, Vector3},
     world_object::WorldObjectRawPtr,
+    SomeResult,
 };
 use altv_sdk::ffi as sdk;
 use autocxx::{
@@ -237,3 +238,51 @@ pub fn get_player(
         .unwrap();
     Some(player)
 }
+
+#[macro_export]
+macro_rules! __if_not {
+    (() $code: block) => {
+        $code
+    };
+    (($( $target: tt )+) $code: block) => {
+        $( $target )+
+    };
+}
+pub use __if_not as if_not;
+use lazycell::LazyCell;
+
+pub fn init_or_get_lazycell<T: Debug>(
+    cell: &LazyCell<T>,
+    init: impl FnOnce() -> SomeResult<T>,
+) -> SomeResult<&T> {
+    if cell.filled() {
+        logger::debug!("lazycell filled");
+        return Ok(cell.borrow().unwrap());
+    }
+    logger::debug!("lazycell is not filled");
+
+    cell.fill(init()?).unwrap();
+    Ok(cell.borrow().unwrap())
+}
+
+#[macro_export]
+macro_rules! __base_ptr_to {
+    ($base_ptr: expr, $target_type: ident) => {
+        paste::paste! {
+            unsafe {
+                std::ptr::NonNull::new($crate::sdk::base_object::[<to_ $target_type>]($base_ptr)).unwrap()
+            }
+        }
+    };
+}
+
+pub use __base_ptr_to as base_ptr_to;
+
+#[macro_export]
+macro_rules! __base_ptr_to_raw {
+    ($base_ptr: expr, $target_type: ident) => {
+        $crate::helpers::base_ptr_to!($base_ptr, $target_type).as_ptr()
+    };
+}
+
+pub use __base_ptr_to_raw as base_ptr_to_raw;

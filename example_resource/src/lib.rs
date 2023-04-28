@@ -1,20 +1,27 @@
 pub use altv::prelude::*;
 
-#[altv::main(crate_name = "altv")]
+#[altv::main]
 fn main() {
-    std::env::set_var("RUST_BACKTRACE", "full");
+    // std::env::set_var("RUST_BACKTRACE", "full");
 
-    altv::events::on("test", |args| {
-        dbg!(args);
-        Ok(())
-    });
+    let group = altv::VirtualEntityGroup::new(10);
+    let ve = altv::VirtualEntity::new(group, (1, 2, 3), 10).unwrap();
+    dbg!(ve.pos());
 
-    altv::events::emit!(
-        "test",
-        123,
-        1.5,
-        "test".to_string(),
-        altv::mvalue::list![1, 2, 3].unwrap()
-    )
-    .unwrap();
+    let vehicle = altv::Vehicle::new("sultan", 0, 0).unwrap();
+    dbg!(vehicle.pos());
+
+    let vehicle2 = altv::Vehicle::new("sultan", 0, 0).unwrap();
+
+    dbg!(ve.id());
+    dbg!(vehicle.id());
+    dbg!(vehicle2.id());
+
+    let blip = altv::Blip::new_point(0);
+    dbg!(blip.pos());
+
+    let colp = altv::ColShape::new_circle(0, 10.0);
+    dbg!(colp.pos());
+
+    dbg!(colp.is_point_in(9));
 }

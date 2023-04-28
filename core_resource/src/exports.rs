@@ -15,8 +15,9 @@ pub use crate::{
         virtual_entity::{VirtualEntity, VirtualEntityContainer},
         virtual_entity_group::{VirtualEntityGroup, VirtualEntityGroupContainer},
         voice_channel::{VoiceChannel, VoiceChannelContainer},
-        ValidBaseObject,
+        BaseObjectWrapper, ValidBaseObject,
     },
+    col_shape::ColShapy,
     helpers::{hash, Hash},
     init,
     ped_model_info::PedModelInfo,
@@ -233,7 +234,7 @@ pub mod mvalue {
         pub use crate::mvalue::{serialize_mvalue, Serializable};
     }
 
-    pub use crate::mvalue::{MValue, MValueNone};
+    pub use crate::mvalue::{MValue, MValueList, MValueNone};
 
     #[macro_export]
     macro_rules! __mvalue_list {

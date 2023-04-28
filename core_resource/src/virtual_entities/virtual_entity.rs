@@ -1,33 +1,101 @@
+use autocxx::WithinUniquePtr;
+
 use crate::{
     base_objects::{meta, virtual_entity, virtual_entity_group},
+    helpers::IntoString,
+    mvalue,
     resource::Resource,
     sdk,
     vector::Vector3,
-    world_object::WorldObject,
     SomeResult, VoidResult,
 };
-use std::ptr::NonNull;
+use std::{collections::HashMap, ptr::NonNull};
 
 impl virtual_entity::VirtualEntity {
+    /// Creates new instance of VirtualEntity without initial stream synced meta.
+    /// See [virtual_entity::VirtualEntity::new_with_stream_meta]
+    /// if you want to create virtual entity with initial stream synced meta.
+    ///
+    /// # Errors
+    /// When provided `group` instance is invalid (destroyed).
+    ///
+    /// # Examples
+    /// ```rust
+    /// let group = altv::VirtualEntityGroup::new(10);
+    /// let entity = altv::VirtualEntity::new(
+    ///     group.clone(),
+    ///     altv::Vector3::new(0, 0, 72),
+    ///     10,
+    /// )
+    /// .unwrap();
+    /// ```
     pub fn new(
         group: virtual_entity_group::VirtualEntityGroupContainer,
         pos: impl Into<Vector3>,
         streaming_distance: u32,
     ) -> SomeResult<virtual_entity::VirtualEntityContainer> {
-        let pos = pos.into();
-        // let ptr = unsafe {
-        //     sdk::ICore::CreateVirtualEntity(
-        //         group.raw_ptr()?,
-        //         pos.x(),
-        //         pos.y(),
-        //         pos.z(),
-        //         streaming_distance,
-        //     )
-        // }; //todo
-        Ok(virtual_entity::add_to_pool!(NonNull::new(
-            std::ptr::null_mut()
+        Self::new_with_stream_meta(
+            group,
+            pos,
+            streaming_distance,
+            HashMap::<String, mvalue::MValueNone>::new(),
         )
-        .unwrap()))
+    }
+
+    /// Creates new instance of VirtualEntity with initial stream synced meta.
+    ///
+    /// # Errors
+    /// When provided `group` instance is invalid (destroyed).
+    ///
+    /// # Examples
+    /// ```rust
+    /// let group = altv::VirtualEntityGroup::new(10);
+    /// let entity = altv::VirtualEntity::new_with_stream_meta(
+    ///     group.clone(),
+    ///     altv::Vector3::new(0, 0, 72),
+    ///     10,
+    ///     HashMap::from([("example", 123)]),
+    /// )
+    /// .unwrap();
+    /// ```
+    pub fn new_with_stream_meta(
+        group: virtual_entity_group::VirtualEntityGroupContainer,
+        pos: impl Into<Vector3>,
+        streaming_distance: u32,
+        stream_synced_meta: HashMap<
+            impl IntoString,
+            impl TryInto<mvalue::Serializable, Error = anyhow::Error>,
+        >,
+    ) -> SomeResult<virtual_entity::VirtualEntityContainer> {
+        let pos = pos.into();
+
+        let mut mvalue_map = unsafe { sdk::create_mvalue_unordered_map() }.within_unique_ptr();
+        for (key, value) in stream_synced_meta {
+            unsafe {
+                sdk::push_to_mvalue_unordered_map(
+                    mvalue_map.as_mut().unwrap(),
+                    key.into_string(),
+                    value
+                        .try_into()
+                        .or_else(|e| {
+                            anyhow::bail!("Failed to convert value into mvalue, error: {e:?}")
+                        })?
+                        .0,
+                )
+            }
+        }
+
+        let ptr = unsafe {
+            sdk::ICore::CreateVirtualEntity(
+                group.raw_ptr()?,
+                pos.x(),
+                pos.y(),
+                pos.z(),
+                streaming_distance,
+                mvalue_map,
+            )
+        };
+        Ok(virtual_entity::add_to_pool!(NonNull::new(ptr).unwrap()))
     }
 
     pub fn id(&self) -> SomeResult<u32> {
@@ -48,13 +116,20 @@ impl virtual_entity::VirtualEntity {
         Ok(group)
     }
 
+    pub fn visible(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IVirtualEntity::IsVisible(self.raw_ptr()?) })
+    }
+
+    pub fn set_visible(&self, toggle: bool) -> VoidResult {
+        unsafe { sdk::IVirtualEntity::SetVisible(self.raw_ptr()?, toggle) }
+        Ok(())
+    }
+
     pub fn destroy(&self) -> VoidResult {
         virtual_entity::remove_from_pool!(self)?;
         self.internal_destroy()
     }
 }
-
-impl WorldObject for virtual_entity::VirtualEntity {}
 
 meta::impl_meta_type_for!(
     StreamSyncedMeta,
