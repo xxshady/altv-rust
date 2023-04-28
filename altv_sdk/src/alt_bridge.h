@@ -603,6 +603,10 @@ namespace base_object
     alt::IMarker* to_marker(alt::IBaseObject* base_object) {
         return dynamic_cast<alt::IMarker*>(base_object);
     }
+
+    alt::ICheckpoint* to_checkpoint(alt::IBaseObject* base_object) {
+        return dynamic_cast<alt::ICheckpoint*>(base_object);
+    }
 } // namespace base_object
 
 namespace world_object
@@ -634,7 +638,7 @@ namespace col_shape {
     alt::IBaseObject* to_base_object(alt::IColShape* col_shape) {
         return static_cast<alt::IBaseObject*>(col_shape);
     }
-} // colshape
+} // namespace colshape
 
 namespace vehicle
 {
@@ -678,6 +682,12 @@ namespace marker {
         return static_cast<alt::IBaseObject*>(marker);
     }
 } // namespace marker
+
+namespace checkpoint {
+    alt::IBaseObject* to_base_object(alt::ICheckpoint* checkpoint) {
+        return static_cast<alt::IBaseObject*>(checkpoint);
+    }
+} // namespace checkpoint
 
 void read_alt_prop(const alt::Prop& prop, u16* out_drawable, u8* out_texture) {
     *out_drawable = prop.drawableId;

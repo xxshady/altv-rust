@@ -5,6 +5,7 @@ pub use crate::{
     alt_resource::AltResource as Resource,
     base_objects::{
         blip::{Blip, BlipContainer},
+        checkpoint::{Checkpoint, CheckpointContainer},
         col_shape::{ColShape, ColShapeContainer},
         extra_pools::{wrappers::AnyEntity, Entity, SyncId},
         marker::{Marker, MarkerContainer},

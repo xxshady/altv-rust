@@ -300,6 +300,9 @@ base_objects!(
             WorldObject,
         ],
     ],
+    Checkpoint: [
+        altv_sdk::BaseObjectType::Checkpoint,
+    ],
 );
 
 impl Debug for Store {

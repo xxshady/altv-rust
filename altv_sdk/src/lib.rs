@@ -204,6 +204,7 @@ pub mod ffi {
         generate_ns!("blip")
         generate_ns!("voice_channel")
         generate_ns!("marker")
+        generate_ns!("checkpoint")
 
         // alt::Prop
         generate!("read_alt_prop")
