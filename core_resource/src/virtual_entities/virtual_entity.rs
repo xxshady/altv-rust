@@ -117,6 +117,15 @@ impl virtual_entity::VirtualEntity {
         Ok(group)
     }
 
+    pub fn visible(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IVirtualEntity::IsVisible(self.raw_ptr()?) })
+    }
+
+    pub fn set_visible(&self, toggle: bool) -> VoidResult {
+        unsafe { sdk::IVirtualEntity::SetVisible(self.raw_ptr()?, toggle) }
+        Ok(())
+    }
+
     pub fn destroy(&self) -> VoidResult {
         virtual_entity::remove_from_pool!(self)?;
         self.internal_destroy()
