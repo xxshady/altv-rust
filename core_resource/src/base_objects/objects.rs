@@ -5,9 +5,7 @@ use super::{
     extra_pools::{Entity, ExtraPools},
     BaseObjectContainer, BaseObjectManager, BaseObjectWrapper,
 };
-use crate::sdk;
-
-use crate::world_object::WorldObject;
+use crate::{col_shape::ColShapy, sdk, world_object::WorldObject};
 
 macro_rules! base_objects {
     (@internal $(
@@ -135,9 +133,7 @@ macro_rules! base_objects {
                     match base_object_type {
                     $(
                         $base_type => {
-                            let ptr = NonNull::new(unsafe {
-                                sdk::base_object::[<to_ $manager_name_snake>](base_ptr.as_ptr())
-                            }).unwrap();
+                            let ptr = $crate::helpers::base_ptr_to!(base_ptr.as_ptr(), $manager_name_snake);
                             if self.[<$manager_name_snake>].has(ptr) {
                                 logger::debug!("base object: {base_object_type:?} {ptr:?} already added");
                                 return;
@@ -182,9 +178,7 @@ macro_rules! base_objects {
                     match base_object_type {
                     $(
                         $base_type => {
-                            let ptr = NonNull::new(unsafe {
-                                sdk::base_object::[<to_ $manager_name_snake>](base_ptr.as_ptr())
-                            }).unwrap();
+                            let ptr = $crate::helpers::base_ptr_to!(base_ptr.as_ptr(), $manager_name_snake);
                             // TEST unwrap
                             self.[<$manager_name_snake>].remove_externally(ptr).unwrap();
                         $(
@@ -207,7 +201,7 @@ macro_rules! base_objects {
                     match base_object_type {
                     $(
                         $base_type => {
-                            let ptr = NonNull::new(unsafe { sdk::base_object::[<to_ $manager_name_snake>](base_ptr.as_ptr()) }).unwrap();
+                            let ptr = $crate::helpers::base_ptr_to!(base_ptr.as_ptr(), $manager_name_snake);
                             let base_object = self.[<$manager_name_snake>].get_by_ptr(ptr);
                             if let Some(base_object) = base_object {
                                 Some(AnyBaseObject::$manager_name(base_object))
@@ -261,6 +255,10 @@ macro_rules! base_objects {
 base_objects!(
     ColShape: [
         altv_sdk::BaseObjectType::Colshape,
+        @inherit_classes: inherit_ptrs::WorldColShape, [
+            WorldObject,
+            ColShapy,
+        ],
     ],
     Vehicle: [
         altv_sdk::BaseObjectType::Vehicle,

@@ -16,7 +16,7 @@ pub use crate::{
         voice_channel::{VoiceChannel, VoiceChannelContainer},
         BaseObjectWrapper, ValidBaseObject,
     },
-    // col_shape::ColShapy,
+    col_shape::ColShapy,
     helpers::{hash, Hash},
     init,
     ped_model_info::PedModelInfo,
@@ -30,8 +30,7 @@ pub use crate::{
     vector::{Vector2, Vector3},
     vehicle_model_info::VehicleModelInfo,
     world_object::WorldObject,
-    SomeResult,
-    VoidResult,
+    SomeResult, VoidResult,
 };
 
 pub mod logging {

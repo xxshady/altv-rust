@@ -16,4 +16,12 @@ fn main() {
     dbg!(ve.id());
     dbg!(vehicle.id());
     dbg!(vehicle2.id());
+
+    let blip = altv::Blip::new_point(0);
+    dbg!(blip.pos());
+
+    let colp = altv::ColShape::new_circle(0, 10.0);
+    dbg!(colp.pos());
+
+    dbg!(colp.is_point_in(9));
 }

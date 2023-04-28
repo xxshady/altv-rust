@@ -1,5 +1,5 @@
 use super::extra_pools::EntityRawPtr;
-use crate::{sdk, world_object::WorldObjectRawPtr};
+use crate::{col_shape::ColShapeRawPtr, helpers, sdk, world_object::WorldObjectRawPtr};
 
 pub(crate) mod traits {
     use super::*;
@@ -11,6 +11,10 @@ pub(crate) mod traits {
     pub trait Entity {
         fn entity(&self) -> EntityRawPtr;
     }
+
+    pub trait ColShape {
+        fn col_shape(&self) -> ColShapeRawPtr;
+    }
 }
 
 #[derive(Clone)]
@@ -20,9 +24,8 @@ pub struct WorldObject {
 
 impl WorldObject {
     pub(crate) unsafe fn new(base_raw_ptr: altv_sdk::BaseObjectRawMutPtr) -> Self {
-        // TODO: null check
         Self {
-            world_object: sdk::base_object::to_world_object(base_raw_ptr),
+            world_object: helpers::base_ptr_to_raw!(base_raw_ptr, world_object),
         }
     }
 }
@@ -41,10 +44,9 @@ pub struct WorldEntity {
 
 impl WorldEntity {
     pub(crate) unsafe fn new(base_raw_ptr: altv_sdk::BaseObjectRawMutPtr) -> Self {
-        // TODO: null check
         Self {
-            world_object: sdk::base_object::to_world_object(base_raw_ptr),
-            entity: sdk::base_object::to_entity(base_raw_ptr),
+            world_object: helpers::base_ptr_to_raw!(base_raw_ptr, world_object),
+            entity: helpers::base_ptr_to_raw!(base_raw_ptr, entity),
         }
     }
 }
@@ -58,5 +60,32 @@ impl traits::WorldObject for WorldEntity {
 impl traits::Entity for WorldEntity {
     fn entity(&self) -> EntityRawPtr {
         self.entity
+    }
+}
+
+#[derive(Clone)]
+pub struct WorldColShape {
+    world_object: WorldObjectRawPtr,
+    col_shape: ColShapeRawPtr,
+}
+
+impl WorldColShape {
+    pub(crate) unsafe fn new(base_raw_ptr: altv_sdk::BaseObjectRawMutPtr) -> Self {
+        Self {
+            world_object: helpers::base_ptr_to_raw!(base_raw_ptr, world_object),
+            col_shape: helpers::base_ptr_to_raw!(base_raw_ptr, col_shape),
+        }
+    }
+}
+
+impl traits::WorldObject for WorldColShape {
+    fn world_object(&self) -> WorldObjectRawPtr {
+        self.world_object
+    }
+}
+
+impl traits::ColShape for WorldColShape {
+    fn col_shape(&self) -> ColShapeRawPtr {
+        self.col_shape
     }
 }
