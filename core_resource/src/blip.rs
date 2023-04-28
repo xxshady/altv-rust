@@ -423,5 +423,3 @@ impl blip::Blip {
         self.internal_destroy()
     }
 }
-
-// impl WorldObject for blip::Blip {}

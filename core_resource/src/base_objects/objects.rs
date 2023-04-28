@@ -5,6 +5,8 @@ use std::{cell::RefMut, fmt::Debug};
 use super::{BaseObjectContainer, BaseObjectManager, BaseObjectWrapper};
 use crate::sdk;
 
+use crate::world_object::WorldObject;
+
 macro_rules! base_objects {
     (@internal $(
         $manager_name_snake: ident
@@ -14,7 +16,11 @@ macro_rules! base_objects {
         $manager_name: ident: [
             $base_type: path,
             $( @extra_pool: $extra_pool: ident, )?
-            $( @inherit_ptrs: $inherit_ptrs: ty, )?
+            $(
+                @inherit_classes: $inherit_ptrs_struct: ty, [ $(
+                    $impl_trait: ty,
+                )+ ],
+            )?
         ],
     )+ ) => {
         paste::paste! {
@@ -25,11 +31,11 @@ macro_rules! base_objects {
                 #[doc = "[Methods](struct.BaseObjectWrapper.html#impl-BaseObjectWrapper<I" $manager_name ">)"]
                 pub type $manager_name = BaseObjectWrapper<
                     $name_struct
-                    $(, $crate::base_objects::$inherit_ptrs )?
+                    $(, $crate::base_objects::$inherit_ptrs_struct )?
                 >;
                 pub type $name_container = BaseObjectContainer<
                     $name_struct
-                    $(, $crate::base_objects::$inherit_ptrs )?
+                    $(, $crate::base_objects::$inherit_ptrs_struct )?
                 >;
                 #[allow(dead_code)]
                 pub type $name_ptr = NonNull<$name_struct>;
@@ -39,6 +45,10 @@ macro_rules! base_objects {
                         write!(f, "{} {{ ... }}", stringify!($manager_name))
                     }
                 }
+
+            $( $(
+                impl $impl_trait <$crate::base_objects::$inherit_ptrs_struct> for $manager_name {}
+            )+ )?
 
                 #[macro_export]
                 macro_rules! [<__ $manager_name_snake _remove_from_pool>] {
@@ -70,7 +80,7 @@ macro_rules! base_objects {
 
                             let inherit_ptrs = $crate::helpers::if_not!(
                                 ($(
-                                    unsafe { $crate::base_objects::$inherit_ptrs::new(base_ptr.as_ptr()) }
+                                    unsafe { $crate::base_objects::$inherit_ptrs_struct::new(base_ptr.as_ptr()) }
                                 )?) {}
                             );
 
@@ -108,7 +118,7 @@ macro_rules! base_objects {
             $(
                 pub(crate) $manager_name_snake: BaseObjectManager<
                     $manager_name_snake::$name_struct
-                    $(, $crate::base_objects::$inherit_ptrs )?
+                    $(, $crate::base_objects::$inherit_ptrs_struct )?
                 >,
             )+
             }
@@ -133,7 +143,7 @@ macro_rules! base_objects {
 
                             let inherit_ptrs = $crate::helpers::if_not!(
                                 ($(unsafe {
-                                    $crate::base_objects::$inherit_ptrs::new(base_ptr.as_ptr())
+                                    $crate::base_objects::$inherit_ptrs_struct::new(base_ptr.as_ptr())
                                 })?) {}
                             );
 
@@ -221,7 +231,11 @@ macro_rules! base_objects {
         $manager_name: ident: [
             $base_type: path,
             $( @extra_pool: $extra_pool: ident, )?
-            $( @inherit_ptrs: $inherit_ptrs: ty, )?
+            $(
+                @inherit_classes: $inherit_ptrs_struct: ty, [ $(
+                    $impl_trait: ty,
+                )+ ],
+            )?
         ],
     )+ ) => {
         paste::paste! {
@@ -233,7 +247,9 @@ macro_rules! base_objects {
                 $manager_name: [
                     $base_type,
                     $( @extra_pool: $extra_pool, )?
-                    $( @inherit_ptrs: $inherit_ptrs, )?
+                    $( @inherit_classes: $inherit_ptrs_struct, [ $(
+                        $impl_trait,
+                    )+ ], )?
                 ],
             )+ );
         }
@@ -254,19 +270,27 @@ base_objects!(
     ],
     VirtualEntity: [
         altv_sdk::BaseObjectType::VirtualEntity,
-        @inherit_ptrs: inherit_ptrs::WorldObject,
+        @inherit_classes: inherit_ptrs::WorldObject, [
+            WorldObject,
+        ],
     ],
     VirtualEntityGroup: [
         altv_sdk::BaseObjectType::VirtualEntityGroup,
     ],
     Blip: [
         altv_sdk::BaseObjectType::Blip,
+        @inherit_classes: inherit_ptrs::WorldObject, [
+            WorldObject,
+        ],
     ],
     VoiceChannel: [
         altv_sdk::BaseObjectType::VoiceChannel,
     ],
     Marker: [
         altv_sdk::BaseObjectType::Marker,
+        @inherit_classes: inherit_ptrs::WorldObject, [
+            WorldObject,
+        ],
     ],
 );
 

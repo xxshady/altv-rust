@@ -128,5 +128,3 @@ impl marker::Marker {
         self.internal_destroy()
     }
 }
-
-// impl WorldObject for marker::Marker {}

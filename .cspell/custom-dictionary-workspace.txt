@@ -5,6 +5,7 @@ ColShapy
 cxxbridge
 dlopen
 improper_ctypes_definitions
+inherit_ptrs
 lazycell
 libloading
 repr

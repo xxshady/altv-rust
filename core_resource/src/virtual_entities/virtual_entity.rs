@@ -132,8 +132,6 @@ impl virtual_entity::VirtualEntity {
     }
 }
 
-impl WorldObject<inherit_ptrs::WorldObject> for virtual_entity::VirtualEntity {}
-
 meta::impl_meta_type_for!(
     StreamSyncedMeta,
     virtual_entity::VirtualEntity,
