@@ -24,6 +24,7 @@ pub use exports::{
     Vector3,
     Vehicle,
     Ped,
+    NetworkObject,
     VirtualEntity,
     VirtualEntityGroup,
     Blip,

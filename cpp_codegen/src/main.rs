@@ -35,6 +35,7 @@ lazy_static::lazy_static! {
             ("IBaseObject*", "alt::IBaseObject*"),
             ("IVehicle*", "alt::IVehicle*"),
             ("IPed*", "alt::IPed*"),
+            ("INetworkObject*", "alt::INetworkObject*"),
             ("IEntity*", "alt::IEntity*"),
             ("IPlayer*", "alt::IPlayer*"),
             ("IColShape*", "alt::IColShape*"),
@@ -118,6 +119,10 @@ fn main() {
     gen_default("IPlayer", "../altv_sdk/cpp-sdk/objects/IPlayer.h");
     gen_default("IVehicle", "../altv_sdk/cpp-sdk/objects/IVehicle.h");
     gen_default("IPed", "../altv_sdk/cpp-sdk/objects/IPed.h");
+    gen_default(
+        "INetworkObject",
+        "../altv_sdk/cpp-sdk/objects/INetworkObject.h",
+    );
     gen_default(
         "IColShape",
         "../altv_sdk/cpp-sdk/script-objects/IColShape.h",

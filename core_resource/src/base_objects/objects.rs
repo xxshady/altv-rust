@@ -288,6 +288,14 @@ base_objects!(
             Entity,
         ],
     ],
+    NetworkObject: [
+        altv_sdk::BaseObjectType::NetworkObject,
+        @extra_pool: Entity,
+        @inherit_classes: WorldEntity, [
+            WorldObject,
+            Entity,
+        ],
+    ],
     VirtualEntity: [
         altv_sdk::BaseObjectType::VirtualEntity,
         @inherit_classes: WorldObject, [

@@ -592,6 +592,10 @@ namespace base_object
         return dynamic_cast<alt::IPed*>(base_object);
     }
 
+    alt::INetworkObject* to_network_object(alt::IBaseObject* base_object) {
+        return dynamic_cast<alt::INetworkObject*>(base_object);
+    }
+
     alt::IColShape* to_col_shape(alt::IBaseObject* base_object) {
         return dynamic_cast<alt::IColShape*>(base_object);
     }
@@ -665,6 +669,17 @@ namespace ped
         return static_cast<alt::IEntity*>(ped);
     }
 } // namespace ped
+
+namespace network_object
+{
+    alt::IBaseObject* to_base_object(alt::INetworkObject* network_object) {
+        return static_cast<alt::IBaseObject*>(network_object);
+    }
+
+    alt::IEntity* to_entity(alt::INetworkObject* network_object) {
+        return static_cast<alt::IEntity*>(network_object);
+    }
+} // namespace network_object
 
 namespace virtual_entity
 {

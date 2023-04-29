@@ -2,37 +2,29 @@ pub use altv::prelude::*;
 
 #[altv::main]
 fn main() {
-    std::env::set_var("RUST_BACKTRACE", "full");
+    // std::env::set_var("RUST_BACKTRACE", "full");
 
-    altv::events::on_player_connect(|c| {
-        let player = c.player.clone();
+    let obj = altv::NetworkObject::new_with_params(
+        "prop_bench_04",
+        (0, 0, 74),
+        (1.0, 2.0, 3.0),
+        150,
+        0,
+        2,
+    )
+    .unwrap();
 
-        altv::log!("player connected: {}", player.name()?);
+    obj.place_on_ground_properly().unwrap();
 
-        altv::set_interval(
+    altv::events::on_player_connect(move |_| {
+        let obj = obj.clone();
+        altv::set_timeout(
             move || {
-                let ped = altv::Ped::new(player.model()?, player.pos()?, player.rot()?)?;
-                altv::log!("spawned ped id: {}", ped.id()?);
-                altv::log!("spawned ped pos: {:?}", ped.pos()?);
-                altv::log!("player pos: {:?}", player.pos()?);
-                altv::log!("ped current weapon: {}", ped.current_weapon()?);
-                altv::log!("player current weapon: {}", player.current_weapon()?);
-
-                ped.set_health(1000)?;
-
+                altv::log!("destroying");
+                obj.destroy()?;
                 Ok(())
-            },
-            1000,
-        );
-
-        altv::set_interval(
-            || {
-                altv::log!("~rl~destroying all peds: {}", altv::Ped::all().len());
-                altv::Ped::all().iter().for_each(|p| p.destroy().unwrap());
             },
             5000,
         );
-
-        Ok(())
-    });
+    })
 }

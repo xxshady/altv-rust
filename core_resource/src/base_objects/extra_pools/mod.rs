@@ -15,6 +15,7 @@ pub struct ExtraPools {
 pub mod wrappers {
     use super::{super::*, entity::EntityRawPtr};
     use crate::{world_object::WorldObjectRawPtr, SomeResult};
+    use network_object::NetworkObjectContainer;
     use objects::AnyBaseObject;
     use ped::PedContainer;
     use player::PlayerContainer;
@@ -62,6 +63,7 @@ pub mod wrappers {
         Player, PlayerContainer;
         Vehicle, VehicleContainer;
         Ped, PedContainer;
+        NetworkObject, NetworkObjectContainer;
     ]);
 
     impl From<VehicleContainer> for AnyEntity {
@@ -80,5 +82,6 @@ pub mod wrappers {
         Player, PlayerContainer;
         Vehicle, VehicleContainer;
         Ped, PedContainer;
+        NetworkObject, NetworkObjectContainer;
     ]);
 }

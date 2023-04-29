@@ -1,6 +1,6 @@
 use crate::{
     base_objects::{
-        blip, checkpoint, col_shape, marker, ped, player, vehicle, virtual_entity,
+        blip, checkpoint, col_shape, marker, network_object, ped, player, vehicle, virtual_entity,
         virtual_entity_group, voice_channel, AnyBaseObject, BasePtr,
     },
     helpers::{read_cpp_vector2, read_cpp_vector3},
@@ -99,11 +99,12 @@ macro_rules! impl_serializable_base_object {
 
 impl_serializable_base_object!(vehicle::VehicleContainer, "vehicle");
 impl_serializable_base_object!(player::PlayerContainer, "player");
-impl_serializable_base_object!(col_shape::ColShapeContainer, "col_shape");
+impl_serializable_base_object!(col_shape::ColShapeContainer, "colshape");
 impl_serializable_base_object!(blip::BlipContainer, "blip");
 impl_serializable_base_object!(marker::MarkerContainer, "marker");
 impl_serializable_base_object!(checkpoint::CheckpointContainer, "checkpoint");
 impl_serializable_base_object!(ped::PedContainer, "ped");
+impl_serializable_base_object!(network_object::NetworkObjectContainer, "network object");
 
 // TODO: fix this none/null/nil shit
 /// alias for `MValue::None`
@@ -164,6 +165,7 @@ pub enum MValue {
     Vehicle(vehicle::VehicleContainer),
     Player(player::PlayerContainer),
     Ped(ped::PedContainer),
+    NetworkObject(network_object::NetworkObjectContainer),
     VirtualEntity(virtual_entity::VirtualEntityContainer),
     VirtualEntityGroup(virtual_entity_group::VirtualEntityGroupContainer),
     Blip(blip::BlipContainer),
@@ -324,6 +326,7 @@ pub(crate) fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Re
                 AnyBaseObject::Marker(c) => MValue::Marker(c),
                 AnyBaseObject::Checkpoint(c) => MValue::Checkpoint(c),
                 AnyBaseObject::Ped(c) => MValue::Ped(c),
+                AnyBaseObject::NetworkObject(c) => MValue::NetworkObject(c),
             }
         }
         Vector3 => MValue::Vector3(read_cpp_vector3(
