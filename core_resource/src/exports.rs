@@ -83,7 +83,9 @@ pub mod events {
             add_custom_handler, add_sdk_handler, connection_queue::ConnectionQueueInfo,
             custom_controllers, sdk_controllers, structs::FireInfo, CustomHandler, SDKHandler,
         },
-        script_events::{add_client_handler, add_local_handler},
+        script_events::{
+            add_client_handler, add_local_handler, ClientEventController, LocalEventController,
+        },
     };
 
     #[macro_export]

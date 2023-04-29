@@ -2,7 +2,8 @@ use core_resource::{exports::events, VoidResult};
 pub use events::{
     add_client_handler as on_client, add_local_handler as on, emit, emit_all_clients,
     emit_all_clients_unreliable, emit_client, emit_client_unreliable, emit_some_clients,
-    emit_some_clients_unreliable, ConnectionQueueInfo, FireInfo,
+    emit_some_clients_unreliable, ClientEventController, ConnectionQueueInfo, FireInfo,
+    LocalEventController,
 };
 
 pub use events::custom_controllers::*;

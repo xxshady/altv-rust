@@ -18,8 +18,20 @@ pub fn emit_local_event_without_args(event_name: &str) {
 }
 
 pub type EventArgs<'a> = &'a mvalue::MValueList;
-pub type LocalEventHandler = Box<dyn FnMut(EventArgs) -> VoidResult>;
-pub type ClientEventHandler = Box<dyn FnMut(player::PlayerContainer, EventArgs) -> VoidResult>;
+
+#[derive(Debug)]
+pub struct LocalEventController<'a> {
+    pub args: EventArgs<'a>,
+}
+
+#[derive(Debug)]
+pub struct ClientEventController<'a> {
+    pub player: player::PlayerContainer,
+    pub args: EventArgs<'a>,
+}
+
+pub type LocalEventHandler = Box<dyn FnMut(&LocalEventController) -> VoidResult>;
+pub type ClientEventHandler = Box<dyn FnMut(&ClientEventController) -> VoidResult>;
 
 pub trait ScriptEventManager {
     type Handler;
@@ -69,8 +81,9 @@ impl LocalEventManager {
 
     fn handle_event(&mut self, event_name: &str, args: EventArgs) {
         if let Some(handlers) = self.get_handlers_for_event(event_name) {
+            let controller = LocalEventController { args };
             for h in handlers {
-                if let Err(error) = h(args) {
+                if let Err(error) = h(&controller) {
                     logger::error!("handler of event: {event_name:?} failed with error: {error:?}");
                 } else {
                     logger::debug!("handler of event: {event_name:?} called successfully");
@@ -131,8 +144,9 @@ impl ClientEventManager {
         args: EventArgs,
     ) {
         if let Some(handlers) = self.get_handlers_for_event(event_name) {
+            let controller = ClientEventController { player, args };
             for h in handlers {
-                if let Err(error) = h(player.clone(), args) {
+                if let Err(error) = h(&controller) {
                     logger::error!(
                         "handler of client event: {event_name:?} failed with error: {error:?}"
                     );
@@ -166,7 +180,7 @@ impl Debug for ClientEventManager {
 
 pub fn add_local_handler(
     event_name: impl IntoString,
-    handler: impl FnMut(EventArgs) -> VoidResult + 'static,
+    handler: impl FnMut(&LocalEventController) -> VoidResult + 'static,
 ) {
     Resource::with_local_script_events_mut(|mut local_events, _| {
         local_events.add_handler(event_name.into_string(), Box::new(handler))
@@ -175,7 +189,7 @@ pub fn add_local_handler(
 
 pub fn add_client_handler(
     event_name: impl IntoString,
-    handler: impl FnMut(player::PlayerContainer, EventArgs) -> VoidResult + 'static,
+    handler: impl FnMut(&ClientEventController) -> VoidResult + 'static,
 ) {
     Resource::with_client_script_events_mut(|mut client_events, _| {
         client_events.add_handler(event_name.into_string(), Box::new(handler))
