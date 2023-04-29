@@ -226,6 +226,12 @@ impl MValueList {
     get_mvalue_type_at!(get_vector2_at, Vector2, MValue::Vector2);
     get_mvalue_type_at!(get_player_at, player::PlayerContainer, MValue::Player);
     get_mvalue_type_at!(get_vehicle_at, vehicle::VehicleContainer, MValue::Vehicle);
+    get_mvalue_type_at!(get_ped_at, ped::PedContainer, MValue::Ped);
+    get_mvalue_type_at!(
+        get_network_object_at,
+        network_object::NetworkObjectContainer,
+        MValue::NetworkObject
+    );
     get_mvalue_type_at!(
         get_col_shape_at,
         col_shape::ColShapeContainer,
@@ -241,6 +247,18 @@ impl MValueList {
         virtual_entity_group::VirtualEntityGroupContainer,
         MValue::VirtualEntityGroup
     );
+    get_mvalue_type_at!(get_blip_at, blip::BlipContainer, MValue::Blip);
+    get_mvalue_type_at!(
+        get_checkpoint_at,
+        checkpoint::CheckpointContainer,
+        MValue::Checkpoint
+    );
+    get_mvalue_type_at!(
+        get_voice_channel_at,
+        voice_channel::VoiceChannelContainer,
+        MValue::VoiceChannel
+    );
+    get_mvalue_type_at!(get_marker_at, marker::MarkerContainer, MValue::Marker);
 
     pub fn push(&mut self, mvalue: MValue) {
         self.vec.push(mvalue);
