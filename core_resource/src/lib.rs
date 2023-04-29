@@ -3,16 +3,6 @@ use core_shared::*;
 pub type VoidResult = anyhow::Result<()>;
 pub type SomeResult<V> = anyhow::Result<V>;
 
-trait IntoVoidResult {
-    fn into_void_result(self) -> VoidResult;
-}
-
-impl IntoVoidResult for () {
-    fn into_void_result(self) -> VoidResult {
-        Ok(())
-    }
-}
-
 use altv_sdk::ffi as sdk;
 
 mod resource;
