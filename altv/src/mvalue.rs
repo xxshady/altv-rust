@@ -1,5 +1,8 @@
 //! MValue, stands for Multi Value, this is needed so you can tell alt:V
-//! how to understand Rust types in more general way.
+//! how to understand Rust types in more general way
+//! to send or receive something from clients (players), or communicate with
+//! [other alt:V resources](https://docs.altv.mp/articles/resources.html#types).
+//!
 //! For example, JavaScript has type [Object](https://javascript.info/object),
 //! Rust does not, but has a [HashMap](https://doc.rust-lang.org/std/collections/struct.HashMap.html),
 //! so alt:V has Dict MValue type, which is `HashMap<String, MValue>` in Rust API, and `Object` in JS API
