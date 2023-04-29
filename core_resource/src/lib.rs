@@ -17,6 +17,7 @@ mod helpers;
 mod logging;
 mod marker;
 mod mvalue;
+mod ped;
 mod ped_model_info;
 mod player;
 mod quaternion;

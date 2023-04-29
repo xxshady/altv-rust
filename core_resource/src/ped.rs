@@ -1,0 +1,94 @@
+use std::ptr::NonNull;
+
+use crate::{
+    base_objects::{
+        extra_pools::{get_entity_by_id, wrappers::AnyEntity, Entity},
+        meta, ped,
+    },
+    helpers::{Hash, IntoHash},
+    resource::Resource,
+    sdk,
+    vector::Vector3,
+    SomeResult, VoidResult,
+};
+
+/// # **`Ped implementation`**
+impl ped::Ped {
+    pub fn all() -> Vec<ped::PedContainer> {
+        Resource::with_base_objects_ref(|v, _| v.ped.all())
+    }
+
+    pub fn get_by_id(id: u32) -> SomeResult<ped::PedContainer> {
+        get_entity_by_id!(AnyEntity::Ped, id).ok_or(anyhow::anyhow!("No ped with id: {id}"))
+    }
+
+    pub fn new(
+        model: impl IntoHash,
+        pos: impl Into<Vector3>,
+        rot: impl Into<Vector3>,
+    ) -> SomeResult<ped::PedContainer> {
+        let pos = pos.into();
+        let rot = rot.into();
+
+        let ptr = unsafe {
+            sdk::ICore::CreatePed(
+                model.into_hash(),
+                pos.x(),
+                pos.y(),
+                pos.z(),
+                rot.x(),
+                rot.y(),
+                rot.z(),
+            )
+        };
+
+        let Some(ptr) = NonNull::new(ptr) else {
+            anyhow::bail!("Ped model is incorrect or there is no free id for new entity");
+        };
+
+        Ok(ped::add_to_pool!(ptr))
+    }
+
+    pub fn destroy(&self) -> VoidResult {
+        ped::remove_from_pool!(self)?;
+        self.internal_destroy()
+    }
+
+    pub fn health(&self) -> SomeResult<u16> {
+        Ok(unsafe { sdk::IPed::GetHealth(self.raw_ptr()?) })
+    }
+
+    pub fn set_health(&self, health: u16) -> VoidResult {
+        unsafe { sdk::IPed::SetHealth(self.raw_ptr()?, health) }
+        Ok(())
+    }
+
+    pub fn max_health(&self) -> SomeResult<u16> {
+        Ok(unsafe { sdk::IPed::GetMaxHealth(self.raw_ptr()?) })
+    }
+
+    pub fn set_max_health(&self, max_health: u16) -> VoidResult {
+        unsafe { sdk::IPed::SetMaxHealth(self.raw_ptr()?, max_health) }
+        Ok(())
+    }
+
+    pub fn armour(&self) -> SomeResult<u16> {
+        Ok(unsafe { sdk::IPed::GetArmour(self.raw_ptr()?) })
+    }
+
+    pub fn set_armour(&self, armour: u16) -> VoidResult {
+        unsafe { sdk::IPed::SetArmour(self.raw_ptr()?, armour) }
+        Ok(())
+    }
+
+    pub fn current_weapon(&self) -> SomeResult<Hash> {
+        Ok(unsafe { sdk::IPed::GetCurrentWeapon(self.raw_ptr()?) })
+    }
+
+    pub fn set_current_weapon(&self, weapon: impl IntoHash) -> VoidResult {
+        unsafe { sdk::IPed::SetCurrentWeapon(self.raw_ptr()?, weapon.into_hash()) }
+        Ok(())
+    }
+}
+
+meta::impl_entity_meta_for!(StreamSyncedMeta, ped::Ped);

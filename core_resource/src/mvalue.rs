@@ -1,7 +1,7 @@
 use crate::{
     base_objects::{
-        blip, checkpoint, col_shape, marker, player, vehicle, virtual_entity, virtual_entity_group,
-        voice_channel, AnyBaseObject, BasePtr,
+        blip, checkpoint, col_shape, marker, ped, player, vehicle, virtual_entity,
+        virtual_entity_group, voice_channel, AnyBaseObject, BasePtr,
     },
     helpers::{read_cpp_vector2, read_cpp_vector3},
     resource::Resource,
@@ -103,6 +103,7 @@ impl_serializable_base_object!(col_shape::ColShapeContainer, "col_shape");
 impl_serializable_base_object!(blip::BlipContainer, "blip");
 impl_serializable_base_object!(marker::MarkerContainer, "marker");
 impl_serializable_base_object!(checkpoint::CheckpointContainer, "checkpoint");
+impl_serializable_base_object!(ped::PedContainer, "ped");
 
 // TODO: fix this none/null/nil shit
 /// alias for `MValue::None`
@@ -162,6 +163,7 @@ pub enum MValue {
     ColShape(col_shape::ColShapeContainer),
     Vehicle(vehicle::VehicleContainer),
     Player(player::PlayerContainer),
+    Ped(ped::PedContainer),
     VirtualEntity(virtual_entity::VirtualEntityContainer),
     VirtualEntityGroup(virtual_entity_group::VirtualEntityGroupContainer),
     Blip(blip::BlipContainer),
@@ -321,6 +323,7 @@ pub(crate) fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Re
                 AnyBaseObject::VoiceChannel(c) => MValue::VoiceChannel(c),
                 AnyBaseObject::Marker(c) => MValue::Marker(c),
                 AnyBaseObject::Checkpoint(c) => MValue::Checkpoint(c),
+                AnyBaseObject::Ped(c) => MValue::Ped(c),
             }
         }
         Vector3 => MValue::Vector3(read_cpp_vector3(

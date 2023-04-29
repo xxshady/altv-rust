@@ -10,6 +10,7 @@ pub use crate::{
         extra_pools::{wrappers::AnyEntity, Entity, SyncId},
         marker::{Marker, MarkerContainer},
         meta::{BaseObjectMeta, LocalMeta, StreamSyncedMeta, SyncedMeta},
+        ped::{Ped, PedContainer},
         player::{Player, PlayerContainer},
         vehicle::{Vehicle, VehicleContainer},
         virtual_entity::{VirtualEntity, VirtualEntityContainer},

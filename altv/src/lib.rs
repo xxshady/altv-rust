@@ -23,6 +23,7 @@ pub use exports::{
     Vector2,
     Vector3,
     Vehicle,
+    Ped,
     VirtualEntity,
     VirtualEntityGroup,
     Blip,

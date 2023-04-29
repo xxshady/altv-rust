@@ -2,53 +2,37 @@ pub use altv::prelude::*;
 
 #[altv::main]
 fn main() {
-    // std::env::set_var("RUST_BACKTRACE", "full");
-
-    altv::events::on("test", |c| {
-        dbg!(c);
-        altv::Vehicle::new("s80", 0, 0).unwrap();
-    });
-
-    altv::events::on("test", |c| {
-        dbg!(c);
-        altv::Vehicle::new("s80", 0, 0)?;
-        Ok(())
-    });
-
-    altv::events::on_client("test", |c| {
-        dbg!(c);
-        altv::Vehicle::new("s80", 0, 0).unwrap();
-    });
-
-    altv::events::on_client("test", |c| {
-        dbg!(c);
-        altv::Vehicle::new("s80", 0, 0)?;
-        Ok(())
-    });
-
-    altv::events::emit!("test", 123).unwrap();
+    std::env::set_var("RUST_BACKTRACE", "full");
 
     altv::events::on_player_connect(|c| {
-        dbg!(c);
-    });
+        let player = c.player.clone();
 
-    altv::events::on_player_connect(|c| {
-        dbg!(c);
-        Ok(())
-    });
+        altv::log!("player connected: {}", player.name()?);
 
-    altv::events::on_vehicle_enter_col_shape(|c| {
-        dbg!(c);
-    });
+        altv::set_interval(
+            move || {
+                let ped = altv::Ped::new(player.model()?, player.pos()?, player.rot()?)?;
+                altv::log!("spawned ped id: {}", ped.id()?);
+                altv::log!("spawned ped pos: {:?}", ped.pos()?);
+                altv::log!("player pos: {:?}", player.pos()?);
+                altv::log!("ped current weapon: {}", ped.current_weapon()?);
+                altv::log!("player current weapon: {}", player.current_weapon()?);
 
-    altv::events::on_vehicle_enter_col_shape(|c| {
-        dbg!(c);
-        altv::Vehicle::new("s80", 0, 0)?;
-        Ok(())
-    });
+                ped.set_health(1000)?;
 
-    altv::events::on_player_connect(|c| {
-        dbg!(c);
+                Ok(())
+            },
+            1000,
+        );
+
+        altv::set_interval(
+            || {
+                altv::log!("~rl~destroying all peds: {}", altv::Ped::all().len());
+                altv::Ped::all().iter().for_each(|p| p.destroy().unwrap());
+            },
+            5000,
+        );
+
         Ok(())
     });
 }

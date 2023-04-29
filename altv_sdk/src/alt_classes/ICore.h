@@ -200,6 +200,9 @@ Config::Value::ValuePtr GetServerConfig() {
 void SetWorldProfiler(bool state) {
     return alt::ICore::Instance().SetWorldProfiler(state);
 }
+alt::IPed* CreatePed(u32 model, f32 pos_x, f32 pos_y, f32 pos_z, f32 rot_x, f32 rot_y, f32 rot_z) {
+    return alt::ICore::Instance().CreatePed(model, { pos_x, pos_y, pos_z }, { rot_x, rot_y, rot_z });
+}
 BaseObjectVector GetEntitiesInDimension(i32 dimension, u64 allowedTypes) {
     auto alt_vec = alt::ICore::Instance().GetEntitiesInDimension(dimension, allowedTypes);
     BaseObjectVector vec {};

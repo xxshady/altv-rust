@@ -182,6 +182,7 @@ impl EntityPool {
         let id = match &entity {
             AnyEntity::Player(p) => p.id(),
             AnyEntity::Vehicle(v) => v.id(),
+            AnyEntity::Ped(v) => v.id(),
         }
         .unwrap();
         logger::debug!("add entity id: {id}");

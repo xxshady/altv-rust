@@ -15,6 +15,7 @@ pub mod ffi {
         #include "alt_classes/IEntity.h"
         #include "alt_classes/IPlayer.h"
         #include "alt_classes/IVehicle.h"
+        #include "alt_classes/IPed.h"
         #include "alt_classes/IColShape.h"
         #include "alt_classes/IBlip.h"
         #include "alt_classes/IMarker.h"
@@ -86,6 +87,7 @@ pub mod ffi {
         generate_ns!("IEntity")
         generate_ns!("IPlayer")
         generate_ns!("IVehicle")
+        generate_ns!("IPed")
         generate_ns!("IColShape")
         generate_ns!("IBlip")
         generate_ns!("ICheckpoint")
@@ -198,6 +200,7 @@ pub mod ffi {
         generate_ns!("entity")
         generate_ns!("player")
         generate_ns!("vehicle")
+        generate_ns!("ped")
         generate_ns!("col_shape")
         generate_ns!("virtual_entity")
         generate_ns!("virtual_entity_group")

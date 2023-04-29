@@ -588,6 +588,10 @@ namespace base_object
         return dynamic_cast<alt::IPlayer*>(base_object);
     }
 
+    alt::IPed* to_ped(alt::IBaseObject* base_object) {
+        return dynamic_cast<alt::IPed*>(base_object);
+    }
+
     alt::IColShape* to_col_shape(alt::IBaseObject* base_object) {
         return dynamic_cast<alt::IColShape*>(base_object);
     }
@@ -650,6 +654,17 @@ namespace vehicle
         return static_cast<alt::IEntity*>(vehicle);
     }
 } // namespace vehicle
+
+namespace ped
+{
+    alt::IBaseObject* to_base_object(alt::IPed* ped) {
+        return static_cast<alt::IBaseObject*>(ped);
+    }
+
+    alt::IEntity* to_entity(alt::IPed* ped) {
+        return static_cast<alt::IEntity*>(ped);
+    }
+} // namespace ped
 
 namespace virtual_entity
 {

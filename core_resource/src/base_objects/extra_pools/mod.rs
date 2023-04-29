@@ -16,6 +16,7 @@ pub mod wrappers {
     use super::{super::*, entity::EntityRawPtr};
     use crate::{world_object::WorldObjectRawPtr, SomeResult};
     use objects::AnyBaseObject;
+    use ped::PedContainer;
     use player::PlayerContainer;
     use vehicle::VehicleContainer;
 
@@ -60,6 +61,7 @@ pub mod wrappers {
     extra_pool_enum!(Entity, EntityRawPtr: [
         Player, PlayerContainer;
         Vehicle, VehicleContainer;
+        Ped, PedContainer;
     ]);
 
     impl From<VehicleContainer> for AnyEntity {
@@ -77,5 +79,6 @@ pub mod wrappers {
     extra_pool_enum!(WorldObject, WorldObjectRawPtr: [
         Player, PlayerContainer;
         Vehicle, VehicleContainer;
+        Ped, PedContainer;
     ]);
 }
