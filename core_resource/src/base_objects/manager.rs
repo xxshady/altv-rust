@@ -1,7 +1,7 @@
 use crate::VoidResult;
 use std::{collections::HashMap, fmt::Debug, ptr::NonNull};
 
-use super::base_object::BaseObjectContainer;
+use super::base_impl::BaseObjectContainer;
 
 pub(crate) struct BaseObjectManager<T, InheritPtrs: Clone = ()> {
     objects: HashMap<NonNull<T>, BaseObjectContainer<T, InheritPtrs>>,
