@@ -107,7 +107,7 @@ impl_serializable_base_object!(ped::PedContainer, "ped");
 impl_serializable_base_object!(network_object::NetworkObjectContainer, "network object");
 
 // TODO: fix this none/null/nil shit
-/// alias for `MValue::None`
+/// Intended to explicitly express the lack of a value (`null` in alt:V JavaScript API).
 #[derive(Debug)]
 pub struct MValueNone;
 
