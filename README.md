@@ -10,7 +10,6 @@
 altv::events::on_player_connect(|event| {
     let name = event.player.name()?;
     altv::log!("player with name: {name} connected!");
-    Ok(())
 });
 ```
 

@@ -5,7 +5,7 @@ use crate::{
     helpers::IntoString,
     mvalue::{self, convert_iter_to_mvalue_vec, Serializable},
     resource::Resource,
-    VoidResult,
+    IntoVoidResult, VoidResult,
 };
 use altv_sdk::ffi as sdk;
 
@@ -178,20 +178,26 @@ impl Debug for ClientEventManager {
     }
 }
 
-pub fn add_local_handler(
+pub fn add_local_handler<V: IntoVoidResult>(
     event_name: impl IntoString,
-    handler: impl FnMut(&LocalEventController) -> VoidResult + 'static,
+    mut handler: impl FnMut(&LocalEventController) -> V + 'static,
 ) {
     Resource::with_local_script_events_mut(|mut local_events, _| {
-        local_events.add_handler(event_name.into_string(), Box::new(handler))
+        local_events.add_handler(
+            event_name.into_string(),
+            Box::new(move |c| handler(c).into_void_result()),
+        )
     });
 }
 
-pub fn add_client_handler(
+pub fn add_client_handler<V: IntoVoidResult>(
     event_name: impl IntoString,
-    handler: impl FnMut(&ClientEventController) -> VoidResult + 'static,
+    mut handler: impl FnMut(&ClientEventController) -> V + 'static,
 ) {
     Resource::with_client_script_events_mut(|mut client_events, _| {
-        client_events.add_handler(event_name.into_string(), Box::new(handler))
+        client_events.add_handler(
+            event_name.into_string(),
+            Box::new(move |c| handler(c).into_void_result()),
+        )
     });
 }

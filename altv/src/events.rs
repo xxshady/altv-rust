@@ -1,4 +1,4 @@
-use core_resource::{exports::events, VoidResult};
+use core_resource::exports::{events, IntoVoidResult};
 pub use events::{
     add_client_handler as on_client, add_local_handler as on, emit, emit_all_clients,
     emit_all_clients_unreliable, emit_client, emit_client_unreliable, emit_some_clients,
@@ -11,20 +11,24 @@ pub use events::sdk_controllers::*;
 
 macro_rules! on_sdk_event {
     ($func_name: ident, $event_name: ident) => {
-        pub fn $func_name(
-            handler: impl FnMut(&events::sdk_controllers::$event_name) -> VoidResult + 'static,
+        pub fn $func_name<V: IntoVoidResult>(
+            mut handler: impl FnMut(&events::sdk_controllers::$event_name) -> V + 'static,
         ) {
-            events::add_sdk_handler(events::SDKHandler::$event_name(Box::new(handler)));
+            events::add_sdk_handler(events::SDKHandler::$event_name(Box::new(move |c| {
+                handler(c).into_void_result()
+            })));
         }
     };
 }
 
 macro_rules! on_custom_event {
     ($func_name: ident, $event_name: ident) => {
-        pub fn $func_name(
-            handler: impl FnMut(&events::custom_controllers::$event_name) -> VoidResult + 'static,
+        pub fn $func_name<V: IntoVoidResult>(
+            mut handler: impl FnMut(&events::custom_controllers::$event_name) -> V + 'static,
         ) {
-            events::add_custom_handler(events::CustomHandler::$event_name(Box::new(handler)));
+            events::add_custom_handler(events::CustomHandler::$event_name(Box::new(move |c| {
+                handler(c).into_void_result()
+            })));
         }
     };
 }

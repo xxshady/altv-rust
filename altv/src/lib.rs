@@ -2,7 +2,7 @@
 //!
 //! [How to use?](https://github.com/xxshady/altv-rust#how-to-use)
 
-use core_resource::{exports, VoidResult};
+use core_resource::exports;
 
 #[rustfmt::skip]
 pub use exports::{
@@ -48,6 +48,7 @@ pub use exports::{
     config_node::*,
     Resource,
     ColShapy,
+    IntoVoidResult,
 };
 
 pub use altv_sdk::{
@@ -69,31 +70,64 @@ pub mod prelude {
 }
 
 /// # Examples
+///
 /// ```rust
 /// altv::set_timeout(
 ///     move || {
 ///         altv::log!("this message will be printed once, after 1.5s");
+///     },
+///     1500,
+/// );
+/// ```
+///
+/// With error handling
+/// ```rust
+/// altv::set_timeout(
+///     move || {
+///         altv::log!("this message will be printed once, after 1.5s");
+///         something_that_can_fail()?;
 ///         Ok(())
 ///     },
 ///     1500,
 /// );
 /// ```
-pub fn set_timeout(callback: impl FnMut() -> VoidResult + 'static, millis: u64) {
-    exports::create_timer(Box::new(callback), millis, true);
+pub fn set_timeout<V: IntoVoidResult>(mut callback: impl FnMut() -> V + 'static, millis: u64) {
+    exports::create_timer(
+        Box::new(move || callback().into_void_result()),
+        millis,
+        true,
+    );
 }
 
 /// # Examples
+///
+/// Without error handling
 /// ```rust
 /// altv::set_interval(
 ///     move || {
 ///         altv::log!("this message will be printed every 1.5s");
+///     },
+///     1500,
+/// );
+/// ```
+///
+/// With error handling
+/// ```rust
+/// altv::set_interval(
+///     move || {
+///         altv::log!("this message will be printed every 1.5s");
+///         something_that_can_fail()?;
 ///         Ok(())
 ///     },
 ///     1500,
 /// );
 /// ```
-pub fn set_interval(callback: impl FnMut() -> VoidResult + 'static, millis: u64) {
-    exports::create_timer(Box::new(callback), millis, false);
+pub fn set_interval<V: IntoVoidResult>(mut callback: impl FnMut() -> V + 'static, millis: u64) {
+    exports::create_timer(
+        Box::new(move || callback().into_void_result()),
+        millis,
+        false,
+    );
 }
 
 pub use resource_main_macro::resource_main_func as main;

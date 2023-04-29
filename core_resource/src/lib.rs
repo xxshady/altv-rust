@@ -1,8 +1,5 @@
 use core_shared::*;
 
-pub type VoidResult = anyhow::Result<()>;
-pub type SomeResult<V> = anyhow::Result<V>;
-
 use altv_sdk::ffi as sdk;
 
 mod resource;
@@ -33,6 +30,9 @@ mod vehicle_model_info;
 mod virtual_entities;
 mod voice_channel;
 mod world_object;
+
+mod result;
+pub use result::{IntoVoidResult, SomeResult, VoidResult};
 
 pub mod exports;
 

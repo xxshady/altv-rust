@@ -22,6 +22,7 @@ pub use crate::{
     init,
     ped_model_info::PedModelInfo,
     quaternion::Quaternion,
+    result::{IntoVoidResult, SomeResult, VoidResult},
     rgba::RGBA,
     structs::{
         AnimationFlags, AttachToEntityBoneIndex, AttachToEntityBoneName, PlayAnimation,
@@ -31,7 +32,6 @@ pub use crate::{
     vector::{Vector2, Vector3},
     vehicle_model_info::VehicleModelInfo,
     world_object::WorldObject,
-    SomeResult, VoidResult,
 };
 
 pub mod logging {
