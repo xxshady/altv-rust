@@ -1,3 +1,8 @@
+use autocxx::{
+    cxx::{CxxString, CxxVector},
+    prelude::*,
+};
+use lazycell::LazyCell;
 use std::{fmt::Debug, ptr::NonNull};
 
 use crate::{
@@ -16,10 +21,6 @@ use crate::{
     SomeResult,
 };
 use altv_sdk::ffi as sdk;
-use autocxx::{
-    cxx::{CxxString, CxxVector},
-    prelude::*,
-};
 
 pub fn read_cpp_vector3(cpp_vector: UniquePtr<sdk::Vector3Wrapper>) -> Vector3 {
     let mut out_x = 0f32;
@@ -249,7 +250,6 @@ macro_rules! __if_not {
     };
 }
 pub use __if_not as if_not;
-use lazycell::LazyCell;
 
 pub fn init_or_get_lazycell<T: Debug>(
     cell: &LazyCell<T>,

@@ -3,7 +3,7 @@ use std::{cell::RefMut, fmt::Debug};
 
 use super::{
     extra_pools::{Entity, ExtraPools},
-    BaseObjectContainer, BaseObjectManager, BaseObjectWrapper,
+    helpers, BaseObjectContainer, BaseObjectManager, BaseObjectWrapper,
 };
 use crate::{col_shape::ColShapy, sdk, world_object::WorldObject};
 
@@ -21,6 +21,7 @@ macro_rules! base_objects {
                     $impl_trait: ty,
                 )+ ],
             )?
+            @inherit_ptrs_generic_for_doc: $inherit_ptrs_generic_for_doc: ty,
         ],
     )+ ) => {
         paste::paste! {
@@ -30,16 +31,15 @@ macro_rules! base_objects {
 
                 pub type $name_struct = sdk::alt::[<I $manager_name>];
 
-                // TODO: fix this
-                #[doc = "[Methods](struct.BaseObjectWrapper.html#impl-BaseObjectWrapper<I" $manager_name ">)"]
+                #[doc = helpers::base_object_wrapper_impl_link!($manager_name, ($( $inherit_ptrs_struct )?))]
                 pub type $manager_name = BaseObjectWrapper<
                     $name_struct
-                    $(, $crate::base_objects::$inherit_ptrs_struct )?
+                    $(, $crate::base_objects::inherit_ptrs::$inherit_ptrs_struct )?
                 >;
 
                 pub type $name_container = BaseObjectContainer<
                     $name_struct
-                    $(, $crate::base_objects::$inherit_ptrs_struct )?
+                    $(, $crate::base_objects::inherit_ptrs::$inherit_ptrs_struct )?
                 >;
 
                 #[allow(dead_code)]
@@ -52,7 +52,7 @@ macro_rules! base_objects {
                 }
 
             $( $(
-                impl $impl_trait <$crate::base_objects::$inherit_ptrs_struct> for $manager_name {}
+                impl $impl_trait <$crate::base_objects::inherit_ptrs::$inherit_ptrs_struct> for $manager_name {}
             )+ )?
 
                 #[macro_export]
@@ -85,7 +85,7 @@ macro_rules! base_objects {
 
                             let inherit_ptrs = $crate::helpers::if_not!(
                                 ($(
-                                    unsafe { $crate::base_objects::$inherit_ptrs_struct::new(base_ptr.as_ptr()) }
+                                    unsafe { $crate::base_objects::inherit_ptrs::$inherit_ptrs_struct::new(base_ptr.as_ptr()) }
                                 )?) {}
                             );
 
@@ -123,7 +123,7 @@ macro_rules! base_objects {
             $(
                 pub(crate) $manager_name_snake: BaseObjectManager<
                     $manager_name_snake::$name_struct
-                    $(, $crate::base_objects::$inherit_ptrs_struct )?
+                    $(, $crate::base_objects::inherit_ptrs::$inherit_ptrs_struct )?
                 >,
             )+
             }
@@ -146,7 +146,7 @@ macro_rules! base_objects {
 
                             let inherit_ptrs = $crate::helpers::if_not!(
                                 ($(unsafe {
-                                    $crate::base_objects::$inherit_ptrs_struct::new(base_ptr.as_ptr())
+                                    $crate::base_objects::inherit_ptrs::$inherit_ptrs_struct::new(base_ptr.as_ptr())
                                 })?) {}
                             );
 
@@ -251,6 +251,7 @@ macro_rules! base_objects {
                     $( @inherit_classes: $inherit_ptrs_struct, [ $(
                         $impl_trait,
                     )+ ], )?
+                    @inherit_ptrs_generic_for_doc: $crate::helpers::if_not_for_doc!(( $( $inherit_ptrs_struct )? ) () ),
                 ],
             )+ );
         }
@@ -260,7 +261,7 @@ macro_rules! base_objects {
 base_objects!(
     ColShape: [
         altv_sdk::BaseObjectType::Colshape,
-        @inherit_classes: inherit_ptrs::WorldColShape, [
+        @inherit_classes: WorldColShape, [
             WorldObject,
             ColShapy,
         ],
@@ -268,7 +269,7 @@ base_objects!(
     Vehicle: [
         altv_sdk::BaseObjectType::Vehicle,
         @extra_pool: Entity,
-        @inherit_classes: inherit_ptrs::WorldEntity, [
+        @inherit_classes: WorldEntity, [
             WorldObject,
             Entity,
         ],
@@ -276,14 +277,14 @@ base_objects!(
     Player: [
         altv_sdk::BaseObjectType::Player,
         @extra_pool: Entity,
-        @inherit_classes: inherit_ptrs::WorldEntity, [
+        @inherit_classes: WorldEntity, [
             WorldObject,
             Entity,
         ],
     ],
     VirtualEntity: [
         altv_sdk::BaseObjectType::VirtualEntity,
-        @inherit_classes: inherit_ptrs::WorldObject, [
+        @inherit_classes: WorldObject, [
             WorldObject,
         ],
     ],
@@ -292,7 +293,7 @@ base_objects!(
     ],
     Blip: [
         altv_sdk::BaseObjectType::Blip,
-        @inherit_classes: inherit_ptrs::WorldObject, [
+        @inherit_classes: WorldObject, [
             WorldObject,
         ],
     ],
@@ -301,13 +302,13 @@ base_objects!(
     ],
     Marker: [
         altv_sdk::BaseObjectType::Marker,
-        @inherit_classes: inherit_ptrs::WorldObject, [
+        @inherit_classes: WorldObject, [
             WorldObject,
         ],
     ],
     Checkpoint: [
         altv_sdk::BaseObjectType::Checkpoint,
-        @inherit_classes: inherit_ptrs::WorldColShape, [
+        @inherit_classes: WorldColShape, [
             WorldObject,
             ColShapy,
         ],
