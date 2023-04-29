@@ -16,6 +16,7 @@ use crate::{
     SomeResult, VoidResult,
 };
 
+/// # **`Vehicle implementation`**
 impl vehicle::Vehicle {
     pub fn all() -> Vec<vehicle::VehicleContainer> {
         Resource::with_base_objects_ref(|v, _| v.vehicle.all())

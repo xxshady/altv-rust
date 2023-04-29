@@ -3,7 +3,7 @@ use std::{cell::RefMut, fmt::Debug};
 
 use super::{
     extra_pools::{Entity, ExtraPools},
-    helpers, BaseObjectContainer, BaseObjectManager, BaseObjectWrapper,
+    BaseObjectContainer, BaseObjectManager, BaseObjectWrapper,
 };
 use crate::{col_shape::ColShapy, sdk, world_object::WorldObject};
 
@@ -21,7 +21,6 @@ macro_rules! base_objects {
                     $impl_trait: ty,
                 )+ ],
             )?
-            @inherit_ptrs_generic_for_doc: $inherit_ptrs_generic_for_doc: ty,
         ],
     )+ ) => {
         paste::paste! {
@@ -31,7 +30,7 @@ macro_rules! base_objects {
 
                 pub type $name_struct = sdk::alt::[<I $manager_name>];
 
-                #[doc = helpers::base_object_wrapper_impl_link!($manager_name, ($( $inherit_ptrs_struct )?))]
+                #[doc = "[Implementation](struct.BaseObjectWrapper.html#" [<$manager_name:lower>] "-implementation)"]
                 pub type $manager_name = BaseObjectWrapper<
                     $name_struct
                     $(, $crate::base_objects::inherit_ptrs::$inherit_ptrs_struct )?
@@ -251,7 +250,6 @@ macro_rules! base_objects {
                     $( @inherit_classes: $inherit_ptrs_struct, [ $(
                         $impl_trait,
                     )+ ], )?
-                    @inherit_ptrs_generic_for_doc: $crate::helpers::if_not_for_doc!(( $( $inherit_ptrs_struct )? ) () ),
                 ],
             )+ );
         }

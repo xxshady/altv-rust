@@ -11,6 +11,7 @@ use crate::{
 use autocxx::prelude::*;
 use std::ptr::NonNull;
 
+/// # **`Checkpoint implementation`**
 impl checkpoint::Checkpoint {
     pub fn new(
         checkpoint_type: u8,

@@ -7,6 +7,7 @@ use crate::{
     sdk, SomeResult, VoidResult,
 };
 
+/// # **`VoiceChannel implementation`**
 impl voice_channel::VoiceChannel {
     pub fn new_spatial(max_distance: f32) -> SomeResult<voice_channel::VoiceChannelContainer> {
         Self::new(true, max_distance)

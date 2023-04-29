@@ -1,6 +1,5 @@
 mod base_impl;
 pub(crate) mod extra_pools;
-pub(self) mod helpers;
 pub(crate) mod inherit_ptrs;
 mod manager;
 pub(crate) mod meta;

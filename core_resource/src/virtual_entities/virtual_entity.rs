@@ -11,6 +11,7 @@ use crate::{
 };
 use std::{collections::HashMap, ptr::NonNull};
 
+/// # **`VirtualEntity implementation`**
 impl virtual_entity::VirtualEntity {
     /// Creates new instance of VirtualEntity without initial stream synced meta.
     /// See [virtual_entity::VirtualEntity::new_with_stream_meta]

@@ -11,6 +11,7 @@ use crate::resource::Resource;
 use autocxx::prelude::*;
 use std::ptr::NonNull;
 
+/// # **`Blip implementation`**
 impl blip::Blip {
     pub fn new_area(pos: impl Into<Vector3>, width: f32, height: f32) -> blip::BlipContainer {
         let pos = pos.into();

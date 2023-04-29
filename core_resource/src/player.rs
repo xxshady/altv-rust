@@ -12,6 +12,7 @@ use crate::{
 };
 use autocxx::prelude::*;
 
+/// # **`Player implementation`**
 impl player::Player {
     pub fn all() -> Vec<player::PlayerContainer> {
         Resource::with_base_objects_ref(|v, _| v.player.all())

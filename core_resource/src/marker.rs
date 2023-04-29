@@ -10,6 +10,7 @@ use crate::{
 use autocxx::prelude::*;
 use std::ptr::NonNull;
 
+/// # **`Marker implementation`**
 impl marker::Marker {
     pub fn new(
         marker_type: altv_sdk::MarkerType,

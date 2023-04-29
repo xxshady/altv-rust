@@ -10,6 +10,7 @@ use std::ptr::NonNull;
 
 pub type ColShapeRawPtr = *mut col_shape::ColShapeStruct;
 
+/// # **`ColShape implementation`**
 impl col_shape::ColShape {
     pub fn new_circle(pos: impl Into<Vector2>, radius: f32) -> col_shape::ColShapeContainer {
         let pos = pos.into();
