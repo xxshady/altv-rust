@@ -411,11 +411,11 @@ impl vehicle::Vehicle {
     }
 
     /// At present this function is **unstable**,
-    /// consider recreating the vehicle instead.<br>
-    /// https://github.com/altmp/altv-issues/issues/1748<br>
-    /// https://github.com/altmp/altv-issues/issues/1184<br>
-    /// https://github.com/altmp/altv-issues/issues/1445<br>
-    /// https://github.com/altmp/altv-issues/issues/1426
+    /// consider recreating the vehicle instead. <br>
+    /// <https://github.com/altmp/altv-issues/issues/1748> <br>
+    /// <https://github.com/altmp/altv-issues/issues/1184> <br>
+    /// <https://github.com/altmp/altv-issues/issues/1445> <br>
+    /// <https://github.com/altmp/altv-issues/issues/1426> <br>
     pub fn repair(&self) -> VoidResult {
         unsafe { sdk::IVehicle::SetFixed(self.raw_ptr()?) }
         Ok(())
