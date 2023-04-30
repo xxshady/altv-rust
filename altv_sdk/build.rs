@@ -1,17 +1,5 @@
 use std::fs;
 
-// TODO: remove these retarded constants
-const BASE_OBJECT_TYPE_ENUM_FILE: &str = "cpp-sdk/objects/IBaseObject.h";
-const EVENT_TYPE_ENUM_FILE: &str = "cpp-sdk/events/CEvent.h";
-const MVALUE_TYPE_ENUM_FILE: &str = "cpp-sdk/types/MValue.h";
-const COL_SHAPE_TYPE_ENUM_FILE: &str = "cpp-sdk/script-objects/IColShape.h";
-const BLIP_TYPE_ENUM_FILE: &str = "cpp-sdk/script-objects/IBlip.h";
-const MARKER_TYPE_ENUM_FILE: &str = "cpp-sdk/script-objects/IMarker.h";
-const PLAYER_BODY_PART_ENUM_FILE: &str = "cpp-sdk/events/CWeaponDamageEvent.h";
-const PLAYER_CONNECT_DENIED_REASON_ENUM_FILE: &str = "cpp-sdk/events/CPlayerConnectDeniedEvent.h";
-const EXPLOSION_TYPE_ENUM_FILE: &str = "cpp-sdk/events/CExplosionEvent.h";
-const VEHICLE_MODEL_TYPE_ENUM_FILE: &str = "cpp-sdk/types/VehicleModelInfo.h";
-
 fn main() {
     let out_dir = std::env::var("OUT_DIR").unwrap();
     generate_cpp_to_rust_bindings(&out_dir);
@@ -25,7 +13,7 @@ fn generate_cpp_to_rust_bindings(out_dir: &str) {
     generate_rust_enum_from_cpp(
         "BaseObjectType",
         "u8",
-        BASE_OBJECT_TYPE_ENUM_FILE,
+        "cpp-sdk/objects/IBaseObject.h",
         "enum class Type : uint8_t",
         "base_object_type.rs",
         out_dir,
@@ -34,7 +22,7 @@ fn generate_cpp_to_rust_bindings(out_dir: &str) {
     generate_rust_enum_from_cpp(
         "EventType",
         "u16",
-        EVENT_TYPE_ENUM_FILE,
+        "cpp-sdk/events/CEvent.h",
         "enum class Type : uint16_t",
         "event_type.rs",
         out_dir,
@@ -43,7 +31,7 @@ fn generate_cpp_to_rust_bindings(out_dir: &str) {
     generate_rust_enum_from_cpp(
         "MValueType",
         "u8",
-        MVALUE_TYPE_ENUM_FILE,
+        "cpp-sdk/types/MValue.h",
         "enum class Type : uint8_t",
         "mvalue_type.rs",
         out_dir,
@@ -52,7 +40,7 @@ fn generate_cpp_to_rust_bindings(out_dir: &str) {
     generate_rust_enum_from_cpp(
         "ColShapeType",
         "u8",
-        COL_SHAPE_TYPE_ENUM_FILE,
+        "cpp-sdk/script-objects/IColShape.h",
         "enum class ColShapeType : uint8_t",
         "col_shape_type.rs",
         out_dir,
@@ -61,7 +49,7 @@ fn generate_cpp_to_rust_bindings(out_dir: &str) {
     generate_rust_enum_from_cpp(
         "BlipType",
         "u8",
-        BLIP_TYPE_ENUM_FILE,
+        "cpp-sdk/script-objects/IBlip.h",
         "enum class BlipType",
         "blip_type.rs",
         out_dir,
@@ -70,7 +58,7 @@ fn generate_cpp_to_rust_bindings(out_dir: &str) {
     generate_rust_enum_from_cpp(
         "MarkerType",
         "u32",
-        MARKER_TYPE_ENUM_FILE,
+        "cpp-sdk/script-objects/IMarker.h",
         "enum class MarkerType",
         "marker_type.rs",
         out_dir,
@@ -79,7 +67,7 @@ fn generate_cpp_to_rust_bindings(out_dir: &str) {
     generate_rust_enum_from_cpp(
         "PlayerBodyPart",
         "i8",
-        PLAYER_BODY_PART_ENUM_FILE,
+        "cpp-sdk/events/CWeaponDamageEvent.h",
         "enum class BodyPart : int8_t",
         "player_body_part.rs",
         out_dir,
@@ -88,7 +76,7 @@ fn generate_cpp_to_rust_bindings(out_dir: &str) {
     generate_rust_enum_from_cpp(
         "PlayerConnectDeniedReason",
         "u8",
-        PLAYER_CONNECT_DENIED_REASON_ENUM_FILE,
+        "cpp-sdk/events/CPlayerConnectDeniedEvent.h",
         "enum Reason: uint8_t",
         "player_connect_denied_reason.rs",
         out_dir,
@@ -97,7 +85,7 @@ fn generate_cpp_to_rust_bindings(out_dir: &str) {
     generate_rust_enum_from_cpp(
         "ExplosionType",
         "i8",
-        EXPLOSION_TYPE_ENUM_FILE,
+        "cpp-sdk/events/CExplosionEvent.h",
         "enum class ExplosionType : int8_t",
         "explosion_type.rs",
         out_dir,
@@ -106,7 +94,7 @@ fn generate_cpp_to_rust_bindings(out_dir: &str) {
     generate_rust_enum_from_cpp(
         "VehicleModelType",
         "u8",
-        VEHICLE_MODEL_TYPE_ENUM_FILE,
+        "cpp-sdk/types/VehicleModelInfo.h",
         "enum class Type : uint8_t",
         "vehicle_model_type.rs",
         out_dir,
