@@ -10,12 +10,12 @@ thread_local! {
 }
 
 #[derive(Debug)]
-pub struct ResourceContext {
+pub struct ResourceController {
     _lib: libloading::Library,
     pub resource_for_module: ResourceForModule,
 }
 
-impl ResourceContext {
+impl ResourceController {
     pub fn new(lib: libloading::Library, resource_for_module: ResourceForModule) -> Self {
         Self {
             _lib: lib,
@@ -26,12 +26,12 @@ impl ResourceContext {
 
 #[derive(Debug, Default)]
 pub struct ResourceManager {
-    resources: HashMap<ResourceName, ResourceContext>,
+    resources: HashMap<ResourceName, ResourceController>,
     pending_start_resources: HashSet<ResourceName>,
 }
 
 impl ResourceManager {
-    pub fn resources_iter(&self) -> hash_map::Iter<String, ResourceContext> {
+    pub fn resources_iter(&self) -> hash_map::Iter<String, ResourceController> {
         self.resources.iter()
     }
 
@@ -47,7 +47,7 @@ impl ResourceManager {
         self.pending_start_resources.contains(name)
     }
 
-    pub fn add(&mut self, name: ResourceName, resource: ResourceContext) {
+    pub fn add(&mut self, name: ResourceName, resource: ResourceController) {
         self.resources.insert(name, resource);
     }
 

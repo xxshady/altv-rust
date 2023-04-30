@@ -55,12 +55,12 @@ impl ConnectionQueueInfo {
 }
 
 #[derive(Debug)]
-pub struct ConnectionQueueContext {
+pub struct ConnectionQueueController {
     info_ptr: InfoPtr,
     state: RefCell<ConnectionQueueState>,
 }
 
-impl ConnectionQueueContext {
+impl ConnectionQueueController {
     pub fn new(info_ptr: InfoPtr) -> Rc<Self> {
         Rc::new(Self {
             info_ptr,
@@ -103,11 +103,11 @@ impl ConnectionQueueContext {
 
 #[derive(Debug, Default)]
 pub struct ConnectionQueueManager {
-    contexts: HashMap<InfoPtr, Rc<ConnectionQueueContext>>,
+    contexts: HashMap<InfoPtr, Rc<ConnectionQueueController>>,
 }
 
 impl ConnectionQueueManager {
-    pub(super) fn add(&mut self, ptr: InfoPtr, context: Rc<ConnectionQueueContext>) {
+    pub(super) fn add(&mut self, ptr: InfoPtr, context: Rc<ConnectionQueueController>) {
         logger::debug!("adding context ptr: {ptr:?}");
         self.contexts.insert(ptr, context);
     }

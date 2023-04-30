@@ -25,7 +25,7 @@ use crate::{
 
 use super::{
     cancellable::CancellableEvent,
-    connection_queue::{ConnectionQueueContext, ConnectionQueueInfo},
+    connection_queue::{ConnectionQueueController, ConnectionQueueInfo},
     structs,
 };
 
@@ -628,24 +628,24 @@ impl ExplosionEvent {
 pub struct ConnectionQueueAdd {
     info_ptr: *mut sdk::alt::IConnectionInfo,
     info: LazyCell<ConnectionQueueInfo>,
-    context: Rc<ConnectionQueueContext>,
+    controller: Rc<ConnectionQueueController>,
 }
 
 impl ConnectionQueueAdd {
     pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
         let event = base_event_to_specific!(base_event, CConnectionQueueAddEvent);
         let info_ptr = sdk::CConnectionQueueAddEvent::GetConnectionInfo(event);
-        let context = ConnectionQueueContext::new(info_ptr);
+        let controller = ConnectionQueueController::new(info_ptr);
 
         resource
             .connection_queue
             .borrow_mut()
-            .add(info_ptr, context.clone());
+            .add(info_ptr, controller.clone());
 
         Self {
             info_ptr,
             info: LazyCell::new(),
-            context,
+            controller,
         }
     }
 
@@ -656,8 +656,8 @@ impl ConnectionQueueAdd {
         .unwrap()
     }
 
-    pub fn context(&self) -> Rc<ConnectionQueueContext> {
-        self.context.clone()
+    pub fn controller(&self) -> Rc<ConnectionQueueController> {
+        self.controller.clone()
     }
 }
 
