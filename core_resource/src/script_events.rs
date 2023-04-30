@@ -20,18 +20,18 @@ pub fn emit_local_event_without_args(event_name: &str) {
 pub type EventArgs<'a> = &'a mvalue::MValueList;
 
 #[derive(Debug)]
-pub struct LocalEventController<'a> {
+pub struct LocalEventContext<'a> {
     pub args: EventArgs<'a>,
 }
 
 #[derive(Debug)]
-pub struct ClientEventController<'a> {
+pub struct ClientEventContext<'a> {
     pub player: player::PlayerContainer,
     pub args: EventArgs<'a>,
 }
 
-pub type LocalEventHandler = Box<dyn FnMut(&LocalEventController) -> VoidResult>;
-pub type ClientEventHandler = Box<dyn FnMut(&ClientEventController) -> VoidResult>;
+pub type LocalEventHandler = Box<dyn FnMut(&LocalEventContext) -> VoidResult>;
+pub type ClientEventHandler = Box<dyn FnMut(&ClientEventContext) -> VoidResult>;
 
 pub trait ScriptEventManager {
     type Handler;
@@ -65,7 +65,7 @@ impl LocalEventManager {
         use crate::events;
 
         events::add_sdk_handler(events::SDKHandler::ServerScriptEvent(Box::new(|c| {
-            let events::sdk_controllers::ServerScriptEvent { name, .. } = c;
+            let events::sdk_contexts::ServerScriptEvent { name, .. } = c;
 
             Resource::with_local_script_events_mut(|mut events, _| {
                 if !events.is_event_handled(name) {
@@ -81,9 +81,9 @@ impl LocalEventManager {
 
     fn handle_event(&mut self, event_name: &str, args: EventArgs) {
         if let Some(handlers) = self.get_handlers_for_event(event_name) {
-            let controller = LocalEventController { args };
+            let context = LocalEventContext { args };
             for h in handlers {
-                if let Err(error) = h(&controller) {
+                if let Err(error) = h(&context) {
                     logger::error!("handler of event: {event_name:?} failed with error: {error:?}");
                 } else {
                     logger::debug!("handler of event: {event_name:?} called successfully");
@@ -123,7 +123,7 @@ impl ClientEventManager {
         use crate::events;
 
         events::add_sdk_handler(events::SDKHandler::ClientScriptEvent(Box::new(|c| {
-            let events::sdk_controllers::ClientScriptEvent { name, player, .. } = c;
+            let events::sdk_contexts::ClientScriptEvent { name, player, .. } = c;
 
             Resource::with_client_script_events_mut(|mut events, _| {
                 if !events.is_event_handled(name) {
@@ -144,9 +144,9 @@ impl ClientEventManager {
         args: EventArgs,
     ) {
         if let Some(handlers) = self.get_handlers_for_event(event_name) {
-            let controller = ClientEventController { player, args };
+            let context = ClientEventContext { player, args };
             for h in handlers {
-                if let Err(error) = h(&controller) {
+                if let Err(error) = h(&context) {
                     logger::error!(
                         "handler of client event: {event_name:?} failed with error: {error:?}"
                     );
@@ -180,7 +180,7 @@ impl Debug for ClientEventManager {
 
 pub fn add_local_handler<V: IntoVoidResult>(
     event_name: impl IntoString,
-    mut handler: impl FnMut(&LocalEventController) -> V + 'static,
+    mut handler: impl FnMut(&LocalEventContext) -> V + 'static,
 ) {
     Resource::with_local_script_events_mut(|mut local_events, _| {
         local_events.add_handler(
@@ -192,7 +192,7 @@ pub fn add_local_handler<V: IntoVoidResult>(
 
 pub fn add_client_handler<V: IntoVoidResult>(
     event_name: impl IntoString,
-    mut handler: impl FnMut(&ClientEventController) -> V + 'static,
+    mut handler: impl FnMut(&ClientEventContext) -> V + 'static,
 ) {
     Resource::with_client_script_events_mut(|mut client_events, _| {
         client_events.add_handler(

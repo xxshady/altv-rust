@@ -10,12 +10,12 @@ thread_local! {
 }
 
 #[derive(Debug)]
-pub struct ResourceController {
+pub struct ResourceContext {
     _lib: libloading::Library,
     pub resource_for_module: ResourceForModule,
 }
 
-impl ResourceController {
+impl ResourceContext {
     pub fn new(lib: libloading::Library, resource_for_module: ResourceForModule) -> Self {
         Self {
             _lib: lib,
@@ -26,12 +26,12 @@ impl ResourceController {
 
 #[derive(Debug, Default)]
 pub struct ResourceManager {
-    resources: HashMap<ResourceName, ResourceController>,
+    resources: HashMap<ResourceName, ResourceContext>,
     pending_start_resources: HashSet<ResourceName>,
 }
 
 impl ResourceManager {
-    pub fn resources_iter(&self) -> hash_map::Iter<String, ResourceController> {
+    pub fn resources_iter(&self) -> hash_map::Iter<String, ResourceContext> {
         self.resources.iter()
     }
 
@@ -47,15 +47,15 @@ impl ResourceManager {
         self.pending_start_resources.contains(name)
     }
 
-    pub fn add(&mut self, name: ResourceName, resource: ResourceController) {
+    pub fn add(&mut self, name: ResourceName, resource: ResourceContext) {
         self.resources.insert(name, resource);
     }
 
     pub fn remove(&mut self, resource: &str) {
-        if let Some(controller) = self.resources.remove(resource) {
+        if let Some(context) = self.resources.remove(resource) {
             // workaround to fix crash due to drop_in_place of boxed closures
             // core::ptr::drop_in_place<alloc::boxed::Box<dyn$<core::ops::function::Fn<...
-            drop(controller.resource_for_module);
+            drop(context.resource_for_module);
         } else {
             logger::error!("ResourceManager remove unknown resource: {resource}");
         }

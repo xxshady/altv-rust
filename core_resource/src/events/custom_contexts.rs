@@ -3,19 +3,19 @@ use crate::{
     resource::Resource,
 };
 
-use super::sdk_controllers::{ColshapeEvent, ResourceStart, ResourceStop};
+use super::sdk_contexts::{ColshapeEvent, ResourceStart, ResourceStop};
 
 macro_rules! entity_enter_or_leave_col_shape {
     ($bool_state: literal, $key_name: ident, $any_entity: path) => {
-        pub fn new(controller: &ColshapeEvent, _: &Resource) -> Option<Self> {
-            if controller.state != $bool_state {
+        pub fn new(context: &ColshapeEvent, _: &Resource) -> Option<Self> {
+            if context.state != $bool_state {
                 return None;
             };
 
-            let $any_entity($key_name) = &controller.world_object else {
+            let $any_entity($key_name) = &context.world_object else {
                                         logger::debug!(
                                             "{}_enter_or_leave_col_shape received {:?} -> skip",
-                                            stringify!($key_name), &controller.world_object
+                                            stringify!($key_name), &context.world_object
                                         );
                                         return None;
                                     };
@@ -23,7 +23,7 @@ macro_rules! entity_enter_or_leave_col_shape {
 
             Some(Self {
                 col_shape: Resource::with_base_objects_mut(|v, _| {
-                    v.col_shape.get_by_ptr(controller.col_shape)
+                    v.col_shape.get_by_ptr(context.col_shape)
                 })
                 .unwrap(),
                 $key_name,
@@ -76,9 +76,9 @@ impl PlayerLeaveColShape {
 pub struct ThisResourceStart {}
 
 impl ThisResourceStart {
-    pub fn new(controller: &ResourceStart, _: &Resource) -> Option<Self> {
+    pub fn new(context: &ResourceStart, _: &Resource) -> Option<Self> {
         Resource::with(|v| {
-            if v.name != controller.resource.name {
+            if v.name != context.resource.name {
                 return None;
             }
             Some(Self {})
@@ -90,9 +90,9 @@ impl ThisResourceStart {
 pub struct ThisResourceStop {}
 
 impl ThisResourceStop {
-    pub fn new(controller: &ResourceStop, _: &Resource) -> Option<Self> {
+    pub fn new(context: &ResourceStop, _: &Resource) -> Option<Self> {
         Resource::with(|v| {
-            if v.name != controller.resource.name {
+            if v.name != context.resource.name {
                 return None;
             }
             Some(Self {})

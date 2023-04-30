@@ -1,7 +1,7 @@
 use altv_sdk::ffi as sdk;
 use core_module::ResourceName;
 use libloading::Library;
-use resource_manager::ResourceController;
+use resource_manager::ResourceContext;
 use std::{path::PathBuf, ptr::NonNull};
 
 use crate::{event_manager::EVENT_MANAGER_INSTANCE, resource_manager::RESOURCE_MANAGER_INSTANCE};
@@ -53,9 +53,9 @@ extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
 
         manager.borrow_mut().remove_pending_status(&resource_name);
 
-        let resource_controller = ResourceController::new(lib, resource_for_module);
+        let resource_context = ResourceContext::new(lib, resource_for_module);
 
-        manager.borrow_mut().add(resource_name, resource_controller);
+        manager.borrow_mut().add(resource_name, resource_context);
     });
 }
 
@@ -95,8 +95,8 @@ extern "C" fn runtime_resource_destroy_impl() {
 #[allow(improper_ctypes_definitions)]
 extern "C" fn runtime_on_tick() {
     RESOURCE_MANAGER_INSTANCE.with(|v| {
-        for (_, controller) in v.borrow().resources_iter() {
-            controller.resource_for_module.on_tick();
+        for (_, context) in v.borrow().resources_iter() {
+            context.resource_for_module.on_tick();
         }
     });
 }

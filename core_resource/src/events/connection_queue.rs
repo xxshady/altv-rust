@@ -55,12 +55,12 @@ impl ConnectionQueueInfo {
 }
 
 #[derive(Debug)]
-pub struct ConnectionQueueController {
+pub struct ConnectionQueueContext {
     info_ptr: InfoPtr,
     state: RefCell<ConnectionQueueState>,
 }
 
-impl ConnectionQueueController {
+impl ConnectionQueueContext {
     pub fn new(info_ptr: InfoPtr) -> Rc<Self> {
         Rc::new(Self {
             info_ptr,
@@ -103,25 +103,25 @@ impl ConnectionQueueController {
 
 #[derive(Debug, Default)]
 pub struct ConnectionQueueManager {
-    controllers: HashMap<InfoPtr, Rc<ConnectionQueueController>>,
+    contexts: HashMap<InfoPtr, Rc<ConnectionQueueContext>>,
 }
 
 impl ConnectionQueueManager {
-    pub(super) fn add(&mut self, ptr: InfoPtr, controller: Rc<ConnectionQueueController>) {
-        logger::debug!("adding controller ptr: {ptr:?}");
-        self.controllers.insert(ptr, controller);
+    pub(super) fn add(&mut self, ptr: InfoPtr, context: Rc<ConnectionQueueContext>) {
+        logger::debug!("adding context ptr: {ptr:?}");
+        self.contexts.insert(ptr, context);
     }
 
     pub(super) fn remove(&mut self, ptr: InfoPtr) {
-        logger::debug!("removing controller ptr: {ptr:?}");
+        logger::debug!("removing context ptr: {ptr:?}");
 
-        let Some(c) = self.controllers.remove(&ptr) else {
-            logger::error!("remove unknown controller ptr: {ptr:?}");
+        let Some(c) = self.contexts.remove(&ptr) else {
+            logger::error!("remove unknown context ptr: {ptr:?}");
             return;
         };
 
         if let Err(e) = c.invalidate() {
-            logger::error!("failed to invalidate controller ptr: {ptr:?}, error: {e:?}")
+            logger::error!("failed to invalidate context ptr: {ptr:?}, error: {e:?}")
         }
     }
 }

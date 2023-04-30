@@ -3,8 +3,8 @@ use crate::{resource::Resource, VoidResult, SomeResult};
 
 pub use altv_sdk::EventType as SDKEventType;
 
-pub mod sdk_controllers;
-pub mod custom_controllers;
+pub mod sdk_contexts;
+pub mod custom_contexts;
 pub(self) mod helpers;
 pub(self) mod cancellable;
 pub(crate) mod connection_queue;
@@ -48,14 +48,14 @@ macro_rules! supported_sdk_events {
             }
         }
 
-        pub enum SDKController {
-            $( $event_name(sdk_controllers::$event_name), )+
+        pub enum SDKContext {
+            $( $event_name(sdk_contexts::$event_name), )+
         }
 
-        impl std::fmt::Debug for SDKController {
+        impl std::fmt::Debug for SDKContext {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 let str = format!("{}", match self {
-                    $( Self::$event_name(_) => stringify!(SDKController::$event_name), )+
+                    $( Self::$event_name(_) => stringify!(SDKContext::$event_name), )+
                 });
 
                 f.write_str(&str)
@@ -63,7 +63,7 @@ macro_rules! supported_sdk_events {
         }
 
         pub enum SDKHandler { $(
-            $event_name(Box<dyn FnMut(&sdk_controllers::$event_name) -> VoidResult + 'static>),
+            $event_name(Box<dyn FnMut(&sdk_contexts::$event_name) -> VoidResult + 'static>),
         )+ }
 
         impl SDKHandler {
@@ -84,28 +84,28 @@ macro_rules! supported_sdk_events {
             }
         }
 
-        pub(crate) fn sdk_controller_from_supported_event_type(
+        pub(crate) fn sdk_context_from_supported_event_type(
             event_type: SupportedEventType, 
             event_ptr: altv_sdk::CEventPtr,
             resource: &Resource,
-        ) -> SDKController {
+        ) -> SDKContext {
             match event_type { $(
                 SupportedEventType::$event_name => 
-                    SDKController::$event_name(unsafe { sdk_controllers::$event_name::new(event_ptr, resource) }),
+                    SDKContext::$event_name(unsafe { sdk_contexts::$event_name::new(event_ptr, resource) }),
             )+ }
         }
 
-        pub fn call_user_sdk_handlers(controller: &SDKController, handlers: &mut [SDKHandler]) {
+        pub fn call_user_sdk_handlers(context: &SDKContext, handlers: &mut [SDKHandler]) {
             for h in handlers {
                 match h { $(
                     SDKHandler::$event_name(h) => {
                         let result = h(
-                            if let SDKController::$event_name(controller) = controller {
-                                controller
+                            if let SDKContext::$event_name(context) = context {
+                                context
                             } else {
                                 // this should never happen because SDKHandler gets converted to SupportedEventType
                                 // automatically with `to_event_type()`
-                                panic!("expected SDKController: {}, received: {controller:?}", stringify!($event_name))
+                                panic!("expected SDKContext: {}, received: {context:?}", stringify!($event_name))
                             }
                         );
                         log_user_handler_error!($event_name, result);
@@ -134,14 +134,14 @@ macro_rules! custom_events {
             }
         }
 
-        pub enum CustomController { $($(
-            $custom_event_name(custom_controllers::$custom_event_name),
+        pub enum CustomContext { $($(
+            $custom_event_name(custom_contexts::$custom_event_name),
         )+)+ }
         
-        impl std::fmt::Debug for CustomController {
+        impl std::fmt::Debug for CustomContext {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 let str = format!("{}", match self {
-                    $($( Self::$custom_event_name(_) => stringify!(CustomController::$custom_event_name), )+)+
+                    $($( Self::$custom_event_name(_) => stringify!(CustomContext::$custom_event_name), )+)+
                 });
 
                 f.write_str(&str)
@@ -149,7 +149,7 @@ macro_rules! custom_events {
         }
 
         pub enum CustomHandler { $($(
-            $custom_event_name(Box<dyn FnMut(&custom_controllers::$custom_event_name) -> VoidResult + 'static>),
+            $custom_event_name(Box<dyn FnMut(&custom_contexts::$custom_event_name) -> VoidResult + 'static>),
         )+)+ }
 
         impl CustomHandler {
@@ -170,16 +170,16 @@ macro_rules! custom_events {
             }
         }
 
-        pub fn custom_controller_from_event_type(
+        pub fn custom_context_from_event_type(
             event_type: CustomEventType,
-            controller: &SDKController,
+            context: &SDKContext,
             resource: &Resource,
-        ) -> Option<CustomController> {
-            match (controller, event_type) {
+        ) -> Option<CustomContext> {
+            match (context, event_type) {
                 $($(
-                    (SDKController::$sdk_event_name(controller), CustomEventType::$custom_event_name) => {
-                        if let Some(c) = custom_controllers::$custom_event_name::new(controller, resource) {
-                            Some(CustomController::$custom_event_name(c))
+                    (SDKContext::$sdk_event_name(context), CustomEventType::$custom_event_name) => {
+                        if let Some(c) = custom_contexts::$custom_event_name::new(context, resource) {
+                            Some(CustomContext::$custom_event_name(c))
                         } else {
                             None
                         }
@@ -189,16 +189,16 @@ macro_rules! custom_events {
             }
         }
 
-        pub fn call_user_custom_handlers(controller: &CustomController, handlers: &mut [CustomHandler]) {
+        pub fn call_user_custom_handlers(context: &CustomContext, handlers: &mut [CustomHandler]) {
             for h in handlers {
                 match h { $($(
                     CustomHandler::$custom_event_name(h) => {
                         let result = h(
-                            if let CustomController::$custom_event_name(controller) = controller {
-                                controller
+                            if let CustomContext::$custom_event_name(context) = context {
+                                context
                             } else {
                                 // this shit should never happen
-                                panic!("expected CustomController: {}, received: {controller:?}", stringify!($custom_event_name))
+                                panic!("expected CustomContext: {}, received: {context:?}", stringify!($custom_event_name))
                             }
                         );
                         log_user_handler_error!($custom_event_name, result);
@@ -304,18 +304,18 @@ impl EventManager {
     }
 
     pub fn on_supported_sdk_event(&mut self, event_type: SupportedEventType, event_ptr: altv_sdk::CEventPtr, resource: &Resource) {
-        let controller = sdk_controller_from_supported_event_type(event_type, event_ptr, resource);
+        let context = sdk_context_from_supported_event_type(event_type, event_ptr, resource);
 
         if let Some(handlers) = self.user_sdk_handlers.get_mut(&event_type) {
-            call_user_sdk_handlers(&controller, handlers);
+            call_user_sdk_handlers(&context, handlers);
         } else {
             logger::debug!("no user sdk handlers for event: {event_type:?}");
         }
         
-        self.handle_custom_event_type(event_type, controller, resource);
+        self.handle_custom_event_type(event_type, context, resource);
     }
 
-    fn handle_custom_event_type(&mut self, event_type: SupportedEventType, controller: SDKController, resource: &Resource) {
+    fn handle_custom_event_type(&mut self, event_type: SupportedEventType, context: SDKContext, resource: &Resource) {
         let Some(custom_types) = get_custom_event_types_from_sdk_type(event_type) else {
             logger::debug!("no custom sdk handlers for event: {event_type:?}");
             return;
@@ -327,13 +327,13 @@ impl EventManager {
                 continue;
             };
 
-            let controller = custom_controller_from_event_type(*custom_type, &controller, resource);
-            let Some(controller) = controller else {
-                logger::debug!("custom event: {custom_type:?} controller does not exist or event should not be called now");
+            let context = custom_context_from_event_type(*custom_type, &context, resource);
+            let Some(context) = context else {
+                logger::debug!("custom event: {custom_type:?} context does not exist or event should not be called now");
                 continue;  
             };
 
-            call_user_custom_handlers(&controller, handlers);
+            call_user_custom_handlers(&context, handlers);
         }
     }
 

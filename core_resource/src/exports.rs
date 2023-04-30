@@ -83,10 +83,10 @@ pub mod events {
         client_events::emit_all_clients,
         events::{
             add_custom_handler, add_sdk_handler, connection_queue::ConnectionQueueInfo,
-            custom_controllers, sdk_controllers, structs::FireInfo, CustomHandler, SDKHandler,
+            custom_contexts, sdk_contexts, structs::FireInfo, CustomHandler, SDKHandler,
         },
         script_events::{
-            add_client_handler, add_local_handler, ClientEventController, LocalEventController,
+            add_client_handler, add_local_handler, ClientEventContext, LocalEventContext,
         },
     };
 
