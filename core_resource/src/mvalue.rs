@@ -109,10 +109,13 @@ impl_serializable_base_object!(network_object::NetworkObjectContainer, "network 
 
 impl<T: TryInto<Serializable, Error = anyhow::Error>> TryFrom<Option<T>> for Serializable {
     type Error = anyhow::Error;
-    fn try_from(value: Option<T>) -> SomeResult<Self> {
-        Ok(match value {
+    fn try_from(option: Option<T>) -> SomeResult<Self> {
+        Ok(match option {
+            // if option is Option::None convert it to MValue::None
             None => Self(unsafe { sdk::create_mvalue_nil() }.within_unique_ptr()),
-            Some(v) => v.try_into()?,
+            // otherwise "unwrap" the value stored in Option::Some and convert
+            // it to appropriate MValue if type of value can be converted to Serializable
+            Some(value) => value.try_into()?,
         })
     }
 }
