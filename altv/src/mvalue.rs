@@ -9,6 +9,28 @@
 //!
 //! If you want to know more about MValue, you can read more [here](https://docs.altv.mp/sdk/mvalues.html).
 //!
+//! # Option type
+//! Since there is no MValue::Option, Rust [`Option`](https://doc.rust-lang.org/std/option) type
+//! is handled differently when it is [converted to MValue](https://github.com/xxshady/altv-rust/blob/380df752ff46c87887b785635a55ac190224577c/core_resource/src/mvalue.rs#L113-L119).
+//!
+//! ```rust
+//! let vehicle = altv::Vehicle::new("sultan", 0, 0).unwrap();
+//!
+//! let bool: Option<bool> = Some(true);
+//! // Here it is converted to MValue::Bool
+//! vehicle.set_meta("example", bool).unwrap();
+//!
+//! // outputs "Bool(true)"
+//! dbg!(vehicle.get_meta("example").unwrap());
+//!
+//! let none: Option<bool> = None;
+//! // Here it is converted to MValue::None
+//! vehicle.set_meta("example", none).unwrap();
+//!
+//! // outputs "None"
+//! dbg!(vehicle.get_meta("example").unwrap());
+//! ```
+//!
 //! # Examples
 //!
 //! `altv::mvalue::list` creates `MValue::List` (dynamic array or vector of mvalues).
