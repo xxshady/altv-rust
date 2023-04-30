@@ -39,7 +39,7 @@ impl virtual_entity::VirtualEntity {
             group,
             pos,
             streaming_distance,
-            HashMap::<String, mvalue::MValueNone>::new(),
+            HashMap::<String, Option<()>>::new(),
         )
     }
 

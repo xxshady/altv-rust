@@ -58,5 +58,5 @@
 //! alt.log("dict:", dict) // dict: { example: 123 }
 //! ```
 pub use core_resource::exports::mvalue::{
-    mvalue_dict as dict, mvalue_list as list, MValue, MValueList, MValueNone,
+    mvalue_dict as dict, mvalue_list as list, MValue, MValueList,
 };

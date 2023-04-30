@@ -40,6 +40,7 @@ macro_rules! impl_serializable {
 impl_serializable!(bool, sdk::create_mvalue_bool);
 impl_serializable!(&str, sdk::create_mvalue_string);
 impl_serializable!(String, sdk::create_mvalue_string);
+impl_serializable!((), |_| sdk::create_mvalue_nil());
 
 impl_serializable!(i8, |value| sdk::create_mvalue_int(value as i64));
 impl_serializable!(i16, |value| sdk::create_mvalue_int(value as i64));
@@ -106,17 +107,13 @@ impl_serializable_base_object!(checkpoint::CheckpointContainer, "checkpoint");
 impl_serializable_base_object!(ped::PedContainer, "ped");
 impl_serializable_base_object!(network_object::NetworkObjectContainer, "network object");
 
-// TODO: fix this none/null/nil shit
-/// Intended to explicitly express the lack of a value (`null` in alt:V JavaScript API).
-#[derive(Debug)]
-pub struct MValueNone;
-
-impl TryFrom<MValueNone> for Serializable {
+impl<T: TryInto<Serializable, Error = anyhow::Error>> TryFrom<Option<T>> for Serializable {
     type Error = anyhow::Error;
-    fn try_from(_: MValueNone) -> SomeResult<Self> {
-        Ok(Self(
-            unsafe { sdk::create_mvalue_nil() }.within_unique_ptr(),
-        ))
+    fn try_from(value: Option<T>) -> SomeResult<Self> {
+        Ok(match value {
+            None => Self(unsafe { sdk::create_mvalue_nil() }.within_unique_ptr()),
+            Some(v) => v.try_into()?,
+        })
     }
 }
 
