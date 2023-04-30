@@ -6,11 +6,11 @@ fn main() {
 
     let vehicle = altv::Vehicle::new("sultan", 0, 0).unwrap();
 
-    let buf: Vec<u8> = vec![1, 2, 3];
-    dbg!(buf.len(), buf.capacity());
-
-    vehicle.set_meta("example", buf.as_slice()).unwrap();
+    let rgba = altv::RGBA::new(1, 2, 3, 4);
+    vehicle.set_meta("example", &rgba).unwrap();
     dbg!(vehicle.get_meta("example").unwrap());
+
+    dbg!(rgba);
 
     altv::set_timeout(
         move || {

@@ -3,8 +3,9 @@ use crate::{
         blip, checkpoint, col_shape, marker, network_object, ped, player, vehicle, virtual_entity,
         virtual_entity_group, voice_channel, AnyBaseObject, BasePtr,
     },
-    helpers::{read_cpp_vector2, read_cpp_vector3},
+    helpers::{read_cpp_rgba, read_cpp_vector2, read_cpp_vector3},
     resource::Resource,
+    rgba::RGBA,
     vector::{Vector2, Vector3},
     SomeResult,
 };
@@ -57,6 +58,20 @@ impl_serializable!(u64, sdk::create_mvalue_uint);
 impl_serializable!(&[u8], |value: &[u8]| sdk::create_mvalue_byte_array(
     value.as_ptr(),
     value.len()
+));
+
+impl_serializable!(&RGBA, |value: &RGBA| sdk::create_mvalue_rgba(
+    value.r(),
+    value.g(),
+    value.b(),
+    value.a()
+));
+
+impl_serializable!(RGBA, |value: RGBA| sdk::create_mvalue_rgba(
+    value.r(),
+    value.g(),
+    value.b(),
+    value.a()
 ));
 
 impl_serializable!(Vec<Serializable>, |value| sdk::create_mvalue_list(
@@ -165,6 +180,7 @@ pub enum MValue {
     Vector3(Vector3),
     Vector2(Vector2),
     ByteArray(Vec<u8>),
+    RGBA(RGBA),
 
     ColShape(col_shape::ColShapeContainer),
     Vehicle(vehicle::VehicleContainer),
@@ -229,6 +245,8 @@ impl MValueList {
     get_mvalue_type_at!(get_dict_at, HashMap<String, MValue>, MValue::Dict);
     get_mvalue_type_at!(get_vector3_at, Vector3, MValue::Vector3);
     get_mvalue_type_at!(get_vector2_at, Vector2, MValue::Vector2);
+    get_mvalue_type_at!(get_byte_array_at, Vec<u8>, MValue::ByteArray);
+    get_mvalue_type_at!(get_rgba_at, RGBA, MValue::RGBA);
     get_mvalue_type_at!(get_player_at, player::PlayerContainer, MValue::Player);
     get_mvalue_type_at!(get_vehicle_at, vehicle::VehicleContainer, MValue::Vehicle);
     get_mvalue_type_at!(get_ped_at, ped::PedContainer, MValue::Ped);
@@ -368,6 +386,9 @@ pub(crate) fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Re
             }
             MValue::ByteArray(buffer)
         }
+        Rgba => MValue::RGBA(read_cpp_rgba(
+            unsafe { sdk::get_mvalue_rgba(cpp_wrapper) }.within_unique_ptr(),
+        )),
         _ => {
             logger::error!("[deserialize_mvalue] unknown mvalue type: {mvalue_type:?}");
             MValue::None

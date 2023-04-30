@@ -440,6 +440,12 @@ void get_mvalue_byte_array(MValueWrapper mvalue, u8* data) {
     std::memcpy(data, byte_arr->GetData(), byte_arr->GetSize());
 }
 
+RGBAWrapper get_mvalue_rgba(MValueWrapper mvalue) {
+    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::RGBA);
+    auto value = mvalue.ptr->As<alt::IMValueRGBA>().Get()->Value();
+    return { value.r, value.g, value.b, value.a };
+}
+
 MValueMutWrapper create_mvalue_bool(bool value) {
     MValueMutWrapper wrapper;
     wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueBool(value));
@@ -521,6 +527,12 @@ MValueMutWrapper create_mvalue_vector2(f32 x, f32 y) {
 MValueMutWrapper create_mvalue_byte_array(const u8* data, size_t size) {
     MValueMutWrapper wrapper;
     wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueByteArray(data, size));
+    return wrapper;
+}
+
+MValueMutWrapper create_mvalue_rgba(u8 r, u8 g, u8 b, u8 a) {
+    MValueMutWrapper wrapper;
+    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueRGBA({ r, g, b, a }));
     return wrapper;
 }
 
