@@ -34,7 +34,7 @@ impl vehicle::Vehicle {
         let pos = pos.into();
         let rot = rot.into();
 
-        let ptr = Resource::with_pending_base_object_destroy_or_creation_mut(|_, _| unsafe {
+        let ptr = unsafe {
             sdk::ICore::CreateVehicle(
                 model.into_hash(),
                 pos.x(),
@@ -44,7 +44,7 @@ impl vehicle::Vehicle {
                 rot.y(),
                 rot.z(),
             )
-        });
+        };
         let Some(ptr) = NonNull::new(ptr) else {
             anyhow::bail!("Vehicle model is incorrect or there is no free id for new entity");
         };
