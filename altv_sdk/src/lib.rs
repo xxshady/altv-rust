@@ -174,6 +174,8 @@ pub mod ffi {
         generate!("get_mvalue_base_object")
         generate!("get_mvalue_vector3")
         generate!("get_mvalue_vector2")
+        generate!("get_mvalue_byte_array_size")
+        generate!("get_mvalue_byte_array")
 
         generate!("create_mvalue_bool")
         generate!("create_mvalue_double")
@@ -187,6 +189,7 @@ pub mod ffi {
         generate!("create_mvalue_base_object")
         generate!("create_mvalue_vector3")
         generate!("create_mvalue_vector2")
+        generate!("create_mvalue_byte_array")
 
         // events
         generate!("trigger_local_event")

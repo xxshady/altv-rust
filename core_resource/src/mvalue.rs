@@ -54,6 +54,10 @@ impl_serializable!(u8, |value| sdk::create_mvalue_uint(value as u64));
 impl_serializable!(u16, |value| sdk::create_mvalue_uint(value as u64));
 impl_serializable!(u32, |value| sdk::create_mvalue_uint(value as u64));
 impl_serializable!(u64, sdk::create_mvalue_uint);
+impl_serializable!(&[u8], |value: &[u8]| sdk::create_mvalue_byte_array(
+    value.as_ptr(),
+    value.len()
+));
 
 impl_serializable!(Vec<Serializable>, |value| sdk::create_mvalue_list(
     convert_iter_to_mvalue_vec(value)
@@ -160,6 +164,7 @@ pub enum MValue {
     Dict(HashMap<String, MValue>),
     Vector3(Vector3),
     Vector2(Vector2),
+    ByteArray(Vec<u8>),
 
     ColShape(col_shape::ColShapeContainer),
     Vehicle(vehicle::VehicleContainer),
@@ -353,6 +358,16 @@ pub(crate) fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Re
         Vector2 => MValue::Vector2(read_cpp_vector2(
             unsafe { sdk::get_mvalue_vector2(cpp_wrapper) }.within_unique_ptr(),
         )),
+        ByteArray => {
+            let size = unsafe { sdk::get_mvalue_byte_array_size(cpp_wrapper) };
+            logger::debug!("byte array size: {size}");
+            let mut buffer = Vec::<u8>::with_capacity(size);
+            unsafe {
+                sdk::get_mvalue_byte_array(cpp_wrapper, buffer.as_mut_ptr());
+                buffer.set_len(size);
+            }
+            MValue::ByteArray(buffer)
+        }
         _ => {
             logger::error!("[deserialize_mvalue] unknown mvalue type: {mvalue_type:?}");
             MValue::None
