@@ -52,10 +52,10 @@ impl ResourceManager {
     }
 
     pub fn remove(&mut self, resource: &str) {
-        if let Some(context) = self.resources.remove(resource) {
+        if let Some(controller) = self.resources.remove(resource) {
             // workaround to fix crash due to drop_in_place of boxed closures
             // core::ptr::drop_in_place<alloc::boxed::Box<dyn$<core::ops::function::Fn<...
-            drop(context.resource_for_module);
+            drop(controller.resource_for_module);
         } else {
             logger::error!("ResourceManager remove unknown resource: {resource}");
         }
