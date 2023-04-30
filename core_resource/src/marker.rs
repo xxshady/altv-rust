@@ -38,6 +38,11 @@ impl marker::Marker {
         marker::add_to_pool!(NonNull::new(ptr).unwrap())
     }
 
+    pub fn destroy(&self) -> VoidResult {
+        marker::remove_from_pool!(self)?;
+        self.internal_destroy()
+    }
+
     pub fn id(&self) -> SomeResult<u32> {
         Ok(unsafe { sdk::IMarker::GetID(self.raw_ptr()?) })
     }
@@ -66,7 +71,7 @@ impl marker::Marker {
     }
 
     pub fn visible(&self) -> SomeResult<bool> {
-        Ok(unsafe { sdk::IMarker::GetVisible(self.raw_ptr()?) })
+        Ok(unsafe { sdk::IMarker::IsVisible(self.raw_ptr()?) })
     }
 
     pub fn set_visible(&self, visible: bool) -> VoidResult {
@@ -123,8 +128,16 @@ impl marker::Marker {
         Ok(())
     }
 
-    pub fn destroy(&self) -> VoidResult {
-        marker::remove_from_pool!(self)?;
-        self.internal_destroy()
+    pub fn face_camera(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IMarker::IsFaceCamera(self.raw_ptr()?) })
+    }
+
+    pub fn set_face_camera(&self, face_camera: bool) -> VoidResult {
+        unsafe { sdk::IMarker::SetFaceCamera(self.raw_ptr()?, face_camera) }
+        Ok(())
+    }
+
+    pub fn streaming_distance(&self) -> SomeResult<u32> {
+        Ok(unsafe { sdk::IMarker::GetStreamingDistance(self.raw_ptr()?) })
     }
 }

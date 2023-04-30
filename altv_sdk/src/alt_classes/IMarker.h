@@ -20,8 +20,8 @@ RGBAWrapper GetColor(const alt::IMarker* ptr) {
 void SetColor(alt::IMarker* ptr, u8 color_r, u8 color_g, u8 color_b, u8 color_a) {
     return ptr->SetColor({ color_r, color_g, color_b, color_a });
 }
-bool GetVisible(const alt::IMarker* ptr) {
-    return ptr->GetVisible();
+bool IsVisible(const alt::IMarker* ptr) {
+    return ptr->IsVisible();
 }
 void SetVisible(alt::IMarker* ptr, bool visible) {
     return ptr->SetVisible(visible);
@@ -52,6 +52,15 @@ Vector3Wrapper GetDirection(const alt::IMarker* ptr) {
 }
 void SetDirection(alt::IMarker* ptr, f32 dir_x, f32 dir_y, f32 dir_z) {
     return ptr->SetDirection({ dir_x, dir_y, dir_z });
+}
+bool IsFaceCamera(const alt::IMarker* ptr) {
+    return ptr->IsFaceCamera();
+}
+void SetFaceCamera(alt::IMarker* ptr, bool faceCamera) {
+    return ptr->SetFaceCamera(faceCamera);
+}
+u32 GetStreamingDistance(const alt::IMarker* ptr) {
+    return ptr->GetStreamingDistance();
 }
 
 } // namespace
