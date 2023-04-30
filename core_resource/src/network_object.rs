@@ -39,29 +39,7 @@ impl network_object::NetworkObject {
         pos: impl Into<Vector3>,
         rot: impl Into<Vector3>,
     ) -> SomeResult<network_object::NetworkObjectContainer> {
-        let pos = pos.into();
-        let rot = rot.into();
-
-        let ptr = unsafe {
-            sdk::ICore::CreateNetworkObject(
-                model.into_hash(),
-                pos.x(),
-                pos.y(),
-                pos.z(),
-                rot.x(),
-                rot.y(),
-                rot.z(),
-                255,
-                0,
-                100,
-            )
-        };
-
-        let Some(ptr) = NonNull::new(ptr) else {
-            anyhow::bail!("NetworkObject model is incorrect or there is no free id for new entity");
-        };
-
-        Ok(network_object::add_to_pool!(ptr))
+        Self::new_with_params(model, pos, rot, 255, 0, 100)
     }
 
     /// Creates new instance of NetworkObject with custom params.
