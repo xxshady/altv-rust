@@ -136,5 +136,5 @@ meta::impl_meta_type_for!(
     StreamSyncedMeta,
     virtual_entity::VirtualEntity,
     sdk::IVirtualEntity,
-    virtual_entity::VirtualEntity::raw_ptr
+    virtual_entity::VirtualEntity::raw_ptr,
 );

@@ -11,7 +11,7 @@ use crate::{
             wrappers::{AnyEntity, AnyWorldObject},
             EntityRawPtr,
         },
-        player,
+        player, AnyBaseObject,
     },
     quaternion::Quaternion,
     resource::Resource,
@@ -286,3 +286,16 @@ macro_rules! __base_ptr_to_raw {
 }
 
 pub use __base_ptr_to_raw as base_ptr_to_raw;
+
+pub fn read_cpp_base_object_vec(
+    cpp_vec: UniquePtr<CxxVector<sdk::BaseObjectPtrWrapper>>,
+) -> Vec<AnyBaseObject> {
+    cpp_vec
+        .into_iter()
+        .filter_map(|v| {
+            let ptr = unsafe { sdk::read_base_object_ptr_wrapper(v) };
+            let ptr = NonNull::new(ptr).unwrap();
+            Resource::with_base_objects_ref(|v, _| v.get_by_ptr(ptr))
+        })
+        .collect()
+}

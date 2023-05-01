@@ -108,5 +108,5 @@ meta::impl_meta_type_for!(
     StreamSyncedMeta,
     checkpoint::Checkpoint,
     sdk::ICheckpoint,
-    checkpoint::Checkpoint::raw_ptr
+    checkpoint::Checkpoint::raw_ptr,
 );

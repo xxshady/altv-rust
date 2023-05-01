@@ -56,13 +56,13 @@ macro_rules! __impl_meta_type_for {
         $meta_type: ident,
         $entity: path,
         $sdk_namespace: path,
-        $raw_ptr: expr
-        $(, @generics: [ $(
+        $raw_ptr: expr,
+        $( @generics: [ $(
             $generic_param: ident $(: $generic_param_trait: ty )?,
         )+ ] )?
     ) => {
         paste::paste! {
-            impl $( < $( $generic_param $( : $generic_param_trait  )?, )+ > )? $crate::base_objects::meta::[<$meta_type>] for $entity {
+            impl $( < $( $generic_param $( : $generic_param_trait )?, )+ > )? $crate::base_objects::meta::$meta_type for $entity {
                 fn [<has_ $meta_type:snake>](&self, key: impl $crate::helpers::IntoString) -> SomeResult<bool> {
                     Ok(unsafe {
                         $sdk_namespace::[<Has $meta_type Data>]($raw_ptr(self)?, key.into_string())
@@ -103,19 +103,16 @@ macro_rules! __impl_meta_type_for {
                                 .try_into()
                                 .or_else(|e| {
                                     anyhow::bail!("Failed to convert value into mvalue, error: {e:?}")
-                                })?
-                                .0,
+                                })?.0,
                         )
                     }
                     Ok(())
                 }
 
                 fn [<get_ $meta_type:snake _keys>](&self) -> SomeResult<Vec<String>> {
-                    Ok(
-                        $crate::helpers::read_cpp_str_vec(
-                            unsafe { $sdk_namespace::[<Get $meta_type DataKeys>]($raw_ptr(self)?) }
-                        )
-                    )
+                    Ok($crate::helpers::read_cpp_str_vec(
+                        unsafe { $sdk_namespace::[<Get $meta_type DataKeys>]($raw_ptr(self)?) }
+                    ))
                 }
             }
         }
@@ -131,7 +128,7 @@ macro_rules! __impl_entity_meta_for {
             $meta_type,
             $entity,
             $crate::sdk::IEntity,
-            Entity::raw_ptr
+            Entity::raw_ptr,
         );
     };
 }

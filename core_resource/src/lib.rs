@@ -16,6 +16,7 @@ mod events;
 mod helpers;
 mod logging;
 mod marker;
+mod meta;
 mod mvalue;
 mod network_object;
 mod ped;

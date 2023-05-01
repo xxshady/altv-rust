@@ -838,5 +838,5 @@ meta::impl_meta_type_for!(
     LocalMeta,
     player::Player,
     sdk::IPlayer,
-    player::Player::raw_ptr
+    player::Player::raw_ptr,
 );
