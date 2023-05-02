@@ -1,7 +1,7 @@
 use autocxx::prelude::*;
 use std::{collections::HashMap, ptr::NonNull};
 
-use super::{wrappers::AnyEntity, ExtraPool};
+use super::{AnyEntity, ExtraPool};
 use crate::{
     base_objects::{inherit_ptrs, player, BaseObjectInheritPtrs},
     helpers::{self, read_cpp_vector3, Hash},

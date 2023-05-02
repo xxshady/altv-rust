@@ -12,7 +12,7 @@ pub struct ExtraPools {
     pub entity: EntityPool,
 }
 
-pub mod wrappers {
+pub(self) mod wrappers {
     use super::{super::*, entity::EntityRawPtr};
     use crate::{world_object::WorldObjectRawPtr, SomeResult};
     use network_object::NetworkObjectContainer;
@@ -78,6 +78,18 @@ pub mod wrappers {
         }
     }
 
+    impl From<PedContainer> for AnyEntity {
+        fn from(value: PedContainer) -> Self {
+            AnyEntity::Ped(value)
+        }
+    }
+
+    impl From<NetworkObjectContainer> for AnyEntity {
+        fn from(value: NetworkObjectContainer) -> Self {
+            AnyEntity::NetworkObject(value)
+        }
+    }
+
     extra_pool_enum!(WorldObject, WorldObjectRawPtr: [
         Player, PlayerContainer;
         Vehicle, VehicleContainer;
@@ -85,3 +97,5 @@ pub mod wrappers {
         NetworkObject, NetworkObjectContainer;
     ]);
 }
+
+pub use wrappers::*;

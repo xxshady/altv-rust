@@ -7,12 +7,13 @@ use lazycell::LazyCell;
 use crate::{
     alt_resource::AltResource,
     base_objects::{
-        col_shape, extra_pools::wrappers::AnyWorldObject, player, vehicle, AnyBaseObject,
+        col_shape,
+        extra_pools::{AnyEntity, AnyWorldObject},
+        player, vehicle, AnyBaseObject,
     },
     events::helpers::{
         base_event_to_specific, get_non_null_base_object_from_event, get_vehicle_from_event,
     },
-    exports::{AnyEntity, Vector3},
     helpers::{
         get_entity_by_ptr, get_non_null_entity_by_ptr, get_non_null_player,
         get_non_null_world_object_by_ptr, get_player, init_or_get_lazycell, read_cpp_str_vec,
@@ -20,6 +21,7 @@ use crate::{
     },
     mvalue,
     resource::Resource,
+    vector::Vector3,
     VoidResult,
 };
 

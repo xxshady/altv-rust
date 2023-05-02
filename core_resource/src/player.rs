@@ -1,9 +1,10 @@
 use crate::{
     base_objects::{
-        extra_pools::{get_entity_by_id, wrappers::AnyEntity, Entity, SyncId},
-        meta, player, vehicle,
+        extra_pools::{get_entity_by_id, AnyEntity, SyncId},
+        player, vehicle,
     },
     helpers::{self, read_cpp_vector3, Hash, IntoHash, IntoString},
+    meta::{entity_stream_synced_meta::StreamSyncedEntityMeta, player_local_meta::LocalPlayerMeta},
     resource::Resource,
     rgba::RGBA,
     sdk, structs,
@@ -832,11 +833,5 @@ impl player::Player {
     }
 }
 
-meta::impl_entity_meta_for!(StreamSyncedMeta, player::Player);
-
-meta::impl_meta_type_for!(
-    LocalMeta,
-    player::Player,
-    sdk::IPlayer,
-    player::Player::raw_ptr,
-);
+impl StreamSyncedEntityMeta for player::Player {}
+impl LocalPlayerMeta for player::Player {}

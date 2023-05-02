@@ -1,5 +1,5 @@
 use crate::{
-    base_objects::{blip, extra_pools::wrappers::AnyEntity, player},
+    base_objects::{blip, extra_pools::AnyEntity, player},
     helpers,
     rgba::RGBA,
     sdk,

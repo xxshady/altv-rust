@@ -2,7 +2,6 @@ mod base_impl;
 pub(crate) mod extra_pools;
 pub(crate) mod inherit_ptrs;
 mod manager;
-pub(crate) mod meta;
 mod objects;
 
 pub(crate) use base_impl::base_ptr::BasePtr;

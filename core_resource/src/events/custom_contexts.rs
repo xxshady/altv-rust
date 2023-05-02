@@ -1,5 +1,5 @@
 use crate::{
-    base_objects::{col_shape, extra_pools::wrappers::AnyWorldObject, player, vehicle},
+    base_objects::{col_shape, extra_pools::AnyWorldObject, player, vehicle},
     resource::Resource,
 };
 

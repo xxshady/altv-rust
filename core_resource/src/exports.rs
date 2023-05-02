@@ -7,9 +7,8 @@ pub use crate::{
         blip::{Blip, BlipContainer},
         checkpoint::{Checkpoint, CheckpointContainer},
         col_shape::{ColShape, ColShapeContainer},
-        extra_pools::{wrappers::AnyEntity, Entity, SyncId},
+        extra_pools::{AnyEntity, Entity, SyncId},
         marker::{Marker, MarkerContainer},
-        meta::{BaseObjectMeta, LocalMeta, StreamSyncedMeta, SyncedMeta},
         network_object::{NetworkObject, NetworkObjectContainer},
         ped::{Ped, PedContainer},
         player::{Player, PlayerContainer},
@@ -287,4 +286,16 @@ pub mod core_funcs {
 
 pub mod config_node {
     pub use crate::config_node::*;
+}
+
+pub mod meta {
+    pub use crate::meta::{
+        base_object::{entry::*, normal_meta::*, synced_meta::*},
+        checkpoint_stream_synced_meta::*,
+        entity_stream_synced_meta::*,
+        entry::*,
+        global::*,
+        player_local_meta::*,
+        ve_stream_synced_meta::*,
+    };
 }

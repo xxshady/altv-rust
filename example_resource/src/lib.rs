@@ -2,52 +2,68 @@ pub use altv::prelude::*;
 
 #[altv::main]
 fn main() {
-    // std::env::set_var("RUST_BACKTRACE", "full");
+    std::env::set_var("RUST_BACKTRACE", "full");
 
-    let vehicle = altv::Vehicle::new("sultan", 0, 0).unwrap();
+    let test = || -> altv::anyhow::Result<_> {
+        let vehicle = altv::Vehicle::new("sultan", 0, 0).unwrap();
+        vehicle
+            .stream_synced_meta_entry("example")
+            .unwrap()
+            .set(123)
+            .unwrap();
 
-    let rgba = altv::RGBA::new(1, 2, 3, 4);
-    vehicle.set_meta("example", &rgba).unwrap();
-    vehicle.set_stream_synced_meta("test", 123).unwrap();
-    vehicle.get_stream_synced_meta("test").unwrap();
-    vehicle.has_stream_synced_meta("test").unwrap();
-    vehicle.delete_stream_synced_meta("test").unwrap();
-    vehicle.get_stream_synced_meta_keys().unwrap();
+        vehicle
+            .stream_synced_meta_entry("example")
+            .unwrap()
+            .get()
+            .unwrap(); // MValue::I64(123)
 
-    dbg!(vehicle.get_meta("example").unwrap());
+        vehicle.stream_synced_meta_entry("example")?.get()?; // MValue::I64(123)
+        vehicle.meta_entry("example")?.get()?;
+        vehicle.synced_meta_entry("example")?.get()?;
 
-    let g = altv::VirtualEntityGroup::new(10);
-    let ve = altv::VirtualEntity::new(g, 0, 0).unwrap();
-    ve.get_stream_synced_meta("test").unwrap();
-    ve.get_synced_meta("kek").unwrap();
-    ve.get_meta("test").unwrap();
+        altv::meta::entry("example").set(123)?;
 
-    let ch = altv::Checkpoint::new(0, 0, 0.0, 0.0, (255, 255, 255), 0);
+        let _value = altv::meta::entry("example").get();
 
-    ch.get_stream_synced_meta("test").unwrap();
-    ch.get_synced_meta("kek").unwrap();
-    ch.get_meta("test").unwrap();
+        altv::meta::synced_entry("example").set(123)?;
+        let _value = altv::meta::synced_entry("example").get();
 
-    dbg!(rgba);
+        let ch = altv::Checkpoint::new(0, 0, 10.0, 10.0, (255, 255, 255), 10);
 
-    altv::set_timeout(
-        move || {
-            dbg!(vehicle.get_meta("example").unwrap());
-        },
-        1000,
-    );
+        let _value = ch.stream_synced_meta_entry("example")?.get()?;
+        let _value = ch.meta_entry("example")?.get()?;
+        let _value = ch.synced_meta_entry("example")?.get()?;
 
-    dbg!(altv::set_meta("kek", 123).unwrap());
-    dbg!(altv::get_meta("kek"));
-    dbg!(altv::has_meta("kek"));
-    dbg!(altv::delete_meta("kek"));
-    dbg!(altv::get_meta("kek"));
-    dbg!(altv::has_meta("kek"));
+        let all = altv::Player::all();
+        let player = all.get(0);
 
-    dbg!(altv::set_synced_meta("kek", 123).unwrap());
-    dbg!(altv::get_synced_meta("kek"));
-    dbg!(altv::has_synced_meta("kek"));
-    dbg!(altv::delete_synced_meta("kek"));
-    dbg!(altv::get_synced_meta("kek"));
-    dbg!(altv::has_synced_meta("kek"));
+        if let Some(player) = player {
+            // Set "example" key of stream synced meta to `123`
+            player.local_meta_entry("example")?.set(123)?;
+
+            // Read "example" key of stream synced meta
+            player.local_meta_entry("example")?.get()?; // Some(MValue::I64(123))
+
+            player.stream_synced_meta_entry("example")?.has()?;
+        }
+
+        let group = altv::VirtualEntityGroup::new(10);
+        let entity = altv::VirtualEntity::new(group, altv::Vector3::new(0, 0, 72), 10)?;
+        // Set "example" key of stream synced meta to `123`
+        entity.stream_synced_meta_entry("example")?.set(123)?;
+        // Read "example" key of stream synced meta
+        let _value = entity.stream_synced_meta_entry("example")?.get()?; // Some(MValue::I64(123))
+
+        let _value = entity.meta_entry("example")?.has()?;
+
+        let object = altv::NetworkObject::new("model", 0, 0)?;
+
+        dbg!(object.meta_entry("example")?.has()?);
+        dbg!(object.synced_meta_entry("example")?.has()?);
+        dbg!(object.stream_synced_meta_entry("example")?.has()?);
+
+        Ok(())
+    };
+    test().unwrap();
 }

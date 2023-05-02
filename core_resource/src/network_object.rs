@@ -2,10 +2,11 @@ use std::ptr::NonNull;
 
 use crate::{
     base_objects::{
-        extra_pools::{get_entity_by_id, wrappers::AnyEntity, Entity},
-        meta, network_object,
+        extra_pools::{get_entity_by_id, AnyEntity},
+        network_object,
     },
     helpers::IntoHash,
+    meta::entity_stream_synced_meta::StreamSyncedEntityMeta,
     resource::Resource,
     sdk,
     vector::Vector3,
@@ -134,4 +135,4 @@ impl network_object::NetworkObject {
     }
 }
 
-meta::impl_entity_meta_for!(StreamSyncedMeta, network_object::NetworkObject);
+impl StreamSyncedEntityMeta for network_object::NetworkObject {}

@@ -1,11 +1,7 @@
 use crate::{
-    base_objects::{checkpoint, meta},
-    helpers,
-    resource::Resource,
-    rgba::RGBA,
-    sdk,
-    vector::Vector3,
-    SomeResult, VoidResult,
+    base_objects::checkpoint, helpers,
+    meta::checkpoint_stream_synced_meta::StreamSyncedCheckpointMeta, rgba::RGBA, sdk,
+    vector::Vector3, SomeResult, VoidResult,
 };
 
 use autocxx::prelude::*;
@@ -104,9 +100,4 @@ impl checkpoint::Checkpoint {
     }
 }
 
-meta::impl_meta_type_for!(
-    StreamSyncedMeta,
-    checkpoint::Checkpoint,
-    sdk::ICheckpoint,
-    checkpoint::Checkpoint::raw_ptr,
-);
+impl StreamSyncedCheckpointMeta for checkpoint::Checkpoint {}

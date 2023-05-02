@@ -62,12 +62,18 @@ pub const DEFAULT_DIMENSION: i32 = 0;
 pub const GLOBAL_DIMENSION: i32 = i32::MIN;
 
 pub mod events;
+pub mod meta;
 pub mod mvalue;
 
 pub mod prelude {
     pub use super::exports::{
-        config_node::Config, BaseObjectMeta, ColShapy, Entity, LocalMeta, StreamSyncedMeta,
-        SyncedMeta, ValidBaseObject, WorldObject,
+        config_node::Config,
+        meta::{
+            BaseObjectMetaEntry, LocalPlayerMeta, MetaEntry, NormalBaseObjectMeta,
+            StreamSyncedCheckpointMeta, StreamSyncedEntityMeta, StreamSyncedVirtualEntityMeta,
+            SyncedBaseObjectMeta,
+        },
+        ColShapy, Entity, ValidBaseObject, WorldObject,
     };
 }
 

@@ -8,8 +8,7 @@ use std::{fmt::Debug, ptr::NonNull};
 use crate::{
     base_objects::{
         extra_pools::{
-            wrappers::{AnyEntity, AnyWorldObject},
-            EntityRawPtr,
+            EntityRawPtr, {AnyEntity, AnyWorldObject},
         },
         player, AnyBaseObject,
     },

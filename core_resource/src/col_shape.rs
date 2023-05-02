@@ -1,6 +1,9 @@
 use crate::{
-    base_objects::{col_shape, inherit_ptrs, BaseObjectInheritPtrs},
-    exports::{AnyEntity, SyncId},
+    base_objects::{
+        col_shape,
+        extra_pools::{AnyEntity, SyncId},
+        inherit_ptrs, BaseObjectInheritPtrs,
+    },
     sdk,
     vector::{Vector2, Vector3},
     SomeResult, VoidResult,

@@ -1,7 +1,7 @@
 use crate::{
     base_objects::AnyBaseObject,
     helpers::{self, IntoString},
-    meta, sdk,
+    sdk,
     vector::Vector3,
 };
 
@@ -64,6 +64,3 @@ pub fn toggle_world_profiler(toggle: bool) {
 pub fn get_net_time() -> u32 {
     unsafe { sdk::ICore::GetNetTime() }
 }
-
-meta::impl_meta!(Meta, sdk::ICore);
-meta::impl_meta!(SyncedMeta, sdk::ICore);

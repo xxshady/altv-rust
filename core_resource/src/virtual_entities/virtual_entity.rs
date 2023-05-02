@@ -1,8 +1,9 @@
 use autocxx::WithinUniquePtr;
 
 use crate::{
-    base_objects::{meta, virtual_entity, virtual_entity_group},
+    base_objects::{virtual_entity, virtual_entity_group},
     helpers::IntoString,
+    meta::ve_stream_synced_meta::StreamSyncedVirtualEntityMeta,
     mvalue,
     resource::Resource,
     sdk,
@@ -132,9 +133,4 @@ impl virtual_entity::VirtualEntity {
     }
 }
 
-meta::impl_meta_type_for!(
-    StreamSyncedMeta,
-    virtual_entity::VirtualEntity,
-    sdk::IVirtualEntity,
-    virtual_entity::VirtualEntity::raw_ptr,
-);
+impl StreamSyncedVirtualEntityMeta for virtual_entity::VirtualEntity {}

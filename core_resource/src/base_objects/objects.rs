@@ -95,7 +95,7 @@ macro_rules! base_objects {
                             $(
                                 $crate::resource::Resource::with_extra_base_object_pools_mut(|mut v, _| {
                                     v.[<$extra_pool:snake>].add(
-                                        $crate::base_objects::extra_pools::wrappers::[<Any $extra_pool>]::$manager_name(
+                                        $crate::base_objects::extra_pools::[<Any $extra_pool>]::$manager_name(
                                             container.clone()
                                         )
                                     );
@@ -162,7 +162,7 @@ macro_rules! base_objects {
 
                         $(
                             extra_pools.[<$extra_pool:snake>].add(
-                                super::extra_pools::wrappers::[<Any $extra_pool>]::$manager_name(container)
+                                super::extra_pools::[<Any $extra_pool>]::$manager_name(container)
                             );
                         )?
                         }
