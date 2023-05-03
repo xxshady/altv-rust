@@ -30,7 +30,7 @@
 //!
 //! # Stream Synced meta bound to Checkpoint
 //!
-//! [Documentation is here](trait.StreamSyncedVirtualEntityMeta.html).
+//! [Documentation is here](trait.StreamSyncedCheckpointMeta.html).
 //!
 
 pub use core_resource::exports::meta::*;

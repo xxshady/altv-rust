@@ -22,6 +22,11 @@ fn main() {
         vehicle.meta_entry("example")?.get()?;
         vehicle.synced_meta_entry("example")?.get()?;
 
+        let vehicle = altv::Vehicle::new("sultan", 0, 0)?;
+        vehicle
+            .meta_entry("example")?
+            .set(altv::mvalue::dict! { "example" => 123 }?)?;
+
         altv::meta::entry("example").set(123)?;
 
         let _value = altv::meta::entry("example").get();
@@ -62,6 +67,22 @@ fn main() {
         dbg!(object.meta_entry("example")?.has()?);
         dbg!(object.synced_meta_entry("example")?.has()?);
         dbg!(object.stream_synced_meta_entry("example")?.has()?);
+
+        let entry = altv::meta::entry("example");
+
+        let bool: Option<bool> = Some(true);
+        // Here it is converted to MValue::Bool
+        entry.set(bool)?;
+
+        // outputs "Some(Bool(true))"
+        dbg!(entry.get());
+
+        let none: Option<bool> = None;
+        // Here it is converted to MValue::None
+        entry.set(none)?;
+
+        // outputs "None"
+        dbg!(entry.get());
 
         Ok(())
     };

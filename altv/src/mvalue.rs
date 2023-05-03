@@ -14,21 +14,21 @@
 //! is handled differently when it is [converted to MValue](https://github.com/xxshady/altv-rust/blob/380df752ff46c87887b785635a55ac190224577c/core_resource/src/mvalue.rs#L113-L119).
 //!
 //! ```rust
-//! let vehicle = altv::Vehicle::new("sultan", 0, 0).unwrap();
+//! let entry = altv::meta::entry("example");
 //!
 //! let bool: Option<bool> = Some(true);
 //! // Here it is converted to MValue::Bool
-//! vehicle.set_meta("example", bool).unwrap();
+//! entry.set(bool)?;
 //!
-//! // outputs "Bool(true)"
-//! dbg!(vehicle.get_meta("example").unwrap());
+//! // outputs "Some(Bool(true))"
+//! dbg!(entry.get());
 //!
 //! let none: Option<bool> = None;
 //! // Here it is converted to MValue::None
-//! vehicle.set_meta("example", none).unwrap();
+//! entry.set(none)?;
 //!
 //! // outputs "None"
-//! dbg!(vehicle.get_meta("example").unwrap());
+//! dbg!(entry.get());
 //! ```
 //!
 //! # Examples
@@ -37,11 +37,11 @@
 //!
 //! ```rust
 //! // Sending local "example" event with one list as argument
-//! altv::events::emit!("example", altv::mvalue::list![1, 2, 3].unwrap()).unwrap();
+//! altv::events::emit!("example", altv::mvalue::list![1, 2, 3]?)?;
 //!
-//! // Applying a per-resource vehicle meta
-//! let vehicle = altv::Vehicle::new("sultan", 0, 0).unwrap();
-//! vehicle.set_meta("example", altv::mvalue::list![1, 2, 3].unwrap()).unwrap();
+//! // Applying a cross-resource vehicle meta
+//! let vehicle = altv::Vehicle::new("sultan", 0, 0)?;
+//! vehicle.meta_entry("example", altv::mvalue::list![1, 2, 3]?)?;
 //! ```
 //!
 //! How it can be handled in JavaScript:
@@ -61,11 +61,13 @@
 //!
 //! ```rust
 //! // Sending local "example" event with one dict as argument
-//! altv::events::emit!("example", altv::mvalue::dict!{ "example" => 123 }.unwrap()).unwrap();
+//! altv::events::emit!("example", altv::mvalue::dict!{ "example" => 123 }?)?;
 //!
-//! // Applying a per-resource vehicle meta
-//! let vehicle = altv::Vehicle::new("sultan", 0, 0).unwrap();
-//! vehicle.set_meta("example", altv::mvalue::dict!{ "example" => 123 }.unwrap()).unwrap();
+//! // Applying a cross-resource vehicle meta
+//! let vehicle = altv::Vehicle::new("sultan", 0, 0)?;
+//! vehicle
+//!     .meta_entry("example")?
+//!     .set(altv::mvalue::dict! { "example" => 123 }?)?;
 //! ```
 //!
 //! How it can be handled in JavaScript:
