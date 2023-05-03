@@ -13,7 +13,7 @@ dependencies = [
 
 [[package]]
 name = "altv"
-version = "15.0.0-dev.17"
+version = "15.0.0-dev.18"
 dependencies = [
  "altv_internal_core_resource",
  "altv_internal_resource_main_macro",
@@ -23,7 +23,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_core_resource"
-version = "15.0.0-dev.17"
+version = "15.0.0-dev.18"
 dependencies = [
  "altv_internal_core_shared",
  "altv_internal_logger",
@@ -36,7 +36,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_core_shared"
-version = "15.0.0-dev.17"
+version = "15.0.0-dev.18"
 dependencies = [
  "altv_internal_sdk",
  "lmnkjgkj-std-backtrace-anyhow",
@@ -44,7 +44,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_logger"
-version = "15.0.0-dev.17"
+version = "15.0.0-dev.18"
 dependencies = [
  "colored",
  "log",
@@ -52,7 +52,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_resource_main_macro"
-version = "15.0.0-dev.17"
+version = "15.0.0-dev.18"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -61,7 +61,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_sdk"
-version = "15.0.0-dev.17"
+version = "15.0.0-dev.18"
 dependencies = [
  "autocxx",
  "autocxx-build",
@@ -70,7 +70,7 @@ dependencies = [
 
 [[package]]
 name = "altv_module"
-version = "15.0.0-dev.17"
+version = "15.0.0-dev.18"
 dependencies = [
  "altv_internal_logger",
  "altv_internal_sdk",
@@ -280,7 +280,7 @@ dependencies = [
 
 [[package]]
 name = "core_module"
-version = "15.0.0-dev.17"
+version = "15.0.0-dev.18"
 dependencies = [
  "altv_internal_core_shared",
  "altv_internal_sdk",
@@ -288,7 +288,7 @@ dependencies = [
 
 [[package]]
 name = "cpp_codegen"
-version = "15.0.0-dev.17"
+version = "15.0.0-dev.18"
 dependencies = [
  "lazy_static",
  "lmnkjgkj-std-backtrace-anyhow",
@@ -356,7 +356,7 @@ dependencies = [
 
 [[package]]
 name = "example_resource"
-version = "15.0.0-dev.17"
+version = "15.0.0-dev.18"
 dependencies = [
  "altv",
  "rand",
