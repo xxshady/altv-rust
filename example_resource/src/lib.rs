@@ -5,86 +5,56 @@ fn main() {
     std::env::set_var("RUST_BACKTRACE", "full");
 
     let test = || -> altv::anyhow::Result<_> {
-        let vehicle = altv::Vehicle::new("sultan", 0, 0).unwrap();
-        vehicle
-            .stream_synced_meta_entry("example")
-            .unwrap()
-            .set(123)
-            .unwrap();
+        altv::meta::entry("normal global meta").set(123)?;
+        altv::meta::entry("normal global meta 2").set(123)?;
+        // altv::meta::synced_entry("synced global meta").set(123)?;
+        // altv::meta::synced_entry("synced global meta 2").set(123)?;
 
-        vehicle
-            .stream_synced_meta_entry("example")
-            .unwrap()
-            .get()
-            .unwrap(); // MValue::I64(123)
+        // dbg!(altv::meta::keys());
+        // dbg!(altv::meta::synced_keys());
 
-        vehicle.stream_synced_meta_entry("example")?.get()?; // MValue::I64(123)
-        vehicle.meta_entry("example")?.get()?;
-        vehicle.synced_meta_entry("example")?.get()?;
+        // // altv::meta::synced_entry("synced global meta").delete();
+        // altv::meta::synced_entry("synced global meta 2").delete();
 
-        let vehicle = altv::Vehicle::new("sultan", 0, 0)?;
-        vehicle
-            .meta_entry("example")?
-            .set(altv::mvalue::dict! { "example" => 123 }?)?;
+        // dbg!(altv::meta::keys());
+        // dbg!(altv::meta::synced_keys());
 
-        altv::meta::entry("example").set(123)?;
+        // let ch = altv::Checkpoint::new(0, 0, 10.0, 10.0, (255, 255, 255), 10);
 
-        let _value = altv::meta::entry("example").get();
+        // dbg!(ch.stream_synced_meta_keys()?);
 
-        altv::meta::synced_entry("example").set(123)?;
-        let _value = altv::meta::synced_entry("example").get();
+        // ch.stream_synced_meta_entry("test")?.set(123)?;
 
-        let ch = altv::Checkpoint::new(0, 0, 10.0, 10.0, (255, 255, 255), 10);
+        // dbg!(ch.stream_synced_meta_keys()?);
 
-        let _value = ch.stream_synced_meta_entry("example")?.get()?;
-        let _value = ch.meta_entry("example")?.get()?;
-        let _value = ch.synced_meta_entry("example")?.get()?;
+        // ch.meta_entry("meta_keys")?.set(true)?;
 
-        let all = altv::Player::all();
-        let player = all.get(0);
+        // dbg!(ch.meta_keys()?);
 
-        if let Some(player) = player {
-            // Set "example" key of stream synced meta to `123`
-            player.local_meta_entry("example")?.set(123)?;
+        // ch.synced_meta_entry("synced_meta_keys")?.set(true)?;
 
-            // Read "example" key of stream synced meta
-            player.local_meta_entry("example")?.get()?; // Some(MValue::I64(123))
+        // let marker = altv::Marker::new(altv::MarkerType::Markerarrow, 0, (255, 255, 255));
 
-            player.stream_synced_meta_entry("example")?.has()?;
-        }
+        // marker.synced_meta_entry("synced_meta_keys")?.set(true)?;
 
-        let group = altv::VirtualEntityGroup::new(10);
-        let entity = altv::VirtualEntity::new(group, altv::Vector3::new(0, 0, 72), 10)?;
-        // Set "example" key of stream synced meta to `123`
-        entity.stream_synced_meta_entry("example")?.set(123)?;
-        // Read "example" key of stream synced meta
-        let _value = entity.stream_synced_meta_entry("example")?.get()?; // Some(MValue::I64(123))
+        // dbg!(ch.synced_meta_keys()?);
 
-        let _value = entity.meta_entry("example")?.has()?;
+        // dbg!(marker.synced_meta_keys()?);
+        // dbg!(marker.meta_keys()?);
 
-        let object = altv::NetworkObject::new("model", 0, 0)?;
+        // dbg!(marker.meta_keys()?);
+        // dbg!(marker.meta_keys()?);
+        // dbg!(marker.meta_keys()?);
+        // dbg!(marker.meta_keys()?);
+        // dbg!(marker.meta_keys()?);
+        // dbg!(marker.meta_keys()?);
 
-        dbg!(object.meta_entry("example")?.has()?);
-        dbg!(object.synced_meta_entry("example")?.has()?);
-        dbg!(object.stream_synced_meta_entry("example")?.has()?);
+        // marker.destroy()?;
 
-        let entry = altv::meta::entry("example");
-
-        let bool: Option<bool> = Some(true);
-        // Here it is converted to MValue::Bool
-        entry.set(bool)?;
-
-        // outputs "Some(Bool(true))"
-        dbg!(entry.get());
-
-        let none: Option<bool> = None;
-        // Here it is converted to MValue::None
-        entry.set(none)?;
-
-        // outputs "None"
-        dbg!(entry.get());
+        // dbg!(marker.meta_keys()?);
 
         Ok(())
     };
-    test().unwrap();
+
+    dbg!(test());
 }

@@ -1,9 +1,9 @@
 use std::rc::Rc;
 
 use crate::{
-    base_objects::{BaseObjectContainer, ValidBaseObject},
-    helpers::IntoString,
-    SomeResult,
+    base_objects::{BaseObjectContainer, BasePtr, ValidBaseObject},
+    helpers::{self, IntoString},
+    sdk, SomeResult,
 };
 
 pub struct SyncedBaseObjectMetaEntry<T, InheritPtrs: Clone> {
@@ -36,5 +36,12 @@ where
             base_object: self.clone().into(),
             key: key.into_string(),
         })
+    }
+
+    fn synced_meta_keys(self: &Rc<Self>) -> SomeResult<Vec<String>> {
+        let base_object: BaseObjectContainer<T, InheritPtrs> = self.clone().into();
+        Ok(helpers::read_cpp_str_vec(unsafe {
+            sdk::IBaseObject::GetSyncedMetaDataKeys(base_object.raw_base_ptr()?)
+        }))
     }
 }

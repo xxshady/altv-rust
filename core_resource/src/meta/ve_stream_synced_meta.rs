@@ -2,8 +2,8 @@ use std::rc::Rc;
 
 use crate::{
     base_objects::{virtual_entity::VirtualEntityContainer, ValidBaseObject},
-    helpers::IntoString,
-    SomeResult,
+    helpers::{self, IntoString},
+    sdk, SomeResult,
 };
 
 pub struct StreamSyncedVirtualEntityMetaEntry {
@@ -41,5 +41,12 @@ where
             base_object: self.clone().into(),
             key: key.into_string(),
         })
+    }
+
+    fn stream_synced_meta_keys(self: &Rc<Self>) -> SomeResult<Vec<String>> {
+        let entity: VirtualEntityContainer = self.clone().into();
+        Ok(helpers::read_cpp_str_vec(unsafe {
+            sdk::IVirtualEntity::GetStreamSyncedMetaDataKeys(entity.raw_ptr()?)
+        }))
     }
 }

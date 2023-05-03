@@ -2,8 +2,8 @@ use std::rc::Rc;
 
 use crate::{
     base_objects::{checkpoint::CheckpointContainer, ValidBaseObject},
-    helpers::IntoString,
-    SomeResult,
+    helpers::{self, IntoString},
+    sdk, SomeResult,
 };
 
 pub struct StreamSyncedCheckpointMetaEntry {
@@ -36,5 +36,12 @@ where
             base_object: self.clone().into(),
             key: key.into_string(),
         })
+    }
+
+    fn stream_synced_meta_keys(self: &Rc<Self>) -> SomeResult<Vec<String>> {
+        let checkpoint: CheckpointContainer = self.clone().into();
+        Ok(helpers::read_cpp_str_vec(unsafe {
+            sdk::ICheckpoint::GetStreamSyncedMetaDataKeys(checkpoint.raw_ptr()?)
+        }))
     }
 }

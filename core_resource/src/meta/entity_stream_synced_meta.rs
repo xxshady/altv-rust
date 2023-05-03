@@ -1,8 +1,9 @@
 use std::rc::Rc;
 
 use crate::{
+    sdk,
     base_objects::{extra_pools::AnyEntity, ValidBaseObject},
-    helpers::IntoString,
+    helpers::{self, IntoString},
     SomeResult,
 };
 
@@ -36,5 +37,12 @@ where
             base_object: self.clone().into(),
             key: key.into_string(),
         })
+    }
+
+    fn stream_synced_meta_keys(self: &Rc<Self>) -> SomeResult<Vec<String>> {
+        let entity: AnyEntity = self.clone().into();
+        Ok(helpers::read_cpp_str_vec(unsafe {
+            sdk::IEntity::GetStreamSyncedMetaDataKeys(entity.raw_ptr()?)
+        }))
     }
 }

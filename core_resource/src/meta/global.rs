@@ -1,4 +1,7 @@
-use crate::helpers::IntoString;
+use crate::{
+    helpers::{self, IntoString},
+    sdk,
+};
 
 pub struct GlobalMetaEntry {
     pub(super) key: String,
@@ -20,6 +23,10 @@ pub fn entry(key: impl IntoString) -> GlobalMetaEntry {
     }
 }
 
+pub fn keys() -> Vec<String> {
+    helpers::read_cpp_str_vec(unsafe { sdk::ICore::GetMetaDataKeys() })
+}
+
 pub struct GlobalSyncedMetaEntry {
     pub(super) key: String,
 }
@@ -38,4 +45,8 @@ pub fn synced_entry(key: impl IntoString) -> GlobalSyncedMetaEntry {
     GlobalSyncedMetaEntry {
         key: key.into_string(),
     }
+}
+
+pub fn synced_keys() -> Vec<String> {
+    helpers::read_cpp_str_vec(unsafe { sdk::ICore::GetSyncedMetaDataKeys() })
 }

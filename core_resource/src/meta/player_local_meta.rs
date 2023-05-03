@@ -2,8 +2,8 @@ use std::rc::Rc;
 
 use crate::{
     base_objects::{player::PlayerContainer, ValidBaseObject},
-    helpers::IntoString,
-    SomeResult,
+    helpers::{self, IntoString},
+    sdk, SomeResult,
 };
 
 pub struct LocalPlayerMetaEntry {
@@ -33,5 +33,12 @@ where
             base_object: self.clone().into(),
             key: key.into_string(),
         })
+    }
+
+    fn local_meta_keys(self: &Rc<Self>) -> SomeResult<Vec<String>> {
+        let player: PlayerContainer = self.clone().into();
+        Ok(helpers::read_cpp_str_vec(unsafe {
+            sdk::IPlayer::GetLocalMetaDataKeys(player.raw_ptr()?)
+        }))
     }
 }
