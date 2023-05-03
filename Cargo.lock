@@ -39,6 +39,7 @@ name = "altv_internal_core_shared"
 version = "15.0.0-dev.17"
 dependencies = [
  "altv_internal_sdk",
+ "lmnkjgkj-std-backtrace-anyhow",
 ]
 
 [[package]]

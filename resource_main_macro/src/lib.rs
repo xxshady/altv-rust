@@ -14,7 +14,7 @@ type AttributeArgs = syn::punctuated::Punctuated<syn::NestedMeta, syn::Token![,]
 /// ## Example
 /// ```
 /// #[altv::main]
-/// fn main() {
+/// fn main() -> impl altv::IntoVoidResult {
 ///    altv::log!("hello world");
 /// }
 /// ```
@@ -31,7 +31,7 @@ type AttributeArgs = syn::punctuated::Punctuated<syn::NestedMeta, syn::Token![,]
 /// src/lib.rs
 /// ```rust
 /// #[my_custom_name::main(crate_name = "my_custom_name")]
-/// fn main() {
+/// fn main() -> impl my_custom_name::IntoVoidResult {
 ///    my_custom_name::log!("hello world");
 /// }
 /// ```
@@ -90,7 +90,7 @@ pub fn resource_main_func(args: TokenStream, input: TokenStream) -> TokenStream 
             resource_name: String,
             resource_handlers: &mut #crate_name_ident::__internal::ResourceHandlers,
             module_handlers: #crate_name_ident::__internal::ModuleHandlers,
-        ) {
+        ) -> #crate_name_ident::VoidResult {
             if altv_module_version != #resource_version {
                 panic!(
                     "\n\n\
@@ -105,7 +105,11 @@ pub fn resource_main_func(args: TokenStream, input: TokenStream) -> TokenStream 
             unsafe { #crate_name_ident::__internal::set_alt_core(core as *mut #crate_name_ident::__internal::ICore) };
             #crate_name_ident::__internal::init(resource_name, resource_handlers, module_handlers);
 
-            #(#statements)*
+            use #crate_name_ident::IntoVoidResult;
+            fn user_code() -> impl IntoVoidResult {
+                #(#statements)*
+            }
+            user_code().into_void_result()
         }
     }
     .into()

@@ -44,7 +44,7 @@ crate-type = ['cdylib']
 use altv::prelude::*; // Entity, WorldObject traits
 
 #[altv::main] // This is required
-fn main() {
+fn main() -> impl altv::IntoVoidResult {
     altv::log!("~gl~hello world");
 }
 ```

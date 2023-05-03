@@ -1,5 +1,7 @@
 use std::fmt::Debug;
 
+pub mod result;
+
 #[derive(Default)]
 pub struct ResourceHandlers {
     pub on_tick: Option<Box<dyn Fn() + 'static>>,

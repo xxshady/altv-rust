@@ -1,5 +1,5 @@
 use altv_sdk::ffi as sdk;
-use core_module::ResourceName;
+use core_module::{result::VoidResult, ResourceName};
 use libloading::Library;
 use resource_manager::ResourceController;
 use std::{path::PathBuf, ptr::NonNull};
@@ -17,7 +17,7 @@ type ResourceMainFn = unsafe extern "C" fn(
     resource_name: ResourceName,
     resource_handlers: &mut core_module::ResourceHandlers,
     module_handlers: core_module::ModuleHandlers,
-);
+) -> VoidResult;
 
 const ALTV_MODULE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -41,7 +41,7 @@ extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
             .borrow_mut()
             .add_pending_status(resource_name.clone());
 
-        unsafe {
+        let result = unsafe {
             main_fn(
                 ALTV_MODULE_VERSION.to_string(),
                 core_ptr,
@@ -50,6 +50,11 @@ extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
                 module_handlers,
             )
         };
+
+        if let Err(err) = result {
+            logger::error!("Resource: {resource_name:?} main function returned error: {err:?}");
+            std::process::exit(0);
+        }
 
         manager.borrow_mut().remove_pending_status(&resource_name);
 

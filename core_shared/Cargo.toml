@@ -12,3 +12,4 @@ readme = { workspace = true }
 
 [dependencies]
 altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "15.0.0-dev.17" }
+anyhow = { workspace = true }

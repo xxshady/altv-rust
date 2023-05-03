@@ -34,7 +34,6 @@ mod virtual_entities;
 mod voice_channel;
 mod world_object;
 
-mod result;
 pub use result::{IntoVoidResult, SomeResult, VoidResult};
 
 pub mod exports;

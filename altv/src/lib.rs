@@ -50,7 +50,7 @@ pub use exports::{
     config_node::*,
     Resource,
     ColShapy,
-    IntoVoidResult,
+    result::{VoidResult, IntoVoidResult, SomeResult},
 };
 
 pub use altv_sdk::{
