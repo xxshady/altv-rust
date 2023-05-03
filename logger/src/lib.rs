@@ -31,6 +31,10 @@ impl Log for Logger {
 
 pub fn init() -> Result<(), log::SetLoggerError> {
     let level = option_env!("LOG_LEVEL").unwrap_or("info");
+
+    #[cfg(windows)]
+    control::set_virtual_terminal(true).unwrap();
+
     log::set_max_level(LevelFilter::from_str(level).unwrap());
     log::set_logger(&Logger {})
 }
