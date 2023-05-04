@@ -1,6 +1,6 @@
 use std::{fmt::Debug, ptr::NonNull};
 
-use crate::{resource::Resource, sdk, SomeResult, VoidResult};
+use crate::{sdk, SomeResult, VoidResult};
 
 pub struct BaseObject<T, InheritPtrs: Clone> {
     pub(super) ptr: Option<NonNull<T>>,
@@ -25,10 +25,9 @@ impl<T, InheritPtrs: Clone> BaseObject<T, InheritPtrs> {
             anyhow::bail!("base_object already destroyed");
         };
 
-        Resource::with_pending_base_object_destroy_or_creation_mut(|_, _| unsafe {
-            sdk::ICore::DestroyBaseObject(base_ptr.as_ptr())
-        });
-
+        unsafe {
+            sdk::ICore::DestroyBaseObject(base_ptr.as_ptr());
+        }
         self.clear_pointers();
 
         Ok(())

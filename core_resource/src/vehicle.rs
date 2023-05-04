@@ -1,5 +1,3 @@
-use std::ptr::NonNull;
-
 use autocxx::prelude::*;
 
 use crate::{
@@ -30,7 +28,8 @@ impl vehicle::Vehicle {
         let pos = pos.into();
         let rot = rot.into();
 
-        let ptr = unsafe {
+        Ok(helpers::create_base_object!(
+            vehicle,
             sdk::ICore::CreateVehicle(
                 model.into_hash(),
                 pos.x(),
@@ -39,13 +38,9 @@ impl vehicle::Vehicle {
                 rot.x(),
                 rot.y(),
                 rot.z(),
-            )
-        };
-        let Some(ptr) = NonNull::new(ptr) else {
-            anyhow::bail!("Vehicle model is incorrect or there is no free id for new entity");
-        };
-
-        Ok(vehicle::add_to_pool!(ptr))
+            ),
+            anyhow::bail!("Vehicle model is incorrect or there is no free id for new entity")
+        ))
     }
 
     pub fn destroy(&self) -> VoidResult {

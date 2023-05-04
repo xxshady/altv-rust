@@ -9,24 +9,24 @@ use crate::{
 
 use crate::resource::Resource;
 use autocxx::prelude::*;
-use std::ptr::NonNull;
 
 /// # **`Blip implementation`**
 impl blip::Blip {
     pub fn new_area(pos: impl Into<Vector3>, width: f32, height: f32) -> blip::BlipContainer {
         let pos = pos.into();
 
-        let ptr = unsafe {
+        let blip = helpers::create_base_object!(
+            blip,
             sdk::ICore::CreateBlip(
                 std::ptr::null_mut(),
                 altv_sdk::BlipType::Area as u8,
                 pos.x(),
                 pos.y(),
                 pos.z(),
-            )
-        };
+            ),
+            panic!("Failed to create blip")
+        );
 
-        let blip = blip::add_to_pool!(NonNull::new(ptr).unwrap());
         blip.set_scale((width, height)).unwrap();
         blip
     }
@@ -34,17 +34,18 @@ impl blip::Blip {
     pub fn new_radius(pos: impl Into<Vector3>, radius: f32) -> blip::BlipContainer {
         let pos = pos.into();
 
-        let ptr = unsafe {
+        let blip = helpers::create_base_object!(
+            blip,
             sdk::ICore::CreateBlip(
                 std::ptr::null_mut(),
                 altv_sdk::BlipType::Radius as u8,
                 pos.x(),
                 pos.y(),
                 pos.z(),
-            )
-        };
+            ),
+            panic!("Failed to create blip")
+        );
 
-        let blip = blip::add_to_pool!(NonNull::new(ptr).unwrap());
         blip.set_scale(radius).unwrap();
         blip
     }
@@ -52,29 +53,31 @@ impl blip::Blip {
     pub fn new_point(pos: impl Into<Vector3>) -> blip::BlipContainer {
         let pos = pos.into();
 
-        let ptr = unsafe {
+        helpers::create_base_object!(
+            blip,
             sdk::ICore::CreateBlip(
                 std::ptr::null_mut(),
                 altv_sdk::BlipType::Destination as u8,
                 pos.x(),
                 pos.y(),
                 pos.z(),
-            )
-        };
-        blip::add_to_pool!(NonNull::new(ptr).unwrap())
+            ),
+            panic!("Failed to create blip")
+        )
     }
 
     pub fn new_entity_point(entity: impl Into<AnyEntity>) -> blip::BlipContainer {
         let entity = entity.into();
 
-        let ptr = unsafe {
+        helpers::create_base_object!(
+            blip,
             sdk::ICore::CreateBlip1(
                 std::ptr::null_mut(),
                 altv_sdk::BlipType::Destination as u8,
                 entity.raw_ptr().unwrap(),
-            )
-        };
-        blip::add_to_pool!(NonNull::new(ptr).unwrap())
+            ),
+            panic!("Failed to create blip")
+        )
     }
 
     pub fn id(&self) -> SomeResult<u32> {

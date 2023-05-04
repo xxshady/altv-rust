@@ -1,11 +1,9 @@
-use std::ptr::NonNull;
-
 use crate::{
     base_objects::{
         extra_pools::{get_entity_by_id, AnyEntity},
         ped,
     },
-    helpers::{Hash, IntoHash},
+    helpers::{self, Hash, IntoHash},
     meta::entity_stream_synced_meta::StreamSyncedEntityMeta,
     sdk,
     vector::Vector3,
@@ -26,7 +24,8 @@ impl ped::Ped {
         let pos = pos.into();
         let rot = rot.into();
 
-        let ptr = unsafe {
+        Ok(helpers::create_base_object!(
+            ped,
             sdk::ICore::CreatePed(
                 model.into_hash(),
                 pos.x(),
@@ -35,14 +34,9 @@ impl ped::Ped {
                 rot.x(),
                 rot.y(),
                 rot.z(),
-            )
-        };
-
-        let Some(ptr) = NonNull::new(ptr) else {
-            anyhow::bail!("Ped model is incorrect or there is no free id for new entity");
-        };
-
-        Ok(ped::add_to_pool!(ptr))
+            ),
+            anyhow::bail!("Ped model is incorrect or there is no free id for new entity")
+        ))
     }
 
     pub fn destroy(&self) -> VoidResult {

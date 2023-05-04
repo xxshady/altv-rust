@@ -1,11 +1,9 @@
-use std::ptr::NonNull;
-
 use crate::{
     base_objects::{
         extra_pools::{get_entity_by_id, AnyEntity},
         network_object,
     },
-    helpers::IntoHash,
+    helpers::{self, IntoHash},
     meta::entity_stream_synced_meta::StreamSyncedEntityMeta,
     sdk,
     vector::Vector3,
@@ -65,7 +63,8 @@ impl network_object::NetworkObject {
         let pos = pos.into();
         let rot = rot.into();
 
-        let ptr = unsafe {
+        Ok(helpers::create_base_object!(
+            network_object,
             sdk::ICore::CreateNetworkObject(
                 model.into_hash(),
                 pos.x(),
@@ -77,14 +76,9 @@ impl network_object::NetworkObject {
                 alpha,
                 texture_variation,
                 lod_distance,
-            )
-        };
-
-        let Some(ptr) = NonNull::new(ptr) else {
-            anyhow::bail!("NetworkObject model is incorrect or there is no free id for new entity");
-        };
-
-        Ok(network_object::add_to_pool!(ptr))
+            ),
+            anyhow::bail!("NetworkObject model is incorrect or there is no free id for new entity")
+        ))
     }
 
     pub fn destroy(&self) -> VoidResult {

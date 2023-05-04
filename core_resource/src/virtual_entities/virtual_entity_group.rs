@@ -1,11 +1,13 @@
-use crate::{base_objects::virtual_entity_group, sdk, SomeResult};
-use std::ptr::NonNull;
+use crate::{base_objects::virtual_entity_group, helpers, sdk, SomeResult};
 
 /// # **`VirtualEntityGroup implementation`**
 impl virtual_entity_group::VirtualEntityGroup {
     pub fn new(max_entities_in_stream: u32) -> virtual_entity_group::VirtualEntityGroupContainer {
-        let ptr = unsafe { sdk::ICore::CreateVirtualEntityGroup(max_entities_in_stream) };
-        virtual_entity_group::add_to_pool!(NonNull::new(ptr).unwrap())
+        helpers::create_base_object!(
+            virtual_entity_group,
+            sdk::ICore::CreateVirtualEntityGroup(max_entities_in_stream),
+            panic!("Failed to create virtual entity group")
+        )
     }
 
     pub fn id(&self) -> SomeResult<u32> {

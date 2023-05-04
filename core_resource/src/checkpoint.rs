@@ -5,7 +5,6 @@ use crate::{
 };
 
 use autocxx::prelude::*;
-use std::ptr::NonNull;
 
 /// # **`Checkpoint implementation`**
 impl checkpoint::Checkpoint {
@@ -20,7 +19,8 @@ impl checkpoint::Checkpoint {
         let pos = pos.into();
         let color = color.into();
 
-        let ptr = unsafe {
+        helpers::create_base_object!(
+            checkpoint,
             sdk::ICore::CreateCheckpoint(
                 checkpoint_type,
                 pos.x(),
@@ -33,10 +33,9 @@ impl checkpoint::Checkpoint {
                 color.b(),
                 color.a(),
                 streaming_distance,
-            )
-        };
-
-        checkpoint::add_to_pool!(NonNull::new(ptr).unwrap())
+            ),
+            panic!("Failed to create checkpoint")
+        )
     }
 
     pub fn checkpoint_type(&self) -> SomeResult<u8> {

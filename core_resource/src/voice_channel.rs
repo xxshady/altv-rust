@@ -1,5 +1,3 @@
-use std::ptr::NonNull;
-
 use crate::{
     base_objects::{player, voice_channel},
     helpers,
@@ -21,9 +19,9 @@ impl voice_channel::VoiceChannel {
         spatial: bool,
         max_distance: f32,
     ) -> SomeResult<voice_channel::VoiceChannelContainer> {
-        let ptr = unsafe { sdk::ICore::CreateVoiceChannel(spatial, max_distance) };
-
-        if ptr.is_null() {
+        Ok(helpers::create_base_object!(
+            voice_channel,
+            sdk::ICore::CreateVoiceChannel(spatial, max_distance),
             anyhow::bail!(
                 "Failed to create voice channel\n\
                 Maybe you forgot to enable voice in server.toml?\n\
@@ -31,10 +29,8 @@ impl voice_channel::VoiceChannel {
                 ```\n\
                 [voice]\n\
                 ```\n"
-            );
-        }
-
-        Ok(voice_channel::add_to_pool!(NonNull::new(ptr).unwrap()))
+            )
+        ))
     }
 
     pub fn id(&self) -> SomeResult<u32> {

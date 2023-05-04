@@ -298,3 +298,21 @@ pub fn read_cpp_base_object_vec(
         })
         .collect()
 }
+
+macro_rules! __create_base_object {
+    ($namespace: path, $creation: expr, $else: expr) => {{
+        paste::paste! {
+            let ptr = $crate::resource::Resource::with_pending_base_object_destroy_or_creation_mut(
+                |_, _| unsafe { $creation },
+            );
+
+            let Some(ptr) = std::ptr::NonNull::new(ptr) else {
+                $else
+            };
+
+            $namespace::add_to_pool!(ptr)
+        }
+    }};
+}
+
+pub(crate) use __create_base_object as create_base_object;

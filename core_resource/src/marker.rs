@@ -8,7 +8,6 @@ use crate::{
 };
 
 use autocxx::prelude::*;
-use std::ptr::NonNull;
 
 /// # **`Marker implementation`**
 impl marker::Marker {
@@ -20,7 +19,8 @@ impl marker::Marker {
         let pos = pos.into();
         let color = color.into();
 
-        let ptr = unsafe {
+        helpers::create_base_object!(
+            marker,
             sdk::ICore::CreateMarker(
                 std::ptr::null_mut(),
                 marker_type as u32,
@@ -32,10 +32,9 @@ impl marker::Marker {
                 color.b(),
                 color.a(),
                 std::ptr::null_mut(),
-            )
-        };
-
-        marker::add_to_pool!(NonNull::new(ptr).unwrap())
+            ),
+            panic!("Failed to create marker")
+        )
     }
 
     pub fn destroy(&self) -> VoidResult {

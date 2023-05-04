@@ -3,6 +3,7 @@ use std::{cell::RefCell, ptr::NonNull, rc::Rc};
 use super::{base_object::BaseObject, BaseObjectContainer};
 use crate::{
     meta::base_object::{normal_meta::NormalBaseObjectMeta, synced_meta::SyncedBaseObjectMeta},
+    resource::Resource,
     SomeResult, VoidResult,
 };
 
@@ -34,7 +35,10 @@ impl<T, InheritPtrs: Clone> BaseObjectWrapper<T, InheritPtrs> {
     }
 
     pub(crate) fn internal_destroy(&self) -> VoidResult {
-        self.value.try_borrow_mut()?.internal_destroy()
+        Resource::with_pending_base_object_destroy_or_creation_mut(|_, _| {
+            self.value.try_borrow_mut()?.internal_destroy()
+        })?;
+        Ok(())
     }
 }
 

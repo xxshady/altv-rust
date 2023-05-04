@@ -4,12 +4,11 @@ use crate::{
         extra_pools::{AnyEntity, SyncId},
         inherit_ptrs, BaseObjectInheritPtrs,
     },
-    sdk,
+    helpers, sdk,
     vector::{Vector2, Vector3},
     SomeResult, VoidResult,
 };
 use autocxx::prelude::*;
-use std::ptr::NonNull;
 
 pub type ColShapeRawPtr = *mut col_shape::ColShapeStruct;
 
@@ -17,14 +16,21 @@ pub type ColShapeRawPtr = *mut col_shape::ColShapeStruct;
 impl col_shape::ColShape {
     pub fn new_circle(pos: impl Into<Vector2>, radius: f32) -> col_shape::ColShapeContainer {
         let pos = pos.into();
-        let ptr = unsafe { sdk::ICore::CreateColShapeCircle(pos.x(), pos.y(), 0.0, radius) };
-        col_shape::add_to_pool!(NonNull::new(ptr).unwrap())
+
+        helpers::create_base_object!(
+            col_shape,
+            sdk::ICore::CreateColShapeCircle(pos.x(), pos.y(), 0.0, radius),
+            panic!("Failed to create col_shape")
+        )
     }
 
     pub fn new_sphere(pos: impl Into<Vector3>, radius: f32) -> col_shape::ColShapeContainer {
         let pos = pos.into();
-        let ptr = unsafe { sdk::ICore::CreateColShapeSphere(pos.x(), pos.y(), pos.z(), radius) };
-        col_shape::add_to_pool!(NonNull::new(ptr).unwrap())
+        helpers::create_base_object!(
+            col_shape,
+            sdk::ICore::CreateColShapeSphere(pos.x(), pos.y(), pos.z(), radius),
+            panic!("Failed to create col_shape")
+        )
     }
 
     pub fn new_rectangle(
@@ -33,16 +39,18 @@ impl col_shape::ColShape {
     ) -> col_shape::ColShapeContainer {
         let first_point = first_point.into();
         let second_point = second_point.into();
-        let ptr = unsafe {
+
+        helpers::create_base_object!(
+            col_shape,
             sdk::ICore::CreateColShapeRectangle(
                 first_point.x(),
                 first_point.y(),
                 second_point.x(),
                 second_point.y(),
                 0.0, // don't ask me what is it
-            )
-        };
-        col_shape::add_to_pool!(NonNull::new(ptr).unwrap())
+            ),
+            panic!("Failed to create col_shape")
+        )
     }
 
     pub fn new_cuboid(
@@ -51,7 +59,9 @@ impl col_shape::ColShape {
     ) -> col_shape::ColShapeContainer {
         let first_point = first_point.into();
         let second_point = second_point.into();
-        let ptr = unsafe {
+
+        helpers::create_base_object!(
+            col_shape,
             sdk::ICore::CreateColShapeCube(
                 first_point.x(),
                 first_point.y(),
@@ -59,9 +69,9 @@ impl col_shape::ColShape {
                 second_point.x(),
                 second_point.y(),
                 second_point.z(),
-            )
-        };
-        col_shape::add_to_pool!(NonNull::new(ptr).unwrap())
+            ),
+            panic!("Failed to create col_shape")
+        )
     }
 
     pub fn new_cylinder(
@@ -70,10 +80,12 @@ impl col_shape::ColShape {
         height: f32,
     ) -> col_shape::ColShapeContainer {
         let pos = pos.into();
-        let ptr = unsafe {
-            sdk::ICore::CreateColShapeCylinder(pos.x(), pos.y(), pos.z(), radius, height)
-        };
-        col_shape::add_to_pool!(NonNull::new(ptr).unwrap())
+
+        helpers::create_base_object!(
+            col_shape,
+            sdk::ICore::CreateColShapeCylinder(pos.x(), pos.y(), pos.z(), radius, height),
+            panic!("Failed to create col_shape")
+        )
     }
 
     pub fn new_polygon(
@@ -87,9 +99,11 @@ impl col_shape::ColShape {
             unsafe { sdk::push_to_vector2_vec(cpp_points.as_mut().unwrap(), p.x(), p.y()) };
         }
 
-        let ptr = unsafe { sdk::ICore::CreateColShapePolygon(min_z, max_z, cpp_points) };
-        let ptr = NonNull::new(ptr).unwrap();
-        col_shape::add_to_pool!(ptr)
+        helpers::create_base_object!(
+            col_shape,
+            sdk::ICore::CreateColShapePolygon(min_z, max_z, cpp_points),
+            panic!("Failed to create col_shape")
+        )
     }
 
     pub fn destroy(&self) -> VoidResult {

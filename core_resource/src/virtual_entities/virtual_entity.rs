@@ -2,7 +2,7 @@ use autocxx::WithinUniquePtr;
 
 use crate::{
     base_objects::{virtual_entity, virtual_entity_group},
-    helpers::IntoString,
+    helpers::{self, IntoString},
     meta::ve_stream_synced_meta::StreamSyncedVirtualEntityMeta,
     mvalue,
     resource::Resource,
@@ -69,6 +69,7 @@ impl virtual_entity::VirtualEntity {
             impl TryInto<mvalue::Serializable, Error = anyhow::Error>,
         >,
     ) -> SomeResult<virtual_entity::VirtualEntityContainer> {
+        let group = group.raw_ptr()?;
         let pos = pos.into();
 
         let mut mvalue_map = unsafe { sdk::create_mvalue_unordered_map() }.within_unique_ptr();
@@ -87,17 +88,18 @@ impl virtual_entity::VirtualEntity {
             }
         }
 
-        let ptr = unsafe {
+        Ok(helpers::create_base_object!(
+            virtual_entity,
             sdk::ICore::CreateVirtualEntity(
-                group.raw_ptr()?,
+                group,
                 pos.x(),
                 pos.y(),
                 pos.z(),
                 streaming_distance,
                 mvalue_map,
-            )
-        };
-        Ok(virtual_entity::add_to_pool!(NonNull::new(ptr).unwrap()))
+            ),
+            panic!("Failed to create virtual entity")
+        ))
     }
 
     pub fn id(&self) -> SomeResult<u32> {
