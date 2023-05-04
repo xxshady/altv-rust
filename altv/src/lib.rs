@@ -14,7 +14,6 @@ pub use exports::{
         log_warn,
         log_error,
     },
-
     BaseObjectWrapper,
     ColShape,
     SyncId,
@@ -31,8 +30,9 @@ pub use exports::{
     VoiceChannel,
     Marker,
     Checkpoint,
+    WorldObject,
+    Entity,
     AnyEntity,
-
     AttachToEntityBoneIndex,
     AttachToEntityBoneName,
     PlayerDateTime,
