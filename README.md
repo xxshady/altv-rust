@@ -25,7 +25,9 @@ API documentation can be found [here](https://docs.rs/altv)
 ## How to use
 
 Before start writing your server-side in Rust you need to [install LLVM](https://rust-lang.github.io/rust-bindgen/requirements.html#installing-clang)
-> if you are on Windows, don't forget to set `LIBCLANG_PATH` as an environment variable
+> If you are on Windows, don't forget to set `LIBCLANG_PATH` as an environment variable
+
+> If you have similar error: `src/alt_bridge.h:5:10: fatal error: 'memory' file not found` when installing or building altv_internal_sdk, try [this](https://stackoverflow.com/questions/26333823/clang-doesnt-see-basic-headers/75546125#75546125)
 
 [Video format of this tutorial](https://youtu.be/PRIJsRdjiGg) if you are more into video tutorials
 
