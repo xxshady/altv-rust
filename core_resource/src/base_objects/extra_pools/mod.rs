@@ -15,6 +15,7 @@ pub struct ExtraPools {
 pub(self) mod wrappers {
     use super::{super::*, entity::EntityRawPtr};
     use crate::{world_object::WorldObjectRawPtr, SomeResult};
+    use inherit_ptrs::traits::{Entity, WorldObject};
     use network_object::NetworkObjectContainer;
     use objects::AnyBaseObject;
     use ped::PedContainer;
@@ -33,7 +34,7 @@ pub(self) mod wrappers {
                     #[allow(dead_code)]
                     pub(crate) fn raw_ptr(&self) -> SomeResult<$raw_ptr_type> {
                         match self { $(
-                            $any_name::$variant(e) => Ok($crate::helpers::base_ptr_to_raw!(e.raw_base_ptr()?, [<$name:snake>])),
+                            $any_name::$variant(e) => Ok(e.inherit_ptrs()?.[<$name:snake>]()),
                         )+}
                     }
                 }
