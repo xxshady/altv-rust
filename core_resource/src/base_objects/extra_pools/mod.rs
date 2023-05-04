@@ -49,6 +49,14 @@ pub(self) mod wrappers {
                         })
                     }
                 }
+
+            $(
+                impl From<$container> for $any_name {
+                    fn from(value: $container) -> Self {
+                        $any_name::$variant(value)
+                    }
+                }
+            )+
             }
         };
 
@@ -65,30 +73,6 @@ pub(self) mod wrappers {
         Ped, PedContainer;
         NetworkObject, NetworkObjectContainer;
     ]);
-
-    impl From<VehicleContainer> for AnyEntity {
-        fn from(value: VehicleContainer) -> Self {
-            AnyEntity::Vehicle(value)
-        }
-    }
-
-    impl From<PlayerContainer> for AnyEntity {
-        fn from(value: PlayerContainer) -> Self {
-            AnyEntity::Player(value)
-        }
-    }
-
-    impl From<PedContainer> for AnyEntity {
-        fn from(value: PedContainer) -> Self {
-            AnyEntity::Ped(value)
-        }
-    }
-
-    impl From<NetworkObjectContainer> for AnyEntity {
-        fn from(value: NetworkObjectContainer) -> Self {
-            AnyEntity::NetworkObject(value)
-        }
-    }
 
     extra_pool_enum!(WorldObject, WorldObjectRawPtr: [
         Player, PlayerContainer;
