@@ -41,7 +41,9 @@
 //!
 //! // Applying a cross-resource vehicle meta
 //! let vehicle = altv::Vehicle::new("sultan", 0, 0)?;
-//! vehicle.meta_entry("example", altv::mvalue::list![1, 2, 3]?)?;
+//! vehicle
+//!     .meta_entry("example")?
+//!     .set(altv::mvalue::list![1, 2, 3]?)?;
 //! ```
 //!
 //! How it can be handled in JavaScript:
@@ -67,7 +69,7 @@
 //! let vehicle = altv::Vehicle::new("sultan", 0, 0)?;
 //! vehicle
 //!     .meta_entry("example")?
-//!     .set(altv::mvalue::dict! { "example" => 123 }?)?;
+//!     .set(altv::mvalue::dict!{ "example" => 123 }?)?;
 //! ```
 //!
 //! How it can be handled in JavaScript:
