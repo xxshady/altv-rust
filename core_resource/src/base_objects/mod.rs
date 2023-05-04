@@ -13,7 +13,7 @@ pub(crate) use base_impl::BaseObjectContainer;
 pub(crate) use manager::BaseObjectManager;
 pub(crate) use objects::Store;
 
-pub(crate) use objects::AnyBaseObject;
+pub use objects::AnyBaseObject;
 pub(crate) use objects::PendingDestroyOrCreation;
 
 pub(crate) use objects::blip;

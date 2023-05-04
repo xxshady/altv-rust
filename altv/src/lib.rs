@@ -51,6 +51,7 @@ pub use exports::{
     Resource,
     ColShapy,
     result::{VoidResult, IntoVoidResult, SomeResult},
+    AnyBaseObject,
 };
 
 pub use altv_sdk::{

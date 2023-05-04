@@ -16,7 +16,7 @@ pub use crate::{
         virtual_entity::{VirtualEntity, VirtualEntityContainer},
         virtual_entity_group::{VirtualEntityGroup, VirtualEntityGroupContainer},
         voice_channel::{VoiceChannel, VoiceChannelContainer},
-        BaseObjectWrapper, ValidBaseObject,
+        AnyBaseObject, BaseObjectWrapper, ValidBaseObject,
     },
     col_shape::ColShapy,
     helpers::{hash, Hash},

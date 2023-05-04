@@ -45,7 +45,7 @@ pub(self) mod wrappers {
                         $(
                             AnyBaseObject::$variant(e) => $any_name::$variant(e),
                         )+
-                            base_object => anyhow::bail!("cannot convert: {base_object:?} to AnyEntity"),
+                            base_object => anyhow::bail!("cannot convert: {base_object:?} to {}", stringify!($any_name)),
                         })
                     }
                 }
