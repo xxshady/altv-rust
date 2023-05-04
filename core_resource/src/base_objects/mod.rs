@@ -3,6 +3,7 @@ pub(crate) mod extra_pools;
 pub(crate) mod inherit_ptrs;
 mod manager;
 mod objects;
+mod pool_funcs;
 
 pub(crate) use base_impl::base_ptr::BasePtr;
 pub use base_impl::inherit_ptrs::BaseObjectInheritPtrs;
@@ -27,3 +28,5 @@ pub(crate) use objects::vehicle;
 pub(crate) use objects::virtual_entity;
 pub(crate) use objects::virtual_entity_group;
 pub(crate) use objects::voice_channel;
+
+pub use pool_funcs::BaseObjectPoolFuncs;

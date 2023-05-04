@@ -7,7 +7,6 @@ use crate::{
     },
     helpers::IntoHash,
     meta::entity_stream_synced_meta::StreamSyncedEntityMeta,
-    resource::Resource,
     sdk,
     vector::Vector3,
     SomeResult, VoidResult,
@@ -15,10 +14,6 @@ use crate::{
 
 /// # **`NetworkObject implementation`**
 impl network_object::NetworkObject {
-    pub fn all() -> Vec<network_object::NetworkObjectContainer> {
-        Resource::with_base_objects_ref(|v, _| v.network_object.all())
-    }
-
     pub fn get_by_id(id: u32) -> SomeResult<network_object::NetworkObjectContainer> {
         get_entity_by_id!(AnyEntity::NetworkObject, id)
             .ok_or(anyhow::anyhow!("No network object with id: {id}"))

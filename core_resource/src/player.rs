@@ -15,10 +15,6 @@ use autocxx::prelude::*;
 
 /// # **`Player implementation`**
 impl player::Player {
-    pub fn all() -> Vec<player::PlayerContainer> {
-        Resource::with_base_objects_ref(|v, _| v.player.all())
-    }
-
     pub fn get_by_id(id: u32) -> SomeResult<player::PlayerContainer> {
         get_entity_by_id!(AnyEntity::Player, id).ok_or(anyhow::anyhow!("No player with id: {id}"))
     }

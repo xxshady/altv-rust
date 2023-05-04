@@ -3,6 +3,7 @@ use std::{cell::RefMut, fmt::Debug};
 
 use super::{
     extra_pools::{Entity, ExtraPools},
+    pool_funcs::BaseObjectPoolFuncs,
     BaseObjectContainer, BaseObjectManager, BaseObjectWrapper,
 };
 use crate::{col_shape::ColShapy, sdk, world_object::WorldObject};
@@ -50,6 +51,11 @@ macro_rules! base_objects {
                     }
                 }
 
+                impl BaseObjectPoolFuncs<$name_container> for $manager_name {
+                    fn all() -> Vec<$name_container> {
+                        $crate::resource::Resource::with_base_objects_ref(|v, _| v.[<$manager_name_snake>].all())
+                    }
+                }
             $( $(
                 impl $impl_trait <$crate::base_objects::inherit_ptrs::$inherit_ptrs_struct> for $manager_name {}
             )+ )?

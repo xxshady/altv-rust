@@ -10,7 +10,6 @@ use crate::{
     helpers::{self, IntoHash, IntoString},
     meta::entity_stream_synced_meta::StreamSyncedEntityMeta,
     quaternion::Quaternion,
-    resource::Resource,
     rgba::RGBA,
     sdk, structs,
     vector::Vector3,
@@ -19,10 +18,6 @@ use crate::{
 
 /// # **`Vehicle implementation`**
 impl vehicle::Vehicle {
-    pub fn all() -> Vec<vehicle::VehicleContainer> {
-        Resource::with_base_objects_ref(|v, _| v.vehicle.all())
-    }
-
     pub fn get_by_id(id: u32) -> SomeResult<vehicle::VehicleContainer> {
         get_entity_by_id!(AnyEntity::Vehicle, id).ok_or(anyhow::anyhow!("No vehicle with id: {id}"))
     }

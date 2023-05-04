@@ -7,7 +7,6 @@ use crate::{
     },
     helpers::{Hash, IntoHash},
     meta::entity_stream_synced_meta::StreamSyncedEntityMeta,
-    resource::Resource,
     sdk,
     vector::Vector3,
     SomeResult, VoidResult,
@@ -15,10 +14,6 @@ use crate::{
 
 /// # **`Ped implementation`**
 impl ped::Ped {
-    pub fn all() -> Vec<ped::PedContainer> {
-        Resource::with_base_objects_ref(|v, _| v.ped.all())
-    }
-
     pub fn get_by_id(id: u32) -> SomeResult<ped::PedContainer> {
         get_entity_by_id!(AnyEntity::Ped, id).ok_or(anyhow::anyhow!("No ped with id: {id}"))
     }

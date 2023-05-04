@@ -52,6 +52,7 @@ pub use exports::{
     ColShapy,
     result::{VoidResult, IntoVoidResult, SomeResult},
     AnyBaseObject,
+    BaseObjectPoolFuncs,
 };
 
 pub use altv_sdk::{
@@ -74,7 +75,7 @@ pub mod prelude {
             StreamSyncedCheckpointMeta, StreamSyncedEntityMeta, StreamSyncedVirtualEntityMeta,
             SyncedBaseObjectMeta,
         },
-        ColShapy, Entity, ValidBaseObject, WorldObject,
+        BaseObjectPoolFuncs, ColShapy, Entity, ValidBaseObject, WorldObject,
     };
 }
 
