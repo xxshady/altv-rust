@@ -66,18 +66,18 @@ impl blip::Blip {
         )
     }
 
-    pub fn new_entity_point(entity: impl Into<AnyEntity>) -> blip::BlipContainer {
-        let entity = entity.into();
+    pub fn new_entity_point(entity: impl Into<AnyEntity>) -> SomeResult<blip::BlipContainer> {
+        let entity = entity.into().raw_ptr()?;
 
-        helpers::create_base_object!(
+        Ok(helpers::create_base_object!(
             blip,
             sdk::ICore::CreateBlip1(
                 std::ptr::null_mut(),
                 altv_sdk::BlipType::Destination as u8,
-                entity.raw_ptr().unwrap(),
+                entity,
             ),
             panic!("Failed to create blip")
-        )
+        ))
     }
 
     pub fn id(&self) -> SomeResult<u32> {
