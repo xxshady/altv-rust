@@ -11,9 +11,9 @@ publish = false
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "15.0.0-dev.19" }
-core_module = { path = "../core_module", version = "15.0.0-dev.19" }
-logger = { path = "../logger", package = "altv_internal_logger", version = "15.0.0-dev.19" }
+altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "15.0.0-dev.20" }
+core_module = { path = "../core_module", version = "15.0.0-dev.20" }
+logger = { path = "../logger", package = "altv_internal_logger", version = "15.0.0-dev.20" }
 paste = { workspace = true }
 autocxx = { workspace = true }
 lazy_static = { workspace = true }
