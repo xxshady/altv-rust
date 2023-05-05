@@ -115,8 +115,14 @@ extern "C" fn resource_on_event(resource_name: &str, event: altv_sdk::CEventPtr)
     }
 
     let raw_type = unsafe { sdk::CEvent::GetType(event) };
-
     let event_type = altv_sdk::EventType::try_from(raw_type).unwrap();
+
+    if let altv_sdk::EventType::CreateBaseObjectEvent | altv_sdk::EventType::RemoveBaseObjectEvent =
+        event_type
+    {
+        logger::debug!("ignoring create/remove baseobject event");
+        return;
+    }
 
     logger::debug!(
         "resource_on_event resource_name: {}, event: {:?}",

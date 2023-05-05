@@ -6,12 +6,12 @@ fn main() -> impl altv::IntoVoidResult {
 
     // vehicle();
 
-    altv::set_interval(
-        || {
-            dbg!(altv::Vehicle::all());
-        },
-        1000,
-    );
+    // altv::set_interval(
+    //     || {
+    //         dbg!(altv::Vehicle::all());
+    //     },
+    //     1000,
+    // );
 
     // altv::set_timeout(
     //     || {
