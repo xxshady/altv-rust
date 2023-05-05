@@ -24,7 +24,7 @@ impl blip::Blip {
                 pos.y(),
                 pos.z(),
             ),
-            panic!("Failed to create blip")
+            panic!("Failed to create Area Blip")
         );
 
         blip.set_scale((width, height)).unwrap();
@@ -43,7 +43,7 @@ impl blip::Blip {
                 pos.y(),
                 pos.z(),
             ),
-            panic!("Failed to create blip")
+            panic!("Failed to create Radius Blip")
         );
 
         blip.set_scale(radius).unwrap();
@@ -62,7 +62,7 @@ impl blip::Blip {
                 pos.y(),
                 pos.z(),
             ),
-            panic!("Failed to create blip")
+            panic!("Failed to create Point Blip")
         )
     }
 
@@ -76,7 +76,7 @@ impl blip::Blip {
                 altv_sdk::BlipType::Destination as u8,
                 entity,
             ),
-            panic!("Failed to create blip")
+            panic!("Failed to create Attached Blip")
         ))
     }
 

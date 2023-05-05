@@ -98,7 +98,7 @@ impl virtual_entity::VirtualEntity {
                 streaming_distance,
                 mvalue_map,
             ),
-            panic!("Failed to create virtual entity")
+            panic!("Failed to create VirtualEntity")
         ))
     }
 

@@ -34,7 +34,7 @@ impl checkpoint::Checkpoint {
                 color.a(),
                 streaming_distance,
             ),
-            panic!("Failed to create checkpoint")
+            panic!("Failed to create Checkpoint")
         )
     }
 

@@ -33,7 +33,7 @@ impl marker::Marker {
                 color.a(),
                 std::ptr::null_mut(),
             ),
-            panic!("Failed to create marker")
+            panic!("Failed to create Marker")
         )
     }
 

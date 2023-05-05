@@ -6,7 +6,7 @@ impl virtual_entity_group::VirtualEntityGroup {
         helpers::create_base_object!(
             virtual_entity_group,
             sdk::ICore::CreateVirtualEntityGroup(max_entities_in_stream),
-            panic!("Failed to create virtual entity group")
+            panic!("Failed to create VirtualEntityGroup")
         )
     }
 

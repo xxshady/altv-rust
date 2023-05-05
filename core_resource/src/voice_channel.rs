@@ -23,7 +23,7 @@ impl voice_channel::VoiceChannel {
             voice_channel,
             sdk::ICore::CreateVoiceChannel(spatial, max_distance),
             anyhow::bail!(
-                "Failed to create voice channel\n\
+                "Failed to create VoiceChannel\n\
                 Maybe you forgot to enable voice in server.toml?\n\
                 You can do this by adding the following line:\n\
                 ```\n\

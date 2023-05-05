@@ -20,7 +20,7 @@ impl col_shape::ColShape {
         helpers::create_base_object!(
             col_shape,
             sdk::ICore::CreateColShapeCircle(pos.x(), pos.y(), 0.0, radius),
-            panic!("Failed to create col_shape")
+            panic!("Failed to create ColShapeCircle")
         )
     }
 
@@ -29,7 +29,7 @@ impl col_shape::ColShape {
         helpers::create_base_object!(
             col_shape,
             sdk::ICore::CreateColShapeSphere(pos.x(), pos.y(), pos.z(), radius),
-            panic!("Failed to create col_shape")
+            panic!("Failed to create ColShapeSphere")
         )
     }
 
@@ -49,7 +49,7 @@ impl col_shape::ColShape {
                 second_point.y(),
                 0.0, // don't ask me what is it
             ),
-            panic!("Failed to create col_shape")
+            panic!("Failed to create ColShapeRectangle")
         )
     }
 
@@ -70,7 +70,7 @@ impl col_shape::ColShape {
                 second_point.y(),
                 second_point.z(),
             ),
-            panic!("Failed to create col_shape")
+            panic!("Failed to create ColShapeCube")
         )
     }
 
@@ -84,7 +84,7 @@ impl col_shape::ColShape {
         helpers::create_base_object!(
             col_shape,
             sdk::ICore::CreateColShapeCylinder(pos.x(), pos.y(), pos.z(), radius, height),
-            panic!("Failed to create col_shape")
+            panic!("Failed to create ColShapeCylinder")
         )
     }
 
@@ -102,7 +102,7 @@ impl col_shape::ColShape {
         helpers::create_base_object!(
             col_shape,
             sdk::ICore::CreateColShapePolygon(min_z, max_z, cpp_points),
-            panic!("Failed to create col_shape")
+            panic!("Failed to create ColShapePolygon")
         )
     }
 
