@@ -4,6 +4,14 @@ pub use altv::prelude::*;
 fn main() -> impl altv::IntoVoidResult {
     std::env::set_var("RUST_BACKTRACE", "full");
 
+    dbg!(altv::base_object::all());
+    altv::Vehicle::new("sultan", 0, 0).unwrap();
+    altv::Vehicle::new("sultan", 0, 0).unwrap();
+    altv::Vehicle::new("sultan", 0, 0).unwrap();
+    altv::Marker::new(altv::MarkerType::Markerarrow, 0, (255, 255, 255));
+    altv::Marker::new(altv::MarkerType::Markerarrow, 0, (255, 255, 255));
+    dbg!(altv::base_object::all());
+
     // vehicle();
 
     // altv::set_interval(

@@ -55,6 +55,10 @@ macro_rules! base_objects {
                     fn all() -> Vec<$name_container> {
                         $crate::resource::Resource::with_base_objects_ref(|v, _| v.[<$manager_name_snake>].all())
                     }
+
+                    fn all_count() -> usize {
+                        $crate::resource::Resource::with_base_objects_ref(|v, _| v.[<$manager_name_snake>].all_count())
+                    }
                 }
             $( $(
                 impl $impl_trait <$crate::base_objects::inherit_ptrs::$inherit_ptrs_struct> for $manager_name {}
@@ -227,9 +231,25 @@ macro_rules! base_objects {
                         }
                     }
                 }
+
+                pub fn all(&self) -> Vec<AnyBaseObject> {
+                    let capacity = self.all_count();
+                    let mut objects = Vec::with_capacity(capacity);
+                $(
+                    let objects_of_type = self.[<$manager_name_snake>].all();
+                    objects.extend(&mut objects_of_type.into_iter().map(AnyBaseObject::$manager_name));
+                )+
+                    objects
+                }
+
+                pub fn all_count(&self) -> usize {
+                    let mut count = 0;
+                $(
+                    count += self.[<$manager_name_snake>].all_count();
+                )+
+                    count
+                }
             }
-
-
         }
     };
 

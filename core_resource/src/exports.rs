@@ -299,3 +299,7 @@ pub mod meta {
         ve_stream_synced_meta::*,
     };
 }
+
+pub mod base_object {
+    pub use crate::base_object_funcs::*;
+}

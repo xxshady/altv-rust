@@ -53,6 +53,7 @@ pub use exports::{
     result::{VoidResult, IntoVoidResult, SomeResult},
     AnyBaseObject,
     BaseObjectPoolFuncs,
+    base_object,
 };
 
 pub use altv_sdk::{

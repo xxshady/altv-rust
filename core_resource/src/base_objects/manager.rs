@@ -41,6 +41,10 @@ impl<T, InheritPtrs: Clone> BaseObjectManager<T, InheritPtrs> {
     pub fn all(&self) -> Vec<BaseObjectContainer<T, InheritPtrs>> {
         self.objects.values().cloned().collect()
     }
+
+    pub fn all_count(&self) -> usize {
+        self.objects.values().count()
+    }
 }
 
 impl<T, InheritPtrs: Clone> Default for BaseObjectManager<T, InheritPtrs> {
