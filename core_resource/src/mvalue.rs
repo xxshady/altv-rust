@@ -402,10 +402,10 @@ macro_rules! __serialize_mvalue {
         let serializable = $crate::exports::mvalue::__internal::Serializable::try_from($value);
 
         match serializable {
-            Ok(serialized) => {
+            Result::Ok(serialized) => {
                 $vec.push(serialized);
             }
-            Err(error) => {
+            Result::Err(error) => {
                 $crate::exports::anyhow::bail!(
                     "Failed to convert value: {} to mvalue, error: {}",
                     stringify!($value),
