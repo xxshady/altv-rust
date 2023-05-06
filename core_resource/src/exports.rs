@@ -237,7 +237,7 @@ pub mod mvalue {
         pub use crate::mvalue::{serialize_mvalue, Serializable};
     }
 
-    pub use crate::mvalue::{MValue, MValueList};
+    pub use crate::mvalue::{MValue, MValueList, Serializable};
 
     #[macro_export]
     macro_rules! __mvalue_list {
