@@ -9,5 +9,7 @@ fn main() -> impl altv::IntoVoidResult {
     vehicle.set_mod_kit(1)?;
     dbg!(vehicle.set_mod(0, 0));
 
+    dbg!(vehicle.set_mod(255, 255));
+
     Ok(())
 }
