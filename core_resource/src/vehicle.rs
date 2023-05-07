@@ -818,8 +818,19 @@ impl vehicle::Vehicle {
         Ok(())
     }
 
-    pub fn set_mod(&self, category: u8, id: u8) -> SomeResult<bool> {
-        Ok(unsafe { sdk::IVehicle::SetMod(self.raw_ptr()?, category, id) })
+    pub fn set_mod(&self, category: u8, id: u8) -> VoidResult {
+        if self.mod_kit()? == 0 {
+            anyhow::bail!("Vehicle mod kit must be set before using set_mod");
+        }
+
+        let result = unsafe { sdk::IVehicle::SetMod(self.raw_ptr()?, category, id) };
+        if !result {
+            anyhow::bail!(
+                "Failed to set mod category: {category}, id: {id} on vehicle for unknown reason"
+            );
+        }
+
+        Ok(())
     }
 }
 
