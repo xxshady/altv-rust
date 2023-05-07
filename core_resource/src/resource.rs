@@ -39,7 +39,10 @@ macro_rules! with_resource {
             RESOURCE.with(|resource| {
                 let resource = resource.borrow();
                 let resource = resource.as_ref().unwrap();
-                $func(resource.[<$property_name>].[<$borrow_func>](), resource)
+                let manager = resource.[<$property_name>].[<$borrow_func>]().unwrap_or_else(|_| {
+                    panic!("Failed to {} `{}`", stringify!($borrow_func), stringify!($property_name));
+                });
+                $func(manager, resource)
             })
         }
     };
@@ -52,7 +55,7 @@ macro_rules! impl_borrow_fn {
             where
                 F: FnOnce(Ref<$full_path>, &Resource) -> R,
             {
-                with_resource!(f, $property_name, borrow)
+                with_resource!(f, $property_name, try_borrow)
             }
         }
     };
@@ -65,7 +68,7 @@ macro_rules! impl_borrow_mut_fn {
             where
                 F: FnOnce(RefMut<$full_path>, &Resource) -> R,
             {
-                with_resource!(f, $property_name, borrow_mut)
+                with_resource!(f, $property_name, try_borrow_mut)
             }
         }
     };
