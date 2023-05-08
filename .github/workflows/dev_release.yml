@@ -9,9 +9,13 @@ jobs:
   build-linux:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
           submodules: recursive
+          
+      - name: Cache
+        uses: Swatinem/rust-cache@v2
 
       - name: Build
         run: |
@@ -27,9 +31,13 @@ jobs:
   build-windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
           submodules: recursive
+
+      - name: Cache
+        uses: Swatinem/rust-cache@v2
 
       - name: Build
         run: |
