@@ -29,12 +29,6 @@ jobs:
           cd altv_module
           cargo build --verbose
 
-      - uses: actions/upload-artifact@v3
-        name: Upload module-linux
-        with:
-          name: module-linux
-          path: target/release/libaltv_module.so
-
   build-windows:
     runs-on: windows-latest
     steps:
