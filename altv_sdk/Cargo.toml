@@ -13,4 +13,4 @@ cxx = { workspace = true }
 autocxx = { workspace = true }
 
 [build-dependencies]
-autocxx-build = "0.24.0"
+autocxx-build = "0.25.0"
