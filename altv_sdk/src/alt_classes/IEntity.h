@@ -28,7 +28,7 @@ bool HasStreamSyncedMetaData(const alt::IEntity* ptr, const StdStringClone key) 
 }
 MValueWrapper GetStreamSyncedMetaData(const alt::IEntity* ptr, const StdStringClone key) {
     MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(ptr->GetStreamSyncedMetaData(key));
+    wrapper.ptr = ptr->GetStreamSyncedMetaData(key);
     return wrapper;
 }
 std::vector<std::string> GetStreamSyncedMetaDataKeys(const alt::IEntity* ptr) {
@@ -41,7 +41,7 @@ void SetNetworkOwner(alt::IEntity* ptr, alt::IPlayer* player, bool disableMigrat
     return ptr->SetNetworkOwner(player, disableMigration);
 }
 void SetStreamSyncedMetaData(alt::IEntity* ptr, const StdStringClone key, MValueMutWrapper val) {
-    return ptr->SetStreamSyncedMetaData(key, *(val.ptr));
+    return ptr->SetStreamSyncedMetaData(key, val.ptr);
 }
 void DeleteStreamSyncedMetaData(alt::IEntity* ptr, const StdStringClone key) {
     return ptr->DeleteStreamSyncedMetaData(key);

@@ -9,12 +9,12 @@ std::string GetKey(const alt::CGlobalSyncedMetaDataChangeEvent* ptr) {
 }
 MValueWrapper GetVal(const alt::CGlobalSyncedMetaDataChangeEvent* ptr) {
     MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(ptr->GetVal());
+    wrapper.ptr = ptr->GetVal();
     return wrapper;
 }
 MValueWrapper GetOldVal(const alt::CGlobalSyncedMetaDataChangeEvent* ptr) {
     MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(ptr->GetOldVal());
+    wrapper.ptr = ptr->GetOldVal();
     return wrapper;
 }
 

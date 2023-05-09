@@ -15,7 +15,7 @@ bool HasStreamSyncedMetaData(const alt::IVirtualEntity* ptr, const StdStringClon
 }
 MValueWrapper GetStreamSyncedMetaData(const alt::IVirtualEntity* ptr, const StdStringClone key) {
     MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(ptr->GetStreamSyncedMetaData(key));
+    wrapper.ptr = ptr->GetStreamSyncedMetaData(key);
     return wrapper;
 }
 std::vector<std::string> GetStreamSyncedMetaDataKeys(const alt::IVirtualEntity* ptr) {
@@ -31,7 +31,7 @@ bool IsVisible(const alt::IVirtualEntity* ptr) {
     return ptr->IsVisible();
 }
 void SetStreamSyncedMetaData(alt::IVirtualEntity* ptr, const StdStringClone key, MValueMutWrapper val) {
-    return ptr->SetStreamSyncedMetaData(key, *(val.ptr));
+    return ptr->SetStreamSyncedMetaData(key, val.ptr);
 }
 void DeleteStreamSyncedMetaData(alt::IVirtualEntity* ptr, const StdStringClone key) {
     return ptr->DeleteStreamSyncedMetaData(key);

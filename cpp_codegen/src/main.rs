@@ -868,8 +868,8 @@ fn cpp_method_to_rust_compatible_func(
                 name, type_name, ..
             } = p;
             match type_name.as_str() {
-                "MValueMutWrapper" => format!("*({name}.ptr)"),
-                "MValueWrapper" => format!("*({name}.ptr)"),
+                "MValueMutWrapper" => format!("{name}.ptr"),
+                "MValueWrapper" => format!("{name}.ptr"),
                 "Vector3Wrapper" => format!("{{ {name}_x, {name}_y, {name}_z }}"),
                 "Vector2Wrapper" => format!("{{ {name}_x, {name}_y }}"),
                 "alt::Quaternion" => format!("{{ {name}_x, {name}_y, {name}_z, {name}_w }}"),
@@ -911,14 +911,14 @@ fn cpp_method_to_rust_compatible_func(
         "MValueMutWrapper" => |v: &str| {
             format!(
                 "MValueMutWrapper wrapper;\n    \
-                wrapper.ptr = std::make_shared<alt::MValue>({v});\n    \
+                wrapper.ptr = {v};\n    \
                 return wrapper"
             )
         },
         "MValueWrapper" => |v: &str| {
             format!(
                 "MValueWrapper wrapper;\n    \
-                wrapper.ptr = std::make_shared<alt::MValueConst>({v});\n    \
+                wrapper.ptr = {v};\n    \
                 return wrapper"
             )
         },
@@ -964,7 +964,7 @@ fn cpp_method_to_rust_compatible_func(
                 auto mvalue_vec = create_mvalue_vec();\n    \
                 for (const auto& e : args) {{\n    \
                     MValueWrapper wrapper;\n    \
-                    wrapper.ptr = std::make_shared<alt::MValueConst>(e);\n    \
+                    wrapper.ptr = e;\n    \
                     mvalue_vec.push_back(wrapper.clone());\n    \
                 }}\n    \
                 return mvalue_vec"
