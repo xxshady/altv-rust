@@ -1,0 +1,15 @@
+[package]
+name = "altv_internal_mvalue"
+description = "An internal crate for alt:V module. Not intended for direct use."
+version = { workspace = true }
+rust-version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+repository = { workspace = true }
+readme = { workspace = true }
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+serde = { version = "1.0.162" }
+altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "15.0.0-dev.21" }

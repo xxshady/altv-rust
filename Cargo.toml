@@ -4,6 +4,7 @@ members = [
     "core_shared",
     "core_module",
     "core_resource",
+    "mvalue",
     "resource_main_macro",
     "altv_sdk",
     "altv_module",
