@@ -302,7 +302,7 @@ impl PlayerDamage {
 }
 
 macro_rules! player_enter_or_leave_vehicle {
-    ($event: ident) => {
+    ($event:ident) => {
         pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
             let event = base_event_to_specific!(event, $event);
 

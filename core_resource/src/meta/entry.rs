@@ -11,8 +11,8 @@ pub trait MetaEntry {
 
 macro_rules! impl_global_meta_entry {
     (
-        $meta_type: ident,
-        $entry_struct: path
+        $meta_type:ident,
+        $entry_struct:path
     ) => {
         paste::paste! {
             impl MetaEntry for $entry_struct {

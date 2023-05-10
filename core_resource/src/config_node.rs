@@ -5,10 +5,10 @@ use crate::sdk;
 
 macro_rules! config_nodes {
     (
-        $enum_name: ident [ $(
-            $type_name: ident $( : $rust_type: ty )?,
+        $enum_name:ident [ $(
+            $type_name:ident $( : $rust_type:ty )?,
         )+ ],
-        $type_mod_name: ident
+        $type_mod_name:ident
     ) => {
     paste::paste! {
         #[derive(Debug)]

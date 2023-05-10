@@ -6,7 +6,7 @@ use crate::{
 use super::sdk_contexts::{ColshapeEvent, ResourceStart, ResourceStop};
 
 macro_rules! entity_enter_or_leave_col_shape {
-    ($bool_state: literal, $key_name: ident, $any_entity: path) => {
+    ($bool_state:literal, $key_name:ident, $any_entity:path) => {
         pub fn new(context: &ColshapeEvent, _: &Resource) -> Option<Self> {
             if context.state != $bool_state {
                 return None;

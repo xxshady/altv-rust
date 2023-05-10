@@ -17,7 +17,7 @@ use std::{collections::HashMap, fmt::Debug, ptr::NonNull};
 pub struct Serializable(pub(crate) UniquePtr<sdk::MValueMutWrapper>);
 
 macro_rules! impl_serializable {
-    (@internal $value_type: ty, $create_mvalue: expr) => {
+    (@internal $value_type:ty, $create_mvalue:expr) => {
         impl TryFrom<$value_type> for Serializable {
             type Error = anyhow::Error;
             fn try_from(value: $value_type) -> SomeResult<Self> {
@@ -26,11 +26,11 @@ macro_rules! impl_serializable {
         }
     };
 
-    (@no_unique_ptr $value_type: ty, $create_func: expr) => {
+    (@no_unique_ptr $value_type:ty, $create_func:expr) => {
         impl_serializable!(@internal $value_type, $create_func);
     };
 
-    ($value_type: ty, $create_func: expr) => {
+    ($value_type:ty, $create_func:expr) => {
         impl_serializable!(@internal
             $value_type,
             |value| { $create_func(value) }.within_unique_ptr()
@@ -101,7 +101,7 @@ impl_serializable!(Vector2, |value: Vector2| sdk::create_mvalue_vector2(
 ));
 
 macro_rules! impl_serializable_base_object {
-    ($base_object: ty, $short_name: literal) => {
+    ($base_object:ty, $short_name:literal) => {
         impl TryFrom<$base_object> for Serializable {
             type Error = anyhow::Error;
 
@@ -197,7 +197,7 @@ pub enum MValue {
 }
 
 macro_rules! get_mvalue_type_at {
-    ($method_name: ident, $type_name: ty, $mvalue_type: path) => {
+    ($method_name:ident, $type_name:ty, $mvalue_type:path) => {
         pub fn $method_name(&self, index: usize) -> SomeResult<&$type_name> {
             let value = self.get(index).with_context(|| {
                 format!(
@@ -398,7 +398,7 @@ pub(crate) fn deserialize_mvalue(cpp_wrapper: &sdk::MValueWrapper, resource: &Re
 
 #[macro_export]
 macro_rules! __serialize_mvalue {
-    ($value: expr, $vec: expr) => {
+    ($value:expr, $vec:expr) => {
         let serializable = $crate::exports::mvalue::__internal::Serializable::try_from($value);
 
         match serializable {

@@ -34,7 +34,7 @@ pub struct Resource {
 }
 
 macro_rules! with_resource {
-    ($func: expr, $property_name: ident, $borrow_func: ident) => {
+    ($func:expr, $property_name:ident, $borrow_func:ident) => {
         paste::paste! {
             RESOURCE.with(|resource| {
                 let resource = resource.borrow();
@@ -49,7 +49,7 @@ macro_rules! with_resource {
 }
 
 macro_rules! impl_borrow_fn {
-    ($property_name: ident, $full_path: path) => {
+    ($property_name:ident, $full_path:path) => {
         paste::paste! {
             pub fn [<with_  $property_name _ref>]<F, R>(f: F) -> R
             where
@@ -62,7 +62,7 @@ macro_rules! impl_borrow_fn {
 }
 
 macro_rules! impl_borrow_mut_fn {
-    ($property_name: ident, $full_path: path) => {
+    ($property_name:ident, $full_path:path) => {
         paste::paste! {
             pub fn [<with_  $property_name _mut>]<F, R>(f: F) -> R
             where

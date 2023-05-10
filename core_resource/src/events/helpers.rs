@@ -8,7 +8,7 @@ use crate::{
 
 #[macro_export]
 macro_rules! __base_event_to_specific {
-    ($base_event: expr, $specific: ident) => {
+    ($base_event:expr, $specific:ident) => {
         paste::paste! {{
             let raw = $crate::sdk::events::[<to_ $specific>]($base_event);
             assert!(!raw.is_null(), "converting base event to: {} returned null", stringify!($specific));
