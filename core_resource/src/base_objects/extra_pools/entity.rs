@@ -209,7 +209,7 @@ impl EntityPool {
 
 #[macro_export]
 macro_rules! __get_entity_by_id {
-    ($entity_type: path, $id: expr) => {
+    ($entity_type:path, $id:expr) => {
         $crate::resource::Resource::with_extra_base_object_pools_ref(|v, _| {
             match v.entity.get_by_id($id) {
                 Some(_wrapper @ $entity_type(entity)) => Some(std::rc::Rc::clone(entity)),

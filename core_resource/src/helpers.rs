@@ -139,7 +139,7 @@ impl IntoHash for &str {
 
 #[macro_export]
 macro_rules! __get_any_option_base_object {
-    ($get_ptr: expr, $base_obj_manager: ident) => {
+    ($get_ptr:expr, $base_obj_manager:ident) => {
         paste::paste! { {
             let ptr = unsafe { $get_ptr };
             let Some(ptr) = std::ptr::NonNull::new(ptr) else {
@@ -241,10 +241,10 @@ pub fn get_player(
 
 #[macro_export]
 macro_rules! __if_not {
-    (() $code: block) => {
+    (() $code:block) => {
         $code
     };
-    (($( $target: tt )+) $code: block) => {
+    (($( $target:tt )+) $code:block) => {
         $( $target )+
     };
 }
@@ -266,7 +266,7 @@ pub fn init_or_get_lazycell<T: Debug>(
 
 #[macro_export]
 macro_rules! __base_ptr_to {
-    ($base_ptr: expr, $target_type: ident) => {
+    ($base_ptr:expr, $target_type:ident) => {
         paste::paste! {
             unsafe {
                 std::ptr::NonNull::new($crate::sdk::base_object::[<to_ $target_type>]($base_ptr)).unwrap()
@@ -279,7 +279,7 @@ pub use __base_ptr_to as base_ptr_to;
 
 #[macro_export]
 macro_rules! __base_ptr_to_raw {
-    ($base_ptr: expr, $target_type: ident) => {
+    ($base_ptr:expr, $target_type:ident) => {
         $crate::helpers::base_ptr_to!($base_ptr, $target_type).as_ptr()
     };
 }
@@ -300,7 +300,7 @@ pub fn read_cpp_base_object_vec(
 }
 
 macro_rules! __create_base_object {
-    ($namespace: path, $creation: expr, $else: expr) => {{
+    ($namespace:path, $creation:expr, $else:expr) => {{
         paste::paste! {
             let ptr = $crate::resource::Resource::with_pending_base_object_destroy_or_creation_mut(
                 |_, _| unsafe { $creation },

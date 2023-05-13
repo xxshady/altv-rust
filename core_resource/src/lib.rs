@@ -50,7 +50,7 @@ pub fn init(
     Resource::init(resource_name, module_handlers);
 
     macro_rules! set_callback {
-        ($name: ident, $closure: expr) => {
+        ($name:ident, $closure:expr) => {
             paste::paste! {
                 resource_handlers.[<$name>].replace(Box::new($closure));
             }

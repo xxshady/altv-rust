@@ -1,6 +1,6 @@
 #[macro_export]
 macro_rules! on_base_object_event {
-    ($method_name: ident, $resource_name: expr, $base_object: expr) => {
+    ($method_name:ident, $resource_name:expr, $base_object:expr) => {
         paste::paste! {
             RESOURCE_MANAGER_INSTANCE.with(|manager| {
                 let stringified_method_name = stringify!([$method_name]);

@@ -10,7 +10,7 @@ pub use events::custom_contexts::*;
 pub use events::sdk_contexts::*;
 
 macro_rules! on_sdk_event {
-    ($func_name: ident, $event_name: ident) => {
+    ($func_name:ident, $event_name:ident) => {
         pub fn $func_name<V: IntoVoidResult>(
             mut handler: impl FnMut(&events::sdk_contexts::$event_name) -> V + 'static,
         ) {
@@ -22,7 +22,7 @@ macro_rules! on_sdk_event {
 }
 
 macro_rules! on_custom_event {
-    ($func_name: ident, $event_name: ident) => {
+    ($func_name:ident, $event_name:ident) => {
         pub fn $func_name<V: IntoVoidResult>(
             mut handler: impl FnMut(&events::custom_contexts::$event_name) -> V + 'static,
         ) {

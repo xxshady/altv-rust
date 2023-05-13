@@ -12,12 +12,12 @@ std::string GetKey(const alt::CLocalMetaDataChangeEvent* ptr) {
 }
 MValueWrapper GetVal(const alt::CLocalMetaDataChangeEvent* ptr) {
     MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(ptr->GetVal());
+    wrapper.ptr = ptr->GetVal();
     return wrapper;
 }
 MValueWrapper GetOldVal(const alt::CLocalMetaDataChangeEvent* ptr) {
     MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(ptr->GetOldVal());
+    wrapper.ptr = ptr->GetOldVal();
     return wrapper;
 }
 

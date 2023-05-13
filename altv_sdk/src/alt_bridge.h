@@ -64,7 +64,7 @@ void register_script_runtime(
 
 class MValueWrapper {
 public:
-    std::shared_ptr<alt::MValueConst> ptr;
+    alt::MValueConst ptr;
 
     MValueWrapper clone() {
         MValueWrapper instance;
@@ -76,7 +76,7 @@ public:
 
 class MValueMutWrapper {
 public:
-    std::shared_ptr<alt::MValue> ptr;
+    alt::MValue ptr;
 
     MValueMutWrapper clone() {
         MValueMutWrapper instance;
@@ -89,7 +89,7 @@ public:
 MValueWrapper convert_mvalue_mut_wrapper_to_const(MValueMutWrapper mut_wrapper) {
     MValueWrapper wrapper;
     // is this even legal?
-    wrapper.ptr = std::make_shared<alt::MValueConst>(*mut_wrapper.ptr);
+    wrapper.ptr = mut_wrapper.ptr;
     mut_wrapper.ptr = nullptr;
     return wrapper;
 }
@@ -204,7 +204,7 @@ public:
     f32 y = 0;
     f32 z = 0;
 
-    Vector3Wrapper(f32 _x, f32 _y, f32 _z): x(_x), y(_y), z(_z) {}
+    Vector3Wrapper(f32 _x, f32 _y, f32 _z) : x(_x), y(_y), z(_z) {}
 };
 
 void read_vector3(const Vector3Wrapper& vector3, f32* out_x, f32* out_y, f32* out_z) {
@@ -218,7 +218,7 @@ public:
     f32 x = 0;
     f32 y = 0;
 
-    Vector2Wrapper(f32 _x, f32 _y): x(_x), y(_y) {}
+    Vector2Wrapper(f32 _x, f32 _y) : x(_x), y(_y) {}
 };
 
 void read_vector2(const Vector2Wrapper& vector2, f32* out_x, f32* out_y) {
@@ -258,7 +258,7 @@ public:
     u8 b = 0;
     u8 a = 0;
 
-    RGBAWrapper(u8 _r, u8 _g, u8 _b, u8 _a): r(_r), g(_g), b(_b), a(_a) {}
+    RGBAWrapper(u8 _r, u8 _g, u8 _b, u8 _a) : r(_r), g(_g), b(_b), a(_a) {}
 };
 
 void read_rgba(const RGBAWrapper& rgba, u8* out_r, u8* out_g, u8* out_b, u8* out_a) {
@@ -274,7 +274,7 @@ public:
     u8 tint_index = 0;
     std::vector<u32> components {};
 
-    WeaponWrapper(u32 _hash, u8 _tint_index, std::unordered_set<u32> _components):
+    WeaponWrapper(u32 _hash, u8 _tint_index, std::unordered_set<u32> _components) :
         hash(_hash),
         tint_index(_tint_index)
     {
@@ -299,7 +299,7 @@ public:
     Vector3Wrapper pos;
     u32 weapon_hash;
 
-    FireInfoWrapper(Vector3Wrapper _pos, u32 _weapon_hash):
+    FireInfoWrapper(Vector3Wrapper _pos, u32 _weapon_hash) :
         pos(_pos),
         weapon_hash(_weapon_hash)
     {}
@@ -325,7 +325,7 @@ MValueUnorderedMapWrapper create_mvalue_unordered_map() {
 }
 
 void push_to_mvalue_unordered_map(MValueUnorderedMapWrapper& map, std::string key, MValueMutWrapper value) {
-    map.value.insert({ key, *value.ptr });
+    map.value.insert({ key, value.ptr });
 }
 
 using MValueWrapperVec = std::vector<MValueWrapper>;
@@ -340,45 +340,45 @@ void push_to_mvalue_vec(MValueWrapperVec& mvalue_vec, MValueMutWrapper mvalue) {
 }
 
 u8 get_mvalue_type(MValueWrapper mvalue) {
-    return static_cast<u8>(mvalue.ptr->Get()->GetType());
+    return static_cast<u8>(mvalue.ptr->GetType());
 }
 
 bool get_mvalue_bool(MValueWrapper mvalue) {
-    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::BOOL);
-    return mvalue.ptr->As<alt::IMValueBool>().Get()->Value();
+    assert(mvalue.ptr->GetType() == alt::IMValue::Type::BOOL);
+    return std::dynamic_pointer_cast<const alt::IMValueBool>(mvalue.ptr)->Value();
 }
 
 f64 get_mvalue_double(MValueWrapper mvalue) {
-    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::DOUBLE);
-    return mvalue.ptr->As<alt::IMValueDouble>().Get()->Value();
+    assert(mvalue.ptr->GetType() == alt::IMValue::Type::DOUBLE);
+    return std::dynamic_pointer_cast<const alt::IMValueDouble>(mvalue.ptr)->Value();
 }
 
 std::string get_mvalue_string(MValueWrapper mvalue) {
-    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::STRING);
-    return mvalue.ptr->As<alt::IMValueString>().Get()->Value();
+    assert(mvalue.ptr->GetType() == alt::IMValue::Type::STRING);
+    return std::dynamic_pointer_cast<const alt::IMValueString>(mvalue.ptr)->Value();
 }
 
 i64 get_mvalue_int(MValueWrapper mvalue) {
-    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::INT);
-    return mvalue.ptr->As<alt::IMValueInt>().Get()->Value();
+    assert(mvalue.ptr->GetType() == alt::IMValue::Type::INT);
+    return std::dynamic_pointer_cast<const alt::IMValueInt>(mvalue.ptr)->Value();
 }
 
 u64 get_mvalue_uint(MValueWrapper mvalue) {
-    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::UINT);
-    return mvalue.ptr->As<alt::IMValueUInt>().Get()->Value();
+    assert(mvalue.ptr->GetType() == alt::IMValue::Type::UINT);
+    return std::dynamic_pointer_cast<const alt::IMValueUInt>(mvalue.ptr)->Value();
 }
 
 MValueWrapperVec get_mvalue_list(MValueWrapper mvalue) {
-    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::LIST);
+    assert(mvalue.ptr->GetType() == alt::IMValue::Type::LIST);
 
-    auto list = mvalue.ptr->As<alt::IMValueList>().Get();
+    auto list = std::dynamic_pointer_cast<const alt::IMValueList>(mvalue.ptr);
     auto size = list->GetSize();
 
     auto mvalue_vec = create_mvalue_vec();
 
     for (alt::Size i = 0; i < size; ++i) {
         MValueWrapper wrapper;
-        wrapper.ptr = std::make_shared<alt::MValueConst>(list->Get(i));
+        wrapper.ptr = list->Get(i);
         mvalue_vec.push_back(wrapper.clone());
     }
 
@@ -386,14 +386,14 @@ MValueWrapperVec get_mvalue_list(MValueWrapper mvalue) {
 }
 
 std::vector<MValueDictPairWrapper> get_mvalue_dict(MValueWrapper mvalue) {
-    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::DICT);
-    auto dict = mvalue.ptr->As<alt::IMValueDict>().Get();
+    assert(mvalue.ptr->GetType() == alt::IMValue::Type::DICT);
+    auto dict = std::dynamic_pointer_cast<const alt::IMValueDict>(mvalue.ptr);
 
     std::vector<MValueDictPairWrapper> vec;
 
     for (auto it = dict->Begin(); it; it = dict->Next()) {
         MValueWrapper value_wrapper;
-        value_wrapper.ptr = std::make_shared<alt::MValueConst>(it->GetValue());
+        value_wrapper.ptr = it->GetValue();
 
         MValueDictPairWrapper pair;
         pair.ptr = std::make_shared<MValueDictPair>(std::pair { it->GetKey(), value_wrapper.clone() });
@@ -412,73 +412,73 @@ MValueWrapper get_mvalue_dict_pair_value(const MValueDictPairWrapper& pair) {
 }
 
 alt::IBaseObject* get_mvalue_base_object(MValueWrapper mvalue) {
-    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::BASE_OBJECT);
-    return mvalue.ptr->As<alt::IMValueBaseObject>().Get()->RawValue();
+    assert(mvalue.ptr->GetType() == alt::IMValue::Type::BASE_OBJECT);
+    return std::dynamic_pointer_cast<const alt::IMValueBaseObject>(mvalue.ptr)->RawValue();
 }
 
 Vector3Wrapper get_mvalue_vector3(MValueWrapper mvalue) {
-    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::VECTOR3);
-    auto vector3 = mvalue.ptr->As<alt::IMValueVector3>().Get()->Value();
+    assert(mvalue.ptr->GetType() == alt::IMValue::Type::VECTOR3);
+    auto vector3 = std::dynamic_pointer_cast<const alt::IMValueVector3>(mvalue.ptr)->Value();
     return { vector3[0], vector3[1], vector3[2] };
 }
 
 Vector2Wrapper get_mvalue_vector2(MValueWrapper mvalue) {
-    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::VECTOR2);
-    auto vector2 = mvalue.ptr->As<alt::IMValueVector2>().Get()->Value();
+    assert(mvalue.ptr->GetType() == alt::IMValue::Type::VECTOR2);
+    auto vector2 = std::dynamic_pointer_cast<const alt::IMValueVector2>(mvalue.ptr)->Value();
     return { vector2[0], vector2[1] };
 }
 
 size_t get_mvalue_byte_array_size(MValueWrapper mvalue) {
-    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::BYTE_ARRAY);
-    auto byte_arr = mvalue.ptr->As<alt::IMValueByteArray>().Get();
+    assert(mvalue.ptr->GetType() == alt::IMValue::Type::BYTE_ARRAY);
+    auto byte_arr = std::dynamic_pointer_cast<const alt::IMValueByteArray>(mvalue.ptr);
     return byte_arr->GetSize();
 }
 
 void get_mvalue_byte_array(MValueWrapper mvalue, u8* data) {
-    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::BYTE_ARRAY);
-    auto byte_arr = mvalue.ptr->As<alt::IMValueByteArray>().Get();
+    assert(mvalue.ptr->GetType() == alt::IMValue::Type::BYTE_ARRAY);
+    auto byte_arr = std::dynamic_pointer_cast<const alt::IMValueByteArray>(mvalue.ptr);
     std::memcpy(data, byte_arr->GetData(), byte_arr->GetSize());
 }
 
 RGBAWrapper get_mvalue_rgba(MValueWrapper mvalue) {
-    assert(mvalue.ptr->Get()->GetType() == alt::IMValue::Type::RGBA);
-    auto value = mvalue.ptr->As<alt::IMValueRGBA>().Get()->Value();
+    assert(mvalue.ptr->GetType() == alt::IMValue::Type::RGBA);
+    auto value = std::dynamic_pointer_cast<const alt::IMValueRGBA>(mvalue.ptr)->Value();
     return { value.r, value.g, value.b, value.a };
 }
 
 MValueMutWrapper create_mvalue_bool(bool value) {
     MValueMutWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueBool(value));
+    wrapper.ptr = alt::ICore::Instance().CreateMValueBool(value);
     return wrapper;
 }
 
 MValueMutWrapper create_mvalue_double(f64 value) {
     MValueMutWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueDouble(value));
+    wrapper.ptr = alt::ICore::Instance().CreateMValueDouble(value);
     return wrapper;
 }
 
 MValueMutWrapper create_mvalue_string(std::string value) {
     MValueMutWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueString(value));
+    wrapper.ptr = alt::ICore::Instance().CreateMValueString(value);
     return wrapper;
 }
 
 MValueMutWrapper create_mvalue_nil() {
     MValueMutWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueNil());
+    wrapper.ptr = alt::ICore::Instance().CreateMValueNil();
     return wrapper;
 }
 
 MValueMutWrapper create_mvalue_int(i64 value) {
     MValueMutWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueInt(value));
+    wrapper.ptr = alt::ICore::Instance().CreateMValueInt(value);
     return wrapper;
 }
 
 MValueMutWrapper create_mvalue_uint(u64 value) {
     MValueMutWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueUInt(value));
+    wrapper.ptr = alt::ICore::Instance().CreateMValueUInt(value);
     return wrapper;
 }
 
@@ -487,52 +487,52 @@ MValueMutWrapper create_mvalue_list(MValueWrapperVec mvalue_vec) {
     auto size = mvalue_vec.size();
 
     for (size_t i = 0; i < size; ++i) {
-        mvalue_list->PushConst(*(mvalue_vec[i].ptr));
+        mvalue_list->PushConst(mvalue_vec[i].ptr);
     }
 
     MValueMutWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValue>(mvalue_list);
+    wrapper.ptr = mvalue_list;
     return wrapper;
 }
 
 MValueMutWrapper create_mvalue_dict() {
     MValueMutWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueDict());
+    wrapper.ptr = alt::ICore::Instance().CreateMValueDict();
     return wrapper;
 }
 
 void push_to_mvalue_dict(MValueMutWrapper& dict, std::string key, MValueMutWrapper mvalue) {
-    assert(dict.ptr->Get()->GetType() == alt::IMValue::Type::DICT);
-    dict.ptr->As<alt::IMValueDict>().Get()->SetConst(key, *(mvalue.ptr));
+    assert(dict.ptr->GetType() == alt::IMValue::Type::DICT);
+    std::dynamic_pointer_cast<alt::IMValueDict>(dict.ptr)->SetConst(key, mvalue.ptr);
 }
 
 MValueMutWrapper create_mvalue_base_object(alt::IBaseObject* value) {
     MValueMutWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueBaseObject(value));
+    wrapper.ptr = alt::ICore::Instance().CreateMValueBaseObject(value);
     return wrapper;
 }
 
 MValueMutWrapper create_mvalue_vector3(f32 x, f32 y, f32 z) {
     MValueMutWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueVector3({ x, y, z }));
+    wrapper.ptr = alt::ICore::Instance().CreateMValueVector3({ x, y, z });
     return wrapper;
 }
 
 MValueMutWrapper create_mvalue_vector2(f32 x, f32 y) {
     MValueMutWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueVector2({ x, y }));
+    wrapper.ptr = alt::ICore::Instance().CreateMValueVector2({ x, y });
     return wrapper;
 }
 
 MValueMutWrapper create_mvalue_byte_array(const u8* data, size_t size) {
     MValueMutWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueByteArray(data, size));
+    wrapper.ptr = alt::ICore::Instance().CreateMValueByteArray(data, size);
     return wrapper;
 }
 
 MValueMutWrapper create_mvalue_rgba(u8 r, u8 g, u8 b, u8 a) {
     MValueMutWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValue>(alt::ICore::Instance().CreateMValueRGBA({ r, g, b, a }));
+    wrapper.ptr = alt::ICore::Instance().CreateMValueRGBA({ r, g, b, a });
     return wrapper;
 }
 
@@ -542,7 +542,7 @@ alt::MValueArgs mvalue_wrapper_vec_to_alt(MValueWrapperVec mvalue_vec) {
     alt::MValueArgs args;
     auto size = mvalue_vec.size();
     for (alt::Size i = 0; i < size; ++i) {
-        args.push_back(*(mvalue_vec[i].ptr));
+        args.push_back(mvalue_vec[i].ptr);
     }
     return args;
 }

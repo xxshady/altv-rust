@@ -11,7 +11,7 @@ pub(crate) mod connection_queue;
 pub mod structs;
 
 macro_rules! log_user_handler_error {
-    ($event_name: expr, $result: expr) => {
+    ($event_name:expr, $result:expr) => {
         if let Err(err) = $result {
             logger::error!("handler of event {:?} failed with error: {:?}", stringify!($event_name), err);
         }
@@ -19,7 +19,7 @@ macro_rules! log_user_handler_error {
 }
 
 macro_rules! supported_sdk_events {
-    ( $( $event_name: ident, )+ ) => {
+    ( $( $event_name:ident, )+ ) => {
         #[derive(Debug, Eq, PartialEq, Hash, Clone, Copy)]
         pub enum SupportedEventType {
             $( $event_name, )+
@@ -118,7 +118,7 @@ macro_rules! supported_sdk_events {
 
 macro_rules! custom_events {
     ( $(
-        $sdk_event_name: ident: [ $( $custom_event_name: ident, )+ ],
+        $sdk_event_name:ident: [ $( $custom_event_name:ident, )+ ],
     )+ ) => {
         #[derive(Debug, Eq, PartialEq, Hash, Clone, Copy)]
         pub enum CustomEventType { $($(

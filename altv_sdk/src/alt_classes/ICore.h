@@ -83,11 +83,11 @@ bool HasMetaData(const StdStringClone key) {
 }
 MValueWrapper GetMetaData(const StdStringClone key) {
     MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(alt::ICore::Instance().GetMetaData(key));
+    wrapper.ptr = alt::ICore::Instance().GetMetaData(key);
     return wrapper;
 }
 void SetMetaData(const StdStringClone key, MValueMutWrapper val) {
-    return alt::ICore::Instance().SetMetaData(key, *(val.ptr));
+    return alt::ICore::Instance().SetMetaData(key, val.ptr);
 }
 void DeleteMetaData(const StdStringClone key) {
     return alt::ICore::Instance().DeleteMetaData(key);
@@ -100,7 +100,7 @@ bool HasSyncedMetaData(const StdStringClone key) {
 }
 MValueWrapper GetSyncedMetaData(const StdStringClone key) {
     MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(alt::ICore::Instance().GetSyncedMetaData(key));
+    wrapper.ptr = alt::ICore::Instance().GetSyncedMetaData(key);
     return wrapper;
 }
 std::vector<std::string> GetSyncedMetaDataKeys() {
@@ -142,7 +142,7 @@ void RestartResource(const StdStringClone name) {
     return alt::ICore::Instance().RestartResource(name);
 }
 void SetSyncedMetaData(const StdStringClone key, MValueMutWrapper val) {
-    return alt::ICore::Instance().SetSyncedMetaData(key, *(val.ptr));
+    return alt::ICore::Instance().SetSyncedMetaData(key, val.ptr);
 }
 void DeleteSyncedMetaData(const StdStringClone key) {
     return alt::ICore::Instance().DeleteSyncedMetaData(key);

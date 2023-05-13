@@ -50,14 +50,14 @@ bool HasStreamSyncedMetaData(const alt::ICheckpoint* ptr, const StdStringClone k
 }
 MValueWrapper GetStreamSyncedMetaData(const alt::ICheckpoint* ptr, const StdStringClone key) {
     MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(ptr->GetStreamSyncedMetaData(key));
+    wrapper.ptr = ptr->GetStreamSyncedMetaData(key);
     return wrapper;
 }
 std::vector<std::string> GetStreamSyncedMetaDataKeys(const alt::ICheckpoint* ptr) {
     return ptr->GetStreamSyncedMetaDataKeys();
 }
 void SetStreamSyncedMetaData(alt::ICheckpoint* ptr, const StdStringClone key, MValueMutWrapper val) {
-    return ptr->SetStreamSyncedMetaData(key, *(val.ptr));
+    return ptr->SetStreamSyncedMetaData(key, val.ptr);
 }
 void DeleteStreamSyncedMetaData(alt::ICheckpoint* ptr, const StdStringClone key) {
     return ptr->DeleteStreamSyncedMetaData(key);

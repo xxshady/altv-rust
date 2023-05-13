@@ -10,16 +10,16 @@ use crate::{col_shape::ColShapy, sdk, world_object::WorldObject};
 
 macro_rules! base_objects {
     (@internal $(
-        $manager_name_snake: ident
-        $name_struct: ident
-        $name_container: ident
-        $name_ptr: ident
-        $manager_name: ident: [
-            $base_type: path,
-            $( @extra_pool: $extra_pool: ident, )?
+        $manager_name_snake:ident
+        $name_struct:ident
+        $name_container:ident
+        $name_ptr:ident
+        $manager_name:ident: [
+            $base_type:path,
+            $( @extra_pool: $extra_pool:ident, )?
             $(
-                @inherit_classes: $inherit_ptrs_struct: ty, [ $(
-                    $impl_trait: ty,
+                @inherit_classes: $inherit_ptrs_struct:ty, [ $(
+                    $impl_trait:ty,
                 )+ ],
             )?
         ],
@@ -66,7 +66,7 @@ macro_rules! base_objects {
 
                 #[macro_export]
                 macro_rules! [<__ $manager_name_snake _remove_from_pool>] {
-                    ($base_object: expr) => {
+                    ($base_object:expr) => {
                         $crate::resource::Resource::with_base_objects_mut(|mut v, _| -> $crate::VoidResult {
                             v.[<$manager_name_snake>].remove($base_object.ptr()?)?;
                             $(
@@ -86,7 +86,7 @@ macro_rules! base_objects {
 
                 #[macro_export]
                 macro_rules! [<__ $manager_name_snake _add_to_pool>] {
-                    ($ptr: expr) => {
+                    ($ptr:expr) => {
                         $crate::resource::Resource::with_base_objects_mut(|mut v, _| {
                             let base_ptr = std::ptr::NonNull::new(unsafe {
                                 $crate::sdk::$manager_name_snake::to_base_object($ptr.as_ptr())
@@ -130,7 +130,7 @@ macro_rules! base_objects {
             #[derive(Default)]
             pub struct Store {
             $(
-                pub(crate) $manager_name_snake: BaseObjectManager<
+                pub(crate) $manager_name_snake:BaseObjectManager<
                     $manager_name_snake::$name_struct
                     $(, $crate::base_objects::inherit_ptrs::$inherit_ptrs_struct )?
                 >,
@@ -254,12 +254,12 @@ macro_rules! base_objects {
     };
 
     ( $(
-        $manager_name: ident: [
-            $base_type: path,
-            $( @extra_pool: $extra_pool: ident, )?
+        $manager_name:ident: [
+            $base_type:path,
+            $( @extra_pool: $extra_pool:ident, )?
             $(
-                @inherit_classes: $inherit_ptrs_struct: ty, [ $(
-                    $impl_trait: ty,
+                @inherit_classes: $inherit_ptrs_struct:ty, [ $(
+                    $impl_trait:ty,
                 )+ ],
             )?
         ],

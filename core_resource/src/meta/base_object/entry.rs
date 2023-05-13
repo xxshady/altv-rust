@@ -24,13 +24,13 @@ pub trait BaseObjectMetaEntry {
 
 macro_rules! impl_base_object_meta_entry {
     (
-        $meta_type: ident,
-        $entry_struct: path,
-        $sdk_namespace: path,
-        $raw_ptr: expr,
+        $meta_type:ident,
+        $entry_struct:path,
+        $sdk_namespace:path,
+        $raw_ptr:expr,
         $(
             @generics: [ $(
-                $generic_param: ident $(: $generic_param_trait: ty )?,
+                $generic_param:ident $(: $generic_param_trait:ty )?,
             )+ ]
         )?
     ) => {

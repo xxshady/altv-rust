@@ -12,11 +12,11 @@ bool HasMetaData(const alt::IBaseObject* ptr, const StdStringClone key) {
 }
 MValueWrapper GetMetaData(const alt::IBaseObject* ptr, const StdStringClone key) {
     MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(ptr->GetMetaData(key));
+    wrapper.ptr = ptr->GetMetaData(key);
     return wrapper;
 }
 void SetMetaData(alt::IBaseObject* ptr, const StdStringClone key, MValueMutWrapper val) {
-    return ptr->SetMetaData(key, *(val.ptr));
+    return ptr->SetMetaData(key, val.ptr);
 }
 void DeleteMetaData(alt::IBaseObject* ptr, const StdStringClone key) {
     return ptr->DeleteMetaData(key);
@@ -29,14 +29,14 @@ bool HasSyncedMetaData(const alt::IBaseObject* ptr, const StdStringClone key) {
 }
 MValueWrapper GetSyncedMetaData(const alt::IBaseObject* ptr, const StdStringClone key) {
     MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(ptr->GetSyncedMetaData(key));
+    wrapper.ptr = ptr->GetSyncedMetaData(key);
     return wrapper;
 }
 std::vector<std::string> GetSyncedMetaDataKeys(const alt::IBaseObject* ptr) {
     return ptr->GetSyncedMetaDataKeys();
 }
 void SetSyncedMetaData(alt::IBaseObject* ptr, const StdStringClone key, MValueMutWrapper val) {
-    return ptr->SetSyncedMetaData(key, *(val.ptr));
+    return ptr->SetSyncedMetaData(key, val.ptr);
 }
 void DeleteSyncedMetaData(alt::IBaseObject* ptr, const StdStringClone key) {
     return ptr->DeleteSyncedMetaData(key);

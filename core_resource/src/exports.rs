@@ -91,10 +91,10 @@ pub mod events {
 
     #[macro_export]
     macro_rules! __emit_client {
-        ($event_name: expr, $player: expr) => {
+        ($event_name:expr, $player:expr) => {
             $crate::exports::events::__internal::emit_client_without_args($event_name, $player)
         };
-        ($event_name: expr, $player: expr, $( $arg: expr ),+ ) => {
+        ($event_name:expr, $player:expr, $( $arg:expr ),+ ) => {
             (|| -> $crate::exports::VoidResult {
                 let vec = $crate::exports::mvalue::mvalue_list!($( $arg ),+)?;
                 $crate::exports::events::__internal::emit_client(
@@ -109,10 +109,10 @@ pub mod events {
 
     #[macro_export]
     macro_rules! __emit_client_unreliable {
-        ($event_name: expr, $player: expr) => {
+        ($event_name:expr, $player:expr) => {
             $crate::exports::events::__internal::emit_client_unreliable_without_args($event_name, $player)
         };
-        ($event_name: expr, $player: expr, $( $arg: expr ),+ ) => {
+        ($event_name:expr, $player:expr, $( $arg:expr ),+ ) => {
             (|| -> $crate::exports::VoidResult {
                 let vec = $crate::exports::mvalue::mvalue_list!($( $arg ),+)?;
                 $crate::exports::events::__internal::emit_client_unreliable(
@@ -127,10 +127,10 @@ pub mod events {
 
     #[macro_export]
     macro_rules! __emit_all_clients {
-        ($event_name: expr) => {
+        ($event_name:expr) => {
             $crate::exports::events::__internal::emit_all_clients($event_name)
         };
-        ($event_name: expr, $( $arg: expr ),+ ) => {
+        ($event_name:expr, $( $arg:expr ),+ ) => {
             (|| -> $crate::VoidResult {
                 let vec = $crate::exports::mvalue::mvalue_list!($( $arg ),+)?;
                 $crate::exports::events::__internal::emit_all_clients(
@@ -145,10 +145,10 @@ pub mod events {
 
     #[macro_export]
     macro_rules! __emit_all_clients_unreliable {
-        ($event_name: expr) => {
+        ($event_name:expr) => {
             $crate::exports::events::__internal::emit_all_clients_unreliable($event_name)
         };
-        ($event_name: expr, $( $arg: expr ),+ ) => {
+        ($event_name:expr, $( $arg:expr ),+ ) => {
             (|| -> $crate::VoidResult {
                 let vec = $crate::exports::mvalue::mvalue_list!($( $arg ),+)?;
                 $crate::exports::events::__internal::emit_all_clients_unreliable(
@@ -163,10 +163,10 @@ pub mod events {
 
     #[macro_export]
     macro_rules! __emit_some_clients {
-        ($event_name: expr, $players: expr) => {
+        ($event_name:expr, $players:expr) => {
             $crate::exports::events::__internal::emit_some_clients_without_args($event_name, $players)
         };
-        ($event_name: expr, $players: expr, $( $arg: expr ),+ ) => {
+        ($event_name:expr, $players:expr, $( $arg:expr ),+ ) => {
             (|| -> $crate::VoidResult {
                 let vec = $crate::exports::mvalue::mvalue_list!($( $arg ),+)?;
                 $crate::exports::events::__internal::emit_some_clients(
@@ -181,10 +181,10 @@ pub mod events {
 
     #[macro_export]
     macro_rules! __emit_some_clients_unreliable {
-        ($event_name: expr, $players: expr) => {
+        ($event_name:expr, $players:expr) => {
             $crate::exports::events::__internal::emit_some_clients_unreliable_without_args($event_name, $players)
         };
-        ($event_name: expr, $players: expr, $( $arg: expr ),+ ) => {
+        ($event_name:expr, $players:expr, $( $arg:expr ),+ ) => {
             (|| -> $crate::VoidResult {
                 let vec = $crate::exports::mvalue::mvalue_list!($( $arg ),+)?;
                 $crate::exports::events::__internal::emit_some_clients_unreliable(
@@ -214,10 +214,10 @@ pub mod events {
     /// ```
     #[macro_export]
     macro_rules! __emit {
-        ($event_name: expr) => {
+        ($event_name:expr) => {
             unsafe { $crate::exports::events::__internal::emit_local_event_without_args($event_name) };
         };
-        ($event_name: expr, $($arg: expr),+ $(,)*) => {
+        ($event_name:expr, $($arg:expr),+ $(,)*) => {
             (|| -> $crate::exports::VoidResult {
                 let vec = $crate::exports::mvalue::mvalue_list!($( $arg ),+)?;
                 $crate::exports::events::__internal::emit_local_event(
@@ -241,7 +241,7 @@ pub mod mvalue {
 
     #[macro_export]
     macro_rules! __mvalue_list {
-        ($($arg: expr),+ $(,)*) => {
+        ($($arg:expr),+ $(,)*) => {
             (|| {
                 let mut vec = vec![];
                 $(
@@ -255,7 +255,7 @@ pub mod mvalue {
 
     #[macro_export]
     macro_rules! __mvalue_dict {
-        ($($key: expr => $value: expr),+ $(,)*) => {
+        ($($key:expr => $value:expr),+ $(,)*) => {
             (||{
                 let mut hash_map = std::collections::HashMap::new();
                 $(

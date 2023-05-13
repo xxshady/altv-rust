@@ -12,7 +12,7 @@ const MValueWrapperVec GetArgs(const alt::CServerScriptEvent* ptr) {
     auto mvalue_vec = create_mvalue_vec();
     for (const auto& e : args) {
     MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(e);
+    wrapper.ptr = e;
     mvalue_vec.push_back(wrapper.clone());
     }
     return mvalue_vec;

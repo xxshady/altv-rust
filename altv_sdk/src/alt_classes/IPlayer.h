@@ -309,11 +309,11 @@ bool HasLocalMetaData(const alt::IPlayer* ptr, const StdStringClone key) {
     return ptr->HasLocalMetaData(key);
 }
 void SetLocalMetaData(alt::IPlayer* ptr, const StdStringClone key, MValueMutWrapper val) {
-    return ptr->SetLocalMetaData(key, *(val.ptr));
+    return ptr->SetLocalMetaData(key, val.ptr);
 }
 MValueWrapper GetLocalMetaData(const alt::IPlayer* ptr, const StdStringClone key) {
     MValueWrapper wrapper;
-    wrapper.ptr = std::make_shared<alt::MValueConst>(ptr->GetLocalMetaData(key));
+    wrapper.ptr = ptr->GetLocalMetaData(key);
     return wrapper;
 }
 void DeleteLocalMetaData(alt::IPlayer* ptr, const StdStringClone key) {

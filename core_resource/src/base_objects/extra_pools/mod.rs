@@ -23,7 +23,7 @@ pub(self) mod wrappers {
     use vehicle::VehicleContainer;
 
     macro_rules! extra_pool_enum {
-        (@internal $any_name: ident, $name: ident, $raw_ptr_type: ty: [ $( $variant: ident, $container: ty; )+ ]) => {
+        (@internal $any_name:ident, $name:ident, $raw_ptr_type:ty: [ $( $variant:ident, $container:ty; )+ ]) => {
             paste::paste! {
                 #[derive(Debug)]
                 pub enum $any_name { $(
@@ -61,7 +61,7 @@ pub(self) mod wrappers {
             }
         };
 
-        ($name: ident, $raw_ptr_type: ty: [ $( $variant: ident, $container: ty; )+ ]) => {
+        ($name:ident, $raw_ptr_type:ty: [ $( $variant:ident, $container:ty; )+ ]) => {
             paste::paste! {
                 extra_pool_enum!(@internal [<Any $name>], $name, $raw_ptr_type: [ $( $variant, $container; )+ ]);
             }
