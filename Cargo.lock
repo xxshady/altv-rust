@@ -27,11 +27,13 @@ version = "15.0.0-dev.22"
 dependencies = [
  "altv_internal_core_shared",
  "altv_internal_logger",
+ "altv_internal_mvalue",
  "altv_internal_sdk",
  "autocxx",
  "lazycell",
  "lmnkjgkj-std-backtrace-anyhow",
  "paste",
+ "serde",
 ]
 
 [[package]]
@@ -52,9 +54,10 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_mvalue"
-version = "15.0.0-dev.21"
+version = "15.0.0-dev.22"
 dependencies = [
  "altv_internal_sdk",
+ "autocxx",
  "serde",
 ]
 
@@ -81,6 +84,7 @@ name = "altv_module"
 version = "15.0.0-dev.22"
 dependencies = [
  "altv_internal_logger",
+ "altv_internal_mvalue",
  "altv_internal_sdk",
  "autocxx",
  "core_module",
@@ -388,6 +392,8 @@ name = "example_resource"
 version = "15.0.0-dev.22"
 dependencies = [
  "altv",
+ "altv_internal_sdk",
+ "autocxx",
  "rand",
 ]
 

@@ -1,5 +1,6 @@
 use std::fmt::Display;
 
+use altv_sdk::MValueType;
 use serde::{de, ser};
 
 pub type Result<T> = std::result::Result<T, Error>;
@@ -7,6 +8,15 @@ pub type Result<T> = std::result::Result<T, Error>;
 #[derive(Debug)]
 pub enum Error {
     Message(String),
+    SerializationFailed,
+    DictKeySerializationFailed,
+    BaseObjectSerializationFailed,
+    InvalidBaseObject,
+    BaseObjectNotFound,
+    InvalidMValueType,
+    DictKeyMustBeAString,
+    BaseObjectImpossibleSerialization,
+    UnimplementedMValueType(MValueType),
 }
 
 impl ser::Error for Error {

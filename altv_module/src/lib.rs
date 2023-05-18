@@ -2,7 +2,7 @@ use altv_sdk::ffi as sdk;
 use core_module::{result::VoidResult, ResourceName};
 use libloading::Library;
 use resource_manager::ResourceController;
-use std::{path::PathBuf, ptr::NonNull};
+use std::{collections::HashMap, path::PathBuf, ptr::NonNull};
 
 use crate::{event_manager::EVENT_MANAGER_INSTANCE, resource_manager::RESOURCE_MANAGER_INSTANCE};
 
@@ -199,6 +199,48 @@ pub unsafe extern "C" fn altMain(core: *mut sdk::alt::ICore) -> bool {
     required_sdk_events::enable();
 
     logger::info!("{ALTV_MODULE_VERSION}");
+
+    // TEST
+    use autocxx::prelude::*;
+    macro_rules! check_mvalue_serde {
+        ($expected_type:ty, $input:expr) => {{
+            println!("checking type: {}", stringify!($expected_type));
+
+            let mvalue = mvalue::to_mvalue(&$input).unwrap();
+            let const_mvalue =
+                sdk::convert_mvalue_mut_wrapper_to_const(mvalue.0).within_unique_ptr();
+            println!(
+                "mvalue type: {:?}",
+                altv_sdk::MValueType::try_from(sdk::read_mvalue_type(&const_mvalue))
+            );
+
+            let deserialized: $expected_type = mvalue::from_mvalue(const_mvalue).unwrap();
+            println!("deserialized: {deserialized:?}");
+        }};
+    }
+
+    // check_mvalue_serde!(i8, 55);
+    // check_mvalue_serde!(f32, 55);
+    // check_mvalue_serde!(f64, 55);
+    // check_mvalue_serde!(bool, true);
+    // check_mvalue_serde!(String, "kek");
+    // check_mvalue_serde!(char, "k");
+    // check_mvalue_serde!(Vec<u8>, vec![1, 2, 3]);
+    // check_mvalue_serde!(Option<i32>, Some(123) as Option<i32>);
+    // check_mvalue_serde!(Option<bool>, Some(false) as Option<bool>);
+    // // check_mvalue_serde!((), Some(false) as Option<bool>); doesnt supported
+
+    // // type RGBA = mvalue::rgba::RGBA;
+    // // check_mvalue_serde!(RGBA, RGBA::new(255, 0, 0, 55));
+    // // check_mvalue_serde!(
+    // //     (RGBA, RGBA),
+    // //     (RGBA::new(255, 0, 0, 55), RGBA::new(255, 0, 0, 55))
+    // // );
+
+    // // check_mvalue_serde!(
+    // //     Vec<(RGBA, RGBA)>,
+    // //     vec![(RGBA::new(255, 0, 0, 55), RGBA::new(255, 0, 0, 55))]
+    // // );
 
     true
 }

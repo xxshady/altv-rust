@@ -1,15 +1,51 @@
-pub use altv::prelude::*;
+use altv::prelude::*;
+
+use altv_sdk::ffi as sdk;
 
 #[altv::main]
 fn main() -> impl altv::IntoVoidResult {
-    std::env::set_var("RUST_BACKTRACE", "full");
+    // std::env::set_var("RUST_BACKTRACE", "full");
 
-    let vehicle = altv::Vehicle::new("sultan", 0, 0)?;
-    dbg!(vehicle.set_mod(0, 0));
-    vehicle.set_mod_kit(1)?;
-    dbg!(vehicle.set_mod(0, 0));
+    use autocxx::prelude::*;
+    macro_rules! check_mvalue_serde {
+        ($expected_type:ty, $input:expr) => {{
+            println!("checking type: {}", stringify!($expected_type));
 
-    dbg!(vehicle.set_mod(255, 255));
+            dbg!();
+            let mvalue = altv::__mvalue::to_mvalue(&$input).unwrap();
+            dbg!();
+            let const_mvalue =
+                sdk::convert_mvalue_mut_wrapper_to_const(mvalue.0).within_unique_ptr();
+            dbg!();
+            println!(
+                "mvalue type: {:?}",
+                altv_sdk::MValueType::try_from(sdk::read_mvalue_type(&const_mvalue))
+            );
 
-    Ok(())
+            // let deserialized: $expected_type = mvalue::from_mvalue(const_mvalue).unwrap();
+            // println!("deserialized: {deserialized:?}");
+        }};
+    }
+
+    let veh = altv::Vehicle::new("sultan2", 0, 0).unwrap();
+    let blip = altv::Blip::new_point(0);
+    // veh.destroy().unwrap();
+
+    unsafe {
+        dbg!();
+        let mvalue = altv::__mvalue::to_mvalue(&blip).unwrap();
+        dbg!();
+        let const_mvalue = sdk::convert_mvalue_mut_wrapper_to_const(mvalue.0).within_unique_ptr();
+        dbg!();
+        println!(
+            "mvalue type: {:?}",
+            altv_sdk::MValueType::try_from(sdk::read_mvalue_type(&const_mvalue))
+        );
+
+        // veh.destroy().unwrap();
+
+        let deserialized: altv::BaseObjectRc<altv::Vehicle> =
+            altv::__mvalue::from_mvalue(const_mvalue).unwrap();
+        println!("deserialized: {deserialized:?}");
+    }
 }

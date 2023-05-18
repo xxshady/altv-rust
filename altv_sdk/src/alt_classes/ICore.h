@@ -64,8 +64,8 @@ std::string FileRead(const StdStringClone path) {
 alt::IResource* GetResource(const StdStringClone name) {
     return alt::ICore::Instance().GetResource(name);
 }
-alt::IEntity* GetEntityByID(u16 id) {
-    return alt::ICore::Instance().GetEntityByID(id);
+alt::IEntity* GetEntityBySyncID(u16 id) {
+    return alt::ICore::Instance().GetEntityBySyncID(id);
 }
 PlayerVector GetPlayers() {
     auto alt_vec = alt::ICore::Instance().GetPlayers();

@@ -11,5 +11,6 @@ readme = { workspace = true }
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-serde = { version = "1.0.162" }
+serde = { workspace = true }
 altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "15.0.0-dev.21" }
+autocxx = { workspace = true }

@@ -66,7 +66,7 @@ class MValueWrapper {
 public:
     alt::MValueConst ptr;
 
-    MValueWrapper clone() {
+    MValueWrapper clone() const {
         MValueWrapper instance;
         instance.ptr = this->ptr;
 
@@ -74,17 +74,25 @@ public:
     }
 };
 
+MValueWrapper copy_mvalue(const MValueWrapper& wrapper) {
+    return wrapper.clone();
+}
+
 class MValueMutWrapper {
 public:
     alt::MValue ptr;
 
-    MValueMutWrapper clone() {
+    MValueMutWrapper clone() const {
         MValueMutWrapper instance;
         instance.ptr = this->ptr;
 
         return instance;
     }
 };
+
+MValueMutWrapper copy_mut_mvalue(const MValueMutWrapper& wrapper) {
+    return wrapper.clone();
+}
 
 MValueWrapper convert_mvalue_mut_wrapper_to_const(MValueMutWrapper mut_wrapper) {
     MValueWrapper wrapper;
@@ -100,13 +108,17 @@ class MValueDictPairWrapper {
 public:
     std::shared_ptr<MValueDictPair> ptr;
 
-    MValueDictPairWrapper clone() {
+    MValueDictPairWrapper clone() const {
         MValueDictPairWrapper instance;
         instance.ptr = this->ptr;
 
         return instance;
     }
 };
+
+MValueDictPairWrapper copy_mvalue_dict_pair(const MValueDictPairWrapper& wrapper) {
+    return wrapper.clone();
+}
 
 using ConfigDictPair = std::pair<std::string, Config::Value::ValuePtr>;
 
@@ -335,40 +347,36 @@ MValueWrapperVec create_mvalue_vec() {
     return vec;
 }
 
-void push_to_mvalue_vec(MValueWrapperVec& mvalue_vec, MValueMutWrapper mvalue) {
-    mvalue_vec.push_back(convert_mvalue_mut_wrapper_to_const(mvalue));
-}
-
-u8 get_mvalue_type(MValueWrapper mvalue) {
+u8 read_mvalue_type(MValueWrapper mvalue) {
     return static_cast<u8>(mvalue.ptr->GetType());
 }
 
-bool get_mvalue_bool(MValueWrapper mvalue) {
+bool read_mvalue_bool(MValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::BOOL);
     return std::dynamic_pointer_cast<const alt::IMValueBool>(mvalue.ptr)->Value();
 }
 
-f64 get_mvalue_double(MValueWrapper mvalue) {
+f64 read_mvalue_double(MValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::DOUBLE);
     return std::dynamic_pointer_cast<const alt::IMValueDouble>(mvalue.ptr)->Value();
 }
 
-std::string get_mvalue_string(MValueWrapper mvalue) {
+std::string read_mvalue_string(MValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::STRING);
     return std::dynamic_pointer_cast<const alt::IMValueString>(mvalue.ptr)->Value();
 }
 
-i64 get_mvalue_int(MValueWrapper mvalue) {
+i64 read_mvalue_int(MValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::INT);
     return std::dynamic_pointer_cast<const alt::IMValueInt>(mvalue.ptr)->Value();
 }
 
-u64 get_mvalue_uint(MValueWrapper mvalue) {
+u64 read_mvalue_uint(MValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::UINT);
     return std::dynamic_pointer_cast<const alt::IMValueUInt>(mvalue.ptr)->Value();
 }
 
-MValueWrapperVec get_mvalue_list(MValueWrapper mvalue) {
+MValueWrapperVec read_mvalue_list(MValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::LIST);
 
     auto list = std::dynamic_pointer_cast<const alt::IMValueList>(mvalue.ptr);
@@ -385,7 +393,7 @@ MValueWrapperVec get_mvalue_list(MValueWrapper mvalue) {
     return mvalue_vec;
 }
 
-std::vector<MValueDictPairWrapper> get_mvalue_dict(MValueWrapper mvalue) {
+std::vector<MValueDictPairWrapper> read_mvalue_dict(MValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::DICT);
     auto dict = std::dynamic_pointer_cast<const alt::IMValueDict>(mvalue.ptr);
 
@@ -403,44 +411,44 @@ std::vector<MValueDictPairWrapper> get_mvalue_dict(MValueWrapper mvalue) {
     return vec;
 }
 
-std::string get_mvalue_dict_pair_key(const MValueDictPairWrapper& pair) {
+std::string read_mvalue_dict_pair_key(const MValueDictPairWrapper& pair) {
     return pair.ptr->first;
 }
 
-MValueWrapper get_mvalue_dict_pair_value(const MValueDictPairWrapper& pair) {
+MValueWrapper read_mvalue_dict_pair_value(const MValueDictPairWrapper& pair) {
     return pair.ptr->second.clone();
 }
 
-alt::IBaseObject* get_mvalue_base_object(MValueWrapper mvalue) {
+alt::IBaseObject* read_mvalue_base_object(MValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::BASE_OBJECT);
     return std::dynamic_pointer_cast<const alt::IMValueBaseObject>(mvalue.ptr)->RawValue();
 }
 
-Vector3Wrapper get_mvalue_vector3(MValueWrapper mvalue) {
+Vector3Wrapper read_mvalue_vector3(MValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::VECTOR3);
     auto vector3 = std::dynamic_pointer_cast<const alt::IMValueVector3>(mvalue.ptr)->Value();
     return { vector3[0], vector3[1], vector3[2] };
 }
 
-Vector2Wrapper get_mvalue_vector2(MValueWrapper mvalue) {
+Vector2Wrapper read_mvalue_vector2(MValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::VECTOR2);
     auto vector2 = std::dynamic_pointer_cast<const alt::IMValueVector2>(mvalue.ptr)->Value();
     return { vector2[0], vector2[1] };
 }
 
-size_t get_mvalue_byte_array_size(MValueWrapper mvalue) {
+size_t read_mvalue_byte_array_size(MValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::BYTE_ARRAY);
     auto byte_arr = std::dynamic_pointer_cast<const alt::IMValueByteArray>(mvalue.ptr);
     return byte_arr->GetSize();
 }
 
-void get_mvalue_byte_array(MValueWrapper mvalue, u8* data) {
+void read_mvalue_byte_array(MValueWrapper mvalue, u8* data) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::BYTE_ARRAY);
     auto byte_arr = std::dynamic_pointer_cast<const alt::IMValueByteArray>(mvalue.ptr);
     std::memcpy(data, byte_arr->GetData(), byte_arr->GetSize());
 }
 
-RGBAWrapper get_mvalue_rgba(MValueWrapper mvalue) {
+RGBAWrapper read_mvalue_rgba(MValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::RGBA);
     auto value = std::dynamic_pointer_cast<const alt::IMValueRGBA>(mvalue.ptr)->Value();
     return { value.r, value.g, value.b, value.a };
@@ -482,17 +490,16 @@ MValueMutWrapper create_mvalue_uint(u64 value) {
     return wrapper;
 }
 
-MValueMutWrapper create_mvalue_list(MValueWrapperVec mvalue_vec) {
-    auto mvalue_list = alt::ICore::Instance().CreateMValueList();
-    auto size = mvalue_vec.size();
-
-    for (size_t i = 0; i < size; ++i) {
-        mvalue_list->PushConst(mvalue_vec[i].ptr);
-    }
-
+MValueMutWrapper create_mvalue_list() {
+    auto list = alt::ICore::Instance().CreateMValueList();
     MValueMutWrapper wrapper;
-    wrapper.ptr = mvalue_list;
+    wrapper.ptr = list;
     return wrapper;
+}
+
+void push_to_mvalue_list(MValueMutWrapper& list, MValueWrapper value) {
+    assert(list.ptr->GetType() == alt::IMValue::Type::LIST);
+    std::dynamic_pointer_cast<alt::IMValueList>(list.ptr)->PushConst(value.ptr);
 }
 
 MValueMutWrapper create_mvalue_dict() {
@@ -501,9 +508,12 @@ MValueMutWrapper create_mvalue_dict() {
     return wrapper;
 }
 
-void push_to_mvalue_dict(MValueMutWrapper& dict, std::string key, MValueMutWrapper mvalue) {
+void push_to_mvalue_dict(MValueMutWrapper& dict, MValueMutWrapper key, MValueMutWrapper mvalue) {
     assert(dict.ptr->GetType() == alt::IMValue::Type::DICT);
-    std::dynamic_pointer_cast<alt::IMValueDict>(dict.ptr)->SetConst(key, mvalue.ptr);
+    assert(key.ptr->GetType() == alt::IMValue::Type::STRING);
+
+    auto string_key = std::dynamic_pointer_cast<alt::IMValueString>(key.ptr);
+    std::dynamic_pointer_cast<alt::IMValueDict>(dict.ptr)->SetConst(string_key->ToString(), mvalue.ptr);
 }
 
 MValueMutWrapper create_mvalue_base_object(alt::IBaseObject* value) {
@@ -538,17 +548,20 @@ MValueMutWrapper create_mvalue_rgba(u8 r, u8 g, u8 b, u8 a) {
 
 // events
 
-alt::MValueArgs mvalue_wrapper_vec_to_alt(MValueWrapperVec mvalue_vec) {
+alt::MValueArgs mvalue_wrapper_list_to_args(MValueMutWrapper mvalue_list) {
+    assert(mvalue_list.ptr->GetType() == alt::IMValue::Type::LIST);
+    auto list = std::dynamic_pointer_cast<const alt::IMValueList>(mvalue_list.ptr);
+
     alt::MValueArgs args;
-    auto size = mvalue_vec.size();
+    auto size = list->GetSize();
     for (alt::Size i = 0; i < size; ++i) {
-        args.push_back(mvalue_vec[i].ptr);
+        args.push_back(list->Get(i));
     }
     return args;
 }
 
-void trigger_local_event(std::string event_name, MValueWrapperVec mvalue_vec) {
-    alt::ICore::Instance().TriggerLocalEvent(event_name, mvalue_wrapper_vec_to_alt(mvalue_vec));
+void trigger_local_event(std::string event_name, MValueMutWrapper mvalue_list) {
+    alt::ICore::Instance().TriggerLocalEvent(event_name, mvalue_wrapper_list_to_args(mvalue_list));
 }
 
 std::vector<alt::IPlayer*> player_wrapper_vec_to_alt(PlayerVector player_vec) {
@@ -560,36 +573,36 @@ std::vector<alt::IPlayer*> player_wrapper_vec_to_alt(PlayerVector player_vec) {
     return players;
 }
 
-void trigger_client_event(alt::IPlayer* player, std::string event_name, MValueWrapperVec mvalue_vec) {
-    alt::ICore::Instance().TriggerClientEvent(player, event_name, mvalue_wrapper_vec_to_alt(mvalue_vec));
+void trigger_client_event(alt::IPlayer* player, std::string event_name, MValueMutWrapper mvalue_list) {
+    alt::ICore::Instance().TriggerClientEvent(player, event_name, mvalue_wrapper_list_to_args(mvalue_list));
 }
 
-void trigger_client_event_unreliable(alt::IPlayer* player, std::string event_name, MValueWrapperVec mvalue_vec) {
-    alt::ICore::Instance().TriggerClientEventUnreliable(player, event_name, mvalue_wrapper_vec_to_alt(mvalue_vec));
+void trigger_client_event_unreliable(alt::IPlayer* player, std::string event_name, MValueMutWrapper mvalue_list) {
+    alt::ICore::Instance().TriggerClientEventUnreliable(player, event_name, mvalue_wrapper_list_to_args(mvalue_list));
 }
 
-void trigger_client_event_for_some(PlayerVector players, std::string event_name, MValueWrapperVec mvalue_vec) {
+void trigger_client_event_for_some(PlayerVector players, std::string event_name, MValueMutWrapper mvalue_list) {
     alt::ICore::Instance().TriggerClientEvent(
         player_wrapper_vec_to_alt(players),
         event_name,
-        mvalue_wrapper_vec_to_alt(mvalue_vec)
+        mvalue_wrapper_list_to_args(mvalue_list)
     );
 }
 
-void trigger_client_event_unreliable_for_some(PlayerVector players, std::string event_name, MValueWrapperVec mvalue_vec) {
+void trigger_client_event_unreliable_for_some(PlayerVector players, std::string event_name, MValueMutWrapper mvalue_list) {
     alt::ICore::Instance().TriggerClientEventUnreliable(
         player_wrapper_vec_to_alt(players),
         event_name,
-        mvalue_wrapper_vec_to_alt(mvalue_vec)
+        mvalue_wrapper_list_to_args(mvalue_list)
     );
 }
 
-void trigger_client_event_for_all(std::string event_name, MValueWrapperVec mvalue_vec) {
-    alt::ICore::Instance().TriggerClientEventForAll(event_name, mvalue_wrapper_vec_to_alt(mvalue_vec));
+void trigger_client_event_for_all(std::string event_name, MValueMutWrapper mvalue_list) {
+    alt::ICore::Instance().TriggerClientEventForAll(event_name, mvalue_wrapper_list_to_args(mvalue_list));
 }
 
-void trigger_client_event_unreliable_for_all(std::string event_name, MValueWrapperVec mvalue_vec) {
-    alt::ICore::Instance().TriggerClientEventUnreliableForAll(event_name, mvalue_wrapper_vec_to_alt(mvalue_vec));
+void trigger_client_event_unreliable_for_all(std::string event_name, MValueMutWrapper mvalue_list) {
+    alt::ICore::Instance().TriggerClientEventUnreliableForAll(event_name, mvalue_wrapper_list_to_args(mvalue_list));
 }
 
 namespace base_object

@@ -8,7 +8,6 @@ use crate::{
         player_local_meta::LocalPlayerMetaEntry,
         ve_stream_synced_meta::StreamSyncedVirtualEntityMetaEntry,
     },
-    mvalue,
     resource::Resource,
     sdk, SomeResult, VoidResult,
 };

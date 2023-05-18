@@ -9,7 +9,7 @@ mod base_object_funcs;
 mod base_objects;
 mod blip;
 mod checkpoint;
-mod client_events;
+// mod client_events;
 mod col_shape;
 mod config_node;
 mod core_funcs;
@@ -18,14 +18,13 @@ mod helpers;
 mod logging;
 mod marker;
 mod meta;
-mod mvalue;
 mod network_object;
 mod ped;
 mod ped_model_info;
 mod player;
 mod quaternion;
 mod rgba;
-mod script_events;
+// mod script_events;
 mod structs;
 mod timers;
 mod vector;
@@ -81,6 +80,6 @@ pub fn init(
         });
     });
 
-    script_events::LocalEventManager::init();
-    script_events::ClientEventManager::init();
+    // script_events::LocalEventManager::init();
+    // script_events::ClientEventManager::init();
 }

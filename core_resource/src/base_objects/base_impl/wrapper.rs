@@ -1,10 +1,14 @@
 use std::{cell::RefCell, ptr::NonNull, rc::Rc};
 
+use serde::{Deserialize, Serialize};
+
 use super::{base_object::BaseObject, BaseObjectContainer};
 use crate::{
-    meta::base_object::{normal_meta::NormalBaseObjectMeta, synced_meta::SyncedBaseObjectMeta},
+    base_objects::BasePtr,
     resource::Resource,
-    SomeResult, VoidResult,
+    // meta::base_object::{normal_meta::NormalBaseObjectMeta, synced_meta::SyncedBaseObjectMeta},
+    SomeResult,
+    VoidResult,
 };
 
 pub struct BaseObjectWrapper<T, InheritPtrs: Clone = ()> {
@@ -42,12 +46,12 @@ impl<T, InheritPtrs: Clone> BaseObjectWrapper<T, InheritPtrs> {
     }
 }
 
-impl<T, InheritPtrs: Clone> SyncedBaseObjectMeta<T, InheritPtrs>
-    for BaseObjectWrapper<T, InheritPtrs>
-{
-}
+// impl<T, InheritPtrs: Clone> SyncedBaseObjectMeta<T, InheritPtrs>
+//     for BaseObjectWrapper<T, InheritPtrs>
+// {
+// }
 
-impl<T, InheritPtrs: Clone> NormalBaseObjectMeta<T, InheritPtrs>
-    for BaseObjectWrapper<T, InheritPtrs>
-{
-}
+// impl<T, InheritPtrs: Clone> NormalBaseObjectMeta<T, InheritPtrs>
+//     for BaseObjectWrapper<T, InheritPtrs>
+// {
+// }

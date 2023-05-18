@@ -19,7 +19,7 @@ use crate::{
         get_non_null_world_object_by_ptr, get_player, init_or_get_lazycell, read_cpp_str_vec,
         read_cpp_vector3, Hash,
     },
-    mvalue,
+    // mvalue,
     resource::Resource,
     vector::Vector3,
     VoidResult,
@@ -135,7 +135,7 @@ impl ColshapeEvent {
 pub struct ServerScriptEvent {
     pub name: String,
     event: *const sdk::alt::CServerScriptEvent,
-    args: LazyCell<mvalue::MValueList>,
+    // args: LazyCell<mvalue::MValueList>,
 }
 
 impl ServerScriptEvent {
@@ -145,17 +145,17 @@ impl ServerScriptEvent {
         Self {
             name,
             event,
-            args: LazyCell::new(),
+            // args: LazyCell::new(),
         }
     }
 
-    pub fn args(&self) -> &mvalue::MValueList {
-        init_or_get_lazycell(&self.args, || {
-            let args = unsafe { sdk::CServerScriptEvent::GetArgs(self.event) };
-            Ok(Resource::with(|v| mvalue::deserialize_mvalue_args(args, v)))
-        })
-        .unwrap()
-    }
+    // pub fn args(&self) -> &mvalue::MValueList {
+    //     init_or_get_lazycell(&self.args, || {
+    //         let args = unsafe { sdk::CServerScriptEvent::GetArgs(self.event) };
+    //         Ok(Resource::with(|v| mvalue::deserialize_mvalue_args(args, v)))
+    //     })
+    //     .unwrap()
+    // }
 }
 
 #[derive(Debug)]
@@ -163,7 +163,7 @@ pub struct ClientScriptEvent {
     pub name: String,
     pub player: player::PlayerContainer,
     event: *const sdk::alt::CClientScriptEvent,
-    args: LazyCell<mvalue::MValueList>,
+    // args: LazyCell<mvalue::MValueList>,
 }
 
 impl ClientScriptEvent {
@@ -176,17 +176,17 @@ impl ClientScriptEvent {
             name,
             event,
             player,
-            args: LazyCell::new(),
+            // args: LazyCell::new(),
         }
     }
 
-    pub fn args(&self) -> &mvalue::MValueList {
-        init_or_get_lazycell(&self.args, || {
-            let args = unsafe { sdk::CClientScriptEvent::GetArgs(self.event) };
-            Ok(Resource::with(|v| mvalue::deserialize_mvalue_args(args, v)))
-        })
-        .unwrap()
-    }
+    // pub fn args(&self) -> &mvalue::MValueList {
+    //     init_or_get_lazycell(&self.args, || {
+    //         let args = unsafe { sdk::CClientScriptEvent::GetArgs(self.event) };
+    //         Ok(Resource::with(|v| mvalue::deserialize_mvalue_args(args, v)))
+    //     })
+    //     .unwrap()
+    // }
 }
 
 #[derive(Debug)]
@@ -833,8 +833,8 @@ impl NetownerChange {
 #[derive(Debug)]
 pub struct GlobalMetaChange {
     pub key: String,
-    pub new_value: mvalue::MValue,
-    pub old_value: mvalue::MValue,
+    // pub new_value: mvalue::MValue,
+    // pub old_value: mvalue::MValue,
 }
 
 impl GlobalMetaChange {
@@ -844,8 +844,8 @@ impl GlobalMetaChange {
         use sdk::CGlobalMetaDataChangeEvent::*;
         Self {
             key: GetKey(event).to_string(),
-            new_value: mvalue::deserialize_from_sdk(GetVal(event), resource),
-            old_value: mvalue::deserialize_from_sdk(GetOldVal(event), resource),
+            // new_value: mvalue::deserialize_from_sdk(GetVal(event), resource),
+            // old_value: mvalue::deserialize_from_sdk(GetOldVal(event), resource),
         }
     }
 }
@@ -853,8 +853,8 @@ impl GlobalMetaChange {
 #[derive(Debug)]
 pub struct GlobalSyncedMetaChange {
     pub key: String,
-    pub new_value: mvalue::MValue,
-    pub old_value: mvalue::MValue,
+    // pub new_value: mvalue::MValue,
+    // pub old_value: mvalue::MValue,
 }
 
 impl GlobalSyncedMetaChange {
@@ -864,8 +864,8 @@ impl GlobalSyncedMetaChange {
         use sdk::CGlobalSyncedMetaDataChangeEvent::*;
         Self {
             key: GetKey(event).to_string(),
-            new_value: mvalue::deserialize_from_sdk(GetVal(event), resource),
-            old_value: mvalue::deserialize_from_sdk(GetOldVal(event), resource),
+            // new_value: mvalue::deserialize_from_sdk(GetVal(event), resource),
+            // old_value: mvalue::deserialize_from_sdk(GetOldVal(event), resource),
         }
     }
 }
@@ -874,8 +874,8 @@ impl GlobalSyncedMetaChange {
 pub struct SyncedMetaChange {
     pub key: String,
     pub base_object: AnyBaseObject,
-    pub new_value: mvalue::MValue,
-    pub old_value: mvalue::MValue,
+    // pub new_value: mvalue::MValue,
+    // pub old_value: mvalue::MValue,
 }
 
 impl SyncedMetaChange {
@@ -885,9 +885,9 @@ impl SyncedMetaChange {
         use sdk::CSyncedMetaDataChangeEvent::*;
         Self {
             key: GetKey(event).to_string(),
-            new_value: mvalue::deserialize_from_sdk(GetVal(event), resource),
+            // new_value: mvalue::deserialize_from_sdk(GetVal(event), resource),
             base_object: get_non_null_base_object_from_event(GetTarget(event), resource),
-            old_value: mvalue::deserialize_from_sdk(GetOldVal(event), resource),
+            // old_value: mvalue::deserialize_from_sdk(GetOldVal(event), resource),
         }
     }
 }
@@ -896,8 +896,8 @@ impl SyncedMetaChange {
 pub struct StreamSyncedMetaChange {
     pub key: String,
     pub base_object: AnyBaseObject,
-    pub new_value: mvalue::MValue,
-    pub old_value: mvalue::MValue,
+    // pub new_value: mvalue::MValue,
+    // pub old_value: mvalue::MValue,
 }
 
 impl StreamSyncedMetaChange {
@@ -908,8 +908,8 @@ impl StreamSyncedMetaChange {
         Self {
             key: GetKey(event).to_string(),
             base_object: get_non_null_base_object_from_event(GetTarget(event), resource),
-            new_value: mvalue::deserialize_from_sdk(GetVal(event), resource),
-            old_value: mvalue::deserialize_from_sdk(GetOldVal(event), resource),
+            // new_value: mvalue::deserialize_from_sdk(GetVal(event), resource),
+            // old_value: mvalue::deserialize_from_sdk(GetOldVal(event), resource),
         }
     }
 }
@@ -918,8 +918,8 @@ impl StreamSyncedMetaChange {
 pub struct LocalSyncedMetaChange {
     pub key: String,
     pub player: player::PlayerContainer,
-    pub new_value: mvalue::MValue,
-    pub old_value: mvalue::MValue,
+    // pub new_value: mvalue::MValue,
+    // pub old_value: mvalue::MValue,
 }
 
 impl LocalSyncedMetaChange {
@@ -930,8 +930,8 @@ impl LocalSyncedMetaChange {
         Self {
             key: GetKey(event).to_string(),
             player: get_non_null_player(GetTarget(event), resource),
-            new_value: mvalue::deserialize_from_sdk(GetVal(event), resource),
-            old_value: mvalue::deserialize_from_sdk(GetOldVal(event), resource),
+            // new_value: mvalue::deserialize_from_sdk(GetVal(event), resource),
+            // old_value: mvalue::deserialize_from_sdk(GetOldVal(event), resource),
         }
     }
 }

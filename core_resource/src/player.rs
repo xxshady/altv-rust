@@ -4,12 +4,14 @@ use crate::{
         player, vehicle,
     },
     helpers::{self, read_cpp_vector3, Hash, IntoHash, IntoString},
-    meta::{entity_stream_synced_meta::StreamSyncedEntityMeta, player_local_meta::LocalPlayerMeta},
+    // meta::{entity_stream_synced_meta::StreamSyncedEntityMeta, player_local_meta::LocalPlayerMeta},
     resource::Resource,
     rgba::RGBA,
-    sdk, structs,
+    sdk,
+    structs,
     vector::Vector3,
-    SomeResult, VoidResult,
+    SomeResult,
+    VoidResult,
 };
 use autocxx::prelude::*;
 
@@ -829,5 +831,5 @@ impl player::Player {
     }
 }
 
-impl StreamSyncedEntityMeta for player::Player {}
-impl LocalPlayerMeta for player::Player {}
+// impl StreamSyncedEntityMeta for player::Player {}
+// impl LocalPlayerMeta for player::Player {}

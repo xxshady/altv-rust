@@ -4,10 +4,11 @@ use crate::{
         network_object,
     },
     helpers::{self, IntoHash},
-    meta::entity_stream_synced_meta::StreamSyncedEntityMeta,
+    // meta::entity_stream_synced_meta::StreamSyncedEntityMeta,
     sdk,
     vector::Vector3,
-    SomeResult, VoidResult,
+    SomeResult,
+    VoidResult,
 };
 
 /// # **`NetworkObject implementation`**
@@ -124,4 +125,4 @@ impl network_object::NetworkObject {
     }
 }
 
-impl StreamSyncedEntityMeta for network_object::NetworkObject {}
+// impl StreamSyncedEntityMeta for network_object::NetworkObject {}

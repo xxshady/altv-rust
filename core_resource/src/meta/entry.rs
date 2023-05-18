@@ -1,4 +1,4 @@
-use crate::{mvalue, resource::Resource, sdk, VoidResult};
+use crate::{resource::Resource, sdk, VoidResult};
 
 use super::global::{GlobalMetaEntry, GlobalSyncedMetaEntry};
 

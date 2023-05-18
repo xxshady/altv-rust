@@ -67,26 +67,26 @@ pub mod events {
     // intended for public macros
     pub mod __internal {
         pub use crate::{
-            client_events::{
-                emit_all_clients, emit_all_clients_unreliable,
-                emit_all_clients_unreliable_without_args, emit_all_clients_without_args,
-                emit_client, emit_client_unreliable, emit_client_unreliable_without_args,
-                emit_client_without_args, emit_some_clients, emit_some_clients_unreliable,
-                emit_some_clients_unreliable_without_args, emit_some_clients_without_args,
-            },
-            script_events::{emit_local_event, emit_local_event_without_args},
+            // client_events::{
+            //     emit_all_clients, emit_all_clients_unreliable,
+            //     emit_all_clients_unreliable_without_args, emit_all_clients_without_args,
+            //     emit_client, emit_client_unreliable, emit_client_unreliable_without_args,
+            //     emit_client_without_args, emit_some_clients, emit_some_clients_unreliable,
+            //     emit_some_clients_unreliable_without_args, emit_some_clients_without_args,
+            // },
+            // script_events::{emit_local_event, emit_local_event_without_args},
         };
     }
 
     pub use crate::{
-        client_events::emit_all_clients,
+        // client_events::emit_all_clients,
         events::{
             add_custom_handler, add_sdk_handler, connection_queue::ConnectionQueueInfo,
             custom_contexts, sdk_contexts, structs::FireInfo, CustomHandler, SDKHandler,
         },
-        script_events::{
-            add_client_handler, add_local_handler, ClientEventContext, LocalEventContext,
-        },
+        // script_events::{
+        //     add_client_handler, add_local_handler, ClientEventContext, LocalEventContext,
+        // },
     };
 
     #[macro_export]
@@ -231,55 +231,6 @@ pub mod events {
     pub use __emit as emit;
 }
 
-pub mod mvalue {
-    // intended for public macros
-    pub mod __internal {
-        pub use crate::mvalue::{serialize_mvalue, Serializable};
-    }
-
-    pub use crate::mvalue::{MValue, MValueList, Serializable};
-
-    #[macro_export]
-    macro_rules! __mvalue_list {
-        ($($arg:expr),+ $(,)*) => {
-            (|| {
-                let mut vec = vec![];
-                $(
-                    $crate::exports::mvalue::__internal::serialize_mvalue!($arg, vec);
-                )+
-                Ok(vec)
-            })()
-        };
-    }
-    pub use __mvalue_list as mvalue_list;
-
-    #[macro_export]
-    macro_rules! __mvalue_dict {
-        ($($key:expr => $value:expr),+ $(,)*) => {
-            (||{
-                let mut hash_map = std::collections::HashMap::new();
-                $(
-                    let serializable = $crate::exports::mvalue::__internal::Serializable::try_from($value);
-                    match serializable {
-                        Ok(serialized) => {
-                            hash_map.insert($key.to_string(), serialized);
-                        }
-                        Err(error) => {
-                            $crate::exports::anyhow::bail!(
-                                "Failed to convert value: {} to mvalue, error: {}",
-                                stringify!($value),
-                                error
-                            );
-                        }
-                    }
-                )+
-                Ok(hash_map)
-            })()
-        };
-    }
-    pub use __mvalue_dict as mvalue_dict;
-}
-
 pub mod core_funcs {
     pub use crate::core_funcs::*;
 }
@@ -288,18 +239,23 @@ pub mod config_node {
     pub use crate::config_node::*;
 }
 
-pub mod meta {
-    pub use crate::meta::{
-        base_object::{entry::*, normal_meta::*, synced_meta::*},
-        checkpoint_stream_synced_meta::*,
-        entity_stream_synced_meta::*,
-        entry::*,
-        global::*,
-        player_local_meta::*,
-        ve_stream_synced_meta::*,
-    };
-}
+// pub mod meta {
+//     pub use crate::meta::{
+//         base_object::{entry::*, normal_meta::*, synced_meta::*},
+//         checkpoint_stream_synced_meta::*,
+//         entity_stream_synced_meta::*,
+//         entry::*,
+//         global::*,
+//         player_local_meta::*,
+//         ve_stream_synced_meta::*,
+//     };
+// }
 
 pub mod base_object {
     pub use crate::base_object_funcs::*;
 }
+
+// TEST
+pub use mvalue as __mvalue;
+pub use serde as __serde;
+pub use crate::base_objects::BaseObjectRc;

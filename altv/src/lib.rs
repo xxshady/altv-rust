@@ -64,19 +64,28 @@ pub use altv_sdk::{
 pub const DEFAULT_DIMENSION: i32 = 0;
 pub const GLOBAL_DIMENSION: i32 = i32::MIN;
 
-pub mod events;
-pub mod meta;
-pub mod mvalue;
+// pub mod events;
+// pub mod meta;
+// pub mod mvalue;
+
+// TEST
+pub use exports::BaseObjectRc;
+pub use exports::__mvalue;
+pub use exports::__serde;
 
 pub mod prelude {
     pub use super::exports::{
         config_node::Config,
-        meta::{
-            BaseObjectMetaEntry, LocalPlayerMeta, MetaEntry, NormalBaseObjectMeta,
-            StreamSyncedCheckpointMeta, StreamSyncedEntityMeta, StreamSyncedVirtualEntityMeta,
-            SyncedBaseObjectMeta,
-        },
-        BaseObjectPoolFuncs, ColShapy, Entity, ValidBaseObject, WorldObject,
+        // meta::{
+        //     BaseObjectMetaEntry, LocalPlayerMeta, MetaEntry, NormalBaseObjectMeta,
+        //     StreamSyncedCheckpointMeta, StreamSyncedEntityMeta, StreamSyncedVirtualEntityMeta,
+        //     SyncedBaseObjectMeta,
+        // },
+        BaseObjectPoolFuncs,
+        ColShapy,
+        Entity,
+        ValidBaseObject,
+        WorldObject,
     };
 }
 
