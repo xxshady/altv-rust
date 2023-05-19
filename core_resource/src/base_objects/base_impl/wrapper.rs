@@ -1,10 +1,7 @@
 use std::{cell::RefCell, ptr::NonNull, rc::Rc};
 
-use serde::{Deserialize, Serialize};
-
 use super::{base_object::BaseObject, BaseObjectContainer};
 use crate::{
-    base_objects::BasePtr,
     resource::Resource,
     // meta::base_object::{normal_meta::NormalBaseObjectMeta, synced_meta::SyncedBaseObjectMeta},
     SomeResult,
@@ -21,13 +18,13 @@ impl<T, InheritPtrs: Clone> BaseObjectWrapper<T, InheritPtrs> {
         base_ptr: altv_sdk::BaseObjectMutPtr,
         inherit_ptrs: InheritPtrs,
     ) -> BaseObjectContainer<T, InheritPtrs> {
-        Rc::new(Self {
+        BaseObjectContainer(Rc::new(Self {
             value: RefCell::new(BaseObject {
                 ptr: Some(ptr),
                 base_ptr: Some(base_ptr),
                 inherit_ptrs: Some(inherit_ptrs),
             }),
-        })
+        }))
     }
 
     pub(crate) fn ptr(&self) -> SomeResult<NonNull<T>> {

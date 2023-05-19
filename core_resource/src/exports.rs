@@ -258,4 +258,3 @@ pub mod base_object {
 // TEST
 pub use mvalue as __mvalue;
 pub use serde as __serde;
-pub use crate::base_objects::BaseObjectRc;

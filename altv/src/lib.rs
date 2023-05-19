@@ -15,21 +15,23 @@ pub use exports::{
         log_error,
     },
     BaseObjectWrapper,
-    ColShape,
     SyncId,
-    Player,
-    PlayerContainer,
     Vector2,
     Vector3,
-    Vehicle,
-    Ped,
-    NetworkObject,
-    VirtualEntity,
-    VirtualEntityGroup,
-    Blip,
-    VoiceChannel,
-    Marker,
-    Checkpoint,
+
+    // base objects
+    ColShape, ColShapeContainer,
+    Player, PlayerContainer,
+    Vehicle, VehicleContainer,
+    Ped, PedContainer,
+    NetworkObject, NetworkObjectContainer,
+    VirtualEntity, VirtualEntityContainer,
+    VirtualEntityGroup, VirtualEntityGroupContainer,
+    Blip, BlipContainer,
+    VoiceChannel, VoiceChannelContainer,
+    Marker, MarkerContainer,
+    Checkpoint, CheckpointContainer,
+
     WorldObject,
     Entity,
     AnyEntity,
@@ -69,7 +71,6 @@ pub const GLOBAL_DIMENSION: i32 = i32::MIN;
 // pub mod mvalue;
 
 // TEST
-pub use exports::BaseObjectRc;
 pub use exports::__mvalue;
 pub use exports::__serde;
 

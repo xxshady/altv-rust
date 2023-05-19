@@ -44,7 +44,7 @@ fn main() -> impl altv::IntoVoidResult {
 
         // veh.destroy().unwrap();
 
-        let deserialized: altv::BaseObjectRc<altv::Vehicle> =
+        let deserialized: altv::VehicleContainer =
             altv::__mvalue::from_mvalue(const_mvalue).unwrap();
         println!("deserialized: {deserialized:?}");
     }

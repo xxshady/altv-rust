@@ -1,16 +1,16 @@
-use std::{ptr::NonNull, rc::Rc};
+use std::ptr::NonNull;
 
 use serde::{de, ser};
 
 use super::{
     super::{vehicle, AnyBaseObject},
     base_ptr::BasePtr,
-    wrapper::BaseObjectWrapper,
+    BaseObjectContainer,
 };
-use crate::{resource::Resource, sdk};
+use crate::resource::Resource;
 
 // see `serialize_u64` method in mvalue/src/ser_base_object.rs
-impl<T, InheritPtrs: Clone> ser::Serialize for BaseObjectWrapper<T, InheritPtrs> {
+impl<T, InheritPtrs: Clone> ser::Serialize for BaseObjectContainer<T, InheritPtrs> {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: ser::Serializer,
@@ -60,7 +60,7 @@ impl<'de> de::Deserialize<'de> for AnyBaseObject {
 struct VehicleVisitor;
 
 impl<'de> de::Visitor<'de> for VehicleVisitor {
-    type Value = BaseObjectRc<vehicle::Vehicle>;
+    type Value = vehicle::VehicleContainer;
 
     fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(formatter, "Vehicle MValue")
@@ -79,16 +79,13 @@ impl<'de> de::Visitor<'de> for VehicleVisitor {
         };
 
         match base_object {
-            AnyBaseObject::Vehicle(v) => Ok(BaseObjectRc(v)),
+            AnyBaseObject::Vehicle(v) => Ok(v),
             _ => Err(E::custom("This base object is not vehicle")),
         }
     }
 }
 
-#[derive(Debug)]
-pub struct BaseObjectRc<T>(pub Rc<T>);
-
-impl<'de> de::Deserialize<'de> for BaseObjectRc<vehicle::Vehicle> {
+impl<'de> de::Deserialize<'de> for vehicle::VehicleContainer {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: de::Deserializer<'de>,
