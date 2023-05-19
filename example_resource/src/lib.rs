@@ -44,8 +44,12 @@ fn main() -> impl altv::IntoVoidResult {
 
         // veh.destroy().unwrap();
 
-        let deserialized: altv::VehicleContainer =
-            altv::__mvalue::from_mvalue(const_mvalue).unwrap();
-        println!("deserialized: {deserialized:?}");
+        let deserialized: altv::BlipContainer = altv::__mvalue::from_mvalue(const_mvalue).unwrap();
+        deserialized.set_alpha(100).unwrap();
+        println!(
+            "deserialized: {deserialized:?} {:?} {:?}",
+            deserialized.alpha().unwrap(),
+            deserialized.blip_type().unwrap()
+        );
     }
 }

@@ -2,6 +2,7 @@ use std::ptr::NonNull;
 use std::{cell::RefMut, fmt::Debug};
 
 use super::{
+    base_impl::mvalue::impl_deserialize_for,
     extra_pools::{Entity, ExtraPools},
     pool_funcs::BaseObjectPoolFuncs,
     BaseObjectContainer, BaseObjectManager, BaseObjectWrapper,
@@ -63,6 +64,8 @@ macro_rules! base_objects {
             $( $(
                 impl $impl_trait <$crate::base_objects::inherit_ptrs::$inherit_ptrs_struct> for $manager_name {}
             )+ )?
+
+                impl_deserialize_for!($name_container, $manager_name, [<$manager_name_snake _mvalue_deserialize_impl>]);
 
                 #[macro_export]
                 macro_rules! [<__ $manager_name_snake _remove_from_pool>] {
