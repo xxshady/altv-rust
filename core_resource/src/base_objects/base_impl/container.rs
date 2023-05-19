@@ -19,10 +19,3 @@ impl<T, InheritPtrs: Clone> Clone for BaseObjectContainer<T, InheritPtrs> {
         Self(Rc::clone(&self.0))
     }
 }
-
-// TODO: test it
-impl<T, InheritPtrs: Clone> Debug for BaseObjectContainer<T, InheritPtrs> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{:?}", self.0.value)
-    }
-}

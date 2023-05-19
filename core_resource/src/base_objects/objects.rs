@@ -46,7 +46,7 @@ macro_rules! base_objects {
                 #[allow(dead_code)]
                 pub type $name_ptr = NonNull<$name_struct>;
 
-                impl Debug for $manager_name {
+                impl Debug for $name_container {
                     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                         write!(f, "{} {{ ... }}", stringify!($manager_name))
                     }
