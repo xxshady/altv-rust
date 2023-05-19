@@ -1,5 +1,3 @@
-use std::dbg;
-
 use serde::{
     ser::{self, Impossible},
     Serialize,
@@ -98,17 +96,8 @@ impl<'a> ser::Serializer for &'a mut BaseObjectSerializer {
         Err(Error::BaseObjectImpossibleSerialization)
     }
 
-    fn serialize_bytes(self, base_object_ptr: &[u8]) -> Result<Self::Ok> {
-        dbg!();
-        let bytes = base_object_ptr.split_at(8).0.try_into().unwrap();
-        dbg!(&bytes);
-        let usize_bytes = usize::from_le_bytes(bytes);
-        dbg!(&usize_bytes);
-
-        serialize_simple!(
-            self,
-            sdk::create_mvalue_base_object(usize_bytes as altv_sdk::BaseObjectRawMutPtr)
-        )
+    fn serialize_bytes(self, _v: &[u8]) -> Result<Self::Ok> {
+        Err(Error::BaseObjectImpossibleSerialization)
     }
 
     fn serialize_none(self) -> Result<Self::Ok> {
@@ -119,7 +108,6 @@ impl<'a> ser::Serializer for &'a mut BaseObjectSerializer {
     where
         T: Serialize,
     {
-        dbg!();
         Err(Error::BaseObjectImpossibleSerialization)
     }
 
@@ -161,12 +149,10 @@ impl<'a> ser::Serializer for &'a mut BaseObjectSerializer {
     }
 
     fn serialize_seq(self, _len: Option<usize>) -> Result<Self::SerializeSeq> {
-        dbg!();
         Err(Error::BaseObjectImpossibleSerialization)
     }
 
     fn serialize_tuple(self, _len: usize) -> Result<Self::SerializeTuple> {
-        dbg!();
         Err(Error::BaseObjectImpossibleSerialization)
     }
 
@@ -192,11 +178,7 @@ impl<'a> ser::Serializer for &'a mut BaseObjectSerializer {
         Err(Error::BaseObjectImpossibleSerialization)
     }
 
-    fn serialize_struct(
-        self,
-        _name: &'static str,
-        _base_object_ptr: usize,
-    ) -> Result<Self::SerializeStruct> {
+    fn serialize_struct(self, _name: &'static str, _len: usize) -> Result<Self::SerializeStruct> {
         Err(Error::BaseObjectImpossibleSerialization)
     }
 
