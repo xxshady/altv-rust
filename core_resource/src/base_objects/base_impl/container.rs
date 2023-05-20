@@ -1,4 +1,4 @@
-use std::{fmt::Debug, ops::Deref, rc::Rc};
+use std::{ops::Deref, rc::Rc};
 
 use super::wrapper::BaseObjectWrapper;
 

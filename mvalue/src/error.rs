@@ -11,11 +11,18 @@ pub enum Error {
     SerializationFailed,
     DictKeySerializationFailed,
     BaseObjectSerializationFailed,
+    Vector3SerializationFailed,
+    Vector2SerializationFailed,
+    RgbaSerializationFailed,
     InvalidBaseObject,
     BaseObjectNotFound,
     InvalidMValueType,
     DictKeyMustBeAString,
     BaseObjectImpossibleSerialization,
+    Vector3ImpossibleSerialization,
+    Vector2ImpossibleSerialization,
+    F32ImpossibleSerialization,
+    RgbaImpossibleSerialization,
     UnimplementedMValueType(MValueType),
 }
 

@@ -9,4 +9,6 @@ inherit_ptrs
 InheritPtrs
 lazycell
 libloading
+newtype_struct
+newtype_variant
 repr

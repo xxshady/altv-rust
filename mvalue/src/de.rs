@@ -1,5 +1,3 @@
-use std::ptr::NonNull;
-
 use altv_sdk::{
     ffi::{self as sdk, MValueWrapper},
     MValueType,
@@ -10,7 +8,7 @@ use serde::{
     forward_to_deserialize_any,
 };
 
-use crate::{de_dict_key::DictKeyDeserializer, types::RawMValue, Error, Result};
+use crate::{bytes_num, de_dict_key::DictKeyDeserializer, types::RawMValue, Error, Result};
 
 pub struct Deserializer {
     input: RawMValue,
@@ -68,6 +66,60 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
                 let raw_ptr = unsafe { sdk::read_mvalue_base_object(mvalue) };
                 visitor.visit_u64(raw_ptr as u64)
             }
+            MValueType::Vector3 => {
+                let ptr = unsafe { sdk::read_mvalue_vector3(mvalue) }.within_unique_ptr();
+                let mut x = 0f32;
+                let mut y = 0f32;
+                let mut z = 0f32;
+                unsafe {
+                    sdk::read_vector3(
+                        ptr.as_ref().unwrap(),
+                        &mut x as *mut f32,
+                        &mut y as *mut f32,
+                        &mut z as *mut f32,
+                    );
+                }
+
+                let buf = bytes_num::to_byte_buf([x, y, z]);
+                visitor.visit_byte_buf(buf)
+            }
+            MValueType::Vector2 => {
+                let ptr = unsafe { sdk::read_mvalue_vector2(mvalue) }.within_unique_ptr();
+                let mut x = 0f32;
+                let mut y = 0f32;
+                unsafe {
+                    sdk::read_vector2(
+                        ptr.as_ref().unwrap(),
+                        &mut x as *mut f32,
+                        &mut y as *mut f32,
+                    );
+                }
+
+                let buf = bytes_num::to_byte_buf([x, y]);
+                visitor.visit_byte_buf(buf)
+            }
+            MValueType::List => {
+                visitor.visit_seq(Seq::new(unsafe { sdk::read_mvalue_list(&self.input) }))
+            }
+            MValueType::Rgba => {
+                let ptr = unsafe { sdk::read_mvalue_rgba(mvalue) }.within_unique_ptr();
+                let mut r = 0u8;
+                let mut g = 0u8;
+                let mut b = 0u8;
+                let mut a = 0u8;
+                unsafe {
+                    sdk::read_rgba(
+                        ptr.as_ref().unwrap(),
+                        &mut r as *mut _,
+                        &mut g as *mut _,
+                        &mut b as *mut _,
+                        &mut a as *mut _,
+                    );
+                }
+
+                let buf = bytes_num::to_byte_buf([r, g, b, a]);
+                visitor.visit_byte_buf(buf)
+            }
 
             unimplemented_type => Err(Error::UnimplementedMValueType(unimplemented_type)),
         }
@@ -83,6 +135,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
         byte_buf
         unit unit_struct
         enum identifier ignored_any
+        seq
     }
 
     fn deserialize_option<V>(self, visitor: V) -> Result<V::Value>
@@ -95,6 +148,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
         }
     }
 
+    // TODO: forward it to any
     fn deserialize_newtype_struct<V>(self, _name: &'static str, visitor: V) -> Result<V::Value>
     where
         V: Visitor<'de>,
@@ -102,13 +156,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
         visitor.visit_newtype_struct(self)
     }
 
-    fn deserialize_seq<V>(self, visitor: V) -> Result<V::Value>
-    where
-        V: Visitor<'de>,
-    {
-        visitor.visit_seq(Seq::new(unsafe { sdk::read_mvalue_list(&self.input) }))
-    }
-
+    // TODO: forward it to any?
     fn deserialize_tuple<V>(self, _len: usize, visitor: V) -> Result<V::Value>
     where
         V: Visitor<'de>,
@@ -116,6 +164,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
         self.deserialize_seq(visitor)
     }
 
+    // TODO: forward it to any?
     fn deserialize_tuple_struct<V>(
         self,
         _name: &'static str,
@@ -128,6 +177,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
         self.deserialize_seq(visitor)
     }
 
+    // TODO: forward it to any
     fn deserialize_map<V>(self, visitor: V) -> Result<V::Value>
     where
         V: Visitor<'de>,
@@ -135,6 +185,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
         visitor.visit_map(Map::new(unsafe { sdk::read_mvalue_dict(&self.input) }))
     }
 
+    // TODO: forward it to any?
     fn deserialize_struct<V>(
         self,
         _name: &'static str,

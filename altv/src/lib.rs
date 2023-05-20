@@ -41,7 +41,6 @@ pub use exports::{
     PlayerHeadBlendData,
     PlayAnimation,
     AnimationFlags,
-    anyhow,
     hash,
     Hash,
     VehicleModelInfo,
@@ -62,6 +61,12 @@ pub use altv_sdk::{
     BaseObjectType, BlipType, ColShapeType, ExplosionType, MarkerType, PlayerBodyPart,
     PlayerConnectDeniedReason, VehicleModelType,
 };
+
+pub use anyhow;
+
+pub use serde_bytes;
+pub use serde_bytes::ByteBuf;
+pub use serde_bytes::Bytes;
 
 pub const DEFAULT_DIMENSION: i32 = 0;
 pub const GLOBAL_DIMENSION: i32 = i32::MIN;

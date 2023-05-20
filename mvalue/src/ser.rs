@@ -4,9 +4,12 @@ use serde::{ser, Serialize};
 
 use crate::{
     error::{Error, Result},
+    helpers::serialize_simple,
     ser_base_object::{to_base_object_mvalue, BASE_OBJECT_MVALUE},
     ser_dict_key::to_dict_key_mvalue,
-    serialize_simple,
+    ser_rgba::{to_rgba_mvalue, RGBA_MVALUE},
+    ser_vector2::{to_vector2_mvalue, VECTOR2_MVALUE},
+    ser_vector3::{to_vector3_mvalue, VECTOR3_MVALUE},
     types::RawMutMValue,
 };
 
@@ -128,6 +131,9 @@ impl<'a> ser::Serializer for &'a mut Serializer {
     {
         self.output = Some(match name {
             BASE_OBJECT_MVALUE => to_base_object_mvalue(value)?,
+            VECTOR3_MVALUE => to_vector3_mvalue(value)?,
+            VECTOR2_MVALUE => to_vector2_mvalue(value)?,
+            RGBA_MVALUE => to_rgba_mvalue(value)?,
             _ => to_mvalue(value)?,
         });
         Ok(())

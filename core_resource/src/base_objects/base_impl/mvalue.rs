@@ -2,11 +2,7 @@ use std::ptr::NonNull;
 
 use serde::{de, ser};
 
-use super::{
-    super::{vehicle, AnyBaseObject},
-    base_ptr::BasePtr,
-    BaseObjectContainer,
-};
+use super::{super::AnyBaseObject, base_ptr::BasePtr, BaseObjectContainer};
 use crate::resource::Resource;
 
 // see `serialize_u64` method in mvalue/src/ser_base_object.rs
