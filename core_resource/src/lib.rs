@@ -1,3 +1,5 @@
+#![allow(clippy::new_ret_no_self)]
+
 use core_shared::*;
 
 use altv_sdk::ffi as sdk;
