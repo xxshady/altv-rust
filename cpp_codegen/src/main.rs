@@ -366,7 +366,7 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
         }
     };
 
-    let content = String::from_utf8(fs::read(in_file).unwrap()).unwrap();
+    let content = String::from_utf8(fs::read(in_file).expect(in_file)).expect(in_file);
 
     let mut cpp_if_directive = "";
     let mut multiline_method: String = "".to_string();
