@@ -10,8 +10,8 @@ BaseObjectType GetType(const alt::IBaseObject* ptr) {
 bool HasMetaData(const alt::IBaseObject* ptr, const StdStringClone key) {
     return ptr->HasMetaData(key);
 }
-MValueWrapper GetMetaData(const alt::IBaseObject* ptr, const StdStringClone key) {
-    MValueWrapper wrapper;
+ConstMValueWrapper GetMetaData(const alt::IBaseObject* ptr, const StdStringClone key) {
+    ConstMValueWrapper wrapper;
     wrapper.ptr = ptr->GetMetaData(key);
     return wrapper;
 }
@@ -27,8 +27,8 @@ std::vector<std::string> GetMetaDataKeys(const alt::IBaseObject* ptr) {
 bool HasSyncedMetaData(const alt::IBaseObject* ptr, const StdStringClone key) {
     return ptr->HasSyncedMetaData(key);
 }
-MValueWrapper GetSyncedMetaData(const alt::IBaseObject* ptr, const StdStringClone key) {
-    MValueWrapper wrapper;
+ConstMValueWrapper GetSyncedMetaData(const alt::IBaseObject* ptr, const StdStringClone key) {
+    ConstMValueWrapper wrapper;
     wrapper.ptr = ptr->GetSyncedMetaData(key);
     return wrapper;
 }

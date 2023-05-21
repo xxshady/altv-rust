@@ -10,14 +10,14 @@ use crate::{
     ser_rgba::{to_rgba_mvalue, RGBA_MVALUE},
     ser_vector2::{to_vector2_mvalue, VECTOR2_MVALUE},
     ser_vector3::{to_vector3_mvalue, VECTOR3_MVALUE},
-    wrapper::MValue,
+    wrappers::MutMValue,
 };
 
 pub struct Serializer {
-    output: Option<MValue>,
+    output: Option<MutMValue>,
 }
 
-pub fn to_mvalue<T>(value: &T) -> Result<MValue>
+pub fn to_mvalue<T>(value: &T) -> Result<MutMValue>
 where
     T: Serialize + ?Sized,
 {
@@ -201,13 +201,13 @@ impl<'a> ser::Serializer for &'a mut Serializer {
 }
 
 pub struct MValueDict {
-    mvalue: MValue,
+    mvalue: MutMValue,
 }
 
 impl MValueDict {
     fn new() -> Self {
         Self {
-            mvalue: MValue::new(unsafe { sdk::create_mvalue_dict().within_unique_ptr() }),
+            mvalue: MutMValue::new(unsafe { sdk::create_mvalue_dict().within_unique_ptr() }),
         }
     }
 }
@@ -281,13 +281,13 @@ impl ser::SerializeStructVariant for MValueDict {
 }
 
 pub struct MValueList {
-    mvalue: MValue,
+    mvalue: MutMValue,
 }
 
 impl MValueList {
     fn new() -> Self {
         Self {
-            mvalue: MValue::new(unsafe { sdk::create_mvalue_list().within_unique_ptr() }),
+            mvalue: MutMValue::new(unsafe { sdk::create_mvalue_list().within_unique_ptr() }),
         }
     }
 }
@@ -301,10 +301,7 @@ impl ser::SerializeSeq for MValueList {
         T: Serialize,
     {
         unsafe {
-            sdk::push_to_mvalue_list(
-                self.mvalue.as_mut(),
-                to_mvalue(value)?.into_const(),
-            )
+            sdk::push_to_mvalue_list(self.mvalue.as_mut(), to_mvalue(value)?.into_const().get())
         };
 
         Ok(())

@@ -3,17 +3,17 @@ use serde::{
     Serialize,
 };
 
-use crate::{bytes_num, helpers::serialize_simple, wrapper::MValue, Error, Result};
+use crate::{bytes_num, helpers::serialize_simple, wrappers::MutMValue, Error, Result};
 
 use altv_sdk::ffi as sdk;
 
 pub const RGBA_MVALUE: &str = "___altv_rgba_mvalue";
 
 pub struct RgbaSerializer {
-    output: Option<MValue>,
+    output: Option<MutMValue>,
 }
 
-pub fn to_rgba_mvalue<T>(value: &T) -> Result<MValue>
+pub fn to_rgba_mvalue<T>(value: &T) -> Result<MutMValue>
 where
     T: Serialize + ?Sized,
 {

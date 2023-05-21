@@ -2,7 +2,9 @@
 macro_rules! __serialize_simple {
     ($self:ident, $create_mvalue:expr) => {{
         use autocxx::prelude::*;
-        $self.output = Some(MValue::new(unsafe { $create_mvalue }.within_unique_ptr()));
+        $self.output = Some($crate::wrappers::MutMValue::new(
+            unsafe { $create_mvalue }.within_unique_ptr(),
+        ));
         Ok(())
     }};
 }

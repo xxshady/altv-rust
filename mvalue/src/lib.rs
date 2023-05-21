@@ -11,7 +11,7 @@ pub mod ser_rgba;
 pub mod ser_vector2;
 pub mod ser_vector3;
 mod types;
-mod wrapper;
+mod wrappers;
 
 pub use de::{from_mvalue, Deserializer};
 pub use error::{Error, Result};
@@ -21,4 +21,5 @@ pub use ser_base_object::BASE_OBJECT_MVALUE;
 
 pub use helpers::generate_serde_via_bytes_for;
 
-pub use wrapper::MValue;
+pub use wrappers::ConstMValue;
+pub use wrappers::MutMValue;

@@ -81,8 +81,8 @@ PlayerVector GetPlayers() {
 bool HasMetaData(const StdStringClone key) {
     return alt::ICore::Instance().HasMetaData(key);
 }
-MValueWrapper GetMetaData(const StdStringClone key) {
-    MValueWrapper wrapper;
+ConstMValueWrapper GetMetaData(const StdStringClone key) {
+    ConstMValueWrapper wrapper;
     wrapper.ptr = alt::ICore::Instance().GetMetaData(key);
     return wrapper;
 }
@@ -98,8 +98,8 @@ std::vector<std::string> GetMetaDataKeys() {
 bool HasSyncedMetaData(const StdStringClone key) {
     return alt::ICore::Instance().HasSyncedMetaData(key);
 }
-MValueWrapper GetSyncedMetaData(const StdStringClone key) {
-    MValueWrapper wrapper;
+ConstMValueWrapper GetSyncedMetaData(const StdStringClone key) {
+    ConstMValueWrapper wrapper;
     wrapper.ptr = alt::ICore::Instance().GetSyncedMetaData(key);
     return wrapper;
 }

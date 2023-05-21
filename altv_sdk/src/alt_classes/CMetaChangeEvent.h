@@ -10,13 +10,13 @@ alt::IBaseObject* GetTarget(const alt::CMetaChangeEvent* ptr) {
 std::string GetKey(const alt::CMetaChangeEvent* ptr) {
     return ptr->GetKey();
 }
-MValueWrapper GetVal(const alt::CMetaChangeEvent* ptr) {
-    MValueWrapper wrapper;
+ConstMValueWrapper GetVal(const alt::CMetaChangeEvent* ptr) {
+    ConstMValueWrapper wrapper;
     wrapper.ptr = ptr->GetVal();
     return wrapper;
 }
-MValueWrapper GetOldVal(const alt::CMetaChangeEvent* ptr) {
-    MValueWrapper wrapper;
+ConstMValueWrapper GetOldVal(const alt::CMetaChangeEvent* ptr) {
+    ConstMValueWrapper wrapper;
     wrapper.ptr = ptr->GetOldVal();
     return wrapper;
 }

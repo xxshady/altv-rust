@@ -62,19 +62,19 @@ void register_script_runtime(
 
 // mvalue
 
-class MValueWrapper {
+class ConstMValueWrapper {
 public:
     alt::MValueConst ptr;
 
-    MValueWrapper clone() const {
-        MValueWrapper instance;
+    ConstMValueWrapper clone() const {
+        ConstMValueWrapper instance;
         instance.ptr = this->ptr;
 
         return instance;
     }
 };
 
-MValueWrapper copy_mvalue(const MValueWrapper& wrapper) {
+ConstMValueWrapper copy_const_mvalue(const ConstMValueWrapper& wrapper) {
     return wrapper.clone();
 }
 
@@ -94,15 +94,15 @@ MValueMutWrapper copy_mut_mvalue(const MValueMutWrapper& wrapper) {
     return wrapper.clone();
 }
 
-MValueWrapper convert_mvalue_mut_wrapper_to_const(MValueMutWrapper mut_wrapper) {
-    MValueWrapper wrapper;
+ConstMValueWrapper convert_mvalue_mut_wrapper_to_const(MValueMutWrapper mut_wrapper) {
+    ConstMValueWrapper wrapper;
     // is this even legal?
     wrapper.ptr = mut_wrapper.ptr;
     mut_wrapper.ptr = nullptr;
     return wrapper;
 }
 
-using MValueDictPair = std::pair<std::string, MValueWrapper>;
+using MValueDictPair = std::pair<std::string, ConstMValueWrapper>;
 
 class MValueDictPairWrapper {
 public:
@@ -340,43 +340,43 @@ void push_to_mvalue_unordered_map(MValueUnorderedMapWrapper& map, std::string ke
     map.value.insert({ key, value.ptr });
 }
 
-using MValueWrapperVec = std::vector<MValueWrapper>;
+using MValueWrapperVec = std::vector<ConstMValueWrapper>;
 
 MValueWrapperVec create_mvalue_vec() {
     MValueWrapperVec vec;
     return vec;
 }
 
-u8 read_mvalue_type(MValueWrapper mvalue) {
+u8 read_mvalue_type(ConstMValueWrapper mvalue) {
     return static_cast<u8>(mvalue.ptr->GetType());
 }
 
-bool read_mvalue_bool(MValueWrapper mvalue) {
+bool read_mvalue_bool(ConstMValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::BOOL);
     return std::dynamic_pointer_cast<const alt::IMValueBool>(mvalue.ptr)->Value();
 }
 
-f64 read_mvalue_double(MValueWrapper mvalue) {
+f64 read_mvalue_double(ConstMValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::DOUBLE);
     return std::dynamic_pointer_cast<const alt::IMValueDouble>(mvalue.ptr)->Value();
 }
 
-std::string read_mvalue_string(MValueWrapper mvalue) {
+std::string read_mvalue_string(ConstMValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::STRING);
     return std::dynamic_pointer_cast<const alt::IMValueString>(mvalue.ptr)->Value();
 }
 
-i64 read_mvalue_int(MValueWrapper mvalue) {
+i64 read_mvalue_int(ConstMValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::INT);
     return std::dynamic_pointer_cast<const alt::IMValueInt>(mvalue.ptr)->Value();
 }
 
-u64 read_mvalue_uint(MValueWrapper mvalue) {
+u64 read_mvalue_uint(ConstMValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::UINT);
     return std::dynamic_pointer_cast<const alt::IMValueUInt>(mvalue.ptr)->Value();
 }
 
-MValueWrapperVec read_mvalue_list(MValueWrapper mvalue) {
+MValueWrapperVec read_mvalue_list(ConstMValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::LIST);
 
     auto list = std::dynamic_pointer_cast<const alt::IMValueList>(mvalue.ptr);
@@ -385,7 +385,7 @@ MValueWrapperVec read_mvalue_list(MValueWrapper mvalue) {
     auto mvalue_vec = create_mvalue_vec();
 
     for (alt::Size i = 0; i < size; ++i) {
-        MValueWrapper wrapper;
+        ConstMValueWrapper wrapper;
         wrapper.ptr = list->Get(i);
         mvalue_vec.push_back(wrapper.clone());
     }
@@ -393,14 +393,14 @@ MValueWrapperVec read_mvalue_list(MValueWrapper mvalue) {
     return mvalue_vec;
 }
 
-std::vector<MValueDictPairWrapper> read_mvalue_dict(MValueWrapper mvalue) {
+std::vector<MValueDictPairWrapper> read_mvalue_dict(ConstMValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::DICT);
     auto dict = std::dynamic_pointer_cast<const alt::IMValueDict>(mvalue.ptr);
 
     std::vector<MValueDictPairWrapper> vec;
 
     for (auto it = dict->Begin(); it; it = dict->Next()) {
-        MValueWrapper value_wrapper;
+        ConstMValueWrapper value_wrapper;
         value_wrapper.ptr = it->GetValue();
 
         MValueDictPairWrapper pair;
@@ -415,40 +415,40 @@ std::string read_mvalue_dict_pair_key(const MValueDictPairWrapper& pair) {
     return pair.ptr->first;
 }
 
-MValueWrapper read_mvalue_dict_pair_value(const MValueDictPairWrapper& pair) {
+ConstMValueWrapper read_mvalue_dict_pair_value(const MValueDictPairWrapper& pair) {
     return pair.ptr->second.clone();
 }
 
-alt::IBaseObject* read_mvalue_base_object(MValueWrapper mvalue) {
+alt::IBaseObject* read_mvalue_base_object(ConstMValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::BASE_OBJECT);
     return std::dynamic_pointer_cast<const alt::IMValueBaseObject>(mvalue.ptr)->RawValue();
 }
 
-Vector3Wrapper read_mvalue_vector3(MValueWrapper mvalue) {
+Vector3Wrapper read_mvalue_vector3(ConstMValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::VECTOR3);
     auto vector3 = std::dynamic_pointer_cast<const alt::IMValueVector3>(mvalue.ptr)->Value();
     return { vector3[0], vector3[1], vector3[2] };
 }
 
-Vector2Wrapper read_mvalue_vector2(MValueWrapper mvalue) {
+Vector2Wrapper read_mvalue_vector2(ConstMValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::VECTOR2);
     auto vector2 = std::dynamic_pointer_cast<const alt::IMValueVector2>(mvalue.ptr)->Value();
     return { vector2[0], vector2[1] };
 }
 
-size_t read_mvalue_byte_array_size(MValueWrapper mvalue) {
+size_t read_mvalue_byte_array_size(ConstMValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::BYTE_ARRAY);
     auto byte_arr = std::dynamic_pointer_cast<const alt::IMValueByteArray>(mvalue.ptr);
     return byte_arr->GetSize();
 }
 
-void read_mvalue_byte_array(MValueWrapper mvalue, u8* data) {
+void read_mvalue_byte_array(ConstMValueWrapper mvalue, u8* data) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::BYTE_ARRAY);
     auto byte_arr = std::dynamic_pointer_cast<const alt::IMValueByteArray>(mvalue.ptr);
     std::memcpy(data, byte_arr->GetData(), byte_arr->GetSize());
 }
 
-RGBAWrapper read_mvalue_rgba(MValueWrapper mvalue) {
+RGBAWrapper read_mvalue_rgba(ConstMValueWrapper mvalue) {
     assert(mvalue.ptr->GetType() == alt::IMValue::Type::RGBA);
     auto value = std::dynamic_pointer_cast<const alt::IMValueRGBA>(mvalue.ptr)->Value();
     return { value.r, value.g, value.b, value.a };
@@ -497,7 +497,7 @@ MValueMutWrapper create_mvalue_list() {
     return wrapper;
 }
 
-void push_to_mvalue_list(MValueMutWrapper& list, MValueWrapper value) {
+void push_to_mvalue_list(MValueMutWrapper& list, ConstMValueWrapper value) {
     assert(list.ptr->GetType() == alt::IMValue::Type::LIST);
     std::dynamic_pointer_cast<alt::IMValueList>(list.ptr)->PushConst(value.ptr);
 }

@@ -48,8 +48,8 @@ bool IsVisible(const alt::ICheckpoint* ptr) {
 bool HasStreamSyncedMetaData(const alt::ICheckpoint* ptr, const StdStringClone key) {
     return ptr->HasStreamSyncedMetaData(key);
 }
-MValueWrapper GetStreamSyncedMetaData(const alt::ICheckpoint* ptr, const StdStringClone key) {
-    MValueWrapper wrapper;
+ConstMValueWrapper GetStreamSyncedMetaData(const alt::ICheckpoint* ptr, const StdStringClone key) {
+    ConstMValueWrapper wrapper;
     wrapper.ptr = ptr->GetStreamSyncedMetaData(key);
     return wrapper;
 }

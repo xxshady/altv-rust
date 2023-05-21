@@ -3,17 +3,17 @@ use serde::{
     Serialize,
 };
 
-use crate::{bytes_num, helpers::serialize_simple, wrapper::MValue, Error, Result};
+use crate::{bytes_num, helpers::serialize_simple, wrappers::MutMValue, Error, Result};
 
 use altv_sdk::ffi as sdk;
 
 pub const VECTOR3_MVALUE: &str = "___altv_vector3_mvalue";
 
 pub struct Vector3Serializer {
-    output: Option<MValue>,
+    output: Option<MutMValue>,
 }
 
-pub fn to_vector3_mvalue<T>(value: &T) -> Result<MValue>
+pub fn to_vector3_mvalue<T>(value: &T) -> Result<MutMValue>
 where
     T: Serialize + ?Sized,
 {

@@ -29,7 +29,7 @@ lazy_static::lazy_static! {
             ("std::string", "std::string"),
             ("std::string&", "StdStringClone"),
             ("MValue", "MValueMutWrapper"),
-            ("MValueConst", "MValueWrapper"),
+            ("MValueConst", "ConstMValueWrapper"),
             ("MValueArgs&", "MValueWrapperVec"),
 
             ("IBaseObject*", "alt::IBaseObject*"),
@@ -869,7 +869,7 @@ fn cpp_method_to_rust_compatible_func(
             } = p;
             match type_name.as_str() {
                 "MValueMutWrapper" => format!("{name}.ptr"),
-                "MValueWrapper" => format!("{name}.ptr"),
+                "ConstMValueWrapper" => format!("{name}.ptr"),
                 "Vector3Wrapper" => format!("{{ {name}_x, {name}_y, {name}_z }}"),
                 "Vector2Wrapper" => format!("{{ {name}_x, {name}_y }}"),
                 "alt::Quaternion" => format!("{{ {name}_x, {name}_y, {name}_z, {name}_w }}"),
@@ -915,9 +915,9 @@ fn cpp_method_to_rust_compatible_func(
                 return wrapper"
             )
         },
-        "MValueWrapper" => |v: &str| {
+        "ConstMValueWrapper" => |v: &str| {
             format!(
-                "MValueWrapper wrapper;\n    \
+                "ConstMValueWrapper wrapper;\n    \
                 wrapper.ptr = {v};\n    \
                 return wrapper"
             )
@@ -963,7 +963,7 @@ fn cpp_method_to_rust_compatible_func(
                 "auto args = {v};\n    \
                 auto mvalue_vec = create_mvalue_vec();\n    \
                 for (const auto& e : args) {{\n    \
-                    MValueWrapper wrapper;\n    \
+                    ConstMValueWrapper wrapper;\n    \
                     wrapper.ptr = e;\n    \
                     mvalue_vec.push_back(wrapper.clone());\n    \
                 }}\n    \

@@ -3,15 +3,15 @@ use serde::{
     Serialize,
 };
 
-use crate::{helpers::serialize_simple, wrapper::MValue, Error, Result};
+use crate::{helpers::serialize_simple, wrappers::MutMValue, Error, Result};
 
 use altv_sdk::ffi as sdk;
 
 pub struct DictKeySerializer {
-    output: Option<MValue>,
+    output: Option<MutMValue>,
 }
 
-pub fn to_dict_key_mvalue<T>(value: &T) -> Result<MValue>
+pub fn to_dict_key_mvalue<T>(value: &T) -> Result<MutMValue>
 where
     T: Serialize + ?Sized,
 {

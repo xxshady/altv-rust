@@ -157,8 +157,8 @@ pub mod ffi {
         generate!("register_script_runtime")
 
         // mvalue
-        generate!("MValueWrapper")
-        generate!("copy_mvalue")
+        generate!("ConstMValueWrapper")
+        generate!("copy_const_mvalue")
         generate!("copy_mut_mvalue")
         generate!("copy_mvalue_dict_pair")
         generate!("convert_mvalue_mut_wrapper_to_const")

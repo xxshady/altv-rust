@@ -3,17 +3,17 @@ use serde::{
     Serialize,
 };
 
-use crate::{helpers::serialize_simple, wrapper::MValue, Error, Result};
+use crate::{helpers::serialize_simple, wrappers::MutMValue, Error, Result};
 
 use altv_sdk::ffi as sdk;
 
 pub const BASE_OBJECT_MVALUE: &str = "___altv_base_object_mvalue";
 
 pub struct BaseObjectSerializer {
-    output: Option<MValue>,
+    output: Option<MutMValue>,
 }
 
-pub fn to_base_object_mvalue<T>(value: &T) -> Result<MValue>
+pub fn to_base_object_mvalue<T>(value: &T) -> Result<MutMValue>
 where
     T: Serialize + ?Sized,
 {

@@ -1,5 +1,5 @@
 use altv_sdk::{
-    ffi::{self as sdk, MValueWrapper},
+    ffi::{self as sdk},
     MValueType,
 };
 use autocxx::{cxx::CxxVector, prelude::*};
@@ -9,20 +9,23 @@ use serde::{
 };
 
 use crate::{
-    bytes_num, de_dict_key::DictKeyDeserializer, types::RawMValue, wrapper::MValue, Error, Result,
+    bytes_num,
+    de_dict_key::DictKeyDeserializer,
+    wrappers::{ConstMValue, MutMValue},
+    Error, Result,
 };
 
 pub struct Deserializer {
-    input: RawMValue,
+    input: ConstMValue,
 }
 
 impl Deserializer {
-    pub fn from_mvalue(input: RawMValue) -> Self {
+    pub fn from_mvalue(input: ConstMValue) -> Self {
         Deserializer { input }
     }
 }
 
-pub fn from_mvalue<T>(m: MValue) -> Result<T>
+pub fn from_mvalue<T>(m: MutMValue) -> Result<T>
 where
     T: DeserializeOwned,
 {
@@ -33,7 +36,7 @@ where
 
 impl Deserializer {
     fn mvalue_type(&self) -> Result<MValueType> {
-        let raw = unsafe { sdk::read_mvalue_type(&self.input) };
+        let raw = unsafe { sdk::read_mvalue_type(self.input.get()) };
         MValueType::try_from(raw).map_err(|_| Error::InvalidMValueType)
     }
 }
@@ -45,7 +48,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
     where
         V: Visitor<'de>,
     {
-        let mvalue = &self.input;
+        let mvalue = self.input.get();
 
         match self.mvalue_type()? {
             MValueType::Bool => visitor.visit_bool(unsafe { sdk::read_mvalue_bool(mvalue) }),
@@ -101,7 +104,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
                 visitor.visit_byte_buf(buf)
             }
             MValueType::List => {
-                visitor.visit_seq(Seq::new(unsafe { sdk::read_mvalue_list(&self.input) }))
+                visitor.visit_seq(Seq::new(unsafe { sdk::read_mvalue_list(self.input.get()) }))
             }
             MValueType::Rgba => {
                 let ptr = unsafe { sdk::read_mvalue_rgba(mvalue) }.within_unique_ptr();
@@ -184,7 +187,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
     where
         V: Visitor<'de>,
     {
-        visitor.visit_map(Map::new(unsafe { sdk::read_mvalue_dict(&self.input) }))
+        visitor.visit_map(Map::new(unsafe { sdk::read_mvalue_dict(self.input.get()) }))
     }
 
     // TODO: forward it to any?
@@ -202,25 +205,28 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
 }
 
 struct Seq {
-    mvalue_list: UniquePtr<CxxVector<sdk::MValueWrapper>>,
+    mvalue_list: UniquePtr<CxxVector<sdk::ConstMValueWrapper>>,
     current_idx: usize,
 }
 
 impl Seq {
-    fn new(mvalue_list: UniquePtr<CxxVector<sdk::MValueWrapper>>) -> Self {
+    fn new(mvalue_list: UniquePtr<CxxVector<sdk::ConstMValueWrapper>>) -> Self {
         Self {
             mvalue_list,
             current_idx: 0,
         }
     }
 
-    fn next(&mut self) -> Option<RawMValue> {
+    fn next(&mut self) -> Option<ConstMValue> {
         if self.current_idx == self.mvalue_list.len() {
             return None;
         }
         let value = self.mvalue_list.get(self.current_idx);
+        let value = value
+            .map(|v| ConstMValue::new(unsafe { sdk::copy_const_mvalue(v) }.within_unique_ptr()));
+
         self.current_idx += 1;
-        value.map(|v| unsafe { sdk::copy_mvalue(v) }.within_unique_ptr())
+        value
     }
 }
 
@@ -266,9 +272,11 @@ impl Map {
         &self.current_pair
     }
 
-    fn current_pair_value(&self) -> UniquePtr<MValueWrapper> {
+    fn current_pair_value(&self) -> ConstMValue {
         let pair = self.current_pair.as_ref().unwrap();
-        unsafe { sdk::read_mvalue_dict_pair_value(pair.as_ref().unwrap()) }.within_unique_ptr()
+        ConstMValue::new(
+            unsafe { sdk::read_mvalue_dict_pair_value(pair.as_ref().unwrap()) }.within_unique_ptr(),
+        )
     }
 }
 
