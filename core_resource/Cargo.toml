@@ -20,4 +20,5 @@ autocxx = { workspace = true }
 paste = { workspace = true }
 serde = { workspace = true }
 serde_bytes = { workspace = true }
+erased-serde = { workspace = true }
 lazycell = "1.3.0"

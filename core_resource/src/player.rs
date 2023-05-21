@@ -829,6 +829,8 @@ impl player::Player {
 
         Ok(())
     }
+
+    pub fn emit(&self, event_name: impl IntoString, args: mvalue::DynMValueArgs) {}
 }
 
 // impl StreamSyncedEntityMeta for player::Player {}

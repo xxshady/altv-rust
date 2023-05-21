@@ -63,6 +63,7 @@ pub use altv_sdk::{
 };
 
 pub use anyhow;
+pub use erased_serde;
 pub use serde_bytes::{self, ByteBuf, Bytes};
 
 pub const DEFAULT_DIMENSION: i32 = 0;
@@ -73,7 +74,8 @@ pub const GLOBAL_DIMENSION: i32 = i32::MIN;
 // pub mod mvalue;
 
 // TEST
-pub use exports::__mvalue;
+// TODO: add them as direct deps of altv crate
+pub use exports::__mvalue::{self, DynMValue, DynMValueArgs};
 pub use exports::__serde;
 
 pub mod prelude {

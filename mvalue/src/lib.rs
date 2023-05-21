@@ -23,3 +23,6 @@ pub use helpers::generate_serde_via_bytes_for;
 
 pub use wrappers::ConstMValue;
 pub use wrappers::MutMValue;
+
+pub type DynMValue<'a> = &'a dyn erased_serde::Serialize;
+pub type DynMValueArgs<'a> = &'a [DynMValue<'a>];

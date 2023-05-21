@@ -1,5 +1,7 @@
 use altv_sdk::ffi as sdk;
 
+use altv::prelude::*;
+
 #[altv::main]
 fn main() -> impl altv::IntoVoidResult {
     std::env::set_var("RUST_BACKTRACE", "full");
@@ -43,4 +45,16 @@ fn main() -> impl altv::IntoVoidResult {
             altv::Vector2::new(f32::MAX, f32::MIN)
         );
     }
+
+    let args: altv::DynMValueArgs = &[&1, &true];
+    let player = altv::Player::all()[0].clone();
+    player.emit("test", args);
+
+    let mut vec_args: Vec<altv::DynMValue> = vec![];
+
+    for _ in 0..=5 {
+        vec_args.push(&123);
+    }
+
+    player.emit("test", &vec_args);
 }

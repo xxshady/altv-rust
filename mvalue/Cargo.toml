@@ -14,3 +14,4 @@ readme = { workspace = true }
 serde = { workspace = true }
 altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "15.0.0-dev.21" }
 autocxx = { workspace = true }
+erased-serde = { workspace = true }
