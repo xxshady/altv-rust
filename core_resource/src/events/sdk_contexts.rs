@@ -3,6 +3,7 @@ use std::{cell::RefCell, ptr::NonNull, rc::Rc};
 use altv_sdk::ffi as sdk;
 use autocxx::prelude::*;
 use lazycell::LazyCell;
+use mvalue::ConstMValue;
 
 use crate::{
     alt_resource::AltResource,
@@ -134,8 +135,7 @@ impl ColshapeEvent {
 #[derive(Debug)]
 pub struct ServerScriptEvent {
     pub name: String,
-    event: *const sdk::alt::CServerScriptEvent,
-    // args: LazyCell<mvalue::MValueList>,
+    pub args: Vec<mvalue::ConstMValue>,
 }
 
 impl ServerScriptEvent {
@@ -144,26 +144,19 @@ impl ServerScriptEvent {
         let name = sdk::CServerScriptEvent::GetName(event).to_string();
         Self {
             name,
-            event,
-            // args: LazyCell::new(),
+            args: sdk::CServerScriptEvent::GetArgs(event)
+                .into_iter()
+                .map(ConstMValue::from)
+                .collect(),
         }
     }
-
-    // pub fn args(&self) -> &mvalue::MValueList {
-    //     init_or_get_lazycell(&self.args, || {
-    //         let args = unsafe { sdk::CServerScriptEvent::GetArgs(self.event) };
-    //         Ok(Resource::with(|v| mvalue::deserialize_mvalue_args(args, v)))
-    //     })
-    //     .unwrap()
-    // }
 }
 
 #[derive(Debug)]
 pub struct ClientScriptEvent {
     pub name: String,
     pub player: player::PlayerContainer,
-    event: *const sdk::alt::CClientScriptEvent,
-    // args: LazyCell<mvalue::MValueList>,
+    pub args: Vec<mvalue::ConstMValue>,
 }
 
 impl ClientScriptEvent {
@@ -174,19 +167,13 @@ impl ClientScriptEvent {
 
         Self {
             name,
-            event,
             player,
-            // args: LazyCell::new(),
+            args: sdk::CClientScriptEvent::GetArgs(event)
+                .into_iter()
+                .map(|v| ConstMValue::from(v))
+                .collect(),
         }
     }
-
-    // pub fn args(&self) -> &mvalue::MValueList {
-    //     init_or_get_lazycell(&self.args, || {
-    //         let args = unsafe { sdk::CClientScriptEvent::GetArgs(self.event) };
-    //         Ok(Resource::with(|v| mvalue::deserialize_mvalue_args(args, v)))
-    //     })
-    //     .unwrap()
-    // }
 }
 
 #[derive(Debug)]

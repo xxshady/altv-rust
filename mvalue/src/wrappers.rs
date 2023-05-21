@@ -56,3 +56,15 @@ impl Debug for ConstMValue {
         write!(f, "ConstMValue {{ ... }}")
     }
 }
+
+impl From<&sdk::ConstMValueWrapper> for ConstMValue {
+    fn from(value: &sdk::ConstMValueWrapper) -> Self {
+        Self::new(unsafe { sdk::copy_const_mvalue(value) }.within_unique_ptr())
+    }
+}
+
+impl Clone for ConstMValue {
+    fn clone(&self) -> Self {
+        Self::new(unsafe { sdk::copy_const_mvalue(self.0.as_ref().unwrap()) }.within_unique_ptr())
+    }
+}

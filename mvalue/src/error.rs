@@ -41,7 +41,7 @@ impl de::Error for Error {
 impl Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         // TODO:
-        write!(f, "Error {{ ... }}")
+        write!(f, "MValue error: {:?}", self)
     }
 }
 

@@ -1,8 +1,16 @@
 use core_resource::exports::{events, IntoVoidResult};
 pub use events::{
-    add_client_handler as on_client, add_local_handler as on, emit, emit_all_clients,
-    emit_all_clients_unreliable, emit_client, emit_client_unreliable, emit_some_clients,
-    emit_some_clients_unreliable, ClientEventContext, ConnectionQueueInfo, FireInfo,
+    // TEST
+    emit,
+    on,
+    on_client,
+    // emit, emit_all_clients,
+    // emit_all_clients_unreliable, emit_client, emit_client_unreliable, emit_some_clients,
+    // emit_some_clients_unreliable,
+    //
+    ClientEventContext,
+    ConnectionQueueInfo,
+    FireInfo,
     LocalEventContext,
 };
 

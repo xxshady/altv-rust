@@ -26,7 +26,7 @@ mod ped_model_info;
 mod player;
 mod quaternion;
 mod rgba;
-// mod script_events;
+mod script_events;
 mod structs;
 mod timers;
 mod vector;
@@ -82,6 +82,6 @@ pub fn init(
         });
     });
 
-    // script_events::LocalEventManager::init();
-    // script_events::ClientEventManager::init();
+    script_events::LocalEventManager::init();
+    script_events::ClientEventManager::init();
 }

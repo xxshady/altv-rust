@@ -13,6 +13,7 @@ use crate::{
     SomeResult,
     VoidResult,
 };
+use anyhow::anyhow;
 use autocxx::prelude::*;
 
 /// # **`Player implementation`**
@@ -830,7 +831,13 @@ impl player::Player {
         Ok(())
     }
 
-    pub fn emit(&self, event_name: impl IntoString, args: mvalue::DynMValueArgs) {}
+    pub fn emit<'a>(&self, event_name: impl IntoString, args: impl Into<mvalue::DynMValueArgs<'a>>) -> VoidResult {
+        let mvalue = mvalue::to_mvalue(args.into()).map_err(|e| anyhow!(e))?;
+        unsafe {
+            sdk::trigger_client_event(self.raw_ptr()?, event_name.into_string(), mvalue.get());
+        }
+        Ok(())
+    }
 }
 
 // impl StreamSyncedEntityMeta for player::Player {}

@@ -69,7 +69,7 @@ pub use serde_bytes::{self, ByteBuf, Bytes};
 pub const DEFAULT_DIMENSION: i32 = 0;
 pub const GLOBAL_DIMENSION: i32 = i32::MIN;
 
-// pub mod events;
+pub mod events;
 // pub mod meta;
 // pub mod mvalue;
 

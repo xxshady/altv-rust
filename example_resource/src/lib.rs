@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use altv_sdk::ffi as sdk;
 
 use altv::prelude::*;
@@ -21,7 +23,7 @@ fn main() -> impl altv::IntoVoidResult {
             );
             assert_eq!(sdk_type, $expected_sdk_type);
 
-            let deserialized: $expected_type = altv::__mvalue::from_mvalue(mvalue).unwrap();
+            let deserialized: $expected_type = altv::__mvalue::from_mvalue(&const_mvalue).unwrap();
             println!("deserialized: {deserialized:?}");
         }};
     }
@@ -47,14 +49,31 @@ fn main() -> impl altv::IntoVoidResult {
     }
 
     let args: altv::DynMValueArgs = &[&1, &true];
-    let player = altv::Player::all()[0].clone();
-    player.emit("test", args);
 
-    let mut vec_args: Vec<altv::DynMValue> = vec![];
+    // altv::events::on("test", |c| {
+    //     dbg!(c);
+    //     let first = altv::__mvalue::from_mvalue::<i32>(c.args.get(0).unwrap());
+    //     let second = altv::__mvalue::from_mvalue::<HashMap<String, i32>>(c.args.get(1).unwrap());
+    //     dbg!(first, second);
 
-    for _ in 0..=5 {
-        vec_args.push(&123);
-    }
+    //     Ok(())
+    // });
 
-    player.emit("test", &vec_args);
+    // altv::events::emit("test", args).unwrap();
+
+    // TODO: test it
+    altv::events::on_client("test", |c| {
+        dbg!(c);
+    });
+
+    // let player = altv::Player::all()[0].clone();
+    // player.emit("test", args);
+
+    // let mut vec_args: Vec<altv::DynMValue> = vec![];
+
+    // for _ in 0..=5 {
+    //     vec_args.push(&123);
+    // }
+
+    // player.emit("test", &vec_args);
 }

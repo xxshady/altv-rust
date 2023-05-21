@@ -6,11 +6,9 @@ use std::{
 use core_shared::{ModuleHandlers, ResourceName};
 
 use crate::{
-    alt_resource,
-    base_objects,
+    alt_resource, base_objects,
     events::{self, connection_queue},
-    // script_events,
-    timers,
+    script_events, timers,
 };
 
 thread_local! {
@@ -26,8 +24,8 @@ pub struct Resource {
     pub timers: RefCell<timers::TimerManager>,
     pub timer_schedule: RefCell<timers::ScheduleState>,
     pub events: RefCell<events::EventManager>,
-    // pub local_script_events: RefCell<script_events::LocalEventManager>,
-    // pub client_script_events: RefCell<script_events::ClientEventManager>,
+    pub local_script_events: RefCell<script_events::LocalEventManager>,
+    pub client_script_events: RefCell<script_events::ClientEventManager>,
     pub base_objects: RefCell<base_objects::Store>,
     pub pending_base_object_destroy_or_creation: RefCell<base_objects::PendingDestroyOrCreation>,
     pub extra_base_object_pools: RefCell<base_objects::extra_pools::ExtraPools>,
@@ -146,8 +144,8 @@ impl Resource {
     impl_borrow_mut_fn!(timers, timers::TimerManager);
     impl_borrow_mut_fn!(timer_schedule, timers::ScheduleState);
     impl_borrow_mut_fn!(events, events::EventManager);
-    // impl_borrow_mut_fn!(local_script_events, script_events::LocalEventManager);
-    // impl_borrow_mut_fn!(client_script_events, script_events::ClientEventManager);
+    impl_borrow_mut_fn!(local_script_events, script_events::LocalEventManager);
+    impl_borrow_mut_fn!(client_script_events, script_events::ClientEventManager);
     impl_borrow_mut_fn!(base_objects, base_objects::Store);
     impl_borrow_fn!(base_objects, base_objects::Store);
     impl_borrow_mut_fn!(
