@@ -12,8 +12,7 @@ fn main() -> impl altv::IntoVoidResult {
             println!("checking type: {}", stringify!($expected_type));
 
             let mvalue = altv::__mvalue::to_mvalue(&$input).unwrap();
-            let const_mvalue =
-                sdk::convert_mvalue_mut_wrapper_to_const(mvalue.0).within_unique_ptr();
+            let const_mvalue = mvalue.clone().into_const();
 
             let sdk_type =
                 altv_sdk::MValueType::try_from(sdk::read_mvalue_type(&const_mvalue)).unwrap();
@@ -23,7 +22,7 @@ fn main() -> impl altv::IntoVoidResult {
             );
             assert_eq!(sdk_type, $expected_sdk_type);
 
-            let deserialized: $expected_type = altv::__mvalue::from_mvalue(const_mvalue).unwrap();
+            let deserialized: $expected_type = altv::__mvalue::from_mvalue(mvalue).unwrap();
             println!("deserialized: {deserialized:?}");
         }};
     }

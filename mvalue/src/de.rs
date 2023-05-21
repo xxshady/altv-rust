@@ -8,7 +8,9 @@ use serde::{
     forward_to_deserialize_any,
 };
 
-use crate::{bytes_num, de_dict_key::DictKeyDeserializer, types::RawMValue, Error, Result};
+use crate::{
+    bytes_num, de_dict_key::DictKeyDeserializer, types::RawMValue, wrapper::MValue, Error, Result,
+};
 
 pub struct Deserializer {
     input: RawMValue,
@@ -20,11 +22,11 @@ impl Deserializer {
     }
 }
 
-pub fn from_mvalue<T>(m: RawMValue) -> Result<T>
+pub fn from_mvalue<T>(m: MValue) -> Result<T>
 where
     T: DeserializeOwned,
 {
-    let mut deserializer = Deserializer::from_mvalue(m);
+    let mut deserializer = Deserializer::from_mvalue(m.into_const());
     let t = T::deserialize(&mut deserializer)?;
     Ok(t)
 }

@@ -10,10 +10,8 @@ use crate::{
     ser_rgba::{to_rgba_mvalue, RGBA_MVALUE},
     ser_vector2::{to_vector2_mvalue, VECTOR2_MVALUE},
     ser_vector3::{to_vector3_mvalue, VECTOR3_MVALUE},
-    types::RawMutMValue,
+    wrapper::MValue,
 };
-
-pub struct MValue(pub RawMutMValue);
 
 pub struct Serializer {
     output: Option<MValue>,
@@ -155,9 +153,7 @@ impl<'a> ser::Serializer for &'a mut Serializer {
 
     fn serialize_seq(self, _len: Option<usize>) -> Result<Self::SerializeSeq> {
         let list = MValueList::new();
-        self.output = Some(MValue(
-            unsafe { sdk::copy_mut_mvalue(list.mvalue.0.as_ref().unwrap()) }.within_unique_ptr(),
-        ));
+        self.output = Some(list.mvalue.clone());
         Ok(list)
     }
 
@@ -185,9 +181,7 @@ impl<'a> ser::Serializer for &'a mut Serializer {
 
     fn serialize_map(self, _len: Option<usize>) -> Result<Self::SerializeMap> {
         let dict = MValueDict::new();
-        self.output = Some(MValue(
-            unsafe { sdk::copy_mut_mvalue(dict.mvalue.0.as_ref().unwrap()) }.within_unique_ptr(),
-        ));
+        self.output = Some(dict.mvalue.clone());
         Ok(dict)
     }
 
@@ -213,7 +207,7 @@ pub struct MValueDict {
 impl MValueDict {
     fn new() -> Self {
         Self {
-            mvalue: MValue(unsafe { sdk::create_mvalue_dict().within_unique_ptr() }),
+            mvalue: MValue::new(unsafe { sdk::create_mvalue_dict().within_unique_ptr() }),
         }
     }
 }
@@ -230,7 +224,7 @@ impl ser::SerializeMap for MValueDict {
         let key = to_dict_key_mvalue(key)?;
         let value = to_mvalue(value)?;
 
-        unsafe { sdk::push_to_mvalue_dict(self.mvalue.0.as_mut().unwrap(), key.0, value.0) };
+        unsafe { sdk::push_to_mvalue_dict(self.mvalue.as_mut(), key.get(), value.get()) };
 
         Ok(())
     }
@@ -293,7 +287,7 @@ pub struct MValueList {
 impl MValueList {
     fn new() -> Self {
         Self {
-            mvalue: MValue(unsafe { sdk::create_mvalue_list().within_unique_ptr() }),
+            mvalue: MValue::new(unsafe { sdk::create_mvalue_list().within_unique_ptr() }),
         }
     }
 }
@@ -308,8 +302,8 @@ impl ser::SerializeSeq for MValueList {
     {
         unsafe {
             sdk::push_to_mvalue_list(
-                self.mvalue.0.as_mut().unwrap(),
-                sdk::convert_mvalue_mut_wrapper_to_const(to_mvalue(value)?.0).within_unique_ptr(),
+                self.mvalue.as_mut(),
+                to_mvalue(value)?.into_const(),
             )
         };
 

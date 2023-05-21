@@ -3,7 +3,7 @@ use serde::{
     Serialize,
 };
 
-use crate::{bytes_num, helpers::serialize_simple, ser::MValue, Error, Result};
+use crate::{bytes_num, helpers::serialize_simple, wrapper::MValue, Error, Result};
 
 use altv_sdk::ffi as sdk;
 
