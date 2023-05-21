@@ -120,6 +120,9 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
                 let buf = bytes_num::to_byte_buf([r, g, b, a]);
                 visitor.visit_byte_buf(buf)
             }
+            MValueType::Dict => {
+                visitor.visit_map(Map::new(unsafe { sdk::read_mvalue_dict(mvalue) }))
+            }
 
             unimplemented_type => Err(Error::UnimplementedMValueType(unimplemented_type)),
         }
@@ -135,7 +138,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
         byte_buf
         unit unit_struct
         enum identifier ignored_any
-        seq
+        seq newtype_struct tuple tuple_struct map struct
     }
 
     fn deserialize_option<V>(self, visitor: V) -> Result<V::Value>
@@ -146,56 +149,6 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
             MValueType::None | MValueType::Nil => visitor.visit_none(),
             _ => visitor.visit_some(self),
         }
-    }
-
-    // TODO: forward it to any
-    fn deserialize_newtype_struct<V>(self, _name: &'static str, visitor: V) -> Result<V::Value>
-    where
-        V: Visitor<'de>,
-    {
-        visitor.visit_newtype_struct(self)
-    }
-
-    // TODO: forward it to any?
-    fn deserialize_tuple<V>(self, _len: usize, visitor: V) -> Result<V::Value>
-    where
-        V: Visitor<'de>,
-    {
-        self.deserialize_seq(visitor)
-    }
-
-    // TODO: forward it to any?
-    fn deserialize_tuple_struct<V>(
-        self,
-        _name: &'static str,
-        _len: usize,
-        visitor: V,
-    ) -> Result<V::Value>
-    where
-        V: Visitor<'de>,
-    {
-        self.deserialize_seq(visitor)
-    }
-
-    // TODO: forward it to any
-    fn deserialize_map<V>(self, visitor: V) -> Result<V::Value>
-    where
-        V: Visitor<'de>,
-    {
-        visitor.visit_map(Map::new(unsafe { sdk::read_mvalue_dict(self.input.get()) }))
-    }
-
-    // TODO: forward it to any?
-    fn deserialize_struct<V>(
-        self,
-        _name: &'static str,
-        _fields: &'static [&'static str],
-        visitor: V,
-    ) -> Result<V::Value>
-    where
-        V: Visitor<'de>,
-    {
-        self.deserialize_map(visitor)
     }
 }
 

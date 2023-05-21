@@ -2,7 +2,10 @@ use std::collections::HashMap;
 
 use altv_sdk::ffi as sdk;
 
-use altv::prelude::*;
+use altv::{
+    __serde::{Deserialize, Serialize},
+    prelude::*,
+};
 
 #[altv::main]
 fn main() -> impl altv::IntoVoidResult {
@@ -48,18 +51,28 @@ fn main() -> impl altv::IntoVoidResult {
         );
     }
 
-    let args: altv::DynMValueArgs = &[&1, &true];
+    #[derive(Serialize, Deserialize, Debug)]
+    #[serde(crate = "altv::__serde")]
+    struct TestStruct {
+        kek: bool,
+    }
 
-    // altv::events::on("test", |c| {
-    //     dbg!(c);
-    //     let first = altv::__mvalue::from_mvalue::<i32>(c.args.get(0).unwrap());
-    //     let second = altv::__mvalue::from_mvalue::<HashMap<String, i32>>(c.args.get(1).unwrap());
-    //     dbg!(first, second);
+    #[derive(Serialize, Deserialize, Debug)]
+    #[serde(crate = "altv::__serde")]
+    struct TestTupleStruct(i32, bool);
 
-    //     Ok(())
-    // });
+    altv::events::on("test", |c| {
+        dbg!(c);
+        let first = altv::__mvalue::from_mvalue::<i32>(c.args.get(0).unwrap());
+        let second = altv::__mvalue::from_mvalue::<TestStruct>(c.args.get(1).unwrap());
+        let third = altv::__mvalue::from_mvalue::<TestTupleStruct>(c.args.get(2).unwrap());
+        dbg!(first, second, third);
 
-    // altv::events::emit("test", args).unwrap();
+        Ok(())
+    });
+
+    let args: altv::DynMValueArgs = &[&1, &HashMap::from([("kek".to_string(), true)]), &(1, true)];
+    altv::events::emit("test", args).unwrap();
 
     // TODO: test it
     altv::events::on_client("test", |c| {
