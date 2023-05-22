@@ -7,7 +7,7 @@ pub struct BaseObjectContainer<T, InheritPtrs: Clone = ()>(
 );
 
 impl<T, InheritPtrs: Clone> Deref for BaseObjectContainer<T, InheritPtrs> {
-    type Target = BaseObjectWrapper<T, InheritPtrs>;
+    type Target = Rc<BaseObjectWrapper<T, InheritPtrs>>;
 
     fn deref(&self) -> &Self::Target {
         &self.0
