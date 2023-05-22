@@ -27,7 +27,9 @@ impl<'a> ser::Serializer for &'a mut RgbaSerializer {
     type Error = Error;
 
     fn serialize_bytes(self, v: &[u8]) -> Result<Self::Ok> {
-        let [r, g, b, a] = bytes_num::from_byte_buf::<u8, 1, 4>(v);
+        let Some([r, g, b, a]) = bytes_num::from_byte_buf::<u8, 1, 4>(v) else {
+            return Err(Error::RgbaSerializationFailed);
+        };
         serialize_simple!(self, sdk::create_mvalue_rgba(r, g, b, a))
     }
 

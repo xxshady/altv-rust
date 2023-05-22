@@ -52,7 +52,9 @@ mvalue::generate_serde_via_bytes_for!(
     rgba_serde_impl,
     |v: &Self| { [v.r, v.g, v.b, v.a] },
     |v: Vec<u8>| {
-        let [r, g, b, a] = mvalue::bytes_num::from_byte_buf::<u8, 1, 4>(&v);
-        RGBA::new(r, g, b, a)
+        let Some([r, g, b, a]) = mvalue::bytes_num::from_byte_buf::<u8, 1, 4>(&v) else {
+            return Err(E::custom("Failed to deserialize Rgba"));
+        };
+        Ok(RGBA::new(r, g, b, a))
     }
 );

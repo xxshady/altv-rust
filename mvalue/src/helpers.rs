@@ -50,7 +50,7 @@ macro_rules! __generate_serde_via_bytes_for {
                 where
                     E: serde::de::Error,
                 {
-                    Ok($deserialize_byte_buf(v))
+                    $deserialize_byte_buf(v)
                 }
             }
 
@@ -59,7 +59,7 @@ macro_rules! __generate_serde_via_bytes_for {
                 where
                     D: serde::Deserializer<'de>,
                 {
-                    deserializer.deserialize_any(Visitor)
+                    deserializer.deserialize_newtype_struct($serialization_key, Visitor)
                 }
             }
         }

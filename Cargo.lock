@@ -60,6 +60,7 @@ dependencies = [
 name = "altv_internal_mvalue"
 version = "15.0.0-dev.22"
 dependencies = [
+ "altv_internal_logger",
  "altv_internal_sdk",
  "autocxx",
  "erased-serde",

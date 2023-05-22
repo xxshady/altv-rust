@@ -27,7 +27,9 @@ impl<'a> ser::Serializer for &'a mut Vector2Serializer {
     type Error = Error;
 
     fn serialize_bytes(self, v: &[u8]) -> Result<Self::Ok> {
-        let [x, y] = bytes_num::from_byte_buf::<f32, 4, 2>(v);
+        let Some([x, y]) = bytes_num::from_byte_buf::<f32, 4, 2>(v) else {
+            return Err(Error::Vector2SerializationFailed);
+        };
         serialize_simple!(self, sdk::create_mvalue_vector2(x, y))
     }
 

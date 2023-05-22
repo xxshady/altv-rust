@@ -53,8 +53,10 @@ mvalue::generate_serde_via_bytes_for!(
     vector3_serde_impl,
     |v: &Self| { [v.x, v.y, v.z] },
     |v: Vec<u8>| {
-        let [x, y, z] = mvalue::bytes_num::from_byte_buf::<f32, 4, 3>(&v);
-        Vector3::new(x, y, z)
+        let Some([x, y, z]) = mvalue::bytes_num::from_byte_buf::<f32, 4, 3>(&v) else {
+            return Err(E::custom("Failed to deserialize Vector3"));
+        };
+        Ok(Vector3::new(x, y, z))
     }
 );
 
@@ -104,7 +106,9 @@ mvalue::generate_serde_via_bytes_for!(
     vector2_serde_impl,
     |v: &Self| { [v.x, v.y] },
     |v: Vec<u8>| {
-        let [x, y] = mvalue::bytes_num::from_byte_buf::<f32, 4, 2>(&v);
-        Vector2::new(x, y)
+        let Some([x, y]) = mvalue::bytes_num::from_byte_buf::<f32, 4, 2>(&v) else {
+            return Err(E::custom("Failed to deserialize Vector2"));
+        };
+        Ok(Vector2::new(x, y))
     }
 );

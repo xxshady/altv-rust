@@ -54,7 +54,8 @@ fn main() -> impl altv::IntoVoidResult {
     #[derive(Serialize, Deserialize, Debug)]
     #[serde(crate = "altv::__serde")]
     struct TestStruct {
-        kek: bool,
+        kek: altv::Vector3,
+        kek2: altv::Vector2,
     }
 
     #[derive(Serialize, Deserialize, Debug)]
@@ -66,12 +67,39 @@ fn main() -> impl altv::IntoVoidResult {
         let first = altv::__mvalue::from_mvalue::<i32>(c.args.get(0).unwrap());
         let second = altv::__mvalue::from_mvalue::<TestStruct>(c.args.get(1).unwrap());
         let third = altv::__mvalue::from_mvalue::<TestTupleStruct>(c.args.get(2).unwrap());
-        dbg!(first, second, third);
+        let fourth = altv::__mvalue::from_mvalue::<(
+            bool,
+            bool,
+            bool,
+            altv::VehicleContainer,
+            altv::Vector3,
+            TestStruct,
+            // altv::RGBA,
+            altv::ByteBuf,
+        )>(c.args.get(3).unwrap());
+        dbg!(first, second, third, fourth);
 
         Ok(())
     });
 
-    let args: altv::DynMValueArgs = &[&1, &HashMap::from([("kek".to_string(), true)]), &(1, true)];
+    let args: altv::DynMValueArgs = &[
+        &1,
+        &HashMap::from([("kek".to_string(), true)]),
+        &(1, true),
+        &(
+            true,
+            true,
+            true,
+            altv::Vehicle::new("sultan2", 0, 0).unwrap(),
+            altv::Vector3::new(0, 1, 2),
+            TestStruct {
+                kek: altv::Vector3::new(111, 12323, 1111),
+                kek2: altv::Vector2::new(11, 9909),
+            },
+            altv::ByteBuf::from([1, 2, 255]),
+            // altv::RGBA::new(1, 2, 3, 4),
+        ),
+    ];
     altv::events::emit("test", args).unwrap();
 
     // TODO: test it

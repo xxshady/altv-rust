@@ -31,7 +31,7 @@ pub fn to_byte_buf<const N: usize, const S: usize, T: BytesNum<S>>(array: [T; N]
     buf
 }
 
-pub fn from_byte_buf<T, const S: usize, const N: usize>(buf: &[u8]) -> [T; N]
+pub fn from_byte_buf<T, const S: usize, const N: usize>(buf: &[u8]) -> Option<[T; N]>
 where
     T: BytesNum<S> + Default + Copy,
 {
@@ -39,11 +39,13 @@ where
     let num_size = std::mem::size_of::<T>();
 
     for i in 0..N {
-        array[i] = T::from_le_bytes(
-            buf[(i * num_size)..((1 + i) * num_size)]
-                .try_into()
-                .unwrap(),
-        );
+        let slice = buf.get((i * num_size)..((1 + i) * num_size));
+        let Some(slice) = slice else {
+            return None;
+        };
+
+        array[i] = T::from_le_bytes(slice.try_into().unwrap());
     }
-    array
+
+    Some(array)
 }

@@ -64,7 +64,11 @@ pub use altv_sdk::{
 
 pub use anyhow;
 pub use erased_serde;
-pub use serde_bytes::{self, ByteBuf, Bytes};
+pub use serde_bytes::{
+    self,
+    ByteBuf,
+    // Bytes TODO: implement bytes deserialization
+};
 
 pub const DEFAULT_DIMENSION: i32 = 0;
 pub const GLOBAL_DIMENSION: i32 = i32::MIN;

@@ -12,8 +12,11 @@ pub enum Error {
     DictKeySerializationFailed,
     BaseObjectSerializationFailed,
     Vector3SerializationFailed,
+    Vector3DeserializationFailed,
     Vector2SerializationFailed,
+    Vector2DeserializationFailed,
     RgbaSerializationFailed,
+    RgbaDeserializationFailed,
     InvalidBaseObject,
     BaseObjectNotFound,
     InvalidMValueType,
@@ -24,6 +27,7 @@ pub enum Error {
     F32ImpossibleSerialization,
     RgbaImpossibleSerialization,
     UnimplementedMValueType(MValueType),
+    BytesDeserializationIsNotImplementedYet,
 }
 
 impl ser::Error for Error {

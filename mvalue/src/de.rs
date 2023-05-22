@@ -8,7 +8,10 @@ use serde::{
     forward_to_deserialize_any,
 };
 
-use crate::{bytes_num, de_dict_key::DictKeyDeserializer, wrappers::ConstMValue, Error, Result};
+use crate::{
+    bytes_num, de_dict_key::DictKeyDeserializer, ser_rgba::RGBA_MVALUE,
+    ser_vector2::VECTOR2_MVALUE, ser_vector3::VECTOR3_MVALUE, wrappers::ConstMValue, Error, Result,
+};
 
 pub struct Deserializer {
     input: ConstMValue,
@@ -34,6 +37,15 @@ impl Deserializer {
         let raw = unsafe { sdk::read_mvalue_type(self.input.get()) };
         MValueType::try_from(raw).map_err(|_| Error::InvalidMValueType)
     }
+
+    fn assert_mvalue_type(&self, mvalue_type: MValueType, expected: MValueType) -> Result<()> {
+        if mvalue_type != expected {
+            return Err(Error::Message(format!(
+                "Expected {expected:?}, received: {mvalue_type:?}"
+            )));
+        }
+        Ok(())
+    }
 }
 
 impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
@@ -53,55 +65,52 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
             MValueType::String => {
                 visitor.visit_string(unsafe { sdk::read_mvalue_string(mvalue) }.to_string())
             }
-            MValueType::ByteArray => {
-                let size = unsafe { sdk::read_mvalue_byte_array_size(mvalue) };
-                let mut buffer = Vec::<u8>::with_capacity(size);
-                unsafe {
-                    sdk::read_mvalue_byte_array(mvalue, buffer.as_mut_ptr());
-                    buffer.set_len(size);
-                }
-                visitor.visit_byte_buf(buffer)
-            }
             MValueType::BaseObject => {
                 let raw_ptr = unsafe { sdk::read_mvalue_base_object(mvalue) };
                 visitor.visit_u64(raw_ptr as u64)
             }
-            MValueType::Vector3 => {
-                let ptr = unsafe { sdk::read_mvalue_vector3(mvalue) }.within_unique_ptr();
-                let mut x = 0f32;
-                let mut y = 0f32;
-                let mut z = 0f32;
-                unsafe {
-                    sdk::read_vector3(
-                        ptr.as_ref().unwrap(),
-                        &mut x as *mut f32,
-                        &mut y as *mut f32,
-                        &mut z as *mut f32,
-                    );
-                }
-
-                let buf = bytes_num::to_byte_buf([x, y, z]);
-                visitor.visit_byte_buf(buf)
-            }
-            MValueType::Vector2 => {
-                let ptr = unsafe { sdk::read_mvalue_vector2(mvalue) }.within_unique_ptr();
-                let mut x = 0f32;
-                let mut y = 0f32;
-                unsafe {
-                    sdk::read_vector2(
-                        ptr.as_ref().unwrap(),
-                        &mut x as *mut f32,
-                        &mut y as *mut f32,
-                    );
-                }
-
-                let buf = bytes_num::to_byte_buf([x, y]);
-                visitor.visit_byte_buf(buf)
-            }
             MValueType::List => {
                 visitor.visit_seq(Seq::new(unsafe { sdk::read_mvalue_list(self.input.get()) }))
             }
-            MValueType::Rgba => {
+            MValueType::Dict => {
+                visitor.visit_map(Map::new(unsafe { sdk::read_mvalue_dict(mvalue) }))
+            }
+            unimplemented_type => Err(Error::UnimplementedMValueType(unimplemented_type)),
+        }
+    }
+
+    forward_to_deserialize_any! {
+        bool
+        i8 i16 i32 i64
+        u8 u16 u32 u64
+        f32 f64
+        char str string
+        unit unit_struct
+        enum identifier ignored_any
+        seq tuple tuple_struct map struct
+    }
+
+    fn deserialize_option<V>(self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        match self.mvalue_type()? {
+            MValueType::None | MValueType::Nil => visitor.visit_none(),
+            _ => visitor.visit_some(self),
+        }
+    }
+
+    fn deserialize_newtype_struct<V>(self, name: &'static str, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        let mvalue_type = self.mvalue_type()?;
+        let mvalue = self.input.get();
+
+        match name {
+            RGBA_MVALUE => {
+                self.assert_mvalue_type(mvalue_type, MValueType::Rgba)?;
+
                 let ptr = unsafe { sdk::read_mvalue_rgba(mvalue) }.within_unique_ptr();
                 let mut r = 0u8;
                 let mut g = 0u8;
@@ -120,35 +129,71 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
                 let buf = bytes_num::to_byte_buf([r, g, b, a]);
                 visitor.visit_byte_buf(buf)
             }
-            MValueType::Dict => {
-                visitor.visit_map(Map::new(unsafe { sdk::read_mvalue_dict(mvalue) }))
-            }
+            VECTOR3_MVALUE => {
+                self.assert_mvalue_type(mvalue_type, MValueType::Vector3)?;
 
-            unimplemented_type => Err(Error::UnimplementedMValueType(unimplemented_type)),
+                let ptr = unsafe { sdk::read_mvalue_vector3(mvalue) }.within_unique_ptr();
+                let mut x = 0f32;
+                let mut y = 0f32;
+                let mut z = 0f32;
+                unsafe {
+                    sdk::read_vector3(
+                        ptr.as_ref().unwrap(),
+                        &mut x as *mut f32,
+                        &mut y as *mut f32,
+                        &mut z as *mut f32,
+                    );
+                }
+
+                let buf = bytes_num::to_byte_buf([x, y, z]);
+                visitor.visit_byte_buf(buf)
+            }
+            VECTOR2_MVALUE => {
+                self.assert_mvalue_type(mvalue_type, MValueType::Vector2)?;
+
+                let ptr = unsafe { sdk::read_mvalue_vector2(mvalue) }.within_unique_ptr();
+                let mut x = 0f32;
+                let mut y = 0f32;
+                unsafe {
+                    sdk::read_vector2(
+                        ptr.as_ref().unwrap(),
+                        &mut x as *mut f32,
+                        &mut y as *mut f32,
+                    );
+                }
+
+                let buf = bytes_num::to_byte_buf([x, y]);
+                visitor.visit_byte_buf(buf)
+            }
+            _ => {
+                logger::debug!("forwarding newtype_struct name: {name} to any");
+                self.deserialize_any(visitor)
+            }
         }
     }
 
-    forward_to_deserialize_any! {
-        bool
-        i8 i16 i32 i64
-        u8 u16 u32 u64
-        f32 f64
-        char str string
-        bytes // TODO:
-        byte_buf
-        unit unit_struct
-        enum identifier ignored_any
-        seq newtype_struct tuple tuple_struct map struct
-    }
-
-    fn deserialize_option<V>(self, visitor: V) -> Result<V::Value>
+    fn deserialize_byte_buf<V>(self, visitor: V) -> Result<V::Value>
     where
         V: Visitor<'de>,
     {
-        match self.mvalue_type()? {
-            MValueType::None | MValueType::Nil => visitor.visit_none(),
-            _ => visitor.visit_some(self),
+        self.assert_mvalue_type(self.mvalue_type()?, MValueType::ByteArray)?;
+        let mvalue = self.input.get();
+
+        let size = unsafe { sdk::read_mvalue_byte_array_size(mvalue) };
+        let mut buffer = Vec::<u8>::with_capacity(size);
+        unsafe {
+            sdk::read_mvalue_byte_array(mvalue, buffer.as_mut_ptr());
+            buffer.set_len(size);
         }
+        visitor.visit_byte_buf(buffer)
+    }
+
+    // TODO:
+    fn deserialize_bytes<V>(self, _visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        Err(Error::BytesDeserializationIsNotImplementedYet)
     }
 }
 
