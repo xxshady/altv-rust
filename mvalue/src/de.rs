@@ -21,18 +21,7 @@ impl Deserializer {
     pub fn from_mvalue(input: ConstMValue) -> Self {
         Deserializer { input }
     }
-}
 
-pub fn from_mvalue<T>(m: &ConstMValue) -> Result<T>
-where
-    T: DeserializeOwned,
-{
-    let mut deserializer = Deserializer::from_mvalue(m.clone());
-    let t = T::deserialize(&mut deserializer)?;
-    Ok(t)
-}
-
-impl Deserializer {
     fn mvalue_type(&self) -> Result<MValueType> {
         let raw = unsafe { sdk::read_mvalue_type(self.input.get()) };
         MValueType::try_from(raw).map_err(|_| Error::InvalidMValueType)
@@ -46,6 +35,15 @@ impl Deserializer {
         }
         Ok(())
     }
+}
+
+pub fn from_mvalue<T>(m: &ConstMValue) -> Result<T>
+where
+    T: DeserializeOwned,
+{
+    let mut deserializer = Deserializer::from_mvalue(m.clone());
+    let t = T::deserialize(&mut deserializer)?;
+    Ok(t)
 }
 
 impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
