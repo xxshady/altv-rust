@@ -38,13 +38,23 @@ where
     let mut array: [T; N] = [Default::default(); N];
     let num_size = std::mem::size_of::<T>();
 
-    for i in 0..N {
-        let slice = buf.get((i * num_size)..((1 + i) * num_size));
+    for (idx, e) in array.iter_mut().enumerate() {
+        let slice = buf.get((idx * num_size)..((1 + idx) * num_size));
         let Some(slice) = slice else {
             return None;
         };
 
-        array[i] = T::from_le_bytes(slice.try_into().unwrap());
+        let result = slice.try_into();
+
+        match result {
+            Ok(v) => {
+                *e = T::from_le_bytes(v);
+            }
+            Err(e) => {
+                logger::error!("Failed to convert slice to static array, error: {e:?}");
+                return None;
+            }
+        }
     }
 
     Some(array)
