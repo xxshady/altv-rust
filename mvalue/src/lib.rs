@@ -4,6 +4,7 @@ mod ser;
 
 pub mod bytes_num;
 mod de_dict_key;
+mod de_mvalue_slice;
 mod helpers;
 mod ser_base_object;
 mod ser_dict_key;
@@ -26,3 +27,5 @@ pub use wrappers::MutMValue;
 
 pub type DynMValue<'a> = &'a dyn erased_serde::Serialize;
 pub type DynMValueArgs<'a> = &'a [DynMValue<'a>];
+
+pub use de_mvalue_slice::{from_mvalue_slice, DeserializeMValueArgs};

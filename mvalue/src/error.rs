@@ -28,6 +28,7 @@ pub enum Error {
     RgbaImpossibleSerialization,
     UnimplementedMValueType(MValueType),
     BytesDeserializationIsNotImplementedYet,
+    ConstMValueSliceCanOnlyBeDeserializedAsTuple,
 }
 
 impl ser::Error for Error {

@@ -1,53 +1,22 @@
-#![allow(unused_must_use)]
-
 use altv::prelude::*;
 
 #[altv::main]
 fn main() -> impl altv::IntoVoidResult {
     std::env::set_var("RUST_BACKTRACE", "full");
 
-    altv::events::on_stream_synced_meta_change(|c| {
-        dbg!(c);
-
-        let new_value: Option<i32> = c.new_value.deserialize()?;
-        dbg!(new_value);
-
-        Ok(())
-    });
-
     altv::events::on("test", |c| {
-        let Some(v) = c.args.get(0) else {
-            return Ok(());
-        };
+        let (value, value2, veh): (i32, bool, altv::VehicleContainer) = c.args.deserialize()?;
 
-        let value: Option<i32> = v.deserialize()?;
-        dbg!(value);
+        dbg!(value, value2, &veh);
+        altv::log!("veh id: {}", veh.id()?);
 
         Ok(())
     });
 
-    altv::events::emit("test", &[&Some(123)]);
-    altv::events::emit("test", &[&(None as Option<i32>)]);
-
-    let vehicle = altv::Vehicle::new("sultan2", 0, 0)?;
-
-    let already_set_entry = vehicle.stream_synced_meta_entry("already_set")?;
-
-    already_set_entry.set(&228)?;
-
-    // Returns `228` because entry already contained it
-    let value = already_set_entry.get_or_set(1337)?;
-    assert_eq!(value, 228);
-
-    let empty_entry = vehicle.stream_synced_meta_entry("empty")?;
-
-    // Returns `1337` because entry was empty
-    let value = empty_entry.get_or_set(1337)?;
-    assert_eq!(value, 1337);
-
-    // Returns `Some(1337)`
-    let value: Option<i32> = empty_entry.get()?;
-    assert_eq!(value, Some(1337));
+    let veh = altv::Vehicle::new("sultan2", 0, 0)?;
+    altv::events::emit("test", &[&123, &true, &veh])?;
+    // veh.destroy()?;
+    // altv::events::emit("test", &[&(None as Option<i32>)]);
 
     Ok(())
 }

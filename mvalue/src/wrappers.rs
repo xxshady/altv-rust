@@ -2,7 +2,8 @@ use std::fmt::Debug;
 
 use crate::{
     from_mvalue,
-    types::{RawConstMValue, RawMutMValue}, Result,
+    types::{RawConstMValue, RawMutMValue},
+    Result,
 };
 
 use altv_sdk::ffi as sdk;
