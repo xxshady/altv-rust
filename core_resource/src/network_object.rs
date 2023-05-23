@@ -4,11 +4,10 @@ use crate::{
         network_object,
     },
     helpers::{self, IntoHash},
-    // meta::entity_stream_synced_meta::StreamSyncedEntityMeta,
+    meta::entity_stream_synced_meta::StreamSyncedEntityMeta,
     sdk,
     vector::Vector3,
-    SomeResult,
-    VoidResult,
+    SomeResult, VoidResult,
 };
 
 /// # **`NetworkObject implementation`**
@@ -27,7 +26,14 @@ impl network_object::NetworkObject {
     ///
     /// # Examples
     /// ```rust
-    /// let object = altv::NetworkObject::new("prop_bench_04", (0, 0, 71), (1.0, 2.0, 3.0)).unwrap();
+    /// # mod altv { pub use altv_internal_core_resource::exports::*; }
+    /// # fn test() -> altv::VoidResult {
+    /// let object = altv::NetworkObject::new(
+    ///    "prop_bench_04",
+    ///    altv::Vector3::new(0.0, 0.0, 71.0),
+    ///    altv::Vector3::new(1.0, 2.0, 3.0)
+    /// )?;
+    /// # Ok(()) }
     /// ```
     pub fn new(
         model: impl IntoHash,
@@ -44,14 +50,17 @@ impl network_object::NetworkObject {
     ///
     /// # Examples
     /// ```rust
+    /// # mod altv { pub use altv_internal_core_resource::exports::*; }
+    /// # fn test() -> altv::VoidResult {
     /// let object = altv::NetworkObject::new_with_params(
     ///    "prop_bench_04",
-    ///    (0, 0, 71),
-    ///    (1.0, 2.0, 3.0),
+    ///    altv::Vector3::new(0, 0, 71),
+    ///    altv::Vector3::new(1.0, 2.0, 3.0),
     ///    150,
     ///    0,
     ///    999
-    /// ).unwrap();
+    /// )?;
+    /// # Ok(()) }
     /// ```
     pub fn new_with_params(
         model: impl IntoHash,
@@ -125,4 +134,4 @@ impl network_object::NetworkObject {
     }
 }
 
-// impl StreamSyncedEntityMeta for network_object::NetworkObject {}
+impl StreamSyncedEntityMeta for network_object::NetworkObject {}

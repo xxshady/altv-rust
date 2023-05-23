@@ -2,11 +2,12 @@ use std::{cell::RefCell, ptr::NonNull, rc::Rc};
 
 use super::{base_object::BaseObject, BaseObjectContainer};
 use crate::{
+    meta::base_object::{normal_meta::NormalBaseObjectMeta, synced_meta::SyncedBaseObjectMeta},
     resource::Resource,
-    // meta::base_object::{normal_meta::NormalBaseObjectMeta, synced_meta::SyncedBaseObjectMeta},
-    SomeResult,
-    VoidResult,
+    SomeResult, VoidResult,
 };
+
+pub(crate) type BaseObjectWrapperRc<T, InheritPtrs = ()> = Rc<BaseObjectWrapper<T, InheritPtrs>>;
 
 pub struct BaseObjectWrapper<T, InheritPtrs: Clone = ()> {
     pub(crate) value: RefCell<BaseObject<T, InheritPtrs>>,
@@ -43,12 +44,12 @@ impl<T, InheritPtrs: Clone> BaseObjectWrapper<T, InheritPtrs> {
     }
 }
 
-// impl<T, InheritPtrs: Clone> SyncedBaseObjectMeta<T, InheritPtrs>
-//     for BaseObjectWrapper<T, InheritPtrs>
-// {
-// }
+impl<T, InheritPtrs: Clone> NormalBaseObjectMeta<T, InheritPtrs>
+    for BaseObjectWrapper<T, InheritPtrs>
+{
+}
 
-// impl<T, InheritPtrs: Clone> NormalBaseObjectMeta<T, InheritPtrs>
-//     for BaseObjectWrapper<T, InheritPtrs>
-// {
-// }
+impl<T, InheritPtrs: Clone> SyncedBaseObjectMeta<T, InheritPtrs>
+    for BaseObjectWrapper<T, InheritPtrs>
+{
+}

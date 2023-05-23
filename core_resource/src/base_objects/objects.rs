@@ -1,5 +1,4 @@
-use std::ptr::NonNull;
-use std::{cell::RefMut, fmt::Debug};
+use std::{cell::RefMut, fmt::Debug, ptr::NonNull, rc::Rc};
 
 use super::{
     base_impl::mvalue::impl_deserialize_for,
@@ -15,6 +14,7 @@ macro_rules! base_objects {
         $name_struct:ident
         $name_container:ident
         $name_ptr:ident
+        $manager_name_rc:ident
         $manager_name:ident: [
             $base_type:path,
             $( @extra_pool: $extra_pool:ident, )?
@@ -37,6 +37,10 @@ macro_rules! base_objects {
                     $name_struct
                     $(, $crate::base_objects::inherit_ptrs::$inherit_ptrs_struct )?
                 >;
+
+                // TODO: refactor this shit, this only needed for meta
+                #[allow(dead_code)]
+                pub(crate) type $manager_name_rc = Rc<$manager_name>;
 
                 pub type $name_container = BaseObjectContainer<
                     $name_struct
@@ -273,6 +277,7 @@ macro_rules! base_objects {
                 [<$manager_name Struct>]
                 [<$manager_name Container>]
                 [<$manager_name MutPtr>]
+                [<$manager_name Rc>]
                 $manager_name: [
                     $base_type,
                     $( @extra_pool: $extra_pool, )?

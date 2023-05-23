@@ -6,14 +6,12 @@ use crate::{
         player, vehicle,
     },
     helpers::{self, IntoHash, IntoString},
-    // meta::entity_stream_synced_meta::StreamSyncedEntityMeta,
+    meta::entity_stream_synced_meta::StreamSyncedEntityMeta,
     quaternion::Quaternion,
     rgba::RGBA,
-    sdk,
-    structs,
+    sdk, structs,
     vector::Vector3,
-    SomeResult,
-    VoidResult,
+    SomeResult, VoidResult,
 };
 
 /// # **`Vehicle implementation`**
@@ -836,4 +834,4 @@ impl vehicle::Vehicle {
     }
 }
 
-// impl StreamSyncedEntityMeta for vehicle::Vehicle {}
+impl StreamSyncedEntityMeta for vehicle::Vehicle {}

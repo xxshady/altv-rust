@@ -3,7 +3,7 @@ use std::{ops::Deref, rc::Rc};
 use super::wrapper::BaseObjectWrapper;
 
 pub struct BaseObjectContainer<T, InheritPtrs: Clone = ()>(
-    pub(super) Rc<BaseObjectWrapper<T, InheritPtrs>>,
+    pub(in super::super) Rc<BaseObjectWrapper<T, InheritPtrs>>,
 );
 
 impl<T, InheritPtrs: Clone> Deref for BaseObjectContainer<T, InheritPtrs> {

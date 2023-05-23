@@ -4,14 +4,12 @@ use crate::{
         player, vehicle,
     },
     helpers::{self, read_cpp_vector3, Hash, IntoHash, IntoString},
-    // meta::{entity_stream_synced_meta::StreamSyncedEntityMeta, player_local_meta::LocalPlayerMeta},
+    meta::{entity_stream_synced_meta::StreamSyncedEntityMeta, player_local_meta::LocalPlayerMeta},
     resource::Resource,
     rgba::RGBA,
-    sdk,
-    structs,
+    sdk, structs,
     vector::Vector3,
-    SomeResult,
-    VoidResult,
+    SomeResult, VoidResult,
 };
 use anyhow::anyhow;
 use autocxx::prelude::*;
@@ -780,12 +778,23 @@ impl player::Player {
     }
 
     /// ### Examples
-    /// Using default options
+    /// Using [default options](struct.PlayAnimation.html#impl-Default-for-PlayAnimation).
     /// ```rust
-    /// player.play_animation("cellphone@", "cellphone_text_in", Default::default()).unwrap();
+    /// # mod altv { pub use altv_internal_core_resource::exports::*; }
+    /// # use altv::BaseObjectPoolFuncs;
+    /// # fn test() -> altv::VoidResult {
+    /// let player = altv::Player::all()[0].clone();
+    ///
+    /// player.play_animation("cellphone@", "cellphone_text_in", Default::default())?;
+    /// # Ok(()) }
     /// ```
-    /// Custom flags
+    /// Custom flags.
     /// ```rust
+    /// # mod altv { pub use altv_internal_core_resource::exports::*; }
+    /// # use altv::BaseObjectPoolFuncs;
+    /// # fn test() -> altv::VoidResult {
+    /// let player = altv::Player::all()[0].clone();
+    ///
     /// player.play_animation(
     ///     "cellphone@",
     ///     "cellphone_text_in",
@@ -793,7 +802,8 @@ impl player::Player {
     ///         flags: altv::AnimationFlags::HoldLastFrame | altv::AnimationFlags::AbortOnWeaponDamage,
     ///         ..Default::default()
     ///     },
-    /// ).unwrap();
+    /// )?;
+    /// # Ok(()) }
     /// ```
     pub fn play_animation(
         &self,
@@ -831,7 +841,11 @@ impl player::Player {
         Ok(())
     }
 
-    pub fn emit<'a>(&self, event_name: impl IntoString, args: impl Into<mvalue::DynMValueArgs<'a>>) -> VoidResult {
+    pub fn emit<'a>(
+        &self,
+        event_name: impl IntoString,
+        args: impl Into<mvalue::DynMValueArgs<'a>>,
+    ) -> VoidResult {
         let mvalue = mvalue::to_mvalue(args.into()).map_err(|e| anyhow!(e))?;
         unsafe {
             sdk::trigger_client_event(self.raw_ptr()?, event_name.into_string(), mvalue.get());
@@ -840,5 +854,5 @@ impl player::Player {
     }
 }
 
-// impl StreamSyncedEntityMeta for player::Player {}
-// impl LocalPlayerMeta for player::Player {}
+impl StreamSyncedEntityMeta for player::Player {}
+impl LocalPlayerMeta for player::Player {}

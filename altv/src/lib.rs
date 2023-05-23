@@ -74,7 +74,7 @@ pub const DEFAULT_DIMENSION: i32 = 0;
 pub const GLOBAL_DIMENSION: i32 = i32::MIN;
 
 pub mod events;
-// pub mod meta;
+pub mod meta;
 // pub mod mvalue;
 
 // TEST
@@ -82,14 +82,20 @@ pub mod events;
 pub use exports::__mvalue::{self, DynMValue, DynMValueArgs};
 pub use exports::__serde;
 
+#[rustfmt::skip]
 pub mod prelude {
     pub use super::exports::{
         config_node::Config,
-        // meta::{
-        //     BaseObjectMetaEntry, LocalPlayerMeta, MetaEntry, NormalBaseObjectMeta,
-        //     StreamSyncedCheckpointMeta, StreamSyncedEntityMeta, StreamSyncedVirtualEntityMeta,
-        //     SyncedBaseObjectMeta,
-        // },
+        meta::{
+            MetaEntry,
+            BaseObjectMetaEntry,
+            NormalBaseObjectMeta,
+            SyncedBaseObjectMeta,
+            StreamSyncedEntityMeta,
+            StreamSyncedCheckpointMeta, 
+            StreamSyncedVirtualEntityMeta,
+            LocalPlayerMeta, 
+        },
         BaseObjectPoolFuncs,
         ColShapy,
         Entity,

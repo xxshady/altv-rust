@@ -1,120 +1,40 @@
-use std::collections::HashMap;
+#![allow(unused_must_use)]
 
-use altv_sdk::ffi as sdk;
-
-use altv::{
-    __serde::{Deserialize, Serialize},
-    prelude::*,
-};
+use altv::prelude::*;
 
 #[altv::main]
 fn main() -> impl altv::IntoVoidResult {
     std::env::set_var("RUST_BACKTRACE", "full");
 
-    macro_rules! check_mvalue_serde {
-        ($expected_type:ty, $expected_sdk_type:expr, $input:expr) => {{
-            println!("checking type: {}", stringify!($expected_type));
-
-            let mvalue = altv::__mvalue::to_mvalue(&$input).unwrap();
-            let const_mvalue = mvalue.clone().into_const();
-
-            let sdk_type =
-                altv_sdk::MValueType::try_from(sdk::read_mvalue_type(const_mvalue.get())).unwrap();
-            println!(
-                "mvalue type: {sdk_type:?}, expected: {:?}",
-                $expected_sdk_type
-            );
-            assert_eq!(sdk_type, $expected_sdk_type);
-
-            let deserialized: $expected_type = altv::__mvalue::from_mvalue(&const_mvalue).unwrap();
-            println!("deserialized: {deserialized:?}");
-        }};
-    }
-
-    // dbg!(f32::MAX);
-    // dbg!(f32::MIN);
-    // unsafe {
-    //     check_mvalue_serde!(
-    //         altv::Vector3,
-    //         altv_sdk::MValueType::Vector3,
-    //         altv::Vector3::new(f32::MAX, f32::MIN, f32::MIN)
-    //     );
-    // }
-
-    dbg!(f32::MAX);
-    dbg!(f32::MIN);
-    unsafe {
-        check_mvalue_serde!(
-            altv::Vector2,
-            altv_sdk::MValueType::Vector2,
-            altv::Vector2::new(f32::MAX, f32::MIN)
-        );
-    }
-
-    #[derive(Serialize, Deserialize, Debug)]
-    #[serde(crate = "altv::__serde")]
-    struct TestStruct {
-        kek: altv::Vector3,
-        kek2: altv::Vector2,
-    }
-
-    #[derive(Serialize, Deserialize, Debug)]
-    #[serde(crate = "altv::__serde")]
-    struct TestTupleStruct(i32, bool);
-
-    altv::events::on("test", |c| {
+    altv::events::on_stream_synced_meta_change(|c| {
         dbg!(c);
-        let first = altv::__mvalue::from_mvalue::<i32>(c.args.get(0).unwrap());
-        let second = altv::__mvalue::from_mvalue::<TestStruct>(c.args.get(1).unwrap());
-        let third = altv::__mvalue::from_mvalue::<TestTupleStruct>(c.args.get(2).unwrap());
-        let fourth = altv::__mvalue::from_mvalue::<(
-            bool,
-            bool,
-            bool,
-            altv::VehicleContainer,
-            altv::Vector3,
-            TestStruct,
-            // altv::RGBA,
-            altv::ByteBuf,
-        )>(c.args.get(3).unwrap());
-        dbg!(first, second, third, fourth);
+
+        // c.new_value.deserialize ?
+        let new_value: Option<bool> = altv::__mvalue::from_mvalue(&c.new_value)?;
+        dbg!(new_value);
 
         Ok(())
     });
 
-    let args: altv::DynMValueArgs = &[
-        &1,
-        &HashMap::from([("kek".to_string(), true)]),
-        &(1, true),
-        &(
-            true,
-            true,
-            true,
-            altv::Vehicle::new("sultan2", 0, 0).unwrap(),
-            altv::Vector3::new(0, 1, 2),
-            TestStruct {
-                kek: altv::Vector3::new(111, 12323, 1111),
-                kek2: altv::Vector2::new(11, 9909),
-            },
-            altv::ByteBuf::from([1, 2, 255]),
-            // altv::RGBA::new(1, 2, 3, 4),
-        ),
-    ];
-    altv::events::emit("test", args).unwrap();
+    let vehicle = altv::Vehicle::new("sultan2", 0, 0)?;
 
-    // TODO: test it
-    altv::events::on_client("test", |c| {
-        dbg!(c);
-    });
+    let already_set_entry = vehicle.stream_synced_meta_entry("already_set")?;
 
-    // let player = altv::Player::all()[0].clone();
-    // player.emit("test", args);
+    already_set_entry.set(&228)?;
 
-    // let mut vec_args: Vec<altv::DynMValue> = vec![];
+    // Returns `228` because entry already contained it
+    let value = already_set_entry.get_or_set(1337)?;
+    assert_eq!(value, 228);
 
-    // for _ in 0..=5 {
-    //     vec_args.push(&123);
-    // }
+    let empty_entry = vehicle.stream_synced_meta_entry("empty")?;
 
-    // player.emit("test", &vec_args);
+    // Returns `1337` because entry was empty
+    let value = empty_entry.get_or_set(1337)?;
+    assert_eq!(value, 1337);
+
+    // Returns `Some(1337)`
+    let value: Option<i32> = empty_entry.get()?;
+    assert_eq!(value, Some(1337));
+
+    Ok(())
 }

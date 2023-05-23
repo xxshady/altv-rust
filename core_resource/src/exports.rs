@@ -97,17 +97,17 @@ pub mod config_node {
     pub use crate::config_node::*;
 }
 
-// pub mod meta {
-//     pub use crate::meta::{
-//         base_object::{entry::*, normal_meta::*, synced_meta::*},
-//         checkpoint_stream_synced_meta::*,
-//         entity_stream_synced_meta::*,
-//         entry::*,
-//         global::*,
-//         player_local_meta::*,
-//         ve_stream_synced_meta::*,
-//     };
-// }
+pub mod meta {
+    pub use crate::meta::{
+        base_object::{entry::*, normal_meta::*, synced_meta::*},
+        checkpoint_stream_synced_meta::*,
+        entity_stream_synced_meta::*,
+        entry::*,
+        global::*,
+        player_local_meta::*,
+        ve_stream_synced_meta::*,
+    };
+}
 
 pub mod base_object {
     pub use crate::base_object_funcs::*;

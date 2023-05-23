@@ -1,106 +1,105 @@
-use autocxx::WithinUniquePtr;
+use autocxx::prelude::*;
+use std::{collections::HashMap, ptr::NonNull};
 
 use crate::{
     base_objects::{virtual_entity, virtual_entity_group},
     helpers::{self, IntoString},
-    // meta::ve_stream_synced_meta::StreamSyncedVirtualEntityMeta,
+    meta::ve_stream_synced_meta::StreamSyncedVirtualEntityMeta,
     resource::Resource,
     sdk,
     vector::Vector3,
-    SomeResult,
-    VoidResult,
+    SomeResult, VoidResult,
 };
-use std::{collections::HashMap, ptr::NonNull};
 
 /// # **`VirtualEntity implementation`**
 impl virtual_entity::VirtualEntity {
-    // /// Creates new instance of VirtualEntity without initial stream synced meta.
-    // /// See [virtual_entity::VirtualEntity::new_with_stream_meta]
-    // /// if you want to create virtual entity with initial stream synced meta.
-    // ///
-    // /// # Errors
-    // /// When provided `group` instance is invalid (destroyed).
-    // ///
-    // /// # Examples
-    // /// ```rust
-    // /// let group = altv::VirtualEntityGroup::new(10);
-    // /// let entity = altv::VirtualEntity::new(
-    // ///     group.clone(),
-    // ///     altv::Vector3::new(0, 0, 72),
-    // ///     10,
-    // /// )
-    // /// .unwrap();
-    // /// ```
-    // pub fn new(
-    //     group: virtual_entity_group::VirtualEntityGroupContainer,
-    //     pos: impl Into<Vector3>,
-    //     streaming_distance: u32,
-    // ) -> SomeResult<virtual_entity::VirtualEntityContainer> {
-    //     Self::new_with_stream_meta(
-    //         group,
-    //         pos,
-    //         streaming_distance,
-    //         HashMap::<String, Option<()>>::new(),
-    //     )
-    // }
+    /// Creates new instance of VirtualEntity without initial stream synced meta.
+    /// See [virtual_entity::VirtualEntity::new_with_stream_meta]
+    /// if you want to create virtual entity with initial stream synced meta.
+    ///
+    /// # Errors
+    /// When provided `group` instance is invalid (destroyed).
+    ///
+    /// # Examples
+    /// ```rust
+    /// # mod altv { pub use altv_internal_core_resource::exports::*; }
+    /// # fn test() -> altv::VoidResult {
+    /// let group = altv::VirtualEntityGroup::new(10);
+    /// let entity = altv::VirtualEntity::new(
+    ///     group.clone(),
+    ///     altv::Vector3::new(0, 0, 72),
+    ///     10,
+    /// )?;
+    /// # Ok(()) }
+    /// ```
+    pub fn new(
+        group: virtual_entity_group::VirtualEntityGroupContainer,
+        pos: impl Into<Vector3>,
+        streaming_distance: u32,
+    ) -> SomeResult<virtual_entity::VirtualEntityContainer> {
+        Self::new_with_stream_meta(
+            group,
+            pos,
+            streaming_distance,
+            HashMap::<String, &dyn erased_serde::Serialize>::new(),
+        )
+    }
 
-    // /// Creates new instance of VirtualEntity with initial stream synced meta.
-    // ///
-    // /// # Errors
-    // /// When provided `group` instance is invalid (destroyed).
-    // ///
-    // /// # Examples
-    // /// ```rust
-    // /// let group = altv::VirtualEntityGroup::new(10);
-    // /// let entity = altv::VirtualEntity::new_with_stream_meta(
-    // ///     group.clone(),
-    // ///     altv::Vector3::new(0, 0, 72),
-    // ///     10,
-    // ///     HashMap::from([("example", 123)]),
-    // /// )
-    // /// .unwrap();
-    // /// ```
-    // pub fn new_with_stream_meta(
-    //     group: virtual_entity_group::VirtualEntityGroupContainer,
-    //     pos: impl Into<Vector3>,
-    //     streaming_distance: u32,
-    //     stream_synced_meta: HashMap<
-    //         impl IntoString,
-    //         impl TryInto<mvalue::Serializable, Error = anyhow::Error>,
-    //     >,
-    // ) -> SomeResult<virtual_entity::VirtualEntityContainer> {
-    //     let group = group.raw_ptr()?;
-    //     let pos = pos.into();
+    /// Creates new instance of VirtualEntity with initial stream synced meta.
+    ///
+    /// # Errors
+    /// When provided `group` instance is invalid (destroyed).
+    ///
+    /// # Examples
+    /// ```rust
+    /// # mod altv {
+    /// #     pub use altv_internal_core_resource::exports::*;
+    /// #     pub use mvalue::DynMValue;
+    /// # }
+    /// # fn test() -> altv::VoidResult {
+    /// # use std::collections::HashMap;
+    /// let group = altv::VirtualEntityGroup::new(10);
+    /// let entity = altv::VirtualEntity::new_with_stream_meta(
+    ///     group.clone(),
+    ///     altv::Vector3::new(0, 0, 72),
+    ///     10,
+    ///     HashMap::from([("example", &123 as altv::DynMValue)]),
+    /// )?;
+    /// # Ok(()) }
+    /// ```
+    pub fn new_with_stream_meta(
+        group: virtual_entity_group::VirtualEntityGroupContainer,
+        pos: impl Into<Vector3>,
+        streaming_distance: u32,
+        stream_synced_meta: HashMap<impl IntoString, &dyn erased_serde::Serialize>,
+    ) -> SomeResult<virtual_entity::VirtualEntityContainer> {
+        let group = group.raw_ptr()?;
+        let pos = pos.into();
 
-    //     let mut mvalue_map = unsafe { sdk::create_mvalue_unordered_map() }.within_unique_ptr();
-    //     for (key, value) in stream_synced_meta {
-    //         unsafe {
-    //             sdk::push_to_mvalue_unordered_map(
-    //                 mvalue_map.as_mut().unwrap(),
-    //                 key.into_string(),
-    //                 value
-    //                     .try_into()
-    //                     .or_else(|e| {
-    //                         anyhow::bail!("Failed to convert value into mvalue, error: {e:?}")
-    //                     })?
-    //                     .0,
-    //             )
-    //         }
-    //     }
+        let mut mvalue_map = unsafe { sdk::create_mvalue_unordered_map() }.within_unique_ptr();
+        for (key, value) in stream_synced_meta {
+            unsafe {
+                sdk::push_to_mvalue_unordered_map(
+                    mvalue_map.as_mut().unwrap(),
+                    key.into_string(),
+                    mvalue::to_mvalue(value)?.get(),
+                )
+            }
+        }
 
-    //     Ok(helpers::create_base_object!(
-    //         virtual_entity,
-    //         sdk::ICore::CreateVirtualEntity(
-    //             group,
-    //             pos.x(),
-    //             pos.y(),
-    //             pos.z(),
-    //             streaming_distance,
-    //             mvalue_map,
-    //         ),
-    //         panic!("Failed to create VirtualEntity")
-    //     ))
-    // }
+        Ok(helpers::create_base_object!(
+            virtual_entity,
+            sdk::ICore::CreateVirtualEntity(
+                group,
+                pos.x(),
+                pos.y(),
+                pos.z(),
+                streaming_distance,
+                mvalue_map,
+            ),
+            panic!("Failed to create VirtualEntity")
+        ))
+    }
 
     pub fn id(&self) -> SomeResult<u32> {
         Ok(unsafe { sdk::IVirtualEntity::GetID(self.raw_ptr()?) })
@@ -135,4 +134,4 @@ impl virtual_entity::VirtualEntity {
     }
 }
 
-// impl StreamSyncedVirtualEntityMeta for virtual_entity::VirtualEntity {}
+impl StreamSyncedVirtualEntityMeta for virtual_entity::VirtualEntity {}

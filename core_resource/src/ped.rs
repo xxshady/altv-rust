@@ -4,11 +4,10 @@ use crate::{
         ped,
     },
     helpers::{self, Hash, IntoHash},
-    // meta::entity_stream_synced_meta::StreamSyncedEntityMeta,
+    meta::entity_stream_synced_meta::StreamSyncedEntityMeta,
     sdk,
     vector::Vector3,
-    SomeResult,
-    VoidResult,
+    SomeResult, VoidResult,
 };
 
 /// # **`Ped implementation`**
@@ -82,4 +81,4 @@ impl ped::Ped {
     }
 }
 
-// impl StreamSyncedEntityMeta for ped::Ped {}
+impl StreamSyncedEntityMeta for ped::Ped {}
