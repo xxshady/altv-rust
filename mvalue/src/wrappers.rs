@@ -1,9 +1,13 @@
 use std::fmt::Debug;
 
-use crate::types::{RawConstMValue, RawMutMValue};
+use crate::{
+    from_mvalue,
+    types::{RawConstMValue, RawMutMValue}, Result,
+};
 
 use altv_sdk::ffi as sdk;
 use autocxx::prelude::*;
+use serde::de::DeserializeOwned;
 
 pub struct MutMValue(RawMutMValue);
 
@@ -48,6 +52,10 @@ impl ConstMValue {
 
     pub fn get(&self) -> &RawConstMValue {
         &self.0
+    }
+
+    pub fn deserialize<V: DeserializeOwned>(&self) -> Result<V> {
+        from_mvalue(self)
     }
 }
 

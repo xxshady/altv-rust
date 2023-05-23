@@ -9,8 +9,7 @@ fn main() -> impl altv::IntoVoidResult {
     altv::events::on_stream_synced_meta_change(|c| {
         dbg!(c);
 
-        // c.new_value.deserialize ?
-        let new_value: Option<bool> = altv::__mvalue::from_mvalue(&c.new_value)?;
+        let new_value: Option<i32> = c.new_value.deserialize()?;
         dbg!(new_value);
 
         Ok(())
