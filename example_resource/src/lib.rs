@@ -15,6 +15,20 @@ fn main() -> impl altv::IntoVoidResult {
         Ok(())
     });
 
+    altv::events::on("test", |c| {
+        let Some(v) = c.args.get(0) else {
+            return Ok(());
+        };
+
+        let value: Option<i32> = v.deserialize()?;
+        dbg!(value);
+
+        Ok(())
+    });
+
+    altv::events::emit("test", &[&Some(123)]);
+    altv::events::emit("test", &[&(None as Option<i32>)]);
+
     let vehicle = altv::Vehicle::new("sultan2", 0, 0)?;
 
     let already_set_entry = vehicle.stream_synced_meta_entry("already_set")?;
