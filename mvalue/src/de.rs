@@ -9,8 +9,14 @@ use serde::{
 };
 
 use crate::{
-    bytes_num, de_dict_key::DictKeyDeserializer, ser_rgba::RGBA_MVALUE,
-    ser_vector2::VECTOR2_MVALUE, ser_vector3::VECTOR3_MVALUE, wrappers::ConstMValue, Error, Result,
+    bytes_num,
+    de_dict_key::DictKeyDeserializer,
+    helpers::{self, deserialize_simple},
+    ser_rgba::RGBA_MVALUE,
+    ser_vector2::VECTOR2_MVALUE,
+    ser_vector3::VECTOR3_MVALUE,
+    wrappers::ConstMValue,
+    Error, Result,
 };
 
 pub struct Deserializer {
@@ -27,10 +33,13 @@ impl Deserializer {
         MValueType::try_from(raw).map_err(|_| Error::InvalidMValueType)
     }
 
-    fn assert_mvalue_type(&self, mvalue_type: MValueType, expected: MValueType) -> Result<()> {
-        if mvalue_type != expected {
+    fn assert_mvalue_type(&self, received: MValueType, expected: MValueType) -> Result<()> {
+        if received != expected {
+            let mvalue_type_rust = helpers::sdk_type_to_rust(received);
+            let expected_rust = helpers::sdk_type_to_rust(expected);
+
             return Err(Error::Message(format!(
-                "Expected {expected:?}, received: {mvalue_type:?}"
+                "Expected: {expected_rust}, received: {mvalue_type_rust}"
             )));
         }
         Ok(())
@@ -56,7 +65,6 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
         let mvalue = self.input.get();
 
         match self.mvalue_type()? {
-            MValueType::Bool => visitor.visit_bool(unsafe { sdk::read_mvalue_bool(mvalue) }),
             MValueType::Int => visitor.visit_i64(unsafe { sdk::read_mvalue_int(mvalue) }),
             MValueType::Uint => visitor.visit_u64(unsafe { sdk::read_mvalue_uint(mvalue) }),
             MValueType::Double => visitor.visit_f64(unsafe { sdk::read_mvalue_double(mvalue) }),
@@ -73,19 +81,92 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
             MValueType::Dict => {
                 visitor.visit_map(Map::new(unsafe { sdk::read_mvalue_dict(mvalue) }))
             }
-            unimplemented_type => Err(Error::UnimplementedMValueType(unimplemented_type)),
+            _ => panic!("remove this"),
         }
     }
 
     forward_to_deserialize_any! {
-        bool
-        i8 i16 i32 i64
-        u8 u16 u32 u64
-        f32 f64
         char str string
         unit unit_struct
         enum identifier ignored_any
         seq tuple tuple_struct map struct
+    }
+
+    fn deserialize_bool<V>(self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        deserialize_simple!(self, visitor, Bool: bool)
+    }
+
+    fn deserialize_i8<V>(self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        self.deserialize_i64(visitor)
+    }
+
+    fn deserialize_i16<V>(self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        self.deserialize_i64(visitor)
+    }
+
+    fn deserialize_i32<V>(self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        self.deserialize_i64(visitor)
+    }
+
+    fn deserialize_i64<V>(self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        deserialize_simple!(self, visitor, Int: i64)
+    }
+
+    fn deserialize_u8<V>(self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        self.deserialize_u64(visitor)
+    }
+
+    fn deserialize_u16<V>(self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        self.deserialize_u64(visitor)
+    }
+
+    fn deserialize_u32<V>(self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        self.deserialize_u64(visitor)
+    }
+
+    fn deserialize_u64<V>(self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        deserialize_simple!(self, visitor, Uint: u64)
+    }
+
+    fn deserialize_f32<V>(self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        self.deserialize_f64(visitor)
+    }
+
+    fn deserialize_f64<V>(self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        deserialize_simple!(self, visitor, Double: f64)
     }
 
     fn deserialize_option<V>(self, visitor: V) -> Result<V::Value>

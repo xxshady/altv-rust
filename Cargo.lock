@@ -64,6 +64,7 @@ dependencies = [
  "altv_internal_sdk",
  "autocxx",
  "erased-serde",
+ "paste",
  "serde",
 ]
 

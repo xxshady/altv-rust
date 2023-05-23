@@ -16,3 +16,4 @@ altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "15.
 logger = { path = "../logger", package = "altv_internal_logger", version = "15.0.0-dev.22" }
 autocxx = { workspace = true }
 erased-serde = { workspace = true }
+paste = { workspace = true }

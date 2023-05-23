@@ -4,10 +4,9 @@ use crate::{
     base_objects::player, helpers::IntoString, resource::Resource, IntoVoidResult, VoidResult,
 };
 use altv_sdk::ffi as sdk;
-use anyhow::anyhow;
 
 pub fn emit(event_name: impl IntoString, args: mvalue::DynMValueArgs) -> VoidResult {
-    let mvalue = mvalue::to_mvalue(args).map_err(|e| anyhow!(e))?;
+    let mvalue = mvalue::to_mvalue(args)?;
     unsafe { sdk::trigger_local_event(event_name.into_string(), mvalue.get()) };
     Ok(())
 }

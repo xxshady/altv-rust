@@ -14,9 +14,9 @@ fn main() -> impl altv::IntoVoidResult {
     });
 
     let veh = altv::Vehicle::new("sultan2", 0, 0)?;
+    veh.destroy()?;
     altv::events::emit("test", &[&123, &true, &veh])?;
-    // veh.destroy()?;
-    // altv::events::emit("test", &[&(None as Option<i32>)]);
+    altv::events::emit("test", &[&(None as Option<i32>)])?;
 
     Ok(())
 }

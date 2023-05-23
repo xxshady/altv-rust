@@ -12,6 +12,18 @@ macro_rules! __serialize_simple {
 pub use __serialize_simple as serialize_simple;
 
 #[macro_export]
+macro_rules! __deserialize_simple {
+    ($self:ident, $visitor:expr, $sdk_type:ident: $rust_type:ident) => {{
+        paste::paste! {
+            $self.assert_mvalue_type($self.mvalue_type()?, altv_sdk::MValueType::$sdk_type)?;
+            $visitor.[<visit_ $rust_type>](unsafe { altv_sdk::ffi::[<read_mvalue_ $sdk_type:snake>]($self.input.get()) })
+        }
+    }};
+}
+
+pub use __deserialize_simple as deserialize_simple;
+
+#[macro_export]
 macro_rules! __generate_serde_via_bytes_for {
     (
         $value_type:ty,
@@ -67,3 +79,23 @@ macro_rules! __generate_serde_via_bytes_for {
 }
 
 pub use __generate_serde_via_bytes_for as generate_serde_via_bytes_for;
+use altv_sdk::MValueType;
+
+pub(crate) fn sdk_type_to_rust(sdk_type: MValueType) -> &'static str {
+    match sdk_type {
+        MValueType::BaseObject => "BaseObject",
+        MValueType::Bool => "bool",
+        MValueType::ByteArray => "ByteArray (ByteBuf)",
+        MValueType::Dict => "Dict (HashMap or struct)",
+        MValueType::Double => "Double (f64 or f32)",
+        MValueType::Function => "Function",
+        MValueType::Int => "Int (i64..u8)",
+        MValueType::Uint => "UInt (u64..u8)",
+        MValueType::List => "List (tuple or static array or Vec or slice)",
+        MValueType::Nil | MValueType::None => "None",
+        MValueType::Rgba => "Rgba",
+        MValueType::String => "String",
+        MValueType::Vector2 => "Vector2",
+        MValueType::Vector3 => "Vector3",
+    }
+}
