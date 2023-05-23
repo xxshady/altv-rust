@@ -14,8 +14,6 @@ publish = false
 altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "15.0.0-dev.22" }
 core_module = { path = "../core_module", version = "15.0.0-dev.22" }
 logger = { path = "../logger", package = "altv_internal_logger", version = "15.0.0-dev.22" }
-# TEST
-mvalue = { path = "../mvalue", package = "altv_internal_mvalue", version = "15.0.0-dev.22" }
 paste = { workspace = true }
 autocxx = { workspace = true }
 lazy_static = { workspace = true }

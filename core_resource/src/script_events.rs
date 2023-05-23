@@ -6,15 +6,9 @@ use crate::{
 use altv_sdk::ffi as sdk;
 
 pub fn emit(event_name: impl IntoString, args: mvalue::DynMValueArgs) -> VoidResult {
-    let mvalue = mvalue::to_mvalue(args)?;
-    unsafe { sdk::trigger_local_event(event_name.into_string(), mvalue.get()) };
+    unsafe { sdk::trigger_local_event(event_name.into_string(), mvalue::serialize_args(args)?) };
     Ok(())
 }
-
-// TODO:
-// pub fn emit_local_event_without_args(event_name: impl IntoString) {
-//     unsafe { sdk::trigger_local_event(event_name.into_string(), sdk::create_mvalue_vec()) };
-// }
 
 pub type EventArgs<'a> = &'a Vec<mvalue::ConstMValue>;
 

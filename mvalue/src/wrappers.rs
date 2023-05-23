@@ -30,6 +30,10 @@ impl MutMValue {
             unsafe { sdk::convert_mvalue_mut_wrapper_to_const(self.0) }.within_unique_ptr(),
         )
     }
+
+    pub fn into_raw(self) -> RawMutMValue {
+        self.0
+    }
 }
 
 impl Clone for MutMValue {

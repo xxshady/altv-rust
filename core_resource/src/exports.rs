@@ -1,3 +1,9 @@
+pub use anyhow;
+pub use erased_serde;
+pub use mvalue;
+pub use serde;
+pub use serde_bytes;
+
 pub use core_shared::*;
 
 pub use crate::{
@@ -63,29 +69,13 @@ pub mod logging {
 }
 
 pub mod events {
-    // intended for public macros
-    pub mod __internal {
-        pub use crate::{
-            // client_events::{
-            //     emit_all_clients, emit_all_clients_unreliable,
-            //     emit_all_clients_unreliable_without_args, emit_all_clients_without_args,
-            //     emit_client, emit_client_unreliable, emit_client_unreliable_without_args,
-            //     emit_client_without_args, emit_some_clients, emit_some_clients_unreliable,
-            //     emit_some_clients_unreliable_without_args, emit_some_clients_without_args,
-            // },
-            // script_events::{emit_local_event, emit_local_event_without_args},
-        };
-    }
-
     pub use crate::{
-        // client_events::emit_all_clients,
+        client_events::*,
         events::{
             add_custom_handler, add_sdk_handler, connection_queue::ConnectionQueueInfo,
             custom_contexts, sdk_contexts, structs::FireInfo, CustomHandler, SDKHandler,
         },
-        script_events::{
-            on_client, on, ClientEventContext, LocalEventContext, emit,
-        },
+        script_events::{emit, on, on_client, ClientEventContext, LocalEventContext},
     };
 }
 
@@ -112,7 +102,3 @@ pub mod meta {
 pub mod base_object {
     pub use crate::base_object_funcs::*;
 }
-
-// TEST
-pub use mvalue as __mvalue;
-pub use serde as __serde;

@@ -20,10 +20,9 @@ pub use ser::{to_mvalue, Serializer};
 
 pub use ser_base_object::BASE_OBJECT_MVALUE;
 
-pub use helpers::generate_serde_via_bytes_for;
+pub use helpers::{generate_serde_via_bytes_for, serialize_args};
 
-pub use wrappers::ConstMValue;
-pub use wrappers::MutMValue;
+pub use wrappers::{ConstMValue, MutMValue};
 
 pub type DynMValue<'a> = &'a dyn erased_serde::Serialize;
 pub type DynMValueArgs<'a> = &'a [DynMValue<'a>];

@@ -11,7 +11,7 @@ mod base_object_funcs;
 mod base_objects;
 mod blip;
 mod checkpoint;
-// mod client_events;
+mod client_events;
 mod col_shape;
 mod config_node;
 mod core_funcs;

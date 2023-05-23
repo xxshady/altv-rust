@@ -841,9 +841,27 @@ impl player::Player {
     }
 
     pub fn emit(&self, event_name: impl IntoString, args: mvalue::DynMValueArgs) -> VoidResult {
-        let mvalue = mvalue::to_mvalue(args)?;
         unsafe {
-            sdk::trigger_client_event(self.raw_ptr()?, event_name.into_string(), mvalue.get());
+            sdk::trigger_client_event(
+                self.raw_ptr()?,
+                event_name.into_string(),
+                mvalue::serialize_args(args)?,
+            );
+        }
+        Ok(())
+    }
+
+    pub fn emit_unreliable(
+        &self,
+        event_name: impl IntoString,
+        args: mvalue::DynMValueArgs,
+    ) -> VoidResult {
+        unsafe {
+            sdk::trigger_client_event_unreliable(
+                self.raw_ptr()?,
+                event_name.into_string(),
+                mvalue::serialize_args(args)?,
+            );
         }
         Ok(())
     }

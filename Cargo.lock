@@ -18,9 +18,6 @@ dependencies = [
  "altv_internal_core_resource",
  "altv_internal_resource_main_macro",
  "altv_internal_sdk",
- "erased-serde",
- "lmnkjgkj-std-backtrace-anyhow",
- "serde_bytes",
 ]
 
 [[package]]
@@ -91,7 +88,6 @@ name = "altv_module"
 version = "15.0.0-dev.22"
 dependencies = [
  "altv_internal_logger",
- "altv_internal_mvalue",
  "altv_internal_sdk",
  "autocxx",
  "core_module",

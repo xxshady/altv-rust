@@ -55,19 +55,21 @@ pub use exports::{
     AnyBaseObject,
     BaseObjectPoolFuncs,
     base_object,
+
+    anyhow,
+    serde,
+    erased_serde,
+    serde_bytes::{
+        self,
+        ByteBuf,
+        // Bytes TODO: implement bytes deserialization
+    },
+    mvalue::{self, DynMValue, DynMValueArgs},
 };
 
 pub use altv_sdk::{
     BaseObjectType, BlipType, ColShapeType, ExplosionType, MarkerType, PlayerBodyPart,
     PlayerConnectDeniedReason, VehicleModelType,
-};
-
-pub use anyhow;
-pub use erased_serde;
-pub use serde_bytes::{
-    self,
-    ByteBuf,
-    // Bytes TODO: implement bytes deserialization
 };
 
 pub const DEFAULT_DIMENSION: i32 = 0;
@@ -76,11 +78,6 @@ pub const GLOBAL_DIMENSION: i32 = i32::MIN;
 pub mod events;
 pub mod meta;
 // pub mod mvalue;
-
-// TEST
-// TODO: add them as direct deps of altv crate
-pub use exports::__mvalue::{self, DynMValue, DynMValueArgs};
-pub use exports::__serde;
 
 #[rustfmt::skip]
 pub mod prelude {
@@ -96,7 +93,7 @@ pub mod prelude {
             StreamSyncedVirtualEntityMeta,
             LocalPlayerMeta, 
         },
-        __mvalue::DeserializeMValueArgs,
+        mvalue::DeserializeMValueArgs,
 
         BaseObjectPoolFuncs,
         ColShapy,

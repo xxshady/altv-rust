@@ -1,3 +1,7 @@
+use altv_sdk::MValueType;
+
+use crate::{to_mvalue, types::RawMutMValue, DynMValueArgs, Result};
+
 #[macro_export]
 macro_rules! __serialize_simple {
     ($self:ident, $create_mvalue:expr) => {{
@@ -79,7 +83,6 @@ macro_rules! __generate_serde_via_bytes_for {
 }
 
 pub use __generate_serde_via_bytes_for as generate_serde_via_bytes_for;
-use altv_sdk::MValueType;
 
 pub(crate) fn sdk_type_to_rust(sdk_type: MValueType) -> &'static str {
     match sdk_type {
@@ -98,4 +101,8 @@ pub(crate) fn sdk_type_to_rust(sdk_type: MValueType) -> &'static str {
         MValueType::Vector2 => "Vector2",
         MValueType::Vector3 => "Vector3",
     }
+}
+
+pub fn serialize_args(args: DynMValueArgs) -> Result<RawMutMValue> {
+    Ok(to_mvalue(args)?.into_raw())
 }
