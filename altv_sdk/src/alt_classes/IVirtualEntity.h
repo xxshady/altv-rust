@@ -13,8 +13,8 @@ alt::IVirtualEntityGroup* GetGroup(const alt::IVirtualEntity* ptr) {
 bool HasStreamSyncedMetaData(const alt::IVirtualEntity* ptr, const StdStringClone key) {
     return ptr->HasStreamSyncedMetaData(key);
 }
-MValueWrapper GetStreamSyncedMetaData(const alt::IVirtualEntity* ptr, const StdStringClone key) {
-    MValueWrapper wrapper;
+ConstMValueWrapper GetStreamSyncedMetaData(const alt::IVirtualEntity* ptr, const StdStringClone key) {
+    ConstMValueWrapper wrapper;
     wrapper.ptr = ptr->GetStreamSyncedMetaData(key);
     return wrapper;
 }

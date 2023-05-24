@@ -14,7 +14,11 @@ readme = { workspace = true }
 core_shared = { path = "../core_shared", package = "altv_internal_core_shared", version = "15.0.0-dev.22" }
 logger = { path = "../logger", package = "altv_internal_logger", version = "15.0.0-dev.22" }
 altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "15.0.0-dev.22" }
+mvalue = { path = "../mvalue", package = "altv_internal_mvalue", version = "15.0.0-dev.22" }
 anyhow = { workspace = true }
 autocxx = { workspace = true }
 paste = { workspace = true }
+serde = { workspace = true }
+serde_bytes = { workspace = true }
+erased-serde = { workspace = true }
 lazycell = "1.3.0"

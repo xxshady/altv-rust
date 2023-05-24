@@ -15,21 +15,23 @@ pub use exports::{
         log_error,
     },
     BaseObjectWrapper,
-    ColShape,
     SyncId,
-    Player,
-    PlayerContainer,
     Vector2,
     Vector3,
-    Vehicle,
-    Ped,
-    NetworkObject,
-    VirtualEntity,
-    VirtualEntityGroup,
-    Blip,
-    VoiceChannel,
-    Marker,
-    Checkpoint,
+
+    // base objects
+    ColShape, ColShapeContainer,
+    Player, PlayerContainer,
+    Vehicle, VehicleContainer,
+    Ped, PedContainer,
+    NetworkObject, NetworkObjectContainer,
+    VirtualEntity, VirtualEntityContainer,
+    VirtualEntityGroup, VirtualEntityGroupContainer,
+    Blip, BlipContainer,
+    VoiceChannel, VoiceChannelContainer,
+    Marker, MarkerContainer,
+    Checkpoint, CheckpointContainer,
+
     WorldObject,
     Entity,
     AnyEntity,
@@ -39,7 +41,6 @@ pub use exports::{
     PlayerHeadBlendData,
     PlayAnimation,
     AnimationFlags,
-    anyhow,
     hash,
     Hash,
     VehicleModelInfo,
@@ -54,6 +55,15 @@ pub use exports::{
     AnyBaseObject,
     BaseObjectPoolFuncs,
     base_object,
+
+    anyhow,
+    serde,
+    erased_serde,
+    serde_bytes::{
+        self,
+        ByteBuf,
+        // Bytes TODO: implement bytes deserialization
+    },
 };
 
 pub use altv_sdk::{
@@ -68,31 +78,50 @@ pub mod events;
 pub mod meta;
 pub mod mvalue;
 
+#[rustfmt::skip]
 pub mod prelude {
     pub use super::exports::{
         config_node::Config,
         meta::{
-            BaseObjectMetaEntry, LocalPlayerMeta, MetaEntry, NormalBaseObjectMeta,
-            StreamSyncedCheckpointMeta, StreamSyncedEntityMeta, StreamSyncedVirtualEntityMeta,
+            MetaEntry,
+            BaseObjectMetaEntry,
+            NormalBaseObjectMeta,
             SyncedBaseObjectMeta,
+            StreamSyncedEntityMeta,
+            StreamSyncedCheckpointMeta, 
+            StreamSyncedVirtualEntityMeta,
+            LocalPlayerMeta, 
         },
-        BaseObjectPoolFuncs, ColShapy, Entity, ValidBaseObject, WorldObject,
+        mvalue::DeserializeMValueArgs,
+
+        BaseObjectPoolFuncs,
+        ColShapy,
+        Entity,
+        ValidBaseObject,
+        WorldObject,
     };
 }
 
 /// # Examples
 ///
 /// ```rust
+/// # fn test() -> altv::VoidResult {
 /// altv::set_timeout(
 ///     move || {
 ///         altv::log!("this message will be printed once, after 1.5s");
 ///     },
 ///     1500,
 /// );
+/// # Ok(()) }
 /// ```
 ///
 /// With error handling
 /// ```rust
+/// # fn test() -> altv::VoidResult {
+/// fn something_that_can_fail() -> altv::VoidResult {
+///     Ok(())
+/// }
+///
 /// altv::set_timeout(
 ///     move || {
 ///         altv::log!("this message will be printed once, after 1.5s");
@@ -101,6 +130,7 @@ pub mod prelude {
 ///     },
 ///     1500,
 /// );
+/// # Ok(()) }
 /// ```
 pub fn set_timeout<V: IntoVoidResult>(mut callback: impl FnMut() -> V + 'static, millis: u64) {
     exports::create_timer(
@@ -114,16 +144,23 @@ pub fn set_timeout<V: IntoVoidResult>(mut callback: impl FnMut() -> V + 'static,
 ///
 /// Without error handling
 /// ```rust
+/// # fn test() -> altv::VoidResult {
 /// altv::set_interval(
 ///     move || {
 ///         altv::log!("this message will be printed every 1.5s");
 ///     },
 ///     1500,
 /// );
+/// # Ok(()) }
 /// ```
 ///
 /// With error handling
 /// ```rust
+/// # fn test() -> altv::VoidResult {
+/// fn something_that_can_fail() -> altv::VoidResult {
+///     Ok(())
+/// }
+///
 /// altv::set_interval(
 ///     move || {
 ///         altv::log!("this message will be printed every 1.5s");
@@ -132,6 +169,7 @@ pub fn set_timeout<V: IntoVoidResult>(mut callback: impl FnMut() -> V + 'static,
 ///     },
 ///     1500,
 /// );
+/// # Ok(()) }
 /// ```
 pub fn set_interval<V: IntoVoidResult>(mut callback: impl FnMut() -> V + 'static, millis: u64) {
     exports::create_timer(

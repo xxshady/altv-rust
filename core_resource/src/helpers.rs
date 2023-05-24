@@ -316,3 +316,17 @@ macro_rules! __create_base_object {
 }
 
 pub(crate) use __create_base_object as create_base_object;
+
+pub(crate) fn convert_player_vec_to_cpp_vec(
+    vec: Vec<player::PlayerContainer>,
+) -> SomeResult<UniquePtr<CxxVector<sdk::PlayerPtrWrapper>>> {
+    let mut cpp_vec = unsafe { sdk::create_player_vec() };
+
+    for player in vec {
+        unsafe {
+            sdk::push_to_player_vec(cpp_vec.as_mut().unwrap(), player.raw_ptr()?);
+        }
+    }
+
+    Ok(cpp_vec)
+}

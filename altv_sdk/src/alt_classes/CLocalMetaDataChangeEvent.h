@@ -10,13 +10,13 @@ alt::IPlayer* GetTarget(const alt::CLocalMetaDataChangeEvent* ptr) {
 std::string GetKey(const alt::CLocalMetaDataChangeEvent* ptr) {
     return ptr->GetKey();
 }
-MValueWrapper GetVal(const alt::CLocalMetaDataChangeEvent* ptr) {
-    MValueWrapper wrapper;
+ConstMValueWrapper GetVal(const alt::CLocalMetaDataChangeEvent* ptr) {
+    ConstMValueWrapper wrapper;
     wrapper.ptr = ptr->GetVal();
     return wrapper;
 }
-MValueWrapper GetOldVal(const alt::CLocalMetaDataChangeEvent* ptr) {
-    MValueWrapper wrapper;
+ConstMValueWrapper GetOldVal(const alt::CLocalMetaDataChangeEvent* ptr) {
+    ConstMValueWrapper wrapper;
     wrapper.ptr = ptr->GetOldVal();
     return wrapper;
 }

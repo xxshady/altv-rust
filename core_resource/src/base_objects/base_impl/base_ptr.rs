@@ -9,8 +9,9 @@ pub trait BasePtr {
 
 impl<T, InheritPtrs: Clone> BasePtr for BaseObject<T, InheritPtrs> {
     fn base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectMutPtr> {
-        self.base_ptr
-            .ok_or(anyhow::anyhow!("base object base_ptr is none"))
+        self.base_ptr.ok_or(anyhow::anyhow!(
+            "Base object is destroyed and cannot be used anymore (base_ptr is none)"
+        ))
     }
 
     fn raw_base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectRawMutPtr> {

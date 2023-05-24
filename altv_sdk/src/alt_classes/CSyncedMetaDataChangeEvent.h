@@ -10,13 +10,13 @@ alt::IBaseObject* GetTarget(const alt::CSyncedMetaDataChangeEvent* ptr) {
 std::string GetKey(const alt::CSyncedMetaDataChangeEvent* ptr) {
     return ptr->GetKey();
 }
-MValueWrapper GetVal(const alt::CSyncedMetaDataChangeEvent* ptr) {
-    MValueWrapper wrapper;
+ConstMValueWrapper GetVal(const alt::CSyncedMetaDataChangeEvent* ptr) {
+    ConstMValueWrapper wrapper;
     wrapper.ptr = ptr->GetVal();
     return wrapper;
 }
-MValueWrapper GetOldVal(const alt::CSyncedMetaDataChangeEvent* ptr) {
-    MValueWrapper wrapper;
+ConstMValueWrapper GetOldVal(const alt::CSyncedMetaDataChangeEvent* ptr) {
+    ConstMValueWrapper wrapper;
     wrapper.ptr = ptr->GetOldVal();
     return wrapper;
 }

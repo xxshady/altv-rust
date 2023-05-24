@@ -16,14 +16,26 @@ pub(self) mod wrappers {
     use super::{super::*, entity::EntityRawPtr};
     use crate::{world_object::WorldObjectRawPtr, SomeResult};
     use inherit_ptrs::traits::{Entity, WorldObject};
-    use network_object::NetworkObjectContainer;
     use objects::AnyBaseObject;
-    use ped::PedContainer;
-    use player::PlayerContainer;
-    use vehicle::VehicleContainer;
+    // use network_object::NetworkObjectContainer;
+    // use ped::PedContainer;
+    // use player::PlayerContainer;
+    // use vehicle::VehicleContainer;
+
+    use std::rc::Rc;
 
     macro_rules! extra_pool_enum {
-        (@internal $any_name:ident, $name:ident, $raw_ptr_type:ty: [ $( $variant:ident, $container:ty; )+ ]) => {
+        (@internal
+            $any_name:ident,
+            $name:ident,
+            $raw_ptr_type:ty: [
+                $(
+                    $variant:ident,
+                    $container:ty,
+                    $wrapper:ty;
+                )+
+            ]
+        ) => {
             paste::paste! {
                 #[derive(Debug)]
                 pub enum $any_name { $(
@@ -57,29 +69,46 @@ pub(self) mod wrappers {
                         $any_name::$variant(value)
                     }
                 }
+
+                // TODO: refactor this shit, this only needed for meta
+                impl From<Rc<$wrapper>> for $any_name {
+                    fn from(value: Rc<$wrapper>) -> Self {
+                        $any_name::$variant(BaseObjectContainer(value))
+                    }
+                }
             )+
             }
         };
 
-        ($name:ident, $raw_ptr_type:ty: [ $( $variant:ident, $container:ty; )+ ]) => {
+        ($name:ident, $raw_ptr_type:ty: [ $( $variant:ident, $base_object_mod:path; )+ ]) => {
             paste::paste! {
-                extra_pool_enum!(@internal [<Any $name>], $name, $raw_ptr_type: [ $( $variant, $container; )+ ]);
+                extra_pool_enum!(@internal
+                    [<Any $name>],
+                    $name,
+                    $raw_ptr_type: [
+                        $(
+                            $variant,
+                            $base_object_mod::[<$variant Container>],
+                            $base_object_mod::$variant;
+                        )+
+                    ]
+                );
             }
         };
     }
 
     extra_pool_enum!(Entity, EntityRawPtr: [
-        Player, PlayerContainer;
-        Vehicle, VehicleContainer;
-        Ped, PedContainer;
-        NetworkObject, NetworkObjectContainer;
+        Player, player;
+        Vehicle, vehicle;
+        Ped, ped;
+        NetworkObject, network_object;
     ]);
 
     extra_pool_enum!(WorldObject, WorldObjectRawPtr: [
-        Player, PlayerContainer;
-        Vehicle, VehicleContainer;
-        Ped, PedContainer;
-        NetworkObject, NetworkObjectContainer;
+        Player, player;
+        Vehicle, vehicle;
+        Ped, ped;
+        NetworkObject, network_object;
     ]);
 }
 

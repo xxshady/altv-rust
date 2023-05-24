@@ -13,6 +13,8 @@ publish = false
 [dependencies]
 altv = { path = "../altv" }
 rand = "0.8.5"
+autocxx = { workspace = true }
+altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk" }
 
 [lib]
 crate-type = ["cdylib"]

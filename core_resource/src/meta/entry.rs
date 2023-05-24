@@ -1,11 +1,19 @@
-use crate::{mvalue, resource::Resource, sdk, VoidResult};
+use autocxx::prelude::*;
+use serde::{de::DeserializeOwned, Serialize};
 
 use super::global::{GlobalMetaEntry, GlobalSyncedMetaEntry};
+use crate::{sdk, SomeResult, VoidResult};
 
-pub trait MetaEntry {
+pub trait MetaEntry<V: Serialize + DeserializeOwned> {
     fn has(&self) -> bool;
-    fn get(&self) -> Option<mvalue::MValue>;
-    fn set(&self, value: impl TryInto<mvalue::Serializable, Error = anyhow::Error>) -> VoidResult;
+    fn get(&self) -> SomeResult<Option<V>>;
+
+    /// Ensures a value is in the entry by setting provided `value` if empty,
+    /// and returns the value in the entry.<br>
+    /// Similar to [`or_insert`](https://doc.rust-lang.org/std/collections/hash_map/enum.Entry.html#method.or_insert) of HashMap.
+    fn get_or_set(&self, value: V) -> SomeResult<V>;
+
+    fn set(&self, value: &V) -> VoidResult;
     fn delete(&self);
 }
 
@@ -15,33 +23,33 @@ macro_rules! impl_global_meta_entry {
         $entry_struct:path
     ) => {
         paste::paste! {
-            impl MetaEntry for $entry_struct {
+            impl<V: Serialize + DeserializeOwned> MetaEntry<V> for $entry_struct<V> {
                 fn has(&self) -> bool {
                     unsafe { sdk::ICore::[<Has $meta_type Data>](&self.key) }
                 }
 
-                fn get(&self) -> Option<mvalue::MValue> {
-                    let value = Resource::with(|resource| {
-                        mvalue::deserialize_from_sdk(unsafe { sdk::ICore::[<Get $meta_type Data>](&self.key) }, resource)
-                    });
+                fn get(&self) -> SomeResult<Option<V>> {
+                    let mvalue = unsafe { sdk::ICore::[<Get $meta_type Data>](&self.key) }.within_unique_ptr();
+                    let mvalue = mvalue::ConstMValue::new(mvalue);
+                    let deserialized: Option<V> = mvalue::from_mvalue(&mvalue)?;
+                    Ok(deserialized)
+                }
 
-                    if let mvalue::MValue::None = value {
-                        None
+                fn get_or_set(&self, value: V) -> SomeResult<V> {
+                    let current_value: Option<V> = self.get()?;
+                    if let Some(v) = current_value {
+                        Ok(v)
                     } else {
-                        Some(value)
+                        self.set(&value)?;
+                        return Ok(value);
                     }
                 }
 
-                fn set(&self, value: impl TryInto<mvalue::Serializable, Error = anyhow::Error>) -> VoidResult {
+                fn set(&self, value: &V) -> VoidResult {
                     unsafe {
                         sdk::ICore::[<Set $meta_type Data>](
                             &self.key,
-                            value
-                                .try_into()
-                                .or_else(|e| {
-                                    anyhow::bail!("Failed to convert value into mvalue, error: {e:?}")
-                                })?
-                                .0,
+                            mvalue::to_mvalue(value)?.get(),
                         )
                     }
                     Ok(())

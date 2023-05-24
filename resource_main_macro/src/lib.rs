@@ -12,10 +12,10 @@ type AttributeArgs = syn::punctuated::Punctuated<syn::NestedMeta, syn::Token![,]
 /// for compatibility with the alt:V module.
 ///
 /// ## Example
-/// ```
+/// ```rust,ignore
 /// #[altv::main]
 /// fn main() -> impl altv::IntoVoidResult {
-///    altv::log!("hello world");
+///     altv::log!("hello world");
 /// }
 /// ```
 ///
@@ -29,10 +29,10 @@ type AttributeArgs = syn::punctuated::Punctuated<syn::NestedMeta, syn::Token![,]
 /// ```
 ///
 /// src/lib.rs
-/// ```rust
+/// ```rust,ignore
 /// #[my_custom_name::main(crate_name = "my_custom_name")]
 /// fn main() -> impl my_custom_name::IntoVoidResult {
-///    my_custom_name::log!("hello world");
+///     my_custom_name::log!("hello world");
 /// }
 /// ```
 #[proc_macro_attribute]

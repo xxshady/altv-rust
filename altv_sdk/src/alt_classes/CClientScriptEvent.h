@@ -14,7 +14,7 @@ const MValueWrapperVec GetArgs(const alt::CClientScriptEvent* ptr) {
     auto args = ptr->GetArgs();
     auto mvalue_vec = create_mvalue_vec();
     for (const auto& e : args) {
-    MValueWrapper wrapper;
+    ConstMValueWrapper wrapper;
     wrapper.ptr = e;
     mvalue_vec.push_back(wrapper.clone());
     }

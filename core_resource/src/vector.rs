@@ -46,6 +46,20 @@ where
     }
 }
 
+mvalue::generate_serde_via_bytes_for!(
+    Vector3,
+    "Vector3",
+    mvalue::ser_vector3::VECTOR3_MVALUE,
+    vector3_serde_impl,
+    |v: &Self| { [v.x, v.y, v.z] },
+    |v: Vec<u8>| {
+        let Some([x, y, z]) = mvalue::bytes_num::from_byte_buf::<f32, 4, 3>(&v) else {
+            return Err(E::custom("Failed to deserialize Vector3"));
+        };
+        Ok(Vector3::new(x, y, z))
+    }
+);
+
 #[derive(Debug)]
 pub struct Vector2 {
     x: f32,
@@ -84,3 +98,17 @@ where
         Self::new(x, y)
     }
 }
+
+mvalue::generate_serde_via_bytes_for!(
+    Vector2,
+    "Vector2",
+    mvalue::ser_vector2::VECTOR2_MVALUE,
+    vector2_serde_impl,
+    |v: &Self| { [v.x, v.y] },
+    |v: Vec<u8>| {
+        let Some([x, y]) = mvalue::bytes_num::from_byte_buf::<f32, 4, 2>(&v) else {
+            return Err(E::custom("Failed to deserialize Vector2"));
+        };
+        Ok(Vector2::new(x, y))
+    }
+);

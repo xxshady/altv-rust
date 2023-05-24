@@ -777,12 +777,23 @@ impl player::Player {
     }
 
     /// ### Examples
-    /// Using default options
+    /// Using [default options](struct.PlayAnimation.html#impl-Default-for-PlayAnimation).
     /// ```rust
-    /// player.play_animation("cellphone@", "cellphone_text_in", Default::default()).unwrap();
+    /// # mod altv { pub use altv_internal_core_resource::exports::*; }
+    /// # use altv::BaseObjectPoolFuncs;
+    /// # fn test() -> altv::VoidResult {
+    /// let player = altv::Player::all()[0].clone();
+    ///
+    /// player.play_animation("cellphone@", "cellphone_text_in", Default::default())?;
+    /// # Ok(()) }
     /// ```
-    /// Custom flags
+    /// Custom flags.
     /// ```rust
+    /// # mod altv { pub use altv_internal_core_resource::exports::*; }
+    /// # use altv::BaseObjectPoolFuncs;
+    /// # fn test() -> altv::VoidResult {
+    /// let player = altv::Player::all()[0].clone();
+    ///
     /// player.play_animation(
     ///     "cellphone@",
     ///     "cellphone_text_in",
@@ -790,7 +801,8 @@ impl player::Player {
     ///         flags: altv::AnimationFlags::HoldLastFrame | altv::AnimationFlags::AbortOnWeaponDamage,
     ///         ..Default::default()
     ///     },
-    /// ).unwrap();
+    /// )?;
+    /// # Ok(()) }
     /// ```
     pub fn play_animation(
         &self,
@@ -825,6 +837,32 @@ impl player::Player {
             )
         }
 
+        Ok(())
+    }
+
+    pub fn emit(&self, event_name: impl IntoString, args: mvalue::DynMValueArgs) -> VoidResult {
+        unsafe {
+            sdk::trigger_client_event(
+                self.raw_ptr()?,
+                event_name.into_string(),
+                mvalue::serialize_args(args)?,
+            );
+        }
+        Ok(())
+    }
+
+    pub fn emit_unreliable(
+        &self,
+        event_name: impl IntoString,
+        args: mvalue::DynMValueArgs,
+    ) -> VoidResult {
+        unsafe {
+            sdk::trigger_client_event_unreliable(
+                self.raw_ptr()?,
+                event_name.into_string(),
+                mvalue::serialize_args(args)?,
+            );
+        }
         Ok(())
     }
 }

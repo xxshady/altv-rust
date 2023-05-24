@@ -1,3 +1,5 @@
+#![allow(clippy::new_ret_no_self)]
+
 use core_shared::*;
 
 use altv_sdk::ffi as sdk;
@@ -18,7 +20,6 @@ mod helpers;
 mod logging;
 mod marker;
 mod meta;
-mod mvalue;
 mod network_object;
 mod ped;
 mod ped_model_info;

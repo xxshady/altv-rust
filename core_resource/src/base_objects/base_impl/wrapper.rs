@@ -7,6 +7,8 @@ use crate::{
     SomeResult, VoidResult,
 };
 
+pub(crate) type BaseObjectWrapperRc<T, InheritPtrs = ()> = Rc<BaseObjectWrapper<T, InheritPtrs>>;
+
 pub struct BaseObjectWrapper<T, InheritPtrs: Clone = ()> {
     pub(crate) value: RefCell<BaseObject<T, InheritPtrs>>,
 }
@@ -17,13 +19,13 @@ impl<T, InheritPtrs: Clone> BaseObjectWrapper<T, InheritPtrs> {
         base_ptr: altv_sdk::BaseObjectMutPtr,
         inherit_ptrs: InheritPtrs,
     ) -> BaseObjectContainer<T, InheritPtrs> {
-        Rc::new(Self {
+        BaseObjectContainer(Rc::new(Self {
             value: RefCell::new(BaseObject {
                 ptr: Some(ptr),
                 base_ptr: Some(base_ptr),
                 inherit_ptrs: Some(inherit_ptrs),
             }),
-        })
+        }))
     }
 
     pub(crate) fn ptr(&self) -> SomeResult<NonNull<T>> {
@@ -42,12 +44,12 @@ impl<T, InheritPtrs: Clone> BaseObjectWrapper<T, InheritPtrs> {
     }
 }
 
-impl<T, InheritPtrs: Clone> SyncedBaseObjectMeta<T, InheritPtrs>
+impl<T, InheritPtrs: Clone> NormalBaseObjectMeta<T, InheritPtrs>
     for BaseObjectWrapper<T, InheritPtrs>
 {
 }
 
-impl<T, InheritPtrs: Clone> NormalBaseObjectMeta<T, InheritPtrs>
+impl<T, InheritPtrs: Clone> SyncedBaseObjectMeta<T, InheritPtrs>
     for BaseObjectWrapper<T, InheritPtrs>
 {
 }

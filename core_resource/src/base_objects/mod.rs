@@ -9,6 +9,7 @@ pub(crate) use base_impl::base_ptr::BasePtr;
 pub use base_impl::inherit_ptrs::BaseObjectInheritPtrs;
 pub use base_impl::valid::ValidBaseObject;
 pub use base_impl::wrapper::BaseObjectWrapper;
+pub(crate) use base_impl::wrapper::BaseObjectWrapperRc;
 pub(crate) use base_impl::BaseObjectContainer;
 
 pub(crate) use manager::BaseObjectManager;

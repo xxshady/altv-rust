@@ -1,3 +1,7 @@
+use serde::{de::DeserializeOwned, Serialize};
+
+use autocxx::prelude::*;
+
 use crate::{
     base_objects::{
         checkpoint, extra_pools::AnyEntity, player, virtual_entity, BaseObjectWrapper, BasePtr,
@@ -8,17 +12,48 @@ use crate::{
         player_local_meta::LocalPlayerMetaEntry,
         ve_stream_synced_meta::StreamSyncedVirtualEntityMetaEntry,
     },
-    mvalue,
-    resource::Resource,
     sdk, SomeResult, VoidResult,
 };
 
 use super::{normal_meta::NormalBaseObjectMetaEntry, synced_meta::SyncedBaseObjectMetaEntry};
 
-pub trait BaseObjectMetaEntry {
+pub trait BaseObjectMetaEntry<V: Serialize + DeserializeOwned> {
     fn has(&self) -> SomeResult<bool>;
-    fn get(&self) -> SomeResult<Option<mvalue::MValue>>;
-    fn set(&self, value: impl TryInto<mvalue::Serializable, Error = anyhow::Error>) -> VoidResult;
+    fn get(&self) -> SomeResult<Option<V>>;
+
+    /// Ensures a value is in the entry by setting provided `value` if empty,
+    /// and returns the value in the entry.<br>
+    /// Similar to [`or_insert`](https://doc.rust-lang.org/std/collections/hash_map/enum.Entry.html#method.or_insert) of HashMap.
+    ///
+    /// # Examples
+    /// ```rust
+    /// # mod altv { pub use altv_internal_core_resource::exports::*; }
+    /// # use altv::meta::{BaseObjectMetaEntry, StreamSyncedEntityMeta};
+    /// # fn test() -> altv::VoidResult {
+    /// let vehicle = altv::Vehicle::new("sultan2", 0, 0)?;
+    ///
+    /// let already_set_entry = vehicle.stream_synced_meta_entry("already_set")?;
+    ///
+    /// already_set_entry.set(&228)?;
+    ///
+    /// // Returns `228` because entry already contained it
+    /// let value = already_set_entry.get_or_set(1337)?;
+    /// assert_eq!(value, 228);
+    ///
+    /// let empty_entry = vehicle.stream_synced_meta_entry("empty")?;
+    ///
+    /// // Returns `1337` because entry was empty
+    /// let value = empty_entry.get_or_set(1337)?;
+    /// assert_eq!(value, 1337);
+    ///
+    /// // Returns `Some(1337)`
+    /// let value: Option<i32> = empty_entry.get()?;
+    /// assert_eq!(value, Some(1337));
+    /// # Ok(()) }
+    /// ```
+    fn get_or_set(&self, value: V) -> SomeResult<V>;
+
+    fn set(&self, value: &V) -> VoidResult;
     fn delete(&self) -> VoidResult;
 }
 
@@ -35,40 +70,57 @@ macro_rules! impl_base_object_meta_entry {
         )?
     ) => {
         paste::paste! {
-            impl $( < $( $generic_param $( : $generic_param_trait )?, )+ > )? BaseObjectMetaEntry for $entry_struct {
+            impl <
+                V: Serialize + DeserializeOwned,
+                $( $( $generic_param $( : $generic_param_trait )?, )+ )?
+            > BaseObjectMetaEntry<V> for $entry_struct<
+                V,
+                $( $( $generic_param, )+ )?
+            > {
                 fn has(&self) -> SomeResult<bool> {
                     Ok(unsafe { $sdk_namespace::[<Has $meta_type Data>]($raw_ptr(&self.base_object)?, &self.key) })
                 }
 
-                fn get(&self) -> SomeResult<Option<mvalue::MValue>> {
+                fn get(&self) -> SomeResult<Option<V>> {
                     let raw_ptr = $raw_ptr(&self.base_object)?;
-                    let value = Resource::with(|resource| {
-                        mvalue::deserialize_from_sdk(
-                            unsafe { $sdk_namespace::[<Get $meta_type Data>](raw_ptr, &self.key) },
-                            resource,
-                        )
-                    });
 
-                    Ok(if let mvalue::MValue::None = value { None } else { Some(value) })
+                    let mvalue = unsafe {
+                        $sdk_namespace::[<Get $meta_type Data>](raw_ptr, &self.key)
+                    }.within_unique_ptr();
+                    let mvalue = mvalue::ConstMValue::new(mvalue);
+
+                    let deserialized: Option<V> = mvalue::from_mvalue(&mvalue)?;
+                    Ok(deserialized)
                 }
 
-                fn set(&self, value: impl TryInto<mvalue::Serializable, Error = anyhow::Error>) -> VoidResult {
+                fn get_or_set(&self, value: V) -> SomeResult<V> {
+                    let current_value: Option<V> = self.get()?;
+                    if let Some(v) = current_value {
+                        Ok(v)
+                    } else {
+                        self.set(&value)?;
+                        return Ok(value);
+                    }
+                }
+
+                fn set(&self, value: &V) -> VoidResult {
                     unsafe {
                         $sdk_namespace::[<Set $meta_type Data>](
                             $raw_ptr(&self.base_object)?,
                             &self.key,
-                            value
-                                .try_into()
-                                .or_else(|e| {
-                                    anyhow::bail!("Failed to convert value to mvalue, error: {e:?}")
-                                })?.0,
+                            mvalue::to_mvalue(value)?.get(),
                         )
                     }
                     Ok(())
                 }
 
                 fn delete(&self) -> VoidResult {
-                    unsafe { $sdk_namespace::[<Delete $meta_type Data>]($raw_ptr(&self.base_object)?, &self.key) }
+                    unsafe {
+                        $sdk_namespace::[<Delete $meta_type Data>](
+                            $raw_ptr(&self.base_object)?,
+                            &self.key
+                        )
+                    }
                     Ok(())
                 }
             }
@@ -78,7 +130,7 @@ macro_rules! impl_base_object_meta_entry {
 
 impl_base_object_meta_entry!(
     Meta,
-    NormalBaseObjectMetaEntry<T, InheritPtrs>,
+    NormalBaseObjectMetaEntry,
     sdk::IBaseObject,
     BaseObjectWrapper::raw_base_ptr,
     @generics: [T, InheritPtrs: Clone,]
@@ -86,7 +138,7 @@ impl_base_object_meta_entry!(
 
 impl_base_object_meta_entry!(
     SyncedMeta,
-    SyncedBaseObjectMetaEntry<T, InheritPtrs>,
+    SyncedBaseObjectMetaEntry,
     sdk::IBaseObject,
     BaseObjectWrapper::raw_base_ptr,
     @generics: [T, InheritPtrs: Clone,]

@@ -26,8 +26,8 @@ void SetRotation(alt::IEntity* ptr, f32 rot_x, f32 rot_y, f32 rot_z) {
 bool HasStreamSyncedMetaData(const alt::IEntity* ptr, const StdStringClone key) {
     return ptr->HasStreamSyncedMetaData(key);
 }
-MValueWrapper GetStreamSyncedMetaData(const alt::IEntity* ptr, const StdStringClone key) {
-    MValueWrapper wrapper;
+ConstMValueWrapper GetStreamSyncedMetaData(const alt::IEntity* ptr, const StdStringClone key) {
+    ConstMValueWrapper wrapper;
     wrapper.ptr = ptr->GetStreamSyncedMetaData(key);
     return wrapper;
 }

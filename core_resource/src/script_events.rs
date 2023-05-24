@@ -1,23 +1,16 @@
 use std::{collections::HashMap, fmt::Debug};
 
 use crate::{
-    base_objects::player,
-    helpers::IntoString,
-    mvalue::{self, convert_iter_to_mvalue_vec, Serializable},
-    resource::Resource,
-    IntoVoidResult, VoidResult,
+    base_objects::player, helpers::IntoString, resource::Resource, IntoVoidResult, VoidResult,
 };
 use altv_sdk::ffi as sdk;
 
-pub fn emit_local_event(event_name: &str, args: Vec<Serializable>) {
-    unsafe { sdk::trigger_local_event(event_name, convert_iter_to_mvalue_vec(args)) };
+pub fn emit(event_name: impl IntoString, args: mvalue::DynMValueArgs) -> VoidResult {
+    unsafe { sdk::trigger_local_event(event_name.into_string(), mvalue::serialize_args(args)?) };
+    Ok(())
 }
 
-pub fn emit_local_event_without_args(event_name: &str) {
-    unsafe { sdk::trigger_local_event(event_name, sdk::create_mvalue_vec()) };
-}
-
-pub type EventArgs<'a> = &'a mvalue::MValueList;
+pub type EventArgs<'a> = &'a Vec<mvalue::ConstMValue>;
 
 #[derive(Debug)]
 pub struct LocalEventContext<'a> {
@@ -65,14 +58,14 @@ impl LocalEventManager {
         use crate::events;
 
         events::add_sdk_handler(events::SDKHandler::ServerScriptEvent(Box::new(|c| {
-            let events::sdk_contexts::ServerScriptEvent { name, .. } = c;
+            let events::sdk_contexts::ServerScriptEvent { name, args } = c;
 
             Resource::with_local_script_events_mut(|mut events, _| {
                 if !events.is_event_handled(name) {
                     logger::debug!("local event is unhandled: {name}");
                     return;
                 }
-                events.handle_event(name, c.args());
+                events.handle_event(name, args);
             });
 
             Ok(())
@@ -123,14 +116,14 @@ impl ClientEventManager {
         use crate::events;
 
         events::add_sdk_handler(events::SDKHandler::ClientScriptEvent(Box::new(|c| {
-            let events::sdk_contexts::ClientScriptEvent { name, player, .. } = c;
+            let events::sdk_contexts::ClientScriptEvent { name, player, args } = c;
 
             Resource::with_client_script_events_mut(|mut events, _| {
                 if !events.is_event_handled(name) {
                     logger::debug!("client event is unhandled: {name}");
                     return;
                 }
-                events.handle_event(name, player.clone(), c.args());
+                events.handle_event(name, player.clone(), args);
             });
 
             Ok(())
@@ -178,7 +171,7 @@ impl Debug for ClientEventManager {
     }
 }
 
-pub fn add_local_handler<V: IntoVoidResult>(
+pub fn on<V: IntoVoidResult>(
     event_name: impl IntoString,
     mut handler: impl FnMut(&LocalEventContext) -> V + 'static,
 ) {
@@ -190,7 +183,7 @@ pub fn add_local_handler<V: IntoVoidResult>(
     });
 }
 
-pub fn add_client_handler<V: IntoVoidResult>(
+pub fn on_client<V: IntoVoidResult>(
     event_name: impl IntoString,
     mut handler: impl FnMut(&ClientEventContext) -> V + 'static,
 ) {

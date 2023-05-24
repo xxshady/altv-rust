@@ -7,13 +7,13 @@ namespace CGlobalMetaDataChangeEvent {
 std::string GetKey(const alt::CGlobalMetaDataChangeEvent* ptr) {
     return ptr->GetKey();
 }
-MValueWrapper GetVal(const alt::CGlobalMetaDataChangeEvent* ptr) {
-    MValueWrapper wrapper;
+ConstMValueWrapper GetVal(const alt::CGlobalMetaDataChangeEvent* ptr) {
+    ConstMValueWrapper wrapper;
     wrapper.ptr = ptr->GetVal();
     return wrapper;
 }
-MValueWrapper GetOldVal(const alt::CGlobalMetaDataChangeEvent* ptr) {
-    MValueWrapper wrapper;
+ConstMValueWrapper GetOldVal(const alt::CGlobalMetaDataChangeEvent* ptr) {
+    ConstMValueWrapper wrapper;
     wrapper.ptr = ptr->GetOldVal();
     return wrapper;
 }

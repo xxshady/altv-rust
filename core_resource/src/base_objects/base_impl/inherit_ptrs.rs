@@ -9,7 +9,7 @@ impl<T, InheritPtrs: Clone> BaseObjectInheritPtrs<InheritPtrs> for BaseObject<T,
     fn inherit_ptrs(&self) -> SomeResult<InheritPtrs> {
         self.inherit_ptrs
             .clone()
-            .ok_or(anyhow::anyhow!("base object inherit_ptrs is none"))
+            .ok_or(anyhow::anyhow!("Base object is destroyed and cannot be used anymore (inherit_ptrs is none)"))
     }
 }
 
