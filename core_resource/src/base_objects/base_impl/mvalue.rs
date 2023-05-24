@@ -49,7 +49,7 @@ impl<'de> de::Deserialize<'de> for AnyBaseObject {
     where
         D: de::Deserializer<'de>,
     {
-        deserializer.deserialize_any(BaseObjectVisitor)
+        deserializer.deserialize_newtype_struct(mvalue::BASE_OBJECT_MVALUE, BaseObjectVisitor)
     }
 }
 
@@ -95,7 +95,7 @@ macro_rules! __impl_mvalue_deserialize_for_base_object {
                 where
                     D: de::Deserializer<'de>,
                 {
-                    deserializer.deserialize_any(BaseObjectVisitor)
+                    deserializer.deserialize_newtype_struct(mvalue::BASE_OBJECT_MVALUE, BaseObjectVisitor)
                 }
             }
         }

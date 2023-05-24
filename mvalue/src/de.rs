@@ -1,12 +1,6 @@
-use altv_sdk::{
-    ffi::{self as sdk},
-    MValueType,
-};
+use altv_sdk::{ffi as sdk, MValueType};
 use autocxx::{cxx::CxxVector, prelude::*};
-use serde::{
-    de::{self, DeserializeOwned, DeserializeSeed, MapAccess, SeqAccess, Visitor},
-    forward_to_deserialize_any,
-};
+use serde::de::{self, DeserializeOwned, DeserializeSeed, MapAccess, SeqAccess, Visitor};
 
 use crate::{
     bytes_num,
@@ -16,7 +10,7 @@ use crate::{
     ser_vector2::VECTOR2_MVALUE,
     ser_vector3::VECTOR3_MVALUE,
     wrappers::ConstMValue,
-    Error, Result,
+    Error, Result, BASE_OBJECT_MVALUE,
 };
 
 pub struct Deserializer {
@@ -58,45 +52,123 @@ where
 impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
     type Error = Error;
 
-    fn deserialize_any<V>(self, visitor: V) -> Result<V::Value>
+    fn deserialize_any<V>(self, _visitor: V) -> Result<V::Value>
     where
         V: Visitor<'de>,
     {
-        let mvalue = self.input.get();
+        Err(Error::DeserializeAny)
+    }
 
+    // TODO: IgnoredAny
+    fn deserialize_ignored_any<V>(self, visitor: V) -> std::result::Result<V::Value, Self::Error>
+    where
+        V: Visitor<'de>,
+    {
+        self.deserialize_any(visitor)
+    }
+
+    fn deserialize_identifier<V>(self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        self.deserialize_string(visitor)
+    }
+
+    fn deserialize_map<V>(self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        self.assert_mvalue_type(self.mvalue_type()?, MValueType::Dict)?;
+        visitor.visit_map(Map::new(unsafe { sdk::read_mvalue_dict(self.input.get()) }))
+    }
+
+    fn deserialize_struct<V>(
+        self,
+        _name: &'static str,
+        _fields: &'static [&'static str],
+        visitor: V,
+    ) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        self.deserialize_map(visitor)
+    }
+
+    fn deserialize_seq<V>(self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        self.assert_mvalue_type(self.mvalue_type()?, MValueType::List)?;
+        visitor.visit_seq(Seq::new(unsafe { sdk::read_mvalue_list(self.input.get()) }))
+    }
+
+    fn deserialize_tuple<V>(self, _len: usize, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        self.deserialize_seq(visitor)
+    }
+
+    fn deserialize_tuple_struct<V>(
+        self,
+        _name: &'static str,
+        len: usize,
+        visitor: V,
+    ) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        self.deserialize_tuple(len, visitor)
+    }
+
+    fn deserialize_unit<V>(self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
         match self.mvalue_type()? {
-            MValueType::Int => visitor.visit_i64(unsafe { sdk::read_mvalue_int(mvalue) }),
-            MValueType::Uint => visitor.visit_u64(unsafe { sdk::read_mvalue_uint(mvalue) }),
-            MValueType::Double => visitor.visit_f64(unsafe { sdk::read_mvalue_double(mvalue) }),
-            MValueType::String => {
-                visitor.visit_string(unsafe { sdk::read_mvalue_string(mvalue) }.to_string())
+            MValueType::None | MValueType::Nil => visitor.visit_unit(),
+            received => {
+                let mvalue_type_rust = helpers::sdk_type_to_rust(received);
+                Err(Error::Message(format!(
+                    "Expected: (), received: {mvalue_type_rust}"
+                )))
             }
-            MValueType::BaseObject => {
-                let raw_ptr = unsafe { sdk::read_mvalue_base_object(mvalue) };
-                visitor.visit_u64(raw_ptr as u64)
-            }
-            MValueType::List => {
-                visitor.visit_seq(Seq::new(unsafe { sdk::read_mvalue_list(self.input.get()) }))
-            }
-            MValueType::Dict => {
-                visitor.visit_map(Map::new(unsafe { sdk::read_mvalue_dict(mvalue) }))
-            }
-            _ => panic!("remove this"),
         }
     }
 
-    forward_to_deserialize_any! {
-        char str string
-        unit unit_struct
-        enum identifier ignored_any
-        seq tuple tuple_struct map struct
+    fn deserialize_unit_struct<V>(self, _name: &'static str, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        self.deserialize_unit(visitor)
+    }
+
+    fn deserialize_string<V>(self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        deserialize_simple!(self, visitor, @sdk String: @rust String, to_string)
+    }
+
+    fn deserialize_str<V>(self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        self.deserialize_string(visitor)
+    }
+
+    fn deserialize_char<V>(self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        self.deserialize_string(visitor)
     }
 
     fn deserialize_bool<V>(self, visitor: V) -> Result<V::Value>
     where
         V: Visitor<'de>,
     {
-        deserialize_simple!(self, visitor, Bool: bool)
+        deserialize_simple!(self, visitor, @sdk Bool: @rust bool)
     }
 
     fn deserialize_i8<V>(self, visitor: V) -> Result<V::Value>
@@ -124,7 +196,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
     where
         V: Visitor<'de>,
     {
-        deserialize_simple!(self, visitor, Int: i64)
+        deserialize_simple!(self, visitor, @sdk Int: @rust i64)
     }
 
     fn deserialize_u8<V>(self, visitor: V) -> Result<V::Value>
@@ -152,7 +224,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
     where
         V: Visitor<'de>,
     {
-        deserialize_simple!(self, visitor, Uint: u64)
+        deserialize_simple!(self, visitor, @sdk Uint: @rust u64)
     }
 
     fn deserialize_f32<V>(self, visitor: V) -> Result<V::Value>
@@ -166,7 +238,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
     where
         V: Visitor<'de>,
     {
-        deserialize_simple!(self, visitor, Double: f64)
+        deserialize_simple!(self, visitor, @sdk Double: @rust f64)
     }
 
     fn deserialize_option<V>(self, visitor: V) -> Result<V::Value>
@@ -244,9 +316,13 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
                 let buf = bytes_num::to_byte_buf([x, y]);
                 visitor.visit_byte_buf(buf)
             }
+            BASE_OBJECT_MVALUE => {
+                let raw_ptr = unsafe { sdk::read_mvalue_base_object(mvalue) };
+                visitor.visit_u64(raw_ptr as u64)
+            }
             _ => {
-                logger::debug!("forwarding newtype_struct name: {name} to any");
-                self.deserialize_any(visitor)
+                logger::debug!("passing newtype_struct: {name} to visit_newtype_struct");
+                visitor.visit_newtype_struct(self)
             }
         }
     }
@@ -273,6 +349,19 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
         V: Visitor<'de>,
     {
         Err(Error::BytesDeserializationIsNotImplementedYet)
+    }
+
+    // TODO: implement enum deserialization
+    fn deserialize_enum<V>(
+        self,
+        _name: &'static str,
+        _variants: &'static [&'static str],
+        _visitor: V,
+    ) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        Err(Error::EnumDeserializationIsNotImplementedYet)
     }
 }
 
@@ -379,3 +468,16 @@ impl<'de> MapAccess<'de> for Map {
         Ok(value)
     }
 }
+
+// TODO: implement enum deserialization
+// struct Enum {
+
+// }
+
+// impl EnumAccess for Enum {
+//     fn variant_seed<V>(self, seed: V) -> std::result::Result<(V::Value, Self::Variant), Self::Error>
+//         where
+//             V: DeserializeSeed<'de> {
+
+//     }
+// }

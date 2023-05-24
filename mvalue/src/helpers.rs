@@ -17,10 +17,16 @@ pub use __serialize_simple as serialize_simple;
 
 #[macro_export]
 macro_rules! __deserialize_simple {
-    ($self:ident, $visitor:expr, $sdk_type:ident: $rust_type:ident) => {{
+    (
+        $self:ident,
+        $visitor:expr,
+        @sdk $sdk_type:ident: @rust $rust_type:ident
+        $(, $convert_method:ident )?
+    ) => {{
         paste::paste! {
             $self.assert_mvalue_type($self.mvalue_type()?, altv_sdk::MValueType::$sdk_type)?;
-            $visitor.[<visit_ $rust_type>](unsafe { altv_sdk::ffi::[<read_mvalue_ $sdk_type:snake>]($self.input.get()) })
+            let raw = unsafe { altv_sdk::ffi::[<read_mvalue_ $sdk_type:snake>]($self.input.get()) };
+            $visitor.[<visit_ $rust_type:snake>](raw $( . $convert_method () )?)
         }
     }};
 }

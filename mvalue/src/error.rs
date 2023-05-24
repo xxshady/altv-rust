@@ -25,7 +25,9 @@ pub enum Error {
     F32ImpossibleSerialization,
     RgbaImpossibleSerialization,
     BytesDeserializationIsNotImplementedYet,
+    EnumDeserializationIsNotImplementedYet,
     ConstMValueSliceCanOnlyBeDeserializedAsTuple,
+    DeserializeAny,
 }
 
 impl ser::Error for Error {
@@ -53,6 +55,9 @@ impl Display for Error {
             Error::BytesDeserializationIsNotImplementedYet => {
                 "Bytes deserialization is not implemented yet"
             }
+            Error::EnumDeserializationIsNotImplementedYet => {
+                "Enum deserialization is not implemented yet"
+            }
             Error::ConstMValueSliceCanOnlyBeDeserializedAsTuple => {
                 "ConstMValue slice can only be deserialized as tuple"
             }
@@ -73,6 +78,7 @@ impl Display for Error {
             }
             Error::Vector3SerializationFailed => "Vector3 serialization failed for unknown reason",
             Error::Vector3ImpossibleSerialization => "Vector3ImpossibleSerialization",
+            Error::DeserializeAny => "DeserializeAny",
         };
 
         f.write_str(info)
