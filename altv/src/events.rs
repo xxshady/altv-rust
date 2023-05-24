@@ -1,8 +1,40 @@
+//! # alt:V events
+//! Player connect, weapon damage, etc.
+//!
+//! ## Examples
+//! Player connect
+//! ```rust
+//! # fn test() -> altv::VoidResult {
+//! altv::events::on_player_connect(|event| {
+//!     let name = event.player.name()?;
+//!     altv::log!("player with name: {name} connected!");
+//!     Ok(())
+//! });
+//! # Ok(()) }
+//! ```
+//!
+//! # Custom events
+//!
+//! ## Examples
+//! Local event (cross-resource)
+//!
+//! ```rust
+//! # fn test() -> altv::VoidResult {
+//! # use altv::prelude::*;
+//! altv::events::on("example", |event| {
+//!     let args: (bool, i32) = event.args.deserialize()?;
+//!     altv::log!("args: {args:?}"); // args: (true, 123)
+//!     Ok(())
+//! });
+//!
+//! altv::events::emit("example", &[&true, &123])?;
+//! # Ok(()) }
+//! ```
+
 use core_resource::exports::{events, IntoVoidResult};
 pub use events::{
     emit, emit_all_players, emit_all_players_unreliable, emit_some_players,
-    emit_some_players_unreliable, on, on_client, ClientEventContext, FireInfo,
-    LocalEventContext,
+    emit_some_players_unreliable, on, on_client, ClientEventContext, FireInfo, LocalEventContext,
 };
 
 pub use events::custom_contexts::*;
