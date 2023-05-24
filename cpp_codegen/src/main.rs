@@ -78,6 +78,7 @@ lazy_static::lazy_static! {
             ("std::vector<IBaseObject*>", "BaseObjectVector"),
             ("std::vector<IResource*>", "ResourceVector"),
             ("std::vector<IPlayer*>", "PlayerVector"),
+            ("std::vector<std::pair<IEntity*, int32_t>>", "std::vector<StreamedEntityWrapper>"),
 
             ("Rotation", "Vector3Wrapper"),
             ("bool*", "bool*"),
@@ -1019,6 +1020,17 @@ fn cpp_method_to_rust_compatible_func(
                     PlayerPtrWrapper wrapper;\n        \
                     wrapper.ptr = std::make_shared<alt::IPlayer*>(e);\n        \
                     vec.push_back(wrapper.clone());\n    \
+                }}\n    \
+                return vec"
+            )
+        },
+        "std::vector<StreamedEntityWrapper>" => |v: &str| {
+            format!(
+                "auto alt_vec = {v};\n    \
+                std::vector<StreamedEntityWrapper> vec {{}};\n    \
+                vec.reserve(alt_vec.size());\n    \
+                for (const auto& pair : alt_vec) {{\n        \
+                    vec.push_back({{ pair.first, pair.second }});\n    \
                 }}\n    \
                 return vec"
             )

@@ -300,6 +300,9 @@ pub mod ffi {
 
         generate!("create_mvalue_unordered_map")
         generate!("push_to_mvalue_unordered_map")
+
+        generate!("read_streamed_entity_key")
+        generate!("read_streamed_entity_value")
     }
     pub use alt_bridge::*;
 

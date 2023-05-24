@@ -73,7 +73,8 @@
     "xlocbuf": "cpp",
     "xlocmes": "cpp",
     "xlocmon": "cpp",
-    "xloctime": "cpp"
+    "xloctime": "cpp",
+    "optional": "cpp"
   },
   "editor.defaultFormatter": "rust-lang.rust-analyzer",
   "editor.formatOnSave": true,

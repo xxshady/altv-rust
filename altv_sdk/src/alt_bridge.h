@@ -340,6 +340,28 @@ void push_to_mvalue_unordered_map(MValueUnorderedMapWrapper& map, std::string ke
     map.value.insert({ key, value.ptr });
 }
 
+using StreamedEntityPair = std::pair<alt::IEntity*, i32>;
+
+class StreamedEntityWrapper {
+public:
+    std::shared_ptr<StreamedEntityPair> ptr;
+    StreamedEntityWrapper(
+        alt::IEntity* entity,
+        i32 squared_distance
+    ) : ptr(std::make_shared<StreamedEntityPair>(std::pair {
+        entity,
+            squared_distance
+    })) {}
+};
+
+alt::IEntity* read_streamed_entity_key(const StreamedEntityWrapper& wrapper) {
+    return wrapper.ptr->first;
+}
+
+i32 read_streamed_entity_value(const StreamedEntityWrapper& wrapper) {
+    return wrapper.ptr->second;
+}
+
 using MValueWrapperVec = std::vector<ConstMValueWrapper>;
 
 MValueWrapperVec create_mvalue_vec() {

@@ -346,5 +346,14 @@ void ClearTasks(alt::IPlayer* ptr) {
 std::string GetCloudAuthHash(const alt::IPlayer* ptr) {
     return ptr->GetCloudAuthHash();
 }
+std::vector<StreamedEntityWrapper> GetStreamedEntities(const alt::IPlayer* ptr) {
+    auto alt_vec = ptr->GetStreamedEntities();
+    std::vector<StreamedEntityWrapper> vec {};
+    vec.reserve(alt_vec.size());
+    for (const auto& pair : alt_vec) {
+        vec.push_back({ pair.first, pair.second });
+    }
+    return vec;
+}
 
 } // namespace

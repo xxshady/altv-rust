@@ -38,6 +38,11 @@ impl checkpoint::Checkpoint {
         )
     }
 
+    pub fn destroy(&self) -> VoidResult {
+        checkpoint::remove_from_pool!(self)?;
+        self.internal_destroy()
+    }
+
     pub fn checkpoint_type(&self) -> SomeResult<u8> {
         Ok(unsafe { sdk::ICheckpoint::GetCheckpointType(self.raw_ptr()?) })
     }
@@ -93,9 +98,13 @@ impl checkpoint::Checkpoint {
         Ok(())
     }
 
-    pub fn destroy(&self) -> VoidResult {
-        checkpoint::remove_from_pool!(self)?;
-        self.internal_destroy()
+    pub fn visible(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::ICheckpoint::IsVisible(self.raw_ptr()?) })
+    }
+
+    pub fn set_visible(&self, visible: bool) -> VoidResult {
+        unsafe { sdk::ICheckpoint::SetVisible(self.raw_ptr()?, visible) }
+        Ok(())
     }
 }
 

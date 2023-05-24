@@ -13,6 +13,8 @@ use crate::{
 };
 use autocxx::prelude::*;
 
+pub type SquaredDistance = i32;
+
 /// # **`Player implementation`**
 impl player::Player {
     pub fn get_by_id(id: u32) -> SomeResult<player::PlayerContainer> {
@@ -864,6 +866,30 @@ impl player::Player {
             );
         }
         Ok(())
+    }
+
+    pub fn streamed_entities(&self) -> SomeResult<Vec<(AnyEntity, SquaredDistance)>> {
+        let raw_entities = unsafe { sdk::IPlayer::GetStreamedEntities(self.raw_ptr()?) };
+        let mut entities = Vec::new();
+
+        for e in raw_entities.into_iter() {
+            let entity = {
+                let raw_ptr = unsafe { sdk::read_streamed_entity_key(e) };
+                let entity =
+                    Resource::with(|resource| helpers::get_entity_by_ptr(raw_ptr, resource));
+                match entity {
+                    Some(e) => e,
+                    None => {
+                        anyhow::bail!("Failed to get streamed entity by ptr: {raw_ptr:?}")
+                    }
+                }
+            };
+            let squared_distance = unsafe { sdk::read_streamed_entity_value(e) };
+
+            entities.push((entity, squared_distance));
+        }
+
+        Ok(entities)
     }
 }
 

@@ -43,5 +43,35 @@ fn main() -> impl altv::IntoVoidResult {
         Ok(())
     });
 
+    altv::events::on_player("console_command", |event| {
+        let (name,): (String,) = event.args.deserialize()?;
+        let player = event.player.clone();
+
+        match name.as_str() {
+            "veh" => {
+                let (_, (model,)): (String, (String,)) = event.args.deserialize()?;
+                altv::Vehicle::new(model, player.pos()?, 0)?;
+            }
+            "streamed_entities" => {
+                let entities = player.streamed_entities()?;
+                player.emit(
+                    "test",
+                    &[&entities
+                        .into_iter()
+                        .map(|(entity, dist)| format!("entity: {:?} dist: {:?}", entity, dist))
+                        .collect::<Vec<String>>()],
+                )?;
+            }
+            _ => {
+                altv::log_error!(
+                    "Unknown client console command: {name} from player: {}",
+                    player.name()?
+                );
+            }
+        }
+
+        Ok(())
+    });
+
     Ok(())
 }
