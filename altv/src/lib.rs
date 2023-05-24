@@ -106,16 +106,23 @@ pub mod prelude {
 /// # Examples
 ///
 /// ```rust
+/// # fn test() -> altv::VoidResult {
 /// altv::set_timeout(
 ///     move || {
 ///         altv::log!("this message will be printed once, after 1.5s");
 ///     },
 ///     1500,
 /// );
+/// # Ok(()) }
 /// ```
 ///
 /// With error handling
 /// ```rust
+/// # fn test() -> altv::VoidResult {
+/// fn something_that_can_fail() -> altv::VoidResult {
+///     Ok(())
+/// }
+///
 /// altv::set_timeout(
 ///     move || {
 ///         altv::log!("this message will be printed once, after 1.5s");
@@ -124,6 +131,7 @@ pub mod prelude {
 ///     },
 ///     1500,
 /// );
+/// # Ok(()) }
 /// ```
 pub fn set_timeout<V: IntoVoidResult>(mut callback: impl FnMut() -> V + 'static, millis: u64) {
     exports::create_timer(
@@ -137,16 +145,23 @@ pub fn set_timeout<V: IntoVoidResult>(mut callback: impl FnMut() -> V + 'static,
 ///
 /// Without error handling
 /// ```rust
+/// # fn test() -> altv::VoidResult {
 /// altv::set_interval(
 ///     move || {
 ///         altv::log!("this message will be printed every 1.5s");
 ///     },
 ///     1500,
 /// );
+/// # Ok(()) }
 /// ```
 ///
 /// With error handling
 /// ```rust
+/// # fn test() -> altv::VoidResult {
+/// fn something_that_can_fail() -> altv::VoidResult {
+///     Ok(())
+/// }
+///
 /// altv::set_interval(
 ///     move || {
 ///         altv::log!("this message will be printed every 1.5s");
@@ -155,6 +170,7 @@ pub fn set_timeout<V: IntoVoidResult>(mut callback: impl FnMut() -> V + 'static,
 ///     },
 ///     1500,
 /// );
+/// # Ok(()) }
 /// ```
 pub fn set_interval<V: IntoVoidResult>(mut callback: impl FnMut() -> V + 'static, millis: u64) {
     exports::create_timer(
