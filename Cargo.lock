@@ -30,7 +30,6 @@ dependencies = [
  "altv_internal_sdk",
  "autocxx",
  "erased-serde",
- "lazycell",
  "lmnkjgkj-std-backtrace-anyhow",
  "paste",
  "serde",

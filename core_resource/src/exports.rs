@@ -72,8 +72,8 @@ pub mod events {
     pub use crate::{
         client_events::*,
         events::{
-            add_custom_handler, add_sdk_handler, connection_queue::ConnectionQueueInfo,
-            custom_contexts, sdk_contexts, structs::FireInfo, CustomHandler, SDKHandler,
+            add_custom_handler, add_sdk_handler, custom_contexts, sdk_contexts, structs::FireInfo,
+            CustomHandler, SDKHandler,
         },
         script_events::{emit, on, on_client, ClientEventContext, LocalEventContext},
     };

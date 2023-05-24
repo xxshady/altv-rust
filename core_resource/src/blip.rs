@@ -80,10 +80,6 @@ impl blip::Blip {
         ))
     }
 
-    pub fn id(&self) -> SomeResult<u32> {
-        Ok(unsafe { sdk::IBlip::GetID(self.raw_ptr()?) })
-    }
-
     pub fn is_global(&self) -> SomeResult<bool> {
         Ok(unsafe { sdk::IBlip::IsGlobal(self.raw_ptr()?) })
     }

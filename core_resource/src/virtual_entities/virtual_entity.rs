@@ -101,10 +101,6 @@ impl virtual_entity::VirtualEntity {
         ))
     }
 
-    pub fn id(&self) -> SomeResult<u32> {
-        Ok(unsafe { sdk::IVirtualEntity::GetID(self.raw_ptr()?) })
-    }
-
     pub fn streaming_distance(&self) -> SomeResult<u32> {
         Ok(unsafe { sdk::IVirtualEntity::GetStreamingDistance(self.raw_ptr()?) })
     }

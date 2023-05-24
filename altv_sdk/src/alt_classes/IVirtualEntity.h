@@ -4,9 +4,6 @@
 
 namespace IVirtualEntity {
 
-u32 GetID(const alt::IVirtualEntity* ptr) {
-    return ptr->GetID();
-}
 alt::IVirtualEntityGroup* GetGroup(const alt::IVirtualEntity* ptr) {
     return ptr->GetGroup();
 }

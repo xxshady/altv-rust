@@ -42,10 +42,6 @@ impl marker::Marker {
         self.internal_destroy()
     }
 
-    pub fn id(&self) -> SomeResult<u32> {
-        Ok(unsafe { sdk::IMarker::GetID(self.raw_ptr()?) })
-    }
-
     pub fn global(&self) -> SomeResult<bool> {
         Ok(unsafe { sdk::IMarker::IsGlobal(self.raw_ptr()?) })
     }

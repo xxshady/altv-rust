@@ -10,12 +10,8 @@ impl virtual_entity_group::VirtualEntityGroup {
         )
     }
 
-    pub fn id(&self) -> SomeResult<u32> {
-        Ok(unsafe { sdk::IVirtualEntityGroup::GetID(self.raw_ptr()?) })
-    }
-
     pub fn max_entities_in_stream(&self) -> SomeResult<u32> {
-        Ok(unsafe { sdk::IVirtualEntityGroup::GetStreamingRangeLimit(self.raw_ptr()?) })
+        Ok(unsafe { sdk::IVirtualEntityGroup::GetMaxEntitiesInStream(self.raw_ptr()?) })
     }
 
     // cannot be destroyed

@@ -42,6 +42,10 @@ impl<T, InheritPtrs: Clone> BaseObjectWrapper<T, InheritPtrs> {
         })?;
         Ok(())
     }
+
+    pub fn id(&self) -> SomeResult<u32> {
+        self.value.try_borrow()?.id()
+    }
 }
 
 impl<T, InheritPtrs: Clone> NormalBaseObjectMeta<T, InheritPtrs>

@@ -4,9 +4,6 @@
 
 namespace IBlip {
 
-u32 GetID(const alt::IBlip* ptr) {
-    return ptr->GetID();
-}
 bool IsGlobal(const alt::IBlip* ptr) {
     return ptr->IsGlobal();
 }

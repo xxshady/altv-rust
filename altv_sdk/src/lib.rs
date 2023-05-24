@@ -219,6 +219,7 @@ pub mod ffi {
         generate_ns!("voice_channel")
         generate_ns!("marker")
         generate_ns!("checkpoint")
+        generate_ns!("connection_info")
 
         // alt::Prop
         generate!("read_alt_prop")

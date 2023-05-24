@@ -149,10 +149,9 @@ fn main() {
         "ICheckpoint",
         "../altv_sdk/cpp-sdk/script-objects/ICheckpoint.h",
     );
-
     gen_default(
         "IConnectionInfo",
-        "../altv_sdk/cpp-sdk/types/IConnectionInfo.h",
+        "../altv_sdk/cpp-sdk/script-objects/IConnectionInfo.h",
     );
 
     gen_default(

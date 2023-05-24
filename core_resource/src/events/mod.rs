@@ -7,7 +7,6 @@ pub mod sdk_contexts;
 pub mod custom_contexts;
 pub(self) mod helpers;
 pub(self) mod cancellable;
-pub(crate) mod connection_queue;
 pub mod structs;
 
 macro_rules! log_user_handler_error {

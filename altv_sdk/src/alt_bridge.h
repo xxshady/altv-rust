@@ -658,6 +658,10 @@ namespace base_object
     alt::ICheckpoint* to_checkpoint(alt::IBaseObject* base_object) {
         return dynamic_cast<alt::ICheckpoint*>(base_object);
     }
+
+    alt::IConnectionInfo* to_connection_info(alt::IBaseObject* base_object) {
+        return dynamic_cast<alt::IConnectionInfo*>(base_object);
+    }
 } // namespace base_object
 
 namespace world_object
@@ -761,6 +765,12 @@ namespace checkpoint {
         return static_cast<alt::IBaseObject*>(checkpoint);
     }
 } // namespace checkpoint
+
+namespace connection_info {
+    alt::IBaseObject* to_base_object(alt::IConnectionInfo* connection_info) {
+        return static_cast<alt::IBaseObject*>(connection_info);
+    }
+} // namespace connection_info
 
 void read_alt_prop(const alt::Prop& prop, u16* out_drawable, u8* out_texture) {
     *out_drawable = prop.drawableId;

@@ -7,6 +7,9 @@ namespace IBaseObject {
 BaseObjectType GetType(const alt::IBaseObject* ptr) {
     return static_cast<uint8_t>(ptr->GetType());
 }
+u32 GetID(const alt::IBaseObject* ptr) {
+    return ptr->GetID();
+}
 bool HasMetaData(const alt::IBaseObject* ptr, const StdStringClone key) {
     return ptr->HasMetaData(key);
 }

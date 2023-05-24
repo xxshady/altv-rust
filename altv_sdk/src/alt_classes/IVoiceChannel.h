@@ -4,9 +4,6 @@
 
 namespace IVoiceChannel {
 
-u32 GetID(const alt::IVoiceChannel* ptr) {
-    return ptr->GetID();
-}
 bool IsSpatial(const alt::IVoiceChannel* ptr) {
     return ptr->IsSpatial();
 }

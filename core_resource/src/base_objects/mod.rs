@@ -21,6 +21,7 @@ pub(crate) use objects::PendingDestroyOrCreation;
 pub(crate) use objects::blip;
 pub(crate) use objects::checkpoint;
 pub(crate) use objects::col_shape;
+pub(crate) use objects::connection_info;
 pub(crate) use objects::marker;
 pub(crate) use objects::network_object;
 pub(crate) use objects::ped;

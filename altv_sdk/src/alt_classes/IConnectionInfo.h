@@ -4,9 +4,6 @@
 
 namespace IConnectionInfo {
 
-u32 GetID(const alt::IConnectionInfo* ptr) {
-    return ptr->GetID();
-}
 std::string GetName(const alt::IConnectionInfo* ptr) {
     return ptr->GetName();
 }

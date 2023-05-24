@@ -14,6 +14,7 @@ mod checkpoint;
 mod client_events;
 mod col_shape;
 mod config_node;
+mod connection_info;
 mod core_funcs;
 mod events;
 mod helpers;

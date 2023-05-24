@@ -4,9 +4,6 @@
 
 namespace IColShape {
 
-u32 GetID(const alt::IColShape* ptr) {
-    return ptr->GetID();
-}
 ColShapeType GetColshapeType(const alt::IColShape* ptr) {
     return static_cast<uint8_t>(ptr->GetColshapeType());
 }

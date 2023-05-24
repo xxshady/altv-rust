@@ -1,7 +1,7 @@
 use core_resource::exports::{events, IntoVoidResult};
 pub use events::{
     emit, emit_all_players, emit_all_players_unreliable, emit_some_players,
-    emit_some_players_unreliable, on, on_client, ClientEventContext, ConnectionQueueInfo, FireInfo,
+    emit_some_players_unreliable, on, on_client, ClientEventContext, FireInfo,
     LocalEventContext,
 };
 

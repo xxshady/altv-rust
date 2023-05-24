@@ -4,9 +4,6 @@
 
 namespace IMarker {
 
-u32 GetID(const alt::IMarker* ptr) {
-    return ptr->GetID();
-}
 bool IsGlobal(const alt::IMarker* ptr) {
     return ptr->IsGlobal();
 }

@@ -33,10 +33,6 @@ impl voice_channel::VoiceChannel {
         ))
     }
 
-    pub fn id(&self) -> SomeResult<u32> {
-        Ok(unsafe { sdk::IVoiceChannel::GetID(self.raw_ptr()?) })
-    }
-
     pub fn spatial(&self) -> SomeResult<bool> {
         Ok(unsafe { sdk::IVoiceChannel::IsSpatial(self.raw_ptr()?) })
     }

@@ -1,5 +1,5 @@
 use autocxx::prelude::*;
-use std::{collections::HashMap, ptr::NonNull};
+use std::collections::HashMap;
 
 use super::{AnyEntity, ExtraPool};
 use crate::{
@@ -19,10 +19,6 @@ pub trait Entity<InheritPtrs: inherit_ptrs::traits::Entity>:
 {
     fn raw_ptr(&self) -> SomeResult<EntityRawPtr> {
         Ok(self.inherit_ptrs()?.entity())
-    }
-
-    fn id(&self) -> SomeResult<u32> {
-        Ok(unsafe { sdk::IEntity::GetID(self.raw_ptr()?) })
     }
 
     fn sync_id(&self) -> SomeResult<SyncId> {
@@ -194,9 +190,7 @@ impl EntityPool {
     pub fn remove(&mut self, base_object: altv_sdk::BaseObjectMutPtr) {
         // why? because i dont know how to borrow base object container immutably to call .id()
         // when its mutably borrowed for .destroy() method
-        let entity = unsafe { sdk::base_object::to_entity(base_object.as_ptr()) };
-        let entity = NonNull::new(entity).unwrap();
-        let id = unsafe { sdk::IEntity::GetID(entity.as_ptr()) };
+        let id = unsafe { sdk::IBaseObject::GetID(base_object.as_ptr()) };
         logger::debug!("remove entity id: {id}");
 
         self.base_objects.remove(&id);

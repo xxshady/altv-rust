@@ -28,8 +28,8 @@ void LogColored(const StdStringClone str, alt::IResource* resource) {
 alt::IVirtualEntity* CreateVirtualEntity(alt::IVirtualEntityGroup* group, f32 pos_x, f32 pos_y, f32 pos_z, u32 streamingDistance, MValueUnorderedMapWrapper data) {
     return alt::ICore::Instance().CreateVirtualEntity(group, { pos_x, pos_y, pos_z }, streamingDistance, data.value);
 }
-alt::IVirtualEntityGroup* CreateVirtualEntityGroup(u32 streamingRangeLimit) {
-    return alt::ICore::Instance().CreateVirtualEntityGroup(streamingRangeLimit);
+alt::IVirtualEntityGroup* CreateVirtualEntityGroup(u32 maxEntitiesInStream) {
+    return alt::ICore::Instance().CreateVirtualEntityGroup(maxEntitiesInStream);
 }
 alt::IColShape* CreateColShapeCylinder(f32 pos_x, f32 pos_y, f32 pos_z, f32 radius, f32 height) {
     return alt::ICore::Instance().CreateColShapeCylinder({ pos_x, pos_y, pos_z }, radius, height);

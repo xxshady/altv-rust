@@ -4,9 +4,6 @@
 
 namespace IEntity {
 
-u32 GetID(const alt::IEntity* ptr) {
-    return ptr->GetID();
-}
 u16 GetSyncID(const alt::IEntity* ptr) {
     return ptr->GetSyncID();
 }

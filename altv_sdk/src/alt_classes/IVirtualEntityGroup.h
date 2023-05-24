@@ -4,11 +4,8 @@
 
 namespace IVirtualEntityGroup {
 
-u32 GetID(const alt::IVirtualEntityGroup* ptr) {
-    return ptr->GetID();
-}
-u32 GetStreamingRangeLimit(const alt::IVirtualEntityGroup* ptr) {
-    return ptr->GetStreamingRangeLimit();
+u32 GetMaxEntitiesInStream(const alt::IVirtualEntityGroup* ptr) {
+    return ptr->GetMaxEntitiesInStream();
 }
 
 } // namespace

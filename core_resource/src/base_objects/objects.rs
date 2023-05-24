@@ -361,6 +361,9 @@ base_objects!(
             ColShapy,
         ],
     ],
+    ConnectionInfo: [
+        altv_sdk::BaseObjectType::ConnectionInfo,
+    ],
 );
 
 impl Debug for Store {

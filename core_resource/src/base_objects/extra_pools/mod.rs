@@ -17,10 +17,6 @@ pub(self) mod wrappers {
     use crate::{world_object::WorldObjectRawPtr, SomeResult};
     use inherit_ptrs::traits::{Entity, WorldObject};
     use objects::AnyBaseObject;
-    // use network_object::NetworkObjectContainer;
-    // use ped::PedContainer;
-    // use player::PlayerContainer;
-    // use vehicle::VehicleContainer;
 
     use std::rc::Rc;
 

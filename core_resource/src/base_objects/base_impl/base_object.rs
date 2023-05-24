@@ -1,6 +1,6 @@
 use std::{fmt::Debug, ptr::NonNull};
 
-use crate::{sdk, SomeResult, VoidResult};
+use crate::{base_objects::BasePtr, sdk, SomeResult, VoidResult};
 
 pub struct BaseObject<T, InheritPtrs: Clone> {
     pub(super) ptr: Option<NonNull<T>>,
@@ -13,7 +13,9 @@ pub struct BaseObject<T, InheritPtrs: Clone> {
 
 impl<T, InheritPtrs: Clone> BaseObject<T, InheritPtrs> {
     pub(crate) fn ptr(&self) -> SomeResult<NonNull<T>> {
-        self.ptr.ok_or(anyhow::anyhow!("base object ptr is none"))
+        self.ptr.ok_or(anyhow::anyhow!(
+            "Base object is destroyed and cannot be used anymore (base object ptr is none)"
+        ))
     }
 
     pub(crate) fn raw_ptr(&self) -> SomeResult<*mut T> {
@@ -37,6 +39,10 @@ impl<T, InheritPtrs: Clone> BaseObject<T, InheritPtrs> {
         self.ptr.take();
         self.base_ptr.take();
         self.inherit_ptrs.take();
+    }
+
+    pub fn id(&self) -> SomeResult<u32> {
+        Ok(unsafe { sdk::IBaseObject::GetID(self.base_ptr()?.as_ptr()) })
     }
 }
 

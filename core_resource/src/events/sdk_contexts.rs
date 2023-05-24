@@ -2,13 +2,12 @@ use std::{cell::RefCell, ptr::NonNull, rc::Rc};
 
 use altv_sdk::ffi as sdk;
 use autocxx::prelude::*;
-use lazycell::LazyCell;
 use mvalue::ConstMValue;
 
 use crate::{
     alt_resource::AltResource,
     base_objects::{
-        col_shape,
+        col_shape, connection_info,
         extra_pools::{AnyEntity, AnyWorldObject},
         player, vehicle, AnyBaseObject,
     },
@@ -17,8 +16,7 @@ use crate::{
     },
     helpers::{
         get_entity_by_ptr, get_non_null_entity_by_ptr, get_non_null_player,
-        get_non_null_world_object_by_ptr, get_player, init_or_get_lazycell, read_cpp_str_vec,
-        read_cpp_vector3, Hash,
+        get_non_null_world_object_by_ptr, get_player, read_cpp_str_vec, read_cpp_vector3, Hash,
     },
     resource::Resource,
     vector::Vector3,
@@ -27,7 +25,8 @@ use crate::{
 
 use super::{
     cancellable::CancellableEvent,
-    connection_queue::{ConnectionQueueController, ConnectionQueueInfo},
+    helpers::get_connection_info_from_event,
+    // connection_queue::{ConnectionQueueController, ConnectionQueueInfo},
     structs,
 };
 
@@ -614,65 +613,37 @@ impl ExplosionEvent {
 
 #[derive(Debug)]
 pub struct ConnectionQueueAdd {
-    info_ptr: *mut sdk::alt::IConnectionInfo,
-    info: LazyCell<ConnectionQueueInfo>,
-    controller: Rc<ConnectionQueueController>,
+    pub info: connection_info::ConnectionInfoContainer,
 }
 
 impl ConnectionQueueAdd {
     pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
         let event = base_event_to_specific!(base_event, CConnectionQueueAddEvent);
-        let info_ptr = sdk::CConnectionQueueAddEvent::GetConnectionInfo(event);
-        let controller = ConnectionQueueController::new(info_ptr);
-
-        resource
-            .connection_queue
-            .borrow_mut()
-            .add(info_ptr, controller.clone());
 
         Self {
-            info_ptr,
-            info: LazyCell::new(),
-            controller,
+            info: get_connection_info_from_event(
+                sdk::CConnectionQueueAddEvent::GetConnectionInfo(event),
+                resource,
+            ),
         }
-    }
-
-    pub fn info(&self) -> &ConnectionQueueInfo {
-        init_or_get_lazycell(&self.info, || {
-            Ok(unsafe { ConnectionQueueInfo::new(self.info_ptr) })
-        })
-        .unwrap()
-    }
-
-    pub fn controller(&self) -> Rc<ConnectionQueueController> {
-        self.controller.clone()
     }
 }
 
 #[derive(Debug)]
 pub struct ConnectionQueueRemove {
-    info_ptr: *mut sdk::alt::IConnectionInfo,
-    info: LazyCell<ConnectionQueueInfo>,
+    pub info: connection_info::ConnectionInfoContainer,
 }
 
 impl ConnectionQueueRemove {
     pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
         let event = base_event_to_specific!(base_event, CConnectionQueueRemoveEvent);
-        let info_ptr = sdk::CConnectionQueueRemoveEvent::GetConnectionInfo(event);
-
-        resource.connection_queue.borrow_mut().remove(info_ptr);
 
         Self {
-            info: LazyCell::new(),
-            info_ptr,
+            info: get_connection_info_from_event(
+                sdk::CConnectionQueueRemoveEvent::GetConnectionInfo(event),
+                resource,
+            ),
         }
-    }
-
-    pub fn info(&self) -> &ConnectionQueueInfo {
-        init_or_get_lazycell(&self.info, || {
-            Ok(unsafe { ConnectionQueueInfo::new(self.info_ptr) })
-        })
-        .unwrap()
     }
 }
 
