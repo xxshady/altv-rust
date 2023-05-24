@@ -267,7 +267,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
         visitor.visit_byte_buf(buffer)
     }
 
-    // TODO:
+    // TODO: implement bytes deserialization
     fn deserialize_bytes<V>(self, _visitor: V) -> Result<V::Value>
     where
         V: Visitor<'de>,
