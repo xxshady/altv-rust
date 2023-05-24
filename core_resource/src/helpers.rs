@@ -136,6 +136,12 @@ impl IntoHash for &str {
     }
 }
 
+impl IntoHash for String {
+    fn into_hash(self) -> Hash {
+        hash(&self)
+    }
+}
+
 #[macro_export]
 macro_rules! __get_any_option_base_object {
     ($get_ptr:expr, $base_obj_manager:ident) => {
