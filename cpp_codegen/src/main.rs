@@ -624,7 +624,7 @@ fn parse_cpp_method(class_name: &str, method: String) -> anyhow::Result<CppMetho
     let mut next_param_word_ignored = false;
     let mut pointer_param = false;
     let mut pointer_return_type = false;
-    let mut generic_parameter_type = false;
+    let mut generic_type = false;
 
     while let Some(char) = method_parser.next_char().copied() {
         // dbg!(char as char);
@@ -643,15 +643,15 @@ fn parse_cpp_method(class_name: &str, method: String) -> anyhow::Result<CppMetho
             }
 
             // dbg!(is_it_delimiter_char(char));
-            if generic_parameter_type && char == b'>' {
+            if generic_type && char == b'>' {
                 // println!("generic_parameter_type end");
-                generic_parameter_type = false;
-            } else if parameters_parsing && char == b'<' {
+                generic_type = false;
+            } else if char == b'<' {
                 // println!("generic_parameter_type start");
-                generic_parameter_type = true;
+                generic_type = true;
             }
 
-            if !generic_parameter_type && is_it_delimiter_char(char)
+            if !generic_type && is_it_delimiter_char(char)
                 || pointer_param
                 || pointer_return_type
                 || method_parser.is_it_last_char()
