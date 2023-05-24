@@ -18,7 +18,7 @@ pub trait StreamSyncedEntityMeta: ValidBaseObject
 where
     AnyEntity: From<Rc<Self>>,
 {
-    /// Provides access to read or modify **stream synced** meta of Vehicle.
+    /// Provides access to read or modify **stream synced** meta of Entity (Vehicle, Player, Ped, etc.).
     ///
     /// # Examples
     /// ```rust
