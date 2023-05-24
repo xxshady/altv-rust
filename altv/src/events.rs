@@ -1,5 +1,5 @@
 //! # alt:V events
-//! Player connect, weapon damage, etc.
+//! Events that are emitted from alt:V for the use of the script.
 //!
 //! ## Examples
 //! Player connect
@@ -14,10 +14,11 @@
 //! ```
 //!
 //! # Custom events
+//! Events that are emitted from the script.
 //!
 //! ## Examples
-//! Local event (cross-resource)
 //!
+//! Local event (cross-resource)
 //! ```rust
 //! # fn test() -> altv::VoidResult {
 //! # use altv::prelude::*;
@@ -28,6 +29,19 @@
 //! });
 //!
 //! altv::events::emit("example", &[&true, &123])?;
+//! # Ok(()) }
+//! ```
+//!
+//! Client -> server events
+//! ```rust
+//! # fn test() -> altv::VoidResult {
+//! # use altv::prelude::*;
+//! altv::events::on_player("example", |event| {
+//!     let args: (bool, i32) = event.args.deserialize()?;
+//!     altv::log!("event from player: {}", event.player.name()?);
+//!     altv::log!("args: {args:?}"); // args: (true, 123)
+//!     Ok(())
+//! });
 //! # Ok(()) }
 //! ```
 
