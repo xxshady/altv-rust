@@ -183,7 +183,7 @@ pub fn on<V: IntoVoidResult>(
     });
 }
 
-pub fn on_client<V: IntoVoidResult>(
+pub fn on_player<V: IntoVoidResult>(
     event_name: impl IntoString,
     mut handler: impl FnMut(&ClientEventContext) -> V + 'static,
 ) {
