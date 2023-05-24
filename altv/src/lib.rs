@@ -64,7 +64,6 @@ pub use exports::{
         ByteBuf,
         // Bytes TODO: implement bytes deserialization
     },
-    mvalue::{self, DynMValue, DynMValueArgs},
 };
 
 pub use altv_sdk::{
@@ -77,7 +76,7 @@ pub const GLOBAL_DIMENSION: i32 = i32::MIN;
 
 pub mod events;
 pub mod meta;
-// pub mod mvalue;
+pub mod mvalue;
 
 #[rustfmt::skip]
 pub mod prelude {

@@ -86,20 +86,20 @@ pub use __generate_serde_via_bytes_for as generate_serde_via_bytes_for;
 
 pub(crate) fn sdk_type_to_rust(sdk_type: MValueType) -> &'static str {
     match sdk_type {
-        MValueType::BaseObject => "BaseObject",
+        MValueType::BaseObject => "BaseObject (Player, Vehicle, ColShape, etc.)", // for example altv::VehicleContainer
         MValueType::Bool => "bool",
-        MValueType::ByteArray => "ByteArray (ByteBuf)",
+        MValueType::ByteArray => "ByteArray (ByteBuf)", // altv::ByteBuf
         MValueType::Dict => "Dict (HashMap or struct)",
         MValueType::Double => "Double (f64 or f32)",
-        MValueType::Function => "Function",
+        MValueType::Function => "Function", // not implemented (yet?)
         MValueType::Int => "Int (i64..u8)",
         MValueType::Uint => "UInt (u64..u8)",
         MValueType::List => "List (tuple or static array or Vec or slice)",
         MValueType::Nil | MValueType::None => "None",
-        MValueType::Rgba => "Rgba",
+        MValueType::Rgba => "Rgba", // altv::RGBA
         MValueType::String => "String",
-        MValueType::Vector2 => "Vector2",
-        MValueType::Vector3 => "Vector3",
+        MValueType::Vector2 => "Vector2", // altv::Vector2
+        MValueType::Vector3 => "Vector3", // altv::Vector3
     }
 }
 

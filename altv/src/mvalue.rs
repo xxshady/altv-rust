@@ -3,86 +3,128 @@
 //! to send or receive something from clients (players), or communicate with
 //! [other alt:V resources](https://docs.altv.mp/articles/resources.html#types).
 //!
-//! For example, JavaScript has type [Object](https://javascript.info/object),
-//! Rust does not, but has a [HashMap](https://doc.rust-lang.org/std/collections/struct.HashMap.html),
-//! so alt:V has Dict MValue type, which is `HashMap<String, MValue>` in Rust API, and `Object` in JS API
+//! If you want to know more about MValue in general, you can read more [here](https://docs.altv.mp/sdk/mvalues.html).
 //!
-//! If you want to know more about MValue, you can read more [here](https://docs.altv.mp/sdk/mvalues.html).
+//! Rust module uses [`serde`](https://serde.rs) for serializing and deserializing
+//! data structures between Rust and alt:V (or other scripting languages, for example JavaScript).
 //!
-//! # Option type
-//! Since there is no MValue::Option, Rust [`Option`](https://doc.rust-lang.org/std/option) type
-//! is handled differently when it is [converted to MValue](https://github.com/xxshady/altv-rust/blob/380df752ff46c87887b785635a55ac190224577c/core_resource/src/mvalue.rs#L113-L119).
+//! For example, alt:V has Dict MValue type, in Rust it can be created
+//! (serialized) from `HashMap<String, &dyn Serialize>` or any struct which implements
+//! [`Serialize`](https://docs.rs/serde/latest/serde/trait.Serialize.html)
+//! ([see](#how-to-implement-serialize-and-deserialize-for-your-struct)).
 //!
-//! ```rust
-//! let entry = altv::meta::entry("example");
-//!
-//! let bool: Option<bool> = Some(true);
-//! // Here it is converted to MValue::Bool
-//! entry.set(bool)?;
-//!
-//! // outputs "Some(Bool(true))"
-//! dbg!(entry.get());
-//!
-//! let none: Option<bool> = None;
-//! // Here it is converted to MValue::None
-//! entry.set(none)?;
-//!
-//! // outputs "None"
-//! dbg!(entry.get());
-//! ```
+//! # Supported MValue <-> Rust types
+//! [Full list of types](https://github.com/xxshady/altv-rust/blob/7169d07f4c6ed549e4022072c970abfffcb79ba4/mvalue/src/helpers.rs#L89-L102)
 //!
 //! # Examples
+//! > *Examples will use [`to_mvalue`](fn.to_mvalue.html) and [`from_mvalue`](fn.from_mvalue.html),
+//! these are used internally by events and meta in Rust module.*
 //!
-//! `altv::mvalue::list` creates `MValue::List` (dynamic array or vector of mvalues).
-//!
+//! ### Numbers
 //! ```rust
-//! // Sending local "example" event with one list as argument
-//! altv::events::emit!("example", altv::mvalue::list![1, 2, 3]?)?;
+//! # fn test() -> altv::VoidResult {
+//! use altv::mvalue::{from_mvalue, to_mvalue};
 //!
-//! // Applying a cross-resource vehicle meta
-//! let vehicle = altv::Vehicle::new("sultan", 0, 0)?;
-//! vehicle
-//!     .meta_entry("example")?
-//!     .set(altv::mvalue::list![1, 2, 3]?)?;
+//! let mvalue = to_mvalue(&123)?;
+//! let value: i32 = from_mvalue(&mvalue.into_const())?;
+//! dbg!(value); // 123
+//!
+//! let mvalue = to_mvalue(&256)?;
+//! // Will return error and panic because 256 is greater than u8::MAX
+//! let value: u8 = from_mvalue(&mvalue.into_const()).unwrap();
+//! # Ok(()) }
 //! ```
 //!
-//! How it can be handled in JavaScript:
-//! ```js
-//! alt.on("example", (list) => {
-//!     alt.log("is array:", Array.isArray(list)) // is array: true
-//!     alt.log("list:", list) // list: [ 1, 2, 3 ]
-//! })
-//!
-//! // Same for vehicle meta:
-//! const vehicle = alt.Vehicle.all[0]
-//! const list = vehicle.getMeta("example")
-//! alt.log("list:", list) // list: [ 1, 2, 3 ]
-//! ```
-//!
-//! `altv::mvalue::dict` creates `MValue::Dict` (`HashMap<String, MValue>` in Rust).
-//!
+//! ### String, &str, char
 //! ```rust
-//! // Sending local "example" event with one dict as argument
-//! altv::events::emit!("example", altv::mvalue::dict!{ "example" => 123 }?)?;
+//! # fn test() -> altv::VoidResult {
+//! use altv::mvalue::{from_mvalue, to_mvalue};
 //!
-//! // Applying a cross-resource vehicle meta
-//! let vehicle = altv::Vehicle::new("sultan", 0, 0)?;
-//! vehicle
-//!     .meta_entry("example")?
-//!     .set(altv::mvalue::dict!{ "example" => 123 }?)?;
+//! let mvalue = to_mvalue(&String::from("example"))?;
+//! let value: String = from_mvalue(&mvalue.into_const())?;
+//! dbg!(value); // "example"
+//!
+//! let mvalue = to_mvalue(&"example")?;
+//! // &str can only be deserialized as String
+//! let value: String = from_mvalue(&mvalue.into_const())?;
+//! dbg!(value); // "example"
+//!
+//! let mvalue = to_mvalue(&'e')?;
+//! let value: char = from_mvalue(&mvalue.into_const())?;
+//! dbg!(value); // 'e'
+//!
+//! let mvalue = to_mvalue(&"eee")?;
+//! // Will return error and panic
+//! let value: char = from_mvalue(&mvalue.into_const()).unwrap();
+//! # Ok(()) }
 //! ```
 //!
-//! How it can be handled in JavaScript:
-//! ```js
-//! alt.on("example", (dict) => {
-//!     alt.log("dict:", dict) // dict: { example: 123 }
-//! })
+//! ### Option
+//! ```rust
+//! # fn test() -> altv::VoidResult {
+//! use altv::mvalue::{from_mvalue, to_mvalue};
 //!
-//! // Same for vehicle meta:
-//! const vehicle = alt.Vehicle.all[0]
-//! const dict = vehicle.getMeta("example")
-//! alt.log("dict:", dict) // dict: { example: 123 }
+//! let mvalue = to_mvalue(&Some(true))?;
+//! let value: Option<bool> = from_mvalue(&mvalue.into_const())?;
+//! dbg!(value); // Some(true)
+//!
+//! // Since there is no Option MValue type, all options containing the value
+//! // are "unwrapped" and serialized as-is
+//! let mvalue = to_mvalue(&Some(true))?;
+//! let value: bool = from_mvalue(&mvalue.into_const())?;
+//! dbg!(value); // true
+//!
+//! let mvalue = to_mvalue(&Option::<bool>::None)?;
+//! let value: Option<bool> = from_mvalue(&mvalue.into_const())?;
+//! dbg!(value); // None
+//! # Ok(()) }
+//! ```
+//!
+//! ### Tuple
+//! ```rust
+//! # fn test() -> altv::VoidResult {
+//! use altv::mvalue::{from_mvalue, to_mvalue};
+//!
+//! let mvalue = to_mvalue(&(true, 123))?;
+//! let value: (bool, i32) = from_mvalue(&mvalue.into_const())?;
+//! dbg!(value); // (true, 123)
+//!
+//! // Tuples can be deserialized partially
+//! // (in fact, it works the same for all sequences: arrays, vectors, etc.)
+//! let mvalue = to_mvalue(&(true, 123))?;
+//! let value: (bool,) = from_mvalue(&mvalue.into_const())?;
+//! dbg!(value); // (true,)
+//! # Ok(()) }
+//! ```
+//!
+//! ### Byte Array (ByteBuf)
+//! ```rust
+//! # fn test() -> altv::VoidResult {
+//! use altv::mvalue::{from_mvalue, to_mvalue};
+//!
+//! let mvalue = to_mvalue(&altv::ByteBuf::from([1, 2, 3]))?;
+//! let value: altv::ByteBuf = from_mvalue(&mvalue.into_const())?;
+//! dbg!(value); // [1, 2, 3]
+//! # Ok(()) }
+//! ```
+//!
+//! # How to implement Serialize and Deserialize for your struct
+//! ```rust
+//! # fn test() -> altv::VoidResult {
+//! use altv::serde::{Deserialize, Serialize};
+//!
+//! #[derive(Serialize, Deserialize, Debug)]
+//! #[serde(crate = "altv::serde")]
+//! struct MyStruct {
+//!     a: i32,
+//! }
+//!
+//! let mvalue = altv::mvalue::to_mvalue(&MyStruct { a: 123 })?;
+//! let my_struct: MyStruct = altv::mvalue::from_mvalue(&mvalue.into_const())?;
+//! dbg!(my_struct); // MyStruct { a: 123 }
+//! # Ok(()) }
 //! ```
 pub use core_resource::exports::mvalue::{
-    mvalue_dict as dict, mvalue_list as list, MValue, MValueList, Serializable,
+    from_mvalue, from_mvalue_slice, to_mvalue, ConstMValue, DeserializeMValueArgs, DynMValue,
+    DynMValueArgs, Error,
 };
