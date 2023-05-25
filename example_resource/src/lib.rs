@@ -7,5 +7,6 @@ use altv::{
 fn main() -> impl altv::IntoVoidResult {
     std::env::set_var("RUST_BACKTRACE", "0");
 
-    bail!("err")
+    let rgba: altv::Rgba = 10.into();
+    dbg!(rgba);
 }

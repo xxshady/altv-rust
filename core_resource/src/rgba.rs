@@ -45,6 +45,12 @@ impl From<(u8, u8, u8, u8)> for Rgba {
     }
 }
 
+impl From<u8> for Rgba {
+    fn from(value: u8) -> Self {
+        Self::new(value, value, value, value)
+    }
+}
+
 mvalue::generate_serde_via_bytes_for!(
     Rgba,
     "Rgba",
