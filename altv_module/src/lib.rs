@@ -53,7 +53,6 @@ extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
 
         if let Err(err) = result {
             logger::error!("Resource: {resource_name:?} main function returned error: {err:?}");
-            std::process::exit(0);
         }
 
         manager.borrow_mut().remove_pending_status(&resource_name);
