@@ -45,7 +45,7 @@ pub use exports::{
     Hash,
     VehicleModelInfo,
     PedModelInfo,
-    RGBA,
+    Rgba,
     Quaternion,
     core_funcs::*,
     config_node::*,

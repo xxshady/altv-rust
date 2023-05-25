@@ -1,7 +1,7 @@
 use crate::{
     base_objects::{marker, player},
     helpers,
-    rgba::RGBA,
+    rgba::Rgba,
     sdk,
     vector::Vector3,
     SomeResult, VoidResult,
@@ -14,7 +14,7 @@ impl marker::Marker {
     pub fn new(
         marker_type: altv_sdk::MarkerType,
         pos: impl Into<Vector3>,
-        color: impl Into<RGBA>,
+        color: impl Into<Rgba>,
     ) -> marker::MarkerContainer {
         let pos = pos.into();
         let color = color.into();
@@ -50,13 +50,13 @@ impl marker::Marker {
         helpers::get_any_option_base_object!(sdk::IMarker::GetTarget(self.raw_ptr()?), player)
     }
 
-    pub fn color(&self) -> SomeResult<RGBA> {
+    pub fn color(&self) -> SomeResult<Rgba> {
         Ok(helpers::read_cpp_rgba(
             unsafe { sdk::IMarker::GetColor(self.raw_ptr()?) }.within_unique_ptr(),
         ))
     }
 
-    pub fn set_color(&self, color: impl Into<RGBA>) -> VoidResult {
+    pub fn set_color(&self, color: impl Into<Rgba>) -> VoidResult {
         let color = color.into();
 
         unsafe {

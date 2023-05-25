@@ -8,7 +8,7 @@ use crate::{
     helpers::{self, IntoHash, IntoString},
     meta::entity_stream_synced_meta::StreamSyncedEntityMeta,
     quaternion::Quaternion,
-    rgba::RGBA,
+    rgba::Rgba,
     sdk, structs,
     vector::Vector3,
     SomeResult, VoidResult,
@@ -413,14 +413,14 @@ impl vehicle::Vehicle {
         Ok(())
     }
 
-    pub fn primary_color_rgb(&self) -> SomeResult<RGBA> {
+    pub fn primary_color_rgb(&self) -> SomeResult<Rgba> {
         Ok(helpers::read_cpp_rgba(
             unsafe { sdk::IVehicle::GetPrimaryColorRGB(self.raw_ptr()?) }.within_unique_ptr(),
         ))
     }
 
-    pub fn set_primary_color_rgb(&self, color: impl Into<RGBA>) -> VoidResult {
-        let color: RGBA = color.into();
+    pub fn set_primary_color_rgb(&self, color: impl Into<Rgba>) -> VoidResult {
+        let color: Rgba = color.into();
         unsafe {
             sdk::IVehicle::SetPrimaryColorRGB(
                 self.raw_ptr()?,
@@ -433,14 +433,14 @@ impl vehicle::Vehicle {
         Ok(())
     }
 
-    pub fn secondary_color_rgb(&self) -> SomeResult<RGBA> {
+    pub fn secondary_color_rgb(&self) -> SomeResult<Rgba> {
         Ok(helpers::read_cpp_rgba(
             unsafe { sdk::IVehicle::GetSecondaryColorRGB(self.raw_ptr()?) }.within_unique_ptr(),
         ))
     }
 
-    pub fn set_secondary_color_rgb(&self, color: impl Into<RGBA>) -> VoidResult {
-        let color: RGBA = color.into();
+    pub fn set_secondary_color_rgb(&self, color: impl Into<Rgba>) -> VoidResult {
+        let color: Rgba = color.into();
         unsafe {
             sdk::IVehicle::SetSecondaryColorRGB(
                 self.raw_ptr()?,
@@ -453,14 +453,14 @@ impl vehicle::Vehicle {
         Ok(())
     }
 
-    pub fn tire_smoke_color(&self) -> SomeResult<RGBA> {
+    pub fn tire_smoke_color(&self) -> SomeResult<Rgba> {
         Ok(helpers::read_cpp_rgba(
             unsafe { sdk::IVehicle::GetTireSmokeColor(self.raw_ptr()?) }.within_unique_ptr(),
         ))
     }
 
-    pub fn set_tire_smoke_color(&self, color: impl Into<RGBA>) -> VoidResult {
-        let color: RGBA = color.into();
+    pub fn set_tire_smoke_color(&self, color: impl Into<Rgba>) -> VoidResult {
+        let color: Rgba = color.into();
         unsafe {
             sdk::IVehicle::SetTireSmokeColor(
                 self.raw_ptr()?,
@@ -527,14 +527,14 @@ impl vehicle::Vehicle {
         Ok(())
     }
 
-    pub fn neon_color(&self) -> SomeResult<RGBA> {
+    pub fn neon_color(&self) -> SomeResult<Rgba> {
         Ok(helpers::read_cpp_rgba(
             unsafe { sdk::IVehicle::GetNeonColor(self.raw_ptr()?) }.within_unique_ptr(),
         ))
     }
 
-    pub fn set_neon_color(&self, color: impl Into<RGBA>) -> VoidResult {
-        let color: RGBA = color.into();
+    pub fn set_neon_color(&self, color: impl Into<Rgba>) -> VoidResult {
+        let color: Rgba = color.into();
         unsafe {
             sdk::IVehicle::SetNeonColor(self.raw_ptr()?, color.r(), color.g(), color.b(), color.a())
         }

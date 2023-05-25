@@ -29,7 +29,7 @@ pub use crate::{
     ped_model_info::PedModelInfo,
     quaternion::Quaternion,
     result::{IntoVoidResult, SomeResult, VoidResult},
-    rgba::RGBA,
+    rgba::Rgba,
     structs::{
         AnimationFlags, AttachToEntityBoneIndex, AttachToEntityBoneName, PlayAnimation,
         PlayerDateTime, PlayerHeadBlendData,

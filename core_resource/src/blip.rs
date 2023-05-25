@@ -1,7 +1,7 @@
 use crate::{
     base_objects::{blip, extra_pools::AnyEntity, player},
     helpers,
-    rgba::RGBA,
+    rgba::Rgba,
     sdk,
     vector::{Vector2, Vector3},
     SomeResult, VoidResult,
@@ -142,7 +142,7 @@ impl blip::Blip {
         Ok(unsafe { sdk::IBlip::GetColor(self.raw_ptr()?) }.into())
     }
 
-    pub fn secondary_color(&self) -> SomeResult<RGBA> {
+    pub fn secondary_color(&self) -> SomeResult<Rgba> {
         Ok(helpers::read_cpp_rgba(
             unsafe { sdk::IBlip::GetSecondaryColor(self.raw_ptr()?) }.within_unique_ptr(),
         ))
@@ -208,7 +208,7 @@ impl blip::Blip {
         Ok(unsafe { sdk::IBlip::GetName(self.raw_ptr()?) }.to_string())
     }
 
-    pub fn route_color(&self) -> SomeResult<RGBA> {
+    pub fn route_color(&self) -> SomeResult<Rgba> {
         Ok(helpers::read_cpp_rgba(
             unsafe { sdk::IBlip::GetRouteColor(self.raw_ptr()?) }.within_unique_ptr(),
         ))
@@ -269,7 +269,7 @@ impl blip::Blip {
         Ok(())
     }
 
-    pub fn set_route_color(&self, color: impl Into<RGBA>) -> VoidResult {
+    pub fn set_route_color(&self, color: impl Into<Rgba>) -> VoidResult {
         let color = color.into();
 
         unsafe {
@@ -278,7 +278,7 @@ impl blip::Blip {
         Ok(())
     }
 
-    pub fn set_secondary_color(&self, color: impl Into<RGBA>) -> VoidResult {
+    pub fn set_secondary_color(&self, color: impl Into<Rgba>) -> VoidResult {
         let color = color.into();
 
         unsafe {

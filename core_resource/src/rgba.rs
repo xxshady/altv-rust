@@ -1,12 +1,12 @@
 #[derive(Debug)]
-pub struct RGBA {
+pub struct Rgba {
     r: u8,
     g: u8,
     b: u8,
     a: u8,
 }
 
-impl RGBA {
+impl Rgba {
     pub fn new(red: u8, green: u8, blue: u8, alpha: u8) -> Self {
         Self {
             r: red,
@@ -33,20 +33,20 @@ impl RGBA {
     }
 }
 
-impl From<(u8, u8, u8)> for RGBA {
+impl From<(u8, u8, u8)> for Rgba {
     fn from((r, g, b): (u8, u8, u8)) -> Self {
         Self::new(r, g, b, 255)
     }
 }
 
-impl From<(u8, u8, u8, u8)> for RGBA {
+impl From<(u8, u8, u8, u8)> for Rgba {
     fn from((r, g, b, a): (u8, u8, u8, u8)) -> Self {
         Self::new(r, g, b, a)
     }
 }
 
 mvalue::generate_serde_via_bytes_for!(
-    RGBA,
+    Rgba,
     "Rgba",
     mvalue::ser_rgba::RGBA_MVALUE,
     rgba_serde_impl,
@@ -55,6 +55,6 @@ mvalue::generate_serde_via_bytes_for!(
         let Some([r, g, b, a]) = mvalue::bytes_num::from_byte_buf::<u8, 1, 4>(&v) else {
             return Err(E::custom("Failed to deserialize Rgba"));
         };
-        Ok(RGBA::new(r, g, b, a))
+        Ok(Rgba::new(r, g, b, a))
     }
 );

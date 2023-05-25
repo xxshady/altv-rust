@@ -13,7 +13,7 @@ use crate::{
     },
     quaternion::Quaternion,
     resource::Resource,
-    rgba::RGBA,
+    rgba::Rgba,
     vector::{Vector2, Vector3},
     world_object::WorldObjectRawPtr,
     SomeResult,
@@ -48,7 +48,7 @@ pub fn read_cpp_vector2(cpp_vector: UniquePtr<sdk::Vector2Wrapper>) -> Vector2 {
     Vector2::new(out_x, out_y)
 }
 
-pub fn read_cpp_rgba(cpp_rgba: UniquePtr<sdk::RGBAWrapper>) -> RGBA {
+pub fn read_cpp_rgba(cpp_rgba: UniquePtr<sdk::RGBAWrapper>) -> Rgba {
     let mut r = 0u8;
     let mut g = 0u8;
     let mut b = 0u8;
@@ -63,7 +63,7 @@ pub fn read_cpp_rgba(cpp_rgba: UniquePtr<sdk::RGBAWrapper>) -> RGBA {
         );
     }
 
-    RGBA::new(r, g, b, a)
+    Rgba::new(r, g, b, a)
 }
 
 pub fn read_cpp_quaternion(cpp_quaternion: UniquePtr<sdk::alt::Quaternion>) -> Quaternion {

@@ -1,6 +1,6 @@
 use crate::{
     base_objects::checkpoint, helpers,
-    meta::checkpoint_stream_synced_meta::StreamSyncedCheckpointMeta, rgba::RGBA, sdk,
+    meta::checkpoint_stream_synced_meta::StreamSyncedCheckpointMeta, rgba::Rgba, sdk,
     vector::Vector3, SomeResult, VoidResult,
 };
 
@@ -13,7 +13,7 @@ impl checkpoint::Checkpoint {
         pos: impl Into<Vector3>,
         radius: f32,
         height: f32,
-        color: impl Into<RGBA>,
+        color: impl Into<Rgba>,
         streaming_distance: u32,
     ) -> checkpoint::CheckpointContainer {
         let pos = pos.into();
@@ -55,7 +55,7 @@ impl checkpoint::Checkpoint {
         Ok(unsafe { sdk::ICheckpoint::GetRadius(self.raw_ptr()?) })
     }
 
-    pub fn color(&self) -> SomeResult<RGBA> {
+    pub fn color(&self) -> SomeResult<Rgba> {
         Ok(helpers::read_cpp_rgba(
             unsafe { sdk::ICheckpoint::GetColor(self.raw_ptr()?) }.within_unique_ptr(),
         ))
@@ -82,7 +82,7 @@ impl checkpoint::Checkpoint {
         Ok(())
     }
 
-    pub fn set_color(&self, color: impl Into<RGBA>) -> VoidResult {
+    pub fn set_color(&self, color: impl Into<Rgba>) -> VoidResult {
         let color = color.into();
 
         unsafe {
