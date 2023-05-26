@@ -1,6 +1,6 @@
 use crate::helpers::IntoF32;
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, PartialEq)]
 pub struct Vector3 {
     x: f32,
     y: f32,
@@ -60,7 +60,7 @@ mvalue::generate_serde_via_bytes_for!(
     }
 );
 
-#[derive(Debug)]
+#[derive(Debug, Default, PartialEq)]
 pub struct Vector2 {
     x: f32,
     y: f32,
