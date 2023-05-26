@@ -89,8 +89,14 @@ async fn main() {
 
     println!("running altv server");
     let (_, server_bin) = files.altv_server;
+
+    if cfg!(unix) {
+        cmd!("chmod", "+x", &server_bin).run().unwrap();
+    }
+
+    let server_dir = Path::new(&server_bin).parent().unwrap();
     cmd!(&server_bin)
-        .dir("test/altv_server")
+        .dir(server_dir)
         .run()
         .unwrap_or_else(|e| panic!("failed to run altv server at: {server_bin:?}, error: {e}"));
 }
