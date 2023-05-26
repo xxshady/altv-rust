@@ -33,6 +33,9 @@ jobs:
       - name: Doc tests
         run: |
           cargo test --doc
+      - name: Server Test
+        run: |
+          cargo run --bin run_test
 
   build-windows:
     if: ${{ !startsWith(github.event.head_commit.message, 'release new version:') }}

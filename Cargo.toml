@@ -10,8 +10,9 @@ members = [
     "altv_module",
     "logger",
     "altv",
-    "example_resource",
     "cpp_codegen",
+    "test/rust_resource",
+    "test/run_test",
 ]
 
 [workspace.package]

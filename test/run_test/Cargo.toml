@@ -1,17 +1,13 @@
 [package]
-name = "example_resource"
-version = "15.0.0-dev.26"
+name = "run_test"
+version = { workspace = true }
 rust-version = { workspace = true }
 edition = { workspace = true }
-license = { workspace = true }
-repository = { workspace = true }
-readme = { workspace = true }
 publish = false
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-altv = { path = "../altv" }
-
-[lib]
-crate-type = ["cdylib"]
+duct = "0.13.6"
+reqwest = "0.11.18"
+tokio = { version = "1.28.1", features = ["full"]}
