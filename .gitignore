@@ -6,3 +6,4 @@ test/altv_server/cache
 test/altv_server/data
 test/altv_server/modules
 test/altv_server/resources
+test/altv_server/crashdumps

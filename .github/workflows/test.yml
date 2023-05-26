@@ -26,10 +26,6 @@ jobs:
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           
-      - name: Build
-        run: |
-          cd altv_module
-          cargo build --verbose
       - name: Doc tests
         run: |
           cargo test --doc
@@ -57,10 +53,9 @@ jobs:
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
-      - name: Build
-        run: |
-          cd altv_module
-          cargo build --verbose
       - name: Doc tests
         run: |
           cargo test --doc
+      - name: Server Test
+        run: |
+          cargo run --bin run_test

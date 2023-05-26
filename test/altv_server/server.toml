@@ -1,2 +1,3 @@
 modules = ["rust-module"]
 resources = ["rust"]
+voice = {}
