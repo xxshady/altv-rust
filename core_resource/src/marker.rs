@@ -135,4 +135,22 @@ impl marker::Marker {
     pub fn streaming_distance(&self) -> SomeResult<u32> {
         Ok(unsafe { sdk::IMarker::GetStreamingDistance(self.raw_ptr()?) })
     }
+
+    pub fn rotating(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IMarker::IsRotating(self.raw_ptr()?) })
+    }
+
+    pub fn set_rotating(&self, toggle: bool) -> VoidResult {
+        unsafe { sdk::IMarker::SetRotating(self.raw_ptr()?, toggle) }
+        Ok(())
+    }
+
+    pub fn bobs_up_down(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IMarker::IsBobUpDown(self.raw_ptr()?) })
+    }
+
+    pub fn set_bob_up_down(&self, toggle: bool) -> VoidResult {
+        unsafe { sdk::IMarker::SetBobUpDown(self.raw_ptr()?, toggle) }
+        Ok(())
+    }
 }

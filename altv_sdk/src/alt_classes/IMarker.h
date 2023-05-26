@@ -56,6 +56,18 @@ bool IsFaceCamera(const alt::IMarker* ptr) {
 void SetFaceCamera(alt::IMarker* ptr, bool faceCamera) {
     return ptr->SetFaceCamera(faceCamera);
 }
+bool IsRotating(const alt::IMarker* ptr) {
+    return ptr->IsRotating();
+}
+void SetRotating(alt::IMarker* ptr, bool rotating) {
+    return ptr->SetRotating(rotating);
+}
+bool IsBobUpDown(const alt::IMarker* ptr) {
+    return ptr->IsBobUpDown();
+}
+void SetBobUpDown(alt::IMarker* ptr, bool bobUpDown) {
+    return ptr->SetBobUpDown(bobUpDown);
+}
 u32 GetStreamingDistance(const alt::IMarker* ptr) {
     return ptr->GetStreamingDistance();
 }
