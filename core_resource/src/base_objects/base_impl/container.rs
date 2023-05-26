@@ -19,3 +19,16 @@ impl<T, InheritPtrs: Clone> Clone for BaseObjectContainer<T, InheritPtrs> {
         Self(Rc::clone(&self.0))
     }
 }
+
+impl<T, InheritPtrs: Clone> PartialEq for BaseObjectContainer<T, InheritPtrs> {
+    fn eq(&self, other: &Self) -> bool {
+        let Ok(borrow) = self.0.value.try_borrow() else {
+            return false;
+        };
+        let Ok(other_borrow) = other.0.value.try_borrow() else {
+            return false;
+        };
+
+        *borrow == *other_borrow
+    }
+}

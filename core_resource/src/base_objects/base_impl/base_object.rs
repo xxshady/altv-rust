@@ -51,3 +51,16 @@ impl<T, InheritPtrs: Clone> Debug for BaseObject<T, InheritPtrs> {
         write!(f, "BaseObject<T>")
     }
 }
+
+impl<T, InheritPtrs: Clone> PartialEq for BaseObject<T, InheritPtrs> {
+    fn eq(&self, other: &Self) -> bool {
+        let Some(ptr) = self.ptr else {
+            return false;
+        };
+        let Some(other_ptr) = other.ptr else {
+            return false;
+        };
+
+        ptr == other_ptr
+    }
+}
