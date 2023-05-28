@@ -67,7 +67,7 @@ main = 'example.dll' # your compiled .dll or .so
 
 10. Don't forget to add resource to [`server.toml`](https://docs.altv.mp/articles/configs/server.html)
 
-11. Now you can download rust-module `.dll` or `.so` from [latest release](https://github.com/xxshady/altv-rust/releases)
+11. Now you can download rust-module `.dll` or `.so` from [latest release](https://github.com/xxshady/altv-rust/releases) or with [`cargo-altvup`](https://github.com/xxshady/cargo-altvup)
 
 12. Copy it to `modules` directory of your server
 
