@@ -3,7 +3,7 @@
 </div>
 <br>
 
-# Server-side Rust API for alt:V
+# Server-side alt:V API for Rust
 [![crates.io](https://img.shields.io/crates/v/altv.svg)](https://crates.io/crates/altv)
 
 ```rust
