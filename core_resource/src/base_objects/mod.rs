@@ -32,3 +32,5 @@ pub(crate) use objects::virtual_entity_group;
 pub(crate) use objects::voice_channel;
 
 pub use pool_funcs::BaseObjectPoolFuncs;
+
+pub type BaseObjectId = u32;

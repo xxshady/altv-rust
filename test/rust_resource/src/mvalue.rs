@@ -49,8 +49,6 @@ macro_rules! to_and_from {
 }
 
 pub(crate) fn test_mvalue() {
-    altv::log!("#################### mvalue");
-
     to_and_from!(@assert_eq
         bool: true, false;
 
@@ -94,6 +92,4 @@ pub(crate) fn test_mvalue() {
     //     @eq |a: altv::Vector2, b: altv::Vector2| a.x() == b.x(), altv::Vector2: altv::Vector2::new(f32::MAX, f32::MIN);
     //     @eq |a: altv::Vector2, b: altv::Vector2| a.x() == b.x(), altv::Vector2: altv::Vector2::new(f32::MAX, 123);
     // );
-
-    altv::log!("#################### mvalue");
 }

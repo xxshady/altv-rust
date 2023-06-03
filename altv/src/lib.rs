@@ -55,6 +55,7 @@ pub use exports::{
     AnyBaseObject,
     BaseObjectPoolFuncs,
     base_object,
+    BaseObjectId,
 
     anyhow,
     serde,

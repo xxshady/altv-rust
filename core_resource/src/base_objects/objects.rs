@@ -4,7 +4,7 @@ use super::{
     base_impl::mvalue::impl_deserialize_for,
     extra_pools::{Entity, ExtraPools},
     pool_funcs::BaseObjectPoolFuncs,
-    BaseObjectContainer, BaseObjectManager, BaseObjectWrapper,
+    BaseObjectContainer, BaseObjectId, BaseObjectManager, BaseObjectWrapper,
 };
 use crate::{col_shape::ColShapy, sdk, world_object::WorldObject};
 
@@ -64,6 +64,12 @@ macro_rules! base_objects {
                     fn all_count() -> usize {
                         $crate::resource::Resource::with_base_objects_ref(|v, _| v.[<$manager_name_snake>].all_count())
                     }
+
+                    fn get_by_id(id: BaseObjectId) -> Option<$name_container> {
+                        $crate::resource::Resource::with_base_objects_ref(|v, _| {
+                            v.[<$manager_name_snake>].get_by_id(id)
+                        })
+                    }
                 }
             $( $(
                 impl $impl_trait <$crate::base_objects::inherit_ptrs::$inherit_ptrs_struct> for $manager_name {}
@@ -75,11 +81,12 @@ macro_rules! base_objects {
                 macro_rules! [<__ $manager_name_snake _remove_from_pool>] {
                     ($base_object:expr) => {
                         $crate::resource::Resource::with_base_objects_mut(|mut v, _| -> $crate::VoidResult {
-                            v.[<$manager_name_snake>].remove($base_object.ptr()?)?;
+                            use $crate::base_objects::BasePtr;
+                            let base_ptr = $base_object.base_ptr()?;
+                            v.[<$manager_name_snake>].remove(base_ptr, $base_object.ptr()?)?;
                             $(
                                 $crate::resource::Resource::with_extra_base_object_pools_mut(|mut v, _| -> VoidResult {
-                                    use $crate::base_objects::BasePtr;
-                                    v.[<$extra_pool:snake>].remove($base_object.base_ptr()?);
+                                    v.[<$extra_pool:snake>].remove(base_ptr);
                                     Ok(())
                                 })?;
                             )?
@@ -107,7 +114,7 @@ macro_rules! base_objects {
 
                             let container = Self::_new($ptr, base_ptr, inherit_ptrs);
 
-                            v.[<$manager_name_snake>].add($ptr, container.clone());
+                            v.[<$manager_name_snake>].add(base_ptr, $ptr, container.clone());
 
                             $(
                                 $crate::resource::Resource::with_extra_base_object_pools_mut(|mut v, _| {
@@ -137,7 +144,7 @@ macro_rules! base_objects {
             #[derive(Default)]
             pub struct Store {
             $(
-                pub(crate) $manager_name_snake:BaseObjectManager<
+                pub(crate) $manager_name_snake: BaseObjectManager<
                     $manager_name_snake::$name_struct
                     $(, $crate::base_objects::inherit_ptrs::$inherit_ptrs_struct )?
                 >,
@@ -173,6 +180,7 @@ macro_rules! base_objects {
                             );
 
                             self.[<$manager_name_snake>].add(
+                                base_ptr,
                                 ptr,
                                 container.clone(),
                             );
@@ -200,8 +208,7 @@ macro_rules! base_objects {
                     $(
                         $base_type => {
                             let ptr = $crate::helpers::base_ptr_to!(base_ptr.as_ptr(), $manager_name_snake);
-                            // TEST unwrap
-                            self.[<$manager_name_snake>].remove_externally(ptr).unwrap();
+                            self.[<$manager_name_snake>].remove_externally(base_ptr, ptr).unwrap();
                         $(
                             extra_pools.[<$extra_pool:snake>].remove(base_ptr);
                         )?
@@ -228,6 +235,29 @@ macro_rules! base_objects {
                                 Some(AnyBaseObject::$manager_name(base_object))
                             } else {
                                 logger::debug!("base object type: {base_object_type:?} is not in pool");
+                                None
+                            }
+                        }
+                    )+
+                        _ => {
+                            logger::error!("unknown base object type: {base_object_type:?}");
+                            None
+                        }
+                    }
+                }
+
+                pub fn get_by_id(
+                    &self,
+                    base_object_type: altv_sdk::BaseObjectType,
+                    id: BaseObjectId,
+                ) -> Option<AnyBaseObject> {
+                    match base_object_type {
+                    $(
+                        $base_type => {
+                            let base_object = self.[<$manager_name_snake>].get_by_id(id);
+                            if let Some(base_object) = base_object {
+                                Some(AnyBaseObject::$manager_name(base_object))
+                            } else {
                                 None
                             }
                         }
