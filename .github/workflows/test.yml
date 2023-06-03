@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  build-linux:
+  test-linux:
     if: ${{ !startsWith(github.event.head_commit.message, 'release new version:') }}
     runs-on: ubuntu-22.04
     steps:
@@ -33,7 +33,7 @@ jobs:
         run: |
           cargo run --bin run_test
 
-  build-windows:
+  test-windows:
     if: ${{ !startsWith(github.event.head_commit.message, 'release new version:') }}
     runs-on: windows-latest
     steps:
