@@ -1,3 +1,6 @@
+#:schema https://raw.githubusercontent.com/xxshady/altv-config-schemas/main/server-config.schema.json
+
 modules = ["rust-module"]
 resources = ["rust"]
 voice = {}
+
