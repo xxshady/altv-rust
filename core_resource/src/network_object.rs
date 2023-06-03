@@ -1,8 +1,5 @@
 use crate::{
-    base_objects::{
-        extra_pools::{get_entity_by_id, AnyEntity},
-        network_object,
-    },
+    base_objects::network_object,
     helpers::{self, IntoHash},
     meta::entity_stream_synced_meta::StreamSyncedEntityMeta,
     sdk,
@@ -12,11 +9,6 @@ use crate::{
 
 /// # **`NetworkObject implementation`**
 impl network_object::NetworkObject {
-    pub fn get_by_id(id: u32) -> SomeResult<network_object::NetworkObjectContainer> {
-        get_entity_by_id!(AnyEntity::NetworkObject, id)
-            .ok_or(anyhow::anyhow!("No network object with id: {id}"))
-    }
-
     /// Creates new instance of NetworkObject with default params.
     /// See [network_object::NetworkObject::new_with_params]
     /// if you want to create network object with custom params.

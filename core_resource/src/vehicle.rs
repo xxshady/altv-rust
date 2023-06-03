@@ -1,10 +1,7 @@
 use autocxx::prelude::*;
 
 use crate::{
-    base_objects::{
-        extra_pools::{get_entity_by_id, AnyEntity},
-        player, vehicle,
-    },
+    base_objects::{extra_pools::AnyEntity, player, vehicle},
     helpers::{self, IntoHash, IntoString},
     meta::entity_stream_synced_meta::StreamSyncedEntityMeta,
     quaternion::Quaternion,
@@ -16,10 +13,6 @@ use crate::{
 
 /// # **`Vehicle implementation`**
 impl vehicle::Vehicle {
-    pub fn get_by_id(id: u32) -> SomeResult<vehicle::VehicleContainer> {
-        get_entity_by_id!(AnyEntity::Vehicle, id).ok_or(anyhow::anyhow!("No vehicle with id: {id}"))
-    }
-
     pub fn new(
         model: impl IntoHash,
         pos: impl Into<Vector3>,

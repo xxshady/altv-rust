@@ -12,7 +12,7 @@ pub use crate::{
         blip::{Blip, BlipContainer},
         checkpoint::{Checkpoint, CheckpointContainer},
         col_shape::{ColShape, ColShapeContainer},
-        extra_pools::{AnyEntity, Entity, SyncId},
+        extra_pools::{AnyEntity, AnyWorldObject, Entity, SyncId, WorldObject},
         marker::{Marker, MarkerContainer},
         network_object::{NetworkObject, NetworkObjectContainer},
         ped::{Ped, PedContainer},
@@ -37,7 +37,6 @@ pub use crate::{
     timers::create_timer,
     vector::{Vector2, Vector3},
     vehicle_model_info::VehicleModelInfo,
-    world_object::WorldObject,
 };
 
 pub mod logging {

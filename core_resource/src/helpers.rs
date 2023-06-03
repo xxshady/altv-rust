@@ -6,16 +6,13 @@ use std::ptr::NonNull;
 
 use crate::{
     base_objects::{
-        extra_pools::{
-            EntityRawPtr, {AnyEntity, AnyWorldObject},
-        },
+        extra_pools::{AnyEntity, AnyWorldObject, EntityRawPtr, WorldObjectRawPtr},
         player, AnyBaseObject,
     },
     quaternion::Quaternion,
     resource::Resource,
     rgba::Rgba,
     vector::{Vector2, Vector3},
-    world_object::WorldObjectRawPtr,
     SomeResult,
 };
 use altv_sdk::ffi as sdk;

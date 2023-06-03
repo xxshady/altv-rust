@@ -24,7 +24,6 @@ pub struct Resource {
     pub client_script_events: RefCell<script_events::ClientEventManager>,
     pub base_objects: RefCell<base_objects::Store>,
     pub pending_base_object_destroy_or_creation: RefCell<base_objects::PendingDestroyOrCreation>,
-    pub extra_base_object_pools: RefCell<base_objects::extra_pools::ExtraPools>,
     pub alt_resources: RefCell<alt_resource::AltResourceManager>,
 }
 
@@ -110,11 +109,9 @@ impl Resource {
             return;
         }
 
-        self.base_objects.borrow_mut().on_create(
-            ptr,
-            base_object_type,
-            self.extra_base_object_pools.borrow_mut(),
-        );
+        self.base_objects
+            .borrow_mut()
+            .on_create(ptr, base_object_type);
     }
 
     pub fn on_base_object_destroy(
@@ -129,11 +126,9 @@ impl Resource {
             return;
         }
 
-        self.base_objects.borrow_mut().on_remove(
-            ptr,
-            base_object_type,
-            self.extra_base_object_pools.borrow_mut(),
-        );
+        self.base_objects
+            .borrow_mut()
+            .on_remove(ptr, base_object_type);
     }
 
     impl_borrow_mut_fn!(timers, timers::TimerManager);
@@ -146,14 +141,6 @@ impl Resource {
     impl_borrow_mut_fn!(
         pending_base_object_destroy_or_creation,
         base_objects::PendingDestroyOrCreation
-    );
-    impl_borrow_mut_fn!(
-        extra_base_object_pools,
-        base_objects::extra_pools::ExtraPools
-    );
-    impl_borrow_fn!(
-        extra_base_object_pools,
-        base_objects::extra_pools::ExtraPools
     );
     impl_borrow_fn!(alt_resources, alt_resource::AltResourceManager);
     impl_borrow_mut_fn!(alt_resources, alt_resource::AltResourceManager);

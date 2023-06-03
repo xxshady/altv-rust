@@ -1,7 +1,6 @@
 use autocxx::prelude::*;
-use std::collections::HashMap;
 
-use super::{AnyEntity, ExtraPool};
+use super::AnyEntity;
 use crate::{
     base_objects::{inherit_ptrs, player, BaseObjectInheritPtrs},
     helpers::{self, read_cpp_vector3, Hash},
@@ -11,7 +10,6 @@ use crate::{
 };
 
 pub type SyncId = u16;
-pub type EntityPool = ExtraPool<HashMap<u32, AnyEntity>>;
 pub type EntityRawPtr = *mut sdk::alt::IEntity;
 
 pub trait Entity<InheritPtrs: inherit_ptrs::traits::Entity>:
@@ -172,45 +170,3 @@ pub trait Entity<InheritPtrs: inherit_ptrs::traits::Entity>:
         Ok(())
     }
 }
-
-impl EntityPool {
-    pub fn add(&mut self, entity: AnyEntity) {
-        let id = match &entity {
-            AnyEntity::Player(p) => p.id(),
-            AnyEntity::Vehicle(v) => v.id(),
-            AnyEntity::Ped(v) => v.id(),
-            AnyEntity::NetworkObject(v) => v.id(),
-        }
-        .unwrap();
-        logger::debug!("add entity id: {id}");
-
-        self.base_objects.insert(id, entity);
-    }
-
-    pub fn remove(&mut self, base_object: altv_sdk::BaseObjectMutPtr) {
-        // why? because i dont know how to borrow base object container immutably to call .id()
-        // when its mutably borrowed for .destroy() method
-        let id = unsafe { sdk::IBaseObject::GetID(base_object.as_ptr()) };
-        logger::debug!("remove entity id: {id}");
-
-        self.base_objects.remove(&id);
-    }
-
-    pub fn get_by_id(&self, id: u32) -> Option<&AnyEntity> {
-        self.base_objects.get(&id)
-    }
-}
-
-#[macro_export]
-macro_rules! __get_entity_by_id {
-    ($entity_type:path, $id:expr) => {
-        $crate::resource::Resource::with_extra_base_object_pools_ref(|v, _| {
-            match v.entity.get_by_id($id) {
-                Some(_wrapper @ $entity_type(entity)) => Some(entity.clone()),
-                None | Some(_) => None,
-            }
-        })
-    };
-}
-
-pub(crate) use __get_entity_by_id as get_entity_by_id;

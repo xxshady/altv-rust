@@ -1,8 +1,5 @@
 use crate::{
-    base_objects::{
-        extra_pools::{get_entity_by_id, AnyEntity},
-        ped,
-    },
+    base_objects::{ped},
     helpers::{self, Hash, IntoHash},
     meta::entity_stream_synced_meta::StreamSyncedEntityMeta,
     sdk,
@@ -12,10 +9,6 @@ use crate::{
 
 /// # **`Ped implementation`**
 impl ped::Ped {
-    pub fn get_by_id(id: u32) -> SomeResult<ped::PedContainer> {
-        get_entity_by_id!(AnyEntity::Ped, id).ok_or(anyhow::anyhow!("No ped with id: {id}"))
-    }
-
     pub fn new(
         model: impl IntoHash,
         pos: impl Into<Vector3>,

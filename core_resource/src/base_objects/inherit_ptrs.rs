@@ -1,5 +1,5 @@
-use super::extra_pools::EntityRawPtr;
-use crate::{col_shape::ColShapeRawPtr, helpers, world_object::WorldObjectRawPtr};
+use super::extra_pools::{EntityRawPtr, WorldObjectRawPtr};
+use crate::{col_shape::ColShapeRawPtr, helpers};
 
 pub(crate) mod traits {
     use super::*;

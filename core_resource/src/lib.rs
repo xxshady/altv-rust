@@ -35,7 +35,6 @@ mod vehicle;
 mod vehicle_model_info;
 mod virtual_entities;
 mod voice_channel;
-mod world_object;
 
 pub use result::{IntoVoidResult, SomeResult, VoidResult};
 

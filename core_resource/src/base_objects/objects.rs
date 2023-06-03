@@ -1,12 +1,12 @@
-use std::{cell::RefMut, fmt::Debug, ptr::NonNull, rc::Rc};
+use std::{fmt::Debug, ptr::NonNull, rc::Rc};
 
 use super::{
     base_impl::mvalue::impl_deserialize_for,
-    extra_pools::{Entity, ExtraPools},
+    extra_pools::{Entity, WorldObject},
     pool_funcs::BaseObjectPoolFuncs,
     BaseObjectContainer, BaseObjectId, BaseObjectManager, BaseObjectWrapper,
 };
-use crate::{col_shape::ColShapy, sdk, world_object::WorldObject};
+use crate::{col_shape::ColShapy, sdk};
 
 macro_rules! base_objects {
     (@internal $(
@@ -17,7 +17,6 @@ macro_rules! base_objects {
         $manager_name_rc:ident
         $manager_name:ident: [
             $base_type:path,
-            $( @extra_pool: $extra_pool:ident, )?
             $(
                 @inherit_classes: $inherit_ptrs_struct:ty, [ $(
                     $impl_trait:ty,
@@ -84,12 +83,6 @@ macro_rules! base_objects {
                             use $crate::base_objects::BasePtr;
                             let base_ptr = $base_object.base_ptr()?;
                             v.[<$manager_name_snake>].remove(base_ptr, $base_object.ptr()?)?;
-                            $(
-                                $crate::resource::Resource::with_extra_base_object_pools_mut(|mut v, _| -> VoidResult {
-                                    v.[<$extra_pool:snake>].remove(base_ptr);
-                                    Ok(())
-                                })?;
-                            )?
                             Ok(())
                         })
                     };
@@ -115,16 +108,6 @@ macro_rules! base_objects {
                             let container = Self::_new($ptr, base_ptr, inherit_ptrs);
 
                             v.[<$manager_name_snake>].add(base_ptr, $ptr, container.clone());
-
-                            $(
-                                $crate::resource::Resource::with_extra_base_object_pools_mut(|mut v, _| {
-                                    v.[<$extra_pool:snake>].add(
-                                        $crate::base_objects::extra_pools::[<Any $extra_pool>]::$manager_name(
-                                            container.clone()
-                                        )
-                                    );
-                                });
-                            )?
 
                             container
                         })
@@ -156,7 +139,6 @@ macro_rules! base_objects {
                     &mut self,
                     base_ptr: NonNull<sdk::alt::IBaseObject>,
                     base_object_type: altv_sdk::BaseObjectType,
-                    mut extra_pools: RefMut<ExtraPools>,
                 ) {
                     match base_object_type {
                     $(
@@ -184,12 +166,6 @@ macro_rules! base_objects {
                                 ptr,
                                 container.clone(),
                             );
-
-                        $(
-                            extra_pools.[<$extra_pool:snake>].add(
-                                super::extra_pools::[<Any $extra_pool>]::$manager_name(container)
-                            );
-                        )?
                         }
                     )+
                         _ => {
@@ -202,16 +178,12 @@ macro_rules! base_objects {
                     &mut self,
                     base_ptr: NonNull<sdk::alt::IBaseObject>,
                     base_object_type: altv_sdk::BaseObjectType,
-                    mut extra_pools: RefMut<ExtraPools>,
                 ) {
                     match base_object_type {
                     $(
                         $base_type => {
                             let ptr = $crate::helpers::base_ptr_to!(base_ptr.as_ptr(), $manager_name_snake);
                             self.[<$manager_name_snake>].remove_externally(base_ptr, ptr).unwrap();
-                        $(
-                            extra_pools.[<$extra_pool:snake>].remove(base_ptr);
-                        )?
                         }
                     )+
                         _ => {
@@ -293,7 +265,6 @@ macro_rules! base_objects {
     ( $(
         $manager_name:ident: [
             $base_type:path,
-            $( @extra_pool: $extra_pool:ident, )?
             $(
                 @inherit_classes: $inherit_ptrs_struct:ty, [ $(
                     $impl_trait:ty,
@@ -310,7 +281,6 @@ macro_rules! base_objects {
                 [<$manager_name Rc>]
                 $manager_name: [
                     $base_type,
-                    $( @extra_pool: $extra_pool, )?
                     $( @inherit_classes: $inherit_ptrs_struct, [ $(
                         $impl_trait,
                     )+ ], )?
@@ -330,7 +300,6 @@ base_objects!(
     ],
     Vehicle: [
         altv_sdk::BaseObjectType::Vehicle,
-        @extra_pool: Entity,
         @inherit_classes: WorldEntity, [
             WorldObject,
             Entity,
@@ -338,7 +307,6 @@ base_objects!(
     ],
     Player: [
         altv_sdk::BaseObjectType::Player,
-        @extra_pool: Entity,
         @inherit_classes: WorldEntity, [
             WorldObject,
             Entity,
@@ -346,7 +314,6 @@ base_objects!(
     ],
     Ped: [
         altv_sdk::BaseObjectType::Ped,
-        @extra_pool: Entity,
         @inherit_classes: WorldEntity, [
             WorldObject,
             Entity,
@@ -354,7 +321,6 @@ base_objects!(
     ],
     NetworkObject: [
         altv_sdk::BaseObjectType::NetworkObject,
-        @extra_pool: Entity,
         @inherit_classes: WorldEntity, [
             WorldObject,
             Entity,

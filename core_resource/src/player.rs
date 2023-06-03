@@ -1,6 +1,6 @@
 use crate::{
     base_objects::{
-        extra_pools::{get_entity_by_id, AnyEntity, SyncId},
+        extra_pools::{AnyEntity, SyncId},
         player, vehicle,
     },
     helpers::{self, read_cpp_vector3, Hash, IntoHash, IntoString},
@@ -17,10 +17,6 @@ pub type SquaredDistance = i32;
 
 /// # **`Player implementation`**
 impl player::Player {
-    pub fn get_by_id(id: u32) -> SomeResult<player::PlayerContainer> {
-        get_entity_by_id!(AnyEntity::Player, id).ok_or(anyhow::anyhow!("No player with id: {id}"))
-    }
-
     pub fn name(&self) -> SomeResult<String> {
         Ok(unsafe { sdk::IPlayer::GetName(self.raw_ptr()?) }.to_string())
     }
