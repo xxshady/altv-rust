@@ -4,3 +4,4 @@ modules = ["rust-module"]
 resources = ["rust"]
 voice = {}
 
+logStreams = ["stdconsole"]
