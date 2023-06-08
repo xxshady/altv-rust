@@ -34,6 +34,12 @@ std::vector<std::string> GetStreamSyncedMetaDataKeys(const alt::IEntity* ptr) {
 bool GetVisible(const alt::IEntity* ptr) {
     return ptr->GetVisible();
 }
+bool IsFrozen(const alt::IEntity* ptr) {
+    return ptr->IsFrozen();
+}
+void SetFrozen(alt::IEntity* ptr, bool state) {
+    return ptr->SetFrozen(state);
+}
 void SetNetworkOwner(alt::IEntity* ptr, alt::IPlayer* player, bool disableMigration) {
     return ptr->SetNetworkOwner(player, disableMigration);
 }
@@ -60,12 +66,6 @@ void SetStreamed(alt::IEntity* ptr, bool toggle) {
 }
 bool GetStreamed(const alt::IEntity* ptr) {
     return ptr->GetStreamed();
-}
-bool IsFrozen(const alt::IEntity* ptr) {
-    return ptr->IsFrozen();
-}
-void SetFrozen(alt::IEntity* ptr, bool state) {
-    return ptr->SetFrozen(state);
 }
 bool HasCollision(const alt::IEntity* ptr) {
     return ptr->HasCollision();
