@@ -24,7 +24,7 @@ pub(crate) fn test_base_object_pool_funcs() {
 }
 
 fn get_by_id() {
-    let marker = altv::Marker::new(altv::MarkerType::Markerlap, 0, 0);
+    let marker = altv::Marker::new(altv::MarkerType::MarkerArrow, 0, 0);
     let id = dbg!(marker.id()).unwrap();
 
     dbg!(altv::Marker::get_by_id(id).unwrap());

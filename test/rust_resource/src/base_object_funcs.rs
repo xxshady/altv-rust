@@ -15,7 +15,7 @@ pub(crate) fn test_base_object_funcs() {
 }
 
 fn all() {
-    let orig_marker = altv::Marker::new(altv::MarkerType::Markerarrow, 0, 0);
+    let orig_marker = altv::Marker::new(altv::MarkerType::MarkerArrow, 0, 0);
 
     let marker_at = |idx: usize| {
         let objects = altv::base_object::all();
@@ -30,14 +30,14 @@ fn all() {
     dbg!(m.id().unwrap(), orig_marker.id().unwrap());
     assert_eq!(m, orig_marker);
 
-    let orig_marker2 = altv::Marker::new(altv::MarkerType::Markerarrow, 0, 0);
+    let orig_marker2 = altv::Marker::new(altv::MarkerType::MarkerArrow, 0, 0);
     dbg!(m.id().unwrap(), orig_marker2.id().unwrap());
 
     assert_ne!(m, orig_marker2);
 }
 
 fn get_by_id() {
-    let orig_marker = altv::Marker::new(altv::MarkerType::Markerarrow, 0, 0);
+    let orig_marker = altv::Marker::new(altv::MarkerType::MarkerArrow, 0, 0);
     let id = dbg!(orig_marker.id()).unwrap();
     let obj = altv::base_object::get_by_id(BaseObjectType::Marker, id);
     let marker = assert_marker(obj);
@@ -85,9 +85,9 @@ fn assert_marker(obj: Option<AnyBaseObject>) -> altv::MarkerContainer {
 fn all_count() {
     assert_eq!(dbg!(altv::base_object::all_count()), 0);
 
-    altv::Marker::new(altv::MarkerType::Markerarrow, 0, 0);
-    altv::Marker::new(altv::MarkerType::Markerarrow, 0, 0);
-    altv::Marker::new(altv::MarkerType::Markerarrow, 0, 0);
+    altv::Marker::new(altv::MarkerType::MarkerArrow, 0, 0);
+    altv::Marker::new(altv::MarkerType::MarkerArrow, 0, 0);
+    altv::Marker::new(altv::MarkerType::MarkerArrow, 0, 0);
 
     assert_eq!(dbg!(altv::base_object::all_count()), 3);
 }
