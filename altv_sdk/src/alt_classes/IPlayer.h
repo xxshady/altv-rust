@@ -355,5 +355,11 @@ std::vector<StreamedEntityWrapper> GetStreamedEntities(const alt::IPlayer* ptr) 
     }
     return vec;
 }
+u16 GetAmmo(const alt::IPlayer* ptr, u32 ammoHash) {
+    return ptr->GetAmmo(ammoHash);
+}
+u16 GetWeaponAmmo(const alt::IPlayer* ptr, u32 weaponHash) {
+    return ptr->GetWeaponAmmo(weaponHash);
+}
 
 } // namespace

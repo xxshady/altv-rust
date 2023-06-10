@@ -10,4 +10,4 @@ publish = false
 [dependencies]
 duct = "0.13.6"
 reqwest = "0.11.18"
-tokio = { version = "1.28.1", features = ["full"]}
+tokio = { version = "1.28.1", features = ["full"] }

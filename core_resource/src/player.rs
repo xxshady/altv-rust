@@ -887,6 +887,14 @@ impl player::Player {
 
         Ok(entities)
     }
+
+    pub fn get_ammo(&self, ammo_hash: impl IntoHash) -> SomeResult<u16> {
+        Ok(unsafe { sdk::IPlayer::GetAmmo(self.raw_ptr()?, ammo_hash.into_hash()) })
+    }
+
+    pub fn get_weapon_ammo(&self, weapon_hash: impl IntoHash) -> SomeResult<u16> {
+        Ok(unsafe { sdk::IPlayer::GetWeaponAmmo(self.raw_ptr()?, weapon_hash.into_hash()) })
+    }
 }
 
 impl StreamSyncedEntityMeta for player::Player {}
