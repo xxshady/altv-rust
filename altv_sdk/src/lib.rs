@@ -279,6 +279,13 @@ pub mod ffi {
         generate!("read_ped_model_info_movement_clip_set")
         generate!("read_ped_model_info_default_unarmed_weapon")
 
+        // alt::WeaponModelInfo
+        generate_ns!("WeaponModelInfo")
+        generate!("is_weapon_model_info_valid")
+        generate!("read_weapon_model_info")
+        generate!("read_weapon_model_info_name")
+        generate!("read_weapon_model_info_ammo_type")
+
         // alt::Quaternion
         generate!("read_quaternion")
 

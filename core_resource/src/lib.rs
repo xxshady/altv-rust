@@ -23,7 +23,6 @@ mod marker;
 mod meta;
 mod network_object;
 mod ped;
-mod ped_model_info;
 mod player;
 mod quaternion;
 mod rgba;
@@ -32,9 +31,11 @@ mod structs;
 mod timers;
 mod vector;
 mod vehicle;
-mod vehicle_model_info;
 mod virtual_entities;
 mod voice_channel;
+mod vehicle_model_info;
+mod ped_model_info;
+mod weapon_model_info;
 
 pub use result::{IntoVoidResult, SomeResult, VoidResult};
 

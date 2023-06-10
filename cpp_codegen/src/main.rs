@@ -46,6 +46,7 @@ lazy_static::lazy_static! {
             ("IConnectionInfo*", "alt::IConnectionInfo*"),
             ("VehicleModelInfo&", "alt::VehicleModelInfo*"),
             ("PedModelInfo&", "alt::PedModelInfo*"),
+            ("WeaponModelInfo&", "alt::WeaponModelInfo*"),
             ("IWorldObject*", "alt::IWorldObject*"),
             ("IBlip*", "alt::IBlip*"),
             ("IVoiceChannel*", "alt::IVoiceChannel*"),
@@ -159,8 +160,11 @@ fn main() {
         "VehicleModelInfo",
         "../altv_sdk/cpp-sdk/types/VehicleModelInfo.h",
     );
-
     gen_default("PedModelInfo", "../altv_sdk/cpp-sdk/types/PedModelInfo.h");
+    gen_default(
+        "WeaponModelInfo",
+        "../altv_sdk/cpp-sdk/types/WeaponModelInfo.h",
+    );
 
     // events
     gen_default("CEvent", "../altv_sdk/cpp-sdk/events/CEvent.h");
@@ -985,6 +989,7 @@ fn cpp_method_to_rust_compatible_func(
         },
         "alt::VehicleModelInfo*" => |v: &str| format!("return &{v}"),
         "alt::PedModelInfo*" => |v: &str| format!("return &{v}"),
+        "alt::WeaponModelInfo*" => |v: &str| format!("return &{v}"),
         "BaseObjectVector" => |v: &str| {
             format!(
                 "auto alt_vec = {v};\n    \

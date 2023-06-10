@@ -37,6 +37,7 @@ pub use crate::{
     timers::create_timer,
     vector::{Vector2, Vector3},
     vehicle_model_info::VehicleModelInfo,
+    weapon_model_info::WeaponModelInfo,
 };
 
 pub mod logging {

@@ -9,6 +9,7 @@ struct Files {
     clothes: (String, String),
     pedmodels: (String, String),
     rpfdata: (String, String),
+    weaponmodels: (String, String),
 }
 
 #[tokio::main]
@@ -82,6 +83,10 @@ async fn main() {
             format!("{cdn_data}/rpfdata.bin"),
             "test/altv_server/data/rpfdata.bin".to_string(),
         ),
+        weaponmodels: (
+            format!("{cdn_data}/weaponmodels.bin"),
+            "test/altv_server/data/weaponmodels.bin".to_string(),
+        ),
     };
 
     println!("downloading server files...");
@@ -114,6 +119,8 @@ async fn download_server_files(files: &Files) {
     let ped_models = download_file(from, to);
     let (from, to) = &files.rpfdata;
     let rpf_data = download_file(from, to);
+    let (from, to) = &files.weaponmodels;
+    let weapon_models = download_file(from, to);
 
     tokio::join!(
         altv_server,
@@ -121,7 +128,8 @@ async fn download_server_files(files: &Files) {
         veh_mods,
         clothes,
         ped_models,
-        rpf_data
+        rpf_data,
+        weapon_models,
     );
 
     async fn download_file(from: &str, to: &str) {

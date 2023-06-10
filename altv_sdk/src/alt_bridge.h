@@ -950,6 +950,39 @@ void read_quaternion(const alt::Quaternion& quat, f32* out_x, f32* out_y, f32* o
     *out_w = quat.w;
 }
 
+bool is_weapon_model_info_valid(const alt::WeaponModelInfo* ptr) {
+    return ptr->hash != 0;
+}
+
+void read_weapon_model_info(
+    const alt::WeaponModelInfo* ptr,
+    u32* hash,
+    u32* model_hash,
+    u32* ammo_type_hash,
+    u32* ammo_model_hash,
+    i32* default_max_ammo_mp,
+    i32* skill_above_50_max_ammo_mp,
+    i32* max_skill_max_ammo_mp,
+    i32* bonus_max_ammo_mp
+) {
+    *hash = ptr->hash;
+    *model_hash = ptr->modelHash;
+    *ammo_type_hash = ptr->ammoTypeHash;
+    *ammo_model_hash = ptr->ammoModelHash;
+    *default_max_ammo_mp = ptr->defaultMaxAmmoMp;
+    *skill_above_50_max_ammo_mp = ptr->skillAbove50MaxAmmoMp;
+    *max_skill_max_ammo_mp = ptr->maxSkillMaxAmmoMp;
+    *bonus_max_ammo_mp = ptr->bonusMaxAmmoMp;
+}
+
+std::string read_weapon_model_info_name(const alt::WeaponModelInfo* ptr) {
+    return ptr->name;
+}
+
+std::string read_weapon_model_info_ammo_type(const alt::WeaponModelInfo* ptr) {
+    return ptr->ammoType;
+}
+
 namespace events
 {
     const alt::CConsoleCommandEvent* to_CConsoleCommandEvent(const alt::CEvent* event) {

@@ -45,6 +45,7 @@ pub use exports::{
     Hash,
     VehicleModelInfo,
     PedModelInfo,
+    WeaponModelInfo,
     Rgba,
     Quaternion,
     core_funcs::*,

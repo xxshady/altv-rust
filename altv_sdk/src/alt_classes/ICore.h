@@ -194,6 +194,9 @@ const alt::VehicleModelInfo* GetVehicleModelByHash(u32 hash) {
 const alt::PedModelInfo* GetPedModelByHash(u32 hash) {
     return &alt::ICore::Instance().GetPedModelByHash(hash);
 }
+const alt::WeaponModelInfo* GetWeaponModelByHash(u32 hash) {
+    return &alt::ICore::Instance().GetWeaponModelByHash(hash);
+}
 Config::Value::ValuePtr GetServerConfig() {
     return alt::ICore::Instance().GetServerConfig();
 }
