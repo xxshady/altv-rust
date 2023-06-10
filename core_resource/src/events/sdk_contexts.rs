@@ -193,6 +193,7 @@ impl ConsoleCommandEvent {
 #[derive(Debug)]
 pub struct WeaponDamageEvent {
     pub source: player::PlayerContainer,
+    pub source_entity: Option<AnyEntity>,
     pub target: AnyEntity,
     pub weapon_hash: Hash,
     pub body_part: altv_sdk::PlayerBodyPart,
@@ -210,6 +211,7 @@ impl WeaponDamageEvent {
 
         Self {
             source: get_non_null_player(sdk::CWeaponDamageEvent::GetSource(weapon_event), resource),
+            source_entity: get_entity_by_ptr(sdk::CWeaponDamageEvent::GetSourceEntity(weapon_event), resource),
             target: get_non_null_entity_by_ptr(
                 sdk::CWeaponDamageEvent::GetTarget(weapon_event),
                 resource,

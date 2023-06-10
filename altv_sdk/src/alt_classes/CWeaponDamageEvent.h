@@ -23,6 +23,9 @@ Vector3Wrapper GetShotOffset(const alt::CWeaponDamageEvent* ptr) {
 WeaponDamageEventBodyPart GetBodyPart(const alt::CWeaponDamageEvent* ptr) {
     return static_cast<int8_t>(ptr->GetBodyPart());
 }
+alt::IEntity* GetSourceEntity(const alt::CWeaponDamageEvent* ptr) {
+    return ptr->GetSourceEntity();
+}
 void SetDamageValue(alt::CWeaponDamageEvent* ptr, u32 _damageValue) {
     return ptr->SetDamageValue(_damageValue);
 }
