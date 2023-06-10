@@ -75,6 +75,19 @@ pub use altv_sdk::{
 
 pub const DEFAULT_DIMENSION: i32 = 0;
 pub const GLOBAL_DIMENSION: i32 = i32::MIN;
+/// # Examples
+///
+/// ```rust
+/// # fn test() -> altv::VoidResult {
+/// altv::events::on_player_enter_vehicle(|event| {
+///     if event.seat == altv::DRIVER_SEAT {
+///         altv::log!("Player: {} entered vehicle as driver", event.player.name()?);
+///     }
+///     Ok(())
+/// });
+/// # Ok(()) }
+/// ```
+pub const DRIVER_SEAT: u8 = 1;
 
 pub mod events;
 pub mod meta;
