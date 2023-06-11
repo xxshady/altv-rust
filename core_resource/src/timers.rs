@@ -2,7 +2,7 @@ use std::{cell::RefMut, fmt::Debug};
 
 use crate::{resource::Resource, VoidResult};
 
-pub type TimerId = u32;
+pub type TimerId = u64;
 pub type TimerCallback = dyn FnMut() -> VoidResult + 'static;
 
 struct Timer {
