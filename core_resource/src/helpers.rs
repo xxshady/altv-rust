@@ -12,6 +12,7 @@ use crate::{
     quaternion::Quaternion,
     resource::Resource,
     rgba::Rgba,
+    structs,
     vector::{Vector2, Vector3},
     SomeResult,
 };
@@ -136,6 +137,12 @@ impl IntoHash for &str {
 impl IntoHash for String {
     fn into_hash(self) -> Hash {
         hash(&self)
+    }
+}
+
+impl IntoHash for structs::AmmoType {
+    fn into_hash(self) -> Hash {
+        self as Hash
     }
 }
 

@@ -40,7 +40,6 @@ pub use exports::{
     PlayerDateTime,
     PlayerHeadBlendData,
     PlayAnimation,
-    AnimationFlags,
     hash,
     Hash,
     VehicleModelInfo,
@@ -57,6 +56,9 @@ pub use exports::{
     BaseObjectPoolFuncs,
     base_object,
     BaseObjectId,
+
+    AnimationFlags,
+    AmmoType,
 
     anyhow,
     serde,

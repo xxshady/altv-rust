@@ -31,7 +31,7 @@ pub use crate::{
     result::{IntoVoidResult, SomeResult, VoidResult},
     rgba::Rgba,
     structs::{
-        AnimationFlags, AttachToEntityBoneIndex, AttachToEntityBoneName, PlayAnimation,
+        AmmoType, AnimationFlags, AttachToEntityBoneIndex, AttachToEntityBoneName, PlayAnimation,
         PlayerDateTime, PlayerHeadBlendData,
     },
     timers::create_timer,

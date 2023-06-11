@@ -888,10 +888,51 @@ impl player::Player {
         Ok(entities)
     }
 
-    pub fn get_ammo(&self, ammo_hash: impl IntoHash) -> SomeResult<u16> {
-        Ok(unsafe { sdk::IPlayer::GetAmmo(self.raw_ptr()?, ammo_hash.into_hash()) })
+    /// Returns current ammo value of specified ammo type.
+    /// If player does not have ammo of specified ammo type, 0 will be returned.
+    ///
+    /// # Examples
+    ///
+    /// Passing ammo type as string.
+    /// ```rust
+    /// # mod altv { pub use altv_internal_core_resource::exports::*; }
+    /// # use altv::BaseObjectPoolFuncs;
+    /// # fn test() -> altv::VoidResult {
+    /// let player = altv::Player::all()[0].clone();
+    ///
+    /// let ammo: u16 = player.get_ammo("ammo_pistol")?;
+    /// # Ok(()) }
+    /// ```
+    ///
+    /// Using AmmoType enum.
+    /// ```rust
+    /// # mod altv { pub use altv_internal_core_resource::exports::*; }
+    /// # use altv::BaseObjectPoolFuncs;
+    /// # fn test() -> altv::VoidResult {
+    /// let player = altv::Player::all()[0].clone();
+    ///
+    /// let ammo: u16 = player.get_ammo(altv::AmmoType::Pistol)?;
+    /// # Ok(()) }
+    /// ```
+    pub fn get_ammo(&self, ammo_type_hash: impl IntoHash) -> SomeResult<u16> {
+        Ok(unsafe { sdk::IPlayer::GetAmmo(self.raw_ptr()?, ammo_type_hash.into_hash()) })
     }
 
+    /// Returns current ammo value of specified weapon.
+    /// If player does not have this weapon, 0 will be returned.
+    ///
+    /// # Examples
+    ///
+    /// Passing weapon as string.
+    /// ```rust
+    /// # mod altv { pub use altv_internal_core_resource::exports::*; }
+    /// # use altv::BaseObjectPoolFuncs;
+    /// # fn test() -> altv::VoidResult {
+    /// let player = altv::Player::all()[0].clone();
+    ///
+    /// let ammo: u16 = player.get_weapon_ammo("weapon_pistol")?;
+    /// # Ok(()) }
+    /// ```
     pub fn get_weapon_ammo(&self, weapon_hash: impl IntoHash) -> SomeResult<u16> {
         Ok(unsafe { sdk::IPlayer::GetWeaponAmmo(self.raw_ptr()?, weapon_hash.into_hash()) })
     }
