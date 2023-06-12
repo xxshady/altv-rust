@@ -14,7 +14,7 @@
 //! ([see](#how-to-implement-serialize-and-deserialize-for-your-struct)).
 //!
 //! # Supported MValue <-> Rust types
-//! [Full list of types](https://github.com/xxshady/altv-rust/blob/577081a3ac0b028e4222584c1b0b79edad3fe405/mvalue/src/helpers.rs#L89-L102)
+//! [Full list of types](https://github.com/xxshady/altv-rust/blob/e2d87bad1da739dd453ede9bbc3195ed593238f2/mvalue/src/helpers.rs#L95-L108)
 //!
 //! # Examples
 //! > *Examples will use [`to_mvalue`](fn.to_mvalue.html) and [`from_mvalue`](fn.from_mvalue.html),
