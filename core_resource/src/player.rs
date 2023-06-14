@@ -918,6 +918,36 @@ impl player::Player {
         Ok(unsafe { sdk::IPlayer::GetAmmo(self.raw_ptr()?, ammo_type_hash.into_hash()) })
     }
 
+    /// Sets ammo value of specified ammo type.
+    ///
+    /// # Examples
+    ///
+    /// Passing ammo type as string.
+    /// ```rust
+    /// # mod altv { pub use altv_internal_core_resource::exports::*; }
+    /// # use altv::BaseObjectPoolFuncs;
+    /// # fn test() -> altv::VoidResult {
+    /// let player = altv::Player::all()[0].clone();
+    ///
+    /// player.set_ammo("ammo_pistol", 10)?;
+    /// # Ok(()) }
+    /// ```
+    ///
+    /// Using AmmoType enum.
+    /// ```rust
+    /// # mod altv { pub use altv_internal_core_resource::exports::*; }
+    /// # use altv::BaseObjectPoolFuncs;
+    /// # fn test() -> altv::VoidResult {
+    /// let player = altv::Player::all()[0].clone();
+    ///
+    /// player.set_ammo(altv::AmmoType::Pistol, 10)?;
+    /// # Ok(()) }
+    /// ```
+    pub fn set_ammo(&self, ammo_type_hash: impl IntoHash, ammo: u16) -> VoidResult {
+        unsafe { sdk::IPlayer::SetAmmo(self.raw_ptr()?, ammo_type_hash.into_hash(), ammo) }
+        Ok(())
+    }
+
     /// Returns current ammo value of specified weapon.
     /// If player does not have this weapon, 0 will be returned.
     ///
@@ -935,6 +965,11 @@ impl player::Player {
     /// ```
     pub fn get_weapon_ammo(&self, weapon_hash: impl IntoHash) -> SomeResult<u16> {
         Ok(unsafe { sdk::IPlayer::GetWeaponAmmo(self.raw_ptr()?, weapon_hash.into_hash()) })
+    }
+
+    pub fn set_weapon_ammo(&self, weapon_hash: impl IntoHash, ammo: u16) -> VoidResult {
+        unsafe { sdk::IPlayer::SetWeaponAmmo(self.raw_ptr()?, weapon_hash.into_hash(), ammo) }
+        Ok(())
     }
 }
 
