@@ -285,6 +285,8 @@ pub mod ffi {
         generate!("read_weapon_model_info")
         generate!("read_weapon_model_info_name")
         generate!("read_weapon_model_info_ammo_type")
+        generate!("read_weapon_model_info_model_name")
+        generate!("read_weapon_model_info_ammo_model_name")
 
         // alt::Quaternion
         generate!("read_quaternion")

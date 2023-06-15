@@ -881,7 +881,8 @@ void read_vehicle_model_info(
     u8* out_interior_color,
     u8* out_dashboard_color,
     bool* out_modkits,
-    bool* out_has_auto_attach_trailer
+    bool* out_has_auto_attach_trailer,
+    bool* can_attach_cars
 ) {
     *out_model_type = static_cast<u8>(ptr->modelType);
     *out_wheels_count = ptr->wheelsCount;
@@ -901,6 +902,7 @@ void read_vehicle_model_info(
     }
 
     *out_has_auto_attach_trailer = ptr->hasAutoAttachTrailer;
+    *can_attach_cars = ptr->canAttachCars;
 }
 
 std::string read_vehicle_model_info_title(const alt::VehicleModelInfo* ptr) {
@@ -981,6 +983,14 @@ std::string read_weapon_model_info_name(const alt::WeaponModelInfo* ptr) {
 
 std::string read_weapon_model_info_ammo_type(const alt::WeaponModelInfo* ptr) {
     return ptr->ammoType;
+}
+
+std::string read_weapon_model_info_model_name(const alt::WeaponModelInfo* ptr) {
+    return ptr->modelName;
+}
+
+std::string read_weapon_model_info_ammo_model_name(const alt::WeaponModelInfo* ptr) {
+    return ptr->ammoModelName;
 }
 
 namespace events

@@ -40,6 +40,9 @@ bool IsFrozen(const alt::IEntity* ptr) {
 void SetFrozen(alt::IEntity* ptr, bool state) {
     return ptr->SetFrozen(state);
 }
+u32 GetTimestamp(const alt::IEntity* ptr) {
+    return ptr->GetTimestamp();
+}
 void SetNetworkOwner(alt::IEntity* ptr, alt::IPlayer* player, bool disableMigration) {
     return ptr->SetNetworkOwner(player, disableMigration);
 }

@@ -169,4 +169,8 @@ pub trait Entity<InheritPtrs: inherit_ptrs::traits::Entity>:
         }
         Ok(())
     }
+
+    fn timestamp(&self) -> SomeResult<u32> {
+        Ok(unsafe { sdk::IEntity::GetTimestamp(self.raw_ptr()?) })
+    }
 }

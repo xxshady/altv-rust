@@ -4,9 +4,11 @@ use crate::{helpers::IntoHash, sdk};
 pub struct WeaponModelInfo {
     pub hash: u32,
     pub name: String,
-    pub ammo_type: String,
+    pub model_name: String,
     pub model_hash: u32,
     pub ammo_type_hash: u32,
+    pub ammo_type: String,
+    pub ammo_model_name: String,
     pub ammo_model_hash: u32,
     pub default_max_ammo_mp: i32,
     pub skill_above_50_max_ammo_mp: i32,
@@ -48,9 +50,12 @@ impl WeaponModelInfo {
         Some(Self {
             hash,
             name: unsafe { sdk::read_weapon_model_info_name(ptr) }.to_string(),
-            ammo_type: unsafe { sdk::read_weapon_model_info_ammo_type(ptr) }.to_string(),
+            model_name: unsafe { sdk::read_weapon_model_info_model_name(ptr) }.to_string(),
             model_hash,
             ammo_type_hash,
+            ammo_type: unsafe { sdk::read_weapon_model_info_ammo_type(ptr) }.to_string(),
+            ammo_model_name: unsafe { sdk::read_weapon_model_info_ammo_model_name(ptr) }
+                .to_string(),
             ammo_model_hash,
             default_max_ammo_mp,
             skill_above_50_max_ammo_mp,

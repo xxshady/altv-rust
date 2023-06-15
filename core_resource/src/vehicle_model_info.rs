@@ -15,6 +15,7 @@ pub struct VehicleModelInfo {
     pub mod_kits: [bool; 2],
     pub has_auto_attach_trailer: bool,
     pub bones: Vec<structs::BoneInfo>,
+    pub can_attach_cars: bool,
 
     ptr: *const sdk::alt::VehicleModelInfo,
 }
@@ -38,21 +39,23 @@ impl VehicleModelInfo {
         let mut dashboard_color = 0u8;
         let mut mod_kits = [false; 2];
         let mut has_auto_attach_trailer = false;
+        let mut can_attach_cars = false;
 
         unsafe {
             sdk::read_vehicle_model_info(
                 ptr,
-                &mut model_type as *mut u8,
-                &mut wheels_count as *mut u8,
-                &mut has_armored_windows as *mut bool,
-                &mut primary_color as *mut u8,
-                &mut secondary_color as *mut u8,
-                &mut pearl_color as *mut u8,
-                &mut wheels_color as *mut u8,
-                &mut interior_color as *mut u8,
-                &mut dashboard_color as *mut u8,
-                &mut mod_kits as *mut bool,
-                &mut has_auto_attach_trailer as *mut bool,
+                &mut model_type as *mut _,
+                &mut wheels_count as *mut _,
+                &mut has_armored_windows as *mut _,
+                &mut primary_color as *mut _,
+                &mut secondary_color as *mut _,
+                &mut pearl_color as *mut _,
+                &mut wheels_color as *mut _,
+                &mut interior_color as *mut _,
+                &mut dashboard_color as *mut _,
+                &mut mod_kits as *mut _,
+                &mut has_auto_attach_trailer as *mut _,
+                &mut can_attach_cars as *mut _,
             )
         };
         let model_type = altv_sdk::VehicleModelType::try_from(model_type).unwrap();
@@ -87,6 +90,7 @@ impl VehicleModelInfo {
             mod_kits,
             has_auto_attach_trailer,
             bones,
+            can_attach_cars,
 
             ptr,
         })
