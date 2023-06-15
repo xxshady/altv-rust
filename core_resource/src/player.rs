@@ -158,6 +158,10 @@ impl player::Player {
         Ok(())
     }
 
+    pub fn reset_head_blend_data(&self) -> VoidResult {
+        self.set_head_blend_data(Default::default())
+    }
+
     pub fn health(&self) -> SomeResult<u16> {
         Ok(unsafe { sdk::IPlayer::GetHealth(self.raw_ptr()?) })
     }
