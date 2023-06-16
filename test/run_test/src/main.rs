@@ -106,22 +106,24 @@ async fn main() {
         .start()
         .unwrap_or_else(|e| panic!("failed to start altv server at: {server_bin:?}, error: {e}"));
 
-    thread::sleep(Duration::from_secs(3));
+    thread::sleep(Duration::from_secs(2));
 
     let result = altv_server.try_wait();
     match result {
         Ok(None) => {
-            println!("altv server still running, forcibly killing process...");
-            altv_server.kill().unwrap();
-        }
-        Ok(Some(output)) => {
-            if output.status.success() {
-                println!("altv server process stopped successfully, output: {output:?}");
+            if cfg!(windows) {
+                panic!("altv server is still running");
             } else {
-                println!("altv server process FAILED to stop, output: {output:?}");
+                println!("its linux, killing altv server forcibly...");
+                altv_server.kill().unwrap();
             }
         }
-        Err(_) => unreachable!(),
+        Ok(Some(_)) => {
+            println!("altv server process stopped successfully");
+        }
+        Err(e) => {
+            panic!("altv server process FAILED to stop, error: {e:?}");
+        }
     }
 }
 

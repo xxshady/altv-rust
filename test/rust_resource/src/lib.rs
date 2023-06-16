@@ -30,5 +30,7 @@ fn main() -> impl altv::IntoVoidResult {
     altv::log!("#################### timers");
     test_timers();
 
-    altv::set_timeout(altv::stop_server, 1000);
+    if cfg!(windows) {
+        altv::set_timeout(altv::stop_server, 1000);
+    }
 }
