@@ -1,4 +1,4 @@
-use std::{fs, path::Path};
+use std::{fs, path::Path, thread, time::Duration};
 
 use duct::cmd;
 
@@ -100,10 +100,29 @@ async fn main() {
     }
 
     let server_dir = Path::new(&server_bin).parent().unwrap();
-    cmd!(&server_bin)
+
+    let altv_server = cmd!(&server_bin)
         .dir(server_dir)
-        .run()
-        .unwrap_or_else(|e| panic!("failed to run altv server at: {server_bin:?}, error: {e}"));
+        .start()
+        .unwrap_or_else(|e| panic!("failed to start altv server at: {server_bin:?}, error: {e}"));
+
+    thread::sleep(Duration::from_secs(3));
+
+    let result = altv_server.try_wait();
+    match result {
+        Ok(None) => {
+            println!("altv server still running, forcibly killing process...");
+            altv_server.kill().unwrap();
+        }
+        Ok(Some(output)) => {
+            if output.status.success() {
+                println!("altv server process stopped successfully, output: {output:?}");
+            } else {
+                println!("altv server process FAILED to stop, output: {output:?}");
+            }
+        }
+        Err(_) => unreachable!(),
+    }
 }
 
 async fn download_server_files(files: &Files) {
