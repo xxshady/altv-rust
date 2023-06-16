@@ -30,7 +30,11 @@ fn main() -> impl altv::IntoVoidResult {
     altv::log!("#################### timers");
     test_timers();
 
-    if cfg!(windows) {
-        altv::set_timeout(altv::stop_server, 1000);
-    }
+    altv::set_timeout(
+        || {
+            altv::log!("stopping resource...");
+            altv::Resource::current().stop();
+        },
+        1000,
+    );
 }

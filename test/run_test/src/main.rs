@@ -1,4 +1,9 @@
-use std::{fs, path::Path, thread, time::Duration};
+use std::{
+    fs,
+    path::Path,
+    thread,
+    time::{Duration, Instant},
+};
 
 use duct::cmd;
 
@@ -99,14 +104,18 @@ async fn main() {
         cmd!("chmod", "+x", &server_bin).run().unwrap();
     }
 
-    let server_dir = Path::new(&server_bin).parent().unwrap();
+    let server_dir = Path::new(&server_bin)
+        .parent()
+        .unwrap()
+        .to_string_lossy()
+        .to_string();
 
     let altv_server = cmd!(&server_bin)
-        .dir(server_dir)
+        .dir(&server_dir)
         .start()
         .unwrap_or_else(|e| panic!("failed to start altv server at: {server_bin:?}, error: {e}"));
 
-    let start = std::time::Instant::now();
+    let start = Instant::now();
     loop {
         thread::sleep(Duration::from_millis(200));
 
@@ -115,6 +124,14 @@ async fn main() {
             Ok(None) => {
                 if start.elapsed() >= Duration::from_secs(30) {
                     panic!("altv server process did not exit in 30 seconds");
+                }
+
+                // https://youtu.be/pLJTfLumkGw
+                let log = fs::read(format!("{server_dir}/server.log")).unwrap();
+                if String::from_utf8_lossy(&log).contains("Stopped resource rust") {
+                    println!("rust resource stopped, killing altv server");
+                    altv_server.kill().unwrap();
+                    break;
                 }
             }
             Ok(Some(_)) => {
