@@ -106,23 +106,24 @@ async fn main() {
         .start()
         .unwrap_or_else(|e| panic!("failed to start altv server at: {server_bin:?}, error: {e}"));
 
-    thread::sleep(Duration::from_secs(2));
+    let start = std::time::Instant::now();
+    loop {
+        thread::sleep(Duration::from_millis(200));
 
-    let result = altv_server.try_wait();
-    match result {
-        Ok(None) => {
-            if cfg!(windows) {
-                panic!("altv server is still running");
-            } else {
-                println!("its linux, killing altv server forcibly...");
-                altv_server.kill().unwrap();
+        let result = altv_server.try_wait();
+        match result {
+            Ok(None) => {
+                if start.elapsed() >= Duration::from_secs(30) {
+                    panic!("altv server process did not exit in 30 seconds");
+                }
             }
-        }
-        Ok(Some(_)) => {
-            println!("altv server process stopped successfully");
-        }
-        Err(e) => {
-            panic!("altv server process FAILED to stop, error: {e:?}");
+            Ok(Some(_)) => {
+                println!("altv server process stopped successfully");
+                std::process::exit(0);
+            }
+            Err(e) => {
+                panic!("altv server process CRASHED, error: {e:?}");
+            }
         }
     }
 }
