@@ -1,13 +1,19 @@
-mod mvalue;
-mod base_object_pool_funcs;
-mod base_object_funcs;
 mod helpers;
-mod weapon_model_info;
 
-use base_object_funcs::test_base_object_funcs;
-use base_object_pool_funcs::test_base_object_pool_funcs;
+mod mvalue;
 use mvalue::test_mvalue;
+
+mod base_object_pool_funcs;
+use base_object_pool_funcs::test_base_object_pool_funcs;
+
+mod base_object_funcs;
+use base_object_funcs::test_base_object_funcs;
+
+mod weapon_model_info;
 use weapon_model_info::test_weapon_model_info;
+
+mod timers;
+use timers::test_timers;
 
 #[altv::main]
 fn main() -> impl altv::IntoVoidResult {
@@ -21,6 +27,8 @@ fn main() -> impl altv::IntoVoidResult {
     test_mvalue();
     altv::log!("#################### weapon_model_info");
     test_weapon_model_info();
+    altv::log!("#################### timers");
+    test_timers();
 
-    altv::stop_server();
+    altv::set_timeout(|| altv::stop_server(), 1000);
 }

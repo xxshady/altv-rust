@@ -34,7 +34,7 @@ pub use crate::{
         AmmoType, AnimationFlags, AttachToEntityBoneIndex, AttachToEntityBoneName, PlayAnimation,
         PlayerDateTime, PlayerHeadBlendData,
     },
-    timers::create_timer,
+    timers::{create_timer, remove_timer, Timer},
     vector::{Vector2, Vector3},
     vehicle_model_info::VehicleModelInfo,
     weapon_model_info::WeaponModelInfo,

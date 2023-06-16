@@ -56,6 +56,7 @@ pub use exports::{
     BaseObjectPoolFuncs,
     base_object,
     BaseObjectId,
+    Timer,
 
     AnimationFlags,
     AmmoType,
@@ -149,12 +150,30 @@ pub mod prelude {
 /// );
 /// # Ok(()) }
 /// ```
-pub fn set_timeout<V: IntoVoidResult>(mut callback: impl FnMut() -> V + 'static, millis: u64) {
+///
+/// Destroying (clearing) timer
+/// ```rust
+/// # fn test() -> altv::VoidResult {
+/// let mut timer = altv::set_timeout(
+///     move || {
+///         altv::log!("this message will never be printed");
+///     },
+///     1500,
+/// );
+///
+/// // Returns error if timer was already destroyed
+/// timer.destroy()?;
+/// # Ok(()) }
+/// ```
+pub fn set_timeout<V: IntoVoidResult>(
+    mut callback: impl FnMut() -> V + 'static,
+    millis: u64,
+) -> Timer {
     exports::create_timer(
         Box::new(move || callback().into_void_result()),
         millis,
         true,
-    );
+    )
 }
 
 /// # Examples
@@ -188,12 +207,30 @@ pub fn set_timeout<V: IntoVoidResult>(mut callback: impl FnMut() -> V + 'static,
 /// );
 /// # Ok(()) }
 /// ```
-pub fn set_interval<V: IntoVoidResult>(mut callback: impl FnMut() -> V + 'static, millis: u64) {
+///
+/// Destroying (clearing) timer
+/// ```rust
+/// # fn test() -> altv::VoidResult {
+/// let mut timer = altv::set_interval(
+///     move || {
+///         altv::log!("this message will never be printed");
+///     },
+///     1500,
+/// );
+///
+/// // Returns error if timer was already destroyed
+/// timer.destroy()?;
+/// # Ok(()) }
+/// ```
+pub fn set_interval<V: IntoVoidResult>(
+    mut callback: impl FnMut() -> V + 'static,
+    millis: u64,
+) -> Timer {
     exports::create_timer(
         Box::new(move || callback().into_void_result()),
         millis,
         false,
-    );
+    )
 }
 
 pub use resource_main_macro::resource_main_func as main;
