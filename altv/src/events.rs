@@ -29,6 +29,12 @@
 //! });
 //!
 //! altv::events::emit("example", &[&true, &123])?;
+//!
+//! // Event handler can also be removed later
+//! let mut controller = altv::events::on("example", |event| {});
+//! controller.destroy()?; // ok
+//! controller.destroy()?; // err "Already destroyed"
+//!
 //! # Ok(()) }
 //! ```
 //!
@@ -42,6 +48,11 @@
 //!     altv::log!("args: {args:?}"); // args: (true, 123)
 //!     Ok(())
 //! });
+//!
+//! // Event handler can also be removed later
+//! let mut controller = altv::events::on_player("example", |event| {});
+//! controller.destroy()?; // ok
+//! controller.destroy()?; // err "Already destroyed"
 //! # Ok(()) }
 //! ```
 
@@ -49,6 +60,7 @@ use core_resource::exports::{events, IntoVoidResult};
 pub use events::{
     emit, emit_all_players, emit_all_players_unreliable, emit_some_players,
     emit_some_players_unreliable, on, on_player, ClientEventContext, FireInfo, LocalEventContext,
+    ScriptEventController, LocalEventController, ClientEventController,
 };
 
 pub use events::custom_contexts::*;

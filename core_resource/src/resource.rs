@@ -21,7 +21,9 @@ pub struct Resource {
     pub timer_schedule: RefCell<timers::ScheduleState>,
     pub events: RefCell<events::EventManager>,
     pub local_script_events: RefCell<script_events::LocalEventManager>,
+    pub local_script_events_schedule: RefCell<script_events::LocalEventSchedule>,
     pub client_script_events: RefCell<script_events::ClientEventManager>,
+    pub client_script_events_schedule: RefCell<script_events::ClientEventSchedule>,
     pub base_objects: RefCell<base_objects::Store>,
     pub pending_base_object_destroy_or_creation: RefCell<base_objects::PendingDestroyOrCreation>,
     pub alt_resources: RefCell<alt_resource::AltResourceManager>,
@@ -135,7 +137,15 @@ impl Resource {
     impl_borrow_mut_fn!(timer_schedule, timers::ScheduleState);
     impl_borrow_mut_fn!(events, events::EventManager);
     impl_borrow_mut_fn!(local_script_events, script_events::LocalEventManager);
+    impl_borrow_mut_fn!(
+        local_script_events_schedule,
+        script_events::LocalEventSchedule
+    );
     impl_borrow_mut_fn!(client_script_events, script_events::ClientEventManager);
+    impl_borrow_mut_fn!(
+        client_script_events_schedule,
+        script_events::ClientEventSchedule
+    );
     impl_borrow_mut_fn!(base_objects, base_objects::Store);
     impl_borrow_fn!(base_objects, base_objects::Store);
     impl_borrow_mut_fn!(

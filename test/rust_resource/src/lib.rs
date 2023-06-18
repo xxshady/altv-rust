@@ -15,6 +15,9 @@ use weapon_model_info::test_weapon_model_info;
 mod timers;
 use timers::test_timers;
 
+mod script_events;
+use script_events::test_script_events;
+
 #[altv::main]
 fn main() -> impl altv::IntoVoidResult {
     std::env::set_var("RUST_BACKTRACE", "full");
@@ -29,6 +32,8 @@ fn main() -> impl altv::IntoVoidResult {
     test_weapon_model_info();
     altv::log!("#################### timers");
     test_timers();
+    altv::log!("#################### script_events");
+    test_script_events();
 
     altv::set_timeout(
         || {

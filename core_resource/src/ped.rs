@@ -1,5 +1,5 @@
 use crate::{
-    base_objects::{ped},
+    base_objects::ped,
     helpers::{self, Hash, IntoHash},
     meta::entity_stream_synced_meta::StreamSyncedEntityMeta,
     sdk,

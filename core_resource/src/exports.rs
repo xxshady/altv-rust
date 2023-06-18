@@ -75,7 +75,10 @@ pub mod events {
             add_custom_handler, add_sdk_handler, custom_contexts, sdk_contexts, structs::FireInfo,
             CustomHandler, SDKHandler,
         },
-        script_events::{emit, on, on_player, ClientEventContext, LocalEventContext},
+        script_events::{
+            emit, on, on_player, ClientEventContext, LocalEventContext, ScriptEventController,
+            LocalEventController, ClientEventController,
+        },
     };
 }
 
