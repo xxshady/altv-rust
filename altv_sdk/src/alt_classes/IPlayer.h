@@ -190,8 +190,8 @@ void GiveWeapon(alt::IPlayer* ptr, u32 weapon, i32 ammo, bool selectWeapon) {
 bool RemoveWeapon(alt::IPlayer* ptr, u32 weapon) {
     return ptr->RemoveWeapon(weapon);
 }
-void RemoveAllWeapons(alt::IPlayer* ptr) {
-    return ptr->RemoveAllWeapons();
+void RemoveAllWeapons(alt::IPlayer* ptr, bool removeAllAmmo) {
+    return ptr->RemoveAllWeapons(removeAllAmmo);
 }
 void SetDateTime(alt::IPlayer* ptr, cpp_int day, cpp_int month, cpp_int year, cpp_int hour, cpp_int minute, cpp_int second) {
     return ptr->SetDateTime(day, month, year, hour, minute, second);
@@ -304,6 +304,9 @@ std::vector<WeaponWrapper> GetWeapons(const alt::IPlayer* ptr) {
         weapons.push_back({ w.hash, w.tintIndex, w.components });
     }
     return weapons;
+}
+bool HasWeapon(const alt::IPlayer* ptr, u32 weapon) {
+    return ptr->HasWeapon(weapon);
 }
 bool HasLocalMetaData(const alt::IPlayer* ptr, const StdStringClone key) {
     return ptr->HasLocalMetaData(key);

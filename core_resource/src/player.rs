@@ -351,8 +351,8 @@ impl player::Player {
         Ok(())
     }
 
-    pub fn remove_all_weapons(&self) -> VoidResult {
-        unsafe { sdk::IPlayer::RemoveAllWeapons(self.raw_ptr()?) }
+    pub fn remove_all_weapons(&self, remove_all_ammo: bool) -> VoidResult {
+        unsafe { sdk::IPlayer::RemoveAllWeapons(self.raw_ptr()?, remove_all_ammo) }
         Ok(())
     }
 
@@ -974,6 +974,10 @@ impl player::Player {
     pub fn set_weapon_ammo(&self, weapon_hash: impl IntoHash, ammo: u16) -> VoidResult {
         unsafe { sdk::IPlayer::SetWeaponAmmo(self.raw_ptr()?, weapon_hash.into_hash(), ammo) }
         Ok(())
+    }
+
+    pub fn has_weapon(&self, weapon_hash: impl IntoHash) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IPlayer::HasWeapon(self.raw_ptr()?, weapon_hash.into_hash()) })
     }
 }
 
