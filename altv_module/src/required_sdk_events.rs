@@ -7,8 +7,6 @@ lazy_static::lazy_static! {
         HashSet::from([
             EventType::ResourceStart,
             EventType::ResourceStop,
-            EventType::ConnectionQueueAdd,
-            EventType::ConnectionQueueRemove,
         ])
     };
 }
