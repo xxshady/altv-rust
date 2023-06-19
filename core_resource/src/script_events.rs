@@ -316,12 +316,8 @@ impl<T> ScriptEventController<T> {
         }
     }
 
-    fn take_id(&mut self) {
-        self.id.take();
-    }
-
-    fn get_data(&mut self) -> SomeResult<(EventName, HandlerId)> {
-        let (Some(id), Some(event_name)) = (self.id, self.event_name.take()) else {
+    fn take_data(&mut self) -> SomeResult<(EventName, HandlerId)> {
+        let (Some(id), Some(event_name)) = (self.id.take(), self.event_name.take()) else {
             bail!("Already destroyed")
         };
         Ok((event_name, id))
@@ -332,13 +328,12 @@ pub type LocalEventController = ScriptEventController<script_event_type::Local>;
 
 impl LocalEventController {
     pub fn destroy(&mut self) -> VoidResult {
-        let (event_name, id) = self.get_data()?;
+        let (event_name, id) = self.take_data()?;
 
         Resource::with_local_script_events_schedule_mut(|mut v, _| {
             v.add_to_be_destroyed(event_name, id)
         });
 
-        self.take_id();
         Ok(())
     }
 }
@@ -347,13 +342,12 @@ pub type ClientEventController = ScriptEventController<script_event_type::Client
 
 impl ClientEventController {
     pub fn destroy(&mut self) -> VoidResult {
-        let (event_name, id) = self.get_data()?;
+        let (event_name, id) = self.take_data()?;
 
         Resource::with_client_script_events_schedule_mut(|mut v, _| {
             v.add_to_be_destroyed(event_name, id)
         });
 
-        self.take_id();
         Ok(())
     }
 }
