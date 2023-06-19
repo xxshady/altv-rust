@@ -27,13 +27,13 @@ pub struct LocalEventContext<'a> {
 }
 
 #[derive(Debug)]
-pub struct ClientEventContext<'a> {
+pub struct PlayerEventContext<'a> {
     pub player: player::PlayerContainer,
     pub args: EventArgs<'a>,
 }
 
 pub type LocalEventHandler = Box<dyn FnMut(&LocalEventContext) -> VoidResult>;
-pub type ClientEventHandler = Box<dyn FnMut(&ClientEventContext) -> VoidResult>;
+pub type ClientEventHandler = Box<dyn FnMut(&PlayerEventContext) -> VoidResult>;
 
 pub trait ScriptEventManager {
     type Handler;
@@ -222,7 +222,7 @@ impl ClientEventManager {
         self.remove_scheduled_handlers(schedule);
 
         if let Some(handlers) = self.get_handlers_for_event(event_name) {
-            let context = ClientEventContext { player, args };
+            let context = PlayerEventContext { player, args };
             for h in handlers {
                 if let Err(error) = h(&context) {
                     logger::error!(
@@ -279,8 +279,8 @@ pub fn on<V: IntoVoidResult>(
 
 pub fn on_player<V: IntoVoidResult>(
     event_name: impl IntoString,
-    mut handler: impl FnMut(&ClientEventContext) -> V + 'static,
-) -> ClientEventController {
+    mut handler: impl FnMut(&PlayerEventContext) -> V + 'static,
+) -> PlayerEventController {
     let event_name = event_name.into_string();
 
     let id = Resource::with_client_script_events_mut(|mut local_events, _| {
@@ -290,7 +290,7 @@ pub fn on_player<V: IntoVoidResult>(
         )
     });
 
-    ClientEventController::new(event_name, id)
+    PlayerEventController::new(event_name, id)
 }
 
 pub mod script_event_type {
@@ -338,9 +338,9 @@ impl LocalEventController {
     }
 }
 
-pub type ClientEventController = ScriptEventController<script_event_type::Client>;
+pub type PlayerEventController = ScriptEventController<script_event_type::Client>;
 
-impl ClientEventController {
+impl PlayerEventController {
     pub fn destroy(&mut self) -> VoidResult {
         let (event_name, id) = self.take_data()?;
 

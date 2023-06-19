@@ -76,8 +76,8 @@ pub mod events {
             CustomHandler, SDKHandler,
         },
         script_events::{
-            emit, on, on_player, ClientEventContext, LocalEventContext, ScriptEventController,
-            LocalEventController, ClientEventController,
+            emit, on, on_player, PlayerEventContext, LocalEventContext, ScriptEventController,
+            LocalEventController, PlayerEventController,
         },
     };
 }

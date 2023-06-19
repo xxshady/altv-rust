@@ -38,7 +38,7 @@
 //! # Ok(()) }
 //! ```
 //!
-//! Client -> server events
+//! client (player) -> server events
 //! ```rust
 //! # fn test() -> altv::VoidResult {
 //! # use altv::prelude::*;
@@ -59,8 +59,8 @@
 use core_resource::exports::{events, IntoVoidResult};
 pub use events::{
     emit, emit_all_players, emit_all_players_unreliable, emit_some_players,
-    emit_some_players_unreliable, on, on_player, ClientEventContext, FireInfo, LocalEventContext,
-    ScriptEventController, LocalEventController, ClientEventController,
+    emit_some_players_unreliable, on, on_player, PlayerEventContext, FireInfo, LocalEventContext,
+    ScriptEventController, LocalEventController, PlayerEventController,
 };
 
 pub use events::custom_contexts::*;
