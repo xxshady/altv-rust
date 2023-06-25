@@ -15,10 +15,7 @@ impl voice_channel::VoiceChannel {
         Self::new(false, 0.0)
     }
 
-    pub(self) fn new(
-        spatial: bool,
-        max_distance: f32,
-    ) -> SomeResult<voice_channel::VoiceChannelContainer> {
+    fn new(spatial: bool, max_distance: f32) -> SomeResult<voice_channel::VoiceChannelContainer> {
         Ok(helpers::create_base_object!(
             voice_channel,
             sdk::ICore::CreateVoiceChannel(spatial, max_distance),

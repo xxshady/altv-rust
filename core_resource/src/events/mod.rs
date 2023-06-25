@@ -5,8 +5,8 @@ pub use altv_sdk::EventType as SDKEventType;
 
 pub mod sdk_contexts;
 pub mod custom_contexts;
-pub(self) mod helpers;
-pub(self) mod cancellable;
+mod helpers;
+mod cancellable;
 pub mod structs;
 
 macro_rules! log_user_handler_error {
