@@ -29,23 +29,23 @@ Vector2Wrapper GetScaleXY(const alt::IBlip* ptr) {
 void SetScaleXY(alt::IBlip* ptr, f32 scale_x, f32 scale_y) {
     return ptr->SetScaleXY({ scale_x, scale_y });
 }
-cpp_int GetDisplay(const alt::IBlip* ptr) {
+u32 GetDisplay(const alt::IBlip* ptr) {
     return ptr->GetDisplay();
 }
-void SetDisplay(alt::IBlip* ptr, cpp_int display) {
+void SetDisplay(alt::IBlip* ptr, u32 display) {
     return ptr->SetDisplay(display);
 }
-cpp_int GetSprite(const alt::IBlip* ptr) {
+u32 GetSprite(const alt::IBlip* ptr) {
     return ptr->GetSprite();
 }
-cpp_int GetColor(const alt::IBlip* ptr) {
+u32 GetColor(const alt::IBlip* ptr) {
     return ptr->GetColor();
 }
 RGBAWrapper GetSecondaryColor(const alt::IBlip* ptr) {
     auto rgba = ptr->GetSecondaryColor();
     return { rgba.r, rgba.g, rgba.b, rgba.a };
 }
-cpp_int GetAlpha(const alt::IBlip* ptr) {
+u32 GetAlpha(const alt::IBlip* ptr) {
     return ptr->GetAlpha();
 }
 cpp_int GetFlashTimer(const alt::IBlip* ptr) {
@@ -78,7 +78,7 @@ bool GetFlashesAlternate(const alt::IBlip* ptr) {
 bool GetAsShortRange(const alt::IBlip* ptr) {
     return ptr->GetAsShortRange();
 }
-cpp_int GetPriority(const alt::IBlip* ptr) {
+u32 GetPriority(const alt::IBlip* ptr) {
     return ptr->GetPriority();
 }
 f32 GetRotation(const alt::IBlip* ptr) {
@@ -115,7 +115,7 @@ bool GetFriendIndicatorVisible(const alt::IBlip* ptr) {
 bool GetCrewIndicatorVisible(const alt::IBlip* ptr) {
     return ptr->GetCrewIndicatorVisible();
 }
-cpp_int GetCategory(const alt::IBlip* ptr) {
+u32 GetCategory(const alt::IBlip* ptr) {
     return ptr->GetCategory();
 }
 bool GetAsHighDetail(const alt::IBlip* ptr) {
@@ -124,10 +124,10 @@ bool GetAsHighDetail(const alt::IBlip* ptr) {
 bool GetShrinked(const alt::IBlip* ptr) {
     return ptr->GetShrinked();
 }
-void SetSprite(alt::IBlip* ptr, cpp_int sprite) {
+void SetSprite(alt::IBlip* ptr, u32 sprite) {
     return ptr->SetSprite(sprite);
 }
-void SetColor(alt::IBlip* ptr, cpp_int color) {
+void SetColor(alt::IBlip* ptr, u32 color) {
     return ptr->SetColor(color);
 }
 void SetRoute(alt::IBlip* ptr, bool state) {
@@ -139,7 +139,7 @@ void SetRouteColor(alt::IBlip* ptr, u8 color_r, u8 color_g, u8 color_b, u8 color
 void SetSecondaryColor(alt::IBlip* ptr, u8 color_r, u8 color_g, u8 color_b, u8 color_a) {
     return ptr->SetSecondaryColor({ color_r, color_g, color_b, color_a });
 }
-void SetAlpha(alt::IBlip* ptr, cpp_int alpha) {
+void SetAlpha(alt::IBlip* ptr, u32 alpha) {
     return ptr->SetAlpha(alpha);
 }
 void SetFlashTimer(alt::IBlip* ptr, cpp_int timer) {
@@ -169,7 +169,7 @@ void SetFlashesAlternate(alt::IBlip* ptr, bool state) {
 void SetAsShortRange(alt::IBlip* ptr, bool state) {
     return ptr->SetAsShortRange(state);
 }
-void SetPriority(alt::IBlip* ptr, cpp_int state) {
+void SetPriority(alt::IBlip* ptr, u32 state) {
     return ptr->SetPriority(state);
 }
 void SetRotation(alt::IBlip* ptr, f32 rot) {
@@ -202,7 +202,7 @@ void SetFriendIndicatorVisible(alt::IBlip* ptr, bool val) {
 void SetCrewIndicatorVisible(alt::IBlip* ptr, bool val) {
     return ptr->SetCrewIndicatorVisible(val);
 }
-void SetCategory(alt::IBlip* ptr, cpp_int val) {
+void SetCategory(alt::IBlip* ptr, u32 val) {
     return ptr->SetCategory(val);
 }
 void SetAsHighDetail(alt::IBlip* ptr, bool val) {

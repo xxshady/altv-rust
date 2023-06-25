@@ -13,57 +13,21 @@ use autocxx::prelude::*;
 /// # **`Blip implementation`**
 impl blip::Blip {
     pub fn new_area(pos: impl Into<Vector3>, width: f32, height: f32) -> blip::BlipContainer {
-        let pos = pos.into();
-
-        let blip = helpers::create_base_object!(
-            blip,
-            sdk::ICore::CreateBlip(
-                std::ptr::null_mut(),
-                altv_sdk::BlipType::Area as u8,
-                pos.x(),
-                pos.y(),
-                pos.z(),
-            ),
-            panic!("Failed to create Area Blip")
-        );
+        let blip = Self::new(altv_sdk::BlipType::Area, pos);
 
         blip.set_scale((width, height)).unwrap();
         blip
     }
 
     pub fn new_radius(pos: impl Into<Vector3>, radius: f32) -> blip::BlipContainer {
-        let pos = pos.into();
-
-        let blip = helpers::create_base_object!(
-            blip,
-            sdk::ICore::CreateBlip(
-                std::ptr::null_mut(),
-                altv_sdk::BlipType::Radius as u8,
-                pos.x(),
-                pos.y(),
-                pos.z(),
-            ),
-            panic!("Failed to create Radius Blip")
-        );
+        let blip = Self::new(altv_sdk::BlipType::Radius, pos);
 
         blip.set_scale(radius).unwrap();
         blip
     }
 
     pub fn new_point(pos: impl Into<Vector3>) -> blip::BlipContainer {
-        let pos = pos.into();
-
-        helpers::create_base_object!(
-            blip,
-            sdk::ICore::CreateBlip(
-                std::ptr::null_mut(),
-                altv_sdk::BlipType::Destination as u8,
-                pos.x(),
-                pos.y(),
-                pos.z(),
-            ),
-            panic!("Failed to create Point Blip")
-        )
+        Self::new(altv_sdk::BlipType::Destination, pos)
     }
 
     pub fn new_entity_point(entity: impl Into<AnyEntity>) -> SomeResult<blip::BlipContainer> {
@@ -76,8 +40,24 @@ impl blip::Blip {
                 altv_sdk::BlipType::Destination as u8,
                 entity,
             ),
-            panic!("Failed to create Attached Blip")
+            panic!("Failed to create Entity Point Blip")
         ))
+    }
+
+    fn new(blip_type: altv_sdk::BlipType, pos: impl Into<Vector3>) -> blip::BlipContainer {
+        let pos = pos.into();
+
+        helpers::create_base_object!(
+            blip,
+            sdk::ICore::CreateBlip(
+                std::ptr::null_mut(),
+                blip_type as u8,
+                pos.x(),
+                pos.y(),
+                pos.z(),
+            ),
+            panic!("Failed to create {blip_type:?} Blip")
+        )
     }
 
     pub fn is_global(&self) -> SomeResult<bool> {
@@ -125,157 +105,19 @@ impl blip::Blip {
         Ok(())
     }
 
-    pub fn display(&self) -> SomeResult<i32> {
-        Ok(unsafe { sdk::IBlip::GetDisplay(self.raw_ptr()?) }.into())
+    pub fn display(&self) -> SomeResult<u32> {
+        Ok(unsafe { sdk::IBlip::GetDisplay(self.raw_ptr()?) })
     }
 
-    pub fn set_display(&self, display: i32) -> VoidResult {
-        unsafe { sdk::IBlip::SetDisplay(self.raw_ptr()?, display.into()) }
+    pub fn set_display(&self, display: u32) -> VoidResult {
+        unsafe { sdk::IBlip::SetDisplay(self.raw_ptr()?, display) }
         Ok(())
-    }
-
-    pub fn sprite(&self) -> SomeResult<i32> {
-        Ok(unsafe { sdk::IBlip::GetSprite(self.raw_ptr()?) }.into())
-    }
-
-    pub fn color(&self) -> SomeResult<i32> {
-        Ok(unsafe { sdk::IBlip::GetColor(self.raw_ptr()?) }.into())
     }
 
     pub fn secondary_color(&self) -> SomeResult<Rgba> {
         Ok(helpers::read_cpp_rgba(
             unsafe { sdk::IBlip::GetSecondaryColor(self.raw_ptr()?) }.within_unique_ptr(),
         ))
-    }
-
-    pub fn alpha(&self) -> SomeResult<i32> {
-        Ok(unsafe { sdk::IBlip::GetAlpha(self.raw_ptr()?) }.into())
-    }
-
-    pub fn flash_timer(&self) -> SomeResult<i32> {
-        Ok(unsafe { sdk::IBlip::GetFlashTimer(self.raw_ptr()?) }.into())
-    }
-
-    pub fn flash_interval(&self) -> SomeResult<i32> {
-        Ok(unsafe { sdk::IBlip::GetFlashInterval(self.raw_ptr()?) }.into())
-    }
-
-    pub fn as_friendly(&self) -> SomeResult<bool> {
-        Ok(unsafe { sdk::IBlip::GetAsFriendly(self.raw_ptr()?) })
-    }
-
-    pub fn route(&self) -> SomeResult<bool> {
-        Ok(unsafe { sdk::IBlip::GetRoute(self.raw_ptr()?) })
-    }
-
-    pub fn bright(&self) -> SomeResult<bool> {
-        Ok(unsafe { sdk::IBlip::GetBright(self.raw_ptr()?) })
-    }
-
-    pub fn number(&self) -> SomeResult<i32> {
-        Ok(unsafe { sdk::IBlip::GetNumber(self.raw_ptr()?) }.into())
-    }
-
-    pub fn show_cone(&self) -> SomeResult<bool> {
-        Ok(unsafe { sdk::IBlip::GetShowCone(self.raw_ptr()?) })
-    }
-
-    pub fn flashes(&self) -> SomeResult<bool> {
-        Ok(unsafe { sdk::IBlip::GetFlashes(self.raw_ptr()?) })
-    }
-
-    pub fn flashes_alternate(&self) -> SomeResult<bool> {
-        Ok(unsafe { sdk::IBlip::GetFlashesAlternate(self.raw_ptr()?) })
-    }
-
-    pub fn as_short_range(&self) -> SomeResult<bool> {
-        Ok(unsafe { sdk::IBlip::GetAsShortRange(self.raw_ptr()?) })
-    }
-
-    pub fn priority(&self) -> SomeResult<i32> {
-        Ok(unsafe { sdk::IBlip::GetPriority(self.raw_ptr()?) }.into())
-    }
-
-    pub fn rot(&self) -> SomeResult<f32> {
-        Ok(unsafe { sdk::IBlip::GetRotation(self.raw_ptr()?) })
-    }
-
-    pub fn gxt_name(&self) -> SomeResult<String> {
-        Ok(unsafe { sdk::IBlip::GetGxtName(self.raw_ptr()?) }.to_string())
-    }
-
-    pub fn name(&self) -> SomeResult<String> {
-        Ok(unsafe { sdk::IBlip::GetName(self.raw_ptr()?) }.to_string())
-    }
-
-    pub fn route_color(&self) -> SomeResult<Rgba> {
-        Ok(helpers::read_cpp_rgba(
-            unsafe { sdk::IBlip::GetRouteColor(self.raw_ptr()?) }.within_unique_ptr(),
-        ))
-    }
-
-    pub fn pulse(&self) -> SomeResult<bool> {
-        Ok(unsafe { sdk::IBlip::GetPulse(self.raw_ptr()?) })
-    }
-
-    pub fn as_mission_creator(&self) -> SomeResult<bool> {
-        Ok(unsafe { sdk::IBlip::GetAsMissionCreator(self.raw_ptr()?) })
-    }
-
-    pub fn tick_visible(&self) -> SomeResult<bool> {
-        Ok(unsafe { sdk::IBlip::GetTickVisible(self.raw_ptr()?) })
-    }
-
-    pub fn heading_indicator_visible(&self) -> SomeResult<bool> {
-        Ok(unsafe { sdk::IBlip::GetHeadingIndicatorVisible(self.raw_ptr()?) })
-    }
-
-    pub fn outline_indicator_visible(&self) -> SomeResult<bool> {
-        Ok(unsafe { sdk::IBlip::GetOutlineIndicatorVisible(self.raw_ptr()?) })
-    }
-
-    pub fn friend_indicator_visible(&self) -> SomeResult<bool> {
-        Ok(unsafe { sdk::IBlip::GetFriendIndicatorVisible(self.raw_ptr()?) })
-    }
-
-    pub fn crew_indicator_visible(&self) -> SomeResult<bool> {
-        Ok(unsafe { sdk::IBlip::GetCrewIndicatorVisible(self.raw_ptr()?) })
-    }
-
-    pub fn category(&self) -> SomeResult<i32> {
-        Ok(unsafe { sdk::IBlip::GetCategory(self.raw_ptr()?) }.into())
-    }
-
-    pub fn as_high_detail(&self) -> SomeResult<bool> {
-        Ok(unsafe { sdk::IBlip::GetAsHighDetail(self.raw_ptr()?) })
-    }
-
-    pub fn shrinked(&self) -> SomeResult<bool> {
-        Ok(unsafe { sdk::IBlip::GetShrinked(self.raw_ptr()?) })
-    }
-
-    pub fn set_sprite(&self, sprite: i32) -> VoidResult {
-        unsafe { sdk::IBlip::SetSprite(self.raw_ptr()?, sprite.into()) }
-        Ok(())
-    }
-
-    pub fn set_color(&self, color: i32) -> VoidResult {
-        unsafe { sdk::IBlip::SetColor(self.raw_ptr()?, color.into()) }
-        Ok(())
-    }
-
-    pub fn set_route(&self, state: bool) -> VoidResult {
-        unsafe { sdk::IBlip::SetRoute(self.raw_ptr()?, state) }
-        Ok(())
-    }
-
-    pub fn set_route_color(&self, color: impl Into<Rgba>) -> VoidResult {
-        let color = color.into();
-
-        unsafe {
-            sdk::IBlip::SetRouteColor(self.raw_ptr()?, color.r(), color.g(), color.b(), color.a())
-        }
-        Ok(())
     }
 
     pub fn set_secondary_color(&self, color: impl Into<Rgba>) -> VoidResult {
@@ -293,9 +135,17 @@ impl blip::Blip {
         Ok(())
     }
 
-    pub fn set_alpha(&self, alpha: i32) -> VoidResult {
-        unsafe { sdk::IBlip::SetAlpha(self.raw_ptr()?, alpha.into()) }
+    pub fn alpha(&self) -> SomeResult<u32> {
+        Ok(unsafe { sdk::IBlip::GetAlpha(self.raw_ptr()?) })
+    }
+
+    pub fn set_alpha(&self, alpha: u32) -> VoidResult {
+        unsafe { sdk::IBlip::SetAlpha(self.raw_ptr()?, alpha) }
         Ok(())
+    }
+
+    pub fn flash_timer(&self) -> SomeResult<i32> {
+        Ok(unsafe { sdk::IBlip::GetFlashTimer(self.raw_ptr()?) }.into())
     }
 
     pub fn set_flash_timer(&self, timer: i32) -> VoidResult {
@@ -303,9 +153,17 @@ impl blip::Blip {
         Ok(())
     }
 
+    pub fn flash_interval(&self) -> SomeResult<i32> {
+        Ok(unsafe { sdk::IBlip::GetFlashInterval(self.raw_ptr()?) }.into())
+    }
+
     pub fn set_flash_interval(&self, interval: i32) -> VoidResult {
         unsafe { sdk::IBlip::SetFlashInterval(self.raw_ptr()?, interval.into()) }
         Ok(())
+    }
+
+    pub fn as_friendly(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IBlip::GetAsFriendly(self.raw_ptr()?) })
     }
 
     pub fn set_as_friendly(&self, friendly: bool) -> VoidResult {
@@ -313,9 +171,26 @@ impl blip::Blip {
         Ok(())
     }
 
+    pub fn route(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IBlip::GetRoute(self.raw_ptr()?) })
+    }
+
+    pub fn set_route(&self, state: bool) -> VoidResult {
+        unsafe { sdk::IBlip::SetRoute(self.raw_ptr()?, state) }
+        Ok(())
+    }
+
+    pub fn bright(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IBlip::GetBright(self.raw_ptr()?) })
+    }
+
     pub fn set_bright(&self, bright: bool) -> VoidResult {
         unsafe { sdk::IBlip::SetBright(self.raw_ptr()?, bright) }
         Ok(())
+    }
+
+    pub fn number(&self) -> SomeResult<i32> {
+        Ok(unsafe { sdk::IBlip::GetNumber(self.raw_ptr()?) }.into())
     }
 
     pub fn set_number(&self, number: i32) -> VoidResult {
@@ -323,9 +198,17 @@ impl blip::Blip {
         Ok(())
     }
 
+    pub fn show_cone(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IBlip::GetShowCone(self.raw_ptr()?) })
+    }
+
     pub fn set_show_cone(&self, state: bool) -> VoidResult {
         unsafe { sdk::IBlip::SetShowCone(self.raw_ptr()?, state) }
         Ok(())
+    }
+
+    pub fn flashes(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IBlip::GetFlashes(self.raw_ptr()?) })
     }
 
     pub fn set_flashes(&self, state: bool) -> VoidResult {
@@ -333,9 +216,17 @@ impl blip::Blip {
         Ok(())
     }
 
+    pub fn flashes_alternate(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IBlip::GetFlashesAlternate(self.raw_ptr()?) })
+    }
+
     pub fn set_flashes_alternate(&self, state: bool) -> VoidResult {
         unsafe { sdk::IBlip::SetFlashesAlternate(self.raw_ptr()?, state) }
         Ok(())
+    }
+
+    pub fn as_short_range(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IBlip::GetAsShortRange(self.raw_ptr()?) })
     }
 
     pub fn set_as_short_range(&self, state: bool) -> VoidResult {
@@ -343,9 +234,17 @@ impl blip::Blip {
         Ok(())
     }
 
-    pub fn set_priority(&self, state: i32) -> VoidResult {
-        unsafe { sdk::IBlip::SetPriority(self.raw_ptr()?, state.into()) }
+    pub fn priority(&self) -> SomeResult<u32> {
+        Ok(unsafe { sdk::IBlip::GetPriority(self.raw_ptr()?) })
+    }
+
+    pub fn set_priority(&self, state: u32) -> VoidResult {
+        unsafe { sdk::IBlip::SetPriority(self.raw_ptr()?, state) }
         Ok(())
+    }
+
+    pub fn rot(&self) -> SomeResult<f32> {
+        Ok(unsafe { sdk::IBlip::GetRotation(self.raw_ptr()?) })
     }
 
     pub fn set_rot(&self, rot: f32) -> VoidResult {
@@ -353,9 +252,17 @@ impl blip::Blip {
         Ok(())
     }
 
+    pub fn gxt_name(&self) -> SomeResult<String> {
+        Ok(unsafe { sdk::IBlip::GetGxtName(self.raw_ptr()?) }.to_string())
+    }
+
     pub fn set_gxt_name(&self, name: String) -> VoidResult {
         unsafe { sdk::IBlip::SetGxtName(self.raw_ptr()?, name) }
         Ok(())
+    }
+
+    pub fn name(&self) -> SomeResult<String> {
+        Ok(unsafe { sdk::IBlip::GetName(self.raw_ptr()?) }.to_string())
     }
 
     pub fn set_name(&self, name: String) -> VoidResult {
@@ -363,9 +270,32 @@ impl blip::Blip {
         Ok(())
     }
 
+    pub fn route_color(&self) -> SomeResult<Rgba> {
+        Ok(helpers::read_cpp_rgba(
+            unsafe { sdk::IBlip::GetRouteColor(self.raw_ptr()?) }.within_unique_ptr(),
+        ))
+    }
+
+    pub fn set_route_color(&self, color: impl Into<Rgba>) -> VoidResult {
+        let color = color.into();
+
+        unsafe {
+            sdk::IBlip::SetRouteColor(self.raw_ptr()?, color.r(), color.g(), color.b(), color.a())
+        }
+        Ok(())
+    }
+
+    pub fn pulse(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IBlip::GetPulse(self.raw_ptr()?) })
+    }
+
     pub fn set_pulse(&self, val: bool) -> VoidResult {
         unsafe { sdk::IBlip::SetPulse(self.raw_ptr()?, val) }
         Ok(())
+    }
+
+    pub fn as_mission_creator(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IBlip::GetAsMissionCreator(self.raw_ptr()?) })
     }
 
     pub fn set_as_mission_creator(&self, val: bool) -> VoidResult {
@@ -373,9 +303,17 @@ impl blip::Blip {
         Ok(())
     }
 
+    pub fn tick_visible(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IBlip::GetTickVisible(self.raw_ptr()?) })
+    }
+
     pub fn set_tick_visible(&self, val: bool) -> VoidResult {
         unsafe { sdk::IBlip::SetTickVisible(self.raw_ptr()?, val) }
         Ok(())
+    }
+
+    pub fn heading_indicator_visible(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IBlip::GetHeadingIndicatorVisible(self.raw_ptr()?) })
     }
 
     pub fn set_heading_indicator_visible(&self, val: bool) -> VoidResult {
@@ -383,9 +321,17 @@ impl blip::Blip {
         Ok(())
     }
 
+    pub fn outline_indicator_visible(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IBlip::GetOutlineIndicatorVisible(self.raw_ptr()?) })
+    }
+
     pub fn set_outline_indicator_visible(&self, val: bool) -> VoidResult {
         unsafe { sdk::IBlip::SetOutlineIndicatorVisible(self.raw_ptr()?, val) }
         Ok(())
+    }
+
+    pub fn friend_indicator_visible(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IBlip::GetFriendIndicatorVisible(self.raw_ptr()?) })
     }
 
     pub fn set_friend_indicator_visible(&self, val: bool) -> VoidResult {
@@ -393,14 +339,26 @@ impl blip::Blip {
         Ok(())
     }
 
+    pub fn crew_indicator_visible(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IBlip::GetCrewIndicatorVisible(self.raw_ptr()?) })
+    }
+
     pub fn set_crew_indicator_visible(&self, val: bool) -> VoidResult {
         unsafe { sdk::IBlip::SetCrewIndicatorVisible(self.raw_ptr()?, val) }
         Ok(())
     }
 
-    pub fn set_category(&self, val: i32) -> VoidResult {
-        unsafe { sdk::IBlip::SetCategory(self.raw_ptr()?, val.into()) }
+    pub fn category(&self) -> SomeResult<u32> {
+        Ok(unsafe { sdk::IBlip::GetCategory(self.raw_ptr()?) })
+    }
+
+    pub fn set_category(&self, val: u32) -> VoidResult {
+        unsafe { sdk::IBlip::SetCategory(self.raw_ptr()?, val) }
         Ok(())
+    }
+
+    pub fn as_high_detail(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IBlip::GetAsHighDetail(self.raw_ptr()?) })
     }
 
     pub fn set_as_high_detail(&self, val: bool) -> VoidResult {
@@ -408,8 +366,30 @@ impl blip::Blip {
         Ok(())
     }
 
+    pub fn shrinked(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IBlip::GetShrinked(self.raw_ptr()?) })
+    }
+
     pub fn set_shrinked(&self, val: bool) -> VoidResult {
         unsafe { sdk::IBlip::SetShrinked(self.raw_ptr()?, val) }
+        Ok(())
+    }
+
+    pub fn sprite(&self) -> SomeResult<u32> {
+        Ok(unsafe { sdk::IBlip::GetSprite(self.raw_ptr()?) })
+    }
+
+    pub fn set_sprite(&self, sprite: u32) -> VoidResult {
+        unsafe { sdk::IBlip::SetSprite(self.raw_ptr()?, sprite) }
+        Ok(())
+    }
+
+    pub fn color(&self) -> SomeResult<u32> {
+        Ok(unsafe { sdk::IBlip::GetColor(self.raw_ptr()?) })
+    }
+
+    pub fn set_color(&self, color: u32) -> VoidResult {
+        unsafe { sdk::IBlip::SetColor(self.raw_ptr()?, color) }
         Ok(())
     }
 
