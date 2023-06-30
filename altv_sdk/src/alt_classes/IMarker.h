@@ -4,6 +4,9 @@
 
 namespace IMarker {
 
+bool IsStreamedIn(const alt::IMarker* ptr) {
+    return ptr->IsStreamedIn();
+}
 bool IsGlobal(const alt::IMarker* ptr) {
     return ptr->IsGlobal();
 }

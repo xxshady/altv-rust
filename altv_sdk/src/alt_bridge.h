@@ -1,6 +1,6 @@
 #pragma once
 
-#define ALT_SERVER_API
+#define ALT_CLIENT_API
 
 #include <memory>
 #include <utility>
@@ -284,7 +284,7 @@ class WeaponWrapper {
 public:
     u32 hash = 0;
     u8 tint_index = 0;
-    std::vector<u32> components {};
+    std::vector<u32> components{};
 
     WeaponWrapper(u32 _hash, u8 _tint_index, std::unordered_set<u32> _components) :
         hash(_hash),
@@ -348,10 +348,10 @@ public:
     StreamedEntityWrapper(
         alt::IEntity* entity,
         i32 squared_distance
-    ) : ptr(std::make_shared<StreamedEntityPair>(std::pair {
+    ) : ptr(std::make_shared<StreamedEntityPair>(std::pair{
         entity,
             squared_distance
-    })) {}
+        })) {}
 };
 
 alt::IEntity* read_streamed_entity_key(const StreamedEntityWrapper& wrapper) {
@@ -426,7 +426,7 @@ std::vector<MValueDictPairWrapper> read_mvalue_dict(ConstMValueWrapper mvalue) {
         value_wrapper.ptr = it->GetValue();
 
         MValueDictPairWrapper pair;
-        pair.ptr = std::make_shared<MValueDictPair>(std::pair { it->GetKey(), value_wrapper.clone() });
+        pair.ptr = std::make_shared<MValueDictPair>(std::pair{ it->GetKey(), value_wrapper.clone() });
         vec.push_back(pair.clone());
     }
 
@@ -595,37 +595,37 @@ std::vector<alt::IPlayer*> player_wrapper_vec_to_alt(PlayerVector player_vec) {
     return players;
 }
 
-void trigger_client_event(alt::IPlayer* player, std::string event_name, MValueMutWrapper mvalue_list) {
-    alt::ICore::Instance().TriggerClientEvent(player, event_name, mvalue_wrapper_list_to_args(mvalue_list));
-}
+// void trigger_client_event(alt::IPlayer* player, std::string event_name, MValueMutWrapper mvalue_list) {
+//     alt::ICore::Instance().TriggerClientEvent(player, event_name, mvalue_wrapper_list_to_args(mvalue_list));
+// }
 
-void trigger_client_event_unreliable(alt::IPlayer* player, std::string event_name, MValueMutWrapper mvalue_list) {
-    alt::ICore::Instance().TriggerClientEventUnreliable(player, event_name, mvalue_wrapper_list_to_args(mvalue_list));
-}
+// void trigger_client_event_unreliable(alt::IPlayer* player, std::string event_name, MValueMutWrapper mvalue_list) {
+//     alt::ICore::Instance().TriggerClientEventUnreliable(player, event_name, mvalue_wrapper_list_to_args(mvalue_list));
+// }
 
-void trigger_client_event_for_some(PlayerVector players, std::string event_name, MValueMutWrapper mvalue_list) {
-    alt::ICore::Instance().TriggerClientEvent(
-        player_wrapper_vec_to_alt(players),
-        event_name,
-        mvalue_wrapper_list_to_args(mvalue_list)
-    );
-}
+// void trigger_client_event_for_some(PlayerVector players, std::string event_name, MValueMutWrapper mvalue_list) {
+//     alt::ICore::Instance().TriggerClientEvent(
+//         player_wrapper_vec_to_alt(players),
+//         event_name,
+//         mvalue_wrapper_list_to_args(mvalue_list)
+//     );
+// }
 
-void trigger_client_event_unreliable_for_some(PlayerVector players, std::string event_name, MValueMutWrapper mvalue_list) {
-    alt::ICore::Instance().TriggerClientEventUnreliable(
-        player_wrapper_vec_to_alt(players),
-        event_name,
-        mvalue_wrapper_list_to_args(mvalue_list)
-    );
-}
+// void trigger_client_event_unreliable_for_some(PlayerVector players, std::string event_name, MValueMutWrapper mvalue_list) {
+//     alt::ICore::Instance().TriggerClientEventUnreliable(
+//         player_wrapper_vec_to_alt(players),
+//         event_name,
+//         mvalue_wrapper_list_to_args(mvalue_list)
+//     );
+// }
 
-void trigger_client_event_for_all(std::string event_name, MValueMutWrapper mvalue_list) {
-    alt::ICore::Instance().TriggerClientEventForAll(event_name, mvalue_wrapper_list_to_args(mvalue_list));
-}
+// void trigger_client_event_for_all(std::string event_name, MValueMutWrapper mvalue_list) {
+//     alt::ICore::Instance().TriggerClientEventForAll(event_name, mvalue_wrapper_list_to_args(mvalue_list));
+// }
 
-void trigger_client_event_unreliable_for_all(std::string event_name, MValueMutWrapper mvalue_list) {
-    alt::ICore::Instance().TriggerClientEventUnreliableForAll(event_name, mvalue_wrapper_list_to_args(mvalue_list));
-}
+// void trigger_client_event_unreliable_for_all(std::string event_name, MValueMutWrapper mvalue_list) {
+//     alt::ICore::Instance().TriggerClientEventUnreliableForAll(event_name, mvalue_wrapper_list_to_args(mvalue_list));
+// }
 
 namespace base_object
 {
@@ -1234,7 +1234,7 @@ namespace config_node
         for (auto& pair : node->AsDict()) {
             // TODO: handle empty/none node?
             ConfigDictPairWrapper wrapper;
-            wrapper.ptr = std::make_shared<ConfigDictPair>(std::pair { pair.first, pair.second });
+            wrapper.ptr = std::make_shared<ConfigDictPair>(std::pair{ pair.first, pair.second });
             vec.push_back(wrapper.clone());
         }
 

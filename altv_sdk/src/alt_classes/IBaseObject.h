@@ -38,11 +38,11 @@ ConstMValueWrapper GetSyncedMetaData(const alt::IBaseObject* ptr, const StdStrin
 std::vector<std::string> GetSyncedMetaDataKeys(const alt::IBaseObject* ptr) {
     return ptr->GetSyncedMetaDataKeys();
 }
-void SetSyncedMetaData(alt::IBaseObject* ptr, const StdStringClone key, MValueMutWrapper val) {
-    return ptr->SetSyncedMetaData(key, val.ptr);
+u32 GetRemoteID(const alt::IBaseObject* ptr) {
+    return ptr->GetRemoteID();
 }
-void DeleteSyncedMetaData(alt::IBaseObject* ptr, const StdStringClone key) {
-    return ptr->DeleteSyncedMetaData(key);
+bool IsRemote(const alt::IBaseObject* ptr) {
+    return ptr->IsRemote();
 }
 bool IsRemoved(const alt::IBaseObject* ptr) {
     return ptr->IsRemoved();

@@ -1,9 +1,9 @@
 use std::{collections::HashMap, fs};
 
-const CPP_CODE_CLIENT_API_START: &str = "#ifdef ALT_CLIENT_API";
+const CPP_CODE_CLIENT_API_START: &str = "#ifdef ALT_SERVER_API";
 const CPP_CODE_ENDIF_DIRECTIVE: &str = "#endif";
 const CPP_CODE_ELSE_DIRECTIVE: &str = "#else";
-const CPP_CODE_SERVER_API_START: &str = "#ifdef ALT_SERVER_API";
+const CPP_CODE_SERVER_API_START: &str = "#ifdef ALT_CLIENT_API";
 const CPP_OUT_DIR: &str = "../altv_sdk/src/alt_classes";
 
 lazy_static::lazy_static! {

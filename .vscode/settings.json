@@ -74,7 +74,15 @@
     "xlocmes": "cpp",
     "xlocmon": "cpp",
     "xloctime": "cpp",
-    "optional": "cpp"
+    "optional": "cpp",
+    "bit": "cpp",
+    "charconv": "cpp",
+    "clocale": "cpp",
+    "compare": "cpp",
+    "concepts": "cpp",
+    "format": "cpp",
+    "forward_list": "cpp",
+    "stop_token": "cpp"
   },
   "editor.defaultFormatter": "rust-lang.rust-analyzer",
   "editor.formatOnSave": true,

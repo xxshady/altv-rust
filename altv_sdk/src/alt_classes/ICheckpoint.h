@@ -45,22 +45,11 @@ void SetVisible(alt::ICheckpoint* ptr, bool toggle) {
 bool IsVisible(const alt::ICheckpoint* ptr) {
     return ptr->IsVisible();
 }
-bool HasStreamSyncedMetaData(const alt::ICheckpoint* ptr, const StdStringClone key) {
-    return ptr->HasStreamSyncedMetaData(key);
+bool IsStreamedIn(const alt::ICheckpoint* ptr) {
+    return ptr->IsStreamedIn();
 }
-ConstMValueWrapper GetStreamSyncedMetaData(const alt::ICheckpoint* ptr, const StdStringClone key) {
-    ConstMValueWrapper wrapper;
-    wrapper.ptr = ptr->GetStreamSyncedMetaData(key);
-    return wrapper;
-}
-std::vector<std::string> GetStreamSyncedMetaDataKeys(const alt::ICheckpoint* ptr) {
-    return ptr->GetStreamSyncedMetaDataKeys();
-}
-void SetStreamSyncedMetaData(alt::ICheckpoint* ptr, const StdStringClone key, MValueMutWrapper val) {
-    return ptr->SetStreamSyncedMetaData(key, val.ptr);
-}
-void DeleteStreamSyncedMetaData(alt::ICheckpoint* ptr, const StdStringClone key) {
-    return ptr->DeleteStreamSyncedMetaData(key);
+u32 GetGameID(const alt::ICheckpoint* ptr) {
+    return ptr->GetGameID();
 }
 
 } // namespace

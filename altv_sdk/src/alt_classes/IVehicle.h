@@ -231,371 +231,147 @@ Vector3Wrapper GetVelocity(const alt::IVehicle* ptr) {
     auto vector3 = ptr->GetVelocity();
     return { vector3[0], vector3[1], vector3[2] };
 }
-void SetFixed(alt::IVehicle* ptr) {
-    return ptr->SetFixed();
+f32 GetWheelSpeed(const alt::IVehicle* ptr) {
+    return ptr->GetWheelSpeed();
 }
-bool SetMod(alt::IVehicle* ptr, u8 category, u8 id) {
-    return ptr->SetMod(category, id);
+u16 GetCurrentGear(const alt::IVehicle* ptr) {
+    return ptr->GetCurrentGear();
 }
-bool SetModKit(alt::IVehicle* ptr, u8 id) {
-    return ptr->SetModKit(id);
+f32 GetCurrentRPM(const alt::IVehicle* ptr) {
+    return ptr->GetCurrentRPM();
 }
-void SetPrimaryColor(alt::IVehicle* ptr, u8 color) {
-    return ptr->SetPrimaryColor(color);
+Vector3Wrapper GetSpeedVector(const alt::IVehicle* ptr) {
+    auto vector3 = ptr->GetSpeedVector();
+    return { vector3[0], vector3[1], vector3[2] };
 }
-void SetPrimaryColorRGB(alt::IVehicle* ptr, u8 color_r, u8 color_g, u8 color_b, u8 color_a) {
-    return ptr->SetPrimaryColorRGB({ color_r, color_g, color_b, color_a });
+u16 GetMaxGear(const alt::IVehicle* ptr) {
+    return ptr->GetMaxGear();
 }
-void SetSecondaryColor(alt::IVehicle* ptr, u8 color) {
-    return ptr->SetSecondaryColor(color);
+void SetCurrentGear(alt::IVehicle* ptr, u16 currentGear) {
+    return ptr->SetCurrentGear(currentGear);
 }
-void SetSecondaryColorRGB(alt::IVehicle* ptr, u8 color_r, u8 color_g, u8 color_b, u8 color_a) {
-    return ptr->SetSecondaryColorRGB({ color_r, color_g, color_b, color_a });
+void SetMaxGear(alt::IVehicle* ptr, u16 gearMax) {
+    return ptr->SetMaxGear(gearMax);
 }
-void SetPearlColor(alt::IVehicle* ptr, u8 color) {
-    return ptr->SetPearlColor(color);
+void SetCurrentRPM(alt::IVehicle* ptr, f32 rpm) {
+    return ptr->SetCurrentRPM(rpm);
 }
-void SetWheelColor(alt::IVehicle* ptr, u8 color) {
-    return ptr->SetWheelColor(color);
+bool IsHandlingModified(const alt::IVehicle* ptr) {
+    return ptr->IsHandlingModified();
 }
-void SetInteriorColor(alt::IVehicle* ptr, u8 color) {
-    return ptr->SetInteriorColor(color);
+void ResetHandling(alt::IVehicle* ptr) {
+    return ptr->ResetHandling();
 }
-void SetDashboardColor(alt::IVehicle* ptr, u8 color) {
-    return ptr->SetDashboardColor(color);
+void ReplaceHandling(alt::IVehicle* ptr) {
+    return ptr->ReplaceHandling();
 }
-void SetTireSmokeColor(alt::IVehicle* ptr, u8 color_r, u8 color_g, u8 color_b, u8 color_a) {
-    return ptr->SetTireSmokeColor({ color_r, color_g, color_b, color_a });
+u8 GetLightsIndicator(const alt::IVehicle* ptr) {
+    return ptr->GetLightsIndicator();
 }
-void SetWheels(alt::IVehicle* ptr, u8 type, u8 variation) {
-    return ptr->SetWheels(type, variation);
+void SetLightsIndicator(alt::IVehicle* ptr, u8 lightsIndicatorFlag) {
+    return ptr->SetLightsIndicator(lightsIndicatorFlag);
 }
-void SetRearWheels(alt::IVehicle* ptr, u8 variation) {
-    return ptr->SetRearWheels(variation);
+u8 GetSeatCount(const alt::IVehicle* ptr) {
+    return ptr->GetSeatCount();
 }
-void SetCustomTires(alt::IVehicle* ptr, bool state) {
-    return ptr->SetCustomTires(state);
+u8 GetOccupiedSeatsCount(const alt::IVehicle* ptr) {
+    return ptr->GetOccupiedSeatsCount();
 }
-void SetSpecialDarkness(alt::IVehicle* ptr, u8 value) {
-    return ptr->SetSpecialDarkness(value);
+void ToggleTaxiLight(alt::IVehicle* ptr, bool state) {
+    return ptr->ToggleTaxiLight(state);
 }
-void SetNumberplateIndex(alt::IVehicle* ptr, u32 index) {
-    return ptr->SetNumberplateIndex(index);
+bool IsTaxiLightOn(const alt::IVehicle* ptr) {
+    return ptr->IsTaxiLightOn();
 }
-void SetNumberplateText(alt::IVehicle* ptr, const StdStringClone text) {
-    return ptr->SetNumberplateText(text);
+f32 GetWheelCamber(const alt::IVehicle* ptr, u8 wheel) {
+    return ptr->GetWheelCamber(wheel);
 }
-void SetWindowTint(alt::IVehicle* ptr, u8 tint) {
-    return ptr->SetWindowTint(tint);
+void SetWheelCamber(alt::IVehicle* ptr, u8 wheel, f32 value) {
+    return ptr->SetWheelCamber(wheel, value);
 }
-void SetDirtLevel(alt::IVehicle* ptr, u8 level) {
-    return ptr->SetDirtLevel(level);
+f32 GetWheelTrackWidth(const alt::IVehicle* ptr, u8 wheel) {
+    return ptr->GetWheelTrackWidth(wheel);
 }
-void SetNeonActive(alt::IVehicle* ptr, bool left, bool right, bool front, bool back) {
-    return ptr->SetNeonActive(left, right, front, back);
+void SetWheelTrackWidth(alt::IVehicle* ptr, u8 wheel, f32 value) {
+    return ptr->SetWheelTrackWidth(wheel, value);
 }
-void SetNeonColor(alt::IVehicle* ptr, u8 color_r, u8 color_g, u8 color_b, u8 color_a) {
-    return ptr->SetNeonColor({ color_r, color_g, color_b, color_a });
+f32 GetWheelHeight(const alt::IVehicle* ptr, u8 wheel) {
+    return ptr->GetWheelHeight(wheel);
 }
-void SetLivery(alt::IVehicle* ptr, u8 livery) {
-    return ptr->SetLivery(livery);
+void SetWheelHeight(alt::IVehicle* ptr, u8 wheel, f32 value) {
+    return ptr->SetWheelHeight(wheel, value);
 }
-void SetRoofLivery(alt::IVehicle* ptr, u8 roofLivery) {
-    return ptr->SetRoofLivery(roofLivery);
+f32 GetWheelTyreRadius(const alt::IVehicle* ptr, u8 wheel) {
+    return ptr->GetWheelTyreRadius(wheel);
 }
-void LoadAppearanceDataFromBase64(alt::IVehicle* ptr, const StdStringClone base64) {
-    return ptr->LoadAppearanceDataFromBase64(base64);
+void SetWheelTyreRadius(alt::IVehicle* ptr, u8 wheel, f32 value) {
+    return ptr->SetWheelTyreRadius(wheel, value);
 }
-void SetEngineOn(alt::IVehicle* ptr, bool state) {
-    return ptr->SetEngineOn(state);
+f32 GetWheelRimRadius(const alt::IVehicle* ptr, u8 wheel) {
+    return ptr->GetWheelRimRadius(wheel);
 }
-void SetHeadlightColor(alt::IVehicle* ptr, u8 color) {
-    return ptr->SetHeadlightColor(color);
+void SetWheelRimRadius(alt::IVehicle* ptr, u8 wheel, f32 value) {
+    return ptr->SetWheelRimRadius(wheel, value);
 }
-void SetRadioStationIndex(alt::IVehicle* ptr, u32 stationIndex) {
-    return ptr->SetRadioStationIndex(stationIndex);
+f32 GetWheelTyreWidth(const alt::IVehicle* ptr, u8 wheel) {
+    return ptr->GetWheelTyreWidth(wheel);
 }
-void SetSirenActive(alt::IVehicle* ptr, bool state) {
-    return ptr->SetSirenActive(state);
+void SetWheelTyreWidth(alt::IVehicle* ptr, u8 wheel, f32 value) {
+    return ptr->SetWheelTyreWidth(wheel, value);
 }
-void SetLockState(alt::IVehicle* ptr, u8 state) {
-    return ptr->SetLockState(state);
+u32 GetWheelSurfaceMaterial(const alt::IVehicle* ptr, u8 wheel) {
+    return ptr->GetWheelSurfaceMaterial(wheel);
 }
-void SetDoorState(alt::IVehicle* ptr, u8 doorId, u8 state) {
-    return ptr->SetDoorState(doorId, state);
+f32 GetEngineTemperature(const alt::IVehicle* ptr) {
+    return ptr->GetEngineTemperature();
 }
-void SetWindowOpened(alt::IVehicle* ptr, u8 windowId, bool state) {
-    return ptr->SetWindowOpened(windowId, state);
+void SetEngineTemperature(alt::IVehicle* ptr, f32 value) {
+    return ptr->SetEngineTemperature(value);
 }
-void SetRoofState(alt::IVehicle* ptr, u8 state) {
-    return ptr->SetRoofState(state);
+f32 GetFuelLevel(const alt::IVehicle* ptr) {
+    return ptr->GetFuelLevel();
 }
-void SetLightsMultiplier(alt::IVehicle* ptr, f32 multiplier) {
-    return ptr->SetLightsMultiplier(multiplier);
+void SetFuelLevel(alt::IVehicle* ptr, f32 value) {
+    return ptr->SetFuelLevel(value);
 }
-void SetEngineHealth(alt::IVehicle* ptr, i32 health) {
-    return ptr->SetEngineHealth(health);
+f32 GetOilLevel(const alt::IVehicle* ptr) {
+    return ptr->GetOilLevel();
 }
-void SetPetrolTankHealth(alt::IVehicle* ptr, i32 health) {
-    return ptr->SetPetrolTankHealth(health);
+void SetOilLevel(alt::IVehicle* ptr, f32 value) {
+    return ptr->SetOilLevel(value);
 }
-void SetWheelBurst(alt::IVehicle* ptr, u8 wheelId, bool state) {
-    return ptr->SetWheelBurst(wheelId, state);
+bool GetEngineLightState(const alt::IVehicle* ptr) {
+    return ptr->GetEngineLightState();
 }
-void SetWheelHasTire(alt::IVehicle* ptr, u8 wheelId, bool state) {
-    return ptr->SetWheelHasTire(wheelId, state);
+void SetEngineLightState(alt::IVehicle* ptr, bool state) {
+    return ptr->SetEngineLightState(state);
 }
-void SetWheelDetached(alt::IVehicle* ptr, u8 wheelId, bool state) {
-    return ptr->SetWheelDetached(wheelId, state);
+bool GetAbsLightState(const alt::IVehicle* ptr) {
+    return ptr->GetAbsLightState();
 }
-void SetWheelOnFire(alt::IVehicle* ptr, u8 wheelId, bool state) {
-    return ptr->SetWheelOnFire(wheelId, state);
+void SetAbsLightState(alt::IVehicle* ptr, bool state) {
+    return ptr->SetAbsLightState(state);
 }
-void SetWheelHealth(alt::IVehicle* ptr, u8 wheelId, f32 health) {
-    return ptr->SetWheelHealth(wheelId, health);
+bool GetPetrolLightState(const alt::IVehicle* ptr) {
+    return ptr->GetPetrolLightState();
 }
-void SetWheelFixed(alt::IVehicle* ptr, u8 wheelId) {
-    return ptr->SetWheelFixed(wheelId);
+void SetPetrolLightState(alt::IVehicle* ptr, bool state) {
+    return ptr->SetPetrolLightState(state);
 }
-void SetBodyHealth(alt::IVehicle* ptr, u32 health) {
-    return ptr->SetBodyHealth(health);
+bool GetOilLightState(const alt::IVehicle* ptr) {
+    return ptr->GetOilLightState();
 }
-void SetBodyAdditionalHealth(alt::IVehicle* ptr, u32 health) {
-    return ptr->SetBodyAdditionalHealth(health);
+void SetOilLightState(alt::IVehicle* ptr, bool state) {
+    return ptr->SetOilLightState(state);
 }
-void SetPartDamageLevel(alt::IVehicle* ptr, u8 partId, u8 damage) {
-    return ptr->SetPartDamageLevel(partId, damage);
+bool GetBatteryLightState(const alt::IVehicle* ptr) {
+    return ptr->GetBatteryLightState();
 }
-void SetPartBulletHoles(alt::IVehicle* ptr, u8 partId, u8 shootsCount) {
-    return ptr->SetPartBulletHoles(partId, shootsCount);
+void SetBatteryLightState(alt::IVehicle* ptr, bool state) {
+    return ptr->SetBatteryLightState(state);
 }
-void SetLightDamaged(alt::IVehicle* ptr, u8 lightId, bool isDamaged) {
-    return ptr->SetLightDamaged(lightId, isDamaged);
-}
-void SetWindowDamaged(alt::IVehicle* ptr, u8 windowId, bool isDamaged) {
-    return ptr->SetWindowDamaged(windowId, isDamaged);
-}
-void SetSpecialLightDamaged(alt::IVehicle* ptr, u8 specialLightId, bool isDamaged) {
-    return ptr->SetSpecialLightDamaged(specialLightId, isDamaged);
-}
-void SetArmoredWindowHealth(alt::IVehicle* ptr, u8 windowId, f32 health) {
-    return ptr->SetArmoredWindowHealth(windowId, health);
-}
-void SetArmoredWindowShootCount(alt::IVehicle* ptr, u8 windowId, u8 count) {
-    return ptr->SetArmoredWindowShootCount(windowId, count);
-}
-void SetBumperDamageLevel(alt::IVehicle* ptr, u8 bumperId, u8 damageLevel) {
-    return ptr->SetBumperDamageLevel(bumperId, damageLevel);
-}
-void SetManualEngineControl(alt::IVehicle* ptr, bool state) {
-    return ptr->SetManualEngineControl(state);
-}
-void LoadDamageDataFromBase64(alt::IVehicle* ptr, const StdStringClone base64) {
-    return ptr->LoadDamageDataFromBase64(base64);
-}
-void LoadScriptDataFromBase64(alt::IVehicle* ptr, const StdStringClone base64) {
-    return ptr->LoadScriptDataFromBase64(base64);
-}
-void LoadGameStateFromBase64(alt::IVehicle* ptr, const StdStringClone base64) {
-    return ptr->LoadGameStateFromBase64(base64);
-}
-void LoadHealthDataFromBase64(alt::IVehicle* ptr, const StdStringClone base64) {
-    return ptr->LoadHealthDataFromBase64(base64);
-}
-alt::IVehicle* GetAttached(const alt::IVehicle* ptr) {
-    return ptr->GetAttached();
-}
-alt::IVehicle* GetAttachedTo(const alt::IVehicle* ptr) {
-    return ptr->GetAttachedTo();
-}
-bool IsDriftMode(const alt::IVehicle* ptr) {
-    return ptr->IsDriftMode();
-}
-void SetDriftMode(alt::IVehicle* ptr, bool state) {
-    return ptr->SetDriftMode(state);
-}
-bool IsTrainMissionTrain(const alt::IVehicle* ptr) {
-    return ptr->IsTrainMissionTrain();
-}
-void SetTrainMissionTrain(alt::IVehicle* ptr, bool value) {
-    return ptr->SetTrainMissionTrain(value);
-}
-i8 GetTrainTrackId(const alt::IVehicle* ptr) {
-    return ptr->GetTrainTrackId();
-}
-void SetTrainTrackId(alt::IVehicle* ptr, i8 trackId) {
-    return ptr->SetTrainTrackId(trackId);
-}
-alt::IVehicle* GetTrainEngineId(const alt::IVehicle* ptr) {
-    return ptr->GetTrainEngineId();
-}
-void SetTrainEngineId(alt::IVehicle* ptr, alt::IVehicle* vehicle) {
-    return ptr->SetTrainEngineId(vehicle);
-}
-i8 GetTrainConfigIndex(const alt::IVehicle* ptr) {
-    return ptr->GetTrainConfigIndex();
-}
-void SetTrainConfigIndex(alt::IVehicle* ptr, i8 trainConfigIndex) {
-    return ptr->SetTrainConfigIndex(trainConfigIndex);
-}
-f32 GetTrainDistanceFromEngine(const alt::IVehicle* ptr) {
-    return ptr->GetTrainDistanceFromEngine();
-}
-void SetTrainDistanceFromEngine(alt::IVehicle* ptr, f32 distanceFromEngine) {
-    return ptr->SetTrainDistanceFromEngine(distanceFromEngine);
-}
-bool IsTrainEngine(const alt::IVehicle* ptr) {
-    return ptr->IsTrainEngine();
-}
-void SetTrainIsEngine(alt::IVehicle* ptr, bool isEngine) {
-    return ptr->SetTrainIsEngine(isEngine);
-}
-bool IsTrainCaboose(const alt::IVehicle* ptr) {
-    return ptr->IsTrainCaboose();
-}
-void SetTrainIsCaboose(alt::IVehicle* ptr, bool isCaboose) {
-    return ptr->SetTrainIsCaboose(isCaboose);
-}
-bool GetTrainDirection(const alt::IVehicle* ptr) {
-    return ptr->GetTrainDirection();
-}
-void SetTrainDirection(alt::IVehicle* ptr, bool direction) {
-    return ptr->SetTrainDirection(direction);
-}
-bool HasTrainPassengerCarriages(const alt::IVehicle* ptr) {
-    return ptr->HasTrainPassengerCarriages();
-}
-void SetTrainHasPassengerCarriages(alt::IVehicle* ptr, bool hasPassengerCarriages) {
-    return ptr->SetTrainHasPassengerCarriages(hasPassengerCarriages);
-}
-bool GetTrainRenderDerailed(const alt::IVehicle* ptr) {
-    return ptr->GetTrainRenderDerailed();
-}
-void SetTrainRenderDerailed(alt::IVehicle* ptr, bool renderDerailed) {
-    return ptr->SetTrainRenderDerailed(renderDerailed);
-}
-bool GetTrainForceDoorsOpen(const alt::IVehicle* ptr) {
-    return ptr->GetTrainForceDoorsOpen();
-}
-void SetTrainForceDoorsOpen(alt::IVehicle* ptr, bool forceDoorsOpen) {
-    return ptr->SetTrainForceDoorsOpen(forceDoorsOpen);
-}
-f32 GetTrainCruiseSpeed(const alt::IVehicle* ptr) {
-    return ptr->GetTrainCruiseSpeed();
-}
-void SetTrainCruiseSpeed(alt::IVehicle* ptr, f32 cruiseSpeed) {
-    return ptr->SetTrainCruiseSpeed(cruiseSpeed);
-}
-i8 GetTrainCarriageConfigIndex(const alt::IVehicle* ptr) {
-    return ptr->GetTrainCarriageConfigIndex();
-}
-void SetTrainCarriageConfigIndex(alt::IVehicle* ptr, i8 carriageConfigIndex) {
-    return ptr->SetTrainCarriageConfigIndex(carriageConfigIndex);
-}
-alt::IVehicle* GetTrainLinkedToBackwardId(const alt::IVehicle* ptr) {
-    return ptr->GetTrainLinkedToBackwardId();
-}
-void SetTrainLinkedToBackwardId(alt::IVehicle* ptr, alt::IVehicle* vehicle) {
-    return ptr->SetTrainLinkedToBackwardId(vehicle);
-}
-alt::IVehicle* GetTrainLinkedToForwardId(const alt::IVehicle* ptr) {
-    return ptr->GetTrainLinkedToForwardId();
-}
-void SetTrainLinkedToForwardId(alt::IVehicle* ptr, alt::IVehicle* vehicle) {
-    return ptr->SetTrainLinkedToForwardId(vehicle);
-}
-void SetTrainUnk1(alt::IVehicle* ptr, bool unk1) {
-    return ptr->SetTrainUnk1(unk1);
-}
-bool GetTrainUnk1(const alt::IVehicle* ptr) {
-    return ptr->GetTrainUnk1();
-}
-void SetTrainUnk2(alt::IVehicle* ptr, bool unk2) {
-    return ptr->SetTrainUnk2(unk2);
-}
-bool GetTrainUnk2(const alt::IVehicle* ptr) {
-    return ptr->GetTrainUnk2();
-}
-void SetTrainUnk3(alt::IVehicle* ptr, bool unk3) {
-    return ptr->SetTrainUnk3(unk3);
-}
-bool GetTrainUnk3(const alt::IVehicle* ptr) {
-    return ptr->GetTrainUnk3();
-}
-bool IsBoatAnchorActive(const alt::IVehicle* ptr) {
-    return ptr->IsBoatAnchorActive();
-}
-void SetBoatAnchorActive(alt::IVehicle* ptr, bool state) {
-    return ptr->SetBoatAnchorActive(state);
-}
-bool SetSearchLight(alt::IVehicle* ptr, bool state, alt::IEntity* spottedEntity) {
-    return ptr->SetSearchLight(state, spottedEntity);
-}
-u8 GetLightState(const alt::IVehicle* ptr) {
-    return ptr->GetLightState();
-}
-void SetLightState(alt::IVehicle* ptr, u8 state) {
-    return ptr->SetLightState(state);
-}
-bool HasTimedExplosion(const alt::IVehicle* ptr) {
-    return ptr->HasTimedExplosion();
-}
-alt::IPlayer* GetTimedExplosionCulprit(const alt::IVehicle* ptr) {
-    return ptr->GetTimedExplosionCulprit();
-}
-u32 GetTimedExplosionTime(const alt::IVehicle* ptr) {
-    return ptr->GetTimedExplosionTime();
-}
-void SetTimedExplosion(alt::IVehicle* ptr, bool state, alt::IPlayer* culprit, u32 time) {
-    return ptr->SetTimedExplosion(state, culprit, time);
-}
-bool IsTowingDisabled(const alt::IVehicle* ptr) {
-    return ptr->IsTowingDisabled();
-}
-void SetDisableTowing(alt::IVehicle* ptr, bool state) {
-    return ptr->SetDisableTowing(state);
-}
-f32 GetRocketRefuelSpeed(const alt::IVehicle* ptr) {
-    return ptr->GetRocketRefuelSpeed();
-}
-void SetRocketRefuelSpeed(alt::IVehicle* ptr, f32 rocketRefuelSpeed) {
-    return ptr->SetRocketRefuelSpeed(rocketRefuelSpeed);
-}
-u32 GetCounterMeasureCount(const alt::IVehicle* ptr) {
-    return ptr->GetCounterMeasureCount();
-}
-void SetCounterMeasureCount(alt::IVehicle* ptr, u32 counterMeasureCount) {
-    return ptr->SetCounterMeasureCount(counterMeasureCount);
-}
-f32 GetScriptMaxSpeed(const alt::IVehicle* ptr) {
-    return ptr->GetScriptMaxSpeed();
-}
-void SetScriptMaxSpeed(alt::IVehicle* ptr, f32 scriptMaxSpeed) {
-    return ptr->SetScriptMaxSpeed(scriptMaxSpeed);
-}
-i32 GetWeaponCapacity(const alt::IVehicle* ptr, u8 index) {
-    return ptr->GetWeaponCapacity(index);
-}
-void SetWeaponCapacity(alt::IVehicle* ptr, u8 index, i32 state) {
-    return ptr->SetWeaponCapacity(index, state);
-}
-bool GetHybridExtraActive(const alt::IVehicle* ptr) {
-    return ptr->GetHybridExtraActive();
-}
-void SetHybridExtraActive(alt::IVehicle* ptr, bool state) {
-    return ptr->SetHybridExtraActive(state);
-}
-u8 GetHybridExtraState(const alt::IVehicle* ptr) {
-    return ptr->GetHybridExtraState();
-}
-void SetHybridExtraState(alt::IVehicle* ptr, u8 state) {
-    return ptr->SetHybridExtraState(state);
-}
-alt::Quaternion GetQuaternion(const alt::IVehicle* ptr) {
-    return ptr->GetQuaternion();
-}
-void SetQuaternion(alt::IVehicle* ptr, f32 quaternion_x, f32 quaternion_y, f32 quaternion_z, f32 quaternion_w) {
-    return ptr->SetQuaternion({ quaternion_x, quaternion_y, quaternion_z, quaternion_w });
+void ResetDashboardLights(alt::IVehicle* ptr) {
+    return ptr->ResetDashboardLights();
 }
 
 } // namespace

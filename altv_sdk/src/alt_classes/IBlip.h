@@ -124,6 +124,15 @@ bool GetAsHighDetail(const alt::IBlip* ptr) {
 bool GetShrinked(const alt::IBlip* ptr) {
     return ptr->GetShrinked();
 }
+u32 GetGameID(const alt::IBlip* ptr) {
+    return ptr->GetGameID();
+}
+void SetVisible(alt::IBlip* ptr, bool toggle) {
+    return ptr->SetVisible(toggle);
+}
+bool IsVisible(const alt::IBlip* ptr) {
+    return ptr->IsVisible();
+}
 void SetSprite(alt::IBlip* ptr, u32 sprite) {
     return ptr->SetSprite(sprite);
 }

@@ -129,118 +129,269 @@ bool IsEventEnabled(u16 type) {
 void ToggleEvent(u16 type, bool state) {
     return alt::ICore::Instance().ToggleEvent(static_cast<alt::CEvent::Type>(type), state);
 }
-const StdStringClone GetRootDirectory() {
-    return std::string { alt::ICore::Instance().GetRootDirectory() };
+bool AreControlsEnabled() {
+    return alt::ICore::Instance().AreControlsEnabled();
 }
-alt::IResource* StartResource(const StdStringClone name) {
-    return alt::ICore::Instance().StartResource(name);
+Vector2Wrapper GetCursorPosition(bool normalized) {
+    auto vector2 = alt::ICore::Instance().GetCursorPosition(normalized);
+    return { vector2[0], vector2[1] };
 }
-void StopResource(const StdStringClone name) {
-    return alt::ICore::Instance().StopResource(name);
+void SetCursorPosition(f32 pos_x, f32 pos_y, bool normalized) {
+    return alt::ICore::Instance().SetCursorPosition({ pos_x, pos_y }, normalized);
 }
-void RestartResource(const StdStringClone name) {
-    return alt::ICore::Instance().RestartResource(name);
+bool SetConfigFlag(const StdStringClone flag, bool state) {
+    return alt::ICore::Instance().SetConfigFlag(flag, state);
 }
-void SetSyncedMetaData(const StdStringClone key, MValueMutWrapper val) {
-    return alt::ICore::Instance().SetSyncedMetaData(key, val.ptr);
+bool GetConfigFlag(const StdStringClone flag) {
+    return alt::ICore::Instance().GetConfigFlag(flag);
 }
-void DeleteSyncedMetaData(const StdStringClone key) {
-    return alt::ICore::Instance().DeleteSyncedMetaData(key);
+bool DoesConfigFlagExist(const StdStringClone flag) {
+    return alt::ICore::Instance().DoesConfigFlagExist(flag);
 }
-alt::IVehicle* CreateVehicle(u32 model, f32 pos_x, f32 pos_y, f32 pos_z, f32 rot_x, f32 rot_y, f32 rot_z) {
-    return alt::ICore::Instance().CreateVehicle(model, { pos_x, pos_y, pos_z }, { rot_x, rot_y, rot_z });
+void SetVoiceInputMuted(bool state) {
+    return alt::ICore::Instance().SetVoiceInputMuted(state);
 }
-alt::ICheckpoint* CreateCheckpoint(u8 type, f32 pos_x, f32 pos_y, f32 pos_z, f32 radius, f32 height, u8 color_r, u8 color_g, u8 color_b, u8 color_a, u32 streamingDistance) {
-    return alt::ICore::Instance().CreateCheckpoint(type, { pos_x, pos_y, pos_z }, radius, height, { color_r, color_g, color_b, color_a }, streamingDistance);
+bool IsVoiceInputMuted() {
+    return alt::ICore::Instance().IsVoiceInputMuted();
 }
-alt::IBlip* CreateBlip(alt::IPlayer* target, BlipType type, f32 pos_x, f32 pos_y, f32 pos_z) {
-    return alt::ICore::Instance().CreateBlip(target, static_cast<alt::IBlip::BlipType>(type), { pos_x, pos_y, pos_z });
+bool IsVoiceActivationEnabled() {
+    return alt::ICore::Instance().IsVoiceActivationEnabled();
 }
-alt::IBlip* CreateBlip(alt::IPlayer* target, BlipType type, alt::IEntity* attachTo) {
-    return alt::ICore::Instance().CreateBlip(target, static_cast<alt::IBlip::BlipType>(type), attachTo);
+void ToggleVoiceControls(bool state) {
+    return alt::ICore::Instance().ToggleVoiceControls(state);
 }
-alt::IMarker* CreateMarker(alt::IPlayer* target, MarkerType type, f32 position_x, f32 position_y, f32 position_z, u8 color_r, u8 color_g, u8 color_b, u8 color_a, alt::IResource* res) {
-    return alt::ICore::Instance().CreateMarker(target, static_cast<alt::IMarker::MarkerType>(type), { position_x, position_y, position_z }, { color_r, color_g, color_b, color_a }, res);
+bool AreVoiceControlsEnabled() {
+    return alt::ICore::Instance().AreVoiceControlsEnabled();
 }
-alt::IVoiceChannel* CreateVoiceChannel(bool spatial, f32 maxDistance) {
-    return alt::ICore::Instance().CreateVoiceChannel(spatial, maxDistance);
+u32 GetVoiceActivationKey() {
+    return alt::ICore::Instance().GetVoiceActivationKey();
 }
-PlayerVector GetPlayersByName(const StdStringClone name) {
-    auto alt_vec = alt::ICore::Instance().GetPlayersByName(name);
-    PlayerVector vec {};
-    vec.reserve(alt_vec.size());
-    for (const auto& e : alt_vec) {
-        PlayerPtrWrapper wrapper;
-        wrapper.ptr = std::make_shared<alt::IPlayer*>(e);
-        vec.push_back(wrapper.clone());
-    }
-    return vec;
+bool ToggleVoiceInput(bool state) {
+    return alt::ICore::Instance().ToggleVoiceInput(state);
 }
-u32 GetNetTime() {
-    return alt::ICore::Instance().GetNetTime();
+bool ToggleVoiceActivation(bool state) {
+    return alt::ICore::Instance().ToggleVoiceActivation(state);
 }
-void SetPassword(const StdStringClone password) {
-    return alt::ICore::Instance().SetPassword(password);
+bool SetVoiceActivationLevel(f32 level) {
+    return alt::ICore::Instance().SetVoiceActivationLevel(level);
 }
-u64 HashServerPassword(const StdStringClone password) {
-    return alt::ICore::Instance().HashServerPassword(password);
+f32 GetVoiceActivationLevel() {
+    return alt::ICore::Instance().GetVoiceActivationLevel();
 }
-void StopServer() {
-    return alt::ICore::Instance().StopServer();
+bool ToggleNoiseSuppression(bool state) {
+    return alt::ICore::Instance().ToggleNoiseSuppression(state);
 }
-const alt::VehicleModelInfo* GetVehicleModelByHash(u32 hash) {
-    return &alt::ICore::Instance().GetVehicleModelByHash(hash);
+bool IsNoiseSuppressionEnabled() {
+    return alt::ICore::Instance().IsNoiseSuppressionEnabled();
 }
-const alt::PedModelInfo* GetPedModelByHash(u32 hash) {
-    return &alt::ICore::Instance().GetPedModelByHash(hash);
+std::string GetLicenseHash() {
+    return alt::ICore::Instance().GetLicenseHash();
 }
-const alt::WeaponModelInfo* GetWeaponModelByHash(u32 hash) {
-    return &alt::ICore::Instance().GetWeaponModelByHash(hash);
+std::string GetLocale() {
+    return alt::ICore::Instance().GetLocale();
 }
-Config::Value::ValuePtr GetServerConfig() {
-    return alt::ICore::Instance().GetServerConfig();
+bool IsInStreamerMode() {
+    return alt::ICore::Instance().IsInStreamerMode();
 }
-void SetWorldProfiler(bool state) {
-    return alt::ICore::Instance().SetWorldProfiler(state);
+bool IsMenuOpen() {
+    return alt::ICore::Instance().IsMenuOpen();
 }
-alt::IPed* CreatePed(u32 model, f32 pos_x, f32 pos_y, f32 pos_z, f32 rot_x, f32 rot_y, f32 rot_z) {
-    return alt::ICore::Instance().CreatePed(model, { pos_x, pos_y, pos_z }, { rot_x, rot_y, rot_z });
+bool IsConsoleOpen() {
+    return alt::ICore::Instance().IsConsoleOpen();
 }
-BaseObjectVector GetEntitiesInDimension(i32 dimension, u64 allowedTypes) {
-    auto alt_vec = alt::ICore::Instance().GetEntitiesInDimension(dimension, allowedTypes);
-    BaseObjectVector vec {};
-    vec.reserve(alt_vec.size());
-    for (const auto& e : alt_vec) {
-        BaseObjectPtrWrapper wrapper;
-        wrapper.ptr = std::make_shared<alt::IBaseObject*>(e);
-        vec.push_back(wrapper.clone());
-    }
-    return vec;
+alt::IWorldObject* GetWorldObjectByScriptID(u32 scriptID) {
+    return alt::ICore::Instance().GetWorldObjectByScriptID(scriptID);
 }
-BaseObjectVector GetEntitiesInRange(f32 position_x, f32 position_y, f32 position_z, i32 range, i32 dimension, u64 allowedTypes) {
-    auto alt_vec = alt::ICore::Instance().GetEntitiesInRange({ position_x, position_y, position_z }, range, dimension, allowedTypes);
-    BaseObjectVector vec {};
-    vec.reserve(alt_vec.size());
-    for (const auto& e : alt_vec) {
-        BaseObjectPtrWrapper wrapper;
-        wrapper.ptr = std::make_shared<alt::IBaseObject*>(e);
-        vec.push_back(wrapper.clone());
-    }
-    return vec;
+void RequestIPL(const StdStringClone ipl) {
+    return alt::ICore::Instance().RequestIPL(ipl);
 }
-BaseObjectVector GetClosestEntities(f32 position_x, f32 position_y, f32 position_z, i32 range, i32 dimension, i32 limit, u64 allowedTypes) {
-    auto alt_vec = alt::ICore::Instance().GetClosestEntities({ position_x, position_y, position_z }, range, dimension, limit, allowedTypes);
-    BaseObjectVector vec {};
-    vec.reserve(alt_vec.size());
-    for (const auto& e : alt_vec) {
-        BaseObjectPtrWrapper wrapper;
-        wrapper.ptr = std::make_shared<alt::IBaseObject*>(e);
-        vec.push_back(wrapper.clone());
-    }
-    return vec;
+void RemoveIPL(const StdStringClone ipl) {
+    return alt::ICore::Instance().RemoveIPL(ipl);
 }
-alt::INetworkObject* CreateNetworkObject(u32 model, f32 pos_x, f32 pos_y, f32 pos_z, f32 rot_x, f32 rot_y, f32 rot_z, u8 alpha, u8 textureVariation, u16 lodDistance) {
-    return alt::ICore::Instance().CreateNetworkObject(model, { pos_x, pos_y, pos_z }, { rot_x, rot_y, rot_z }, alpha, textureVariation, lodDistance);
+bool BeginScaleformMovieMethodMinimap(const StdStringClone methodName) {
+    return alt::ICore::Instance().BeginScaleformMovieMethodMinimap(methodName);
+}
+i32 GetMsPerGameMinute() {
+    return alt::ICore::Instance().GetMsPerGameMinute();
+}
+void SetMsPerGameMinute(i32 val) {
+    return alt::ICore::Instance().SetMsPerGameMinute(val);
+}
+void SetWeatherSyncActive(bool active) {
+    return alt::ICore::Instance().SetWeatherSyncActive(active);
+}
+void SetCamFrozen(bool frozen) {
+    return alt::ICore::Instance().SetCamFrozen(frozen);
+}
+bool IsCamFrozen() {
+    return alt::ICore::Instance().IsCamFrozen();
+}
+u8 GetMapDataIDFromAlias(const StdStringClone alias) {
+    return alt::ICore::Instance().GetMapDataIDFromAlias(alias);
+}
+void ResetMapData(u8 zoomDataId) {
+    return alt::ICore::Instance().ResetMapData(zoomDataId);
+}
+void ResetMapData(const StdStringClone alias) {
+    return alt::ICore::Instance().ResetMapData(alias);
+}
+void ResetAllMapData() {
+    return alt::ICore::Instance().ResetAllMapData();
+}
+alt::IBlip* CreateBlip(BlipType type, f32 position_x, f32 position_y, f32 position_z, alt::IResource* res) {
+    return alt::ICore::Instance().CreateBlip(static_cast<alt::IBlip::BlipType>(type), { position_x, position_y, position_z }, res);
+}
+alt::IBlip* CreateBlip(BlipType type, u32 entityID, alt::IResource* res) {
+    return alt::ICore::Instance().CreateBlip(static_cast<alt::IBlip::BlipType>(type), entityID, res);
+}
+alt::IBlip* CreateBlip(f32 position_x, f32 position_y, f32 position_z, f32 radius, alt::IResource* res) {
+    return alt::ICore::Instance().CreateBlip({ position_x, position_y, position_z }, radius, res);
+}
+alt::IBlip* CreateBlip(f32 position_x, f32 position_y, f32 position_z, f32 width, f32 height, alt::IResource* res) {
+    return alt::ICore::Instance().CreateBlip({ position_x, position_y, position_z }, width, height, res);
+}
+alt::ICheckpoint* CreateCheckpoint(u8 type, f32 pos_x, f32 pos_y, f32 pos_z, f32 next_x, f32 next_y, f32 next_z, f32 radius, f32 height, u8 color_r, u8 color_g, u8 color_b, u8 color_a, u32 streamingDistance, alt::IResource* res) {
+    return alt::ICore::Instance().CreateCheckpoint(type, { pos_x, pos_y, pos_z }, { next_x, next_y, next_z }, radius, height, { color_r, color_g, color_b, color_a }, streamingDistance, res);
+}
+alt::IMarker* CreateMarker(MarkerType type, f32 position_x, f32 position_y, f32 position_z, u8 color_r, u8 color_g, u8 color_b, u8 color_a, bool useStreaming, u32 streamingDistance, alt::IResource* res) {
+    return alt::ICore::Instance().CreateMarker(static_cast<alt::IMarker::MarkerType>(type), { position_x, position_y, position_z }, { color_r, color_g, color_b, color_a }, useStreaming, streamingDistance, res);
+}
+bool IsGameFocused() {
+    return alt::ICore::Instance().IsGameFocused();
+}
+void LoadModel(u32 hash) {
+    return alt::ICore::Instance().LoadModel(hash);
+}
+void LoadModelAsync(u32 hash) {
+    return alt::ICore::Instance().LoadModelAsync(hash);
+}
+bool LoadYtyp(const StdStringClone path) {
+    return alt::ICore::Instance().LoadYtyp(path);
+}
+bool UnloadYtyp(const StdStringClone path) {
+    return alt::ICore::Instance().UnloadYtyp(path);
+}
+std::string HeadshotToBase64(u8 id) {
+    return alt::ICore::Instance().HeadshotToBase64(id);
+}
+void SetDlcClothes(i32 scriptID, u8 component, u16 drawable, u8 texture, u8 palette, u32 dlc) {
+    return alt::ICore::Instance().SetDlcClothes(scriptID, component, drawable, texture, palette, dlc);
+}
+void SetDlcProps(i32 scriptID, u8 component, u8 drawable, u8 texture, u32 dlc) {
+    return alt::ICore::Instance().SetDlcProps(scriptID, component, drawable, texture, dlc);
+}
+void ClearProps(i32 scriptID, u8 component) {
+    return alt::ICore::Instance().ClearProps(scriptID, component);
+}
+void SetWatermarkPosition(u8 pos) {
+    return alt::ICore::Instance().SetWatermarkPosition(pos);
+}
+u16 GetFps() {
+    return alt::ICore::Instance().GetFps();
+}
+u16 GetPing() {
+    return alt::ICore::Instance().GetPing();
+}
+u64 GetTotalPacketsSent() {
+    return alt::ICore::Instance().GetTotalPacketsSent();
+}
+u32 GetTotalPacketsLost() {
+    return alt::ICore::Instance().GetTotalPacketsLost();
+}
+std::string GetServerIp() {
+    return alt::ICore::Instance().GetServerIp();
+}
+u16 GetServerPort() {
+    return alt::ICore::Instance().GetServerPort();
+}
+std::string GetClientPath() {
+    return alt::ICore::Instance().GetClientPath();
+}
+bool HasLocalMetaData(const StdStringClone key) {
+    return alt::ICore::Instance().HasLocalMetaData(key);
+}
+MValueMutWrapper GetLocalMetaData(const StdStringClone key) {
+    MValueMutWrapper wrapper;
+    wrapper.ptr = alt::ICore::Instance().GetLocalMetaData(key);
+    return wrapper;
+}
+bool CopyToClipboard(const StdStringClone value) {
+    return alt::ICore::Instance().CopyToClipboard(value);
+}
+void ToggleRmlDebugger(bool state) {
+    return alt::ICore::Instance().ToggleRmlDebugger(state);
+}
+bool LoadRmlFontFace(alt::IResource* resource, const StdStringClone path, const StdStringClone currentPath, const StdStringClone name, bool italic, bool bold) {
+    return alt::ICore::Instance().LoadRmlFontFace(resource, path, currentPath, name, italic, bold);
+}
+void ToggleRmlControls(bool state) {
+    return alt::ICore::Instance().ToggleRmlControls(state);
+}
+bool AreRmlControlsEnabled() {
+    return alt::ICore::Instance().AreRmlControlsEnabled();
+}
+Vector3Wrapper WorldToScreen(f32 pos_x, f32 pos_y, f32 pos_z) {
+    auto vector3 = alt::ICore::Instance().WorldToScreen({ pos_x, pos_y, pos_z });
+    return { vector3[0], vector3[1], vector3[2] };
+}
+Vector3Wrapper ScreenToWorld(f32 pos_x, f32 pos_y) {
+    auto vector3 = alt::ICore::Instance().ScreenToWorld({ pos_x, pos_y });
+    return { vector3[0], vector3[1], vector3[2] };
+}
+Vector3Wrapper GetCamPos() {
+    auto vector3 = alt::ICore::Instance().GetCamPos();
+    return { vector3[0], vector3[1], vector3[2] };
+}
+void SetMinimapIsRectangle(bool state) {
+    return alt::ICore::Instance().SetMinimapIsRectangle(state);
+}
+Config::Value::ValuePtr GetClientConfig() {
+    return alt::ICore::Instance().GetClientConfig();
+}
+bool IsFocusOverriden() {
+    return alt::ICore::Instance().IsFocusOverriden();
+}
+Vector3Wrapper GetFocusOverridePos() {
+    auto vector3 = alt::ICore::Instance().GetFocusOverridePos();
+    return { vector3[0], vector3[1], vector3[2] };
+}
+Vector3Wrapper GetFocusOverrideOffset() {
+    auto vector3 = alt::ICore::Instance().GetFocusOverrideOffset();
+    return { vector3[0], vector3[1], vector3[2] };
+}
+alt::IEntity* GetFocusOverrideEntity() {
+    return alt::ICore::Instance().GetFocusOverrideEntity();
+}
+void OverrideFocusEntity(alt::IEntity* entity) {
+    return alt::ICore::Instance().OverrideFocusEntity(entity);
+}
+void ClearFocusOverride() {
+    return alt::ICore::Instance().ClearFocusOverride();
+}
+void LoadDefaultIpls() {
+    return alt::ICore::Instance().LoadDefaultIpls();
+}
+bool IsPointOnScreen(f32 point_x, f32 point_y, f32 point_z) {
+    return alt::ICore::Instance().IsPointOnScreen({ point_x, point_y, point_z });
+}
+Vector3Wrapper GetPedBonePos(i32 scriptId, u16 boneId) {
+    auto vector3 = alt::ICore::Instance().GetPedBonePos(scriptId, boneId);
+    return { vector3[0], vector3[1], vector3[2] };
+}
+void InternalAddCefBootstrap(const StdStringClone bootstrap) {
+    return alt::ICore::Instance().InternalAddCefBootstrap(bootstrap);
+}
+bool IsFullScreen() {
+    return alt::ICore::Instance().IsFullScreen();
+}
+alt::IBlip* GetBlipByGameID(u32 gameID) {
+    return alt::ICore::Instance().GetBlipByGameID(gameID);
+}
+alt::ICheckpoint* GetCheckpointByGameID(u32 gameID) {
+    return alt::ICore::Instance().GetCheckpointByGameID(gameID);
+}
+bool IsWebViewGpuAccelerationActive() {
+    return alt::ICore::Instance().IsWebViewGpuAccelerationActive();
 }
 
 } // namespace

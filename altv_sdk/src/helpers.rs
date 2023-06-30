@@ -1,11 +1,11 @@
-use crate::{ffi, BaseObjectType};
+use crate::{ffi};
 
 // why there is no NonNull for const pointers? :c
-pub unsafe fn get_base_object_type(base_object: *const ffi::alt::IBaseObject) -> BaseObjectType {
-    let raw_type = unsafe { ffi::IBaseObject::GetType(base_object) };
-    BaseObjectType::try_from(raw_type)
-        .expect("failed to convert raw baseobj type: {raw_type} to BaseObjectType")
-}
+// pub unsafe fn get_base_object_type(base_object: *const ffi::alt::IBaseObject) -> BaseObjectType {
+//     let raw_type = unsafe { ffi::IBaseObject::GetType(base_object) };
+//     BaseObjectType::try_from(raw_type)
+//         .expect("failed to convert raw baseobj type: {raw_type} to BaseObjectType")
+// }
 
 #[macro_export]
 macro_rules! __impl_extern_type_callback {

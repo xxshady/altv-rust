@@ -16,17 +16,5 @@ u16 GetArmour(const alt::IPed* ptr) {
 u32 GetCurrentWeapon(const alt::IPed* ptr) {
     return ptr->GetCurrentWeapon();
 }
-void SetHealth(alt::IPed* ptr, u16 health) {
-    return ptr->SetHealth(health);
-}
-void SetMaxHealth(alt::IPed* ptr, u16 health) {
-    return ptr->SetMaxHealth(health);
-}
-void SetArmour(alt::IPed* ptr, u16 armor) {
-    return ptr->SetArmour(armor);
-}
-void SetCurrentWeapon(alt::IPed* ptr, u32 weapon) {
-    return ptr->SetCurrentWeapon(weapon);
-}
 
 } // namespace

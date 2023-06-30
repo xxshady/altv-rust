@@ -25,17 +25,32 @@ const std::vector<std::string> GetDependencies(const alt::IResource* ptr) {
 const std::vector<std::string> GetDependants(const alt::IResource* ptr) {
     return ptr->GetDependants();
 }
-std::string GetClientType(const alt::IResource* ptr) {
-    return ptr->GetClientType();
-}
-std::string GetClientMain(const alt::IResource* ptr) {
-    return ptr->GetClientMain();
-}
-const std::vector<std::string> GetClientFiles(const alt::IResource* ptr) {
-    return ptr->GetClientFiles();
-}
 Config::Value::ValuePtr GetConfig(const alt::IResource* ptr) {
     return ptr->GetConfig();
+}
+void EnableNatives(alt::IResource* ptr) {
+    return ptr->EnableNatives();
+}
+void AddGxtText(alt::IResource* ptr, u32 hash, const StdStringClone text) {
+    return ptr->AddGxtText(hash, text);
+}
+void RemoveGxtText(alt::IResource* ptr, u32 hash) {
+    return ptr->RemoveGxtText(hash);
+}
+const StdStringClone GetGxtText(alt::IResource* ptr, u32 hash) {
+    return std::string { ptr->GetGxtText(hash) };
+}
+bool ToggleCursor(alt::IResource* ptr, bool state) {
+    return ptr->ToggleCursor(state);
+}
+void ToggleGameControls(alt::IResource* ptr, bool state) {
+    return ptr->ToggleGameControls(state);
+}
+bool CursorVisible(alt::IResource* ptr) {
+    return ptr->CursorVisible();
+}
+bool GameControlsActive(alt::IResource* ptr) {
+    return ptr->GameControlsActive();
 }
 
 } // namespace

@@ -27,11 +27,8 @@ void SetVisible(alt::IVirtualEntity* ptr, bool toggle) {
 bool IsVisible(const alt::IVirtualEntity* ptr) {
     return ptr->IsVisible();
 }
-void SetStreamSyncedMetaData(alt::IVirtualEntity* ptr, const StdStringClone key, MValueMutWrapper val) {
-    return ptr->SetStreamSyncedMetaData(key, val.ptr);
-}
-void DeleteStreamSyncedMetaData(alt::IVirtualEntity* ptr, const StdStringClone key) {
-    return ptr->DeleteStreamSyncedMetaData(key);
+bool IsStreamedIn(const alt::IVirtualEntity* ptr) {
+    return ptr->IsStreamedIn();
 }
 
 } // namespace
