@@ -55,7 +55,7 @@ fn get_by_id() {
 
     assert_marker_is_none();
 
-    let orig_blip = altv::Blip::new_point(0);
+    let orig_blip = altv::Blip::new_global_point(0).unwrap();
 
     let none = altv::base_object::get_by_id(BaseObjectType::Marker, orig_blip.id().unwrap());
     dbg!(&none);

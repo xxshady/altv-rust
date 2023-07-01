@@ -34,7 +34,7 @@ fn get_by_id() {
     assert_eq!(none, None);
 
     {
-        let blip = altv::Blip::new_point(0);
+        let blip = altv::Blip::new_global_point(0).unwrap();
         let id = dbg!(blip.id()).unwrap();
         dbg!(altv::Blip::get_by_id(id));
     }
@@ -52,9 +52,9 @@ fn all() {
     assert_eq!(altv::Marker::all().len(), 0);
     assert_eq!(altv::Blip::all().len(), 0);
 
-    altv::Blip::new_point(0);
-    altv::Blip::new_point(0);
-    altv::Blip::new_point(0);
+    altv::Blip::new_global_point(0).unwrap();
+    altv::Blip::new_global_point(0).unwrap();
+    altv::Blip::new_global_point(0).unwrap();
 
     assert_eq!(dbg!(altv::Blip::all().len()), 3);
 
@@ -67,9 +67,9 @@ fn all_count() {
     assert_eq!(altv::Marker::all_count(), 0);
     assert_eq!(altv::Blip::all_count(), 0);
 
-    altv::Blip::new_point(0);
-    altv::Blip::new_point(0);
-    altv::Blip::new_point(0);
+    altv::Blip::new_global_point(0).unwrap();
+    altv::Blip::new_global_point(0).unwrap();
+    altv::Blip::new_global_point(0).unwrap();
 
     assert_eq!(dbg!(altv::Blip::all_count()), 3);
 

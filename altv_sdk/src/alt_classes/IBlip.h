@@ -4,11 +4,14 @@
 
 namespace IBlip {
 
+void SetVisible(alt::IBlip* ptr, bool toggle) {
+    return ptr->SetVisible(toggle);
+}
+bool IsVisible(const alt::IBlip* ptr) {
+    return ptr->IsVisible();
+}
 bool IsGlobal(const alt::IBlip* ptr) {
     return ptr->IsGlobal();
-}
-alt::IPlayer* GetTarget(const alt::IBlip* ptr) {
-    return ptr->GetTarget();
 }
 bool IsAttached(const alt::IBlip* ptr) {
     return ptr->IsAttached();
@@ -21,6 +24,9 @@ void AttachTo(alt::IBlip* ptr, alt::IEntity* entity) {
 }
 BlipType GetBlipType(const alt::IBlip* ptr) {
     return static_cast<uint8_t>(ptr->GetBlipType());
+}
+void SetBlipType(alt::IBlip* ptr, BlipType blipType) {
+    return ptr->SetBlipType(static_cast<alt::IBlip::BlipType>(blipType));
 }
 Vector2Wrapper GetScaleXY(const alt::IBlip* ptr) {
     auto vector2 = ptr->GetScaleXY();
@@ -123,6 +129,26 @@ bool GetAsHighDetail(const alt::IBlip* ptr) {
 }
 bool GetShrinked(const alt::IBlip* ptr) {
     return ptr->GetShrinked();
+}
+void SetGlobal(alt::IBlip* ptr, bool state) {
+    return ptr->SetGlobal(state);
+}
+void AddTargetPlayer(alt::IBlip* ptr, alt::IPlayer* player) {
+    return ptr->AddTargetPlayer(player);
+}
+void RemoveTargetPlayer(alt::IBlip* ptr, alt::IPlayer* player) {
+    return ptr->RemoveTargetPlayer(player);
+}
+PlayerVector GetTargets(const alt::IBlip* ptr) {
+    auto alt_vec = ptr->GetTargets();
+    PlayerVector vec {};
+    vec.reserve(alt_vec.size());
+    for (const auto& e : alt_vec) {
+        PlayerPtrWrapper wrapper;
+        wrapper.ptr = std::make_shared<alt::IPlayer*>(e);
+        vec.push_back(wrapper.clone());
+    }
+    return vec;
 }
 void SetSprite(alt::IBlip* ptr, u32 sprite) {
     return ptr->SetSprite(sprite);
