@@ -11,120 +11,121 @@ pub mod ffi {
         #include "alt_bridge.h"
         #include "alt_classes/ICore.h"
         #include "alt_classes/IBaseObject.h"
-        // #include "alt_classes/IWorldObject.h"
-        // #include "alt_classes/IEntity.h"
-        // #include "alt_classes/IPlayer.h"
-        // #include "alt_classes/IVehicle.h"
-        // #include "alt_classes/IPed.h"
+        #include "alt_classes/IWorldObject.h"
+        #include "alt_classes/IEntity.h"
+        #include "alt_classes/IPlayer.h"
+        #include "alt_classes/IVehicle.h"
+        #include "alt_classes/IPed.h"
         // #include "alt_classes/INetworkObject.h"
-        // #include "alt_classes/IColShape.h"
-        // #include "alt_classes/IBlip.h"
+        #include "alt_classes/IColShape.h"
+        #include "alt_classes/IBlip.h"
         #include "alt_classes/IMarker.h"
-        // #include "alt_classes/ICheckpoint.h"
-        // #include "alt_classes/CEvent.h"
-        // #include "alt_classes/IResource.h"
+        #include "alt_classes/ICheckpoint.h"
+        #include "alt_classes/CEvent.h"
+        #include "alt_classes/IResource.h"
         // #include "alt_classes/IVoiceChannel.h"
 
-        // #include "alt_classes/CConsoleCommandEvent.h"
+        #include "alt_classes/CConsoleCommandEvent.h"
         // #include "alt_classes/CServerScriptEvent.h"
         // #include "alt_classes/CClientScriptEvent.h"
         // #include "alt_classes/CPlayerConnectEvent.h"
         // #include "alt_classes/CPlayerDisconnectEvent.h"
-        // #include "alt_classes/CColShapeEvent.h"
-        // #include "alt_classes/IVirtualEntity.h"
-        // #include "alt_classes/IVirtualEntityGroup.h"
-        // #include "alt_classes/CWeaponDamageEvent.h"
+        #include "alt_classes/CColShapeEvent.h"
+        #include "alt_classes/IVirtualEntity.h"
+        #include "alt_classes/IVirtualEntityGroup.h"
+        #include "alt_classes/CWeaponDamageEvent.h"
 
         // entity
-        // #include "alt_classes/CNetOwnerChangeEvent.h"
+        #include "alt_classes/CNetOwnerChangeEvent.h"
 
         // player
         // #include "alt_classes/CPlayerDeathEvent.h"
-        // #include "alt_classes/CPlayerDamageEvent.h"
-        // #include "alt_classes/CPlayerEnteringVehicleEvent.h"
-        // #include "alt_classes/CPlayerEnterVehicleEvent.h"
-        // #include "alt_classes/CPlayerLeaveVehicleEvent.h"
-        // #include "alt_classes/CPlayerChangeAnimationEvent.h"
-        // #include "alt_classes/CPlayerChangeVehicleSeatEvent.h"
-        // #include "alt_classes/CPlayerWeaponChangeEvent.h"
+        #include "alt_classes/CPlayerDamageEvent.h"
+        #include "alt_classes/CPlayerEnteringVehicleEvent.h"
+        #include "alt_classes/CPlayerEnterVehicleEvent.h"
+        #include "alt_classes/CPlayerLeaveVehicleEvent.h"
+        #include "alt_classes/CPlayerChangeAnimationEvent.h"
+        #include "alt_classes/CPlayerChangeVehicleSeatEvent.h"
+        #include "alt_classes/CPlayerWeaponChangeEvent.h"
         // #include "alt_classes/CPlayerConnectDeniedEvent.h"
-        // #include "alt_classes/CPlayerSpawnEvent.h"
-        // #include "alt_classes/CPlayerRequestControlEvent.h"
+        #include "alt_classes/CPlayerSpawnEvent.h"
+        #include "alt_classes/CPlayerRequestControlEvent.h"
         // #include "alt_classes/CPlayerDimensionChangeEvent.h"
-        // #include "alt_classes/CPlayerChangeInteriorEvent.h"
+        #include "alt_classes/CPlayerChangeInteriorEvent.h"
         // #include "alt_classes/CConnectionQueueAddEvent.h"
         // #include "alt_classes/CConnectionQueueRemoveEvent.h"
 
-        // #include "alt_classes/CVehicleAttachEvent.h"
-        // #include "alt_classes/CVehicleDetachEvent.h"
-        // #include "alt_classes/CVehicleDestroyEvent.h"
-        // #include "alt_classes/CVehicleDamageEvent.h"
-        // #include "alt_classes/CVehicleHornEvent.h"
-        // #include "alt_classes/CVehicleSirenEvent.h"
+        #include "alt_classes/CVehicleAttachEvent.h"
+        #include "alt_classes/CVehicleDetachEvent.h"
+        #include "alt_classes/CVehicleDestroyEvent.h"
+        #include "alt_classes/CVehicleDamageEvent.h"
+        #include "alt_classes/CVehicleHornEvent.h"
+        #include "alt_classes/CVehicleSirenEvent.h"
 
-        // #include "alt_classes/CStartProjectileEvent.h"
-        // #include "alt_classes/CFireEvent.h"
-        // #include "alt_classes/CExplosionEvent.h"
+        #include "alt_classes/CStartProjectileEvent.h"
+        #include "alt_classes/CFireEvent.h"
+        #include "alt_classes/CExplosionEvent.h"
 
         // #include "alt_classes/IConnectionInfo.h"
         // #include "alt_classes/VehicleModelInfo.h"
         // #include "alt_classes/PedModelInfo.h"
 
-        // #include "alt_classes/CMetaChangeEvent.h"
-        // #include "alt_classes/CGlobalMetaDataChangeEvent.h"
-        // #include "alt_classes/CGlobalSyncedMetaDataChangeEvent.h"
-        // #include "alt_classes/CSyncedMetaDataChangeEvent.h"
-        // #include "alt_classes/CStreamSyncedMetaDataChangeEvent.h"
-        // #include "alt_classes/CLocalMetaDataChangeEvent.h"
+        #include "alt_classes/CMetaChangeEvent.h"
+        #include "alt_classes/CGlobalMetaDataChangeEvent.h"
+        #include "alt_classes/CGlobalSyncedMetaDataChangeEvent.h"
+        #include "alt_classes/CSyncedMetaDataChangeEvent.h"
+        #include "alt_classes/CStreamSyncedMetaDataChangeEvent.h"
+        #include "alt_classes/CLocalMetaDataChangeEvent.h"
 
-        // #include "alt_classes/CResourceStopEvent.h"
-        // #include "alt_classes/CResourceStartEvent.h"
+        #include "alt_classes/CResourceStopEvent.h"
+        #include "alt_classes/CResourceStartEvent.h"
 
         name!(alt_bridge)
 
         generate_ns!("ICore")
         generate_ns!("IMarker")
+        generate_ns!("IBaseObject")
 
-        // generate_ns!("CNetOwnerChangeEvent")
+        generate_ns!("CNetOwnerChangeEvent")
 
         // generate_ns!("CPlayerDeathEvent")
-        // generate_ns!("CPlayerDamageEvent")
-        // generate_ns!("CPlayerEnteringVehicleEvent")
-        // generate_ns!("CPlayerEnterVehicleEvent")
-        // generate_ns!("CPlayerLeaveVehicleEvent")
-        // generate_ns!("CPlayerChangeAnimationEvent")
-        // generate_ns!("CPlayerChangeVehicleSeatEvent")
-        // generate_ns!("CPlayerWeaponChangeEvent")
-        // generate_ns!("CPlayerConnectDeniedEvent")
-        // generate_ns!("CPlayerSpawnEvent")
-        // generate_ns!("CPlayerRequestControlEvent")
-        // generate_ns!("CPlayerDimensionChangeEvent")
-        // generate_ns!("CPlayerChangeInteriorEvent")
-        // generate_ns!("CConnectionQueueAddEvent")
-        // generate_ns!("CConnectionQueueRemoveEvent")
+        generate_ns!("CPlayerDamageEvent")
+        generate_ns!("CPlayerEnteringVehicleEvent")
+        generate_ns!("CPlayerEnterVehicleEvent")
+        generate_ns!("CPlayerLeaveVehicleEvent")
+        generate_ns!("CPlayerChangeAnimationEvent")
+        generate_ns!("CPlayerChangeVehicleSeatEvent")
+        generate_ns!("CPlayerWeaponChangeEvent")
+        generate_ns!("CPlayerConnectDeniedEvent")
+        generate_ns!("CPlayerSpawnEvent")
+        generate_ns!("CPlayerRequestControlEvent")
+        generate_ns!("CPlayerDimensionChangeEvent")
+        generate_ns!("CPlayerChangeInteriorEvent")
+        generate_ns!("CConnectionQueueAddEvent")
+        generate_ns!("CConnectionQueueRemoveEvent")
 
-        // generate_ns!("CVehicleAttachEvent")
-        // generate_ns!("CVehicleDetachEvent")
-        // generate_ns!("CVehicleDestroyEvent")
-        // generate_ns!("CVehicleDamageEvent")
-        // generate_ns!("CVehicleHornEvent")
-        // generate_ns!("CVehicleSirenEvent")
+        generate_ns!("CVehicleAttachEvent")
+        generate_ns!("CVehicleDetachEvent")
+        generate_ns!("CVehicleDestroyEvent")
+        generate_ns!("CVehicleDamageEvent")
+        generate_ns!("CVehicleHornEvent")
+        generate_ns!("CVehicleSirenEvent")
 
-        // generate_ns!("CStartProjectileEvent")
-        // generate_ns!("CExplosionEvent")
-        // generate_ns!("CFireEvent")
+        generate_ns!("CStartProjectileEvent")
+        generate_ns!("CExplosionEvent")
+        generate_ns!("CFireEvent")
 
         // generate_ns!("IConnectionInfo")
 
-        // generate_ns!("CMetaChangeEvent")
-        // generate_ns!("CGlobalMetaDataChangeEvent")
-        // generate_ns!("CGlobalSyncedMetaDataChangeEvent")
-        // generate_ns!("CSyncedMetaDataChangeEvent")
-        // generate_ns!("CStreamSyncedMetaDataChangeEvent")
-        // generate_ns!("CLocalMetaDataChangeEvent")
+        generate_ns!("CMetaChangeEvent")
+        generate_ns!("CGlobalMetaDataChangeEvent")
+        generate_ns!("CGlobalSyncedMetaDataChangeEvent")
+        generate_ns!("CSyncedMetaDataChangeEvent")
+        generate_ns!("CStreamSyncedMetaDataChangeEvent")
+        generate_ns!("CLocalMetaDataChangeEvent")
 
-        // generate_ns!("CResourceStopEvent")
-        // generate_ns!("CResourceStartEvent")
+        generate_ns!("CResourceStopEvent")
+        generate_ns!("CResourceStartEvent")
 
         // defined in alt_bridge
         generate_ns!("events")
@@ -189,15 +190,15 @@ pub mod ffi {
         generate_ns!("player")
         generate_ns!("vehicle")
         generate_ns!("ped")
-        generate_ns!("network_object")
+        // generate_ns!("network_object")
         generate_ns!("col_shape")
         generate_ns!("virtual_entity")
         generate_ns!("virtual_entity_group")
         generate_ns!("blip")
-        generate_ns!("voice_channel")
+        // generate_ns!("voice_channel")
         generate_ns!("marker")
         generate_ns!("checkpoint")
-        generate_ns!("connection_info")
+        // generate_ns!("connection_info")
 
         // alt::Prop
         generate!("read_alt_prop")
@@ -236,35 +237,35 @@ pub mod ffi {
         generate!("read_fire_info_weapon_hash")
 
         // alt::VehicleModelInfo
-        generate_ns!("VehicleModelInfo")
-        generate!("is_vehicle_model_info_valid")
-        generate!("read_vehicle_model_info")
-        generate!("read_vehicle_model_info_title")
-        generate!("read_vehicle_model_info_bones")
+        // generate_ns!("VehicleModelInfo")
+        // generate!("is_vehicle_model_info_valid")
+        // generate!("read_vehicle_model_info")
+        // generate!("read_vehicle_model_info_title")
+        // generate!("read_vehicle_model_info_bones")
 
         // alt::BoneInfo
         generate!("read_bone_info")
         generate!("read_bone_info_name")
 
         // alt::PedModelInfo
-        generate_ns!("PedModelInfo")
-        generate!("is_ped_model_info_valid")
-        generate!("read_ped_model_info_bones")
-        generate!("read_ped_model_info_hash")
-        generate!("read_ped_model_info_name")
-        generate!("read_ped_model_info_type")
-        generate!("read_ped_model_info_dlc_name")
-        generate!("read_ped_model_info_movement_clip_set")
-        generate!("read_ped_model_info_default_unarmed_weapon")
+        // generate_ns!("PedModelInfo")
+        // generate!("is_ped_model_info_valid")
+        // generate!("read_ped_model_info_bones")
+        // generate!("read_ped_model_info_hash")
+        // generate!("read_ped_model_info_name")
+        // generate!("read_ped_model_info_type")
+        // generate!("read_ped_model_info_dlc_name")
+        // generate!("read_ped_model_info_movement_clip_set")
+        // generate!("read_ped_model_info_default_unarmed_weapon")
 
         // alt::WeaponModelInfo
-        generate_ns!("WeaponModelInfo")
-        generate!("is_weapon_model_info_valid")
-        generate!("read_weapon_model_info")
-        generate!("read_weapon_model_info_name")
-        generate!("read_weapon_model_info_ammo_type")
-        generate!("read_weapon_model_info_model_name")
-        generate!("read_weapon_model_info_ammo_model_name")
+        // generate_ns!("WeaponModelInfo")
+        // generate!("is_weapon_model_info_valid")
+        // generate!("read_weapon_model_info")
+        // generate!("read_weapon_model_info_name")
+        // generate!("read_weapon_model_info_ammo_type")
+        // generate!("read_weapon_model_info_model_name")
+        // generate!("read_weapon_model_info_ammo_model_name")
 
         // alt::Quaternion
         generate!("read_quaternion")
