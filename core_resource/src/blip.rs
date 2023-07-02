@@ -8,64 +8,156 @@ use crate::{
 };
 
 use crate::resource::Resource;
+use anyhow::bail;
 use autocxx::prelude::*;
 
 /// # **`Blip implementation`**
 impl blip::Blip {
-    pub fn new_area(pos: impl Into<Vector3>, width: f32, height: f32) -> blip::BlipContainer {
-        let blip = Self::new(altv_sdk::BlipType::Area, pos);
+    pub fn new_global_area(
+        pos: impl Into<Vector3>,
+        width: f32,
+        height: f32,
+    ) -> SomeResult<blip::BlipContainer> {
+        Self::new_area_internal(true, pos, width, height, &[])
+    }
+
+    pub fn new_area_with_targets(
+        pos: impl Into<Vector3>,
+        width: f32,
+        height: f32,
+        targets: &[player::PlayerContainer],
+    ) -> SomeResult<blip::BlipContainer> {
+        Self::new_area_internal(false, pos, width, height, targets)
+    }
+
+    fn new_area_internal(
+        global: bool,
+        pos: impl Into<Vector3>,
+        width: f32,
+        height: f32,
+        targets: &[player::PlayerContainer],
+    ) -> SomeResult<blip::BlipContainer> {
+        let blip = Self::new(global, altv_sdk::BlipType::Area, pos, targets)?;
 
         blip.set_scale((width, height)).unwrap();
-        blip
+        Ok(blip)
     }
 
-    pub fn new_radius(pos: impl Into<Vector3>, radius: f32) -> blip::BlipContainer {
-        let blip = Self::new(altv_sdk::BlipType::Radius, pos);
+    pub fn new_global_radius(
+        pos: impl Into<Vector3>,
+        radius: f32,
+    ) -> SomeResult<blip::BlipContainer> {
+        Self::new_radius_internal(true, pos, radius, &[])
+    }
+
+    pub fn new_radius_with_targets(
+        pos: impl Into<Vector3>,
+        radius: f32,
+        targets: &[player::PlayerContainer],
+    ) -> SomeResult<blip::BlipContainer> {
+        Self::new_radius_internal(false, pos, radius, targets)
+    }
+
+    fn new_radius_internal(
+        global: bool,
+        pos: impl Into<Vector3>,
+        radius: f32,
+        targets: &[player::PlayerContainer],
+    ) -> SomeResult<blip::BlipContainer> {
+        let blip = Self::new(global, altv_sdk::BlipType::Radius, pos, targets)?;
 
         blip.set_scale(radius).unwrap();
-        blip
+        Ok(blip)
     }
 
-    pub fn new_point(pos: impl Into<Vector3>) -> blip::BlipContainer {
-        Self::new(altv_sdk::BlipType::Destination, pos)
+    pub fn new_global_point(pos: impl Into<Vector3>) -> SomeResult<blip::BlipContainer> {
+        Self::new(true, altv_sdk::BlipType::Destination, pos, &[])
     }
 
-    pub fn new_entity_point(entity: impl Into<AnyEntity>) -> SomeResult<blip::BlipContainer> {
+    pub fn new_point_with_targets(
+        pos: impl Into<Vector3>,
+        targets: &[player::PlayerContainer],
+    ) -> SomeResult<blip::BlipContainer> {
+        Self::new(false, altv_sdk::BlipType::Destination, pos, targets)
+    }
+
+    pub fn new_global_entity_point(
+        entity: impl Into<AnyEntity>,
+    ) -> SomeResult<blip::BlipContainer> {
+        Self::new_entity_point_internal(true, entity, &[])
+    }
+
+    pub fn new_entity_point_with_targets(
+        entity: impl Into<AnyEntity>,
+        targets: &[player::PlayerContainer],
+    ) -> SomeResult<blip::BlipContainer> {
+        Self::new_entity_point_internal(false, entity, targets)
+    }
+
+    fn new_entity_point_internal(
+        global: bool,
+        entity: impl Into<AnyEntity>,
+        targets: &[player::PlayerContainer],
+    ) -> SomeResult<blip::BlipContainer> {
         let entity = entity.into().raw_ptr()?;
+        let targets = helpers::convert_player_slice_to_cpp_vec(targets)?;
 
         Ok(helpers::create_base_object!(
             blip,
             sdk::ICore::CreateBlip1(
-                std::ptr::null_mut(),
+                global,
                 altv_sdk::BlipType::Destination as u8,
                 entity,
+                targets
             ),
             panic!("Failed to create Entity Point Blip")
         ))
     }
 
-    fn new(blip_type: altv_sdk::BlipType, pos: impl Into<Vector3>) -> blip::BlipContainer {
+    fn new(
+        global: bool,
+        blip_type: altv_sdk::BlipType,
+        pos: impl Into<Vector3>,
+        targets: &[player::PlayerContainer],
+    ) -> SomeResult<blip::BlipContainer> {
         let pos = pos.into();
+        let targets = helpers::convert_player_slice_to_cpp_vec(targets)?;
 
-        helpers::create_base_object!(
+        Ok(helpers::create_base_object!(
             blip,
-            sdk::ICore::CreateBlip(
-                std::ptr::null_mut(),
-                blip_type as u8,
-                pos.x(),
-                pos.y(),
-                pos.z(),
-            ),
-            panic!("Failed to create {blip_type:?} Blip")
-        )
+            sdk::ICore::CreateBlip(global, blip_type as u8, pos.x(), pos.y(), pos.z(), targets,),
+            bail!("Failed to create {blip_type:?} Blip")
+        ))
     }
 
-    pub fn is_global(&self) -> SomeResult<bool> {
+    pub fn destroy(&self) -> VoidResult {
+        blip::remove_from_pool!(self)?;
+        self.internal_destroy()
+    }
+
+    pub fn global(&self) -> SomeResult<bool> {
         Ok(unsafe { sdk::IBlip::IsGlobal(self.raw_ptr()?) })
     }
 
-    pub fn target(&self) -> SomeResult<Option<player::PlayerContainer>> {
-        helpers::get_any_option_base_object!(sdk::IBlip::GetTarget(self.raw_ptr()?), player)
+    pub fn set_global(&self, state: bool) -> VoidResult {
+        unsafe { sdk::IBlip::SetGlobal(self.raw_ptr()?, state) }
+        Ok(())
+    }
+
+    pub fn targets(&self) -> SomeResult<Vec<player::PlayerContainer>> {
+        let raw_ptr = self.raw_ptr()?;
+
+        Ok(Resource::with(|resource| {
+            unsafe { sdk::IBlip::GetTargets(raw_ptr) }
+                .into_iter()
+                .map(|v| {
+                    helpers::get_non_null_player(
+                        unsafe { sdk::read_player_ptr_wrapper(v) },
+                        resource,
+                    )
+                })
+                .collect()
+        }))
     }
 
     pub fn attached(&self) -> SomeResult<bool> {
@@ -90,6 +182,11 @@ impl blip::Blip {
     pub fn blip_type(&self) -> SomeResult<altv_sdk::BlipType> {
         let raw = unsafe { sdk::IBlip::GetBlipType(self.raw_ptr()?) };
         Ok(altv_sdk::BlipType::try_from(raw).unwrap())
+    }
+
+    pub fn set_blip_type(&self, blip_type: altv_sdk::BlipType) -> VoidResult {
+        unsafe { sdk::IBlip::SetBlipType(self.raw_ptr()?, blip_type as u8) }
+        Ok(())
     }
 
     pub fn scale(&self) -> SomeResult<Vector2> {
@@ -398,8 +495,24 @@ impl blip::Blip {
         Ok(())
     }
 
-    pub fn destroy(&self) -> VoidResult {
-        blip::remove_from_pool!(self)?;
-        self.internal_destroy()
+    pub fn visible(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IBlip::IsVisible(self.raw_ptr()?) })
+    }
+
+    pub fn set_visible(&self, state: bool) -> VoidResult {
+        unsafe { sdk::IBlip::SetVisible(self.raw_ptr()?, state) }
+        Ok(())
+    }
+
+    pub fn add_target_player(&self, player: player::PlayerContainer) -> VoidResult {
+        let player_raw_ptr = player.raw_ptr()?;
+        unsafe { sdk::IBlip::AddTargetPlayer(self.raw_ptr()?, player_raw_ptr) }
+        Ok(())
+    }
+
+    pub fn remove_target_player(&self, player: player::PlayerContainer) -> VoidResult {
+        let player_raw_ptr = player.raw_ptr()?;
+        unsafe { sdk::IBlip::RemoveTargetPlayer(self.raw_ptr()?, player_raw_ptr) }
+        Ok(())
     }
 }

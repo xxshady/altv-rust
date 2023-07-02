@@ -12,8 +12,8 @@ readme = { workspace = true }
 
 [dependencies]
 serde = { workspace = true }
-altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "15.0.0-dev.48" }
-logger = { path = "../logger", package = "altv_internal_logger", version = "15.0.0-dev.48" }
+altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "15.0.0-dev.50" }
+logger = { path = "../logger", package = "altv_internal_logger", version = "15.0.0-dev.50" }
 autocxx = { workspace = true }
 erased-serde = { workspace = true }
 paste = { workspace = true }

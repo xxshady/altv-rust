@@ -899,6 +899,7 @@ fn cpp_method_to_rust_compatible_func(
                     "---ExplosionType is not implemented as passed param".to_string()
                 }
                 "MValueUnorderedMapWrapper" => format!("{name}.value"),
+                "PlayerVector" => format!("player_wrapper_vec_to_alt({name})"),
                 _ => name.to_string(),
             }
         })
