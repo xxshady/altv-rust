@@ -36,6 +36,8 @@ extern "C" fn resource_start(
         return;
     }
 
+    logger::debug!("resource main file content len: {}", content.len());
+
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
         manager
             .borrow_mut()

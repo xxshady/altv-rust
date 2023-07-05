@@ -85,17 +85,24 @@ public:
                 *exist = false;
                 return {};
             }
+
             *exist = true;
 
             // Open file
-            alt::IPackage::File* pkg_file = pkg->OpenFile(path);
-            std::vector<u8> buf{};
-            auto size = pkg->GetFileSize(pkg_file);
-            buf.reserve(size);
+            alt::IPackage::File* file = pkg->OpenFile(path);
+            if (file == nullptr) {
+                alt::ICore::Instance().LogError(
+                    "Failed to open file: " + path + " (nullptr)"
+                );
+                return {};
+            }
+
+            size_t size = pkg->GetFileSize(file);
+            std::vector<u8> buf(size);
 
             // Read file content
-            pkg->ReadFile(pkg_file, buf.data(), size);
-            pkg->CloseFile(pkg_file);
+            pkg->ReadFile(file, buf.data(), size);
+            pkg->CloseFile(file);
 
             return buf;
         }
