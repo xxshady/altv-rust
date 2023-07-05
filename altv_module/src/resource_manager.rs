@@ -3,24 +3,18 @@ use std::{
     collections::{hash_map, HashMap, HashSet},
 };
 
-use core_module::{ResourceForModule, ResourceName};
+use crate::ResourceName;
 
 thread_local! {
     pub static RESOURCE_MANAGER_INSTANCE: RefCell<ResourceManager> = RefCell::new(ResourceManager::default());
 }
 
 #[derive(Debug)]
-pub struct ResourceController {
-    _lib: libloading::Library,
-    pub resource_for_module: ResourceForModule,
-}
+pub struct ResourceController {}
 
 impl ResourceController {
-    pub fn new(lib: libloading::Library, resource_for_module: ResourceForModule) -> Self {
-        Self {
-            _lib: lib,
-            resource_for_module,
-        }
+    pub fn new() -> Self {
+        Self {}
     }
 }
 
@@ -51,19 +45,11 @@ impl ResourceManager {
         self.resources.insert(name, resource);
     }
 
-    pub fn remove(&mut self, resource: &str) {
-        if let Some(controller) = self.resources.remove(resource) {
-            // workaround to fix crash due to drop_in_place of boxed closures
-            // core::ptr::drop_in_place<alloc::boxed::Box<dyn$<core::ops::function::Fn<...
-            drop(controller.resource_for_module);
-        } else {
-            logger::error!("ResourceManager remove unknown resource: {resource}");
-        }
-    }
-
-    pub fn get_resource_for_module_by_name(&self, name: &str) -> Option<&ResourceForModule> {
-        self.resources
-            .get(name)
-            .map(|resource| &resource.resource_for_module)
-    }
+    // TODO:
+    // pub fn remove(&mut self, resource: &str) {
+    //     if let Some(controller) = self.resources.remove(resource) {
+    //     } else {
+    //         logger::error!("ResourceManager remove unknown resource: {resource}");
+    //     }
+    // }
 }

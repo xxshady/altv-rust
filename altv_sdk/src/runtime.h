@@ -3,7 +3,7 @@
 #include "shared.h"
 #include <filesystem>
 
-class RustRuntime: public alt::IScriptRuntime {
+class RustRuntime : public alt::IScriptRuntime {
 private:
     static RustRuntime*& _instance() {
         static RustRuntime* instance = nullptr;
@@ -24,7 +24,7 @@ public:
     }
     static void set_instance(RustRuntime* rust_runtime) { _instance() = rust_runtime; }
 
-    class RustResource: public alt::IResource::Impl {
+    class RustResource : public alt::IResource::Impl {
         RustRuntime* runtime;
         alt::IResource* resource;
         std::string name;
@@ -34,7 +34,7 @@ public:
             RustRuntime* runtime,
             alt::IResource* resource,
             std::string name
-        ):
+        ) :
             runtime(runtime),
             resource(resource),
             name(name)
@@ -75,6 +75,30 @@ public:
         {
             return runtime;
         }
+
+        std::vector<u8> read_file(std::string path, bool* exist)
+        {
+            auto pkg = resource->GetPackage();
+
+            // Check if file exists
+            if (!pkg->FileExists(path)) {
+                *exist = false;
+                return {};
+            }
+            *exist = true;
+
+            // Open file
+            alt::IPackage::File* pkg_file = pkg->OpenFile(path);
+            std::vector<u8> buf{};
+            auto size = pkg->GetFileSize(pkg_file);
+            buf.reserve(size);
+
+            // Read file content
+            pkg->ReadFile(pkg_file, buf.data(), size);
+            pkg->CloseFile(pkg_file);
+
+            return buf;
+        }
     };
 
     RustRuntime() {}
@@ -91,9 +115,10 @@ public:
         );
 
         assert(resource_start_callback != nullptr);
-        resource_start_callback(resource_name, full_main_path);
+        auto alt_resource_impl = static_cast<alt::IResource::Impl*>(resource_impl);
+        resource_start_callback(resource_name, full_main_path, alt_resource_impl);
 
-        return static_cast<alt::IResource::Impl*>(resource_impl);
+        return alt_resource_impl;
     }
 
     void DestroyImpl(alt::IResource::Impl* impl) override {

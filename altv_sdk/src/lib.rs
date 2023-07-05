@@ -134,6 +134,7 @@ pub mod ffi {
         generate!("get_alt_core")
         generate!("create_script_runtime")
         generate!("register_script_runtime")
+        generate!("read_file")
 
         // mvalue
         generate!("ConstMValueWrapper")
@@ -291,11 +292,19 @@ pub mod ffi {
 
         generate!("read_streamed_entity_key")
         generate!("read_streamed_entity_value")
+
+        generate!("shared::AltResourceImpl")
     }
     pub use alt_bridge::*;
 
     #[repr(transparent)]
-    pub struct ResourceStartCallback(pub extern "C" fn(name: &str, full_main_path: &str));
+    pub struct ResourceStartCallback(
+        pub  extern "C" fn(
+            name: &str,
+            full_main_path: &str,
+            resource: *mut alt_bridge::shared::AltResourceImpl,
+        ),
+    );
     impl_extern_type_callback!(ResourceStartCallback, "callbacks::ResourceStartCallback");
 
     #[repr(transparent)]

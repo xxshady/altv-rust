@@ -17,3 +17,9 @@ macro_rules! __impl_extern_type_callback {
     };
 }
 pub(crate) use __impl_extern_type_callback as impl_extern_type_callback;
+
+pub fn log(str: &str) {
+    unsafe {
+        ffi::ICore::LogColored(str, std::ptr::null_mut());
+    }
+}

@@ -12,13 +12,12 @@ publish = false
 
 [dependencies]
 altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "15.0.0-dev.50" }
-# core_module = { path = "../core_module", version = "15.0.0-dev.50" }
 logger = { path = "../logger", package = "altv_internal_logger", version = "15.0.0-dev.50" }
 paste = { workspace = true }
 autocxx = { workspace = true }
 lazy_static = { workspace = true }
-libloading = "0.7.4"
 wasmer = "4.0.0"
+wasmer-wasix = "0.9.0"
 
 [lib]
 crate-type = ["cdylib"]

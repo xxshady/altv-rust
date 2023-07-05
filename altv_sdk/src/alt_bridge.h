@@ -11,31 +11,6 @@
 using ResourceOnRemoveBaseObjectCallback = shared::ResourceOnRemoveBaseObjectCallback;
 using ResourceStartCallback = shared::ResourceStartCallback;
 
-using StdStringPtr = std::unique_ptr<std::string>;
-
-using u8 = uint8_t;
-using u16 = uint16_t;
-using u32 = uint32_t;
-using u64 = uint64_t;
-
-using i8 = int8_t;
-using i16 = int16_t;
-using i32 = int32_t;
-using cpp_int = int; // why? for some reason sdk uses int and int32_t at the same time
-using i64 = int64_t;
-
-using f32 = float;
-using f64 = double;
-
-using BaseObjectType = uint8_t;
-using ColShapeType = uint8_t;
-using BlipType = uint8_t;
-using MarkerType = uint32_t;
-using WeaponDamageEventBodyPart = int8_t;
-using EventType = uint16_t;
-using PlayerConnectDeniedReason = uint8_t;
-using ExplosionType = int8_t;
-
 // used for const std::string& return values in altv event classes
 using StdStringClone = std::string;
 
@@ -58,6 +33,16 @@ void register_script_runtime(
 ) {
     core->RegisterScriptRuntime(resource_type, runtime);
     RustRuntime::set_instance(static_cast<RustRuntime*>(runtime));
+}
+
+std::vector<u8> read_file(
+    shared::AltResourceImpl* resource,
+    std::string path,
+    bool* exist
+) {
+    auto rust_resource = dynamic_cast<RustRuntime::RustResource*>(resource);
+    assert(rust_resource != nullptr);
+    return rust_resource->read_file(path, exist);
 }
 
 // mvalue
