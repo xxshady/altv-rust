@@ -106,7 +106,7 @@
   },
   "editor.tabSize": 4,
   "rust-analyzer.check.extraEnv": {
-    "ALTV_RUST_LOG_LEVEL": "debug"
+    "LOG_LEVEL": "debug"
   },
   "rust-analyzer.check.command": "clippy",
   "rust-analyzer.check.extraArgs": [
