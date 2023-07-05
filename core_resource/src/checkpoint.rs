@@ -61,6 +61,12 @@ impl checkpoint::Checkpoint {
         ))
     }
 
+    pub fn icon_color(&self) -> SomeResult<Rgba> {
+        Ok(helpers::read_cpp_rgba(
+            unsafe { sdk::ICheckpoint::GetIconColor(self.raw_ptr()?) }.within_unique_ptr(),
+        ))
+    }
+
     pub fn next_position(&self) -> SomeResult<Vector3> {
         Ok(helpers::read_cpp_vector3(unsafe {
             sdk::ICheckpoint::GetNextPosition(self.raw_ptr()?).within_unique_ptr()
@@ -87,6 +93,21 @@ impl checkpoint::Checkpoint {
 
         unsafe {
             sdk::ICheckpoint::SetColor(self.raw_ptr()?, color.r(), color.g(), color.b(), color.a())
+        };
+        Ok(())
+    }
+
+    pub fn set_icon_color(&self, color: impl Into<Rgba>) -> VoidResult {
+        let color = color.into();
+
+        unsafe {
+            sdk::ICheckpoint::SetIconColor(
+                self.raw_ptr()?,
+                color.r(),
+                color.g(),
+                color.b(),
+                color.a(),
+            )
         };
         Ok(())
     }
