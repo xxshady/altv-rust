@@ -291,6 +291,10 @@ pub mod ffi {
         // alt::Quaternion
         generate!("read_quaternion")
 
+        // alt::AmmoFlags
+        generate!("read_ammo_flags")
+        generate!("create_ammo_flags_from_params")
+
         generate!("read_base_object_ptr_wrapper")
         generate!("create_base_object_vec")
         generate!("push_to_base_object_vec")
@@ -416,3 +420,4 @@ include_out_dir!("/player_connect_denied_reason.rs");
 include_out_dir!("/explosion_type.rs");
 include_out_dir!("/vehicle_model_type.rs");
 include_out_dir!("/config_value_type.rs");
+include_out_dir!("/ammo_special_type.rs");

@@ -1,3 +1,6 @@
+use altv_sdk::ffi as sdk;
+use autocxx::prelude::UniquePtr;
+
 use crate::{helpers::Hash, vector::Vector3};
 
 #[derive(Debug, Default)]
@@ -256,4 +259,38 @@ pub enum AmmoType {
     RailgunXm3 = 0x4ed9af7f,
     AcidPackage = 0x3bd3b7f2,
     EmpLauncher = 0xf1df48bd,
+}
+
+#[derive(Debug)]
+pub struct AmmoFlags {
+    pub infinite_ammo: bool,
+    pub add_smoke_on_explosion: bool,
+    pub fuse: bool,
+    pub fixed_after_explosion: bool,
+}
+
+impl AmmoFlags {
+    pub(crate) fn new(ptr: UniquePtr<sdk::alt::AmmoFlags>) -> Self {
+        let mut infinite_ammo = false;
+        let mut add_smoke_on_explosion = false;
+        let mut fuse = false;
+        let mut fixed_after_explosion = false;
+
+        unsafe {
+            sdk::read_ammo_flags(
+                ptr.as_ref().unwrap(),
+                &mut infinite_ammo as *mut _,
+                &mut add_smoke_on_explosion as *mut _,
+                &mut fuse as *mut _,
+                &mut fixed_after_explosion as *mut _,
+            )
+        }
+
+        Self {
+            infinite_ammo,
+            add_smoke_on_explosion,
+            fuse,
+            fixed_after_explosion,
+        }
+    }
 }

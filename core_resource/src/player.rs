@@ -979,6 +979,83 @@ impl player::Player {
     pub fn has_weapon(&self, weapon_hash: impl IntoHash) -> SomeResult<bool> {
         Ok(unsafe { sdk::IPlayer::HasWeapon(self.raw_ptr()?, weapon_hash.into_hash()) })
     }
+
+    pub fn get_ammo_special_type(
+        &self,
+        ammo_type_hash: impl IntoHash,
+    ) -> SomeResult<altv_sdk::AmmoSpecialType> {
+        let raw = unsafe {
+            sdk::IPlayer::GetAmmoSpecialType(self.raw_ptr()?, ammo_type_hash.into_hash())
+        };
+        Ok(altv_sdk::AmmoSpecialType::try_from(raw).unwrap())
+    }
+
+    pub fn set_ammo_special_type(
+        &self,
+        ammo_type_hash: impl IntoHash,
+        ammo_special_type: altv_sdk::AmmoSpecialType,
+    ) -> VoidResult {
+        unsafe {
+            sdk::IPlayer::SetAmmoSpecialType(
+                self.raw_ptr()?,
+                ammo_type_hash.into_hash(),
+                ammo_special_type as u32,
+            )
+        }
+        Ok(())
+    }
+
+    pub fn get_ammo_flags(&self, ammo_type_hash: impl IntoHash) -> SomeResult<structs::AmmoFlags> {
+        let ptr =
+            unsafe { sdk::IPlayer::GetAmmoFlags(self.raw_ptr()?, ammo_type_hash.into_hash()) }
+                .within_unique_ptr();
+        Ok(structs::AmmoFlags::new(ptr))
+    }
+
+    pub fn set_ammo_flags(
+        &self,
+        ammo_type_hash: impl IntoHash,
+        ammo_flags: structs::AmmoFlags,
+    ) -> VoidResult {
+        unsafe {
+            sdk::IPlayer::SetAmmoFlags(
+                self.raw_ptr()?,
+                ammo_type_hash.into_hash(),
+                ammo_flags.infinite_ammo,
+                ammo_flags.add_smoke_on_explosion,
+                ammo_flags.fuse,
+                ammo_flags.fixed_after_explosion,
+            )
+        }
+        Ok(())
+    }
+
+    pub fn set_ammo_max100(&self, ammo_type_hash: impl IntoHash, ammo: i32) -> VoidResult {
+        unsafe { sdk::IPlayer::SetAmmoMax100(self.raw_ptr()?, ammo_type_hash.into_hash(), ammo) }
+        Ok(())
+    }
+
+    pub fn get_ammo_max(&self, ammo_type_hash: impl IntoHash) -> SomeResult<i32> {
+        Ok(unsafe { sdk::IPlayer::GetAmmoMax(self.raw_ptr()?, ammo_type_hash.into_hash()) })
+    }
+
+    pub fn set_ammo_max(&self, ammo_type_hash: impl IntoHash, ammo: i32) -> VoidResult {
+        unsafe { sdk::IPlayer::SetAmmoMax(self.raw_ptr()?, ammo_type_hash.into_hash(), ammo) }
+        Ok(())
+    }
+
+    pub fn get_ammo_max50(&self, ammo_type_hash: impl IntoHash) -> SomeResult<i32> {
+        Ok(unsafe { sdk::IPlayer::GetAmmoMax50(self.raw_ptr()?, ammo_type_hash.into_hash()) })
+    }
+
+    pub fn set_ammo_max50(&self, ammo_type_hash: impl IntoHash, ammo: i32) -> VoidResult {
+        unsafe { sdk::IPlayer::SetAmmoMax50(self.raw_ptr()?, ammo_type_hash.into_hash(), ammo) }
+        Ok(())
+    }
+
+    pub fn get_ammo_max100(&self, ammo_type_hash: impl IntoHash) -> SomeResult<i32> {
+        Ok(unsafe { sdk::IPlayer::GetAmmoMax100(self.raw_ptr()?, ammo_type_hash.into_hash()) })
+    }
 }
 
 impl StreamSyncedEntityMeta for player::Player {}

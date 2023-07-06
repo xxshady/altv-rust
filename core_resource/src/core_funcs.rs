@@ -1,6 +1,6 @@
 use crate::{
     base_objects::AnyBaseObject,
-    helpers::{self, IntoString},
+    helpers::{self, IntoString, IntoHash},
     sdk,
     vector::Vector3,
 };
@@ -63,4 +63,13 @@ pub fn toggle_world_profiler(toggle: bool) {
 
 pub fn get_net_time() -> u32 {
     unsafe { sdk::ICore::GetNetTime() }
+}
+
+pub fn get_ammo_hash_for_weapon_hash(weapon_hash: impl IntoHash) -> Option<u32> {
+    let ammo_hash = unsafe { sdk::ICore::GetAmmoHashForWeaponHash(weapon_hash.into_hash()) };
+    if ammo_hash != 0 {
+        Some(ammo_hash)
+    } else {
+        None
+    }
 }

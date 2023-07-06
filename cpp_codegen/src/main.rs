@@ -62,6 +62,8 @@ lazy_static::lazy_static! {
             ("alt::CEvent::Type", "EventType"),
             ("IBlip::BlipType", "BlipType"),
             ("IMarker::MarkerType", "MarkerType"),
+            ("AmmoSpecialType", "AmmoSpecialType_t"),
+            ("AmmoFlags", "alt::AmmoFlags"),
 
             ("alt::Position", "Vector3Wrapper"),
             ("Position", "Vector3Wrapper"),
@@ -855,6 +857,10 @@ fn cpp_method_to_rust_compatible_func(
                 }
                 "ExplosionType" => "---ExplosionType is not implemented as param".to_string(),
                 "MValueUnorderedMapWrapper" => format!("MValueUnorderedMapWrapper {name}"),
+                "alt::AmmoFlags" => {
+                    format!("bool {name}_infiniteAmmo, bool {name}_addSmokeOnExplosion, bool {name}_fuse, bool {name}_fixedAfterExplosion")
+                }
+
                 _ => format!(
                     "{}{type_name} {name}",
                     (if *is_const { "const " } else { "" }),
@@ -887,6 +893,7 @@ fn cpp_method_to_rust_compatible_func(
                 "ColShapeType" => "---ColShapeType is not implemented as passed param".to_string(),
                 "BlipType" => format!("static_cast<alt::IBlip::BlipType>({name})"),
                 "MarkerType" => format!("static_cast<alt::IMarker::MarkerType>({name})"),
+                "AmmoSpecialType_t" => format!("static_cast<alt::AmmoSpecialType>({name})"),
                 "WeaponDamageEventBodyPart" => {
                     "---WeaponDamageEventBodyPart is not implemented as passed param".to_string()
                 }
@@ -900,6 +907,14 @@ fn cpp_method_to_rust_compatible_func(
                 }
                 "MValueUnorderedMapWrapper" => format!("{name}.value"),
                 "PlayerVector" => format!("player_wrapper_vec_to_alt({name})"),
+                "alt::AmmoFlags" => format!(
+                    "create_ammo_flags_from_params(\n        \
+                        {name}_infiniteAmmo,\n        \
+                        {name}_addSmokeOnExplosion,\n        \
+                        {name}_fuse,\n        \
+                        {name}_fixedAfterExplosion\n        \
+                    )"
+                ),
                 _ => name.to_string(),
             }
         })
@@ -960,6 +975,7 @@ fn cpp_method_to_rust_compatible_func(
         "ColShapeType" => |v: &str| format!("return static_cast<uint8_t>({v})"),
         "BlipType" => |v: &str| format!("return static_cast<uint8_t>({v})"),
         "MarkerType" => |v: &str| format!("return static_cast<uint32_t>({v})"),
+        "AmmoSpecialType_t" => |v: &str| format!("return static_cast<uint32_t>({v})"),
         "WeaponDamageEventBodyPart" => |v: &str| format!("return static_cast<int8_t>({v})"),
         "EventType" => |v: &str| format!("return static_cast<uint16_t>({v})"),
         "StdStringClone" => |v: &str| format!("return std::string {{ {v} }}"),

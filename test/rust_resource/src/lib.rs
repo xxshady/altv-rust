@@ -21,6 +21,9 @@ use script_events::test_script_events;
 mod blip;
 use blip::test_blip;
 
+mod core_funcs;
+use core_funcs::test_core_funcs;
+
 #[altv::main]
 fn main() -> impl altv::IntoVoidResult {
     std::env::set_var("RUST_BACKTRACE", "full");
@@ -39,6 +42,8 @@ fn main() -> impl altv::IntoVoidResult {
     test_script_events();
     altv::log!("#################### blip");
     test_blip();
+    altv::log!("#################### core_funcs");
+    test_core_funcs();
 
     altv::set_timeout(
         || {

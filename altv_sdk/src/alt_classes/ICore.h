@@ -242,5 +242,8 @@ BaseObjectVector GetClosestEntities(f32 position_x, f32 position_y, f32 position
 alt::INetworkObject* CreateNetworkObject(u32 model, f32 pos_x, f32 pos_y, f32 pos_z, f32 rot_x, f32 rot_y, f32 rot_z, u8 alpha, u8 textureVariation, u16 lodDistance) {
     return alt::ICore::Instance().CreateNetworkObject(model, { pos_x, pos_y, pos_z }, { rot_x, rot_y, rot_z }, alpha, textureVariation, lodDistance);
 }
+u32 GetAmmoHashForWeaponHash(u32 weaponHash) {
+    return alt::ICore::Instance().GetAmmoHashForWeaponHash(weaponHash);
+}
 
 } // namespace

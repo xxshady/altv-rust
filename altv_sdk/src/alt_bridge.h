@@ -35,6 +35,7 @@ using WeaponDamageEventBodyPart = int8_t;
 using EventType = uint16_t;
 using PlayerConnectDeniedReason = uint8_t;
 using ExplosionType = int8_t;
+using AmmoSpecialType_t = uint32_t;
 
 // used for const std::string& return values in altv event classes
 using StdStringClone = std::string;
@@ -284,7 +285,7 @@ class WeaponWrapper {
 public:
     u32 hash = 0;
     u8 tint_index = 0;
-    std::vector<u32> components {};
+    std::vector<u32> components{};
 
     WeaponWrapper(u32 _hash, u8 _tint_index, std::unordered_set<u32> _components) :
         hash(_hash),
@@ -348,10 +349,10 @@ public:
     StreamedEntityWrapper(
         alt::IEntity* entity,
         i32 squared_distance
-    ) : ptr(std::make_shared<StreamedEntityPair>(std::pair {
+    ) : ptr(std::make_shared<StreamedEntityPair>(std::pair{
         entity,
             squared_distance
-    })) {}
+        })) {}
 };
 
 alt::IEntity* read_streamed_entity_key(const StreamedEntityWrapper& wrapper) {
@@ -426,7 +427,7 @@ std::vector<MValueDictPairWrapper> read_mvalue_dict(ConstMValueWrapper mvalue) {
         value_wrapper.ptr = it->GetValue();
 
         MValueDictPairWrapper pair;
-        pair.ptr = std::make_shared<MValueDictPair>(std::pair { it->GetKey(), value_wrapper.clone() });
+        pair.ptr = std::make_shared<MValueDictPair>(std::pair{ it->GetKey(), value_wrapper.clone() });
         vec.push_back(pair.clone());
     }
 
@@ -993,6 +994,35 @@ std::string read_weapon_model_info_ammo_model_name(const alt::WeaponModelInfo* p
     return ptr->ammoModelName;
 }
 
+void read_ammo_flags(
+    const alt::AmmoFlags& flags,
+    bool* infinite_ammo,
+    bool* add_smoke_on_explosion,
+    bool* fuse,
+    bool* fixed_after_explosion
+) {
+    *infinite_ammo = flags.infiniteAmmo;
+    *add_smoke_on_explosion = flags.addSmokeOnExplosion;
+    *fuse = flags.fuse;
+    *fixed_after_explosion = flags.fixedAfterExplosion;
+}
+
+alt::AmmoFlags create_ammo_flags_from_params(
+    bool infinite_ammo,
+    bool add_smoke_on_explosion,
+    bool fuse,
+    bool fixed_after_explosion
+) {
+    alt::AmmoFlags flags;
+
+    flags.infiniteAmmo = infinite_ammo;
+    flags.addSmokeOnExplosion = add_smoke_on_explosion;
+    flags.fuse = fuse;
+    flags.fixedAfterExplosion = fixed_after_explosion;
+
+    return flags;
+}
+
 namespace events
 {
     const alt::CConsoleCommandEvent* to_CConsoleCommandEvent(const alt::CEvent* event) {
@@ -1234,7 +1264,7 @@ namespace config_node
         for (auto& pair : node->AsDict()) {
             // TODO: handle empty/none node?
             ConfigDictPairWrapper wrapper;
-            wrapper.ptr = std::make_shared<ConfigDictPair>(std::pair { pair.first, pair.second });
+            wrapper.ptr = std::make_shared<ConfigDictPair>(std::pair{ pair.first, pair.second });
             vec.push_back(wrapper.clone());
         }
 

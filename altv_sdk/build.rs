@@ -108,6 +108,15 @@ fn generate_cpp_to_rust_bindings(out_dir: &str) {
         "config_value_type.rs",
         out_dir,
     );
+
+    generate_rust_enum_from_cpp(
+        "AmmoSpecialType",
+        "u32",
+        "cpp-sdk/types/AmmoSpecialType.h",
+        "enum class AmmoSpecialType : uint32_t",
+        "ammo_special_type.rs",
+        out_dir,
+    );
 }
 
 fn build_rust() {
