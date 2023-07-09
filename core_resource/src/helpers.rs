@@ -85,6 +85,7 @@ pub fn read_cpp_quaternion(cpp_quaternion: UniquePtr<sdk::alt::Quaternion>) -> Q
 // https://github.com/justdimaa/altv-rs/blob/f5cf1733493466634793804dfb1ca6d387fbe687/altv-sdk/src/lib.rs#L24
 /// joaat hash function
 pub fn hash(str: &str) -> u32 {
+    let str = str.to_lowercase();
     let bytes = str.as_bytes();
     let mut num: std::num::Wrapping<u32> = std::num::Wrapping(0u32);
 
