@@ -295,10 +295,10 @@ impl vehicle::Vehicle {
         unsafe {
             sdk::IVehicle::GetNeonActive(
                 self.raw_ptr()?,
-                &mut left as *mut _,
-                &mut right as *mut _,
-                &mut front as *mut _,
-                &mut back as *mut _,
+                &mut left,
+                &mut right,
+                &mut front,
+                &mut back,
             )
         }
 

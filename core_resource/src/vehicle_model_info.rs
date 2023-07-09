@@ -28,34 +28,36 @@ impl VehicleModelInfo {
             return None;
         }
 
-        let mut model_type = 0u8;
-        let mut wheels_count = 0u8;
-        let mut has_armored_windows = false;
-        let mut primary_color = 0u8;
-        let mut secondary_color = 0u8;
-        let mut pearl_color = 0u8;
-        let mut wheels_color = 0u8;
-        let mut interior_color = 0u8;
-        let mut dashboard_color = 0u8;
-        let mut mod_kits = [false; 2];
-        let mut has_auto_attach_trailer = false;
-        let mut can_attach_cars = false;
+        let (
+            mut model_type,
+            mut wheels_count,
+            mut has_armored_windows,
+            mut primary_color,
+            mut secondary_color,
+            mut pearl_color,
+            mut wheels_color,
+            mut interior_color,
+            mut dashboard_color,
+            mut mod_kits, // [bool; 2], https://github.com/rust-lang/rust-analyzer/issues/15246
+            mut has_auto_attach_trailer,
+            mut can_attach_cars,
+        ) = Default::default();
 
         unsafe {
             sdk::read_vehicle_model_info(
                 ptr,
-                &mut model_type as *mut _,
-                &mut wheels_count as *mut _,
-                &mut has_armored_windows as *mut _,
-                &mut primary_color as *mut _,
-                &mut secondary_color as *mut _,
-                &mut pearl_color as *mut _,
-                &mut wheels_color as *mut _,
-                &mut interior_color as *mut _,
-                &mut dashboard_color as *mut _,
-                &mut mod_kits as *mut _,
-                &mut has_auto_attach_trailer as *mut _,
-                &mut can_attach_cars as *mut _,
+                &mut model_type,
+                &mut wheels_count,
+                &mut has_armored_windows,
+                &mut primary_color,
+                &mut secondary_color,
+                &mut pearl_color,
+                &mut wheels_color,
+                &mut interior_color,
+                &mut dashboard_color,
+                &mut mod_kits as *mut bool,
+                &mut has_auto_attach_trailer,
+                &mut can_attach_cars,
             )
         };
         let model_type = altv_sdk::VehicleModelType::try_from(model_type).unwrap();
@@ -65,9 +67,8 @@ impl VehicleModelInfo {
         let bones: Vec<structs::BoneInfo> = unsafe { sdk::read_vehicle_model_info_bones(ptr) }
             .into_iter()
             .map(|v| {
-                let mut id = 0u16;
-                let mut index = 0u16;
-                unsafe { sdk::read_bone_info(v, &mut id as *mut u16, &mut index as *mut u16) }
+                let (mut id, mut index) = Default::default();
+                unsafe { sdk::read_bone_info(v, &mut id, &mut index) }
                 structs::BoneInfo {
                     id,
                     index,

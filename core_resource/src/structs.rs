@@ -279,10 +279,10 @@ impl AmmoFlags {
         unsafe {
             sdk::read_ammo_flags(
                 ptr.as_ref().unwrap(),
-                &mut infinite_ammo as *mut _,
-                &mut add_smoke_on_explosion as *mut _,
-                &mut fuse as *mut _,
-                &mut fixed_after_explosion as *mut _,
+                &mut infinite_ammo,
+                &mut add_smoke_on_explosion,
+                &mut fuse,
+                &mut fixed_after_explosion,
             )
         }
 

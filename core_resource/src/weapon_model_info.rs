@@ -24,26 +24,28 @@ impl WeaponModelInfo {
             return None;
         }
 
-        let mut hash = 0u32;
-        let mut model_hash = 0u32;
-        let mut ammo_type_hash = 0u32;
-        let mut ammo_model_hash = 0u32;
-        let mut default_max_ammo_mp = 0i32;
-        let mut skill_above_50_max_ammo_mp = 0i32;
-        let mut max_skill_max_ammo_mp = 0i32;
-        let mut bonus_max_ammo_mp = 0i32;
+        let (
+            mut hash,
+            mut model_hash,
+            mut ammo_type_hash,
+            mut ammo_model_hash,
+            mut default_max_ammo_mp,
+            mut skill_above_50_max_ammo_mp,
+            mut max_skill_max_ammo_mp,
+            mut bonus_max_ammo_mp,
+        ) = Default::default();
 
         unsafe {
             sdk::read_weapon_model_info(
                 ptr,
-                &mut hash as *mut _,
-                &mut model_hash as *mut _,
-                &mut ammo_type_hash as *mut _,
-                &mut ammo_model_hash as *mut _,
-                &mut default_max_ammo_mp as *mut _,
-                &mut skill_above_50_max_ammo_mp as *mut _,
-                &mut max_skill_max_ammo_mp as *mut _,
-                &mut bonus_max_ammo_mp as *mut _,
+                &mut hash,
+                &mut model_hash,
+                &mut ammo_type_hash,
+                &mut ammo_model_hash,
+                &mut default_max_ammo_mp,
+                &mut skill_above_50_max_ammo_mp,
+                &mut max_skill_max_ammo_mp,
+                &mut bonus_max_ammo_mp,
             )
         }
 
