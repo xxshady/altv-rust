@@ -405,5 +405,17 @@ void SetAmmoMax100(alt::IPlayer* ptr, u32 ammoHash, i32 ammoMax100) {
 i32 GetAmmoMax100(const alt::IPlayer* ptr, u32 ammoHash) {
     return ptr->GetAmmoMax100(ammoHash);
 }
+void AddDecoration(alt::IPlayer* ptr, u32 collection, u32 overlay) {
+    return ptr->AddDecoration(collection, overlay);
+}
+void RemoveDecoration(alt::IPlayer* ptr, u32 collection, u32 overlay) {
+    return ptr->RemoveDecoration(collection, overlay);
+}
+void ClearDecorations(alt::IPlayer* ptr) {
+    return ptr->ClearDecorations();
+}
+std::vector<alt::CDecoration> GetDecorations(const alt::IPlayer* ptr) {
+    return ptr->GetDecorations();
+}
 
 } // namespace

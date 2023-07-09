@@ -294,3 +294,9 @@ impl AmmoFlags {
         }
     }
 }
+
+#[derive(Debug)]
+pub struct Decoration {
+    pub collection: u32,
+    pub overlay: u32,
+}

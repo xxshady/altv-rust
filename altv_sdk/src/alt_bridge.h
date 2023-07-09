@@ -1023,6 +1023,15 @@ alt::AmmoFlags create_ammo_flags_from_params(
     return flags;
 }
 
+void read_alt_decoration(
+    const alt::CDecoration& decoration,
+    u32* out_collection,
+    u32* out_overlay
+) {
+    *out_collection = decoration.collection;
+    *out_overlay = decoration.overlay;
+}
+
 namespace events
 {
     const alt::CConsoleCommandEvent* to_CConsoleCommandEvent(const alt::CEvent* event) {

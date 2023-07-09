@@ -32,7 +32,7 @@ pub use crate::{
     rgba::Rgba,
     structs::{
         AmmoType, AnimationFlags, AttachToEntityBoneIndex, AttachToEntityBoneName, PlayAnimation,
-        PlayerDateTime, PlayerHeadBlendData, AmmoFlags,
+        PlayerDateTime, PlayerHeadBlendData, AmmoFlags, Decoration,
     },
     timers::{create_timer, remove_timer, Timer},
     vector::{Vector2, Vector3},

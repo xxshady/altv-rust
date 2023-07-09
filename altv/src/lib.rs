@@ -60,6 +60,7 @@ pub use exports::{
     AnimationFlags,
     AmmoType,
     AmmoFlags,
+    Decoration,
 
     anyhow,
     serde,

@@ -1056,6 +1056,54 @@ impl player::Player {
     pub fn get_ammo_max100(&self, ammo_type_hash: impl IntoHash) -> SomeResult<i32> {
         Ok(unsafe { sdk::IPlayer::GetAmmoMax100(self.raw_ptr()?, ammo_type_hash.into_hash()) })
     }
+
+    pub fn decorations(&self) -> SomeResult<Vec<structs::Decoration>> {
+        Ok(unsafe {
+            sdk::IPlayer::GetDecorations(self.raw_ptr()?)
+                .into_iter()
+                .map(|v| {
+                    let (mut collection, mut overlay) = Default::default();
+                    sdk::read_alt_decoration(v, &mut collection as *mut _, &mut overlay as *mut _);
+
+                    structs::Decoration {
+                        collection,
+                        overlay,
+                    }
+                })
+                .collect()
+        })
+    }
+
+    pub fn add_decoration(&self, collection: impl IntoHash, overlay: impl IntoHash) -> VoidResult {
+        unsafe {
+            sdk::IPlayer::AddDecoration(
+                self.raw_ptr()?,
+                collection.into_hash(),
+                overlay.into_hash(),
+            )
+        }
+        Ok(())
+    }
+
+    pub fn remove_decoration(
+        &self,
+        collection: impl IntoHash,
+        overlay: impl IntoHash,
+    ) -> VoidResult {
+        unsafe {
+            sdk::IPlayer::RemoveDecoration(
+                self.raw_ptr()?,
+                collection.into_hash(),
+                overlay.into_hash(),
+            )
+        }
+        Ok(())
+    }
+
+    pub fn clear_decorations(&self) -> VoidResult {
+        unsafe { sdk::IPlayer::ClearDecorations(self.raw_ptr()?) }
+        Ok(())
+    }
 }
 
 impl StreamSyncedEntityMeta for player::Player {}

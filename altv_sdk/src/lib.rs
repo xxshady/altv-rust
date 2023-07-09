@@ -295,6 +295,9 @@ pub mod ffi {
         generate!("read_ammo_flags")
         generate!("create_ammo_flags_from_params")
 
+        // alt::CDecoration
+        generate!("read_alt_decoration")
+
         generate!("read_base_object_ptr_wrapper")
         generate!("create_base_object_vec")
         generate!("push_to_base_object_vec")

@@ -82,6 +82,7 @@ lazy_static::lazy_static! {
             ("std::vector<IResource*>", "ResourceVector"),
             ("std::vector<IPlayer*>", "PlayerVector"),
             ("std::vector<std::pair<IEntity*, int32_t>>", "std::vector<StreamedEntityWrapper>"),
+            ("std::vector<CDecoration>", "std::vector<alt::CDecoration>"),
 
             ("Rotation", "Vector3Wrapper"),
             ("bool*", "bool*"),
