@@ -271,11 +271,8 @@ pub struct AmmoFlags {
 
 impl AmmoFlags {
     pub(crate) fn new(ptr: UniquePtr<sdk::alt::AmmoFlags>) -> Self {
-        let mut infinite_ammo = false;
-        let mut add_smoke_on_explosion = false;
-        let mut fuse = false;
-        let mut fixed_after_explosion = false;
-
+        let (mut infinite_ammo, mut add_smoke_on_explosion, mut fuse, mut fixed_after_explosion) =
+            Default::default();
         unsafe {
             sdk::read_ammo_flags(
                 ptr.as_ref().unwrap(),

@@ -287,11 +287,7 @@ impl vehicle::Vehicle {
     }
 
     pub fn neon_active(&self) -> SomeResult<structs::VehicleNeon> {
-        let mut left = false;
-        let mut right = false;
-        let mut front = false;
-        let mut back = false;
-
+        let (mut left, mut right, mut front, mut back) = Default::default();
         unsafe {
             sdk::IVehicle::GetNeonActive(
                 self.raw_ptr()?,
