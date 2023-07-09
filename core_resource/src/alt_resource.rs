@@ -1,12 +1,13 @@
-use std::{collections::HashMap, ptr::NonNull, rc::Rc};
+use std::{collections::HashMap, ptr::NonNull, rc::Rc, cell::RefCell};
 
+use anyhow::bail;
 use core_shared::ResourceName;
 
 use crate::{
     config_node::ResourceConfig,
     helpers::{read_cpp_str_vec, IntoString},
     resource::Resource,
-    sdk, SomeResult,
+    sdk, SomeResult, VoidResult,
 };
 
 #[derive(Debug)]
@@ -21,6 +22,8 @@ pub struct AltResource {
     pub dependants: Vec<String>,
     pub dependencies: Vec<String>,
     pub config: ResourceConfig,
+
+    valid: RefCell<bool>,
 }
 
 impl AltResource {
@@ -41,12 +44,30 @@ impl AltResource {
         Resource::with_alt_resources_mut(|mut v, _| v.add_resource_from_raw_ptr(raw_ptr));
     }
 
-    pub fn restart(&self) {
+    pub fn restart(&self) -> VoidResult {
+        self.assert_valid()?;
         unsafe { sdk::ICore::RestartResource(&self.name) }
+        Ok(())
     }
 
-    pub fn stop(&self) {
+    pub fn stop(&self) -> VoidResult {
+        self.assert_valid()?;
         unsafe { sdk::ICore::StopResource(&self.name) }
+        Ok(())
+    }
+
+    pub fn valid(&self) -> SomeResult<bool> {
+        Ok(*self.valid.try_borrow()?)
+    }
+
+    fn assert_valid(&self) -> VoidResult {
+        if !self.valid()? {
+            bail!(
+                "Resource: '{}' is stopped and cannot be used anymore",
+                self.name
+            )
+        }
+        Ok(())
     }
 }
 
@@ -98,7 +119,17 @@ impl AltResourceManager {
         let name = get_resource_name(resource_ptr);
         logger::debug!("on stop name: {name}");
 
-        self.resources.remove(&name).unwrap()
+        let resource = self.resources.remove(&name).unwrap();
+
+        let Ok(mut valid) = resource.valid.try_borrow_mut() else {
+            logger::error!("Failed to invalidate resource: '{name}' on stop");
+            return resource;
+        };
+
+        *valid = false;
+        drop(valid);
+
+        resource
     }
 
     pub fn add_resource(&mut self, name: ResourceName, ptr: ResourcePtr) -> Rc<AltResource> {
@@ -116,6 +147,8 @@ impl AltResourceManager {
             dependants: read_cpp_str_vec(unsafe { GetDependants(raw_ptr) }),
             dependencies: read_cpp_str_vec(unsafe { GetDependencies(raw_ptr) }),
             config: ResourceConfig::new(unsafe { GetConfig(raw_ptr) }),
+
+            valid: RefCell::new(true),
         });
 
         self.resources.insert(name, instance.clone());
