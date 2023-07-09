@@ -132,7 +132,11 @@ async fn main() {
                 }
 
                 // https://youtu.be/pLJTfLumkGw
-                let log = fs::read(format!("{server_dir}/server.log")).unwrap();
+                let log = fs::read(format!("{server_dir}/server.log"));
+                let Ok(log) = log else {
+                    println!("server.log is not available yet...");
+                    continue;
+                };
                 if String::from_utf8_lossy(&log).contains("Stopped resource rust") {
                     println!("rust resource stopped, killing altv server");
                     altv_server.kill().unwrap();
