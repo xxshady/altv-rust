@@ -53,7 +53,7 @@ fn main() -> impl altv::IntoVoidResult {
     altv::set_timeout(
         || {
             altv::log!("stopping resource...");
-            altv::Resource::current().stop();
+            altv::Resource::current().stop().unwrap();
         },
         1000,
     );
