@@ -65,7 +65,7 @@ pub struct PlayerDlcCloth {
     pub drawable: u16,
     pub texture: u8,
     pub palette: u8,
-    pub dlc: u32,
+    pub dlc: Hash,
 }
 
 #[derive(Debug)]
@@ -78,7 +78,7 @@ pub struct PlayerProp {
 pub struct PlayerDlcProp {
     pub drawable: u8,
     pub texture: u8,
-    pub dlc: u32,
+    pub dlc: Hash,
 }
 
 #[derive(Debug)]
@@ -297,6 +297,6 @@ impl AmmoFlags {
 
 #[derive(Debug)]
 pub struct Decoration {
-    pub collection: u32,
-    pub overlay: u32,
+    pub collection: Hash,
+    pub overlay: Hash,
 }

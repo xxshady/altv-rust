@@ -1,8 +1,11 @@
-use crate::{helpers::IntoHash, sdk};
+use crate::{
+    helpers::{IntoHash, Hash},
+    sdk,
+};
 
 #[derive(Debug)]
 pub struct PedModelInfo {
-    pub hash: u32,
+    pub hash: Hash,
     pub name: String,
     pub model_type: String,
     pub dlc_name: String,

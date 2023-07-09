@@ -1,15 +1,18 @@
-use crate::{helpers::IntoHash, sdk};
+use crate::{
+    helpers::{IntoHash, Hash},
+    sdk,
+};
 
 #[derive(Debug)]
 pub struct WeaponModelInfo {
-    pub hash: u32,
+    pub hash: Hash,
     pub name: String,
     pub model_name: String,
-    pub model_hash: u32,
-    pub ammo_type_hash: u32,
+    pub model_hash: Hash,
+    pub ammo_type_hash: Hash,
     pub ammo_type: String,
     pub ammo_model_name: String,
-    pub ammo_model_hash: u32,
+    pub ammo_model_hash: Hash,
     pub default_max_ammo_mp: i32,
     pub skill_above_50_max_ammo_mp: i32,
     pub max_skill_max_ammo_mp: i32,

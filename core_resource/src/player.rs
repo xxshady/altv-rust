@@ -526,10 +526,17 @@ impl player::Player {
         drawable: u16,
         texture: u8,
         palette: u8,
-        dlc: u32,
+        dlc: impl IntoHash,
     ) -> SomeResult<bool> {
         Ok(unsafe {
-            sdk::IPlayer::SetDlcClothes(self.raw_ptr()?, component, drawable, texture, palette, dlc)
+            sdk::IPlayer::SetDlcClothes(
+                self.raw_ptr()?,
+                component,
+                drawable,
+                texture,
+                palette,
+                dlc.into_hash(),
+            )
         })
     }
 
@@ -574,13 +581,17 @@ impl player::Player {
         component: u8,
         drawable: u8,
         texture: u8,
-        dlc: u32,
+        dlc: impl IntoHash,
     ) -> SomeResult<bool> {
-        Ok(
-            unsafe {
-                sdk::IPlayer::SetDlcProps(self.raw_ptr()?, component, drawable, texture, dlc)
-            },
-        )
+        Ok(unsafe {
+            sdk::IPlayer::SetDlcProps(
+                self.raw_ptr()?,
+                component,
+                drawable,
+                texture,
+                dlc.into_hash(),
+            )
+        })
     }
 
     pub fn clear_props(&self, component: u8) -> VoidResult {
