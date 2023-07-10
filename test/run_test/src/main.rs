@@ -9,6 +9,7 @@ use duct::cmd;
 
 struct Files {
     altv_server: (String, String),
+    crash_handler: (String, String),
     vehmodels: (String, String),
     vehmods: (String, String),
     clothes: (String, String),
@@ -68,6 +69,10 @@ async fn main() {
             format!("{cdn}/server/dev/{platform}/altv-server{altv_server_ext}"),
             format!("test/altv_server/altv-server{altv_server_ext}"),
         ),
+        crash_handler: (
+            format!("{cdn}/server/dev/{platform}/altv-crash-handler{altv_server_ext}"),
+            format!("test/altv_server/altv-crash-handler{altv_server_ext}"),
+        ),
         vehmodels: (
             format!("{cdn_data}/vehmodels.bin"),
             "test/altv_server/data/vehmodels.bin".to_string(),
@@ -102,6 +107,9 @@ async fn main() {
 
     if cfg!(unix) {
         cmd!("chmod", "+x", &server_bin).run().unwrap();
+
+        let (_, crash_handler_bin) = files.crash_handler;
+        cmd!("chmod", "+x", crash_handler_bin).run().unwrap();
     }
 
     let server_dir = Path::new(&server_bin)
@@ -127,7 +135,11 @@ async fn main() {
                 }
 
                 // https://youtu.be/pLJTfLumkGw
-                let log = fs::read(format!("{server_dir}/server.log")).unwrap();
+                let log = fs::read(format!("{server_dir}/server.log"));
+                let Ok(log) = log else {
+                    println!("server.log is not available yet...");
+                    continue;
+                };
                 if String::from_utf8_lossy(&log).contains("Stopped resource rust") {
                     println!("rust resource stopped, killing altv server");
                     altv_server.kill().unwrap();
@@ -148,6 +160,8 @@ async fn main() {
 async fn download_server_files(files: &Files) {
     let (from, to) = &files.altv_server;
     let altv_server = download_file(from, to);
+    let (from, to) = &files.crash_handler;
+    let crash_handler = download_file(from, to);
     let (from, to) = &files.vehmodels;
     let veh_models = download_file(from, to);
     let (from, to) = &files.vehmods;
@@ -163,6 +177,7 @@ async fn download_server_files(files: &Files) {
 
     tokio::join!(
         altv_server,
+        crash_handler,
         veh_models,
         veh_mods,
         clothes,

@@ -1,9 +1,3 @@
 /target
-test/altv_server/resources/rust/*
-test/altv_server/server.log
-test/altv_server/altv-server*
-test/altv_server/cache
-test/altv_server/data
-test/altv_server/modules
-test/altv_server/resources
-test/altv_server/crashdumps
+test/altv_server/*
+!test/altv_server/server.toml

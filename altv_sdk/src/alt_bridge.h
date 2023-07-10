@@ -11,6 +11,32 @@
 using ResourceOnRemoveBaseObjectCallback = shared::ResourceOnRemoveBaseObjectCallback;
 using ResourceStartCallback = shared::ResourceStartCallback;
 
+using StdStringPtr = std::unique_ptr<std::string>;
+
+using u8 = uint8_t;
+using u16 = uint16_t;
+using u32 = uint32_t;
+using u64 = uint64_t;
+
+using i8 = int8_t;
+using i16 = int16_t;
+using i32 = int32_t;
+using cpp_int = int; // why? for some reason sdk uses int and int32_t at the same time
+using i64 = int64_t;
+
+using f32 = float;
+using f64 = double;
+
+using BaseObjectType = uint8_t;
+using ColShapeType = uint8_t;
+using BlipType = uint8_t;
+using MarkerType = uint32_t;
+using WeaponDamageEventBodyPart = int8_t;
+using EventType = uint16_t;
+using PlayerConnectDeniedReason = uint8_t;
+using ExplosionType = int8_t;
+using AmmoSpecialType_t = uint32_t;
+
 // used for const std::string& return values in altv event classes
 using StdStringClone = std::string;
 
@@ -976,6 +1002,44 @@ std::string read_weapon_model_info_model_name(const alt::WeaponModelInfo* ptr) {
 
 std::string read_weapon_model_info_ammo_model_name(const alt::WeaponModelInfo* ptr) {
     return ptr->ammoModelName;
+}
+
+void read_ammo_flags(
+    const alt::AmmoFlags& flags,
+    bool* infinite_ammo,
+    bool* add_smoke_on_explosion,
+    bool* fuse,
+    bool* fixed_after_explosion
+) {
+    *infinite_ammo = flags.infiniteAmmo;
+    *add_smoke_on_explosion = flags.addSmokeOnExplosion;
+    *fuse = flags.fuse;
+    *fixed_after_explosion = flags.fixedAfterExplosion;
+}
+
+alt::AmmoFlags create_ammo_flags_from_params(
+    bool infinite_ammo,
+    bool add_smoke_on_explosion,
+    bool fuse,
+    bool fixed_after_explosion
+) {
+    alt::AmmoFlags flags;
+
+    flags.infiniteAmmo = infinite_ammo;
+    flags.addSmokeOnExplosion = add_smoke_on_explosion;
+    flags.fuse = fuse;
+    flags.fixedAfterExplosion = fixed_after_explosion;
+
+    return flags;
+}
+
+void read_alt_decoration(
+    const alt::CDecoration& decoration,
+    u32* out_collection,
+    u32* out_overlay
+) {
+    *out_collection = decoration.collection;
+    *out_overlay = decoration.overlay;
 }
 
 namespace events

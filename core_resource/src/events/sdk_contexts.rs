@@ -211,7 +211,10 @@ impl WeaponDamageEvent {
 
         Self {
             source: get_non_null_player(sdk::CWeaponDamageEvent::GetSource(weapon_event), resource),
-            source_entity: get_entity_by_ptr(sdk::CWeaponDamageEvent::GetSourceEntity(weapon_event), resource),
+            source_entity: get_entity_by_ptr(
+                sdk::CWeaponDamageEvent::GetSourceEntity(weapon_event),
+                resource,
+            ),
             target: get_non_null_entity_by_ptr(
                 sdk::CWeaponDamageEvent::GetTarget(weapon_event),
                 resource,
@@ -712,7 +715,7 @@ pub struct VehicleDamage {
     pub body_additional_health_damage: u32,
     pub engine_health_damage: u32,
     pub petrol_tank_health_damage: u32,
-    pub weapon: u32,
+    pub weapon: Hash,
 }
 
 impl VehicleDamage {

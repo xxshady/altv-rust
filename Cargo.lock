@@ -39,7 +39,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_core_shared"
-version = "15.0.0-dev.51"
+version = "15.0.0-dev.57"
 dependencies = [
  "altv_internal_sdk",
  "lmnkjgkj-std-backtrace-anyhow",
@@ -47,7 +47,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_logger"
-version = "15.0.0-dev.51"
+version = "15.0.0-dev.57"
 dependencies = [
  "altv_internal_sdk",
  "log",
@@ -55,7 +55,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_mvalue"
-version = "15.0.0-dev.51"
+version = "15.0.0-dev.57"
 dependencies = [
  "altv_internal_logger",
  "altv_internal_sdk",
@@ -67,7 +67,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_sdk"
-version = "15.0.0-dev.51"
+version = "15.0.0-dev.57"
 dependencies = [
  "autocxx",
  "autocxx-build",
@@ -76,7 +76,7 @@ dependencies = [
 
 [[package]]
 name = "altv_module"
-version = "15.0.0-dev.51"
+version = "15.0.0-dev.57"
 dependencies = [
  "altv_internal_logger",
  "altv_internal_sdk",
@@ -441,7 +441,7 @@ checksum = "e496a50fda8aacccc86d7529e2c1e0892dbd0f898a6b5645b5561b89c3210efa"
 
 [[package]]
 name = "core_module"
-version = "15.0.0-dev.51"
+version = "15.0.0-dev.57"
 dependencies = [
  "altv_internal_core_shared",
  "altv_internal_sdk",
@@ -462,7 +462,7 @@ dependencies = [
 
 [[package]]
 name = "cpp_codegen"
-version = "15.0.0-dev.51"
+version = "15.0.0-dev.57"
 dependencies = [
  "lazy_static",
  "lmnkjgkj-std-backtrace-anyhow",

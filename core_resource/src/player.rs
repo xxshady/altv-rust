@@ -89,28 +89,30 @@ impl player::Player {
     pub fn get_head_blend_data(&self) -> SomeResult<structs::PlayerHeadBlendData> {
         let raw = unsafe { sdk::IPlayer::GetHeadBlendData(self.raw_ptr()?) }.within_unique_ptr();
 
-        let mut shape_first_id = 0u32;
-        let mut shape_second_id = 0u32;
-        let mut shape_third_id = 0u32;
-        let mut skin_first_id = 0u32;
-        let mut skin_second_id = 0u32;
-        let mut skin_third_id = 0u32;
-        let mut shape_mix = 0f32;
-        let mut skin_mix = 0f32;
-        let mut third_mix = 0f32;
+        let (
+            mut shape_first_id,
+            mut shape_second_id,
+            mut shape_third_id,
+            mut skin_first_id,
+            mut skin_second_id,
+            mut skin_third_id,
+            mut shape_mix,
+            mut skin_mix,
+            mut third_mix,
+        ) = Default::default();
 
         unsafe {
             sdk::read_alt_head_blend_data(
                 raw.as_ref().unwrap(),
-                &mut shape_first_id as *mut u32,
-                &mut shape_second_id as *mut u32,
-                &mut shape_third_id as *mut u32,
-                &mut skin_first_id as *mut u32,
-                &mut skin_second_id as *mut u32,
-                &mut skin_third_id as *mut u32,
-                &mut shape_mix as *mut f32,
-                &mut skin_mix as *mut f32,
-                &mut third_mix as *mut f32,
+                &mut shape_first_id,
+                &mut shape_second_id,
+                &mut shape_third_id,
+                &mut skin_first_id,
+                &mut skin_second_id,
+                &mut skin_third_id,
+                &mut shape_mix,
+                &mut skin_mix,
+                &mut third_mix,
             )
         }
 
@@ -361,9 +363,8 @@ impl player::Player {
         let weapons = raw
             .into_iter()
             .map(|v| {
-                let mut hash = 0u32;
-                let mut tint_index = 0u8;
-                unsafe { sdk::read_weapon(v, &mut hash as *mut _, &mut tint_index as *mut _) }
+                let (mut hash, mut tint_index) = Default::default();
+                unsafe { sdk::read_weapon(v, &mut hash, &mut tint_index) }
                 let raw_components = unsafe { sdk::read_weapon_components(v) };
 
                 structs::Weapon {
@@ -466,16 +467,13 @@ impl player::Player {
         let raw =
             unsafe { sdk::IPlayer::GetClothes(self.raw_ptr()?, component) }.within_unique_ptr();
 
-        let mut drawable = 0u16;
-        let mut texture = 0u8;
-        let mut palette = 0u8;
-
+        let (mut drawable, mut texture, mut palette) = Default::default();
         unsafe {
             sdk::read_alt_cloth(
                 raw.as_ref().unwrap(),
-                &mut drawable as *mut u16,
-                &mut texture as *mut u8,
-                &mut palette as *mut u8,
+                &mut drawable,
+                &mut texture,
+                &mut palette,
             )
         }
 
@@ -502,18 +500,15 @@ impl player::Player {
         let raw =
             unsafe { sdk::IPlayer::GetDlcClothes(self.raw_ptr()?, component) }.within_unique_ptr();
 
-        let mut drawable = 0u16;
-        let mut texture = 0u8;
-        let mut palette = 0u8;
-        let mut dlc = 0u32;
+        let (mut drawable, mut texture, mut palette, mut dlc) = Default::default();
 
         unsafe {
             sdk::read_alt_dlc_cloth(
                 raw.as_ref().unwrap(),
-                &mut drawable as *mut _,
-                &mut texture as *mut _,
-                &mut palette as *mut _,
-                &mut dlc as *mut _,
+                &mut drawable,
+                &mut texture,
+                &mut palette,
+                &mut dlc,
             )
         }
 
@@ -531,18 +526,24 @@ impl player::Player {
         drawable: u16,
         texture: u8,
         palette: u8,
-        dlc: u32,
+        dlc: impl IntoHash,
     ) -> SomeResult<bool> {
         Ok(unsafe {
-            sdk::IPlayer::SetDlcClothes(self.raw_ptr()?, component, drawable, texture, palette, dlc)
+            sdk::IPlayer::SetDlcClothes(
+                self.raw_ptr()?,
+                component,
+                drawable,
+                texture,
+                palette,
+                dlc.into_hash(),
+            )
         })
     }
 
     pub fn get_prop(&self, component: u8) -> SomeResult<structs::PlayerProp> {
         let raw = unsafe { sdk::IPlayer::GetProps(self.raw_ptr()?, component) }.within_unique_ptr();
 
-        let mut drawable = 0u16;
-        let mut texture = 0u8;
+        let (mut drawable, mut texture) = Default::default();
 
         unsafe {
             sdk::read_alt_prop(
@@ -563,17 +564,9 @@ impl player::Player {
         let raw =
             unsafe { sdk::IPlayer::GetDlcProps(self.raw_ptr()?, component) }.within_unique_ptr();
 
-        let mut drawable = 0u8;
-        let mut texture = 0u8;
-        let mut dlc = 0u32;
-
+        let (mut drawable, mut texture, mut dlc) = Default::default();
         unsafe {
-            sdk::read_alt_dlc_prop(
-                raw.as_ref().unwrap(),
-                &mut drawable as *mut _,
-                &mut texture as *mut _,
-                &mut dlc as *mut _,
-            )
+            sdk::read_alt_dlc_prop(raw.as_ref().unwrap(), &mut drawable, &mut texture, &mut dlc)
         }
 
         Ok(structs::PlayerDlcProp {
@@ -588,13 +581,17 @@ impl player::Player {
         component: u8,
         drawable: u8,
         texture: u8,
-        dlc: u32,
+        dlc: impl IntoHash,
     ) -> SomeResult<bool> {
-        Ok(
-            unsafe {
-                sdk::IPlayer::SetDlcProps(self.raw_ptr()?, component, drawable, texture, dlc)
-            },
-        )
+        Ok(unsafe {
+            sdk::IPlayer::SetDlcProps(
+                self.raw_ptr()?,
+                component,
+                drawable,
+                texture,
+                dlc.into_hash(),
+            )
+        })
     }
 
     pub fn clear_props(&self, component: u8) -> VoidResult {
@@ -650,19 +647,16 @@ impl player::Player {
         let raw = unsafe { sdk::IPlayer::GetHeadOverlay(self.raw_ptr()?, overlay_id) }
             .within_unique_ptr();
 
-        let mut index = 0u8;
-        let mut opacity = 0f32;
-        let mut color_type = 0u8;
-        let mut color_index = 0u8;
-        let mut second_color_index = 0u8;
+        let (mut index, mut opacity, mut color_type, mut color_index, mut second_color_index) =
+            Default::default();
         unsafe {
             sdk::read_alt_head_overlay(
                 raw.as_ref().unwrap(),
-                &mut index as *mut _,
-                &mut opacity as *mut _,
-                &mut color_type as *mut _,
-                &mut color_index as *mut _,
-                &mut second_color_index as *mut _,
+                &mut index,
+                &mut opacity,
+                &mut color_type,
+                &mut color_index,
+                &mut second_color_index,
             )
         }
 
@@ -978,6 +972,131 @@ impl player::Player {
 
     pub fn has_weapon(&self, weapon_hash: impl IntoHash) -> SomeResult<bool> {
         Ok(unsafe { sdk::IPlayer::HasWeapon(self.raw_ptr()?, weapon_hash.into_hash()) })
+    }
+
+    pub fn get_ammo_special_type(
+        &self,
+        ammo_type_hash: impl IntoHash,
+    ) -> SomeResult<altv_sdk::AmmoSpecialType> {
+        let raw = unsafe {
+            sdk::IPlayer::GetAmmoSpecialType(self.raw_ptr()?, ammo_type_hash.into_hash())
+        };
+        Ok(altv_sdk::AmmoSpecialType::try_from(raw).unwrap())
+    }
+
+    pub fn set_ammo_special_type(
+        &self,
+        ammo_type_hash: impl IntoHash,
+        ammo_special_type: altv_sdk::AmmoSpecialType,
+    ) -> VoidResult {
+        unsafe {
+            sdk::IPlayer::SetAmmoSpecialType(
+                self.raw_ptr()?,
+                ammo_type_hash.into_hash(),
+                ammo_special_type as u32,
+            )
+        }
+        Ok(())
+    }
+
+    pub fn get_ammo_flags(&self, ammo_type_hash: impl IntoHash) -> SomeResult<structs::AmmoFlags> {
+        let ptr =
+            unsafe { sdk::IPlayer::GetAmmoFlags(self.raw_ptr()?, ammo_type_hash.into_hash()) }
+                .within_unique_ptr();
+        Ok(structs::AmmoFlags::new(ptr))
+    }
+
+    pub fn set_ammo_flags(
+        &self,
+        ammo_type_hash: impl IntoHash,
+        ammo_flags: structs::AmmoFlags,
+    ) -> VoidResult {
+        unsafe {
+            sdk::IPlayer::SetAmmoFlags(
+                self.raw_ptr()?,
+                ammo_type_hash.into_hash(),
+                ammo_flags.infinite_ammo,
+                ammo_flags.add_smoke_on_explosion,
+                ammo_flags.fuse,
+                ammo_flags.fixed_after_explosion,
+            )
+        }
+        Ok(())
+    }
+
+    pub fn set_ammo_max100(&self, ammo_type_hash: impl IntoHash, ammo: i32) -> VoidResult {
+        unsafe { sdk::IPlayer::SetAmmoMax100(self.raw_ptr()?, ammo_type_hash.into_hash(), ammo) }
+        Ok(())
+    }
+
+    pub fn get_ammo_max(&self, ammo_type_hash: impl IntoHash) -> SomeResult<i32> {
+        Ok(unsafe { sdk::IPlayer::GetAmmoMax(self.raw_ptr()?, ammo_type_hash.into_hash()) })
+    }
+
+    pub fn set_ammo_max(&self, ammo_type_hash: impl IntoHash, ammo: i32) -> VoidResult {
+        unsafe { sdk::IPlayer::SetAmmoMax(self.raw_ptr()?, ammo_type_hash.into_hash(), ammo) }
+        Ok(())
+    }
+
+    pub fn get_ammo_max50(&self, ammo_type_hash: impl IntoHash) -> SomeResult<i32> {
+        Ok(unsafe { sdk::IPlayer::GetAmmoMax50(self.raw_ptr()?, ammo_type_hash.into_hash()) })
+    }
+
+    pub fn set_ammo_max50(&self, ammo_type_hash: impl IntoHash, ammo: i32) -> VoidResult {
+        unsafe { sdk::IPlayer::SetAmmoMax50(self.raw_ptr()?, ammo_type_hash.into_hash(), ammo) }
+        Ok(())
+    }
+
+    pub fn get_ammo_max100(&self, ammo_type_hash: impl IntoHash) -> SomeResult<i32> {
+        Ok(unsafe { sdk::IPlayer::GetAmmoMax100(self.raw_ptr()?, ammo_type_hash.into_hash()) })
+    }
+
+    pub fn decorations(&self) -> SomeResult<Vec<structs::Decoration>> {
+        Ok(unsafe {
+            sdk::IPlayer::GetDecorations(self.raw_ptr()?)
+                .into_iter()
+                .map(|v| {
+                    let (mut collection, mut overlay) = Default::default();
+                    sdk::read_alt_decoration(v, &mut collection, &mut overlay);
+
+                    structs::Decoration {
+                        collection,
+                        overlay,
+                    }
+                })
+                .collect()
+        })
+    }
+
+    pub fn add_decoration(&self, collection: impl IntoHash, overlay: impl IntoHash) -> VoidResult {
+        unsafe {
+            sdk::IPlayer::AddDecoration(
+                self.raw_ptr()?,
+                collection.into_hash(),
+                overlay.into_hash(),
+            )
+        }
+        Ok(())
+    }
+
+    pub fn remove_decoration(
+        &self,
+        collection: impl IntoHash,
+        overlay: impl IntoHash,
+    ) -> VoidResult {
+        unsafe {
+            sdk::IPlayer::RemoveDecoration(
+                self.raw_ptr()?,
+                collection.into_hash(),
+                overlay.into_hash(),
+            )
+        }
+        Ok(())
+    }
+
+    pub fn clear_decorations(&self) -> VoidResult {
+        unsafe { sdk::IPlayer::ClearDecorations(self.raw_ptr()?) }
+        Ok(())
     }
 }
 

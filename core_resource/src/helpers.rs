@@ -19,72 +19,49 @@ use crate::{
 use altv_sdk::ffi as sdk;
 
 pub fn read_cpp_vector3(cpp_vector: UniquePtr<sdk::Vector3Wrapper>) -> Vector3 {
-    let mut out_x = 0f32;
-    let mut out_y = 0f32;
-    let mut out_z = 0f32;
+    let (mut x, mut y, mut z) = Default::default();
     unsafe {
-        sdk::read_vector3(
-            cpp_vector.as_ref().unwrap(),
-            &mut out_x as *mut f32,
-            &mut out_y as *mut f32,
-            &mut out_z as *mut f32,
-        );
+        sdk::read_vector3(cpp_vector.as_ref().unwrap(), &mut x, &mut y, &mut z);
     }
-    Vector3::new(out_x, out_y, out_z)
+    Vector3::new(x, y, z)
 }
 
 pub fn read_cpp_vector2(cpp_vector: UniquePtr<sdk::Vector2Wrapper>) -> Vector2 {
-    let mut out_x = 0f32;
-    let mut out_y = 0f32;
+    let (mut x, mut y) = Default::default();
     unsafe {
-        sdk::read_vector2(
-            cpp_vector.as_ref().unwrap(),
-            &mut out_x as *mut f32,
-            &mut out_y as *mut f32,
-        );
+        sdk::read_vector2(cpp_vector.as_ref().unwrap(), &mut x, &mut y);
     }
-    Vector2::new(out_x, out_y)
+    Vector2::new(x, y)
 }
 
 pub fn read_cpp_rgba(cpp_rgba: UniquePtr<sdk::RGBAWrapper>) -> Rgba {
-    let mut r = 0u8;
-    let mut g = 0u8;
-    let mut b = 0u8;
-    let mut a = 0u8;
+    let (mut r, mut g, mut b, mut a) = Default::default();
     unsafe {
-        sdk::read_rgba(
-            cpp_rgba.as_ref().unwrap(),
-            &mut r as *mut _,
-            &mut g as *mut _,
-            &mut b as *mut _,
-            &mut a as *mut _,
-        );
+        sdk::read_rgba(cpp_rgba.as_ref().unwrap(), &mut r, &mut g, &mut b, &mut a);
     }
 
     Rgba::new(r, g, b, a)
 }
 
 pub fn read_cpp_quaternion(cpp_quaternion: UniquePtr<sdk::alt::Quaternion>) -> Quaternion {
-    let mut out_x = 0f32;
-    let mut out_y = 0f32;
-    let mut out_z = 0f32;
-    let mut out_w = 0f32;
+    let (mut x, mut y, mut z, mut w) = Default::default();
     unsafe {
         sdk::read_quaternion(
             cpp_quaternion.as_ref().unwrap(),
-            &mut out_x as *mut f32,
-            &mut out_y as *mut f32,
-            &mut out_z as *mut f32,
-            &mut out_w as *mut f32,
+            &mut x,
+            &mut y,
+            &mut z,
+            &mut w,
         );
     }
-    Quaternion::new(out_x, out_y, out_z, out_w)
+    Quaternion::new(x, y, z, w)
 }
 
 // credits to altv-rs creator
 // https://github.com/justdimaa/altv-rs/blob/f5cf1733493466634793804dfb1ca6d387fbe687/altv-sdk/src/lib.rs#L24
 /// joaat hash function
 pub fn hash(str: &str) -> u32 {
+    let str = str.to_lowercase();
     let bytes = str.as_bytes();
     let mut num: std::num::Wrapping<u32> = std::num::Wrapping(0u32);
 

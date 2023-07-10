@@ -21,6 +21,12 @@ use script_events::test_script_events;
 mod blip;
 use blip::test_blip;
 
+mod core_funcs;
+use core_funcs::test_core_funcs;
+
+mod vehicle_model_info;
+use vehicle_model_info::test_vehicle_model_info;
+
 #[altv::main]
 fn main() -> impl altv::IntoVoidResult {
     std::env::set_var("RUST_BACKTRACE", "full");
@@ -39,11 +45,15 @@ fn main() -> impl altv::IntoVoidResult {
     test_script_events();
     altv::log!("#################### blip");
     test_blip();
+    altv::log!("#################### core_funcs");
+    test_core_funcs();
+    altv::log!("#################### vehicle_model_info");
+    test_vehicle_model_info();
 
     altv::set_timeout(
         || {
             altv::log!("stopping resource...");
-            altv::Resource::current().stop();
+            altv::Resource::current().stop().unwrap();
         },
         1000,
     );

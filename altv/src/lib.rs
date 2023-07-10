@@ -57,9 +57,10 @@ pub use exports::{
     base_object,
     BaseObjectId,
     Timer,
-
     AnimationFlags,
     AmmoType,
+    AmmoFlags,
+    Decoration,
 
     anyhow,
     serde,
@@ -73,7 +74,7 @@ pub use exports::{
 
 pub use altv_sdk::{
     BaseObjectType, BlipType, ColShapeType, ExplosionType, MarkerType, PlayerBodyPart,
-    PlayerConnectDeniedReason, VehicleModelType,
+    PlayerConnectDeniedReason, VehicleModelType, AmmoSpecialType,
 };
 
 pub const DEFAULT_DIMENSION: i32 = 0;

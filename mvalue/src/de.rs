@@ -263,18 +263,10 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
                 self.assert_mvalue_type(mvalue_type, MValueType::Rgba)?;
 
                 let ptr = unsafe { sdk::read_mvalue_rgba(mvalue) }.within_unique_ptr();
-                let mut r = 0u8;
-                let mut g = 0u8;
-                let mut b = 0u8;
-                let mut a = 0u8;
+
+                let (mut r, mut g, mut b, mut a) = Default::default();
                 unsafe {
-                    sdk::read_rgba(
-                        ptr.as_ref().unwrap(),
-                        &mut r as *mut _,
-                        &mut g as *mut _,
-                        &mut b as *mut _,
-                        &mut a as *mut _,
-                    );
+                    sdk::read_rgba(ptr.as_ref().unwrap(), &mut r, &mut g, &mut b, &mut a);
                 }
 
                 let buf = bytes_num::to_byte_buf([r, g, b, a]);
@@ -284,9 +276,8 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
                 self.assert_mvalue_type(mvalue_type, MValueType::Vector3)?;
 
                 let ptr = unsafe { sdk::read_mvalue_vector3(mvalue) }.within_unique_ptr();
-                let mut x = 0f32;
-                let mut y = 0f32;
-                let mut z = 0f32;
+
+                let (mut x, mut y, mut z) = Default::default();
                 unsafe {
                     sdk::read_vector3(
                         ptr.as_ref().unwrap(),
@@ -303,8 +294,8 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
                 self.assert_mvalue_type(mvalue_type, MValueType::Vector2)?;
 
                 let ptr = unsafe { sdk::read_mvalue_vector2(mvalue) }.within_unique_ptr();
-                let mut x = 0f32;
-                let mut y = 0f32;
+
+                let (mut x, mut y) = Default::default();
                 unsafe {
                     sdk::read_vector2(
                         ptr.as_ref().unwrap(),
