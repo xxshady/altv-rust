@@ -107,6 +107,9 @@ async fn main() {
 
     if cfg!(unix) {
         cmd!("chmod", "+x", &server_bin).run().unwrap();
+
+        let (_, crash_handler_bin) = files.crash_handler;
+        cmd!("chmod", "+x", crash_handler_bin).run().unwrap();
     }
 
     let server_dir = Path::new(&server_bin)
