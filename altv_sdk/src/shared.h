@@ -32,8 +32,9 @@ using ExplosionType = int8_t;
 
 namespace shared {
     using AltResourceImpl = alt::IResource::Impl;
+    using AltResource = alt::IResource;
 
-    using ResourceStartCallback = void (*)(rust::Str name, rust::Str full_main_path, AltResourceImpl* resource);
+    using ResourceStartCallback = void (*)(rust::Str name, rust::Str full_main_path, AltResourceImpl* resource_impl, AltResource* resource);
     using ResourceStopCallback = void (*)(rust::Str name);
     using RuntimeResourceDestroyImplCallback = void (*)();
     using RuntimeOnTickCallback = void (*)();

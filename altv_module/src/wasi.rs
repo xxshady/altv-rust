@@ -1,7 +1,12 @@
-use std::io::{BufReader, BufRead};
+use std::{
+    io::{BufReader, BufRead},
+    error::Error,
+};
 
-use wasmer::{Instance, Module, Store, Function};
+use wasmer::{Instance, Module, Store};
 use wasmer_wasix::{WasiEnv, Pipe};
+
+use crate::types::StdoutReader;
 
 wai_bindgen_wasmer::export!("../wasmer_test/api.wai");
 
@@ -38,17 +43,17 @@ impl api::Api for ResourceApi {
     }
 }
 
-pub(crate) fn start(wasm_bytes: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
+pub(crate) fn start(wasm_bytes: &[u8]) -> Result<(Instance, StdoutReader), Box<dyn Error>> {
     let mut store = Store::default();
 
     let module = Module::new(&store, wasm_bytes)?;
 
     let (stdout_sender, stdout_reader) = Pipe::channel();
+    let stdout_reader = BufReader::new(stdout_reader);
+
     let mut wasi_env = WasiEnv::builder("altv_rust_resource")
         .stdout(Box::new(stdout_sender))
         .finalize(&mut store)?;
-
-    let mut buf_reader = BufReader::new(stdout_reader);
 
     let mut import_object = wasi_env.import_object(&mut store, &module)?;
 
@@ -64,15 +69,5 @@ pub(crate) fn start(wasm_bytes: &[u8]) -> Result<(), Box<dyn std::error::Error>>
     let start = instance.exports.get_function("_start")?;
     start.call(&mut store, &[])?;
 
-    let mut stdout_buf = String::new();
-    while buf_reader.read_line(&mut stdout_buf).is_ok() {
-        logger::debug!("buf data: {stdout_buf}");
-
-        if stdout_buf.contains("created marker") {
-            break;
-        }
-        stdout_buf.clear();
-    }
-
-    Ok(())
+    Ok((instance, stdout_reader))
 }

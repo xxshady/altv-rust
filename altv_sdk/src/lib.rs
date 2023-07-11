@@ -301,15 +301,17 @@ pub mod ffi {
         generate!("read_streamed_entity_value")
 
         generate!("shared::AltResourceImpl")
+        generate!("shared::AltResource")
     }
     pub use alt_bridge::*;
 
     #[repr(transparent)]
     pub struct ResourceStartCallback(
-        pub  extern "C" fn(
+        pub extern "C" fn(
             name: &str,
             full_main_path: &str,
-            resource: *mut alt_bridge::shared::AltResourceImpl,
+            resource_impl: *mut alt_bridge::shared::AltResourceImpl,
+            resource_ptr: *mut alt_bridge::shared::AltResource,
         ),
     );
     impl_extern_type_callback!(ResourceStartCallback, "callbacks::ResourceStartCallback");

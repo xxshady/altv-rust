@@ -23,3 +23,9 @@ pub fn log(str: &str) {
         ffi::ICore::LogColored(str, std::ptr::null_mut());
     }
 }
+
+pub unsafe fn log_with_resource(str: &str, resource: *mut ffi::alt::IResource) {
+    unsafe {
+        ffi::ICore::LogColored(str, resource);
+    }
+}

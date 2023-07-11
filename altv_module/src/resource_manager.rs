@@ -1,20 +1,46 @@
 use std::{
     cell::RefCell,
     collections::{hash_map, HashMap, HashSet},
+    io::BufRead,
 };
-
-use crate::ResourceName;
+use altv_sdk::ffi as sdk;
+use crate::{ResourceName, types::StdoutReader};
 
 thread_local! {
     pub static RESOURCE_MANAGER_INSTANCE: RefCell<ResourceManager> = RefCell::new(ResourceManager::default());
 }
 
 #[derive(Debug)]
-pub struct ResourceController {}
+pub struct ResourceController {
+    instance: wasmer::Instance,
+    stdout: RefCell<StdoutReader>,
+    pub ptr: *mut sdk::shared::AltResource,
+}
 
 impl ResourceController {
-    pub fn new() -> Self {
-        Self {}
+    pub fn new(
+        instance: wasmer::Instance,
+        stdout: StdoutReader,
+        ptr: *mut sdk::shared::AltResource,
+    ) -> Self {
+        Self {
+            instance,
+            stdout: RefCell::new(stdout),
+            ptr,
+        }
+    }
+
+    pub(crate) fn read_stdout_line(&self) -> String {
+        let mut stdout_buf = String::new();
+
+        let stdout = self.stdout.try_borrow_mut();
+        let Ok(mut stdout) = stdout else {
+            logger::error!("Failed to mut borrow stdout");
+            return stdout_buf;
+        };
+
+        let _ = stdout.read_line(&mut stdout_buf);
+        stdout_buf
     }
 }
 

@@ -123,7 +123,7 @@ public:
 
         assert(resource_start_callback != nullptr);
         auto alt_resource_impl = static_cast<alt::IResource::Impl*>(resource_impl);
-        resource_start_callback(resource_name, full_main_path, alt_resource_impl);
+        resource_start_callback(resource_name, full_main_path, alt_resource_impl, resource);
 
         return alt_resource_impl;
     }

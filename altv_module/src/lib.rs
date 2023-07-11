@@ -6,7 +6,7 @@ type ResourceName = String;
 use autocxx::{WithinUniquePtr, prelude::UniquePtr};
 use std::{path::PathBuf, ptr::NonNull, ffi::CString, cell::RefCell};
 
-use crate::resource_manager::RESOURCE_MANAGER_INSTANCE;
+use crate::resource_manager::{RESOURCE_MANAGER_INSTANCE, ResourceController};
 
 // use crate::{event_manager::EVENT_MANAGER_INSTANCE, resource_manager::RESOURCE_MANAGER_INSTANCE};
 
@@ -15,6 +15,7 @@ mod helpers;
 mod required_sdk_events;
 mod resource_manager;
 mod wasi;
+mod types;
 
 const ALTV_MODULE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -22,7 +23,8 @@ const ALTV_MODULE_VERSION: &str = env!("CARGO_PKG_VERSION");
 extern "C" fn resource_start(
     resource_name: &str,
     full_main_path: &str,
-    resource: *mut sdk::shared::AltResourceImpl,
+    resource_impl: *mut sdk::shared::AltResourceImpl,
+    resource_ptr: *mut sdk::shared::AltResource,
 ) {
     let full_main_path = full_main_path.to_string();
     let resource_name = resource_name.to_string();
@@ -30,7 +32,7 @@ extern "C" fn resource_start(
     logger::debug!("resource_start: {resource_name} ({full_main_path})");
 
     let mut exist = false;
-    let content = unsafe { sdk::read_file(resource, &full_main_path, &mut exist as *mut _) };
+    let content = unsafe { sdk::read_file(resource_impl, &full_main_path, &mut exist) };
     if !exist {
         logger::error!("Failed to start resource: {resource_name}, main file: '{full_main_path}' does not exist");
         return;
@@ -46,7 +48,21 @@ extern "C" fn resource_start(
         let res = wasi::start(content.as_slice());
         logger::debug!("start res: {res:?}");
 
-        manager.borrow_mut().remove_pending_status(&resource_name);
+        let mut manager = manager.borrow_mut();
+
+        manager.remove_pending_status(&resource_name);
+
+        match res {
+            Ok((instance, stdout_reader)) => {
+                manager.add(
+                    resource_name,
+                    ResourceController::new(instance, stdout_reader, resource_ptr),
+                );
+            }
+            Err(e) => {
+                logger::error!("Failed to start resource: {resource_name}, error: {e:?}");
+            }
+        }
     });
 }
 
@@ -85,41 +101,21 @@ extern "C" fn runtime_resource_destroy_impl() {
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn runtime_on_tick() {
-    // let opt: Option<(u8, f32)> = TEST_STORE.with(|v| {
-    //     let mut v = v.borrow_mut();
-    //     match v.marker {
-    //         None => None,
-    //         Some(m) => {
-    //             let (_, _, _, _a) =
-    //                 read_cpp_rgba(unsafe { sdk::IMarker::GetColor(m) }.within_unique_ptr());
+    RESOURCE_MANAGER_INSTANCE.with(|v| {
+        for (_, controller) in v.borrow().resources_iter() {
+            let line = controller.read_stdout_line();
+            if line.is_empty() {
+                continue;
+            }
 
-    //                 let (_, _, scale) =
-    //                 read_cpp_vector3(unsafe { sdk::IMarker::GetScale(m) }.within_unique_ptr());
+            let line_without_break = line.get(..(line.len() - 1));
+            let Some(line_without_break) = line_without_break else { continue; };
 
-    //             Some((_a, scale))
-    //         }
-    //     }
-    // });
-
-    // let Some((a, scale)) = opt else {
-    //     log!("waiting for marker");
-    //     return;
-    // };
-
-    // WASM_FUNC.with(|v| {
-    //     WASM_STORE.with(|store| {
-    //         let result = v.borrow().as_ref().unwrap().call(
-    //             store.borrow_mut().as_mut().unwrap(),
-    //             &[wasmer::Value::I32(a as i32), wasmer::Value::F32(scale)],
-    //         );
-    //         // log!("call result: {result:?}");
-    //     });
-    // });
-    // RESOURCE_MANAGER_INSTANCE.with(|v| {
-    //     for (_, controller) in v.borrow().resources_iter() {
-    //         controller.resource_for_module.on_tick();
-    //     }
-    // });
+            unsafe {
+                altv_sdk::helpers::log_with_resource(line_without_break, controller.ptr);
+            }
+        }
+    });
 }
 
 #[allow(improper_ctypes_definitions)]
