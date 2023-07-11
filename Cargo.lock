@@ -83,6 +83,7 @@ dependencies = [
  "autocxx",
  "lazy_static",
  "paste",
+ "wai-bindgen-wasmer",
  "wasmer",
  "wasmer-wasix",
 ]
@@ -3022,6 +3023,7 @@ version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4e5601c6f448c063e83a5e931b8fefcdf7e01ada424ad42372c948d2e3d67741"
 dependencies = [
+ "async-trait",
  "bitflags",
  "wai-bindgen-rust-impl",
 ]
@@ -3292,6 +3294,9 @@ dependencies = [
 [[package]]
 name = "wasmer-test"
 version = "0.1.0"
+dependencies = [
+ "wai-bindgen-rust",
+]
 
 [[package]]
 name = "wasmer-types"

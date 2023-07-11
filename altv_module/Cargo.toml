@@ -19,6 +19,7 @@ autocxx = { workspace = true }
 lazy_static = { workspace = true }
 wasmer = "4.0.0"
 wasmer-wasix = "0.9.0"
+wai-bindgen-wasmer = "0.9.0"
 
 [lib]
 crate-type = ["cdylib"]
