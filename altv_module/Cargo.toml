@@ -17,8 +17,8 @@ logger = { path = "../logger", package = "altv_internal_logger", version = "15.0
 paste = { workspace = true }
 autocxx = { workspace = true }
 lazy_static = { workspace = true }
-wasmer = "4.0.0"
-wasmer-wasix = "0.9.0"
+wasmer = { version = "4.0.0", default-features = false, features = ["sys", "cranelift"] }
+wasmer-wasix = { version = "0.9.0", default-features = false, features = ["sys"] }
 wai-bindgen-wasmer = "0.9.0"
 
 [lib]
