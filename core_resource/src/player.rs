@@ -836,6 +836,11 @@ impl player::Player {
         Ok(())
     }
 
+    pub fn play_scenario(&self, name: impl IntoString) -> VoidResult {
+        unsafe { sdk::IPlayer::PlayScenario(self.raw_ptr()?, name.into_string()) }
+        Ok(())
+    }
+
     pub fn emit(&self, event_name: impl IntoString, args: mvalue::DynMValueArgs) -> VoidResult {
         unsafe {
             sdk::trigger_client_event(

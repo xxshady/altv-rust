@@ -346,6 +346,9 @@ void PlayAnimation(alt::IPlayer* ptr, const StdStringClone animDict, const StdSt
 void ClearTasks(alt::IPlayer* ptr) {
     return ptr->ClearTasks();
 }
+void PlayScenario(alt::IPlayer* ptr, const StdStringClone name) {
+    return ptr->PlayScenario(name);
+}
 std::string GetCloudAuthHash(const alt::IPlayer* ptr) {
     return ptr->GetCloudAuthHash();
 }
