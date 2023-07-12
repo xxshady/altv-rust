@@ -1,1 +1,2 @@
 create-marker: func(marker-type: u32, x: float32, y: float32, z: float32) -> option<u32>
+log-error: func(str: string)

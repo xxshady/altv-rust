@@ -4,7 +4,7 @@ use std::{
     io::BufRead,
 };
 use altv_sdk::ffi as sdk;
-use crate::{ResourceName, types::StdoutReader};
+use crate::{ResourceName, types::StdoutReader, wasi::exports::Exports};
 
 thread_local! {
     pub static RESOURCE_MANAGER_INSTANCE: RefCell<ResourceManager> = RefCell::new(ResourceManager::default());
@@ -14,6 +14,8 @@ thread_local! {
 pub struct ResourceController {
     instance: wasmer::Instance,
     stdout: RefCell<StdoutReader>,
+    store: RefCell<wasmer::Store>,
+    exports: Exports,
     pub ptr: *mut sdk::shared::AltResource,
 }
 
@@ -22,15 +24,19 @@ impl ResourceController {
         instance: wasmer::Instance,
         stdout: StdoutReader,
         ptr: *mut sdk::shared::AltResource,
+        exports: Exports,
+        store: wasmer::Store,
     ) -> Self {
         Self {
             instance,
             stdout: RefCell::new(stdout),
+            store: RefCell::new(store),
             ptr,
+            exports,
         }
     }
 
-    pub(crate) fn read_stdout_line(&self) -> String {
+    pub fn read_stdout_line(&self) -> String {
         let mut stdout_buf = String::new();
 
         let stdout = self.stdout.try_borrow_mut();
@@ -41,6 +47,22 @@ impl ResourceController {
 
         let _ = stdout.read_line(&mut stdout_buf);
         stdout_buf
+    }
+
+    pub fn call_exports(
+        &self,
+        f: impl Fn(&Exports, &mut wasmer::Store) -> Result<(), wasmer::RuntimeError>,
+    ) {
+        let store = self.store.try_borrow_mut();
+        let Ok(mut store) = store else {
+            logger::error!("Failed to mut borrow store");
+            return;
+        };
+
+        let res = f(&self.exports, &mut store);
+        if let Err(e) = res {
+            logger::error!("Failed to call exports, error: {e:?}");
+        }
     }
 }
 

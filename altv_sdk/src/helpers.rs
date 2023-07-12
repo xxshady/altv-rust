@@ -24,6 +24,12 @@ pub fn log(str: &str) {
     }
 }
 
+pub unsafe fn log_error_with_resource(str: &str, resource: *mut ffi::alt::IResource) {
+    unsafe {
+        ffi::ICore::LogError(str, resource);
+    }
+}
+
 pub unsafe fn log_with_resource(str: &str, resource: *mut ffi::alt::IResource) {
     unsafe {
         ffi::ICore::LogColored(str, resource);

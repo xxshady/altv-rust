@@ -3296,6 +3296,7 @@ dependencies = [
 name = "wasmer-test"
 version = "0.1.0"
 dependencies = [
+ "paste",
  "wai-bindgen-rust",
 ]
 

@@ -46,17 +46,16 @@ extern "C" fn resource_start(
             .add_pending_status(resource_name.clone());
 
         let res = wasi::start(content.as_slice());
-        logger::debug!("start res: {res:?}");
 
         let mut manager = manager.borrow_mut();
 
         manager.remove_pending_status(&resource_name);
 
         match res {
-            Ok((instance, stdout_reader)) => {
+            Ok((instance, stdout_reader, exports, store)) => {
                 manager.add(
                     resource_name,
-                    ResourceController::new(instance, stdout_reader, resource_ptr),
+                    ResourceController::new(instance, stdout_reader, resource_ptr, exports, store),
                 );
             }
             Err(e) => {
@@ -103,6 +102,11 @@ extern "C" fn runtime_resource_destroy_impl() {
 extern "C" fn runtime_on_tick() {
     RESOURCE_MANAGER_INSTANCE.with(|v| {
         for (_, controller) in v.borrow().resources_iter() {
+            controller.call_exports(|exports, store| {
+                exports.every_tick(store)?;
+                Ok(())
+            });
+
             let line = controller.read_stdout_line();
             if line.is_empty() {
                 continue;
