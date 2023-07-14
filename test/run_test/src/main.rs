@@ -20,11 +20,8 @@ struct Files {
 
 #[tokio::main]
 async fn main() {
-    println!("building altv_module");
-    cmd!("cargo", "build", "-p", "altv_module").run().unwrap();
-
-    println!("building rust_resource");
-    cmd!("cargo", "build", "-p", "rust_resource").run().unwrap();
+    println!("building");
+    cmd!("cargo", "build").run().unwrap();
 
     let start = if cfg!(windows) { "" } else { "lib" };
     let ext = if cfg!(windows) { ".dll" } else { ".so" };
