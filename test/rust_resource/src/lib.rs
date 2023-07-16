@@ -27,6 +27,9 @@ use core_funcs::test_core_funcs;
 mod vehicle_model_info;
 use vehicle_model_info::test_vehicle_model_info;
 
+mod resource;
+use resource::test_resource;
+
 #[altv::main]
 fn main() -> impl altv::IntoVoidResult {
     std::env::set_var("RUST_BACKTRACE", "full");
@@ -49,6 +52,8 @@ fn main() -> impl altv::IntoVoidResult {
     test_core_funcs();
     altv::log!("#################### vehicle_model_info");
     test_vehicle_model_info();
+    altv::log!("#################### resource");
+    test_resource();
 
     altv::set_timeout(
         || {

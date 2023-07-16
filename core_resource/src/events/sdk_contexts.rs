@@ -1,4 +1,4 @@
-use std::{cell::RefCell, ptr::NonNull, rc::Rc};
+use std::{cell::Cell, ptr::NonNull, rc::Rc};
 
 use altv_sdk::ffi as sdk;
 use autocxx::prelude::*;
@@ -202,7 +202,7 @@ pub struct WeaponDamageEvent {
 
     event: *mut sdk::alt::CWeaponDamageEvent,
     cancellable: CancellableEvent,
-    custom_damage_set: RefCell<bool>,
+    custom_damage_set: Cell<bool>,
 }
 
 impl WeaponDamageEvent {
@@ -233,15 +233,16 @@ impl WeaponDamageEvent {
             // internal properties
             cancellable: CancellableEvent::new(event),
             event: weapon_event,
-            custom_damage_set: RefCell::new(false),
+            custom_damage_set: Cell::new(false),
         }
     }
 
     pub fn set_damage(&self, value: u32) -> VoidResult {
-        if *self.custom_damage_set.try_borrow()? {
+        if self.custom_damage_set.get() {
             anyhow::bail!("Damage cannot be set multiple times")
         }
-        *self.custom_damage_set.try_borrow_mut()? = true;
+        self.custom_damage_set.set(true);
+
         unsafe { sdk::CWeaponDamageEvent::SetDamageValue(self.event, value) }
         Ok(())
     }
