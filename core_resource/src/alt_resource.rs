@@ -5,7 +5,7 @@ use core_shared::ResourceName;
 
 use crate::{
     config_node::ResourceConfig,
-    helpers::{read_cpp_str_vec, IntoString},
+    helpers::read_cpp_str_vec,
     resource::Resource,
     sdk, SomeResult, VoidResult,
 };
@@ -39,8 +39,8 @@ impl AltResource {
         Resource::with_alt_resources_ref(|v, _| v.get_by_name(name))
     }
 
-    pub fn start(name: impl IntoString) {
-        let raw_ptr = unsafe { sdk::ICore::StartResource(name.into_string()) };
+    pub fn start(name: impl ToString) {
+        let raw_ptr = unsafe { sdk::ICore::StartResource(name.to_string()) };
         Resource::with_alt_resources_mut(|mut v, _| v.add_resource_from_raw_ptr(raw_ptr));
     }
 

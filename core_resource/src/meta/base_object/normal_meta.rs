@@ -4,8 +4,7 @@ use serde::{de::DeserializeOwned, Serialize};
 
 use crate::{
     base_objects::{BaseObjectWrapperRc, BasePtr, ValidBaseObject},
-    helpers::{self, IntoString},
-    sdk, SomeResult,
+    helpers, sdk, SomeResult,
 };
 
 pub struct NormalBaseObjectMetaEntry<V, T, InheritPtrs: Clone> {
@@ -39,13 +38,13 @@ where
     /// ```
     fn meta_entry<V: Serialize + DeserializeOwned>(
         self: &Rc<Self>,
-        key: impl IntoString,
+        key: impl ToString,
     ) -> SomeResult<NormalBaseObjectMetaEntry<V, T, InheritPtrs>> {
         self.assert_valid()?;
         let base_object: BaseObjectWrapperRc<T, InheritPtrs> = self.clone().into();
         Ok(NormalBaseObjectMetaEntry {
             base_object,
-            key: key.into_string(),
+            key: key.to_string(),
             __type: PhantomData,
         })
     }

@@ -3,7 +3,7 @@ use std::{collections::HashMap, ptr::NonNull};
 
 use crate::{
     base_objects::{virtual_entity, virtual_entity_group},
-    helpers::{self, IntoString},
+    helpers,
     meta::ve_stream_synced_meta::StreamSyncedVirtualEntityMeta,
     resource::Resource,
     sdk,
@@ -71,7 +71,7 @@ impl virtual_entity::VirtualEntity {
         group: virtual_entity_group::VirtualEntityGroupContainer,
         pos: impl Into<Vector3>,
         streaming_distance: u32,
-        stream_synced_meta: HashMap<impl IntoString, &dyn erased_serde::Serialize>,
+        stream_synced_meta: HashMap<impl ToString, &dyn erased_serde::Serialize>,
     ) -> SomeResult<virtual_entity::VirtualEntityContainer> {
         let group = group.raw_ptr()?;
         let pos = pos.into();
@@ -81,7 +81,7 @@ impl virtual_entity::VirtualEntity {
             unsafe {
                 sdk::push_to_mvalue_unordered_map(
                     mvalue_map.as_mut().unwrap(),
-                    key.into_string(),
+                    key.to_string(),
                     mvalue::to_mvalue(value)?.get(),
                 )
             }

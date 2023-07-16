@@ -4,8 +4,7 @@ use serde::{de::DeserializeOwned, Serialize};
 
 use crate::{
     base_objects::{player::PlayerRc, ValidBaseObject},
-    helpers::{self, IntoString},
-    sdk, SomeResult,
+    helpers, sdk, SomeResult,
 };
 
 pub struct LocalPlayerMetaEntry<V> {
@@ -41,13 +40,13 @@ where
     /// ```
     fn local_meta_entry<V: Serialize + DeserializeOwned>(
         self: &Rc<Self>,
-        key: impl IntoString,
+        key: impl ToString,
     ) -> SomeResult<LocalPlayerMetaEntry<V>> {
         self.assert_valid()?;
         let player: PlayerRc = self.clone().into();
         Ok(LocalPlayerMetaEntry {
             base_object: player,
-            key: key.into_string(),
+            key: key.to_string(),
             __type: PhantomData,
         })
     }

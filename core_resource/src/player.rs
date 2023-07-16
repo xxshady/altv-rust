@@ -3,7 +3,7 @@ use crate::{
         extra_pools::{AnyEntity, SyncId},
         player, vehicle,
     },
-    helpers::{self, read_cpp_vector3, Hash, IntoHash, IntoString},
+    helpers::{self, read_cpp_vector3, Hash, IntoHash},
     meta::{entity_stream_synced_meta::StreamSyncedEntityMeta, player_local_meta::LocalPlayerMeta},
     resource::Resource,
     rgba::Rgba,
@@ -458,8 +458,8 @@ impl player::Player {
         Ok(unsafe { sdk::IPlayer::GetDiscordId(self.raw_ptr()?) })
     }
 
-    pub fn kick(&self, reason: impl IntoString) -> VoidResult {
-        unsafe { sdk::IPlayer::Kick(self.raw_ptr()?, reason.into_string()) }
+    pub fn kick(&self, reason: impl ToString) -> VoidResult {
+        unsafe { sdk::IPlayer::Kick(self.raw_ptr()?, reason.to_string()) }
         Ok(())
     }
 
@@ -624,15 +624,15 @@ impl player::Player {
 
     pub fn play_ambient_speech(
         &self,
-        speech_name: impl IntoString,
-        speech_param: impl IntoString,
+        speech_name: impl ToString,
+        speech_param: impl ToString,
         speech_dict_hash: Hash,
     ) -> VoidResult {
         unsafe {
             sdk::IPlayer::PlayAmbientSpeech(
                 self.raw_ptr()?,
-                speech_name.into_string(),
-                speech_param.into_string(),
+                speech_name.to_string(),
+                speech_param.to_string(),
                 speech_dict_hash,
             )
         }
@@ -802,8 +802,8 @@ impl player::Player {
     /// ```
     pub fn play_animation(
         &self,
-        dict: impl IntoString,
-        name: impl IntoString,
+        dict: impl ToString,
+        name: impl ToString,
         options: structs::PlayAnimation,
     ) -> VoidResult {
         let structs::PlayAnimation {
@@ -820,8 +820,8 @@ impl player::Player {
         unsafe {
             sdk::IPlayer::PlayAnimation(
                 self.raw_ptr()?,
-                dict.into_string(),
-                name.into_string(),
+                dict.to_string(),
+                name.to_string(),
                 blend_in_speed,
                 blend_out_speed,
                 duration.into(),
@@ -836,16 +836,16 @@ impl player::Player {
         Ok(())
     }
 
-    pub fn play_scenario(&self, name: impl IntoString) -> VoidResult {
-        unsafe { sdk::IPlayer::PlayScenario(self.raw_ptr()?, name.into_string()) }
+    pub fn play_scenario(&self, name: impl ToString) -> VoidResult {
+        unsafe { sdk::IPlayer::PlayScenario(self.raw_ptr()?, name.to_string()) }
         Ok(())
     }
 
-    pub fn emit(&self, event_name: impl IntoString, args: mvalue::DynMValueArgs) -> VoidResult {
+    pub fn emit(&self, event_name: impl ToString, args: mvalue::DynMValueArgs) -> VoidResult {
         unsafe {
             sdk::trigger_client_event(
                 self.raw_ptr()?,
-                event_name.into_string(),
+                event_name.to_string(),
                 mvalue::serialize_args(args)?,
             );
         }
@@ -854,13 +854,13 @@ impl player::Player {
 
     pub fn emit_unreliable(
         &self,
-        event_name: impl IntoString,
+        event_name: impl ToString,
         args: mvalue::DynMValueArgs,
     ) -> VoidResult {
         unsafe {
             sdk::trigger_client_event_unreliable(
                 self.raw_ptr()?,
-                event_name.into_string(),
+                event_name.to_string(),
                 mvalue::serialize_args(args)?,
             );
         }

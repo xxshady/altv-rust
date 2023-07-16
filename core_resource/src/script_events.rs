@@ -5,15 +5,12 @@ use std::{
     cell::RefMut,
 };
 
-use crate::{
-    base_objects::player, helpers::IntoString, resource::Resource, IntoVoidResult, VoidResult,
-    SomeResult,
-};
+use crate::{base_objects::player, resource::Resource, IntoVoidResult, VoidResult, SomeResult};
 use altv_sdk::ffi as sdk;
 use anyhow::bail;
 
-pub fn emit(event_name: impl IntoString, args: mvalue::DynMValueArgs) -> VoidResult {
-    unsafe { sdk::trigger_local_event(event_name.into_string(), mvalue::serialize_args(args)?) };
+pub fn emit(event_name: impl ToString, args: mvalue::DynMValueArgs) -> VoidResult {
+    unsafe { sdk::trigger_local_event(event_name.to_string(), mvalue::serialize_args(args)?) };
     Ok(())
 }
 
@@ -262,10 +259,10 @@ impl Debug for ClientEventManager {
 }
 
 pub fn on<V: IntoVoidResult>(
-    event_name: impl IntoString,
+    event_name: impl ToString,
     mut handler: impl FnMut(&LocalEventContext) -> V + 'static,
 ) -> LocalEventController {
-    let event_name = event_name.into_string();
+    let event_name = event_name.to_string();
 
     let id = Resource::with_local_script_events_mut(|mut local_events, _| {
         local_events.add_handler(
@@ -278,10 +275,10 @@ pub fn on<V: IntoVoidResult>(
 }
 
 pub fn on_player<V: IntoVoidResult>(
-    event_name: impl IntoString,
+    event_name: impl ToString,
     mut handler: impl FnMut(&PlayerEventContext) -> V + 'static,
 ) -> PlayerEventController {
-    let event_name = event_name.into_string();
+    let event_name = event_name.to_string();
 
     let id = Resource::with_client_script_events_mut(|mut local_events, _| {
         local_events.add_handler(

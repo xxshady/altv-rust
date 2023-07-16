@@ -2,10 +2,7 @@ use std::marker::PhantomData;
 
 use serde::{de::DeserializeOwned, Serialize};
 
-use crate::{
-    helpers::{self, IntoString},
-    sdk,
-};
+use crate::{helpers, sdk};
 
 pub struct GlobalMetaEntry<V: Serialize + DeserializeOwned> {
     pub(super) key: String,
@@ -28,9 +25,9 @@ pub struct GlobalMetaEntry<V: Serialize + DeserializeOwned> {
 /// let value: Option<i32> = example_entry.get()?; // Some(123)
 /// # Ok(()) }
 /// ```
-pub fn entry<V: Serialize + DeserializeOwned>(key: impl IntoString) -> GlobalMetaEntry<V> {
+pub fn entry<V: Serialize + DeserializeOwned>(key: impl ToString) -> GlobalMetaEntry<V> {
     GlobalMetaEntry {
-        key: key.into_string(),
+        key: key.to_string(),
         __type: PhantomData,
     }
 }
@@ -61,10 +58,10 @@ pub struct GlobalSyncedMetaEntry<V: Serialize + DeserializeOwned> {
 /// # Ok(()) }
 /// ```
 pub fn synced_entry<V: Serialize + DeserializeOwned>(
-    key: impl IntoString,
+    key: impl ToString,
 ) -> GlobalSyncedMetaEntry<V> {
     GlobalSyncedMetaEntry {
-        key: key.into_string(),
+        key: key.to_string(),
         __type: PhantomData,
     }
 }

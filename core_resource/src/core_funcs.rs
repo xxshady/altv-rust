@@ -1,6 +1,6 @@
 use crate::{
     base_objects::AnyBaseObject,
-    helpers::{self, IntoString, IntoHash},
+    helpers::{self, IntoHash},
     sdk,
     vector::Vector3,
 };
@@ -49,12 +49,12 @@ pub fn stop_server() {
     unsafe { sdk::ICore::StopServer() }
 }
 
-pub fn set_password(password: impl IntoString) {
-    unsafe { sdk::ICore::SetPassword(password.into_string()) }
+pub fn set_password(password: impl ToString) {
+    unsafe { sdk::ICore::SetPassword(password.to_string()) }
 }
 
-pub fn hash_server_password(password: impl IntoString) -> u64 {
-    unsafe { sdk::ICore::HashServerPassword(password.into_string()) }
+pub fn hash_server_password(password: impl ToString) -> u64 {
+    unsafe { sdk::ICore::HashServerPassword(password.to_string()) }
 }
 
 pub fn toggle_world_profiler(toggle: bool) {

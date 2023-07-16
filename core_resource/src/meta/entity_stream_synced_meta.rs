@@ -4,8 +4,7 @@ use serde::{de::DeserializeOwned, Serialize};
 
 use crate::{
     base_objects::{extra_pools::AnyEntity, ValidBaseObject},
-    helpers::{self, IntoString},
-    sdk, SomeResult,
+    helpers, sdk, SomeResult,
 };
 
 pub struct StreamSyncedEntityMetaEntry<V> {
@@ -38,12 +37,12 @@ where
     /// ```
     fn stream_synced_meta_entry<V: Serialize + DeserializeOwned>(
         self: &Rc<Self>,
-        key: impl IntoString,
+        key: impl ToString,
     ) -> SomeResult<StreamSyncedEntityMetaEntry<V>> {
         self.assert_valid()?;
         Ok(StreamSyncedEntityMetaEntry {
             base_object: self.clone().into(),
-            key: key.into_string(),
+            key: key.to_string(),
             __type: PhantomData,
         })
     }
