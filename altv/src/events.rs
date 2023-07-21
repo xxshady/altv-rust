@@ -134,6 +134,8 @@ on_sdk_event!(on_local_meta_change, LocalSyncedMetaChange);
 on_sdk_event!(on_any_resource_stop, ResourceStop);
 on_sdk_event!(on_any_resource_start, ResourceStart);
 
+on_sdk_event!(on_voice_connection, VoiceConnectionEvent);
+
 on_custom_event!(on_vehicle_enter_col_shape, VehicleEnterColShape);
 on_custom_event!(on_vehicle_leave_col_shape, VehicleLeaveColShape);
 on_custom_event!(on_player_enter_col_shape, PlayerEnterColShape);
@@ -141,3 +143,7 @@ on_custom_event!(on_player_leave_col_shape, PlayerLeaveColShape);
 
 on_custom_event!(on_resource_start, ThisResourceStart);
 on_custom_event!(on_resource_stop, ThisResourceStop);
+
+on_custom_event!(on_voice_connect, VoiceConnect);
+on_custom_event!(on_voice_disconnect, VoiceDisconnect);
+on_custom_event!(on_voice_connecting, VoiceConnecting);

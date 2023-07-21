@@ -420,5 +420,11 @@ void ClearDecorations(alt::IPlayer* ptr) {
 std::vector<alt::CDecoration> GetDecorations(const alt::IPlayer* ptr) {
     return ptr->GetDecorations();
 }
+bool IsNetworkOwnershipDisabled(const alt::IPlayer* ptr) {
+    return ptr->IsNetworkOwnershipDisabled();
+}
+void SetNetworkOwnershipDisabled(alt::IPlayer* ptr, bool disabled) {
+    return ptr->SetNetworkOwnershipDisabled(disabled);
+}
 
 } // namespace

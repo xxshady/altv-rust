@@ -55,8 +55,8 @@ void DeleteStreamSyncedMetaData(alt::IEntity* ptr, const StdStringClone key) {
 void SetVisible(alt::IEntity* ptr, bool toggle) {
     return ptr->SetVisible(toggle);
 }
-void AttachToEntity(alt::IEntity* ptr, alt::IEntity* entity, i16 otherBoneIndex, i16 myBoneIndex, f32 position_x, f32 position_y, f32 position_z, f32 rotation_x, f32 rotation_y, f32 rotation_z, bool collision, bool noFixedRotation) {
-    return ptr->AttachToEntity(entity, otherBoneIndex, myBoneIndex, { position_x, position_y, position_z }, { rotation_x, rotation_y, rotation_z }, collision, noFixedRotation);
+void AttachToEntity(alt::IEntity* ptr, alt::IEntity* entity, u16 otherBoneId, u16 myBoneId, f32 position_x, f32 position_y, f32 position_z, f32 rotation_x, f32 rotation_y, f32 rotation_z, bool collision, bool noFixedRotation) {
+    return ptr->AttachToEntity(entity, otherBoneId, myBoneId, { position_x, position_y, position_z }, { rotation_x, rotation_y, rotation_z }, collision, noFixedRotation);
 }
 void AttachToEntity(alt::IEntity* ptr, alt::IEntity* entity, const StdStringClone otherBoneName, const StdStringClone myBoneName, f32 position_x, f32 position_y, f32 position_z, f32 rotation_x, f32 rotation_y, f32 rotation_z, bool collision, bool noFixedRotation) {
     return ptr->AttachToEntity(entity, otherBoneName, myBoneName, { position_x, position_y, position_z }, { rotation_x, rotation_y, rotation_z }, collision, noFixedRotation);

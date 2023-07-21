@@ -67,17 +67,6 @@ alt::IResource* GetResource(const StdStringClone name) {
 alt::IEntity* GetEntityBySyncID(u16 id) {
     return alt::ICore::Instance().GetEntityBySyncID(id);
 }
-PlayerVector GetPlayers() {
-    auto alt_vec = alt::ICore::Instance().GetPlayers();
-    PlayerVector vec {};
-    vec.reserve(alt_vec.size());
-    for (const auto& e : alt_vec) {
-        PlayerPtrWrapper wrapper;
-        wrapper.ptr = std::make_shared<alt::IPlayer*>(e);
-        vec.push_back(wrapper.clone());
-    }
-    return vec;
-}
 bool HasMetaData(const StdStringClone key) {
     return alt::ICore::Instance().HasMetaData(key);
 }
@@ -239,11 +228,17 @@ BaseObjectVector GetClosestEntities(f32 position_x, f32 position_y, f32 position
     }
     return vec;
 }
-alt::INetworkObject* CreateNetworkObject(u32 model, f32 pos_x, f32 pos_y, f32 pos_z, f32 rot_x, f32 rot_y, f32 rot_z, u8 alpha, u8 textureVariation, u16 lodDistance) {
-    return alt::ICore::Instance().CreateNetworkObject(model, { pos_x, pos_y, pos_z }, { rot_x, rot_y, rot_z }, alpha, textureVariation, lodDistance);
+alt::IObject* CreateObject(u32 model, f32 pos_x, f32 pos_y, f32 pos_z, f32 rot_x, f32 rot_y, f32 rot_z, u8 alpha, u8 textureVariation, u16 lodDistance) {
+    return alt::ICore::Instance().CreateObject(model, { pos_x, pos_y, pos_z }, { rot_x, rot_y, rot_z }, alpha, textureVariation, lodDistance);
 }
 u32 GetAmmoHashForWeaponHash(u32 weaponHash) {
     return alt::ICore::Instance().GetAmmoHashForWeaponHash(weaponHash);
+}
+void SetVoiceExternalPublic(const StdStringClone host, u16 port) {
+    return alt::ICore::Instance().SetVoiceExternalPublic(host, port);
+}
+void SetVoiceExternal(const StdStringClone host, u16 port) {
+    return alt::ICore::Instance().SetVoiceExternal(host, port);
 }
 
 } // namespace

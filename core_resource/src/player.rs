@@ -1103,6 +1103,15 @@ impl player::Player {
         unsafe { sdk::IPlayer::ClearDecorations(self.raw_ptr()?) }
         Ok(())
     }
+
+    pub fn net_ownership_disabled(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IPlayer::IsNetworkOwnershipDisabled(self.raw_ptr()?) })
+    }
+
+    pub fn disable_net_ownership(&self, disable: bool) -> VoidResult {
+        unsafe { sdk::IPlayer::SetNetworkOwnershipDisabled(self.raw_ptr()?, disable) }
+        Ok(())
+    }
 }
 
 impl StreamSyncedEntityMeta for player::Player {}

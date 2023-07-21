@@ -898,3 +898,20 @@ impl LocalSyncedMetaChange {
         }
     }
 }
+
+#[derive(Debug)]
+pub struct VoiceConnectionEvent {
+    pub state: altv_sdk::VoiceConnectionState,
+}
+
+impl VoiceConnectionEvent {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, _: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CVoiceConnectionEvent);
+        Self {
+            state: altv_sdk::VoiceConnectionState::try_from(sdk::CVoiceConnectionEvent::GetState(
+                event,
+            ))
+            .unwrap(),
+        }
+    }
+}

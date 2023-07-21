@@ -14,7 +14,7 @@ pub use crate::{
         col_shape::{ColShape, ColShapeContainer},
         extra_pools::{AnyEntity, AnyWorldObject, Entity, SyncId, WorldObject},
         marker::{Marker, MarkerContainer},
-        network_object::{NetworkObject, NetworkObjectContainer},
+        object::{Object, ObjectContainer},
         ped::{Ped, PedContainer},
         player::{Player, PlayerContainer},
         vehicle::{Vehicle, VehicleContainer},

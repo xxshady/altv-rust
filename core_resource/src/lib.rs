@@ -21,7 +21,7 @@ mod helpers;
 mod logging;
 mod marker;
 mod meta;
-mod network_object;
+mod object;
 mod ped;
 mod player;
 mod quaternion;

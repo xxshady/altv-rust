@@ -319,8 +319,8 @@ base_objects!(
             Entity,
         ],
     ],
-    NetworkObject: [
-        altv_sdk::BaseObjectType::NetworkObject,
+    Object: [
+        altv_sdk::BaseObjectType::Object,
         @inherit_classes: WorldEntity, [
             WorldObject,
             Entity,

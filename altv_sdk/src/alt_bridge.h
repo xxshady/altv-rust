@@ -36,6 +36,7 @@ using EventType = uint16_t;
 using PlayerConnectDeniedReason = uint8_t;
 using ExplosionType = int8_t;
 using AmmoSpecialType_t = uint32_t;
+using VoiceConnectionState = uint8_t;
 
 // used for const std::string& return values in altv event classes
 using StdStringClone = std::string;
@@ -658,8 +659,8 @@ namespace base_object
         return dynamic_cast<alt::IPed*>(base_object);
     }
 
-    alt::INetworkObject* to_network_object(alt::IBaseObject* base_object) {
-        return dynamic_cast<alt::INetworkObject*>(base_object);
+    alt::IObject* to_object(alt::IBaseObject* base_object) {
+        return dynamic_cast<alt::IObject*>(base_object);
     }
 
     alt::IColShape* to_col_shape(alt::IBaseObject* base_object) {
@@ -740,16 +741,16 @@ namespace ped
     }
 } // namespace ped
 
-namespace network_object
+namespace object
 {
-    alt::IBaseObject* to_base_object(alt::INetworkObject* network_object) {
-        return static_cast<alt::IBaseObject*>(network_object);
+    alt::IBaseObject* to_base_object(alt::IObject* object) {
+        return static_cast<alt::IBaseObject*>(object);
     }
 
-    alt::IEntity* to_entity(alt::INetworkObject* network_object) {
-        return static_cast<alt::IEntity*>(network_object);
+    alt::IEntity* to_entity(alt::IObject* object) {
+        return static_cast<alt::IEntity*>(object);
     }
-} // namespace network_object
+} // namespace object
 
 namespace virtual_entity
 {
@@ -1233,6 +1234,11 @@ namespace events
     const alt::CResourceStartEvent* to_CResourceStartEvent(const alt::CEvent* event) {
         assert(event->GetType() == alt::CEvent::Type::RESOURCE_START);
         return static_cast<const alt::CResourceStartEvent*>(event);
+    }
+
+    const alt::CVoiceConnectionEvent* to_CVoiceConnectionEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::VOICE_CONNECTION_EVENT);
+        return static_cast<const alt::CVoiceConnectionEvent*>(event);
     }
 } // namespace events
 

@@ -20,7 +20,7 @@
 //! [Documentation is here](trait.StreamSyncedVirtualEntityMeta.html).
 //!
 //! # Stream Synced meta bound to Entity
-//! (Entity is Vehicle, Player, Ped, NetworkObject, see [Entity trait](../prelude/trait.Entity.html#implementors))
+//! (Entity is Vehicle, Player, Ped, Object, see [Entity trait](../prelude/trait.Entity.html#implementors))
 //!
 //! [Documentation is here](trait.StreamSyncedEntityMeta.html).
 //!

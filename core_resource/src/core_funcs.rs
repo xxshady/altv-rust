@@ -73,3 +73,11 @@ pub fn get_ammo_hash_for_weapon_hash(weapon_hash: impl IntoHash) -> Option<u32> 
         None
     }
 }
+
+pub fn set_voice_external_public(host: impl ToString, port: u16) {
+    unsafe { sdk::ICore::SetVoiceExternalPublic(host.to_string(), port) }
+}
+
+pub fn set_voice_external(host: impl ToString, port: u16) {
+    unsafe { sdk::ICore::SetVoiceExternal(host.to_string(), port) }
+}

@@ -24,7 +24,7 @@ pub use exports::{
     Player, PlayerContainer,
     Vehicle, VehicleContainer,
     Ped, PedContainer,
-    NetworkObject, NetworkObjectContainer,
+    Object, ObjectContainer,
     VirtualEntity, VirtualEntityContainer,
     VirtualEntityGroup, VirtualEntityGroupContainer,
     Blip, BlipContainer,

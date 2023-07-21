@@ -35,7 +35,7 @@ lazy_static::lazy_static! {
             ("IBaseObject*", "alt::IBaseObject*"),
             ("IVehicle*", "alt::IVehicle*"),
             ("IPed*", "alt::IPed*"),
-            ("INetworkObject*", "alt::INetworkObject*"),
+            ("IObject*", "alt::IObject*"),
             ("IEntity*", "alt::IEntity*"),
             ("IPlayer*", "alt::IPlayer*"),
             ("IColShape*", "alt::IColShape*"),
@@ -103,6 +103,7 @@ lazy_static::lazy_static! {
             ("CEvent::Type", "EventType"),
             ("CPlayerConnectDeniedEvent::Reason", "PlayerConnectDeniedReason"),
             ("CExplosionEvent::ExplosionType", "ExplosionType"),
+            ("CVoiceConnectionEvent::State", "VoiceConnectionState"),
         ])
     };
 }
@@ -124,10 +125,7 @@ fn main() {
     gen_default("IPlayer", "../altv_sdk/cpp-sdk/objects/IPlayer.h");
     gen_default("IVehicle", "../altv_sdk/cpp-sdk/objects/IVehicle.h");
     gen_default("IPed", "../altv_sdk/cpp-sdk/objects/IPed.h");
-    gen_default(
-        "INetworkObject",
-        "../altv_sdk/cpp-sdk/objects/INetworkObject.h",
-    );
+    gen_default("IObject", "../altv_sdk/cpp-sdk/objects/IObject.h");
     gen_default(
         "IColShape",
         "../altv_sdk/cpp-sdk/script-objects/IColShape.h",
@@ -341,6 +339,11 @@ fn main() {
     gen_default(
         "CResourceStartEvent",
         "../altv_sdk/cpp-sdk/events/CResourceStartEvent.h",
+    );
+
+    gen_default(
+        "CVoiceConnectionEvent",
+        "../altv_sdk/cpp-sdk/events/CVoiceConnectionEvent.h",
     );
 
     gen_default("IResource", "../altv_sdk/cpp-sdk/IResource.h");
@@ -857,6 +860,7 @@ fn cpp_method_to_rust_compatible_func(
                     "---PlayerConnectDeniedReason is not implemented as param".to_string()
                 }
                 "ExplosionType" => "---ExplosionType is not implemented as param".to_string(),
+                "VoiceConnectionState" => "---VoiceConnectionState is not implemented as param".to_string(),
                 "MValueUnorderedMapWrapper" => format!("MValueUnorderedMapWrapper {name}"),
                 "alt::AmmoFlags" => {
                     format!("bool {name}_infiniteAmmo, bool {name}_addSmokeOnExplosion, bool {name}_fuse, bool {name}_fixedAfterExplosion")
@@ -905,6 +909,9 @@ fn cpp_method_to_rust_compatible_func(
                 }
                 "ExplosionType" => {
                     "---ExplosionType is not implemented as passed param".to_string()
+                }
+                "VoiceConnectionState" => {
+                    "---VoiceConnectionState is not implemented as passed param".to_string()
                 }
                 "MValueUnorderedMapWrapper" => format!("{name}.value"),
                 "PlayerVector" => format!("player_wrapper_vec_to_alt({name})"),
@@ -994,6 +1001,7 @@ fn cpp_method_to_rust_compatible_func(
         },
         "PlayerConnectDeniedReason" => |v: &str| format!("return static_cast<uint8_t>({v})"),
         "ExplosionType" => |v: &str| format!("return static_cast<int8_t>({v})"),
+        "VoiceConnectionState" => |v: &str| format!("return static_cast<uint8_t>({v})"),
         "std::vector<FireInfoWrapper>" => |v: &str| {
             format!(
                 "auto alt_vec = {v};\n    \

@@ -5,8 +5,8 @@ use crate::{helpers::Hash, vector::Vector3};
 
 #[derive(Debug, Default)]
 pub struct AttachToEntityBoneIndex {
-    pub other_bone_index: i16,
-    pub my_bone_index: i16,
+    pub other_bone_index: u16,
+    pub my_bone_index: u16,
     pub pos: Vector3,
     pub rot: Vector3,
     pub collision: bool,

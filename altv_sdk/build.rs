@@ -117,6 +117,15 @@ fn generate_cpp_to_rust_bindings(out_dir: &str) {
         "ammo_special_type.rs",
         out_dir,
     );
+
+    generate_rust_enum_from_cpp(
+        "VoiceConnectionState",
+        "u8",
+        "cpp-sdk/events/CVoiceConnectionEvent.h",
+        "enum class State: uint8_t",
+        "voice_connection_state.rs",
+        out_dir,
+    );
 }
 
 fn build_rust() {
@@ -191,8 +200,7 @@ fn generate_rust_enum_from_cpp(
             let pascal_case_variant = upper_to_pascal_case(v);
 
             if !pascal_case_variant.starts_with("//") {
-                let v = pascal_case_variant.clone();
-                let v = v.split(',').next().unwrap().to_string();
+                let v = pascal_case_variant.split(',').next().unwrap().to_string();
                 let v = v.split(' ').next().unwrap().to_string();
                 try_from_variants.push(v);
             }
