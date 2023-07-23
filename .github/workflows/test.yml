@@ -6,9 +6,15 @@ on:
   pull_request:
 
 jobs:
-  test-linux:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, windows-2022]
+
+    runs-on: ${{ matrix.os }}
+
     if: ${{ !startsWith(github.event.head_commit.message, 'release new version:') }}
-    runs-on: ubuntu-22.04
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -33,32 +39,5 @@ jobs:
       - name: Server Test
         env:
           ALTV_BRANCH: ${{ github.ref_name }}
-        run: |
-          cargo run --bin run_test
-
-  test-windows:
-    if: ${{ !startsWith(github.event.head_commit.message, 'release new version:') }}
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          submodules: recursive
-
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-
-      - name: Doc tests
-        run: |
-          cargo test --doc
-      - name: Server Test
         run: |
           cargo run --bin run_test
