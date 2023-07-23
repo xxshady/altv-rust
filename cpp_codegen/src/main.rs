@@ -90,6 +90,7 @@ lazy_static::lazy_static! {
             ("Config::Value::ValuePtr", "Config::Value::ValuePtr"),
 
             ("std::unordered_map<std::string, MValue>", "MValueUnorderedMapWrapper"),
+            ("CVoiceConnectionEvent::State", "VoiceConnectionState"),
         ])
     };
 

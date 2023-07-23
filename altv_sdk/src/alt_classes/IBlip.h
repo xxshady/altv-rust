@@ -240,5 +240,29 @@ void SetShrinked(alt::IBlip* ptr, bool val) {
 void Fade(alt::IBlip* ptr, u32 opacity, u32 duration) {
     return ptr->Fade(opacity, duration);
 }
+bool IsHiddenOnLegend(const alt::IBlip* ptr) {
+    return ptr->IsHiddenOnLegend();
+}
+void SetHiddenOnLegend(alt::IBlip* ptr, bool state) {
+    return ptr->SetHiddenOnLegend(state);
+}
+bool IsMinimalOnEdge(const alt::IBlip* ptr) {
+    return ptr->IsMinimalOnEdge();
+}
+void SetMinimalOnEdge(alt::IBlip* ptr, bool state) {
+    return ptr->SetMinimalOnEdge(state);
+}
+bool IsUseHeightIndicatorOnEdge(const alt::IBlip* ptr) {
+    return ptr->IsUseHeightIndicatorOnEdge();
+}
+void SetUseHeightIndicatorOnEdge(alt::IBlip* ptr, bool state) {
+    return ptr->SetUseHeightIndicatorOnEdge(state);
+}
+bool IsShortHeightThreshold(const alt::IBlip* ptr) {
+    return ptr->IsShortHeightThreshold();
+}
+void SetShortHeightThreshold(alt::IBlip* ptr, bool state) {
+    return ptr->SetShortHeightThreshold(state);
+}
 
 } // namespace

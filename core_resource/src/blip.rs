@@ -515,4 +515,40 @@ impl blip::Blip {
         unsafe { sdk::IBlip::RemoveTargetPlayer(self.raw_ptr()?, player_raw_ptr) }
         Ok(())
     }
+
+    pub fn hidden_on_legend(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IBlip::IsVisible(self.raw_ptr()?) })
+    }
+
+    pub fn set_hidden_on_legend(&self, hidden: bool) -> VoidResult {
+        unsafe { sdk::IBlip::SetHiddenOnLegend(self.raw_ptr()?, hidden) }
+        Ok(())
+    }
+
+    pub fn minimal_on_edge(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IBlip::IsMinimalOnEdge(self.raw_ptr()?) })
+    }
+
+    pub fn set_minimal_on_edge(&self, hidden: bool) -> VoidResult {
+        unsafe { sdk::IBlip::SetMinimalOnEdge(self.raw_ptr()?, hidden) }
+        Ok(())
+    }
+
+    pub fn use_height_indicator_on_edge(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IBlip::IsUseHeightIndicatorOnEdge(self.raw_ptr()?) })
+    }
+
+    pub fn set_use_height_indicator_on_edge(&self, hidden: bool) -> VoidResult {
+        unsafe { sdk::IBlip::SetUseHeightIndicatorOnEdge(self.raw_ptr()?, hidden) }
+        Ok(())
+    }
+
+    pub fn short_height_threshold(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IBlip::IsShortHeightThreshold(self.raw_ptr()?) })
+    }
+
+    pub fn set_short_height_threshold(&self, hidden: bool) -> VoidResult {
+        unsafe { sdk::IBlip::SetShortHeightThreshold(self.raw_ptr()?, hidden) }
+        Ok(())
+    }
 }

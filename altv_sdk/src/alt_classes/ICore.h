@@ -118,6 +118,9 @@ bool IsEventEnabled(u16 type) {
 void ToggleEvent(u16 type, bool state) {
     return alt::ICore::Instance().ToggleEvent(static_cast<alt::CEvent::Type>(type), state);
 }
+VoiceConnectionState GetVoiceConnectionState() {
+    return static_cast<uint8_t>(alt::ICore::Instance().GetVoiceConnectionState());
+}
 const StdStringClone GetRootDirectory() {
     return std::string { alt::ICore::Instance().GetRootDirectory() };
 }

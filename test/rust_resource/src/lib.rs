@@ -37,6 +37,8 @@ use events::test_events;
 fn main() -> impl altv::IntoVoidResult {
     std::env::set_var("RUST_BACKTRACE", "full");
 
+    altv::log!("#################### core_funcs");
+    test_core_funcs();
     altv::log!("#################### test_base_object_funcs");
     test_base_object_funcs();
     altv::log!("#################### test_base_object_pool_funcs");
@@ -51,8 +53,6 @@ fn main() -> impl altv::IntoVoidResult {
     test_script_events();
     altv::log!("#################### blip");
     test_blip();
-    altv::log!("#################### core_funcs");
-    test_core_funcs();
     altv::log!("#################### vehicle_model_info");
     test_vehicle_model_info();
     altv::log!("#################### resource");

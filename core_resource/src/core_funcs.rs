@@ -81,3 +81,8 @@ pub fn set_voice_external_public(host: impl ToString, port: u16) {
 pub fn set_voice_external(host: impl ToString, port: u16) {
     unsafe { sdk::ICore::SetVoiceExternal(host.to_string(), port) }
 }
+
+pub fn get_voice_connection_state() -> altv_sdk::VoiceConnectionState {
+    altv_sdk::VoiceConnectionState::try_from(unsafe { sdk::ICore::GetVoiceConnectionState() })
+        .unwrap()
+}
