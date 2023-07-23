@@ -10,10 +10,17 @@ jobs:
     if: ${{ !startsWith(github.event.head_commit.message, 'release new version:') }}
     runs-on: ubuntu-22.04
     steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
+
       - name: Checkout
         uses: actions/checkout@v3
         with:
           submodules: recursive
+
           
       - name: Cache
         uses: actions/cache@v3
@@ -29,9 +36,11 @@ jobs:
       - name: Doc tests
         run: |
           cargo test --doc
+
+        
       - name: Server Test
         env:
-          ALTV_BRANCH: ${{ github.head_ref }}
+          ALTV_BRANCH: ${{ github.event.ref }}
         run: |
           cargo run --bin run_test
 
