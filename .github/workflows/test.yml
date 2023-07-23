@@ -31,7 +31,7 @@ jobs:
           cargo test --doc
       - name: Server Test
         env:
-          ALTV_BRANCH: ${GITHUB_REF##*/}
+          ALTV_BRANCH: ${{ github.head_ref }}
         run: |
           cargo run --bin run_test
 
