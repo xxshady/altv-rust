@@ -30,6 +30,8 @@ jobs:
         run: |
           cargo test --doc
       - name: Server Test
+        env:
+          ALTV_BRANCH: ${GITHUB_REF##*/}
         run: |
           cargo run --bin run_test
 
