@@ -29,7 +29,10 @@ jobs:
       - name: Doc tests
         run: |
           cargo test --doc
+
       - name: Server Test
+        env:
+          ALTV_BRANCH: ${{ github.ref_name }}
         run: |
           cargo run --bin run_test
 
