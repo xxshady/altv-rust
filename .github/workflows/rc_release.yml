@@ -1,0 +1,93 @@
+name: Rc release
+
+on:
+  push:
+    tags:
+      - 'rc-v*'
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      # TODO: cache
+
+      - name: Build
+        run: |
+          cd altv_module
+          cargo build --release
+
+      - uses: actions/upload-artifact@v3
+        name: Upload module-linux
+        with:
+          name: module-linux
+          path: target/release/libaltv_module.so
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      # TODO: cache
+
+      - name: Build
+        run: |
+          cd altv_module
+          cargo build --release
+
+      - uses: actions/upload-artifact@v3
+        name: Upload module-windows
+        with:
+          name: module-windows
+          path: target/release/altv_module.dll
+
+  release:
+    runs-on: ubuntu-22.04
+    needs: [
+      build-linux,
+      build-windows
+    ]
+    steps:
+      - uses: ncipollo/release-action@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          prerelease: true
+
+      - uses: actions/download-artifact@v3
+        name: Download module-linux artifact
+        with:
+          name: module-linux
+
+      - uses: shogo82148/actions-upload-release-asset@v1
+        name: Upload module-linux
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./libaltv_module.so
+          asset_name: librust-module.so
+          asset_content_type: application/octet-stream
+
+      - uses: actions/download-artifact@v3
+        name: Download module-windows artifact
+        with:
+          name: module-windows
+
+      - uses: shogo82148/actions-upload-release-asset@v1
+        name: Upload module-windows
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./altv_module.dll
+          asset_name: rust-module.dll
+          asset_content_type: application/octet-stream
