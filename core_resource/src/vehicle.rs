@@ -821,6 +821,22 @@ impl vehicle::Vehicle {
 
         Ok(())
     }
+
+    pub fn steering_angle(&self) -> SomeResult<f32> {
+        Ok(unsafe { sdk::IVehicle::GetSteeringAngle(self.raw_ptr()?) })
+    }
+
+    pub fn horn_active(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IVehicle::IsHornActive(self.raw_ptr()?) })
+    }
+
+    pub fn acceleration_level(&self) -> SomeResult<f32> {
+        Ok(unsafe { sdk::IVehicle::GetAccelerationLevel(self.raw_ptr()?) })
+    }
+
+    pub fn brake_level(&self) -> SomeResult<f32> {
+        Ok(unsafe { sdk::IVehicle::GetBrakeLevel(self.raw_ptr()?) })
+    }
 }
 
 impl StreamSyncedEntityMeta for vehicle::Vehicle {}
