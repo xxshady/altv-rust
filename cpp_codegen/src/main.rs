@@ -373,7 +373,7 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
             rust_functions_cpp_file += &format!("{rust_func}\n");
         }
         Err(err) => {
-            println!("failed to convert:\n{class_name}: {method}\nto rust func, error: {err:?}");
+            println!("failed to convert class: \"{class_name}\" method: {method}\nto rust func, error: {err:?}");
         }
     };
 
@@ -636,7 +636,7 @@ fn parse_cpp_method(class_name: &str, method: String) -> anyhow::Result<CppMetho
     let mut next_param_word_ignored = false;
     let mut pointer_param = false;
     let mut pointer_return_type = false;
-    let mut generic_type = false;
+    let mut generic_type = 0_u8;
 
     while let Some(char) = method_parser.next_char().copied() {
         // dbg!(char as char);
@@ -655,15 +655,24 @@ fn parse_cpp_method(class_name: &str, method: String) -> anyhow::Result<CppMetho
             }
 
             // dbg!(is_it_delimiter_char(char));
-            if generic_type && char == b'>' {
-                // println!("generic_parameter_type end");
-                generic_type = false;
-            } else if char == b'<' {
-                // println!("generic_parameter_type start");
-                generic_type = true;
+            match (generic_type, char) {
+                (1.., b'>') => {
+                    generic_type -= 1;
+                    println!("generic_type decrease current: {generic_type}");
+                }
+                (0.., b'<') => {
+                    generic_type += 1;
+                    println!("generic_type increase current: {generic_type}");
+                }
+                (_, _) => {
+                    // println!(
+                    //     "generic_type: {generic_type} char: {:?}",
+                    //     std::str::from_utf8(&[char]).unwrap()
+                    // );
+                }
             }
 
-            if !generic_type && is_it_delimiter_char(char)
+            if generic_type == 0 && is_it_delimiter_char(char)
                 || pointer_param
                 || pointer_return_type
                 || method_parser.is_it_last_char()
