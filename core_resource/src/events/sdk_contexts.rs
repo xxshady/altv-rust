@@ -992,3 +992,21 @@ impl StopSyncedScene {
         }
     }
 }
+
+#[derive(Debug)]
+pub struct UpdateSyncedScene {
+    pub source: player::PlayerContainer,
+    pub scene_id: i32,
+    pub start_rate: f32,
+}
+
+impl UpdateSyncedScene {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CUpdateSyncedSceneEvent);
+        Self {
+            source: get_non_null_player(sdk::CUpdateSyncedSceneEvent::GetSource(event), resource),
+            scene_id: sdk::CUpdateSyncedSceneEvent::GetSceneID(event),
+            start_rate: sdk::CUpdateSyncedSceneEvent::GetStartRate(event),
+        }
+    }
+}

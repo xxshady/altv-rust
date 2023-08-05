@@ -272,6 +272,7 @@ supported_sdk_events!(
     RequestSyncedScene,
     StartSyncedScene,
     StopSyncedScene,
+    UpdateSyncedScene,
 );
 
 custom_events!(
