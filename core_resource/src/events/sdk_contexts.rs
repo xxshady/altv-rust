@@ -915,3 +915,80 @@ impl VoiceConnectionEvent {
         }
     }
 }
+
+#[derive(Debug)]
+pub struct RequestSyncedScene {
+    pub source: player::PlayerContainer,
+    pub scene_id: i32,
+}
+
+impl RequestSyncedScene {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CRequestSyncedSceneEvent);
+        Self {
+            source: get_non_null_player(sdk::CRequestSyncedSceneEvent::GetSource(event), resource),
+            scene_id: sdk::CRequestSyncedSceneEvent::GetSceneID(event),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct StartSyncedScene {
+    pub source: player::PlayerContainer,
+    pub scene_id: i32,
+    pub start_pos: Vector3,
+    pub start_rot: Vector3,
+    pub anim_dict_hash: Hash,
+    pub entity_and_anim_hash_pairs: Vec<(AnyEntity, Hash)>,
+}
+
+impl StartSyncedScene {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CStartSyncedSceneEvent);
+
+        use sdk::CStartSyncedSceneEvent::*;
+        Self {
+            source: get_non_null_player(GetSource(event), resource),
+            scene_id: GetSceneID(event),
+            start_pos: {
+                let raw = GetStartPosition(event).within_unique_ptr();
+                read_cpp_vector3(raw)
+            },
+            start_rot: {
+                let raw = GetStartRotation(event).within_unique_ptr();
+                read_cpp_vector3(raw)
+            },
+            anim_dict_hash: GetAnimDictHash(event),
+            entity_and_anim_hash_pairs: {
+                let raw = GetEntityAndAnimHashPairs(event).within_unique_ptr();
+                let raw = sdk::read_entity_anim_hash_pairs(raw.as_ref().unwrap());
+                let mut pairs = Vec::new();
+                for e in raw.into_iter() {
+                    let entity = get_non_null_entity_by_ptr(
+                        sdk::read_entity_anim_hash_pair_entity(e),
+                        resource,
+                    );
+                    let anim_hash = unsafe { sdk::read_entity_anim_hash_pair_anim_hash(e) };
+                    pairs.push((entity, anim_hash));
+                }
+                pairs
+            },
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct StopSyncedScene {
+    pub source: player::PlayerContainer,
+    pub scene_id: i32,
+}
+
+impl StopSyncedScene {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CStopSyncedSceneEvent);
+        Self {
+            source: get_non_null_player(sdk::CStopSyncedSceneEvent::GetSource(event), resource),
+            scene_id: sdk::CStopSyncedSceneEvent::GetSceneID(event),
+        }
+    }
+}

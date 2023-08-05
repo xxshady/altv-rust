@@ -90,6 +90,7 @@ lazy_static::lazy_static! {
             ("Config::Value::ValuePtr", "Config::Value::ValuePtr"),
 
             ("std::unordered_map<std::string, MValue>", "MValueUnorderedMapWrapper"),
+            ("std::unordered_map<std::shared_ptr<IEntity>, uint32_t>", "EntityAnimHashPairsWrapper"),
             ("CVoiceConnectionEvent::State", "VoiceConnectionState"),
         ])
     };
@@ -333,6 +334,7 @@ fn main() {
         "../altv_sdk/cpp-sdk/events/CLocalMetaDataChangeEvent.h",
     );
 
+    // resource
     gen_default(
         "CResourceStopEvent",
         "../altv_sdk/cpp-sdk/events/CResourceStopEvent.h",
@@ -342,9 +344,28 @@ fn main() {
         "../altv_sdk/cpp-sdk/events/CResourceStartEvent.h",
     );
 
+    // voice
     gen_default(
         "CVoiceConnectionEvent",
         "../altv_sdk/cpp-sdk/events/CVoiceConnectionEvent.h",
+    );
+
+    // synced scene
+    gen_default(
+        "CRequestSyncedSceneEvent",
+        "../altv_sdk/cpp-sdk/events/CRequestSyncedSceneEvent.h",
+    );
+    gen_default(
+        "CStartSyncedSceneEvent",
+        "../altv_sdk/cpp-sdk/events/CStartSyncedSceneEvent.h",
+    );
+    gen_default(
+        "CStopSyncedSceneEvent",
+        "../altv_sdk/cpp-sdk/events/CStopSyncedSceneEvent.h",
+    );
+    gen_default(
+        "CUpdateSyncedSceneEvent",
+        "../altv_sdk/cpp-sdk/events/CUpdateSyncedSceneEvent.h",
     );
 
     gen_default("IResource", "../altv_sdk/cpp-sdk/IResource.h");
@@ -1074,6 +1095,13 @@ fn cpp_method_to_rust_compatible_func(
                     vec.push_back({{ pair.first, pair.second }});\n    \
                 }}\n    \
                 return vec"
+            )
+        },
+        "EntityAnimHashPairsWrapper" => |v: &str| {
+            format!(
+                "EntityAnimHashPairsWrapper wrapper;\n    \
+                wrapper.value = {v};\n    \
+                return wrapper"
             )
         },
         _ => |v: &str| format!("return {v}"),

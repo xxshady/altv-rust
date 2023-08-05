@@ -342,6 +342,41 @@ void push_to_mvalue_unordered_map(MValueUnorderedMapWrapper& map, std::string ke
     map.value.insert({ key, value.ptr });
 }
 
+using EntityAnimHashPairsMap = std::unordered_map<std::shared_ptr<alt::IEntity>, uint32_t>;
+
+class EntityAnimHashPairsWrapper {
+public:
+    EntityAnimHashPairsMap value{};
+};
+
+using EntityAnimHashPair = std::pair<std::shared_ptr<alt::IEntity>, uint32_t>;
+
+class EntityAnimHashPairWrapper {
+public:
+    std::shared_ptr<EntityAnimHashPair> value{};
+};
+
+std::vector<EntityAnimHashPairWrapper> read_entity_anim_hash_pairs(const EntityAnimHashPairsWrapper& wrapper) {
+    std::vector<EntityAnimHashPairWrapper> vec{};
+
+    vec.reserve(wrapper.value.size());
+    for (const auto pair : wrapper.value) {
+        EntityAnimHashPairWrapper wrapper;
+        wrapper.value = std::make_shared<EntityAnimHashPair>(pair);
+        vec.push_back(wrapper);
+    }
+
+    return vec;
+}
+
+alt::IEntity* read_entity_anim_hash_pair_entity(const EntityAnimHashPairWrapper& wrapper) {
+    return &*wrapper.value->first;
+}
+
+u32 read_entity_anim_hash_pair_anim_hash(const EntityAnimHashPairWrapper& wrapper) {
+    return wrapper.value->second;
+}
+
 using StreamedEntityPair = std::pair<alt::IEntity*, i32>;
 
 class StreamedEntityWrapper {
@@ -1239,6 +1274,26 @@ namespace events
     const alt::CVoiceConnectionEvent* to_CVoiceConnectionEvent(const alt::CEvent* event) {
         assert(event->GetType() == alt::CEvent::Type::VOICE_CONNECTION_EVENT);
         return static_cast<const alt::CVoiceConnectionEvent*>(event);
+    }
+
+    const alt::CRequestSyncedSceneEvent* to_CRequestSyncedSceneEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::REQUEST_SYNCED_SCENE);
+        return static_cast<const alt::CRequestSyncedSceneEvent*>(event);
+    }
+
+    const alt::CStartSyncedSceneEvent* to_CStartSyncedSceneEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::START_SYNCED_SCENE);
+        return static_cast<const alt::CStartSyncedSceneEvent*>(event);
+    }
+
+    const alt::CStopSyncedSceneEvent* to_CStopSyncedSceneEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::STOP_SYNCED_SCENE);
+        return static_cast<const alt::CStopSyncedSceneEvent*>(event);
+    }
+
+    const alt::CUpdateSyncedSceneEvent* to_CUpdateSyncedSceneEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::UPDATE_SYNCED_SCENE);
+        return static_cast<const alt::CUpdateSyncedSceneEvent*>(event);
     }
 } // namespace events
 
