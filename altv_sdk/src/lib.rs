@@ -83,6 +83,11 @@ pub mod ffi {
         #include "alt_classes/CResourceStartEvent.h"
         #include "alt_classes/CVoiceConnectionEvent.h"
 
+        #include "alt_classes/CRequestSyncedSceneEvent.h"
+        #include "alt_classes/CStartSyncedSceneEvent.h"
+        #include "alt_classes/CStopSyncedSceneEvent.h"
+        #include "alt_classes/CUpdateSyncedSceneEvent.h"
+
         name!(alt_bridge)
 
         generate_ns!("ICore")
@@ -151,6 +156,11 @@ pub mod ffi {
         generate_ns!("CResourceStopEvent")
         generate_ns!("CResourceStartEvent")
         generate_ns!("CVoiceConnectionEvent")
+
+        generate_ns!("CRequestSyncedSceneEvent")
+        generate_ns!("CStartSyncedSceneEvent")
+        generate_ns!("CStopSyncedSceneEvent")
+        generate_ns!("CUpdateSyncedSceneEvent")
 
         // defined in alt_bridge
         generate_ns!("events")
@@ -323,6 +333,10 @@ pub mod ffi {
 
         generate!("read_streamed_entity_key")
         generate!("read_streamed_entity_value")
+
+        generate!("read_entity_anim_hash_pairs")
+        generate!("read_entity_anim_hash_pair_entity")
+        generate!("read_entity_anim_hash_pair_anim_hash")
     }
     pub use alt_bridge::*;
 

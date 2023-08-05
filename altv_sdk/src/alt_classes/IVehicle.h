@@ -231,6 +231,9 @@ Vector3Wrapper GetVelocity(const alt::IVehicle* ptr) {
     auto vector3 = ptr->GetVelocity();
     return { vector3[0], vector3[1], vector3[2] };
 }
+f32 GetSteeringAngle(const alt::IVehicle* ptr) {
+    return ptr->GetSteeringAngle();
+}
 void SetFixed(alt::IVehicle* ptr) {
     return ptr->SetFixed();
 }
@@ -414,6 +417,9 @@ bool IsDriftMode(const alt::IVehicle* ptr) {
 void SetDriftMode(alt::IVehicle* ptr, bool state) {
     return ptr->SetDriftMode(state);
 }
+bool IsHornActive(const alt::IVehicle* ptr) {
+    return ptr->IsHornActive();
+}
 bool IsTrainMissionTrain(const alt::IVehicle* ptr) {
     return ptr->IsTrainMissionTrain();
 }
@@ -596,6 +602,12 @@ alt::Quaternion GetQuaternion(const alt::IVehicle* ptr) {
 }
 void SetQuaternion(alt::IVehicle* ptr, f32 quaternion_x, f32 quaternion_y, f32 quaternion_z, f32 quaternion_w) {
     return ptr->SetQuaternion({ quaternion_x, quaternion_y, quaternion_z, quaternion_w });
+}
+f32 GetAccelerationLevel(const alt::IVehicle* ptr) {
+    return ptr->GetAccelerationLevel();
+}
+f32 GetBrakeLevel(const alt::IVehicle* ptr) {
+    return ptr->GetBrakeLevel();
 }
 
 } // namespace

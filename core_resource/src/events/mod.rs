@@ -268,6 +268,11 @@ supported_sdk_events!(
     LocalSyncedMetaChange,
 
     VoiceConnectionEvent,
+
+    RequestSyncedScene,
+    StartSyncedScene,
+    StopSyncedScene,
+    UpdateSyncedScene,
 );
 
 custom_events!(

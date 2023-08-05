@@ -78,18 +78,6 @@ macro_rules! on_sdk_event {
     };
 }
 
-macro_rules! on_custom_event {
-    ($func_name:ident, $event_name:ident) => {
-        pub fn $func_name<V: IntoVoidResult>(
-            mut handler: impl FnMut(&events::custom_contexts::$event_name) -> V + 'static,
-        ) {
-            events::add_custom_handler(events::CustomHandler::$event_name(Box::new(move |c| {
-                handler(c).into_void_result()
-            })));
-        }
-    };
-}
-
 on_sdk_event!(on_server_started, ServerStarted);
 on_sdk_event!(on_console_command, ConsoleCommandEvent);
 
@@ -135,6 +123,23 @@ on_sdk_event!(on_any_resource_stop, ResourceStop);
 on_sdk_event!(on_any_resource_start, ResourceStart);
 
 on_sdk_event!(on_voice_connection, VoiceConnectionEvent);
+
+on_sdk_event!(on_synced_scene_request, RequestSyncedScene);
+on_sdk_event!(on_synced_scene_start, StartSyncedScene);
+on_sdk_event!(on_synced_scene_stop, StopSyncedScene);
+on_sdk_event!(on_synced_scene_update, UpdateSyncedScene);
+
+macro_rules! on_custom_event {
+    ($func_name:ident, $event_name:ident) => {
+        pub fn $func_name<V: IntoVoidResult>(
+            mut handler: impl FnMut(&events::custom_contexts::$event_name) -> V + 'static,
+        ) {
+            events::add_custom_handler(events::CustomHandler::$event_name(Box::new(move |c| {
+                handler(c).into_void_result()
+            })));
+        }
+    };
+}
 
 on_custom_event!(on_vehicle_enter_col_shape, VehicleEnterColShape);
 on_custom_event!(on_vehicle_leave_col_shape, VehicleLeaveColShape);
