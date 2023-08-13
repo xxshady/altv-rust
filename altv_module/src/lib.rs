@@ -15,7 +15,6 @@ mod helpers;
 mod required_sdk_events;
 mod resource_manager;
 mod wasi;
-mod types;
 
 const ALTV_MODULE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -52,11 +51,8 @@ extern "C" fn resource_start(
         manager.remove_pending_status(&resource_name);
 
         match res {
-            Ok((instance, stdout_reader, exports, store)) => {
-                manager.add(
-                    resource_name,
-                    ResourceController::new(instance, stdout_reader, resource_ptr, store),
-                );
+            Ok(()) => {
+                manager.add(resource_name, ResourceController::new(resource_ptr));
             }
             Err(e) => {
                 logger::error!("Failed to start resource: {resource_name}, error: {e:?}");
