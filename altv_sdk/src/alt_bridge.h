@@ -1295,6 +1295,16 @@ namespace events
         assert(event->GetType() == alt::CEvent::Type::UPDATE_SYNCED_SCENE);
         return static_cast<const alt::CUpdateSyncedSceneEvent*>(event);
     }
+
+    const alt::CClientDeleteObjectEvent* to_CClientDeleteObjectEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::CLIENT_DELETE_OBJECT_EVENT);
+        return static_cast<const alt::CClientDeleteObjectEvent*>(event);
+    }
+
+    const alt::CClientRequestObjectEvent* to_CClientRequestObjectEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::CLIENT_REQUEST_OBJECT_EVENT);
+        return static_cast<const alt::CClientRequestObjectEvent*>(event);
+    }
 } // namespace events
 
 namespace config_node

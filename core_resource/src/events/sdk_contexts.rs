@@ -920,6 +920,8 @@ impl VoiceConnectionEvent {
 pub struct RequestSyncedScene {
     pub source: player::PlayerContainer,
     pub scene_id: i32,
+
+    cancellable: CancellableEvent,
 }
 
 impl RequestSyncedScene {
@@ -928,7 +930,12 @@ impl RequestSyncedScene {
         Self {
             source: get_non_null_player(sdk::CRequestSyncedSceneEvent::GetSource(event), resource),
             scene_id: sdk::CRequestSyncedSceneEvent::GetSceneID(event),
+            cancellable: CancellableEvent::new(base_event),
         }
+    }
+
+    pub fn cancel(&self) -> VoidResult {
+        self.cancellable.cancel()
     }
 }
 
@@ -940,6 +947,8 @@ pub struct StartSyncedScene {
     pub start_rot: Vector3,
     pub anim_dict_hash: Hash,
     pub entity_and_anim_hash_pairs: Vec<(AnyEntity, Hash)>,
+
+    cancellable: CancellableEvent,
 }
 
 impl StartSyncedScene {
@@ -973,7 +982,13 @@ impl StartSyncedScene {
                 }
                 pairs
             },
+
+            cancellable: CancellableEvent::new(base_event),
         }
+    }
+
+    pub fn cancel(&self) -> VoidResult {
+        self.cancellable.cancel()
     }
 }
 
@@ -981,6 +996,8 @@ impl StartSyncedScene {
 pub struct StopSyncedScene {
     pub source: player::PlayerContainer,
     pub scene_id: i32,
+
+    cancellable: CancellableEvent,
 }
 
 impl StopSyncedScene {
@@ -989,7 +1006,13 @@ impl StopSyncedScene {
         Self {
             source: get_non_null_player(sdk::CStopSyncedSceneEvent::GetSource(event), resource),
             scene_id: sdk::CStopSyncedSceneEvent::GetSceneID(event),
+
+            cancellable: CancellableEvent::new(base_event),
         }
+    }
+
+    pub fn cancel(&self) -> VoidResult {
+        self.cancellable.cancel()
     }
 }
 
@@ -998,6 +1021,8 @@ pub struct UpdateSyncedScene {
     pub source: player::PlayerContainer,
     pub scene_id: i32,
     pub start_rate: f32,
+
+    cancellable: CancellableEvent,
 }
 
 impl UpdateSyncedScene {
@@ -1007,6 +1032,63 @@ impl UpdateSyncedScene {
             source: get_non_null_player(sdk::CUpdateSyncedSceneEvent::GetSource(event), resource),
             scene_id: sdk::CUpdateSyncedSceneEvent::GetSceneID(event),
             start_rate: sdk::CUpdateSyncedSceneEvent::GetStartRate(event),
+
+            cancellable: CancellableEvent::new(base_event),
         }
+    }
+
+    pub fn cancel(&self) -> VoidResult {
+        self.cancellable.cancel()
+    }
+}
+
+#[derive(Debug)]
+pub struct ClientDeleteObjectEvent {
+    pub source: player::PlayerContainer,
+
+    cancellable: CancellableEvent,
+}
+
+impl ClientDeleteObjectEvent {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CClientDeleteObjectEvent);
+        Self {
+            source: get_non_null_player(sdk::CClientDeleteObjectEvent::GetTarget(event), resource),
+
+            cancellable: CancellableEvent::new(base_event),
+        }
+    }
+
+    pub fn cancel(&self) -> VoidResult {
+        self.cancellable.cancel()
+    }
+}
+
+#[derive(Debug)]
+pub struct ClientRequestObjectEvent {
+    pub source: player::PlayerContainer,
+    pub model: Hash,
+    pub pos: Vector3,
+
+    cancellable: CancellableEvent,
+}
+
+impl ClientRequestObjectEvent {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CClientRequestObjectEvent);
+        Self {
+            source: get_non_null_player(sdk::CClientRequestObjectEvent::GetTarget(event), resource),
+            model: sdk::CClientRequestObjectEvent::GetModel(event),
+            pos: {
+                let raw = sdk::CClientRequestObjectEvent::GetPosition(event).within_unique_ptr();
+                read_cpp_vector3(raw)
+            },
+
+            cancellable: CancellableEvent::new(base_event),
+        }
+    }
+
+    pub fn cancel(&self) -> VoidResult {
+        self.cancellable.cancel()
     }
 }
