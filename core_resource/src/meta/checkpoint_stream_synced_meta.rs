@@ -4,8 +4,7 @@ use serde::{de::DeserializeOwned, Serialize};
 
 use crate::{
     base_objects::{checkpoint::CheckpointRc, ValidBaseObject},
-    helpers::{self, IntoString},
-    sdk, SomeResult,
+    helpers, sdk, SomeResult,
 };
 
 pub struct StreamSyncedCheckpointMetaEntry<V> {
@@ -38,13 +37,13 @@ where
     /// ```
     fn stream_synced_meta_entry<V: Serialize + DeserializeOwned>(
         self: &Rc<Self>,
-        key: impl IntoString,
+        key: impl ToString,
     ) -> SomeResult<StreamSyncedCheckpointMetaEntry<V>> {
         self.assert_valid()?;
         let checkpoint: CheckpointRc = self.clone().into();
         Ok(StreamSyncedCheckpointMetaEntry {
             base_object: checkpoint,
-            key: key.into_string(),
+            key: key.to_string(),
             __type: PhantomData,
         })
     }

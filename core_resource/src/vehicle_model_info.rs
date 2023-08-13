@@ -38,7 +38,7 @@ impl VehicleModelInfo {
             mut wheels_color,
             mut interior_color,
             mut dashboard_color,
-            mut mod_kits, // [bool; 2], https://github.com/rust-lang/rust-analyzer/issues/15246
+            mut mod_kits,
             mut has_auto_attach_trailer,
             mut can_attach_cars,
         ) = Default::default();

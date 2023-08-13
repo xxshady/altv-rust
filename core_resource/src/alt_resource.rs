@@ -1,11 +1,11 @@
-use std::{collections::HashMap, ptr::NonNull, rc::Rc, cell::RefCell};
+use std::{collections::HashMap, ptr::NonNull, rc::Rc, cell::Cell};
 
 use anyhow::bail;
 use core_shared::ResourceName;
 
 use crate::{
     config_node::ResourceConfig,
-    helpers::{read_cpp_str_vec, IntoString},
+    helpers::read_cpp_str_vec,
     resource::Resource,
     sdk, SomeResult, VoidResult,
 };
@@ -23,7 +23,7 @@ pub struct AltResource {
     pub dependencies: Vec<String>,
     pub config: ResourceConfig,
 
-    valid: RefCell<bool>,
+    valid: Cell<bool>,
 }
 
 impl AltResource {
@@ -39,8 +39,8 @@ impl AltResource {
         Resource::with_alt_resources_ref(|v, _| v.get_by_name(name))
     }
 
-    pub fn start(name: impl IntoString) {
-        let raw_ptr = unsafe { sdk::ICore::StartResource(name.into_string()) };
+    pub fn start(name: impl ToString) {
+        let raw_ptr = unsafe { sdk::ICore::StartResource(name.to_string()) };
         Resource::with_alt_resources_mut(|mut v, _| v.add_resource_from_raw_ptr(raw_ptr));
     }
 
@@ -56,12 +56,12 @@ impl AltResource {
         Ok(())
     }
 
-    pub fn valid(&self) -> SomeResult<bool> {
-        Ok(*self.valid.try_borrow()?)
+    pub fn valid(&self) -> bool {
+        self.valid.get()
     }
 
     fn assert_valid(&self) -> VoidResult {
-        if !self.valid()? {
+        if !self.valid() {
             bail!(
                 "Resource: '{}' is stopped and cannot be used anymore",
                 self.name
@@ -120,15 +120,7 @@ impl AltResourceManager {
         logger::debug!("on stop name: {name}");
 
         let resource = self.resources.remove(&name).unwrap();
-
-        let Ok(mut valid) = resource.valid.try_borrow_mut() else {
-            logger::error!("Failed to invalidate resource: '{name}' on stop");
-            return resource;
-        };
-
-        *valid = false;
-        drop(valid);
-
+        resource.valid.set(false);
         resource
     }
 
@@ -148,7 +140,7 @@ impl AltResourceManager {
             dependencies: read_cpp_str_vec(unsafe { GetDependencies(raw_ptr) }),
             config: ResourceConfig::new(unsafe { GetConfig(raw_ptr) }),
 
-            valid: RefCell::new(true),
+            valid: Cell::new(true),
         });
 
         self.resources.insert(name, instance.clone());

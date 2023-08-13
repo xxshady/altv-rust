@@ -14,7 +14,7 @@ pub(crate) fn destroy_all_base_objects() {
             altv::AnyBaseObject::Marker(o) => {
                 o.destroy().unwrap();
             }
-            altv::AnyBaseObject::NetworkObject(o) => {
+            altv::AnyBaseObject::Object(o) => {
                 o.destroy().unwrap();
             }
             altv::AnyBaseObject::Vehicle(o) => {

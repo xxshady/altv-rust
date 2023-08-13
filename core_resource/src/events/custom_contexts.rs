@@ -3,7 +3,7 @@ use crate::{
     resource::Resource,
 };
 
-use super::sdk_contexts::{ColshapeEvent, ResourceStart, ResourceStop};
+use super::sdk_contexts::{ColshapeEvent, ResourceStart, ResourceStop, VoiceConnectionEvent};
 
 macro_rules! entity_enter_or_leave_col_shape {
     ($bool_state:literal, $key_name:ident, $any_entity:path) => {
@@ -97,5 +97,41 @@ impl ThisResourceStop {
             }
             Some(Self {})
         })
+    }
+}
+
+#[derive(Debug)]
+pub struct VoiceConnect {}
+
+impl VoiceConnect {
+    pub fn new(context: &VoiceConnectionEvent, _: &Resource) -> Option<Self> {
+        if context.state == altv_sdk::VoiceConnectionState::Connected {
+            return Some(Self {});
+        }
+        None
+    }
+}
+
+#[derive(Debug)]
+pub struct VoiceDisconnect {}
+
+impl VoiceDisconnect {
+    pub fn new(context: &VoiceConnectionEvent, _: &Resource) -> Option<Self> {
+        if context.state == altv_sdk::VoiceConnectionState::Disconnected {
+            return Some(Self {});
+        }
+        None
+    }
+}
+
+#[derive(Debug)]
+pub struct VoiceConnecting {}
+
+impl VoiceConnecting {
+    pub fn new(context: &VoiceConnectionEvent, _: &Resource) -> Option<Self> {
+        if context.state == altv_sdk::VoiceConnectionState::Connecting {
+            return Some(Self {});
+        }
+        None
     }
 }

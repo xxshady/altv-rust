@@ -3,6 +3,7 @@ use std::{
     path::Path,
     thread,
     time::{Duration, Instant},
+    env,
 };
 
 use duct::cmd;
@@ -20,11 +21,8 @@ struct Files {
 
 #[tokio::main]
 async fn main() {
-    println!("building altv_module");
-    cmd!("cargo", "build", "-p", "altv_module").run().unwrap();
-
-    println!("building rust_resource");
-    cmd!("cargo", "build", "-p", "rust_resource").run().unwrap();
+    println!("building");
+    cmd!("cargo", "build").run().unwrap();
 
     let start = if cfg!(windows) { "" } else { "lib" };
     let ext = if cfg!(windows) { ".dll" } else { ".so" };
@@ -61,16 +59,18 @@ async fn main() {
         "x64_linux"
     };
 
+    let branch = env::var("ALTV_BRANCH").unwrap();
+
     let cdn = "https://cdn.alt-mp.com";
-    let cdn_data = format!("{cdn}/data/dev/data");
+    let cdn_data = format!("{cdn}/data/{branch}/data");
 
     let files = Files {
         altv_server: (
-            format!("{cdn}/server/dev/{platform}/altv-server{altv_server_ext}"),
+            format!("{cdn}/server/{branch}/{platform}/altv-server{altv_server_ext}"),
             format!("test/altv_server/altv-server{altv_server_ext}"),
         ),
         crash_handler: (
-            format!("{cdn}/server/dev/{platform}/altv-crash-handler{altv_server_ext}"),
+            format!("{cdn}/server/{branch}/{platform}/altv-crash-handler{altv_server_ext}"),
             format!("test/altv_server/altv-crash-handler{altv_server_ext}"),
         ),
         vehmodels: (

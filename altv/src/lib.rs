@@ -24,7 +24,7 @@ pub use exports::{
     Player, PlayerContainer,
     Vehicle, VehicleContainer,
     Ped, PedContainer,
-    NetworkObject, NetworkObjectContainer,
+    Object, ObjectContainer,
     VirtualEntity, VirtualEntityContainer,
     VirtualEntityGroup, VirtualEntityGroupContainer,
     Blip, BlipContainer,
@@ -74,7 +74,7 @@ pub use exports::{
 
 pub use altv_sdk::{
     BaseObjectType, BlipType, ColShapeType, ExplosionType, MarkerType, PlayerBodyPart,
-    PlayerConnectDeniedReason, VehicleModelType, AmmoSpecialType,
+    PlayerConnectDeniedReason, VehicleModelType, AmmoSpecialType, VoiceConnectionState,
 };
 
 pub const DEFAULT_DIMENSION: i32 = 0;

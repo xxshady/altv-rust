@@ -77,22 +77,6 @@ pub fn hash(str: &str) -> u32 {
     (num + (num << 15)).0
 }
 
-pub trait IntoString {
-    fn into_string(self) -> String;
-}
-
-impl IntoString for String {
-    fn into_string(self) -> String {
-        self
-    }
-}
-
-impl IntoString for &str {
-    fn into_string(self) -> String {
-        self.to_string()
-    }
-}
-
 pub type Hash = u32;
 
 pub trait IntoHash {

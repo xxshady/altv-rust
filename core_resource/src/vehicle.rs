@@ -2,7 +2,7 @@ use autocxx::prelude::*;
 
 use crate::{
     base_objects::{extra_pools::AnyEntity, player, vehicle},
-    helpers::{self, IntoHash, IntoString},
+    helpers::{self, IntoHash},
     meta::entity_stream_synced_meta::StreamSyncedEntityMeta,
     quaternion::Quaternion,
     rgba::Rgba,
@@ -466,8 +466,8 @@ impl vehicle::Vehicle {
         Ok(unsafe { sdk::IVehicle::GetNumberplateText(self.raw_ptr()?) }.to_string())
     }
 
-    pub fn set_numberplate_text(&self, text: impl IntoString) -> VoidResult {
-        unsafe { sdk::IVehicle::SetNumberplateText(self.raw_ptr()?, text.into_string()) }
+    pub fn set_numberplate_text(&self, text: impl ToString) -> VoidResult {
+        unsafe { sdk::IVehicle::SetNumberplateText(self.raw_ptr()?, text.to_string()) }
         Ok(())
     }
 
@@ -475,8 +475,8 @@ impl vehicle::Vehicle {
         Ok(unsafe { sdk::IVehicle::GetAppearanceDataBase64(self.raw_ptr()?) }.to_string())
     }
 
-    pub fn set_appearance_data_base64(&self, data: impl IntoString) -> VoidResult {
-        unsafe { sdk::IVehicle::LoadAppearanceDataFromBase64(self.raw_ptr()?, data.into_string()) }
+    pub fn set_appearance_data_base64(&self, data: impl ToString) -> VoidResult {
+        unsafe { sdk::IVehicle::LoadAppearanceDataFromBase64(self.raw_ptr()?, data.to_string()) }
         Ok(())
     }
 
@@ -484,8 +484,8 @@ impl vehicle::Vehicle {
         Ok(unsafe { sdk::IVehicle::GetGameStateBase64(self.raw_ptr()?) }.to_string())
     }
 
-    pub fn set_game_state_base64(&self, data: impl IntoString) -> VoidResult {
-        unsafe { sdk::IVehicle::LoadGameStateFromBase64(self.raw_ptr()?, data.into_string()) }
+    pub fn set_game_state_base64(&self, data: impl ToString) -> VoidResult {
+        unsafe { sdk::IVehicle::LoadGameStateFromBase64(self.raw_ptr()?, data.to_string()) }
         Ok(())
     }
 
@@ -493,8 +493,8 @@ impl vehicle::Vehicle {
         Ok(unsafe { sdk::IVehicle::GetHealthDataBase64(self.raw_ptr()?) }.to_string())
     }
 
-    pub fn set_health_data_base64(&self, data: impl IntoString) -> VoidResult {
-        unsafe { sdk::IVehicle::LoadHealthDataFromBase64(self.raw_ptr()?, data.into_string()) }
+    pub fn set_health_data_base64(&self, data: impl ToString) -> VoidResult {
+        unsafe { sdk::IVehicle::LoadHealthDataFromBase64(self.raw_ptr()?, data.to_string()) }
         Ok(())
     }
 
@@ -502,8 +502,8 @@ impl vehicle::Vehicle {
         Ok(unsafe { sdk::IVehicle::GetDamageDataBase64(self.raw_ptr()?) }.to_string())
     }
 
-    pub fn set_damage_data_base64(&self, data: impl IntoString) -> VoidResult {
-        unsafe { sdk::IVehicle::LoadDamageDataFromBase64(self.raw_ptr()?, data.into_string()) }
+    pub fn set_damage_data_base64(&self, data: impl ToString) -> VoidResult {
+        unsafe { sdk::IVehicle::LoadDamageDataFromBase64(self.raw_ptr()?, data.to_string()) }
         Ok(())
     }
 
@@ -511,8 +511,8 @@ impl vehicle::Vehicle {
         Ok(unsafe { sdk::IVehicle::GetScriptDataBase64(self.raw_ptr()?) }.to_string())
     }
 
-    pub fn set_script_data_base64(&self, data: impl IntoString) -> VoidResult {
-        unsafe { sdk::IVehicle::LoadScriptDataFromBase64(self.raw_ptr()?, data.into_string()) }
+    pub fn set_script_data_base64(&self, data: impl ToString) -> VoidResult {
+        unsafe { sdk::IVehicle::LoadScriptDataFromBase64(self.raw_ptr()?, data.to_string()) }
         Ok(())
     }
 
@@ -820,6 +820,22 @@ impl vehicle::Vehicle {
         }
 
         Ok(())
+    }
+
+    pub fn steering_angle(&self) -> SomeResult<f32> {
+        Ok(unsafe { sdk::IVehicle::GetSteeringAngle(self.raw_ptr()?) })
+    }
+
+    pub fn horn_active(&self) -> SomeResult<bool> {
+        Ok(unsafe { sdk::IVehicle::IsHornActive(self.raw_ptr()?) })
+    }
+
+    pub fn acceleration_level(&self) -> SomeResult<f32> {
+        Ok(unsafe { sdk::IVehicle::GetAccelerationLevel(self.raw_ptr()?) })
+    }
+
+    pub fn brake_level(&self) -> SomeResult<f32> {
+        Ok(unsafe { sdk::IVehicle::GetBrakeLevel(self.raw_ptr()?) })
     }
 }
 

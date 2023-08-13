@@ -1,4 +1,8 @@
-use std::{collections::HashMap, fs};
+use std::fs;
+
+use statics::{HEADERS_CUSTOM, HEADERS};
+
+use crate::statics::{SUPPORTED_CPP_TYPES, SUPPORTED_CPP_TYPES_IN_CLASSES};
 
 const CPP_CODE_CLIENT_API_START: &str = "#ifdef ALT_SERVER_API";
 const CPP_CODE_ENDIF_DIRECTIVE: &str = "#endif";
@@ -6,344 +10,19 @@ const CPP_CODE_ELSE_DIRECTIVE: &str = "#else";
 const CPP_CODE_SERVER_API_START: &str = "#ifdef ALT_CLIENT_API";
 const CPP_OUT_DIR: &str = "../altv_sdk/src/alt_classes";
 
-lazy_static::lazy_static! {
-    static ref SUPPORTED_CPP_TYPES: HashMap<&'static str, &'static str> = {
-        HashMap::from([
-            ("void", "void"),
-            ("bool", "bool"),
-
-            ("uint8_t", "u8"),
-            ("uint16_t", "u16"),
-            ("uint32_t", "u32"),
-            ("uint64_t", "u64"),
-
-            ("int8_t", "i8"),
-            ("int16_t", "i16"),
-            ("int", "cpp_int"), // why? for some reason sdk uses int and int32_t at the same time
-            ("int32_t", "i32"),
-            ("int64_t", "i64"),
-
-            ("float", "f32"),
-            ("double", "f64"),
-
-            ("std::string", "std::string"),
-            ("std::string&", "StdStringClone"),
-            ("MValue", "MValueMutWrapper"),
-            ("MValueConst", "ConstMValueWrapper"),
-            ("MValueArgs&", "MValueWrapperVec"),
-
-            ("IBaseObject*", "alt::IBaseObject*"),
-            ("IVehicle*", "alt::IVehicle*"),
-            ("IPed*", "alt::IPed*"),
-            ("INetworkObject*", "alt::INetworkObject*"),
-            ("IEntity*", "alt::IEntity*"),
-            ("IPlayer*", "alt::IPlayer*"),
-            ("IColShape*", "alt::IColShape*"),
-            ("IResource*", "alt::IResource*"),
-            ("ICore*", "alt::ICore*"),
-            ("IVirtualEntityGroup*", "alt::IVirtualEntityGroup*"),
-            ("IVirtualEntity*", "alt::IVirtualEntity*"),
-            ("IConnectionInfo*", "alt::IConnectionInfo*"),
-            ("VehicleModelInfo&", "alt::VehicleModelInfo*"),
-            ("PedModelInfo&", "alt::PedModelInfo*"),
-            ("WeaponModelInfo&", "alt::WeaponModelInfo*"),
-            ("IWorldObject*", "alt::IWorldObject*"),
-            ("IBlip*", "alt::IBlip*"),
-            ("IVoiceChannel*", "alt::IVoiceChannel*"),
-            ("IMarker*", "alt::IMarker*"),
-            ("ICheckpoint*", "alt::ICheckpoint*"),
-
-            ("alt::Prop", "alt::Prop"),
-            ("alt::DlcProp", "alt::DlcProp"),
-            ("alt::Cloth", "alt::Cloth"),
-            ("alt::DlcCloth", "alt::DlcCloth"),
-            ("HeadOverlay", "alt::HeadOverlay"),
-            ("HeadBlendData", "alt::HeadBlendData"),
-            ("alt::CEvent::Type", "EventType"),
-            ("IBlip::BlipType", "BlipType"),
-            ("IMarker::MarkerType", "MarkerType"),
-            ("AmmoSpecialType", "AmmoSpecialType_t"),
-            ("AmmoFlags", "alt::AmmoFlags"),
-
-            ("alt::Position", "Vector3Wrapper"),
-            ("Position", "Vector3Wrapper"),
-            ("Vector3f", "Vector3Wrapper"),
-            ("Vector2f", "Vector2Wrapper"),
-            ("RGBA", "RGBAWrapper"),
-            ("alt::RGBA", "RGBAWrapper"),
-            ("std::vector<uint32_t>", "std::vector<u32>"),
-            ("std::vector<std::string>", "std::vector<std::string>"),
-            ("std::vector<Weapon>", "std::vector<WeaponWrapper>"),
-            ("std::vector<std::string>&", "std::vector<std::string>"),
-            ("std::vector<Vector2f>", "Vector2Vec"),
-            ("std::vector<FireInfo>&", "std::vector<FireInfoWrapper>"),
-            ("Quaternion", "alt::Quaternion"),
-            ("std::vector<IBaseObject*>", "BaseObjectVector"),
-            ("std::vector<IResource*>", "ResourceVector"),
-            ("std::vector<IPlayer*>", "PlayerVector"),
-            ("std::vector<std::pair<IEntity*, int32_t>>", "std::vector<StreamedEntityWrapper>"),
-            ("std::vector<CDecoration>", "std::vector<alt::CDecoration>"),
-
-            ("Rotation", "Vector3Wrapper"),
-            ("bool*", "bool*"),
-
-            ("Config::Value::ValuePtr", "Config::Value::ValuePtr"),
-
-            ("std::unordered_map<std::string, MValue>", "MValueUnorderedMapWrapper"),
-        ])
-    };
-
-    static ref SUPPORTED_CPP_TYPES_IN_CLASSES: HashMap<&'static str, &'static str> = {
-        HashMap::from([
-            ("IBaseObject::Type", "BaseObjectType"),
-            ("IColShape::ColShapeType", "ColShapeType"),
-            ("IBlip::BlipType", "BlipType"),
-            ("IMarker::MarkerType", "MarkerType"),
-            ("CWeaponDamageEvent::BodyPart", "WeaponDamageEventBodyPart"),
-            ("CEvent::Type", "EventType"),
-            ("CPlayerConnectDeniedEvent::Reason", "PlayerConnectDeniedReason"),
-            ("CExplosionEvent::ExplosionType", "ExplosionType"),
-        ])
-    };
-}
+mod statics;
 
 fn main() {
     fs::remove_dir_all(CPP_OUT_DIR).unwrap();
     fs::create_dir(CPP_OUT_DIR).unwrap();
 
-    gen(
-        "ICore",
-        "../altv_sdk/cpp-sdk/ICore.h",
-        Some(|v| format!("alt::ICore::Instance().{v}")),
-    );
+    for (class, file, custom_caller) in HEADERS_CUSTOM {
+        gen(class, file, Some(*custom_caller));
+    }
 
-    // objects
-    gen_default("IBaseObject", "../altv_sdk/cpp-sdk/objects/IBaseObject.h");
-    gen_default("IWorldObject", "../altv_sdk/cpp-sdk/objects/IWorldObject.h");
-    gen_default("IEntity", "../altv_sdk/cpp-sdk/objects/IEntity.h");
-    gen_default("IPlayer", "../altv_sdk/cpp-sdk/objects/IPlayer.h");
-    gen_default("IVehicle", "../altv_sdk/cpp-sdk/objects/IVehicle.h");
-    gen_default("IPed", "../altv_sdk/cpp-sdk/objects/IPed.h");
-    gen_default(
-        "INetworkObject",
-        "../altv_sdk/cpp-sdk/objects/INetworkObject.h",
-    );
-    gen_default(
-        "IColShape",
-        "../altv_sdk/cpp-sdk/script-objects/IColShape.h",
-    );
-    gen_default("IBlip", "../altv_sdk/cpp-sdk/script-objects/IBlip.h");
-    gen_default(
-        "ICheckpoint",
-        "../altv_sdk/cpp-sdk/script-objects/ICheckpoint.h",
-    );
-    gen_default(
-        "IVirtualEntityGroup",
-        "../altv_sdk/cpp-sdk/script-objects/IVirtualEntityGroup.h",
-    );
-    gen_default(
-        "IVirtualEntity",
-        "../altv_sdk/cpp-sdk/script-objects/IVirtualEntity.h",
-    );
-    gen_default(
-        "IVoiceChannel",
-        "../altv_sdk/cpp-sdk/script-objects/IVoiceChannel.h",
-    );
-    gen_default("IMarker", "../altv_sdk/cpp-sdk/script-objects/IMarker.h");
-    gen_default(
-        "ICheckpoint",
-        "../altv_sdk/cpp-sdk/script-objects/ICheckpoint.h",
-    );
-    gen_default(
-        "IConnectionInfo",
-        "../altv_sdk/cpp-sdk/script-objects/IConnectionInfo.h",
-    );
-
-    gen_default(
-        "VehicleModelInfo",
-        "../altv_sdk/cpp-sdk/types/VehicleModelInfo.h",
-    );
-    gen_default("PedModelInfo", "../altv_sdk/cpp-sdk/types/PedModelInfo.h");
-    gen_default(
-        "WeaponModelInfo",
-        "../altv_sdk/cpp-sdk/types/WeaponModelInfo.h",
-    );
-
-    // events
-    gen_default("CEvent", "../altv_sdk/cpp-sdk/events/CEvent.h");
-    gen_default(
-        "CWeaponDamageEvent",
-        "../altv_sdk/cpp-sdk/events/CWeaponDamageEvent.h",
-    );
-    gen_default(
-        "CColShapeEvent",
-        "../altv_sdk/cpp-sdk/events/CColShapeEvent.h",
-    );
-    gen_default(
-        "CConsoleCommandEvent",
-        "../altv_sdk/cpp-sdk/events/CConsoleCommandEvent.h",
-    );
-    gen_default(
-        "CClientScriptEvent",
-        "../altv_sdk/cpp-sdk/events/CClientScriptEvent.h",
-    );
-    gen_default(
-        "CServerScriptEvent",
-        "../altv_sdk/cpp-sdk/events/CServerScriptEvent.h",
-    );
-    gen_default(
-        "CConnectionQueueAddEvent",
-        "../altv_sdk/cpp-sdk/events/CConnectionQueueAddEvent.h",
-    );
-    gen_default(
-        "CConnectionQueueRemoveEvent",
-        "../altv_sdk/cpp-sdk/events/CConnectionQueueRemoveEvent.h",
-    );
-
-    // entity
-    gen_default(
-        "CNetOwnerChangeEvent",
-        "../altv_sdk/cpp-sdk/events/CNetOwnerChangeEvent.h",
-    );
-
-    // player
-    gen_default(
-        "CPlayerConnectEvent",
-        "../altv_sdk/cpp-sdk/events/CPlayerConnectEvent.h",
-    );
-    gen_default(
-        "CPlayerDisconnectEvent",
-        "../altv_sdk/cpp-sdk/events/CPlayerDisconnectEvent.h",
-    );
-    gen_default(
-        "CPlayerDeathEvent",
-        "../altv_sdk/cpp-sdk/events/CPlayerDeathEvent.h",
-    );
-    gen_default(
-        "CPlayerDamageEvent",
-        "../altv_sdk/cpp-sdk/events/CPlayerDamageEvent.h",
-    );
-    gen_default(
-        "CPlayerEnteringVehicleEvent",
-        "../altv_sdk/cpp-sdk/events/CPlayerEnteringVehicleEvent.h",
-    );
-    gen_default(
-        "CPlayerEnterVehicleEvent",
-        "../altv_sdk/cpp-sdk/events/CPlayerEnterVehicleEvent.h",
-    );
-    gen_default(
-        "CPlayerLeaveVehicleEvent",
-        "../altv_sdk/cpp-sdk/events/CPlayerLeaveVehicleEvent.h",
-    );
-    gen_default(
-        "CPlayerChangeAnimationEvent",
-        "../altv_sdk/cpp-sdk/events/CPlayerChangeAnimationEvent.h",
-    );
-    gen_default(
-        "CPlayerChangeVehicleSeatEvent",
-        "../altv_sdk/cpp-sdk/events/CPlayerChangeVehicleSeatEvent.h",
-    );
-    gen_default(
-        "CPlayerWeaponChangeEvent",
-        "../altv_sdk/cpp-sdk/events/CPlayerWeaponChangeEvent.h",
-    );
-    gen_default(
-        "CPlayerConnectDeniedEvent",
-        "../altv_sdk/cpp-sdk/events/CPlayerConnectDeniedEvent.h",
-    );
-    gen_default(
-        "CPlayerSpawnEvent",
-        "../altv_sdk/cpp-sdk/events/CPlayerSpawnEvent.h",
-    );
-    gen_default(
-        "CPlayerRequestControlEvent",
-        "../altv_sdk/cpp-sdk/events/CPlayerRequestControlEvent.h",
-    );
-    gen_default(
-        "CPlayerDimensionChangeEvent",
-        "../altv_sdk/cpp-sdk/events/CPlayerDimensionChangeEvent.h",
-    );
-    gen_default(
-        "CPlayerChangeInteriorEvent",
-        "../altv_sdk/cpp-sdk/events/CPlayerChangeInteriorEvent.h",
-    );
-
-    // vehicle
-    gen_default(
-        "CVehicleAttachEvent",
-        "../altv_sdk/cpp-sdk/events/CVehicleAttachEvent.h",
-    );
-    gen_default(
-        "CVehicleDamageEvent",
-        "../altv_sdk/cpp-sdk/events/CVehicleDamageEvent.h",
-    );
-    gen_default(
-        "CVehicleDestroyEvent",
-        "../altv_sdk/cpp-sdk/events/CVehicleDestroyEvent.h",
-    );
-    gen_default(
-        "CVehicleDetachEvent",
-        "../altv_sdk/cpp-sdk/events/CVehicleDetachEvent.h",
-    );
-    gen_default(
-        "CVehicleHornEvent",
-        "../altv_sdk/cpp-sdk/events/CVehicleHornEvent.h",
-    );
-    gen_default(
-        "CVehicleSirenEvent",
-        "../altv_sdk/cpp-sdk/events/CVehicleSirenEvent.h",
-    );
-
-    gen_default(
-        "CStartProjectileEvent",
-        "../altv_sdk/cpp-sdk/events/CStartProjectileEvent.h",
-    );
-    gen_default("CFireEvent", "../altv_sdk/cpp-sdk/events/CFireEvent.h");
-    gen_default(
-        "CExplosionEvent",
-        "../altv_sdk/cpp-sdk/events/CExplosionEvent.h",
-    );
-    gen_default(
-        "CExplosionEvent",
-        "../altv_sdk/cpp-sdk/events/CExplosionEvent.h",
-    );
-
-    // meta
-    gen_default(
-        "CMetaChangeEvent",
-        "../altv_sdk/cpp-sdk/events/CMetaDataChangeEvent.h",
-    );
-    gen_default(
-        "CGlobalMetaDataChangeEvent",
-        "../altv_sdk/cpp-sdk/events/CGlobalMetaDataChangeEvent.h",
-    );
-    gen_default(
-        "CGlobalSyncedMetaDataChangeEvent",
-        "../altv_sdk/cpp-sdk/events/CGlobalSyncedMetaDataChangeEvent.h",
-    );
-    gen_default(
-        "CSyncedMetaDataChangeEvent",
-        "../altv_sdk/cpp-sdk/events/CSyncedMetaDataChangeEvent.h",
-    );
-    gen_default(
-        "CStreamSyncedMetaDataChangeEvent",
-        "../altv_sdk/cpp-sdk/events/CStreamSyncedMetaDataChangeEvent.h",
-    );
-    gen_default(
-        "CLocalMetaDataChangeEvent",
-        "../altv_sdk/cpp-sdk/events/CLocalMetaDataChangeEvent.h",
-    );
-
-    gen_default(
-        "CResourceStopEvent",
-        "../altv_sdk/cpp-sdk/events/CResourceStopEvent.h",
-    );
-    gen_default(
-        "CResourceStartEvent",
-        "../altv_sdk/cpp-sdk/events/CResourceStartEvent.h",
-    );
-
-    gen_default("IResource", "../altv_sdk/cpp-sdk/IResource.h");
+    for (class, file) in HEADERS {
+        gen_default(class, file);
+    }
 }
 
 // below is the most shit coded mess ever...
@@ -369,7 +48,7 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
             rust_functions_cpp_file += &format!("{rust_func}\n");
         }
         Err(err) => {
-            println!("failed to convert:\n{class_name}: {method}\nto rust func, error: {err:?}");
+            println!("failed to convert class: \"{class_name}\" method: {method}\nto rust func, error: {err:?}");
         }
     };
 
@@ -632,7 +311,7 @@ fn parse_cpp_method(class_name: &str, method: String) -> anyhow::Result<CppMetho
     let mut next_param_word_ignored = false;
     let mut pointer_param = false;
     let mut pointer_return_type = false;
-    let mut generic_type = false;
+    let mut generic_type = 0_u8;
 
     while let Some(char) = method_parser.next_char().copied() {
         // dbg!(char as char);
@@ -651,15 +330,24 @@ fn parse_cpp_method(class_name: &str, method: String) -> anyhow::Result<CppMetho
             }
 
             // dbg!(is_it_delimiter_char(char));
-            if generic_type && char == b'>' {
-                // println!("generic_parameter_type end");
-                generic_type = false;
-            } else if char == b'<' {
-                // println!("generic_parameter_type start");
-                generic_type = true;
+            match (generic_type, char) {
+                (1.., b'>') => {
+                    generic_type -= 1;
+                    println!("generic_type decrease current: {generic_type}");
+                }
+                (0.., b'<') => {
+                    generic_type += 1;
+                    println!("generic_type increase current: {generic_type}");
+                }
+                (_, _) => {
+                    // println!(
+                    //     "generic_type: {generic_type} char: {:?}",
+                    //     std::str::from_utf8(&[char]).unwrap()
+                    // );
+                }
             }
 
-            if !generic_type && is_it_delimiter_char(char)
+            if generic_type == 0 && is_it_delimiter_char(char)
                 || pointer_param
                 || pointer_return_type
                 || method_parser.is_it_last_char()
@@ -857,6 +545,7 @@ fn cpp_method_to_rust_compatible_func(
                     "---PlayerConnectDeniedReason is not implemented as param".to_string()
                 }
                 "ExplosionType" => "---ExplosionType is not implemented as param".to_string(),
+                "VoiceConnectionState" => "---VoiceConnectionState is not implemented as param".to_string(),
                 "MValueUnorderedMapWrapper" => format!("MValueUnorderedMapWrapper {name}"),
                 "alt::AmmoFlags" => {
                     format!("bool {name}_infiniteAmmo, bool {name}_addSmokeOnExplosion, bool {name}_fuse, bool {name}_fixedAfterExplosion")
@@ -905,6 +594,9 @@ fn cpp_method_to_rust_compatible_func(
                 }
                 "ExplosionType" => {
                     "---ExplosionType is not implemented as passed param".to_string()
+                }
+                "VoiceConnectionState" => {
+                    "---VoiceConnectionState is not implemented as passed param".to_string()
                 }
                 "MValueUnorderedMapWrapper" => format!("{name}.value"),
                 "PlayerVector" => format!("player_wrapper_vec_to_alt({name})"),
@@ -994,6 +686,7 @@ fn cpp_method_to_rust_compatible_func(
         },
         "PlayerConnectDeniedReason" => |v: &str| format!("return static_cast<uint8_t>({v})"),
         "ExplosionType" => |v: &str| format!("return static_cast<int8_t>({v})"),
+        "VoiceConnectionState" => |v: &str| format!("return static_cast<uint8_t>({v})"),
         "std::vector<FireInfoWrapper>" => |v: &str| {
             format!(
                 "auto alt_vec = {v};\n    \
@@ -1056,6 +749,13 @@ fn cpp_method_to_rust_compatible_func(
                     vec.push_back({{ pair.first, pair.second }});\n    \
                 }}\n    \
                 return vec"
+            )
+        },
+        "EntityAnimHashPairsWrapper" => |v: &str| {
+            format!(
+                "EntityAnimHashPairsWrapper wrapper;\n    \
+                wrapper.value = {v};\n    \
+                return wrapper"
             )
         },
         _ => |v: &str| format!("return {v}"),

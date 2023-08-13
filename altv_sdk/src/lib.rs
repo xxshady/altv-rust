@@ -16,7 +16,7 @@ pub mod ffi {
         #include "alt_classes/IPlayer.h"
         #include "alt_classes/IVehicle.h"
         #include "alt_classes/IPed.h"
-        // #include "alt_classes/INetworkObject.h"
+        #include "alt_classes/IObject.h"
         #include "alt_classes/IColShape.h"
         #include "alt_classes/IBlip.h"
         #include "alt_classes/IMarker.h"
@@ -80,11 +80,44 @@ pub mod ffi {
         #include "alt_classes/CResourceStopEvent.h"
         #include "alt_classes/CResourceStartEvent.h"
 
+        #include "alt_classes/CResourceStartEvent.h"
+        #include "alt_classes/CVoiceConnectionEvent.h"
+
+        #include "alt_classes/CRequestSyncedSceneEvent.h"
+        #include "alt_classes/CStartSyncedSceneEvent.h"
+        #include "alt_classes/CStopSyncedSceneEvent.h"
+        #include "alt_classes/CUpdateSyncedSceneEvent.h"
+
+        #include "alt_classes/CClientDeleteObjectEvent.h"
+        #include "alt_classes/CClientRequestObjectEvent.h"
+
         name!(alt_bridge)
 
         generate_ns!("ICore")
         generate_ns!("IMarker")
         generate_ns!("IBaseObject")
+        generate_ns!("IWorldObject")
+        generate_ns!("IEntity")
+        generate_ns!("IPlayer")
+        generate_ns!("IVehicle")
+        generate_ns!("IPed")
+        generate_ns!("IObject")
+        generate_ns!("IColShape")
+        generate_ns!("IBlip")
+        generate_ns!("ICheckpoint")
+        generate_ns!("CEvent")
+        generate_ns!("CConsoleCommandEvent")
+        generate_ns!("CServerScriptEvent")
+        generate_ns!("CClientScriptEvent")
+        generate_ns!("CPlayerConnectEvent")
+        generate_ns!("CPlayerDisconnectEvent")
+        generate_ns!("CWeaponDamageEvent")
+        generate_ns!("CColShapeEvent")
+        generate_ns!("IVirtualEntity")
+        generate_ns!("IVirtualEntityGroup")
+        generate_ns!("IResource")
+        generate_ns!("IVoiceChannel")
+        generate_ns!("IMarker")
 
         generate_ns!("CNetOwnerChangeEvent")
 
@@ -126,6 +159,15 @@ pub mod ffi {
 
         generate_ns!("CResourceStopEvent")
         generate_ns!("CResourceStartEvent")
+        generate_ns!("CVoiceConnectionEvent")
+
+        generate_ns!("CRequestSyncedSceneEvent")
+        generate_ns!("CStartSyncedSceneEvent")
+        generate_ns!("CStopSyncedSceneEvent")
+        generate_ns!("CUpdateSyncedSceneEvent")
+
+        generate_ns!("CClientDeleteObjectEvent")
+        generate_ns!("CClientRequestObjectEvent")
 
         // defined in alt_bridge
         generate_ns!("events")
@@ -191,7 +233,7 @@ pub mod ffi {
         generate_ns!("player")
         generate_ns!("vehicle")
         generate_ns!("ped")
-        // generate_ns!("network_object")
+        generate_ns!("object")
         generate_ns!("col_shape")
         generate_ns!("virtual_entity")
         generate_ns!("virtual_entity_group")
@@ -300,14 +342,15 @@ pub mod ffi {
         generate!("read_streamed_entity_key")
         generate!("read_streamed_entity_value")
 
-        generate!("shared::AltResourceImpl")
-        generate!("shared::AltResource")
+        generate!("read_entity_anim_hash_pairs")
+        generate!("read_entity_anim_hash_pair_entity")
+        generate!("read_entity_anim_hash_pair_anim_hash")
     }
     pub use alt_bridge::*;
 
     #[repr(transparent)]
     pub struct ResourceStartCallback(
-        pub extern "C" fn(
+        pub  extern "C" fn(
             name: &str,
             full_main_path: &str,
             resource_impl: *mut alt_bridge::shared::AltResourceImpl,
@@ -414,3 +457,4 @@ include_out_dir!("/explosion_type.rs");
 include_out_dir!("/vehicle_model_type.rs");
 include_out_dir!("/config_value_type.rs");
 include_out_dir!("/ammo_special_type.rs");
+include_out_dir!("/voice_connection_state.rs");

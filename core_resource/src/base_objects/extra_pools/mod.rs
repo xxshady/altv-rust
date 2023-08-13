@@ -1,8 +1,8 @@
 use std::rc::Rc;
 
 use super::{
-    base_impl::inherit_ptrs::BaseObjectInheritPtrs, network_object, objects::AnyBaseObject, ped,
-    player, vehicle, BaseObjectContainer,
+    base_impl::inherit_ptrs::BaseObjectInheritPtrs, object, objects::AnyBaseObject, ped, player,
+    vehicle, BaseObjectContainer,
 };
 use crate::SomeResult;
 
@@ -88,12 +88,12 @@ extra_pool_enum!(Entity, EntityRawPtr: [
     Player, player;
     Vehicle, vehicle;
     Ped, ped;
-    NetworkObject, network_object;
+    Object, object;
 ]);
 
 extra_pool_enum!(WorldObject, WorldObjectRawPtr: [
     Player, player;
     Vehicle, vehicle;
     Ped, ped;
-    NetworkObject, network_object;
+    Object, object;
 ]);

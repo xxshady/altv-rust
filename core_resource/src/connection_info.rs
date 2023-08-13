@@ -1,4 +1,4 @@
-use crate::{base_objects::connection_info, helpers::IntoString, sdk, SomeResult, VoidResult};
+use crate::{base_objects::connection_info, sdk, SomeResult, VoidResult};
 
 /// # **`ConnectionInfo implementation`**
 impl connection_info::ConnectionInfo {
@@ -11,8 +11,8 @@ impl connection_info::ConnectionInfo {
         Ok(unsafe { sdk::IConnectionInfo::IsAccepted(self.raw_ptr()?) })
     }
 
-    pub fn decline(&self, reason: impl IntoString) -> VoidResult {
-        unsafe { sdk::IConnectionInfo::Decline(self.raw_ptr()?, reason.into_string()) }
+    pub fn decline(&self, reason: impl ToString) -> VoidResult {
+        unsafe { sdk::IConnectionInfo::Decline(self.raw_ptr()?, reason.to_string()) }
         Ok(())
     }
 

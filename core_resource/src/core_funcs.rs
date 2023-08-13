@@ -1,6 +1,6 @@
 use crate::{
     base_objects::AnyBaseObject,
-    helpers::{self, IntoString, IntoHash},
+    helpers::{self, IntoHash},
     sdk,
     vector::Vector3,
 };
@@ -49,12 +49,12 @@ pub fn stop_server() {
     unsafe { sdk::ICore::StopServer() }
 }
 
-pub fn set_password(password: impl IntoString) {
-    unsafe { sdk::ICore::SetPassword(password.into_string()) }
+pub fn set_password(password: impl ToString) {
+    unsafe { sdk::ICore::SetPassword(password.to_string()) }
 }
 
-pub fn hash_server_password(password: impl IntoString) -> u64 {
-    unsafe { sdk::ICore::HashServerPassword(password.into_string()) }
+pub fn hash_server_password(password: impl ToString) -> u64 {
+    unsafe { sdk::ICore::HashServerPassword(password.to_string()) }
 }
 
 pub fn toggle_world_profiler(toggle: bool) {
@@ -72,4 +72,17 @@ pub fn get_ammo_hash_for_weapon_hash(weapon_hash: impl IntoHash) -> Option<u32> 
     } else {
         None
     }
+}
+
+pub fn set_voice_external_public(host: impl ToString, port: u16) {
+    unsafe { sdk::ICore::SetVoiceExternalPublic(host.to_string(), port) }
+}
+
+pub fn set_voice_external(host: impl ToString, port: u16) {
+    unsafe { sdk::ICore::SetVoiceExternal(host.to_string(), port) }
+}
+
+pub fn get_voice_connection_state() -> altv_sdk::VoiceConnectionState {
+    altv_sdk::VoiceConnectionState::try_from(unsafe { sdk::ICore::GetVoiceConnectionState() })
+        .unwrap()
 }

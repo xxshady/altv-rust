@@ -40,8 +40,46 @@ bool IsFrozen(const alt::IEntity* ptr) {
 void SetFrozen(alt::IEntity* ptr, bool state) {
     return ptr->SetFrozen(state);
 }
+<<<<<<< HEAD
 u32 GetScriptID(const alt::IEntity* ptr) {
     return ptr->GetScriptID();
+=======
+u32 GetTimestamp(const alt::IEntity* ptr) {
+    return ptr->GetTimestamp();
+}
+void SetNetworkOwner(alt::IEntity* ptr, alt::IPlayer* player, bool disableMigration) {
+    return ptr->SetNetworkOwner(player, disableMigration);
+}
+void SetStreamSyncedMetaData(alt::IEntity* ptr, const StdStringClone key, MValueMutWrapper val) {
+    return ptr->SetStreamSyncedMetaData(key, val.ptr);
+}
+void DeleteStreamSyncedMetaData(alt::IEntity* ptr, const StdStringClone key) {
+    return ptr->DeleteStreamSyncedMetaData(key);
+}
+void SetVisible(alt::IEntity* ptr, bool toggle) {
+    return ptr->SetVisible(toggle);
+}
+void AttachToEntity(alt::IEntity* ptr, alt::IEntity* entity, u16 otherBoneId, u16 myBoneId, f32 position_x, f32 position_y, f32 position_z, f32 rotation_x, f32 rotation_y, f32 rotation_z, bool collision, bool noFixedRotation) {
+    return ptr->AttachToEntity(entity, otherBoneId, myBoneId, { position_x, position_y, position_z }, { rotation_x, rotation_y, rotation_z }, collision, noFixedRotation);
+}
+void AttachToEntity(alt::IEntity* ptr, alt::IEntity* entity, const StdStringClone otherBoneName, const StdStringClone myBoneName, f32 position_x, f32 position_y, f32 position_z, f32 rotation_x, f32 rotation_y, f32 rotation_z, bool collision, bool noFixedRotation) {
+    return ptr->AttachToEntity(entity, otherBoneName, myBoneName, { position_x, position_y, position_z }, { rotation_x, rotation_y, rotation_z }, collision, noFixedRotation);
+}
+void Detach(alt::IEntity* ptr) {
+    return ptr->Detach();
+}
+void SetStreamed(alt::IEntity* ptr, bool toggle) {
+    return ptr->SetStreamed(toggle);
+}
+bool GetStreamed(const alt::IEntity* ptr) {
+    return ptr->GetStreamed();
+}
+bool HasCollision(const alt::IEntity* ptr) {
+    return ptr->HasCollision();
+}
+void SetCollision(alt::IEntity* ptr, bool state) {
+    return ptr->SetCollision(state);
+>>>>>>> dev
 }
 
 } // namespace

@@ -266,6 +266,16 @@ supported_sdk_events!(
     SyncedMetaChange,
     StreamSyncedMetaChange,
     LocalSyncedMetaChange,
+
+    VoiceConnectionEvent,
+
+    RequestSyncedScene,
+    StartSyncedScene,
+    StopSyncedScene,
+    UpdateSyncedScene,
+
+    ClientDeleteObjectEvent,
+    ClientRequestObjectEvent,
 );
 
 custom_events!(
@@ -280,6 +290,11 @@ custom_events!(
     ],
     ResourceStop: [
         ThisResourceStop,
+    ],
+    VoiceConnectionEvent: [
+        VoiceConnect,
+        VoiceDisconnect,
+        VoiceConnecting,
     ],
 );
 

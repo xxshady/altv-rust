@@ -1,4 +1,4 @@
-use std::{cell::RefCell, ptr::NonNull, rc::Rc};
+use std::{cell::Cell, ptr::NonNull, rc::Rc};
 
 use altv_sdk::ffi as sdk;
 use autocxx::prelude::*;
@@ -202,7 +202,7 @@ pub struct WeaponDamageEvent {
 
     event: *mut sdk::alt::CWeaponDamageEvent,
     cancellable: CancellableEvent,
-    custom_damage_set: RefCell<bool>,
+    custom_damage_set: Cell<bool>,
 }
 
 impl WeaponDamageEvent {
@@ -233,15 +233,16 @@ impl WeaponDamageEvent {
             // internal properties
             cancellable: CancellableEvent::new(event),
             event: weapon_event,
-            custom_damage_set: RefCell::new(false),
+            custom_damage_set: Cell::new(false),
         }
     }
 
     pub fn set_damage(&self, value: u32) -> VoidResult {
-        if *self.custom_damage_set.try_borrow()? {
+        if self.custom_damage_set.get() {
             anyhow::bail!("Damage cannot be set multiple times")
         }
-        *self.custom_damage_set.try_borrow_mut()? = true;
+        self.custom_damage_set.set(true);
+
         unsafe { sdk::CWeaponDamageEvent::SetDamageValue(self.event, value) }
         Ok(())
     }
@@ -895,5 +896,199 @@ impl LocalSyncedMetaChange {
             new_value: ConstMValue::new(GetVal(event).within_unique_ptr()),
             old_value: ConstMValue::new(GetOldVal(event).within_unique_ptr()),
         }
+    }
+}
+
+#[derive(Debug)]
+pub struct VoiceConnectionEvent {
+    pub state: altv_sdk::VoiceConnectionState,
+}
+
+impl VoiceConnectionEvent {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, _: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CVoiceConnectionEvent);
+        Self {
+            state: altv_sdk::VoiceConnectionState::try_from(sdk::CVoiceConnectionEvent::GetState(
+                event,
+            ))
+            .unwrap(),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct RequestSyncedScene {
+    pub source: player::PlayerContainer,
+    pub scene_id: i32,
+
+    cancellable: CancellableEvent,
+}
+
+impl RequestSyncedScene {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CRequestSyncedSceneEvent);
+        Self {
+            source: get_non_null_player(sdk::CRequestSyncedSceneEvent::GetSource(event), resource),
+            scene_id: sdk::CRequestSyncedSceneEvent::GetSceneID(event),
+            cancellable: CancellableEvent::new(base_event),
+        }
+    }
+
+    pub fn cancel(&self) -> VoidResult {
+        self.cancellable.cancel()
+    }
+}
+
+#[derive(Debug)]
+pub struct StartSyncedScene {
+    pub source: player::PlayerContainer,
+    pub scene_id: i32,
+    pub start_pos: Vector3,
+    pub start_rot: Vector3,
+    pub anim_dict_hash: Hash,
+    pub entity_and_anim_hash_pairs: Vec<(AnyEntity, Hash)>,
+
+    cancellable: CancellableEvent,
+}
+
+impl StartSyncedScene {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CStartSyncedSceneEvent);
+
+        use sdk::CStartSyncedSceneEvent::*;
+        Self {
+            source: get_non_null_player(GetSource(event), resource),
+            scene_id: GetSceneID(event),
+            start_pos: {
+                let raw = GetStartPosition(event).within_unique_ptr();
+                read_cpp_vector3(raw)
+            },
+            start_rot: {
+                let raw = GetStartRotation(event).within_unique_ptr();
+                read_cpp_vector3(raw)
+            },
+            anim_dict_hash: GetAnimDictHash(event),
+            entity_and_anim_hash_pairs: {
+                let raw = GetEntityAndAnimHashPairs(event).within_unique_ptr();
+                let raw = sdk::read_entity_anim_hash_pairs(raw.as_ref().unwrap());
+                let mut pairs = Vec::new();
+                for e in raw.into_iter() {
+                    let entity = get_non_null_entity_by_ptr(
+                        sdk::read_entity_anim_hash_pair_entity(e),
+                        resource,
+                    );
+                    let anim_hash = unsafe { sdk::read_entity_anim_hash_pair_anim_hash(e) };
+                    pairs.push((entity, anim_hash));
+                }
+                pairs
+            },
+
+            cancellable: CancellableEvent::new(base_event),
+        }
+    }
+
+    pub fn cancel(&self) -> VoidResult {
+        self.cancellable.cancel()
+    }
+}
+
+#[derive(Debug)]
+pub struct StopSyncedScene {
+    pub source: player::PlayerContainer,
+    pub scene_id: i32,
+
+    cancellable: CancellableEvent,
+}
+
+impl StopSyncedScene {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CStopSyncedSceneEvent);
+        Self {
+            source: get_non_null_player(sdk::CStopSyncedSceneEvent::GetSource(event), resource),
+            scene_id: sdk::CStopSyncedSceneEvent::GetSceneID(event),
+
+            cancellable: CancellableEvent::new(base_event),
+        }
+    }
+
+    pub fn cancel(&self) -> VoidResult {
+        self.cancellable.cancel()
+    }
+}
+
+#[derive(Debug)]
+pub struct UpdateSyncedScene {
+    pub source: player::PlayerContainer,
+    pub scene_id: i32,
+    pub start_rate: f32,
+
+    cancellable: CancellableEvent,
+}
+
+impl UpdateSyncedScene {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CUpdateSyncedSceneEvent);
+        Self {
+            source: get_non_null_player(sdk::CUpdateSyncedSceneEvent::GetSource(event), resource),
+            scene_id: sdk::CUpdateSyncedSceneEvent::GetSceneID(event),
+            start_rate: sdk::CUpdateSyncedSceneEvent::GetStartRate(event),
+
+            cancellable: CancellableEvent::new(base_event),
+        }
+    }
+
+    pub fn cancel(&self) -> VoidResult {
+        self.cancellable.cancel()
+    }
+}
+
+#[derive(Debug)]
+pub struct ClientDeleteObjectEvent {
+    pub source: player::PlayerContainer,
+
+    cancellable: CancellableEvent,
+}
+
+impl ClientDeleteObjectEvent {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CClientDeleteObjectEvent);
+        Self {
+            source: get_non_null_player(sdk::CClientDeleteObjectEvent::GetTarget(event), resource),
+
+            cancellable: CancellableEvent::new(base_event),
+        }
+    }
+
+    pub fn cancel(&self) -> VoidResult {
+        self.cancellable.cancel()
+    }
+}
+
+#[derive(Debug)]
+pub struct ClientRequestObjectEvent {
+    pub source: player::PlayerContainer,
+    pub model: Hash,
+    pub pos: Vector3,
+
+    cancellable: CancellableEvent,
+}
+
+impl ClientRequestObjectEvent {
+    pub(crate) unsafe fn new(base_event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(base_event, CClientRequestObjectEvent);
+        Self {
+            source: get_non_null_player(sdk::CClientRequestObjectEvent::GetTarget(event), resource),
+            model: sdk::CClientRequestObjectEvent::GetModel(event),
+            pos: {
+                let raw = sdk::CClientRequestObjectEvent::GetPosition(event).within_unique_ptr();
+                read_cpp_vector3(raw)
+            },
+
+            cancellable: CancellableEvent::new(base_event),
+        }
+    }
+
+    pub fn cancel(&self) -> VoidResult {
+        self.cancellable.cancel()
     }
 }
