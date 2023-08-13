@@ -55,7 +55,7 @@ extern "C" fn resource_start(
             Ok((instance, stdout_reader, exports, store)) => {
                 manager.add(
                     resource_name,
-                    ResourceController::new(instance, stdout_reader, resource_ptr, exports, store),
+                    ResourceController::new(instance, stdout_reader, resource_ptr, store),
                 );
             }
             Err(e) => {
@@ -102,22 +102,22 @@ extern "C" fn runtime_resource_destroy_impl() {
 extern "C" fn runtime_on_tick() {
     RESOURCE_MANAGER_INSTANCE.with(|v| {
         for (_, controller) in v.borrow().resources_iter() {
-            controller.call_exports(|exports, store| {
-                exports.every_tick(store)?;
-                Ok(())
-            });
+            // controller.call_exports(|exports, store| {
+            //     exports.every_tick(store)?;
+            //     Ok(())
+            // });
 
-            let line = controller.read_stdout_line();
-            if line.is_empty() {
-                continue;
-            }
+            // let line = controller.read_stdout_line();
+            // if line.is_empty() {
+            //     continue;
+            // }
 
-            let line_without_break = line.get(..(line.len() - 1));
-            let Some(line_without_break) = line_without_break else { continue; };
+            // let line_without_break = line.get(..(line.len() - 1));
+            // let Some(line_without_break) = line_without_break else { continue; };
 
-            unsafe {
-                altv_sdk::helpers::log_with_resource(line_without_break, controller.ptr);
-            }
+            // unsafe {
+            //     altv_sdk::helpers::log_with_resource(line_without_break, controller.ptr);
+            // }
         }
     });
 }

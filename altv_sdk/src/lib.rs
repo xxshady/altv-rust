@@ -345,6 +345,9 @@ pub mod ffi {
         generate!("read_entity_anim_hash_pairs")
         generate!("read_entity_anim_hash_pair_entity")
         generate!("read_entity_anim_hash_pair_anim_hash")
+
+        generate!("shared::AltResourceImpl")
+        generate!("shared::AltResource")
     }
     pub use alt_bridge::*;
 

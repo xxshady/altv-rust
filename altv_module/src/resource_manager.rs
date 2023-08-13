@@ -4,7 +4,7 @@ use std::{
     io::BufRead,
 };
 use altv_sdk::ffi as sdk;
-use crate::{ResourceName, types::StdoutReader, wasi::exports::Exports};
+use crate::{ResourceName, types::StdoutReader};
 
 thread_local! {
     pub static RESOURCE_MANAGER_INSTANCE: RefCell<ResourceManager> = RefCell::new(ResourceManager::default());
@@ -15,7 +15,7 @@ pub struct ResourceController {
     instance: wasmer::Instance,
     stdout: RefCell<StdoutReader>,
     store: RefCell<wasmer::Store>,
-    exports: Exports,
+    // exports: Exports,
     pub ptr: *mut sdk::shared::AltResource,
 }
 
@@ -24,7 +24,7 @@ impl ResourceController {
         instance: wasmer::Instance,
         stdout: StdoutReader,
         ptr: *mut sdk::shared::AltResource,
-        exports: Exports,
+        // exports: Exports,
         store: wasmer::Store,
     ) -> Self {
         Self {
@@ -32,7 +32,7 @@ impl ResourceController {
             stdout: RefCell::new(stdout),
             store: RefCell::new(store),
             ptr,
-            exports,
+            // exports,
         }
     }
 
@@ -51,18 +51,18 @@ impl ResourceController {
 
     pub fn call_exports(
         &self,
-        f: impl Fn(&Exports, &mut wasmer::Store) -> Result<(), wasmer::RuntimeError>,
+        // f: impl Fn(&Exports, &mut wasmer::Store) -> Result<(), wasmer::RuntimeError>,
     ) {
-        let store = self.store.try_borrow_mut();
-        let Ok(mut store) = store else {
-            logger::error!("Failed to mut borrow store");
-            return;
-        };
+        // let store = self.store.try_borrow_mut();
+        // let Ok(mut store) = store else {
+        //     logger::error!("Failed to mut borrow store");
+        //     return;
+        // };
 
-        let res = f(&self.exports, &mut store);
-        if let Err(e) = res {
-            logger::error!("Failed to call exports, error: {e:?}");
-        }
+        // let res = f(&self.exports, &mut store);
+        // if let Err(e) = res {
+        //     logger::error!("Failed to call exports, error: {e:?}");
+        // }
     }
 }
 
