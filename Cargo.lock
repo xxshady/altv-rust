@@ -12,8 +12,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "altv"
-version = "15.0.0-dev.68"
+name = "ahash"
+version = "0.8.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2c99f64d1e06488f620f932677e24bc6e2897582980441ae90a671415bd7ec2f"
 dependencies = [
  "cfg-if",
  "once_cell",
@@ -21,8 +23,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "altv_internal_core_resource"
-version = "15.0.0-dev.68"
+name = "aho-corasick"
+version = "1.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6748e8def348ed4d14996fa801f4122cd763fff530258cdc03f64b25f89d3a5a"
 dependencies = [
  "memchr",
 ]
@@ -53,15 +57,6 @@ dependencies = [
  "erased-serde",
  "paste",
  "serde",
-]
-
-[[package]]
-name = "altv_internal_resource_main_macro"
-version = "15.0.0-dev.68"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 1.0.105",
 ]
 
 [[package]]
@@ -414,7 +409,7 @@ dependencies = [
 
 [[package]]
 name = "core_module"
-version = "15.0.0-dev.67"
+version = "15.0.0-dev.68"
 dependencies = [
  "altv_internal_core_shared",
  "altv_internal_sdk",
@@ -422,7 +417,7 @@ dependencies = [
 
 [[package]]
 name = "cpp_codegen"
-version = "15.0.0-dev.67"
+version = "15.0.0-dev.68"
 dependencies = [
  "lazy_static",
  "lmnkjgkj-std-backtrace-anyhow",
@@ -456,8 +451,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "core_module"
-version = "15.0.0-dev.68"
+name = "cranelift-codegen"
+version = "0.98.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "037cca234e1ad0766fdfe43b527ec14e100414b4ccf4bb614977aa9754958f57"
 dependencies = [
  "bumpalo",
  "cranelift-bforest",
@@ -475,8 +472,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "cpp_codegen"
-version = "15.0.0-dev.68"
+name = "cranelift-codegen-meta"
+version = "0.98.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d375e6afa8b9a304999ea8cf58424414b8e55e004571265a4f0826eba8b74f18"
 dependencies = [
  "cranelift-codegen-shared",
 ]
@@ -1439,16 +1438,20 @@ dependencies = [
 ]
 
 [[package]]
-name = "run_test"
-version = "15.0.0-dev.68"
+name = "rayon"
+version = "1.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1d2df5196e37bcc87abebc0053e20787d73847bb33134a69841207dd0a47f03b"
 dependencies = [
  "either",
  "rayon-core",
 ]
 
 [[package]]
-name = "rust_resource"
-version = "15.0.0-dev.68"
+name = "rayon-core"
+version = "1.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4b8f95bd6966f5c87776639160a66bd8ab9895d9d4ab01ddba9fc60661aebe8d"
 dependencies = [
  "crossbeam-channel",
  "crossbeam-deque",
@@ -1965,7 +1968,7 @@ dependencies = [
 
 [[package]]
 name = "wasm_bindgen"
-version = "15.0.0-dev.67"
+version = "15.0.0-dev.68"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1974,7 +1977,7 @@ dependencies = [
 
 [[package]]
 name = "wasm_guest_test"
-version = "15.0.0-dev.67"
+version = "15.0.0-dev.68"
 dependencies = [
  "bincode",
  "custom-print",
