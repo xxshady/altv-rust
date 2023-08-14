@@ -4,7 +4,7 @@ use std::{io::BufReader, error::Error, fmt::Debug};
 
 use crate::resource_manager::ResourceController;
 
-wasm_bindgen::host!("../wasm.interface");
+wasm_codegen::host!("../wasm.interface");
 
 struct State<'a> {
     resource: &'a ResourceController,

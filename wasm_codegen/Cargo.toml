@@ -1,5 +1,5 @@
 [package]
-name = "wasm_bindgen"
+name = "wasm_codegen"
 version = { workspace = true }
 edition = { workspace = true }
 

@@ -17,7 +17,7 @@ custom_print::define_macros!({ cprintln, cdbg }, concat, |output: String| guest:
     output
 ));
 
-wasm_bindgen::guest!("../wasm.interface");
+wasm_codegen::guest!("../wasm.interface");
 
 impl guest::exports::Exports for guest::exports::ExportsImpl {
     fn main() {

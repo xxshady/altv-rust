@@ -20,7 +20,7 @@ lazy_static = { workspace = true }
 bincode = { workspace = true }
 wasmtime = "11.0.1"
 wasmtime-wasi = "11.0.1"
-wasm_bindgen = { path = "../wasm_bindgen" }
+wasm_codegen = { path = "../wasm_codegen" }
 serde = { workspace = true }
 
 [lib]

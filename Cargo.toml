@@ -14,7 +14,7 @@ members = [
     # "test/rust_resource",
     # "test/run_test",
 
-    "wasm_bindgen",
+    "wasm_codegen",
     "wasm_guest_test",
 ]
 

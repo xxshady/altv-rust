@@ -9,7 +9,7 @@ edition = { workspace = true }
 paste = { workspace = true }
 stats_alloc = "0.1.10"
 custom-print = "1.0.0"
-wasm_bindgen = { path = "../wasm_bindgen" }
+wasm_codegen = { path = "../wasm_codegen" }
 serde = { workspace = true }
 bincode = { workspace = true }
 
