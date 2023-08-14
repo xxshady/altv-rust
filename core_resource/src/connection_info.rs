@@ -16,6 +16,15 @@ impl connection_info::ConnectionInfo {
         Ok(())
     }
 
+    pub fn text(&self) -> SomeResult<String> {
+        Ok(unsafe { sdk::IConnectionInfo::GetText(self.raw_ptr()?) }.to_string())
+    }
+
+    pub fn set_text(&self, text: impl ToString) -> VoidResult {
+        unsafe { sdk::IConnectionInfo::SetText(self.raw_ptr()?, text.to_string()) }
+        Ok(())
+    }
+
     pub fn name(&self) -> SomeResult<String> {
         Ok(unsafe { sdk::IConnectionInfo::GetName(self.raw_ptr()?) }.to_string())
     }
