@@ -37,8 +37,7 @@ pub(crate) fn start(wasm_bytes: &[u8], resource: &ResourceController) -> wasmtim
 
     let mut exports = host::exports::CustomExports::new(store, instance);
 
-    let result = exports.call_main();
-    logger::debug!("call main result: {result:?}");
+    exports.call_main()?;
 
     Ok(())
 }
