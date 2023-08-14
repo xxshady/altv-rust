@@ -46,6 +46,9 @@ i64 GetDiscordUserID(const alt::IConnectionInfo* ptr) {
 std::string GetCloudAuthHash(const alt::IConnectionInfo* ptr) {
     return ptr->GetCloudAuthHash();
 }
+std::string GetText(const alt::IConnectionInfo* ptr) {
+    return ptr->GetText();
+}
 void Accept(alt::IConnectionInfo* ptr, bool sendNames) {
     return ptr->Accept(sendNames);
 }
@@ -54,6 +57,9 @@ void Decline(alt::IConnectionInfo* ptr, const StdStringClone reason) {
 }
 bool IsAccepted(const alt::IConnectionInfo* ptr) {
     return ptr->IsAccepted();
+}
+void SetText(alt::IConnectionInfo* ptr, const StdStringClone text) {
+    return ptr->SetText(text);
 }
 
 } // namespace
