@@ -88,7 +88,7 @@ pub(crate) fn gen_exports(input: TokenStream) -> proc_macro2::TokenStream {
     build_code(
         quote! {
             pub mod exports {
-                pub struct CustomExports<S> {
+                pub struct Exports<S> {
                     #( #private_props, )*
 
                     memory: wasmtime::Memory,
@@ -97,7 +97,7 @@ pub(crate) fn gen_exports(input: TokenStream) -> proc_macro2::TokenStream {
                     store: wasmtime::Store<S>,
                 }
 
-                impl<S> CustomExports<S> {
+                impl<S> Exports<S> {
                     pub fn new(mut store: wasmtime::Store<S>, instance: wasmtime::Instance) -> Self {
                         Self {
                             // user funcs

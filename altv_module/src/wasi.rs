@@ -35,7 +35,7 @@ pub(crate) fn start(wasm_bytes: &[u8], resource: &ResourceController) -> wasmtim
 
     let instance = linker.instantiate(&mut store, &module)?;
 
-    let mut exports = host::exports::CustomExports::new(store, instance);
+    let mut exports = host::exports::Exports::new(store, instance);
 
     exports.call_main()?;
 
