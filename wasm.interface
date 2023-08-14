@@ -1,0 +1,8 @@
+imports {
+    log(message: String)
+    log_error(message: String)
+}
+
+exports {
+    main()
+}

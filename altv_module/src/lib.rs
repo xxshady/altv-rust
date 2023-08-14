@@ -43,8 +43,8 @@ extern "C" fn resource_start(
         manager
             .borrow_mut()
             .add_pending_status(resource_name.clone());
-
-        let res = wasi::start(content.as_slice());
+        let resource = ResourceController::new(resource_ptr);
+        let res = wasi::start(content.as_slice(), &resource);
 
         let mut manager = manager.borrow_mut();
 
@@ -52,7 +52,7 @@ extern "C" fn resource_start(
 
         match res {
             Ok(()) => {
-                manager.add(resource_name, ResourceController::new(resource_ptr));
+                manager.add(resource_name, resource);
             }
             Err(e) => {
                 logger::error!("Failed to start resource: {resource_name}, error: {e:?}");

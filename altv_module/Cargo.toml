@@ -17,6 +17,11 @@ logger = { path = "../logger", package = "altv_internal_logger", version = "=15.
 paste = { workspace = true }
 autocxx = { workspace = true }
 lazy_static = { workspace = true }
+bincode = { workspace = true }
+wasmtime = "11.0.1"
+wasmtime-wasi = "11.0.1"
+wasm_bindgen = { path = "../wasm_bindgen" }
+serde = { workspace = true }
 
 [lib]
 crate-type = ["cdylib"]

@@ -13,7 +13,9 @@ members = [
     "cpp_codegen",
     # "test/rust_resource",
     # "test/run_test",
-    "wasm_test",
+
+    "wasm_bindgen",
+    "wasm_guest_test",
 ]
 
 [workspace.package]
@@ -33,6 +35,10 @@ lazy_static = "1.4.0"
 serde = { version = "1.0.162", features = ["derive", "rc"] }
 serde_bytes = "0.11.9"
 erased-serde = "0.3.25"
+quote = "1.0.32"
+syn = "2.0.28"
+proc-macro2 = "1.0.66"
+bincode = "1.3.3"
 
 [workspace.metadata.release]
 pre-release-commit-message = "release new version: {{version}}"
