@@ -1,6 +1,6 @@
 use std::{fmt::Debug, time, cell::RefMut};
 
-use crate::{log_error, resource::Resource};
+use crate::{log, log_error, resource::Resource};
 
 pub type TimerId = u64;
 pub type TimerCallback = dyn FnMut() + 'static;
@@ -34,7 +34,7 @@ impl ScheduleState {
             self.id
         };
 
-        println!("creating timer with id: {id}");
+        log!("creating timer with id: {id}");
 
         let next_call_time = time::SystemTime::now() + time::Duration::from_millis(millis);
 
@@ -78,7 +78,7 @@ impl TimerManager {
         for (idx, timer) in self.timers.iter_mut().enumerate().rev() {
             if now >= timer.next_call_time {
                 (timer.callback)();
-                log_error!("timer callback called successfully");
+                log!("timer callback called successfully");
 
                 if timer.once {
                     indexes_to_remove.push(idx);
@@ -111,7 +111,7 @@ impl TimerManager {
                         "Failed to destroy timer with id: {id} (it was probably already removed)"
                     );
                 } else {
-                    println!("destroying timer with id: {id}");
+                    log!("destroying timer with id: {id}");
                 }
                 timer
             })

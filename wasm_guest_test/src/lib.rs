@@ -6,12 +6,20 @@ use crate::{resource::Resource, timers::create_timer};
 #[macro_export]
 macro_rules! __log_error {
     ($($arg:tt)*) => {
-        // $crate::api::log_error(&format!($($arg)*))
-        todo!()
+        $crate::guest::imports::log_error(format!($($arg)*))
     };
 }
 
 pub use __log_error as log_error;
+
+#[macro_export]
+macro_rules! __log {
+    ($($arg:tt)*) => {
+        $crate::guest::imports::log(format!($($arg)*))
+    };
+}
+
+pub use __log as log;
 
 custom_print::define_macros!({ cprintln, cdbg }, concat, |output: String| guest::imports::log(
     output
@@ -28,10 +36,16 @@ impl guest::exports::Exports for guest::exports::ExportsImpl {
 
         create_timer(
             Box::new(|| {
-                println!("timer");
+                cprintln!("timer");
             }),
             1500,
             false,
         );
+    }
+
+    fn on_tick() {
+        Resource::with_timers_mut(|mut timers, resource| {
+            timers.process_timers(resource.timer_schedule.borrow_mut());
+        });
     }
 }

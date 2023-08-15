@@ -1,20 +1,11 @@
 use altv_sdk::ffi as sdk;
-// use core_module::{result::VoidResult, ResourceName};
-// TEMP
-type ResourceName = String;
-
-use autocxx::{WithinUniquePtr, prelude::UniquePtr};
-use std::{path::PathBuf, ptr::NonNull, ffi::CString, cell::RefCell};
-
+use std::ffi::CString;
 use crate::resource_manager::{RESOURCE_MANAGER_INSTANCE, ResourceController};
 
-// use crate::{event_manager::EVENT_MANAGER_INSTANCE, resource_manager::RESOURCE_MANAGER_INSTANCE};
-
-// mod event_manager;
-mod helpers;
-mod required_sdk_events;
 mod resource_manager;
 mod wasi;
+
+type ResourceName = String;
 
 const ALTV_MODULE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -43,15 +34,15 @@ extern "C" fn resource_start(
         manager
             .borrow_mut()
             .add_pending_status(resource_name.clone());
-        let resource = ResourceController::new(resource_ptr);
-        let res = wasi::start(content.as_slice(), &resource);
+        let res = wasi::start(content.as_slice(), resource_ptr);
 
         let mut manager = manager.borrow_mut();
 
         manager.remove_pending_status(&resource_name);
 
         match res {
-            Ok(()) => {
+            Ok(wasi_exports) => {
+                let resource = ResourceController::new(resource_ptr, wasi_exports);
                 manager.add(resource_name, resource);
             }
             Err(e) => {
@@ -66,104 +57,34 @@ extern "C" fn resource_stop(resource_name: &str) {
     let resource_name = resource_name.to_string();
     logger::debug!("resource_stop: {resource_name}");
 
-    // RESOURCE_MANAGER_INSTANCE.with(|manager| {
-    //     manager.borrow_mut().remove(&resource_name);
-    // });
-    // EVENT_MANAGER_INSTANCE.with(|manager| {
-    //     manager.borrow_mut().resource_stopped(&resource_name);
-    // });
-}
-
-fn toggle_resource_event_type(
-    resource_name: ResourceName,
-    event_type: altv_sdk::EventType,
-    state: bool,
-) {
-    logger::debug!(
-        "toggle_resource_event_type {event_type:?} {state:?} (resource: {resource_name})"
-    );
-
-    // EVENT_MANAGER_INSTANCE.with(|v| {
-    //     v.borrow_mut()
-    //         .toggle_event(resource_name, event_type, state);
-    // })
+    RESOURCE_MANAGER_INSTANCE.with(|manager| {
+        manager.borrow_mut().remove(&resource_name);
+    });
 }
 
 #[allow(improper_ctypes_definitions)]
-extern "C" fn runtime_resource_destroy_impl() {
-    // logger::debug!("runtime_resource_destroy_impl");
-}
+extern "C" fn runtime_resource_destroy_impl() {}
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn runtime_on_tick() {
     RESOURCE_MANAGER_INSTANCE.with(|v| {
-        for (_, controller) in v.borrow().resources_iter() {
-            // controller.call_exports(|exports, store| {
-            //     exports.every_tick(store)?;
-            //     Ok(())
-            // });
-
-            // let line = controller.read_stdout_line();
-            // if line.is_empty() {
-            //     continue;
-            // }
-
-            // let line_without_break = line.get(..(line.len() - 1));
-            // let Some(line_without_break) = line_without_break else { continue; };
-
-            // unsafe {
-            //     altv_sdk::helpers::log_with_resource(line_without_break, controller.ptr);
-            // }
+        for (name, controller) in v.borrow().resources_iter() {
+            let res = controller.wasi_exports.borrow_mut().call_on_tick();
+            if let Err(err) = res {
+                logger::error!("Resource: {name} on_tick handler failed with error: {err:?}");
+            }
         }
     });
 }
 
 #[allow(improper_ctypes_definitions)]
-extern "C" fn resource_on_event(resource_name: &str, event: altv_sdk::CEventPtr) {
-    // let resource_name = resource_name.to_string();
-
-    // if event.is_null() {
-    //     panic!("resource_on_event event is null");
-    // }
-
-    // let raw_type = unsafe { sdk::CEvent::GetType(event) };
-    // let event_type = altv_sdk::EventType::try_from(raw_type).unwrap();
-
-    // if let altv_sdk::EventType::CreateBaseObjectEvent | altv_sdk::EventType::RemoveBaseObjectEvent =
-    //     event_type
-    // {
-    //     logger::debug!("ignoring create/remove baseobject event");
-    //     return;
-    // }
-
-    // logger::debug!(
-    //     "resource_on_event resource_name: {}, event: {:?}",
-    //     resource_name,
-    //     event_type
-    // );
-
-    // RESOURCE_MANAGER_INSTANCE.with(|manager| {
-    //     let manager = manager.borrow();
-    //     manager
-    //         .get_resource_for_module_by_name(&resource_name)
-    //         .unwrap_or_else(|| {
-    //             panic!("[resource_on_event] failed to get resource: {resource_name}");
-    //         })
-    //         .on_sdk_event(event_type, event);
-    // });
-}
+extern "C" fn resource_on_event(resource_name: &str, event: altv_sdk::CEventPtr) {}
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_on_create_base_object(
     resource_name: &str,
     base_object: altv_sdk::BaseObjectRawMutPtr,
 ) {
-    // let resource_name = resource_name.to_string();
-    // on_base_object_event!(
-    //     on_base_object_create,
-    //     &resource_name,
-    //     NonNull::new(base_object).unwrap()
-    // );
 }
 
 #[allow(improper_ctypes_definitions)]
@@ -171,12 +92,6 @@ extern "C" fn resource_on_remove_base_object(
     resource_name: &str,
     base_object: altv_sdk::BaseObjectRawMutPtr,
 ) {
-    // let resource_name = resource_name.to_string();
-    // on_base_object_event!(
-    //     on_base_object_destroy,
-    //     &resource_name,
-    //     NonNull::new(base_object).unwrap()
-    // );
 }
 
 #[no_mangle]
@@ -208,8 +123,6 @@ pub unsafe extern "C" fn CreateScriptRuntime(
         sdk::ResourceOnCreateBaseObjectCallback(resource_on_create_base_object),
         sdk::ResourceOnRemoveBaseObjectCallback(resource_on_remove_base_object),
     );
-
-    required_sdk_events::enable();
 
     logger::info!("{ALTV_MODULE_VERSION}");
 

@@ -1,10 +1,10 @@
 use std::{
     cell::RefCell,
     collections::{hash_map, HashMap, HashSet},
-    io::BufRead,
 };
 use altv_sdk::ffi as sdk;
 use crate::ResourceName;
+use crate::wasi::Exports;
 
 thread_local! {
     pub static RESOURCE_MANAGER_INSTANCE: RefCell<ResourceManager> = RefCell::new(ResourceManager::default());
@@ -13,11 +13,15 @@ thread_local! {
 #[derive(Debug)]
 pub struct ResourceController {
     pub ptr: *mut sdk::shared::AltResource,
+    pub wasi_exports: RefCell<Exports>,
 }
 
 impl ResourceController {
-    pub fn new(ptr: *mut sdk::shared::AltResource) -> Self {
-        Self { ptr }
+    pub fn new(ptr: *mut sdk::shared::AltResource, wasi_exports: Exports) -> Self {
+        Self {
+            ptr,
+            wasi_exports: RefCell::new(wasi_exports),
+        }
     }
 }
 
@@ -40,19 +44,13 @@ impl ResourceManager {
         self.pending_start_resources.remove(name);
     }
 
-    pub fn is_pending(&self, name: &str) -> bool {
-        self.pending_start_resources.contains(name)
-    }
-
     pub fn add(&mut self, name: ResourceName, resource: ResourceController) {
         self.resources.insert(name, resource);
     }
 
-    // TODO:
-    // pub fn remove(&mut self, resource: &str) {
-    //     if let Some(controller) = self.resources.remove(resource) {
-    //     } else {
-    //         logger::error!("ResourceManager remove unknown resource: {resource}");
-    //     }
-    // }
+    pub fn remove(&mut self, resource: &str) {
+        if self.resources.remove(resource).is_none() {
+            logger::error!("ResourceManager remove unknown resource: {resource}");
+        }
+    }
 }
