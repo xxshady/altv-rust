@@ -4,6 +4,7 @@ use crate::resource_manager::{RESOURCE_MANAGER_INSTANCE, ResourceController};
 
 mod resource_manager;
 mod wasi;
+mod const_asserts;
 
 type ResourceName = String;
 
