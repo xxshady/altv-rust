@@ -195,8 +195,8 @@ pub(crate) fn impl_exports(input: TokenStream) -> proc_macro2::TokenStream {
 pub(crate) fn gen_helpers() -> proc_macro2::TokenStream {
     quote! {
         mod __internal {
-            #[cfg(not(rust_analyzer))]
-            macro_rules! __bindgen_internal_static_assert {
+            #[cfg(target_family = "wasm")]
+            macro_rules! static_assert {
                 ($e:expr) => {
                     const _: [(); 1 - {
                         const ASSERT: bool = $e;
@@ -205,12 +205,8 @@ pub(crate) fn gen_helpers() -> proc_macro2::TokenStream {
                 };
             }
 
-            // if you have errors here make sure to set "rust_analyzer" env variable to rust analyzer
-            // "rust-analyzer.check.extraEnv": {
-            //     "RUSTFLAGS": "--cfg rust_analyzer",
-            // },
-            #[cfg(not(rust_analyzer))]
-            __bindgen_internal_static_assert!(std::mem::size_of::<usize>() == std::mem::size_of::<u32>());
+            #[cfg(target_family = "wasm")]
+            static_assert!(std::mem::size_of::<usize>() == std::mem::size_of::<u32>());
 
             #[no_mangle]
             pub fn __custom_free(fat_ptr: super::__shared::FatPtr) {
