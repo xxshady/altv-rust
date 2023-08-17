@@ -31,6 +31,8 @@ pub(crate) fn start(
     wasm_bytes: &[u8],
     resource_ptr: *mut sdk::shared::AltResource,
 ) -> wasmtime::Result<Exports> {
+    std::env::set_var("WASMTIME_BACKTRACE_DETAILS", "1");
+
     let engine = Engine::default();
     let mut linker = Linker::<State>::new(&engine);
 
@@ -43,9 +45,12 @@ pub(crate) fn start(
     host::imports::add_to_linker(&mut linker);
 
     let instance = linker.instantiate(&mut store, &module)?;
+    
+    let pre_main = instance.get_typed_func::<(), ()>(&mut store, "pre_main")?;
+    pre_main.call(&mut store, ())?;
 
-    let mut exports = Exports::new(store, instance);
+    let main = instance.get_typed_func::<(), ()>(&mut store, "main")?;
+    main.call(&mut store, ())?;
 
-    exports.call_main()?;
-    Ok(exports)
+    Ok(Exports::new(store, instance))
 }

@@ -85,6 +85,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "altv_wasm"
+version = "15.0.0-dev.68"
+dependencies = [
+ "bincode",
+ "custom-print",
+ "lmnkjgkj-std-backtrace-anyhow",
+ "paste",
+ "serde",
+ "wasm_codegen",
+]
+
+[[package]]
 name = "ambient-authority"
 version = "0.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1979,12 +1991,8 @@ dependencies = [
 name = "wasm_guest_test"
 version = "15.0.0-dev.68"
 dependencies = [
- "bincode",
- "custom-print",
- "paste",
- "serde",
+ "altv_wasm",
  "stats_alloc",
- "wasm_codegen",
 ]
 
 [[package]]

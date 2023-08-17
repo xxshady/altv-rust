@@ -4,6 +4,5 @@ imports {
 }
 
 exports {
-    main()
     on_tick()
 }

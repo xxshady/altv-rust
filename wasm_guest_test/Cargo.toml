@@ -6,12 +6,8 @@ edition = { workspace = true }
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-paste = { workspace = true }
 stats_alloc = "0.1.10"
-custom-print = "1.0.0"
-wasm_codegen = { path = "../wasm_codegen" }
-serde = { workspace = true }
-bincode = { workspace = true }
+altv = { path = "../altv_wasm", package = "altv_wasm" }
 
 [lib]
 crate-type = ["cdylib"]

@@ -1,9 +1,16 @@
 use std::{fmt::Debug, time, cell::RefMut};
 
-use crate::{log, log_error, resource::Resource};
+use anyhow::bail;
+
+use crate::{
+    resource::Resource,
+    logging::{log, log_error},
+    result::VoidResult,
+    IntoVoidResult,
+};
 
 pub type TimerId = u64;
-pub type TimerCallback = dyn FnMut() + 'static;
+pub type TimerCallback = dyn FnMut() -> VoidResult + 'static;
 
 struct TimerData {
     callback: Box<TimerCallback>,
@@ -77,8 +84,10 @@ impl TimerManager {
 
         for (idx, timer) in self.timers.iter_mut().enumerate().rev() {
             if now >= timer.next_call_time {
-                (timer.callback)();
-                log!("timer callback called successfully");
+                let res = (timer.callback)();
+                if let Err(err) = res {
+                    log!("timer callback failed with error: {err:?}");
+                }
 
                 if timer.once {
                     indexes_to_remove.push(idx);
@@ -121,21 +130,25 @@ impl TimerManager {
     }
 }
 
-pub fn create_timer(callback: Box<dyn FnMut() + 'static>, millis: u64, once: bool) -> Timer {
+pub fn create_timer(
+    callback: Box<dyn FnMut() -> VoidResult + 'static>,
+    millis: u64,
+    once: bool,
+) -> Timer {
     let id = Resource::with_timer_schedule_mut(|mut t, _| t.create(callback, millis, once));
     Timer::new(id)
 }
 
-// pub fn remove_timer(id: TimerId) {
-//     Resource::with(|v| {
-//         let schedule = v.timer_schedule.try_borrow_mut();
-//         let Ok(mut schedule) = schedule else {
-//             bail!("Failed to mutably borrow timer schedule");
-//         };
-//         schedule.add_to_be_destroyed(id);
-//         Ok(())
-//     })
-// }
+pub fn remove_timer(id: TimerId) -> VoidResult {
+    Resource::with(|v| {
+        let schedule = v.timer_schedule.try_borrow_mut();
+        let Ok(mut schedule) = schedule else {
+            bail!("Failed to mutably borrow timer schedule");
+        };
+        schedule.add_to_be_destroyed(id);
+        Ok(())
+    })
+}
 
 #[derive(Debug)]
 pub struct Timer {
@@ -147,21 +160,30 @@ impl Timer {
         Self { id: Some(id) }
     }
 
-    // pub fn destroy(&mut self) {
-    //     let Some(id) = self.id else {
-    //         log_error("Already destroyed");
-    //         return;
-    //         // bail!("Already destroyed")
-    //     };
+    pub fn destroy(&mut self) -> VoidResult {
+        let Some(id) = self.id else {
+            bail!("Already destroyed")
+        };
 
-    //     let res = remove_timer(id);
-    //     if let Ok(()) = res {
-    //         self.id = None;
-    //     }
-    //     res
-    // }
+        let res = remove_timer(id);
+        if let Ok(()) = res {
+            self.id = None;
+        }
+        res
+    }
 
     pub fn id(&self) -> Option<TimerId> {
         self.id
     }
+}
+
+pub fn set_timeout<R: IntoVoidResult>(mut callback: impl FnMut() -> R + 'static, ms: u64) -> Timer {
+    create_timer(Box::new(move || callback().into_void_result()), ms, true)
+}
+
+pub fn set_interval<R: IntoVoidResult>(
+    mut callback: impl FnMut() -> R + 'static,
+    ms: u64,
+) -> Timer {
+    create_timer(Box::new(move || callback().into_void_result()), ms, false)
 }

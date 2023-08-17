@@ -14,6 +14,9 @@ members = [
     # "test/rust_resource",
     # "test/run_test",
 
+
+    # clientside-only stuff
+    "altv_wasm",
     "wasm_codegen",
     "wasm_guest_test",
 ]
