@@ -458,12 +458,12 @@ std::vector<MValueDictPairWrapper> read_mvalue_dict(ConstMValueWrapper mvalue) {
 
     std::vector<MValueDictPairWrapper> vec;
 
-    for (auto it = dict->Begin(); it; it = dict->Next()) {
+    for (auto it = dict->Begin(); it != dict->End(); ++it) {
         ConstMValueWrapper value_wrapper;
-        value_wrapper.ptr = it->GetValue();
+        value_wrapper.ptr = it->second;
 
         MValueDictPairWrapper pair;
-        pair.ptr = std::make_shared<MValueDictPair>(std::pair{ it->GetKey(), value_wrapper.clone() });
+        pair.ptr = std::make_shared<MValueDictPair>(std::pair{ it->first, value_wrapper.clone() });
         vec.push_back(pair.clone());
     }
 
