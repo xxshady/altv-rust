@@ -11,9 +11,9 @@ readme = { workspace = true }
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "=15.0.0-dev.68" }
-resource_main_macro = { path = "../resource_main_macro", package = "altv_internal_resource_main_macro", version = "=15.0.0-dev.68" }
-core_resource = { path = "../core_resource", package = "altv_internal_core_resource", version = "=15.0.0-dev.68" }
+altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "=15.0.0-dev.69" }
+resource_main_macro = { path = "../resource_main_macro", package = "altv_internal_resource_main_macro", version = "=15.0.0-dev.69" }
+core_resource = { path = "../core_resource", package = "altv_internal_core_resource", version = "=15.0.0-dev.69" }
 
 [package.metadata.docs.rs]
 rustdoc-args = ["--generate-link-to-definition", "--theme", "themes/altv.css"]
