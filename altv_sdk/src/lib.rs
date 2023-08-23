@@ -88,6 +88,9 @@ pub mod ffi {
         #include "alt_classes/CStopSyncedSceneEvent.h"
         #include "alt_classes/CUpdateSyncedSceneEvent.h"
 
+        #include "alt_classes/CClientDeleteObjectEvent.h"
+        #include "alt_classes/CClientRequestObjectEvent.h"
+
         name!(alt_bridge)
 
         generate_ns!("ICore")
@@ -161,6 +164,9 @@ pub mod ffi {
         generate_ns!("CStartSyncedSceneEvent")
         generate_ns!("CStopSyncedSceneEvent")
         generate_ns!("CUpdateSyncedSceneEvent")
+
+        generate_ns!("CClientDeleteObjectEvent")
+        generate_ns!("CClientRequestObjectEvent")
 
         // defined in alt_bridge
         generate_ns!("events")

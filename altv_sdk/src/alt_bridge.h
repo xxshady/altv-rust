@@ -458,12 +458,12 @@ std::vector<MValueDictPairWrapper> read_mvalue_dict(ConstMValueWrapper mvalue) {
 
     std::vector<MValueDictPairWrapper> vec;
 
-    for (auto it = dict->Begin(); it; it = dict->Next()) {
+    for (auto it = dict->Begin(); it != dict->End(); ++it) {
         ConstMValueWrapper value_wrapper;
-        value_wrapper.ptr = it->GetValue();
+        value_wrapper.ptr = it->second;
 
         MValueDictPairWrapper pair;
-        pair.ptr = std::make_shared<MValueDictPair>(std::pair{ it->GetKey(), value_wrapper.clone() });
+        pair.ptr = std::make_shared<MValueDictPair>(std::pair{ it->first, value_wrapper.clone() });
         vec.push_back(pair.clone());
     }
 
@@ -1294,6 +1294,16 @@ namespace events
     const alt::CUpdateSyncedSceneEvent* to_CUpdateSyncedSceneEvent(const alt::CEvent* event) {
         assert(event->GetType() == alt::CEvent::Type::UPDATE_SYNCED_SCENE);
         return static_cast<const alt::CUpdateSyncedSceneEvent*>(event);
+    }
+
+    const alt::CClientDeleteObjectEvent* to_CClientDeleteObjectEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::CLIENT_DELETE_OBJECT_EVENT);
+        return static_cast<const alt::CClientDeleteObjectEvent*>(event);
+    }
+
+    const alt::CClientRequestObjectEvent* to_CClientRequestObjectEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::CLIENT_REQUEST_OBJECT_EVENT);
+        return static_cast<const alt::CClientRequestObjectEvent*>(event);
     }
 } // namespace events
 

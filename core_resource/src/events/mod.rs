@@ -273,6 +273,9 @@ supported_sdk_events!(
     StartSyncedScene,
     StopSyncedScene,
     UpdateSyncedScene,
+
+    ClientDeleteObjectEvent,
+    ClientRequestObjectEvent,
 );
 
 custom_events!(

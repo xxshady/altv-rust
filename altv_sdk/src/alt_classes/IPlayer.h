@@ -61,6 +61,9 @@ bool IsInMelee(const alt::IPlayer* ptr) {
 bool IsInCover(const alt::IPlayer* ptr) {
     return ptr->IsInCover();
 }
+bool IsParachuting(const alt::IPlayer* ptr) {
+    return ptr->IsParachuting();
+}
 u16 GetArmour(const alt::IPlayer* ptr) {
     return ptr->GetArmour();
 }

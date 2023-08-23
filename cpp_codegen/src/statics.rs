@@ -349,5 +349,13 @@ pub static HEADERS: &[(&str, &str)] = &[
         "CUpdateSyncedSceneEvent",
         "../altv_sdk/cpp-sdk/events/CUpdateSyncedSceneEvent.h",
     ),
+    (
+        "CClientDeleteObjectEvent",
+        "../altv_sdk/cpp-sdk/events/CClientDeleteObjectEvent.h",
+    ),
+    (
+        "CClientRequestObjectEvent",
+        "../altv_sdk/cpp-sdk/events/CClientRequestObjectEvent.h",
+    ),
     ("IResource", "../altv_sdk/cpp-sdk/IResource.h"),
 ];
