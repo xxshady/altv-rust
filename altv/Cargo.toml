@@ -16,4 +16,4 @@ resource_main_macro = { path = "../resource_main_macro", package = "altv_interna
 core_resource = { path = "../core_resource", package = "altv_internal_core_resource", version = "=15.0.0-dev.70" }
 
 [package.metadata.docs.rs]
-rustdoc-args = ["--generate-link-to-definition", "--theme", "themes/altv.css"]
+rustdoc-args = ["--generate-link-to-definition"]
