@@ -177,8 +177,16 @@ impl Timer {
     }
 }
 
-pub fn set_timeout<R: IntoVoidResult>(mut callback: impl FnMut() -> R + 'static, ms: u64) -> Timer {
-    create_timer(Box::new(move || callback().into_void_result()), ms, true)
+pub fn set_timeout<R: IntoVoidResult>(
+    callback: impl FnOnce() -> R + 'static,
+    ms: u64,
+) -> Timer {
+    let mut callback = Some(callback);
+    create_timer(
+        Box::new(move || (callback.take().unwrap())().into_void_result()),
+        ms,
+        true,
+    )
 }
 
 pub fn set_interval<R: IntoVoidResult>(
