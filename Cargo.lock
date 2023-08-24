@@ -74,6 +74,7 @@ version = "15.0.0-dev.68"
 dependencies = [
  "altv_internal_logger",
  "altv_internal_sdk",
+ "altv_wasm_shared",
  "autocxx",
  "bincode",
  "lazy_static",
@@ -88,6 +89,7 @@ dependencies = [
 name = "altv_wasm"
 version = "15.0.0-dev.68"
 dependencies = [
+ "altv_wasm_shared",
  "bincode",
  "custom-print",
  "lmnkjgkj-std-backtrace-anyhow",
@@ -95,6 +97,10 @@ dependencies = [
  "serde",
  "wasm_codegen",
 ]
+
+[[package]]
+name = "altv_wasm_shared"
+version = "15.0.0-dev.68"
 
 [[package]]
 name = "ambient-authority"

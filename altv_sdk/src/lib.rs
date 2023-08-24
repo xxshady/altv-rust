@@ -242,6 +242,7 @@ pub mod ffi {
         generate_ns!("marker")
         generate_ns!("checkpoint")
         // generate_ns!("connection_info")
+        generate_ns!("local_vehicle")
 
         // alt::Prop
         generate!("read_alt_prop")

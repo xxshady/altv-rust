@@ -16,6 +16,7 @@ members = [
 
 
     # clientside-only stuff
+    "altv_wasm_shared",
     "altv_wasm",
     "wasm_codegen",
     "wasm_guest_test",

@@ -25,6 +25,56 @@ impl host::imports::Imports for State {
     fn log(&self, message: String) {
         unsafe { altv_sdk::helpers::log_with_resource(&message, self.resource_ptr) }
     }
+
+    fn destroy_base_object(&self, ptr: altv_wasm_shared::BaseObjectPtr) {
+        unsafe { sdk::ICore::DestroyBaseObject(ptr as _) }
+    }
+
+    fn create_local_vehicle(
+        &self,
+        model: u32,
+        dimension: i32,
+        pos_x: f32,
+        pos_y: f32,
+        pos_z: f32,
+        rot_x: f32,
+        rot_y: f32,
+        rot_z: f32,
+        use_streaming: bool,
+        streaming_distance: u32,
+    ) -> altv_wasm_shared::BaseObjectPtr {
+        let local_vehicle = unsafe {
+            sdk::ICore::CreateLocalVehicle(
+                model,
+                dimension,
+                pos_x,
+                pos_y,
+                pos_z,
+                rot_x,
+                rot_y,
+                rot_z,
+                use_streaming,
+                streaming_distance,
+                self.resource_ptr,
+            )
+        };
+
+        let ptr = unsafe { sdk::local_vehicle::to_base_object(local_vehicle) };
+        assert!(!ptr.is_null());
+        ptr as altv_wasm_shared::BaseObjectPtr
+    }
+
+    fn vehicle_get_fuel_level(&self, ptr: altv_wasm_shared::BaseObjectPtr) -> f32 {
+        let vehicle = unsafe { sdk::base_object::to_vehicle(ptr as _) };
+        assert!(!vehicle.is_null());
+        unsafe { sdk::IVehicle::GetFuelLevel(vehicle) }
+    }
+
+    fn vehicle_set_fuel_level(&self, ptr: altv_wasm_shared::BaseObjectPtr, value: f32) {
+        let vehicle = unsafe { sdk::base_object::to_vehicle(ptr as _) };
+        assert!(!vehicle.is_null());
+        unsafe { sdk::IVehicle::SetFuelLevel(vehicle, value) }
+    }
 }
 
 pub(crate) fn start(
@@ -45,7 +95,7 @@ pub(crate) fn start(
     host::imports::add_to_linker(&mut linker);
 
     let instance = linker.instantiate(&mut store, &module)?;
-    
+
     let pre_main = instance.get_typed_func::<(), ()>(&mut store, "pre_main")?;
     pre_main.call(&mut store, ())?;
 

@@ -3,7 +3,7 @@ use std::{fmt::Debug, time, cell::RefMut};
 use anyhow::bail;
 
 use crate::{
-    resource::Resource,
+    state::State,
     logging::{log, log_error},
     result::VoidResult,
     IntoVoidResult,
@@ -135,12 +135,12 @@ pub fn create_timer(
     millis: u64,
     once: bool,
 ) -> Timer {
-    let id = Resource::with_timer_schedule_mut(|mut t, _| t.create(callback, millis, once));
+    let id = State::with_timer_schedule_mut(|mut t, _| t.create(callback, millis, once));
     Timer::new(id)
 }
 
 pub fn remove_timer(id: TimerId) -> VoidResult {
-    Resource::with(|v| {
+    State::with(|v| {
         let schedule = v.timer_schedule.try_borrow_mut();
         let Ok(mut schedule) = schedule else {
             bail!("Failed to mutably borrow timer schedule");

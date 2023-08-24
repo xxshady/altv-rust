@@ -46,6 +46,7 @@ lazy_static::lazy_static! {
             ("IVoiceChannel*", "alt::IVoiceChannel*"),
             ("IMarker*", "alt::IMarker*"),
             ("ICheckpoint*", "alt::ICheckpoint*"),
+            ("ILocalVehicle*", "alt::ILocalVehicle*"),
 
             ("alt::Prop", "alt::Prop"),
             ("alt::DlcProp", "alt::DlcProp"),
@@ -79,6 +80,7 @@ lazy_static::lazy_static! {
             ("std::vector<CDecoration>", "std::vector<alt::CDecoration>"),
 
             ("Rotation", "Vector3Wrapper"),
+            ("alt::Rotation", "Vector3Wrapper"),
             ("bool*", "bool*"),
 
             ("Config::Value::ValuePtr", "Config::Value::ValuePtr"),

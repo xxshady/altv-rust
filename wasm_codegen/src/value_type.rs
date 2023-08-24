@@ -68,8 +68,9 @@ value_type!(
     F32 rust: "f32" kind: Native repr: F32;
     F64 rust: "f64" kind: Native repr: F64;
     Bool rust: "bool" kind: Bool repr: I32;
-    Custom rust: "super::super::Custom" kind: FatPtr repr: FatPtr;
     OptionBool rust: "Option<bool>" kind: FatPtr repr: FatPtr;
+    BaseObjectPtr rust: "altv_wasm_shared::BaseObjectPtr" kind: Native repr: U64;
+    BaseObjectType rust: "altv_wasm_shared::BaseObjectTypeRaw" kind: Native repr: U32;
 );
 
 #[derive(Debug)]

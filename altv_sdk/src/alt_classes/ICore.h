@@ -248,6 +248,9 @@ alt::ICheckpoint* CreateCheckpoint(u8 type, f32 pos_x, f32 pos_y, f32 pos_z, f32
 alt::IMarker* CreateMarker(MarkerType type, f32 position_x, f32 position_y, f32 position_z, u8 color_r, u8 color_g, u8 color_b, u8 color_a, bool useStreaming, u32 streamingDistance, alt::IResource* res) {
     return alt::ICore::Instance().CreateMarker(static_cast<alt::IMarker::MarkerType>(type), { position_x, position_y, position_z }, { color_r, color_g, color_b, color_a }, useStreaming, streamingDistance, res);
 }
+alt::ILocalVehicle* CreateLocalVehicle(u32 modelHash, i32 dimension, f32 pos_x, f32 pos_y, f32 pos_z, f32 rot_x, f32 rot_y, f32 rot_z, bool useStreaming, u32 streamingDistance, alt::IResource* res) {
+    return alt::ICore::Instance().CreateLocalVehicle(modelHash, dimension, { pos_x, pos_y, pos_z }, { rot_x, rot_y, rot_z }, useStreaming, streamingDistance, res);
+}
 bool IsGameFocused() {
     return alt::ICore::Instance().IsGameFocused();
 }

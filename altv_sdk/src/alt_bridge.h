@@ -841,6 +841,12 @@ namespace connection_info {
     }
 } // namespace connection_info
 
+namespace local_vehicle {
+    alt::IBaseObject* to_base_object(alt::ILocalVehicle* local_vehicle) {
+        return static_cast<alt::IBaseObject*>(local_vehicle);
+    }
+} // namespace local_vehicle
+
 void read_alt_prop(const alt::Prop& prop, u16* out_drawable, u8* out_texture) {
     *out_drawable = prop.drawableId;
     *out_texture = prop.textureId;

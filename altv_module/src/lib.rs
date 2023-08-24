@@ -86,6 +86,21 @@ extern "C" fn resource_on_create_base_object(
     resource_name: &str,
     base_object: altv_sdk::BaseObjectRawMutPtr,
 ) {
+    RESOURCE_MANAGER_INSTANCE.with(|v| {
+        let manager = v.borrow();
+        let Some(r) = manager.get_by_name(resource_name) else {
+            logger::error!("Unknown resource: {resource_name:?}");
+            return;
+        };
+
+        let ty = unsafe { sdk::IBaseObject::GetType(base_object) };
+        r.wasi_exports
+            .borrow_mut()
+            .call_on_base_object_create(base_object as u64, ty)
+            .unwrap_or_else(|e| {
+                logger::error!("call_on_base_object_create failed: {e:?}");
+            });
+    });
 }
 
 #[allow(improper_ctypes_definitions)]
@@ -93,6 +108,21 @@ extern "C" fn resource_on_remove_base_object(
     resource_name: &str,
     base_object: altv_sdk::BaseObjectRawMutPtr,
 ) {
+    RESOURCE_MANAGER_INSTANCE.with(|v| {
+        let manager = v.borrow();
+        let Some(r) = manager.get_by_name(resource_name) else {
+            logger::error!("Unknown resource: {resource_name:?}");
+            return;
+        };
+
+        let ty = unsafe { sdk::IBaseObject::GetType(base_object) };
+        r.wasi_exports
+            .borrow_mut()
+            .call_on_base_object_destroy(base_object as u64, ty)
+            .unwrap_or_else(|e| {
+                logger::error!("call_on_base_object_destroy failed: {e:?}");
+            });
+    });
 }
 
 #[no_mangle]

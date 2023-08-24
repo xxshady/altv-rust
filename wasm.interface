@@ -1,8 +1,28 @@
 imports {
     log(message: String)
     log_error(message: String)
+
+    destroy_base_object(ptr: BaseObjectPtr)
+
+    create_local_vehicle(
+        model: U32,
+        dimension: I32,
+        pos_x: F32,
+        pos_y: F32,
+        pos_z: F32,
+        rot_x: F32,
+        rot_y: F32,
+        rot_z: F32,
+        use_streaming: Bool,
+        streaming_distance: U32
+    ) -> BaseObjectPtr
+    
+    vehicle_set_fuel_level(ptr: BaseObjectPtr, value: F32)
+    vehicle_get_fuel_level(ptr: BaseObjectPtr) -> F32
 }
 
 exports {
     on_tick()
+    on_base_object_create(ptr: BaseObjectPtr, ty: BaseObjectType)
+    on_base_object_destroy(ptr: BaseObjectPtr, ty: BaseObjectType)
 }

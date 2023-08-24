@@ -22,6 +22,7 @@ wasmtime = "11.0.1"
 wasmtime-wasi = "11.0.1"
 wasm_codegen = { path = "../wasm_codegen" }
 serde = { workspace = true }
+altv_wasm_shared = { path = "../altv_wasm_shared" }
 
 [lib]
 crate-type = ["cdylib"]

@@ -36,6 +36,10 @@ impl ResourceManager {
         self.resources.iter()
     }
 
+    pub fn get_by_name(&self, name: &str) -> Option<&ResourceController> {
+        self.resources.get(name)
+    }
+
     pub fn add_pending_status(&mut self, name: ResourceName) {
         self.pending_start_resources.insert(name);
     }
