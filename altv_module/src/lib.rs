@@ -136,6 +136,10 @@ pub unsafe extern "C" fn CreateScriptRuntime(
 
     logger::init().unwrap();
 
+    std::panic::set_hook(Box::new(|info| {
+        logger::error!("panic: {info}");
+    }));
+
     sdk::set_alt_core(core as *mut sdk::alt::ICore);
 
     logger::debug!("create_script_runtime");
