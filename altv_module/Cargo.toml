@@ -18,8 +18,8 @@ paste = { workspace = true }
 autocxx = { workspace = true }
 lazy_static = { workspace = true }
 bincode = { workspace = true }
-wasmtime = "11.0.1"
-wasmtime-wasi = "11.0.1"
+wasmtime = "12.0.1"
+wasmtime-wasi = "12.0.1"
 wasm_codegen = { path = "../wasm_codegen" }
 serde = { workspace = true }
 altv_wasm_shared = { path = "../altv_wasm_shared" }

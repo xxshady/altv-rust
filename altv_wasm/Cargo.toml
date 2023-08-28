@@ -12,6 +12,7 @@ readme.workspace = true
 [dependencies]
 wasm_codegen = { path = "../wasm_codegen" }
 altv_wasm_shared = { path = "../altv_wasm_shared" }
+logger = { path = "../logger", package = "altv_internal_logger", version = "=15.0.0-dev.70" }
 custom-print = "1.0.0"
 serde = { workspace = true }
 bincode = { workspace = true }

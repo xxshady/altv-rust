@@ -12,4 +12,3 @@ readme = { workspace = true }
 
 [dependencies]
 log = "0.4.17"
-altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "15.0.0-dev.50" }

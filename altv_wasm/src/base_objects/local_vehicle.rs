@@ -3,13 +3,17 @@ use std::{cell::RefCell, collections::HashSet};
 use altv_wasm_shared::BaseObjectPtr;
 use crate::__imports;
 
+thread_local! {
+    pub static LOCAL_VEHICLE_STORE: RefCell<HashSet<BaseObjectPtr>> = RefCell::new(HashSet::new());
+}
+
 #[derive(Debug, Default)]
-pub struct VehicleManager {
+pub struct LocalVehicleManager {
     objects: Vec<LocalVehicle>,
 }
 
-impl VehicleManager {
-    pub fn new(
+impl LocalVehicleManager {
+    pub fn create(
         &mut self,
         model: u32,
         dimension: i32,
@@ -63,12 +67,15 @@ impl VehicleManager {
     }
 }
 
-thread_local! {
-    pub static LOCAL_VEHICLE_STORE: RefCell<HashSet<BaseObjectPtr>> = RefCell::new(HashSet::new());
-}
-
-pub fn vehicles() -> VehicleManager {
-    VehicleManager::default()
+macro_rules! assert_local_vehicle_is_valid {
+    ($object:ident) => {
+        let valid =
+            LOCAL_VEHICLE_STORE.with(|store| store.borrow().iter().any(|ptr| *ptr == $object.ptr));
+        assert!(
+            valid,
+            "LocalVehicle instance is invalid (perhaps it was destroyed in another script resource?)"
+        );
+    };
 }
 
 #[derive(Debug)]
@@ -78,14 +85,32 @@ pub struct LocalVehicle {
 
 impl LocalVehicle {
     pub fn fuel_level(&self) -> f32 {
+        assert_local_vehicle_is_valid!(self);
         __imports::vehicle_get_fuel_level(self.ptr)
     }
 
     pub fn set_fuel_level(&self, value: f32) {
+        assert_local_vehicle_is_valid!(self);
         __imports::vehicle_set_fuel_level(self.ptr, value);
     }
 
-    pub fn destroy(self, manager: &mut VehicleManager) {
+    /// Calls destroy method of [`LocalVehicleManager`] for you.<br>
+    /// To get [`LocalVehicleManager`] you can use `altv::local_vehicles()`
+    /// ```
+    /// # let vehicle = altv::local_vehicles().new();
+    /// let mut manager = altv::local_vehicles;
+    /// // your vehicle instance
+    /// vehicle.destroy(&mut manager);
+    /// ```
+    ///
+    /// You can also call destroy method of local vehicle manager directly:
+    /// ```
+    /// # let vehicle = altv::local_vehicles().new();
+    /// let mut manager = altv::local_vehicles;
+    /// manager.destroy(vehicle);
+    /// ```
+    pub fn destroy(self, manager: &mut LocalVehicleManager) {
+        assert_local_vehicle_is_valid!(self);
         manager.destroy(self);
     }
 }

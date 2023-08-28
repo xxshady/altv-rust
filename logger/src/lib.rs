@@ -1,3 +1,4 @@
+use std::cell::Cell;
 use std::str::FromStr;
 
 use log::{Level, LevelFilter, Log};
@@ -8,6 +9,10 @@ pub use log::info;
 pub use log::warn;
 
 struct Logger {}
+
+thread_local! {
+    pub static LOG_IMPL: Cell<fn(String)> = Cell::new(|_| {});
+}
 
 impl Log for Logger {
     fn enabled(&self, _: &log::Metadata) -> bool {
@@ -31,13 +36,19 @@ impl Log for Logger {
             _ => content,
         };
 
-        altv_sdk::helpers::log(&format!("{module_path} {content}"));
+        LOG_IMPL.with(|v| {
+            (v.get())(format!("{module_path} {content}"));
+        });
     }
     fn flush(&self) {}
 }
 
-pub fn init() -> Result<(), log::SetLoggerError> {
+pub fn init(log_impl: fn(String)) -> Result<(), log::SetLoggerError> {
     let level = option_env!("LOG_LEVEL").unwrap_or("debug");
+
+    LOG_IMPL.with(|v| {
+        v.replace(log_impl);
+    });
 
     log::set_max_level(LevelFilter::from_str(level).unwrap());
     log::set_logger(&Logger {})

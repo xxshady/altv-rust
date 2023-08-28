@@ -1,10 +1,14 @@
 use altv_sdk::ffi as sdk;
 use std::ffi::CString;
-use crate::resource_manager::{RESOURCE_MANAGER_INSTANCE, ResourceController};
+use crate::{
+    resource_manager::{RESOURCE_MANAGER_INSTANCE, ResourceController},
+    helpers::handle_base_object_creation_or_deletion,
+};
 
 mod resource_manager;
 mod wasi;
 mod const_asserts;
+mod helpers;
 
 type ResourceName = String;
 
@@ -32,9 +36,6 @@ extern "C" fn resource_start(
     logger::debug!("resource main file content len: {}", content.len());
 
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
-        manager
-            .borrow_mut()
-            .add_pending_status(resource_name.clone());
         let res = wasi::start(content.as_slice(), resource_ptr);
 
         let mut manager = manager.borrow_mut();
@@ -67,6 +68,17 @@ extern "C" fn resource_stop(resource_name: &str) {
 extern "C" fn runtime_resource_destroy_impl() {}
 
 #[allow(improper_ctypes_definitions)]
+extern "C" fn runtime_resource_impl_create(resource_name: &str) {
+    logger::debug!("runtime_resource_impl_create resource: {resource_name}");
+
+    RESOURCE_MANAGER_INSTANCE.with(|manager| {
+        manager
+            .borrow_mut()
+            .add_pending_status(resource_name.to_string());
+    });
+}
+
+#[allow(improper_ctypes_definitions)]
 extern "C" fn runtime_on_tick() {
     RESOURCE_MANAGER_INSTANCE.with(|v| {
         for (name, controller) in v.borrow().resources_iter() {
@@ -86,21 +98,10 @@ extern "C" fn resource_on_create_base_object(
     resource_name: &str,
     base_object: altv_sdk::BaseObjectRawMutPtr,
 ) {
-    RESOURCE_MANAGER_INSTANCE.with(|v| {
-        let manager = v.borrow();
-        let Some(r) = manager.get_by_name(resource_name) else {
-            logger::error!("Unknown resource: {resource_name:?}");
-            return;
-        };
-
-        let ty = unsafe { sdk::IBaseObject::GetType(base_object) };
-        r.wasi_exports
-            .borrow_mut()
-            .call_on_base_object_create(base_object as u64, ty)
-            .unwrap_or_else(|e| {
-                logger::error!("call_on_base_object_create failed: {e:?}");
-            });
-    });
+    logger::debug!(
+        "resource_on_create_base_object resource: {resource_name:?} object: {base_object:?}"
+    );
+    handle_base_object_creation_or_deletion(resource_name, base_object, true);
 }
 
 #[allow(improper_ctypes_definitions)]
@@ -108,21 +109,10 @@ extern "C" fn resource_on_remove_base_object(
     resource_name: &str,
     base_object: altv_sdk::BaseObjectRawMutPtr,
 ) {
-    RESOURCE_MANAGER_INSTANCE.with(|v| {
-        let manager = v.borrow();
-        let Some(r) = manager.get_by_name(resource_name) else {
-            logger::error!("Unknown resource: {resource_name:?}");
-            return;
-        };
-
-        let ty = unsafe { sdk::IBaseObject::GetType(base_object) };
-        r.wasi_exports
-            .borrow_mut()
-            .call_on_base_object_destroy(base_object as u64, ty)
-            .unwrap_or_else(|e| {
-                logger::error!("call_on_base_object_destroy failed: {e:?}");
-            });
-    });
+    logger::debug!(
+        "resource_on_remove_base_object resource: {resource_name:?} object: {base_object:?}"
+    );
+    handle_base_object_creation_or_deletion(resource_name, base_object, false);
 }
 
 #[no_mangle]
@@ -134,7 +124,7 @@ pub unsafe extern "C" fn CreateScriptRuntime(
         panic!("CreateScriptRuntime core is null");
     }
 
-    logger::init().unwrap();
+    logger::init(|message| altv_sdk::helpers::log(&message)).unwrap();
 
     std::panic::set_hook(Box::new(|info| {
         logger::error!("panic: {info}");
@@ -153,6 +143,7 @@ pub unsafe extern "C" fn CreateScriptRuntime(
         sdk::ResourceStartCallback(resource_start),
         sdk::ResourceStopCallback(resource_stop),
         sdk::RuntimeResourceDestroyImplCallback(runtime_resource_destroy_impl),
+        sdk::RuntimeResourceImplCreateCallback(runtime_resource_impl_create),
         sdk::RuntimeOnTickCallback(runtime_on_tick),
         sdk::ResourceOnEventCallback(resource_on_event),
         sdk::ResourceOnCreateBaseObjectCallback(resource_on_create_base_object),

@@ -1,13 +1,10 @@
-use std::{
-    rc::Rc,
-    cell::{RefCell, RefMut, Ref},
-};
+use std::cell::{RefCell, RefMut};
 
 use crate::{timers, base_objects};
 
 thread_local! {
-    pub(crate) static STATE: Rc<RefCell<Option<State>>> =
-        Rc::new(RefCell::new(None));
+    pub(crate) static STATE: RefCell<Option<State>> =
+        RefCell::new(None);
 }
 
 #[derive(Debug, Default)]
@@ -79,5 +76,4 @@ impl State {
     impl_borrow_mut_fn!(timers, timers::TimerManager);
     impl_borrow_mut_fn!(timer_schedule, timers::ScheduleState);
     impl_borrow_mut_fn!(base_objects, base_objects::manager::BaseObjectManager);
-    impl_borrow_fn!(base_objects, base_objects::manager::BaseObjectManager);
 }

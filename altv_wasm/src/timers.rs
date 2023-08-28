@@ -2,12 +2,7 @@ use std::{fmt::Debug, time, cell::RefMut};
 
 use anyhow::bail;
 
-use crate::{
-    state::State,
-    logging::{log, log_error},
-    result::VoidResult,
-    IntoVoidResult,
-};
+use crate::{state::State, result::VoidResult, IntoVoidResult};
 
 pub type TimerId = u64;
 pub type TimerCallback = dyn FnMut() -> VoidResult + 'static;
@@ -41,7 +36,7 @@ impl ScheduleState {
             self.id
         };
 
-        log!("creating timer with id: {id}");
+        logger::debug!("creating timer with id: {id}");
 
         let next_call_time = time::SystemTime::now() + time::Duration::from_millis(millis);
 
@@ -86,7 +81,7 @@ impl TimerManager {
             if now >= timer.next_call_time {
                 let res = (timer.callback)();
                 if let Err(err) = res {
-                    log!("timer callback failed with error: {err:?}");
+                    logger::error!("timer callback failed with error: {err:?}");
                 }
 
                 if timer.once {
@@ -116,11 +111,11 @@ impl TimerManager {
                     .map(|(idx, _)| idx);
 
                 if timer.is_none() {
-                    log_error!(
+                    logger::error!(
                         "Failed to destroy timer with id: {id} (it was probably already removed)"
                     );
                 } else {
-                    log!("destroying timer with id: {id}");
+                    logger::debug!("destroying timer with id: {id}");
                 }
                 timer
             })
@@ -177,10 +172,7 @@ impl Timer {
     }
 }
 
-pub fn set_timeout<R: IntoVoidResult>(
-    callback: impl FnOnce() -> R + 'static,
-    ms: u64,
-) -> Timer {
+pub fn set_timeout<R: IntoVoidResult>(callback: impl FnOnce() -> R + 'static, ms: u64) -> Timer {
     let mut callback = Some(callback);
     create_timer(
         Box::new(move || (callback.take().unwrap())().into_void_result()),

@@ -14,6 +14,7 @@ public:
     shared::ResourceStartCallback resource_start_callback = nullptr;
     shared::ResourceStopCallback resource_stop_callback = nullptr;
     shared::RuntimeResourceDestroyImplCallback resource_impl_destroy_callback = nullptr;
+    shared::RuntimeResourceImplCreateCallback resource_impl_create_callback = nullptr;
     shared::RuntimeOnTickCallback on_tick_callback = nullptr;
     shared::ResourceOnEventCallback resource_on_event_callback = nullptr;
     shared::ResourceOnCreateBaseObjectCallback resource_on_create_base_object_callback = nullptr;
@@ -43,6 +44,14 @@ public:
         ~RustResource() = default;
 
         bool Start() override {
+            std::filesystem::path _full_main_path(std::filesystem::path(resource->GetPath()) / resource->GetMain());
+            std::string full_main_path = _full_main_path.string();
+
+            auto resource_start_callback = RustRuntime::get_instance().resource_start_callback;
+            assert(resource_start_callback != nullptr);
+            auto alt_resource_impl = static_cast<alt::IResource::Impl*>(this);
+            resource_start_callback(name, full_main_path, alt_resource_impl, resource);
+
             return true;
         }
 
@@ -112,20 +121,16 @@ public:
 
     alt::IResource::Impl* CreateImpl(alt::IResource* resource) override {
         auto resource_name = resource->GetName();
-        std::filesystem::path _full_main_path(std::filesystem::path(resource->GetPath()) / resource->GetMain());
-        std::string full_main_path = _full_main_path.string();
+
+        assert(resource_impl_create_callback != nullptr);
+        resource_impl_create_callback(resource_name);
 
         auto resource_impl = new RustRuntime::RustResource(
             this,
             resource,
             resource_name
         );
-
-        assert(resource_start_callback != nullptr);
-        auto alt_resource_impl = static_cast<alt::IResource::Impl*>(resource_impl);
-        resource_start_callback(resource_name, full_main_path, alt_resource_impl, resource);
-
-        return alt_resource_impl;
+        return static_cast<alt::IResource::Impl*>(resource_impl);
     }
 
     void DestroyImpl(alt::IResource::Impl* impl) override {
@@ -144,6 +149,7 @@ public:
         shared::ResourceStartCallback _resource_start,
         shared::ResourceStopCallback _resource_stop,
         shared::RuntimeResourceDestroyImplCallback _resource_impl_destroy,
+        shared::RuntimeResourceImplCreateCallback _resource_impl_create,
         shared::RuntimeOnTickCallback _on_tick,
         shared::ResourceOnEventCallback _resource_on_event,
         shared::ResourceOnCreateBaseObjectCallback _resource_on_create_base_object,
@@ -153,6 +159,7 @@ public:
         resource_start_callback = _resource_start;
         resource_stop_callback = _resource_stop;
         resource_impl_destroy_callback = _resource_impl_destroy;
+        resource_impl_create_callback = _resource_impl_create;
         on_tick_callback = _on_tick;
         resource_on_event_callback = _resource_on_event;
         resource_on_create_base_object_callback = _resource_on_create_base_object;

@@ -375,6 +375,13 @@ pub mod ffi {
     );
 
     #[repr(transparent)]
+    pub struct RuntimeResourceImplCreateCallback(pub extern "C" fn(resource_name: &str));
+    impl_extern_type_callback!(
+        RuntimeResourceImplCreateCallback,
+        "callbacks::RuntimeResourceImplCreateCallback"
+    );
+
+    #[repr(transparent)]
     pub struct RuntimeOnTickCallback(pub extern "C" fn());
     impl_extern_type_callback!(RuntimeOnTickCallback, "callbacks::RuntimeOnTickCallback");
 
@@ -413,6 +420,7 @@ pub mod ffi {
             type ResourceStartCallback = super::ResourceStartCallback;
             type ResourceStopCallback = super::ResourceStopCallback;
             type RuntimeResourceDestroyImplCallback = super::RuntimeResourceDestroyImplCallback;
+            type RuntimeResourceImplCreateCallback = super::RuntimeResourceImplCreateCallback;
             type RuntimeOnTickCallback = super::RuntimeOnTickCallback;
             type ResourceOnEventCallback = super::ResourceOnEventCallback;
             type ResourceOnCreateBaseObjectCallback = super::ResourceOnCreateBaseObjectCallback;
@@ -423,6 +431,7 @@ pub mod ffi {
                 resource_start: ResourceStartCallback,
                 resource_stop: ResourceStopCallback,
                 resource_impl_destroy: RuntimeResourceDestroyImplCallback,
+                resource_impl_create: RuntimeResourceImplCreateCallback,
                 on_tick: RuntimeOnTickCallback,
                 resource_on_event: ResourceOnEventCallback,
                 resource_on_create_base_object: ResourceOnCreateBaseObjectCallback,

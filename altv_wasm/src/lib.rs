@@ -1,7 +1,4 @@
-mod state;
 mod result;
-use altv_wasm_shared::BaseObjectType;
-use altv_wasm_shared::BaseObjectTypeRaw;
 pub use result::{IntoVoidResult, SomeResult, VoidResult};
 
 mod logging;
@@ -11,12 +8,21 @@ mod timers;
 pub use timers::{set_timeout, set_interval};
 
 mod base_objects;
-pub use base_objects::local_vehicle::{LocalVehicle, vehicles, VehicleManager};
+pub use base_objects::{
+    local_vehicle::{LocalVehicle, LocalVehicleManager},
+    vehicle::{Vehicle, VehicleManager},
+};
 
 mod hash;
 pub use hash::{Hash, IntoHash, hash};
 
+mod api;
+pub use api::Api;
+
+mod helpers;
+mod state;
 use crate::state::State;
+use altv_wasm_shared::BaseObjectTypeRaw;
 
 wasm_codegen::guest!("../wasm.interface");
 
@@ -28,6 +34,7 @@ pub use guest::imports as __imports;
 
 #[no_mangle]
 extern "C" fn pre_main() {
+    logger::init(__imports::log).unwrap();
     State::init();
 }
 

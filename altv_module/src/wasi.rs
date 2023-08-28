@@ -2,6 +2,8 @@ use wasmtime::*;
 use wasmtime_wasi::{WasiCtxBuilder, WasiCtx};
 use altv_sdk::ffi as sdk;
 
+use crate::resource_manager::set_pending_base_object;
+
 wasm_codegen::host!("../wasm.interface");
 pub type Exports = host::exports::Exports<State>;
 
@@ -12,9 +14,10 @@ impl std::fmt::Debug for Exports {
 }
 
 pub struct State {
+    wasi: WasiCtx,
+
     // TODO: some safe wrapper over this unsafe shit
     resource_ptr: *mut sdk::shared::AltResource,
-    wasi: WasiCtx,
 }
 
 impl host::imports::Imports for State {
@@ -27,7 +30,9 @@ impl host::imports::Imports for State {
     }
 
     fn destroy_base_object(&self, ptr: altv_wasm_shared::BaseObjectPtr) {
+        set_pending_base_object(true);
         unsafe { sdk::ICore::DestroyBaseObject(ptr as _) }
+        set_pending_base_object(false);
     }
 
     fn create_local_vehicle(
@@ -43,6 +48,7 @@ impl host::imports::Imports for State {
         use_streaming: bool,
         streaming_distance: u32,
     ) -> altv_wasm_shared::BaseObjectPtr {
+        set_pending_base_object(true);
         let local_vehicle = unsafe {
             sdk::ICore::CreateLocalVehicle(
                 model,
@@ -58,6 +64,7 @@ impl host::imports::Imports for State {
                 self.resource_ptr,
             )
         };
+        set_pending_base_object(false);
 
         let ptr = unsafe { sdk::local_vehicle::to_base_object(local_vehicle) };
         assert!(!ptr.is_null());
@@ -74,6 +81,14 @@ impl host::imports::Imports for State {
         let vehicle = unsafe { sdk::base_object::to_vehicle(ptr as _) };
         assert!(!vehicle.is_null());
         unsafe { sdk::IVehicle::SetFuelLevel(vehicle, value) }
+    }
+
+    fn base_object_get_id(&self, ptr: altv_wasm_shared::BaseObjectPtr) -> u32 {
+        unsafe { sdk::IBaseObject::GetID(ptr as _) }
+    }
+
+    fn base_object_get_remote_id(&self, ptr: altv_wasm_shared::BaseObjectPtr) -> u32 {
+        unsafe { sdk::IBaseObject::GetRemoteID(ptr as _) }
     }
 }
 

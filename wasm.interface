@@ -3,6 +3,8 @@ imports {
     log_error(message: String)
 
     destroy_base_object(ptr: BaseObjectPtr)
+    base_object_get_id(ptr: BaseObjectPtr) -> U32
+    base_object_get_remote_id(ptr: BaseObjectPtr) -> U32
 
     create_local_vehicle(
         model: U32,

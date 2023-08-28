@@ -37,6 +37,7 @@ namespace shared {
     using ResourceStartCallback = void (*)(rust::Str name, rust::Str full_main_path, AltResourceImpl* resource_impl, AltResource* resource);
     using ResourceStopCallback = void (*)(rust::Str name);
     using RuntimeResourceDestroyImplCallback = void (*)();
+    using RuntimeResourceImplCreateCallback = void (*)(rust::Str name);
     using RuntimeOnTickCallback = void (*)();
     using ResourceOnEventCallback = void (*)(rust::Str name, const alt::CEvent* event);
     using ResourceOnCreateBaseObjectCallback = void (*)(rust::Str name, alt::IBaseObject* base_object);
