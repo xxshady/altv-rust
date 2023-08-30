@@ -1,11 +1,5 @@
-use std::{cell::RefCell, collections::HashSet};
-
 use altv_wasm_shared::BaseObjectPtr;
-use crate::__imports;
-
-thread_local! {
-    pub static LOCAL_VEHICLE_STORE: RefCell<HashSet<BaseObjectPtr>> = RefCell::new(HashSet::new());
-}
+use crate::{__imports, state::State};
 
 #[derive(Debug, Default)]
 pub struct LocalVehicleManager {
@@ -39,18 +33,17 @@ impl LocalVehicleManager {
             streaming_distance,
         );
 
-        LOCAL_VEHICLE_STORE.with(|v| {
-            v.borrow_mut().insert(ptr);
+        State::with_base_objects_mut(|mut base_objects, _| {
+            base_objects.on_create(ptr, altv_wasm_shared::BaseObjectType::LocalVehicle);
         });
 
         LocalVehicle { ptr }
     }
 
     pub fn all(&mut self) -> &[LocalVehicle] {
-        LOCAL_VEHICLE_STORE.with(|v| {
-            self.objects = v
-                .borrow()
-                .iter()
+        State::with_base_objects_ref(|base_objects, _| {
+            self.objects = base_objects
+                .local_vehicles()
                 .map(|ptr| LocalVehicle { ptr: *ptr })
                 .collect();
         });
@@ -59,8 +52,8 @@ impl LocalVehicleManager {
     }
 
     pub fn destroy(&mut self, object: LocalVehicle) {
-        LOCAL_VEHICLE_STORE.with(|v| {
-            v.borrow_mut().remove(&object.ptr);
+        State::with_base_objects_mut(|mut base_objects, _| {
+            base_objects.on_destroy(object.ptr, altv_wasm_shared::BaseObjectType::LocalVehicle);
         });
 
         __imports::destroy_base_object(object.ptr);
@@ -69,8 +62,9 @@ impl LocalVehicleManager {
 
 macro_rules! assert_local_vehicle_is_valid {
     ($object:ident) => {
-        let valid =
-            LOCAL_VEHICLE_STORE.with(|store| store.borrow().iter().any(|ptr| *ptr == $object.ptr));
+        let valid = State::with_base_objects_ref(|base_objects, _| {
+            base_objects.local_vehicles().any(|ptr| *ptr == $object.ptr)
+        });
         assert!(
             valid,
             "LocalVehicle instance is invalid (perhaps it was destroyed in another script resource?)"

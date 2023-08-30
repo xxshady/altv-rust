@@ -1,7 +1,5 @@
-use std::{cell::RefCell, collections::HashSet};
-
 use altv_wasm_shared::BaseObjectPtr;
-use crate::__imports;
+use crate::{__imports, State};
 
 #[derive(Debug, Default)]
 pub struct VehicleManager {
@@ -10,8 +8,11 @@ pub struct VehicleManager {
 
 impl VehicleManager {
     pub fn all(&mut self) -> &[Vehicle] {
-        VEHICLE_STORE.with(|v| {
-            self.objects = v.borrow().iter().map(|ptr| Vehicle { ptr: *ptr }).collect();
+        State::with_base_objects_ref(|base_objects, _| {
+            self.objects = base_objects
+                .vehicles()
+                .map(|ptr| Vehicle { ptr: *ptr })
+                .collect();
         });
 
         &self.objects
@@ -26,14 +27,11 @@ impl VehicleManager {
     }
 }
 
-thread_local! {
-    pub static VEHICLE_STORE: RefCell<HashSet<BaseObjectPtr>> = RefCell::new(HashSet::new());
-}
-
 macro_rules! assert_vehicle_is_valid {
     ($object:ident) => {
-        let valid =
-            VEHICLE_STORE.with(|store| store.borrow().iter().any(|ptr| *ptr == $object.ptr));
+        let valid = State::with_base_objects_ref(|base_objects, _| {
+            base_objects.vehicles().any(|ptr| *ptr == $object.ptr)
+        });
         assert!(valid, "Vehicle instance is invalid");
     };
 }

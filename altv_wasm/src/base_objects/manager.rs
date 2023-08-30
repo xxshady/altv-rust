@@ -1,24 +1,31 @@
+use std::collections::{HashSet, hash_set};
+
 use altv_wasm_shared::{BaseObjectPtr, BaseObjectType};
 
-use super::{local_vehicle::LOCAL_VEHICLE_STORE, vehicle::VEHICLE_STORE};
-
 #[derive(Debug, Default)]
-pub(crate) struct BaseObjectManager {}
+pub(crate) struct BaseObjectManager {
+    vehicles: HashSet<BaseObjectPtr>,
+    local_vehicles: HashSet<BaseObjectPtr>,
+}
 
 impl BaseObjectManager {
+    pub(crate) fn vehicles(&self) -> hash_set::Iter<BaseObjectPtr> {
+        self.vehicles.iter()
+    }
+
+    pub(crate) fn local_vehicles(&self) -> hash_set::Iter<BaseObjectPtr> {
+        self.local_vehicles.iter()
+    }
+
     pub(crate) fn on_create(&mut self, ptr: BaseObjectPtr, ty: BaseObjectType) {
         logger::debug!("on_create base object ty: {ty:?}");
 
         match ty {
             BaseObjectType::LocalVehicle => {
-                LOCAL_VEHICLE_STORE.with(|v| {
-                    v.borrow_mut().insert(ptr);
-                });
+                self.local_vehicles.insert(ptr);
             }
             BaseObjectType::Vehicle => {
-                VEHICLE_STORE.with(|v| {
-                    v.borrow_mut().insert(ptr);
-                });
+                self.vehicles.insert(ptr);
             }
             _ => {
                 // TODO: add logger for internal stuff of wasm
@@ -32,14 +39,10 @@ impl BaseObjectManager {
 
         match ty {
             BaseObjectType::LocalVehicle => {
-                LOCAL_VEHICLE_STORE.with(|v| {
-                    v.borrow_mut().remove(&ptr);
-                });
+                self.local_vehicles.remove(&ptr);
             }
             BaseObjectType::Vehicle => {
-                VEHICLE_STORE.with(|v| {
-                    v.borrow_mut().remove(&ptr);
-                });
+                self.vehicles.remove(&ptr);
             }
             _ => {
                 // TODO: add logger for internal stuff of wasm

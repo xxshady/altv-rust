@@ -1,4 +1,4 @@
-use std::cell::{RefCell, RefMut};
+use std::cell::{RefCell, RefMut, Ref};
 
 use crate::{timers, base_objects};
 
@@ -76,4 +76,5 @@ impl State {
     impl_borrow_mut_fn!(timers, timers::TimerManager);
     impl_borrow_mut_fn!(timer_schedule, timers::ScheduleState);
     impl_borrow_mut_fn!(base_objects, base_objects::manager::BaseObjectManager);
+    impl_borrow_fn!(base_objects, base_objects::manager::BaseObjectManager);
 }

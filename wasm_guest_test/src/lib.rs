@@ -4,8 +4,10 @@ extern "C" fn main() {
 
     let mut api = altv::Api::new();
 
+    altv::dbg!(api.local_vehicles.all());
+
     let local_vehicle: altv::LocalVehicle = api.local_vehicles.create(
-        altv::hash("sultanrs"),
+        altv::hash("sultan"),
         0,
         0.0,
         5.0,
@@ -17,11 +19,19 @@ extern "C" fn main() {
         0,
     );
 
-    altv::set_timeout(
-        move || {
-            altv::log!("destroying");
-            api.local_vehicles.destroy(local_vehicle);
-        },
-        2000,
-    );
+    altv::dbg!(api.local_vehicles.all());
+
+    std::io::_print();
+
+    // altv::set_timeout(
+    //     move || {
+    //         altv::dbg!(local_vehicle.fuel_level());
+    //         altv::log!("destroying");
+
+    //         api.local_vehicles.destroy(local_vehicle);
+
+    //         altv::dbg!(api.local_vehicles.all());
+    //     },
+    //     2000,
+    // );
 }
