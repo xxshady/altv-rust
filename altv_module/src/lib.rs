@@ -9,6 +9,7 @@ mod resource_manager;
 mod wasi;
 mod const_asserts;
 mod helpers;
+mod wasi_stdout_err;
 
 type ResourceName = String;
 

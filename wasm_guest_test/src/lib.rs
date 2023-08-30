@@ -21,7 +21,8 @@ extern "C" fn main() {
 
     altv::dbg!(api.local_vehicles.all());
 
-    std::io::_print();
+    // println!("kek");
+    dbg!("kek");
 
     // altv::set_timeout(
     //     move || {

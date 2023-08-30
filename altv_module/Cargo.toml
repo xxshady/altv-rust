@@ -23,6 +23,9 @@ wasmtime-wasi = "12.0.1"
 wasm_codegen = { path = "../wasm_codegen" }
 serde = { workspace = true }
 altv_wasm_shared = { path = "../altv_wasm_shared" }
+async-trait = "0.1.73"
+wasi-common = "12.0.1"
+io-extras = "0.18.0"
 
 [lib]
 crate-type = ["cdylib"]

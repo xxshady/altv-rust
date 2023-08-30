@@ -2,7 +2,10 @@ use wasmtime::*;
 use wasmtime_wasi::{WasiCtxBuilder, WasiCtx};
 use altv_sdk::ffi as sdk;
 
-use crate::resource_manager::set_pending_base_object;
+use crate::{
+    resource_manager::set_pending_base_object,
+    wasi_stdout_err::{UnimplementedStdout, UnimplementedStderr},
+};
 
 wasm_codegen::host!("../wasm.interface");
 pub type Exports = host::exports::Exports<State>;
@@ -103,7 +106,11 @@ pub(crate) fn start(
 
     let module = Module::from_binary(&engine, wasm_bytes)?;
 
-    let wasi = WasiCtxBuilder::new().build();
+    let wasi = WasiCtxBuilder::new()
+        .stdout(Box::new(UnimplementedStdout(std::io::stdout())))
+        .stderr(Box::new(UnimplementedStderr(std::io::stderr())))
+        .build();
+
     let mut store = Store::new(&engine, State { wasi, resource_ptr });
 
     wasmtime_wasi::add_to_linker(&mut linker, |s| &mut s.wasi)?;
