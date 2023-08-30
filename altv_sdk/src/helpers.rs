@@ -24,6 +24,12 @@ pub fn log(str: &str) {
     }
 }
 
+pub unsafe fn log_error(str: &str) {
+    unsafe {
+        ffi::ICore::LogError(format!("[rust] {str}"), std::ptr::null_mut());
+    }
+}
+
 pub unsafe fn log_error_with_resource(str: &str, resource: *mut ffi::alt::IResource) {
     unsafe {
         ffi::ICore::LogError(str, resource);
