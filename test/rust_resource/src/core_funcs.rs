@@ -1,7 +1,7 @@
 use altv::{AmmoType, VoiceConnectionState};
 
 pub(crate) fn test_core_funcs() {
-    let voice_state = altv::get_voice_connection_state();
+    let voice_state = altv::voice_connection_state();
     dbg!(voice_state);
     assert_eq!(voice_state, VoiceConnectionState::Disconnected);
 
