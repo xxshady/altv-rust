@@ -54,6 +54,7 @@ pub mod ffi {
         #include "alt_classes/CPlayerChangeInteriorEvent.h"
         #include "alt_classes/CConnectionQueueAddEvent.h"
         #include "alt_classes/CConnectionQueueRemoveEvent.h"
+        #include "alt_classes/CPlayerHealEvent.h"
 
         #include "alt_classes/CVehicleAttachEvent.h"
         #include "alt_classes/CVehicleDetachEvent.h"
@@ -135,6 +136,7 @@ pub mod ffi {
         generate_ns!("CPlayerChangeInteriorEvent")
         generate_ns!("CConnectionQueueAddEvent")
         generate_ns!("CConnectionQueueRemoveEvent")
+        generate_ns!("CPlayerHealEvent")
 
         generate_ns!("CVehicleAttachEvent")
         generate_ns!("CVehicleDetachEvent")

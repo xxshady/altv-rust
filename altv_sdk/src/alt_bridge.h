@@ -1196,6 +1196,11 @@ namespace events
         return static_cast<const alt::CConnectionQueueRemoveEvent*>(event);
     }
 
+    const alt::CPlayerHealEvent* to_CPlayerHealEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::PLAYER_HEAL);
+        return static_cast<const alt::CPlayerHealEvent*>(event);
+    }
+
     const alt::CVehicleAttachEvent* to_CVehicleAttachEvent(const alt::CEvent* event) {
         assert(event->GetType() == alt::CEvent::Type::VEHICLE_ATTACH);
         return static_cast<const alt::CVehicleAttachEvent*>(event);

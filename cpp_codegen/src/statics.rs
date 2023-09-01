@@ -255,6 +255,10 @@ pub static HEADERS: &[(&str, &str)] = &[
         "CPlayerChangeInteriorEvent",
         "../altv_sdk/cpp-sdk/events/CPlayerChangeInteriorEvent.h",
     ),
+    (
+        "CPlayerHealEvent",
+        "../altv_sdk/cpp-sdk/events/CPlayerHealEvent.h",
+    ),
     // vehicle
     (
         "CVehicleAttachEvent",

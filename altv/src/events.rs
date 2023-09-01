@@ -98,6 +98,7 @@ on_sdk_event!(on_player_spawn, PlayerSpawn);
 on_sdk_event!(on_player_request_control, PlayerRequestControl);
 on_sdk_event!(on_player_dimension_change, PlayerDimensionChange);
 on_sdk_event!(on_player_interior_change, PlayerChangeInteriorEvent);
+on_sdk_event!(on_player_heal, PlayerHeal);
 
 on_sdk_event!(on_vehicle_attach, VehicleAttach);
 on_sdk_event!(on_vehicle_detach, VehicleDetach);
