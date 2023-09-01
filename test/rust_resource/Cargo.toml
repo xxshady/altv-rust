@@ -9,6 +9,7 @@ publish = false
 
 [dependencies]
 altv = { path = "../../altv" }
+paste = { workspace = true }
 
 [lib]
 crate-type = ["cdylib"]

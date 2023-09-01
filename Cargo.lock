@@ -1180,6 +1180,7 @@ name = "rust_resource"
 version = "15.0.0-dev.72"
 dependencies = [
  "altv",
+ "paste",
 ]
 
 [[package]]
