@@ -61,7 +61,7 @@ pub fn toggle_world_profiler(toggle: bool) {
     unsafe { sdk::ICore::SetWorldProfiler(toggle) }
 }
 
-pub fn get_net_time() -> u32 {
+pub fn net_time() -> u32 {
     unsafe { sdk::ICore::GetNetTime() }
 }
 
