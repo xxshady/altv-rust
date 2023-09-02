@@ -9,13 +9,24 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [ubuntu-22.04, windows-2022]
+        # TEST
+        # os: [ubuntu-22.04, windows-2022]
+        os: [windows-2022]
 
     runs-on: ${{ matrix.os }}
 
     if: ${{ !startsWith(github.event.head_commit.message, 'release new version:') }}
 
     steps:
+      - name: Install winget
+        uses: Cyberboss/install-winget@v1
+      - name: Install latest LLVM (clang)
+        shell: powershell
+        run: |
+          winget install LLVM.LLVM --accept-source-agreements --silent
+      - name: Clang version
+        run: |
+          clang --version
       - name: Checkout
         uses: actions/checkout@v3
         with:
