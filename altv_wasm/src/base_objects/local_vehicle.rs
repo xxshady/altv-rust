@@ -1,5 +1,5 @@
 use altv_wasm_shared::BaseObjectPtr;
-use crate::{__imports, state::State};
+use crate::{__imports, state::State, base_objects::objects::assert_local_vehicle_is_valid};
 
 #[derive(Debug, Default)]
 pub struct LocalVehicleManager {
@@ -43,7 +43,7 @@ impl LocalVehicleManager {
     pub fn all(&mut self) -> &[LocalVehicle] {
         State::with_base_objects_ref(|base_objects, _| {
             self.objects = base_objects
-                .local_vehicles()
+                .local_vehicle_iter()
                 .map(|ptr| LocalVehicle { ptr: *ptr })
                 .collect();
         });
@@ -58,18 +58,6 @@ impl LocalVehicleManager {
 
         __imports::destroy_base_object(object.ptr);
     }
-}
-
-macro_rules! assert_local_vehicle_is_valid {
-    ($object:ident) => {
-        let valid = State::with_base_objects_ref(|base_objects, _| {
-            base_objects.local_vehicles().any(|ptr| *ptr == $object.ptr)
-        });
-        assert!(
-            valid,
-            "LocalVehicle instance is invalid (perhaps it was destroyed in another script resource?)"
-        );
-    };
 }
 
 #[derive(Debug)]

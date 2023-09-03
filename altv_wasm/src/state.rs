@@ -11,7 +11,7 @@ thread_local! {
 pub(crate) struct State {
     pub(crate) timers: RefCell<timers::TimerManager>,
     pub(crate) timer_schedule: RefCell<timers::ScheduleState>,
-    pub(crate) base_objects: RefCell<base_objects::manager::BaseObjectManager>,
+    pub(crate) base_objects: RefCell<base_objects::objects::BaseObjectManager>,
 }
 
 macro_rules! with_state {
@@ -75,6 +75,6 @@ impl State {
 
     impl_borrow_mut_fn!(timers, timers::TimerManager);
     impl_borrow_mut_fn!(timer_schedule, timers::ScheduleState);
-    impl_borrow_mut_fn!(base_objects, base_objects::manager::BaseObjectManager);
-    impl_borrow_fn!(base_objects, base_objects::manager::BaseObjectManager);
+    impl_borrow_mut_fn!(base_objects, base_objects::objects::BaseObjectManager);
+    impl_borrow_fn!(base_objects, base_objects::objects::BaseObjectManager);
 }

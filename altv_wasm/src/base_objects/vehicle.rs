@@ -1,5 +1,5 @@
 use altv_wasm_shared::BaseObjectPtr;
-use crate::{__imports, State};
+use crate::{__imports, State, base_objects::objects::assert_vehicle_is_valid};
 
 #[derive(Debug, Default)]
 pub struct VehicleManager {
@@ -10,7 +10,7 @@ impl VehicleManager {
     pub fn all(&mut self) -> &[Vehicle] {
         State::with_base_objects_ref(|base_objects, _| {
             self.objects = base_objects
-                .vehicles()
+                .vehicle_iter()
                 .map(|ptr| Vehicle { ptr: *ptr })
                 .collect();
         });
@@ -25,15 +25,6 @@ impl VehicleManager {
     pub fn get_by_remote_id(&mut self, id: u32) -> Option<&Vehicle> {
         self.all().iter().find(|v| v.remote_id() == id)
     }
-}
-
-macro_rules! assert_vehicle_is_valid {
-    ($object:ident) => {
-        let valid = State::with_base_objects_ref(|base_objects, _| {
-            base_objects.vehicles().any(|ptr| *ptr == $object.ptr)
-        });
-        assert!(valid, "Vehicle instance is invalid");
-    };
 }
 
 #[derive(Debug)]

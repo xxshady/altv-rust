@@ -18,21 +18,23 @@ extern "C" fn main() {
         false,
         0,
     );
+    altv::dbg!(local_vehicle.fuel_level());
 
     altv::dbg!(api.local_vehicles.all());
 
     // println!("kek");
     dbg!("kek");
 
-    // altv::set_timeout(
-    //     move || {
-    //         altv::dbg!(local_vehicle.fuel_level());
-    //         altv::log!("destroying");
+    altv::set_timeout(
+        move || {
+            local_vehicle.set_fuel_level(30.0);
+            altv::dbg!(local_vehicle.fuel_level());
+            altv::log!("destroying");
 
-    //         api.local_vehicles.destroy(local_vehicle);
+            api.local_vehicles.destroy(local_vehicle);
 
-    //         altv::dbg!(api.local_vehicles.all());
-    //     },
-    //     2000,
-    // );
+            altv::dbg!(api.local_vehicles.all());
+        },
+        2500,
+    );
 }
