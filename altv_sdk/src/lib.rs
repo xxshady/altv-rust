@@ -348,26 +348,32 @@ pub mod ffi {
     }
     pub use alt_bridge::*;
 
+    #[allow(improper_ctypes_definitions)]
     #[repr(transparent)]
     pub struct ResourceStartCallback(pub extern "C" fn(name: &str, full_main_path: &str));
     impl_extern_type_callback!(ResourceStartCallback, "callbacks::ResourceStartCallback");
 
+    #[allow(improper_ctypes_definitions)]
     #[repr(transparent)]
     pub struct ResourceStopCallback(pub extern "C" fn(name: &str));
     impl_extern_type_callback!(ResourceStopCallback, "callbacks::ResourceStopCallback");
 
     #[repr(transparent)]
+    #[allow(improper_ctypes_definitions)]
     pub struct RuntimeResourceDestroyImplCallback(pub extern "C" fn());
     impl_extern_type_callback!(
         RuntimeResourceDestroyImplCallback,
         "callbacks::RuntimeResourceDestroyImplCallback"
     );
 
+    #[allow(improper_ctypes_definitions)]
     #[repr(transparent)]
     pub struct RuntimeOnTickCallback(pub extern "C" fn());
     impl_extern_type_callback!(RuntimeOnTickCallback, "callbacks::RuntimeOnTickCallback");
 
+    #[allow(improper_ctypes_definitions)]
     #[repr(transparent)]
+
     pub struct ResourceOnEventCallback(
         pub extern "C" fn(name: &str, event: *const alt_bridge::alt::CEvent),
     );
@@ -376,6 +382,7 @@ pub mod ffi {
         "callbacks::ResourceOnEventCallback"
     );
 
+    #[allow(improper_ctypes_definitions)]
     #[repr(transparent)]
     pub struct ResourceOnCreateBaseObjectCallback(
         pub extern "C" fn(name: &str, base_object: *mut alt_bridge::alt::IBaseObject),
@@ -385,6 +392,7 @@ pub mod ffi {
         "callbacks::ResourceOnCreateBaseObjectCallback"
     );
 
+    #[allow(improper_ctypes_definitions)]
     #[repr(transparent)]
     pub struct ResourceOnRemoveBaseObjectCallback(
         pub extern "C" fn(name: &str, base_object: *mut alt_bridge::alt::IBaseObject),
