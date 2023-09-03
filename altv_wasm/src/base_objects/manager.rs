@@ -28,7 +28,6 @@ impl BaseObjectManager {
                 self.vehicles.insert(ptr);
             }
             _ => {
-                // TODO: add logger for internal stuff of wasm
                 logger::error!("Create unknown base object: {ptr:?} {ty:?}");
             }
         }
@@ -45,7 +44,6 @@ impl BaseObjectManager {
                 self.vehicles.remove(&ptr);
             }
             _ => {
-                // TODO: add logger for internal stuff of wasm
                 logger::error!("Create unknown base object: {ptr:?} {ty:?}");
             }
         }
