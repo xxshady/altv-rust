@@ -131,13 +131,14 @@ pub unsafe extern "C" fn CreateScriptRuntime(
         logger::error!("panic: {info}");
     }));
 
-    sdk::set_alt_core(core as *mut sdk::alt::ICore);
+    logger::debug!("set_alt_core");
+    sdk::set_alt_core(core);
 
     logger::debug!("create_script_runtime");
     let runtime = sdk::create_script_runtime();
 
     logger::debug!("register_script_runtime");
-    sdk::register_script_runtime(core as *mut sdk::alt::ICore, "rs", runtime);
+    sdk::register_script_runtime(core, "rs", runtime);
 
     logger::debug!("setup_callbacks");
     sdk::setup_callbacks(
