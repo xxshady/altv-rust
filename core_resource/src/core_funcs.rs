@@ -61,7 +61,7 @@ pub fn toggle_world_profiler(toggle: bool) {
     unsafe { sdk::ICore::SetWorldProfiler(toggle) }
 }
 
-pub fn get_net_time() -> u32 {
+pub fn net_time() -> u32 {
     unsafe { sdk::ICore::GetNetTime() }
 }
 
@@ -82,7 +82,103 @@ pub fn set_voice_external(host: impl ToString, port: u16) {
     unsafe { sdk::ICore::SetVoiceExternal(host.to_string(), port) }
 }
 
-pub fn get_voice_connection_state() -> altv_sdk::VoiceConnectionState {
+pub fn voice_connection_state() -> altv_sdk::VoiceConnectionState {
     altv_sdk::VoiceConnectionState::try_from(unsafe { sdk::ICore::GetVoiceConnectionState() })
         .unwrap()
+}
+
+pub fn max_streaming_peds() -> u16 {
+    unsafe { sdk::ICore::GetMaxStreamingPeds() }
+}
+
+pub fn set_max_streaming_peds(value: u16) {
+    unsafe { sdk::ICore::SetMaxStreamingPeds(value) }
+}
+
+pub fn max_streaming_objects() -> u16 {
+    unsafe { sdk::ICore::GetMaxStreamingObjects() }
+}
+
+pub fn set_max_streaming_objects(value: u16) {
+    unsafe { sdk::ICore::SetMaxStreamingObjects(value) }
+}
+
+pub fn max_streaming_vehicles() -> u16 {
+    unsafe { sdk::ICore::GetMaxStreamingVehicles() }
+}
+
+pub fn set_max_streaming_vehicles(value: u16) {
+    unsafe { sdk::ICore::SetMaxStreamingVehicles(value) }
+}
+
+pub fn streamer_thread_count() -> u8 {
+    unsafe { sdk::ICore::GetStreamerThreadCount() }
+}
+
+pub fn set_streamer_thread_count(value: u8) {
+    unsafe { sdk::ICore::SetStreamerThreadCount(value) }
+}
+
+pub fn migration_thread_count() -> u8 {
+    unsafe { sdk::ICore::GetMigrationThreadCount() }
+}
+
+pub fn set_migration_thread_count(value: u8) {
+    unsafe { sdk::ICore::SetMigrationThreadCount(value) }
+}
+
+pub fn sync_send_thread_count() -> u8 {
+    unsafe { sdk::ICore::GetSyncSendThreadCount() }
+}
+
+pub fn set_sync_send_thread_count(value: u8) {
+    unsafe { sdk::ICore::SetSyncSendThreadCount(value) }
+}
+
+pub fn sync_receive_thread_count() -> u8 {
+    unsafe { sdk::ICore::GetSyncReceiveThreadCount() }
+}
+
+pub fn set_sync_receive_thread_count(value: u8) {
+    unsafe { sdk::ICore::SetSyncReceiveThreadCount(value) }
+}
+
+pub fn streaming_tick_rate() -> u32 {
+    unsafe { sdk::ICore::GetStreamingTickRate() }
+}
+
+pub fn set_streaming_tick_rate(value: u32) {
+    unsafe { sdk::ICore::SetStreamingTickRate(value) }
+}
+
+pub fn migration_tick_rate() -> u32 {
+    unsafe { sdk::ICore::GetMigrationTickRate() }
+}
+
+pub fn set_migration_tick_rate(value: u32) {
+    unsafe { sdk::ICore::SetMigrationTickRate(value) }
+}
+
+pub fn col_shape_tick_rate() -> u32 {
+    unsafe { sdk::ICore::GetColShapeTickRate() }
+}
+
+pub fn set_col_shape_tick_rate(value: u32) {
+    unsafe { sdk::ICore::SetColShapeTickRate(value) }
+}
+
+pub fn streaming_distance() -> u32 {
+    unsafe { sdk::ICore::GetStreamingDistance() }
+}
+
+pub fn set_streaming_distance(value: u32) {
+    unsafe { sdk::ICore::SetStreamingDistance(value) }
+}
+
+pub fn migration_distance() -> u32 {
+    unsafe { sdk::ICore::GetMigrationDistance() }
+}
+
+pub fn set_migration_distance(value: u32) {
+    unsafe { sdk::ICore::SetMigrationDistance(value) }
 }

@@ -12,25 +12,15 @@ dependencies = [
 ]
 
 [[package]]
-name = "addr2line"
-version = "0.21.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8a30b2e23b9e17a9f90641c7ab1549cd9b44f296d3ccbf309d2863cfe398a0cb"
+name = "altv"
+version = "15.0.0-dev.72"
 dependencies = [
  "gimli 0.28.0",
 ]
 
 [[package]]
-name = "adler"
-version = "1.0.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f26201604c87b1e01bd3d98f8d5d9a8fcbb815e8cedb41ffccbeb4bf593a35fe"
-
-[[package]]
-name = "ahash"
-version = "0.8.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2c99f64d1e06488f620f932677e24bc6e2897582980441ae90a671415bd7ec2f"
+name = "altv_internal_core_resource"
+version = "15.0.0-dev.72"
 dependencies = [
  "cfg-if",
  "once_cell",
@@ -48,7 +38,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_core_shared"
-version = "15.0.0-dev.70"
+version = "15.0.0-dev.72"
 dependencies = [
  "altv_internal_sdk",
  "lmnkjgkj-std-backtrace-anyhow",
@@ -56,14 +46,14 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_logger"
-version = "15.0.0-dev.70"
+version = "15.0.0-dev.72"
 dependencies = [
  "log",
 ]
 
 [[package]]
 name = "altv_internal_mvalue"
-version = "15.0.0-dev.70"
+version = "15.0.0-dev.72"
 dependencies = [
  "altv_internal_logger",
  "altv_internal_sdk",
@@ -74,8 +64,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "altv_internal_resource_main_macro"
+version = "15.0.0-dev.72"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 1.0.105",
+]
+
+[[package]]
 name = "altv_internal_sdk"
-version = "15.0.0-dev.70"
+version = "15.0.0-dev.72"
 dependencies = [
  "autocxx",
  "autocxx-build",
@@ -84,7 +83,7 @@ dependencies = [
 
 [[package]]
 name = "altv_module"
-version = "15.0.0-dev.70"
+version = "15.0.0-dev.72"
 dependencies = [
  "altv_internal_logger",
  "altv_internal_sdk",
@@ -181,9 +180,9 @@ checksum = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
 
 [[package]]
 name = "autocxx"
-version = "0.25.0"
+version = "0.26.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9a19c80ba8384f11f11024462523829c2989a3fd7afb8ac70637abdd25bd3b8a"
+checksum = "1ba64dd33efd8f09724143d45ab91b48aebcee52f4fb11add3464c998fab47dc"
 dependencies = [
  "aquamarine",
  "autocxx-macro",
@@ -234,7 +233,7 @@ checksum = "aa19cbb6614361e61806db4526bd373415dfe0cb95f6bf811a2ddbd6fa4a8115"
 dependencies = [
  "aquamarine",
  "autocxx-bindgen",
- "autocxx-parser",
+ "autocxx-parser 0.25.0",
  "cc",
  "cxx-gen",
  "indexmap 1.9.3",
@@ -258,15 +257,15 @@ dependencies = [
 
 [[package]]
 name = "autocxx-macro"
-version = "0.25.0"
+version = "0.26.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7313f823cd7e017cf80b46254d9bd78e4cb86b33b7e2cd08e1af312ee7bc77cf"
+checksum = "8e594e68d030b6eb1ce7e2b40958f4f4ae7150c588c76d76b9f8178d41c47d80"
 dependencies = [
- "autocxx-parser",
+ "autocxx-parser 0.26.0",
  "proc-macro-error",
  "proc-macro2",
  "quote",
- "syn 1.0.109",
+ "syn 2.0.15",
 ]
 
 [[package]]
@@ -288,18 +287,21 @@ dependencies = [
 ]
 
 [[package]]
-name = "backtrace"
-version = "0.3.69"
+name = "autocxx-parser"
+version = "0.26.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2089b7e3f35b9dd2d0ed921ead4f6d318c27680d4a5bd167b3ee120edb105837"
+checksum = "2ef00b2fc378804c31c4fbd693a7fea93f8a90467dce331dae1e4ce41e542953"
 dependencies = [
- "addr2line 0.21.0",
- "cc",
- "cfg-if",
- "libc",
- "miniz_oxide",
- "object 0.32.0",
- "rustc-demangle",
+ "indexmap",
+ "itertools 0.10.5",
+ "log",
+ "once_cell",
+ "proc-macro2",
+ "quote",
+ "serde",
+ "serde_json",
+ "syn 2.0.15",
+ "thiserror",
 ]
 
 [[package]]
@@ -508,10 +510,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "cranelift-codegen"
-version = "0.99.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "38849e3b19bc9a6dbf8bc188876b76e6ba288089a5567be573de50f44801375c"
+name = "core_module"
+version = "15.0.0-dev.72"
 dependencies = [
  "bumpalo",
  "cranelift-bforest",
@@ -529,10 +529,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "cranelift-codegen-meta"
-version = "0.99.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a3de51da572e65cb712a47b7413c50208cac61a4201560038de929d9a7f4fadf"
+name = "cpp_codegen"
+version = "15.0.0-dev.72"
 dependencies = [
  "cranelift-codegen-shared",
 ]
@@ -1390,9 +1388,9 @@ dependencies = [
 
 [[package]]
 name = "moveit"
-version = "0.5.1"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d7d756ffe4e38013507d35bf726a93fcdae2cae043ab5ce477f13857a335030d"
+checksum = "87d7335204cb6ef7bd647fa6db0be3e4d7aa25b5823a7aa030027ddf512cefba"
 dependencies = [
  "cxx",
 ]
@@ -1589,25 +1587,19 @@ dependencies = [
 ]
 
 [[package]]
-name = "rayon"
-version = "1.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1d2df5196e37bcc87abebc0053e20787d73847bb33134a69841207dd0a47f03b"
+name = "run_test"
+version = "15.0.0-dev.72"
 dependencies = [
  "either",
  "rayon-core",
 ]
 
 [[package]]
-name = "rayon-core"
-version = "1.11.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4b8f95bd6966f5c87776639160a66bd8ab9895d9d4ab01ddba9fc60661aebe8d"
+name = "rust_resource"
+version = "15.0.0-dev.72"
 dependencies = [
- "crossbeam-channel",
- "crossbeam-deque",
- "crossbeam-utils",
- "num_cpus",
+ "altv",
+ "paste",
 ]
 
 [[package]]
