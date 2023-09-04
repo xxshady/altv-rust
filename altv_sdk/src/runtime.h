@@ -50,9 +50,7 @@ public:
             auto resource_start_callback = RustRuntime::get_instance().resource_start_callback;
             assert(resource_start_callback != nullptr);
             auto alt_resource_impl = static_cast<alt::IResource::Impl*>(this);
-            resource_start_callback(name, full_main_path, alt_resource_impl, resource);
-
-            return true;
+            return resource_start_callback(name, full_main_path, alt_resource_impl, resource);
         }
 
         bool Stop() override {

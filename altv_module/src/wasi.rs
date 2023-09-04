@@ -1,13 +1,11 @@
-use wasmtime::*;
-use wasmtime_wasi::{WasiCtxBuilder, WasiCtx};
+use wasmtime_wasi::WasiCtx;
 use altv_sdk::ffi as sdk;
 
-use crate::{
-    resource_manager::set_pending_base_object,
-    wasi_stdout_err::{UnimplementedStdout, UnimplementedStderr},
-};
+use crate::resource_manager::set_pending_base_object;
 
 wasm_codegen::host!("../wasm.interface");
+pub use host::imports;
+
 pub type Exports = host::exports::Exports<State>;
 
 impl std::fmt::Debug for Exports {
@@ -17,10 +15,10 @@ impl std::fmt::Debug for Exports {
 }
 
 pub struct State {
-    wasi: WasiCtx,
+    pub wasi: WasiCtx,
 
     // TODO: some safe wrapper over this unsafe shit
-    resource_ptr: *mut sdk::shared::AltResource,
+    pub resource_ptr: *mut sdk::shared::AltResource,
 }
 
 impl host::imports::Imports for State {
@@ -93,36 +91,4 @@ impl host::imports::Imports for State {
     fn base_object_get_remote_id(&self, ptr: altv_wasm_shared::BaseObjectPtr) -> u32 {
         unsafe { sdk::IBaseObject::GetRemoteID(ptr as _) }
     }
-}
-
-pub(crate) fn start(
-    wasm_bytes: &[u8],
-    resource_ptr: *mut sdk::shared::AltResource,
-) -> wasmtime::Result<Exports> {
-    std::env::set_var("WASMTIME_BACKTRACE_DETAILS", "1");
-
-    let engine = Engine::default();
-    let mut linker = Linker::<State>::new(&engine);
-
-    let module = Module::from_binary(&engine, wasm_bytes)?;
-
-    let wasi = WasiCtxBuilder::new()
-        .stdout(Box::new(UnimplementedStdout(std::io::stdout())))
-        .stderr(Box::new(UnimplementedStderr(std::io::stderr())))
-        .build();
-
-    let mut store = Store::new(&engine, State { wasi, resource_ptr });
-
-    wasmtime_wasi::add_to_linker(&mut linker, |s| &mut s.wasi)?;
-    host::imports::add_to_linker(&mut linker);
-
-    let instance = linker.instantiate(&mut store, &module)?;
-
-    let pre_main = instance.get_typed_func::<(), ()>(&mut store, "pre_main")?;
-    pre_main.call(&mut store, ())?;
-
-    let main = instance.get_typed_func::<(), ()>(&mut store, "main")?;
-    main.call(&mut store, ())?;
-
-    Ok(Exports::new(store, instance))
 }

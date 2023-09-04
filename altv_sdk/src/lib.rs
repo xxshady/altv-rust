@@ -362,7 +362,7 @@ pub mod ffi {
             full_main_path: &str,
             resource_impl: *mut alt_bridge::shared::AltResourceImpl,
             resource_ptr: *mut alt_bridge::shared::AltResource,
-        ),
+        ) -> bool,
     );
     impl_extern_type_callback!(ResourceStartCallback, "callbacks::ResourceStartCallback");
 

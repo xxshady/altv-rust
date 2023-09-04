@@ -3,8 +3,11 @@ use std::{
     collections::{hash_map, HashMap, HashSet},
 };
 use altv_sdk::ffi as sdk;
-use crate::ResourceName;
-use crate::wasi::Exports;
+use crate::{
+    ResourceName,
+    wasi::{State, imports, Exports},
+    wasi_stdout_err::{UnimplementedStdout, Stderr},
+};
 
 thread_local! {
     pub static RESOURCE_MANAGER_INSTANCE: RefCell<ResourceManager> = RefCell::new(ResourceManager::default());
@@ -16,14 +19,93 @@ thread_local! {
 pub struct ResourceController {
     pub ptr: *mut sdk::shared::AltResource,
     pub wasi_exports: RefCell<Exports>,
+    pub name: ResourceName,
+
+    current_error_message: RefCell<Option<Vec<u8>>>,
 }
 
 impl ResourceController {
-    pub fn new(ptr: *mut sdk::shared::AltResource, wasi_exports: Exports) -> Self {
-        Self {
+    pub fn new(
+        name: ResourceName,
+        ptr: *mut sdk::shared::AltResource,
+        wasm_bytes: &[u8],
+    ) -> Result<ResourceController, wasmtime::Error> {
+        let exports = Self::start_wasi(name.clone(), wasm_bytes, ptr)?;
+        Ok(Self {
             ptr,
-            wasi_exports: RefCell::new(wasi_exports),
+            wasi_exports: RefCell::new(exports),
+            current_error_message: RefCell::new(None),
+            name,
+        })
+    }
+
+    fn start_wasi(
+        resource_name: String,
+        wasm_bytes: &[u8],
+        resource_ptr: *mut sdk::shared::AltResource,
+    ) -> wasmtime::Result<Exports> {
+        use wasmtime::*;
+        use wasmtime_wasi::WasiCtxBuilder;
+
+        std::env::set_var("WASMTIME_BACKTRACE_DETAILS", "1");
+
+        let engine = Engine::default();
+        let mut linker = Linker::<State>::new(&engine);
+
+        let module = Module::from_binary(&engine, wasm_bytes)?;
+
+        let wasi = WasiCtxBuilder::new()
+            .env("RUST_BACKTRACE", "full")?
+            .stdout(Box::new(UnimplementedStdout(std::io::stdout())))
+            .stderr(Box::new(Stderr(std::io::stderr(), resource_name)))
+            .build();
+
+        let mut store = Store::new(&engine, State { wasi, resource_ptr });
+
+        wasmtime_wasi::add_to_linker(&mut linker, |s| &mut s.wasi)?;
+        imports::add_to_linker(&mut linker);
+
+        let instance = linker.instantiate(&mut store, &module)?;
+
+        Ok(Exports::new(store, instance))
+    }
+
+    pub fn call_main(&self) -> wasmtime::Result<()> {
+        let mut exports = self.wasi_exports.borrow_mut();
+
+        exports.call_pre_main()?;
+        exports.call_main()
+    }
+
+    pub fn extend_error_message(&self, buf: &[u8]) {
+        self.current_error_message
+            .borrow_mut()
+            .get_or_insert(Vec::new())
+            .extend_from_slice(buf);
+    }
+
+    pub fn log_error_message(&self) {
+        let Some(message) = self.current_error_message.borrow_mut().take() else {
+            return;
+        };
+
+        let Ok(message) = std::str::from_utf8(&message) else {
+            logger::error!(
+                "Failed to create str from raw error message of resource: {}",
+                self.name
+            );
+            return;
+        };
+
+        unsafe { altv_sdk::helpers::log_error_with_resource(message, self.ptr) }
+    }
+
+    pub fn ensure_error_message_is_empty(&self) {
+        if self.current_error_message.borrow_mut().take().is_none() {
+            return;
         }
+
+        logger::error!("Resource: {} tried to output something to stderr without panic (probably called `dbg!` or something like this? use `altv::dbg!` instead)", self.name);
     }
 }
 
@@ -31,6 +113,7 @@ impl ResourceController {
 pub struct ResourceManager {
     resources: HashMap<ResourceName, ResourceController>,
     pending_start_resources: HashSet<ResourceName>,
+    panicked_resources: HashSet<ResourceName>,
 }
 
 impl ResourceManager {
@@ -59,9 +142,25 @@ impl ResourceManager {
     }
 
     pub fn remove(&mut self, resource: &str) {
-        if self.resources.remove(resource).is_none() {
-            logger::error!("ResourceManager remove unknown resource: {resource}");
+        if self.panicked_resources.contains(resource) {
+            logger::debug!("tried to remove panicked resource: {resource}, ignoring");
+            return;
         }
+
+        if self.resources.remove(resource).is_none() {
+            logger::error!("remove unknown resource: {resource}");
+        }
+        self.pending_start_resources.remove(resource);
+        self.panicked_resources.remove(resource);
+    }
+
+    pub fn resource_panicked(&mut self, resource: ResourceName) {
+        if self.resources.remove(&resource).is_none() {
+            logger::error!("remove unknown panicked resource: {resource}");
+            return;
+        }
+
+        self.panicked_resources.insert(resource);
     }
 }
 

@@ -34,7 +34,7 @@ pub use guest::exports as __exports;
 pub use guest::imports as __imports;
 
 #[no_mangle]
-extern "C" fn pre_main() {
+extern "C" fn __pre_main() {
     logger::init(__imports::log).unwrap();
     State::init();
 }

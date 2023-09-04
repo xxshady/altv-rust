@@ -92,9 +92,12 @@ pub(crate) fn gen_exports(input: TokenStream) -> proc_macro2::TokenStream {
                     #( #private_props, )*
 
                     memory: wasmtime::Memory,
+                    store: wasmtime::Store<S>,
+
                     alloc: wasmtime::TypedFunc<super::__shared::Size, super::__shared::Ptr>,
                     free: wasmtime::TypedFunc<super::__shared::FatPtr, ()>,
-                    store: wasmtime::Store<S>,
+                    pre_main: wasmtime::TypedFunc<(), ()>,
+                    main: wasmtime::TypedFunc<(), ()>,
                 }
 
                 impl<S> Exports<S> {
@@ -109,6 +112,11 @@ pub(crate) fn gen_exports(input: TokenStream) -> proc_macro2::TokenStream {
                             memory: instance.get_memory(&mut store, "memory").unwrap(),
                             alloc: instance.get_typed_func(&mut store, "__custom_alloc").unwrap(),
                             free: instance.get_typed_func(&mut store, "__custom_free").unwrap(),
+                            pre_main: instance.get_typed_func(&mut store, "__pre_main").unwrap(),
+
+                            // TODO: maybe do something other than panic here if it fails to find main fn?
+                            main: instance.get_typed_func(&mut store, "main").unwrap(),
+
                             store,
                         }
                     }
@@ -136,6 +144,14 @@ pub(crate) fn gen_exports(input: TokenStream) -> proc_macro2::TokenStream {
 
                         self.free.call(&mut self.store, fat_ptr).unwrap();
                         Ok(decoded)
+                    }
+
+                    pub fn call_pre_main(&mut self) -> wasmtime::Result<()> {
+                        self.pre_main.call(&mut self.store, ())
+                    }
+
+                    pub fn call_main(&mut self) -> wasmtime::Result<()> {
+                        self.main.call(&mut self.store, ())
                     }
 
                     #( #pub_methods )*

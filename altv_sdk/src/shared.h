@@ -34,7 +34,7 @@ namespace shared {
     using AltResourceImpl = alt::IResource::Impl;
     using AltResource = alt::IResource;
 
-    using ResourceStartCallback = void (*)(rust::Str name, rust::Str full_main_path, AltResourceImpl* resource_impl, AltResource* resource);
+    using ResourceStartCallback = bool (*)(rust::Str name, rust::Str full_main_path, AltResourceImpl* resource_impl, AltResource* resource);
     using ResourceStopCallback = void (*)(rust::Str name);
     using RuntimeResourceDestroyImplCallback = void (*)();
     using RuntimeResourceImplCreateCallback = void (*)(rust::Str name);

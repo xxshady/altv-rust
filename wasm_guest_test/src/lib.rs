@@ -4,9 +4,16 @@ extern "C" fn main() {
 
     let mut api = altv::Api::new();
 
+    altv::set_timeout(
+        || {
+            panic!("pppppppanic");
+        },
+        500,
+    );
+
     altv::dbg!(api.local_vehicles.all());
 
-    let local_vehicle: altv::LocalVehicle = api.local_vehicles.create(
+    let local_vehicle = api.local_vehicles.create(
         altv::hash("sultan"),
         0,
         0.0,
@@ -20,21 +27,25 @@ extern "C" fn main() {
     );
     altv::dbg!(local_vehicle.fuel_level());
 
-    altv::dbg!(api.local_vehicles.all());
+    // altv::dbg!(api.local_vehicles.all());
 
-    // println!("kek");
-    dbg!("kek");
+    // altv::set_interval(
+    //     move || {
+    //         altv::dbg!(local_vehicle.id());
+    //     },
+    //     1000,
+    // );
 
-    altv::set_timeout(
-        move || {
-            local_vehicle.set_fuel_level(30.0);
-            altv::dbg!(local_vehicle.fuel_level());
-            altv::log!("destroying");
+    // altv::set_timeout(
+    //     move || {
+    //         local_vehicle.set_fuel_level(30.0);
+    //         altv::dbg!(local_vehicle.fuel_level());
+    //         altv::log!("destroying");
 
-            api.local_vehicles.destroy(local_vehicle);
+    //         api.local_vehicles.destroy(local_vehicle);
 
-            altv::dbg!(api.local_vehicles.all());
-        },
-        2500,
-    );
+    //         altv::dbg!(api.local_vehicles.all());
+    //     },
+    //     2500,
+    // );
 }

@@ -21,7 +21,7 @@ extern "C" fn resource_start(
     full_main_path: &str,
     resource_impl: *mut sdk::shared::AltResourceImpl,
     resource_ptr: *mut sdk::shared::AltResource,
-) {
+) -> bool {
     let full_main_path = full_main_path.to_string();
     let resource_name = resource_name.to_string();
 
@@ -31,28 +31,50 @@ extern "C" fn resource_start(
     let content = unsafe { sdk::read_file(resource_impl, &full_main_path, &mut exist) };
     if !exist {
         logger::error!("Failed to start resource: {resource_name}, main file: '{full_main_path}' does not exist");
-        return;
+        return false;
     }
 
     logger::debug!("resource main file content len: {}", content.len());
 
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
-        let res = wasi::start(content.as_slice(), resource_ptr);
+        let res = ResourceController::new(resource_name.clone(), resource_ptr, content.as_slice());
 
-        let mut manager = manager.borrow_mut();
+        let mut manager_mut = manager.borrow_mut();
 
-        manager.remove_pending_status(&resource_name);
-
+        let mut success = false;
         match res {
-            Ok(wasi_exports) => {
-                let resource = ResourceController::new(resource_ptr, wasi_exports);
-                manager.add(resource_name, resource);
+            Ok(controller) => {
+                success = true;
+                manager_mut.add(resource_name.clone(), controller);
             }
             Err(e) => {
                 logger::error!("Failed to start resource: {resource_name}, error: {e:?}");
             }
         }
-    });
+
+        drop(manager_mut);
+
+        if success {
+            let manager_ref = manager.borrow();
+            let controller = manager_ref.get_by_name(&resource_name).unwrap();
+            let res = controller.call_main();
+
+            if let Err(err) = res {
+                logger::error!("Failed to start resource: {resource_name}, error: {err:?}");
+                controller.log_error_message();
+
+                // not needed because resource will be removed later in resource_stop
+                // drop(manager_ref);
+                // manager.borrow_mut().remove(&resource_name);
+
+                success = false;
+            }
+        }
+
+        manager.borrow_mut().remove_pending_status(&resource_name);
+
+        success
+    })
 }
 
 #[allow(improper_ctypes_definitions)]
@@ -81,12 +103,22 @@ extern "C" fn runtime_resource_impl_create(resource_name: &str) {
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn runtime_on_tick() {
-    RESOURCE_MANAGER_INSTANCE.with(|v| {
-        for (name, controller) in v.borrow().resources_iter() {
+    RESOURCE_MANAGER_INSTANCE.with(|manager| {
+        let mut panicked = vec![];
+
+        for (name, controller) in manager.borrow().resources_iter() {
             let res = controller.wasi_exports.borrow_mut().call_on_tick();
             if let Err(err) = res {
-                logger::error!("Resource: {name} on_tick handler failed with error: {err:?}");
+                logger::error!("Resource: {name:?} on_tick handler failed with error: {err:?}");
+                controller.log_error_message();
+                panicked.push(controller.name.clone());
+            } else {
+                controller.ensure_error_message_is_empty();
             }
+        }
+
+        for name in panicked {
+            manager.borrow_mut().resource_panicked(name);
         }
     });
 }
