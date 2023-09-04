@@ -1,5 +1,4 @@
-use altv_wasm_shared::BaseObjectPtr;
-use crate::{__imports, State, base_objects::objects::assert_vehicle_is_valid};
+use crate::{__imports, State, base_objects::objects::vehicle::Vehicle};
 
 #[derive(Debug, Default)]
 pub struct VehicleManager {
@@ -11,7 +10,7 @@ impl VehicleManager {
         State::with_base_objects_ref(|base_objects, _| {
             self.objects = base_objects
                 .vehicle_iter()
-                .map(|ptr| Vehicle { ptr: *ptr })
+                .map(|ptr| Vehicle::new(*ptr))
                 .collect();
         });
 
@@ -27,29 +26,17 @@ impl VehicleManager {
     }
 }
 
-#[derive(Debug)]
-pub struct Vehicle {
-    pub(crate) ptr: BaseObjectPtr,
-}
-
 impl Vehicle {
-    pub fn id(&self) -> u32 {
-        assert_vehicle_is_valid!(self);
-        __imports::base_object_get_id(self.ptr)
-    }
-
+    // TODO: move it to RemoteBaseObject trait?
     pub fn remote_id(&self) -> u32 {
-        assert_vehicle_is_valid!(self);
-        __imports::base_object_get_remote_id(self.ptr)
+        __imports::base_object_get_remote_id(self.ptr())
     }
 
     pub fn fuel_level(&self) -> f32 {
-        assert_vehicle_is_valid!(self);
-        __imports::vehicle_get_fuel_level(self.ptr)
+        __imports::vehicle_get_fuel_level(self.ptr())
     }
 
     pub fn set_fuel_level(&self, value: f32) {
-        assert_vehicle_is_valid!(self);
-        __imports::vehicle_set_fuel_level(self.ptr, value);
+        __imports::vehicle_set_fuel_level(self.ptr(), value);
     }
 }

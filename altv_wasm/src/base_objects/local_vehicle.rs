@@ -1,5 +1,4 @@
-use altv_wasm_shared::BaseObjectPtr;
-use crate::{__imports, state::State, base_objects::objects::assert_local_vehicle_is_valid};
+use crate::{__imports, state::State, base_objects::objects::local_vehicle::LocalVehicle};
 
 #[derive(Debug, Default)]
 pub struct LocalVehicleManager {
@@ -37,14 +36,14 @@ impl LocalVehicleManager {
             base_objects.on_create(ptr, altv_wasm_shared::BaseObjectType::LocalVehicle);
         });
 
-        LocalVehicle { ptr }
+        LocalVehicle::new(ptr)
     }
 
     pub fn all(&mut self) -> &[LocalVehicle] {
         State::with_base_objects_ref(|base_objects, _| {
             self.objects = base_objects
                 .local_vehicle_iter()
-                .map(|ptr| LocalVehicle { ptr: *ptr })
+                .map(|ptr| LocalVehicle::new(*ptr))
                 .collect();
         });
 
@@ -53,27 +52,20 @@ impl LocalVehicleManager {
 
     pub fn destroy(&mut self, object: LocalVehicle) {
         State::with_base_objects_mut(|mut base_objects, _| {
-            base_objects.on_destroy(object.ptr, altv_wasm_shared::BaseObjectType::LocalVehicle);
+            base_objects.on_destroy(object.ptr(), altv_wasm_shared::BaseObjectType::LocalVehicle);
         });
 
-        __imports::destroy_base_object(object.ptr);
+        __imports::destroy_base_object(object.ptr());
     }
-}
-
-#[derive(Debug)]
-pub struct LocalVehicle {
-    pub(crate) ptr: BaseObjectPtr,
 }
 
 impl LocalVehicle {
     pub fn fuel_level(&self) -> f32 {
-        assert_local_vehicle_is_valid!(self);
-        __imports::vehicle_get_fuel_level(self.ptr)
+        __imports::vehicle_get_fuel_level(self.ptr())
     }
 
     pub fn set_fuel_level(&self, value: f32) {
-        assert_local_vehicle_is_valid!(self);
-        __imports::vehicle_set_fuel_level(self.ptr, value);
+        __imports::vehicle_set_fuel_level(self.ptr(), value);
     }
 
     /// Calls destroy method of [`LocalVehicleManager`] for you.<br>
@@ -92,7 +84,6 @@ impl LocalVehicle {
     /// manager.destroy(vehicle);
     /// ```
     pub fn destroy(self, manager: &mut LocalVehicleManager) {
-        assert_local_vehicle_is_valid!(self);
         manager.destroy(self);
     }
 }
