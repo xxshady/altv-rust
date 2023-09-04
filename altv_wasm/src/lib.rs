@@ -9,8 +9,9 @@ pub use timers::{set_timeout, set_interval};
 
 mod base_objects;
 pub use base_objects::{
-    local_vehicle::{LocalVehicle, LocalVehicleManager},
-    vehicle::{Vehicle, VehicleManager},
+    objects::{vehicle::Vehicle, local_vehicle::LocalVehicle},
+    local_vehicle::LocalVehicleManager,
+    vehicle::VehicleManager,
 };
 
 mod hash;
