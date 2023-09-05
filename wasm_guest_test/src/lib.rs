@@ -4,12 +4,15 @@ extern "C" fn main() {
 
     let mut api = altv::Api::new();
 
-    altv::set_timeout(
-        || {
-            panic!("pppppppanic");
-        },
-        500,
-    );
+    let value = 123;
+    panic!("startup panic example {value}");
+
+    // altv::set_timeout(
+    //     || {
+    //         panic!("pppppppanic");
+    //     },
+    //     500,
+    // );
 
     altv::dbg!(api.local_vehicles.all());
 

@@ -5,7 +5,7 @@ use std::{
 use altv_sdk::ffi as sdk;
 use crate::{
     ResourceName,
-    wasi::{State, imports, Exports},
+    wasi::{State, imports, Exports, self},
     wasi_stdout_err::{UnimplementedStdout, Stderr},
 };
 
@@ -18,9 +18,9 @@ thread_local! {
 #[derive(Debug)]
 pub struct ResourceController {
     pub ptr: *mut sdk::shared::AltResource,
-    pub wasi_exports: RefCell<Exports>,
     pub name: ResourceName,
 
+    exports: RefCell<Exports>,
     current_error_message: RefCell<Option<Vec<u8>>>,
 }
 
@@ -33,7 +33,7 @@ impl ResourceController {
         let exports = Self::start_wasi(name.clone(), wasm_bytes, ptr)?;
         Ok(Self {
             ptr,
-            wasi_exports: RefCell::new(exports),
+            exports: RefCell::new(exports),
             current_error_message: RefCell::new(None),
             name,
         })
@@ -71,10 +71,30 @@ impl ResourceController {
     }
 
     pub fn call_main(&self) -> wasmtime::Result<()> {
-        let mut exports = self.wasi_exports.borrow_mut();
+        let mut exports = self.exports.borrow_mut();
 
         exports.call_pre_main()?;
         exports.call_main()
+    }
+
+    pub fn call_export(
+        &self,
+        call: impl FnOnce(&mut wasi::Exports) -> wasmtime::Result<()>,
+    ) -> Result<(), ()> {
+        let mut exports = self.exports.borrow_mut();
+        let res = call(&mut *exports);
+
+        if let Err(err) = res {
+            logger::error!(
+                "Resource: {:?} internal export call failed with error: {err:?}",
+                self.name
+            );
+            self.log_error_message();
+            Err(())
+        } else {
+            self.ensure_error_message_is_empty();
+            Ok(())
+        }
     }
 
     pub fn extend_error_message(&self, buf: &[u8]) {
@@ -142,7 +162,10 @@ impl ResourceManager {
     }
 
     pub fn remove(&mut self, resource: &str) {
+        self.pending_start_resources.remove(resource);
+
         if self.panicked_resources.contains(resource) {
+            self.panicked_resources.remove(resource);
             logger::debug!("tried to remove panicked resource: {resource}, ignoring");
             return;
         }
@@ -150,11 +173,11 @@ impl ResourceManager {
         if self.resources.remove(resource).is_none() {
             logger::error!("remove unknown resource: {resource}");
         }
-        self.pending_start_resources.remove(resource);
-        self.panicked_resources.remove(resource);
     }
 
     pub fn resource_panicked(&mut self, resource: ResourceName) {
+        logger::debug!("resource_panicked: {resource}");
+
         if self.resources.remove(&resource).is_none() {
             logger::error!("remove unknown panicked resource: {resource}");
             return;

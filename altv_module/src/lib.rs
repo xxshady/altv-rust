@@ -106,14 +106,10 @@ extern "C" fn runtime_on_tick() {
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
         let mut panicked = vec![];
 
-        for (name, controller) in manager.borrow().resources_iter() {
-            let res = controller.wasi_exports.borrow_mut().call_on_tick();
-            if let Err(err) = res {
-                logger::error!("Resource: {name:?} on_tick handler failed with error: {err:?}");
-                controller.log_error_message();
+        for (_, controller) in manager.borrow().resources_iter() {
+            let res = controller.call_export(|e| e.call_on_tick());
+            if res.is_err() {
                 panicked.push(controller.name.clone());
-            } else {
-                controller.ensure_error_message_is_empty();
             }
         }
 

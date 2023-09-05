@@ -24,20 +24,14 @@ pub fn handle_base_object_creation_or_deletion(
         };
 
         let ty = unsafe { altv_sdk::ffi::IBaseObject::GetType(base_object) };
-        if creation {
-            r.wasi_exports
-                .borrow_mut()
-                .call_on_base_object_create(base_object as u64, ty)
-                .unwrap_or_else(|e| {
-                    logger::error!("call_on_base_object_create failed: {e:?}");
-                });
-        } else {
-            r.wasi_exports
-                .borrow_mut()
-                .call_on_base_object_destroy(base_object as u64, ty)
-                .unwrap_or_else(|e| {
-                    logger::error!("call_on_base_object_destroy failed: {e:?}");
-                });
-        }
+
+        // ignoring because error will be printed in call_export
+        let _ = r.call_export(|e| {
+            if creation {
+                e.call_on_base_object_create(base_object as u64, ty)
+            } else {
+                e.call_on_base_object_destroy(base_object as u64, ty)
+            }
+        });
     });
 }
