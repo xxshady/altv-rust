@@ -21,8 +21,14 @@ pub mod private {
                 __type: PhantomData {},
             }
         }
+    }
 
-        pub(crate) fn ptr(&self) -> BaseObjectPtr {
+    pub trait Ptr {
+        fn ptr(&self) -> BaseObjectPtr;
+    }
+
+    impl<T> Ptr for BaseObject<T> {
+        fn ptr(&self) -> BaseObjectPtr {
             let valid = State::with_base_objects_ref(|base_objects, _| {
                 base_objects.all.contains(&self.ptr)
             });
@@ -37,6 +43,8 @@ pub mod private {
         }
     }
 }
+
+use private::Ptr;
 
 impl<T> private::BaseObject<T> {
     pub fn id(&self) -> u32 {

@@ -1,4 +1,5 @@
-use crate::{__imports, State, base_objects::objects::vehicle::Vehicle};
+use crate::State;
+use super::{objects::vehicle::Vehicle, remote::RemoteBaseObject, shared_vehicle::SharedVehicle};
 
 #[derive(Debug, Default)]
 pub struct VehicleManager {
@@ -26,17 +27,7 @@ impl VehicleManager {
     }
 }
 
-impl Vehicle {
-    // TODO: move it to RemoteBaseObject trait?
-    pub fn remote_id(&self) -> u32 {
-        __imports::base_object_get_remote_id(self.ptr())
-    }
+impl Vehicle {}
 
-    pub fn fuel_level(&self) -> f32 {
-        __imports::vehicle_get_fuel_level(self.ptr())
-    }
-
-    pub fn set_fuel_level(&self, value: f32) {
-        __imports::vehicle_set_fuel_level(self.ptr(), value);
-    }
-}
+impl RemoteBaseObject for Vehicle {}
+impl SharedVehicle for Vehicle {}

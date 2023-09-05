@@ -1,4 +1,5 @@
-use crate::{__imports, state::State, base_objects::objects::local_vehicle::LocalVehicle};
+use crate::{__imports, state::State};
+use super::{base::private::Ptr, objects::local_vehicle::LocalVehicle, shared_vehicle::SharedVehicle};
 
 #[derive(Debug, Default)]
 pub struct LocalVehicleManager {
@@ -60,14 +61,6 @@ impl LocalVehicleManager {
 }
 
 impl LocalVehicle {
-    pub fn fuel_level(&self) -> f32 {
-        __imports::vehicle_get_fuel_level(self.ptr())
-    }
-
-    pub fn set_fuel_level(&self, value: f32) {
-        __imports::vehicle_set_fuel_level(self.ptr(), value);
-    }
-
     /// Calls destroy method of [`LocalVehicleManager`] for you.<br>
     /// To get [`LocalVehicleManager`] you can use `altv::local_vehicles()`
     /// ```
@@ -87,3 +80,5 @@ impl LocalVehicle {
         manager.destroy(self);
     }
 }
+
+impl SharedVehicle for LocalVehicle {}

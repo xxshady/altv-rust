@@ -12,6 +12,8 @@ pub use base_objects::{
     objects::{vehicle::Vehicle, local_vehicle::LocalVehicle},
     local_vehicle::LocalVehicleManager,
     vehicle::VehicleManager,
+    remote::RemoteBaseObject,
+    shared_vehicle::SharedVehicle,
 };
 
 mod hash;
