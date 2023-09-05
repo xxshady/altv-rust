@@ -1,5 +1,8 @@
 use crate::{__imports, state::State};
-use super::{base::private::Ptr, objects::local_vehicle::LocalVehicle, shared_vehicle::SharedVehicle};
+use super::{
+    base::private::Ptr, objects::local_vehicle::LocalVehicle, shared_vehicle::SharedVehicle,
+    world_object::WorldObject,
+};
 
 #[derive(Debug, Default)]
 pub struct LocalVehicleManager {
@@ -82,3 +85,4 @@ impl LocalVehicle {
 }
 
 impl SharedVehicle for LocalVehicle {}
+impl WorldObject for LocalVehicle {}

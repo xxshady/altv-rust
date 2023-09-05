@@ -6,6 +6,11 @@ imports {
     base_object_get_id(ptr: BaseObjectPtr) -> U32
     base_object_get_remote_id(ptr: BaseObjectPtr) -> U32
 
+    world_object_get_pos(ptr: BaseObjectPtr) -> Vector3
+    world_object_set_pos(ptr: BaseObjectPtr, value: Vector3)
+    world_object_get_dimension(ptr: BaseObjectPtr) -> I32
+    world_object_set_dimension(ptr: BaseObjectPtr, value: I32)
+
     create_local_vehicle(
         model: U32,
         dimension: I32,

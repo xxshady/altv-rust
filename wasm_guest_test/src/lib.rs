@@ -1,11 +1,13 @@
+use altv::{SharedVehicle, WorldObject};
+
 #[no_mangle]
 extern "C" fn main() {
     altv::log!("~gl~start!");
 
     let mut api = altv::Api::new();
 
-    let value = 123;
-    panic!("startup panic example {value}");
+    // let value = 123;
+    // panic!("startup panic example {value}");
 
     // altv::set_timeout(
     //     || {
@@ -29,6 +31,7 @@ extern "C" fn main() {
         0,
     );
     altv::dbg!(local_vehicle.fuel_level());
+    dbg!(local_vehicle.pos());
 
     // altv::dbg!(api.local_vehicles.all());
 

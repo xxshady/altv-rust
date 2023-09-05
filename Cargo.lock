@@ -119,6 +119,9 @@ dependencies = [
 [[package]]
 name = "altv_wasm_shared"
 version = "15.0.0-dev.72"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "ambient-authority"

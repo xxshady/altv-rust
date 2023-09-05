@@ -14,6 +14,7 @@ pub use base_objects::{
     vehicle::VehicleManager,
     remote::RemoteBaseObject,
     shared_vehicle::SharedVehicle,
+    world_object::WorldObject,
 };
 
 mod hash;
@@ -21,6 +22,8 @@ pub use hash::{Hash, IntoHash, hash};
 
 mod api;
 pub use api::Api;
+
+pub use altv_wasm_shared::Vector3;
 
 mod helpers;
 mod state;

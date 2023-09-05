@@ -1,5 +1,8 @@
 use crate::State;
-use super::{objects::vehicle::Vehicle, remote::RemoteBaseObject, shared_vehicle::SharedVehicle};
+use super::{
+    objects::vehicle::Vehicle, remote::RemoteBaseObject, shared_vehicle::SharedVehicle,
+    world_object::WorldObject,
+};
 
 #[derive(Debug, Default)]
 pub struct VehicleManager {
@@ -31,3 +34,4 @@ impl Vehicle {}
 
 impl RemoteBaseObject for Vehicle {}
 impl SharedVehicle for Vehicle {}
+impl WorldObject for Vehicle {}

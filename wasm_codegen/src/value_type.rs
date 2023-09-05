@@ -56,7 +56,6 @@ macro_rules! value_type {
 }
 
 value_type!(
-    String rust: "String" kind: FatPtr repr: FatPtr;
     I8 rust: "i8" kind: Native repr: I32;
     I16 rust: "i16" kind: Native repr: I32;
     I32 rust: "i32" kind: Native repr: I32;
@@ -68,9 +67,13 @@ value_type!(
     F32 rust: "f32" kind: Native repr: F32;
     F64 rust: "f64" kind: Native repr: F64;
     Bool rust: "bool" kind: Bool repr: I32;
-    OptionBool rust: "Option<bool>" kind: FatPtr repr: FatPtr;
     BaseObjectPtr rust: "altv_wasm_shared::BaseObjectPtr" kind: Native repr: U64;
     BaseObjectType rust: "altv_wasm_shared::BaseObjectTypeRaw" kind: Native repr: U32;
+
+    // fat ptr
+    String rust: "String" kind: FatPtr repr: FatPtr;
+    OptionBool rust: "Option<bool>" kind: FatPtr repr: FatPtr;
+    Vector3 rust: "altv_wasm_shared::Vector3" kind: FatPtr repr: FatPtr;
 );
 
 #[derive(Debug)]
