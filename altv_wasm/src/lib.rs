@@ -14,7 +14,7 @@ pub use base_objects::{
     vehicle::VehicleManager,
     remote::RemoteBaseObject,
     shared_vehicle::SharedVehicle,
-    world_object::WorldObject,
+    world_object::{WorldObject, ClientWorldObject},
 };
 
 mod hash;

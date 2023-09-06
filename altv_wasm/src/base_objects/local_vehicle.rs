@@ -1,7 +1,9 @@
 use crate::{__imports, state::State};
 use super::{
-    base::private::Ptr, objects::local_vehicle::LocalVehicle, shared_vehicle::SharedVehicle,
-    world_object::WorldObject,
+    base::private::Ptr,
+    objects::local_vehicle::LocalVehicle,
+    shared_vehicle::SharedVehicle,
+    world_object::{WorldObject, ClientWorldObject},
 };
 
 #[derive(Debug, Default)]
@@ -86,3 +88,4 @@ impl LocalVehicle {
 
 impl SharedVehicle for LocalVehicle {}
 impl WorldObject for LocalVehicle {}
+impl ClientWorldObject for LocalVehicle {}

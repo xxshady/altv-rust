@@ -1,4 +1,4 @@
-use altv::{SharedVehicle, WorldObject};
+use altv::{SharedVehicle, WorldObject, ClientWorldObject, Vector3};
 
 #[no_mangle]
 extern "C" fn main() {
@@ -27,20 +27,28 @@ extern "C" fn main() {
         0.0,
         0.0,
         0.0,
-        false,
-        0,
+        true,
+        100,
     );
     altv::dbg!(local_vehicle.fuel_level());
-    dbg!(local_vehicle.pos());
+
+    altv::dbg!(local_vehicle.pos());
+    local_vehicle.set_pos(Vector3 {
+        x: 5.0,
+        y: 5.0,
+        z: 75.0,
+    });
+    altv::dbg!(local_vehicle.pos());
 
     // altv::dbg!(api.local_vehicles.all());
 
-    // altv::set_interval(
-    //     move || {
-    //         altv::dbg!(local_vehicle.id());
-    //     },
-    //     1000,
-    // );
+    altv::set_interval(
+        move || {
+            let current = altv::dbg!(local_vehicle.dimension());
+            local_vehicle.set_dimension((!(current != 0)) as i32);
+        },
+        1000,
+    );
 
     // altv::set_timeout(
     //     move || {

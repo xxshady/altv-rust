@@ -8,17 +8,30 @@ pub trait WorldObject: Ptr {
         __imports::world_object_get_pos(self.ptr())
     }
 
-    // TODO: should be implemented for server entities and owned entities separately
-    // fn set_pos(&self, value: Vector3) {
-    //     __imports::world_object_set_pos(self.ptr(), value)
-    // }
-
     fn dimension(&self) -> i32 {
         __imports::world_object_get_dimension(self.ptr())
     }
+}
 
-    // TODO: should be implemented for server entities and owned entities separately
-    // fn set_dimension(&self, value: i32) {
-    //     __imports::world_object_set_dimension(self.ptr(), value)
-    // }
+// TODO: world object setters for server entities
+// pub trait ServerWorldObject: WorldObject {
+//     fn set_pos(&self, value: Vector3) -> VoidResult {
+//         __imports::world_object_set_pos(self.ptr(), value);
+//         Ok(())
+//     }
+
+//     fn set_dimension(&self, value: i32) -> VoidResult {
+//         __imports::world_object_set_dimension(self.ptr(), value);
+//         Ok(())
+//     }
+// }
+
+pub trait ClientWorldObject: WorldObject {
+    fn set_pos(&self, value: Vector3) {
+        __imports::world_object_set_pos(self.ptr(), value)
+    }
+
+    fn set_dimension(&self, value: i32) {
+        __imports::world_object_set_dimension(self.ptr(), value)
+    }
 }
