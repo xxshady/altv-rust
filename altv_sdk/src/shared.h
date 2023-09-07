@@ -1,5 +1,7 @@
 #pragma once
 
+#define ALT_CLIENT_API
+
 #include "../cpp-sdk/SDK.h"
 #include "../cpp-sdk/events/CMetaDataChangeEvent.h"
 #include <string>
@@ -38,7 +40,7 @@ namespace shared {
     using ResourceStopCallback = void (*)(rust::Str name);
     using RuntimeResourceDestroyImplCallback = void (*)();
     using RuntimeResourceImplCreateCallback = void (*)(rust::Str name);
-    using RuntimeOnTickCallback = void (*)();
+    using ResourceOnTickCallback = void (*)(rust::Str name);
     using ResourceOnEventCallback = void (*)(rust::Str name, const alt::CEvent* event);
     using ResourceOnCreateBaseObjectCallback = void (*)(rust::Str name, alt::IBaseObject* base_object);
     using ResourceOnRemoveBaseObjectCallback = void (*)(rust::Str name, alt::IBaseObject* base_object);

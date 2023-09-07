@@ -137,6 +137,22 @@ impl host::imports::Imports for State {
         assert!(!vehicle.is_null());
         unsafe { sdk::IVehicle::SetFuelLevel(vehicle, value) }
     }
+
+    fn natives_do_screen_fade_out(&self, duration: i32) {
+        unsafe {
+            let mut success = Default::default();
+            sdk::natives::do_screen_fade_out(&mut success, duration);
+            logger::debug!("do_screen_fade_out success: {success}");
+        }
+    }
+
+    fn natives_do_screen_fade_in(&self, duration: i32) {
+        unsafe {
+            let mut success = Default::default();
+            sdk::natives::do_screen_fade_in(&mut success, duration);
+            logger::debug!("do_screen_fade_in success: {success}");
+        }
+    }
 }
 
 fn read_cpp_vector3(cpp_vector: UniquePtr<sdk::Vector3Wrapper>) -> Vector3 {

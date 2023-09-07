@@ -351,6 +351,8 @@ pub mod ffi {
 
         generate!("shared::AltResourceImpl")
         generate!("shared::AltResource")
+
+        generate_ns!("natives")
     }
     pub use alt_bridge::*;
 
@@ -388,8 +390,8 @@ pub mod ffi {
     );
 
     #[repr(transparent)]
-    pub struct RuntimeOnTickCallback(pub extern "C" fn());
-    impl_extern_type_callback!(RuntimeOnTickCallback, "callbacks::RuntimeOnTickCallback");
+    pub struct ResourceOnTickCallback(pub extern "C" fn(resource_name: &str));
+    impl_extern_type_callback!(ResourceOnTickCallback, "callbacks::ResourceOnTickCallback");
 
     #[allow(improper_ctypes_definitions)]
     #[repr(transparent)]
@@ -431,7 +433,7 @@ pub mod ffi {
             type ResourceStopCallback = super::ResourceStopCallback;
             type RuntimeResourceDestroyImplCallback = super::RuntimeResourceDestroyImplCallback;
             type RuntimeResourceImplCreateCallback = super::RuntimeResourceImplCreateCallback;
-            type RuntimeOnTickCallback = super::RuntimeOnTickCallback;
+            type ResourceOnTickCallback = super::ResourceOnTickCallback;
             type ResourceOnEventCallback = super::ResourceOnEventCallback;
             type ResourceOnCreateBaseObjectCallback = super::ResourceOnCreateBaseObjectCallback;
             type ResourceOnRemoveBaseObjectCallback = super::ResourceOnRemoveBaseObjectCallback;
@@ -442,7 +444,7 @@ pub mod ffi {
                 resource_stop: ResourceStopCallback,
                 resource_impl_destroy: RuntimeResourceDestroyImplCallback,
                 resource_impl_create: RuntimeResourceImplCreateCallback,
-                on_tick: RuntimeOnTickCallback,
+                resource_on_tick: ResourceOnTickCallback,
                 resource_on_event: ResourceOnEventCallback,
                 resource_on_create_base_object: ResourceOnCreateBaseObjectCallback,
                 resource_on_remove_base_object: ResourceOnRemoveBaseObjectCallback,

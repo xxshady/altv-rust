@@ -102,19 +102,18 @@ extern "C" fn runtime_resource_impl_create(resource_name: &str) {
 }
 
 #[allow(improper_ctypes_definitions)]
-extern "C" fn runtime_on_tick() {
+extern "C" fn resource_on_tick(resource_name: &str) {
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
-        let mut panicked = vec![];
+        let mut manager = manager.borrow_mut();
 
-        for (_, controller) in manager.borrow().resources_iter() {
-            let res = controller.call_export(|e| e.call_on_tick());
-            if res.is_err() {
-                panicked.push(controller.name.clone());
-            }
-        }
+        let Some(controller) = manager.get_by_name(resource_name) else {
+            logger::error!("resource_on_tick unknown resource: {resource_name}");
+            return;
+        };
 
-        for name in panicked {
-            manager.borrow_mut().resource_panicked(name);
+        let res = controller.call_export(|e| e.call_on_tick());
+        if res.is_err() {
+            manager.resource_panicked(resource_name.to_string());
         }
     });
 }
@@ -173,11 +172,14 @@ pub unsafe extern "C" fn CreateScriptRuntime(
         sdk::ResourceStopCallback(resource_stop),
         sdk::RuntimeResourceDestroyImplCallback(runtime_resource_destroy_impl),
         sdk::RuntimeResourceImplCreateCallback(runtime_resource_impl_create),
-        sdk::RuntimeOnTickCallback(runtime_on_tick),
+        sdk::ResourceOnTickCallback(resource_on_tick),
         sdk::ResourceOnEventCallback(resource_on_event),
         sdk::ResourceOnCreateBaseObjectCallback(resource_on_create_base_object),
         sdk::ResourceOnRemoveBaseObjectCallback(resource_on_remove_base_object),
     );
+
+    logger::debug!("natives::init");
+    sdk::natives::init();
 
     logger::info!("{ALTV_MODULE_VERSION}");
 

@@ -26,6 +26,9 @@ imports {
     
     vehicle_set_fuel_level(ptr: BaseObjectPtr, value: F32)
     vehicle_get_fuel_level(ptr: BaseObjectPtr) -> F32
+
+    natives_do_screen_fade_out(duration: I32)
+    natives_do_screen_fade_in(duration: I32)
 }
 
 exports {

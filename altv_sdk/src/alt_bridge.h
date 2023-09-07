@@ -1,7 +1,5 @@
 #pragma once
 
-#define ALT_CLIENT_API
-
 #include <memory>
 #include <utility>
 #include "shared.h"
@@ -1380,3 +1378,27 @@ namespace config_node
         return pair.ptr->second;
     }
 } // namespace config
+
+
+
+namespace natives {
+    std::shared_ptr<alt::INative::Context> ctx;
+
+    void init() {
+        ctx = alt::ICore::Instance().CreateNativesContext();
+    }
+
+    void do_screen_fade_out(bool* success, i32 duration) {
+        static auto native = alt::ICore::Instance().GetNativeByHash(0x891B5B39AC6302AF);
+        ctx->Reset();
+        ctx->Push(duration);
+        *success = native->Invoke(ctx);
+    }
+
+    void do_screen_fade_in(bool* success, i32 duration) {
+        static auto native = alt::ICore::Instance().GetNativeByHash(0xD4E8E24955024033);
+        ctx->Reset();
+        ctx->Push(duration);
+        *success = native->Invoke(ctx);
+    }
+}

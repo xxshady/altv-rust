@@ -23,6 +23,8 @@ pub use hash::{Hash, IntoHash, hash};
 mod api;
 pub use api::Api;
 
+pub mod natives;
+
 pub use altv_wasm_shared::Vector3;
 
 mod helpers;
