@@ -49,7 +49,8 @@ impl ResourceController {
 
         std::env::set_var("WASMTIME_BACKTRACE_DETAILS", "1");
 
-        let engine = Engine::default();
+        let engine = Engine::new(Config::new().cranelift_opt_level(OptLevel::Speed)).unwrap();
+
         let mut linker = Linker::<State>::new(&engine);
 
         let module = Module::from_binary(&engine, wasm_bytes)?;
@@ -60,7 +61,7 @@ impl ResourceController {
             .stderr(Box::new(Stderr(std::io::stderr(), resource_name)))
             .build();
 
-        let mut store = Store::new(&engine, State { wasi, resource_ptr });
+        let mut store = Store::new(&engine, State::new(wasi, resource_ptr));
 
         wasmtime_wasi::add_to_linker(&mut linker, |s| &mut s.wasi)?;
         imports::add_to_linker(&mut linker);

@@ -1,6 +1,6 @@
 use std::fs;
 
-use crate::value_type::ValueType;
+use crate::value_type::{ParamType, ReturnType, ValueType};
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 enum TopLevelSection {
@@ -143,7 +143,7 @@ impl SectionController {
 
                             func.params.push(Param {
                                 name: param_name,
-                                param_type: param_type.into(),
+                                param_type: ParamType(param_type).into(),
                             });
 
                             if char == ')' {
@@ -174,7 +174,7 @@ impl SectionController {
                                     let return_type = &return_type.split("->").last().unwrap();
                                     let return_type = return_type.trim();
                                     dbg!(return_type);
-                                    func.ret.replace(return_type.into());
+                                    func.ret.replace(ReturnType(return_type).into());
                                 }
 
                                 self.add_func(func);

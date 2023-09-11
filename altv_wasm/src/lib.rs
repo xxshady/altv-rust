@@ -42,7 +42,11 @@ pub use guest::imports as __imports;
 
 #[no_mangle]
 extern "C" fn __pre_main() {
-    logger::init(__imports::log).unwrap();
+    logger::init(|msg| {
+        let msg = msg.to_string();
+        __imports::log(&msg);
+    })
+    .unwrap();
     State::init();
 }
 

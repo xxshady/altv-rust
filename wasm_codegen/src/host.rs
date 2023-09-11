@@ -34,8 +34,9 @@ pub(crate) fn gen_exports(input: TokenStream) -> proc_macro2::TokenStream {
                 ValueKind::Native => quote! { #name as #internal_type },
                 ValueKind::FatPtr => quote! { self.send_to_guest(&#name)? },
                 ValueKind::Bool => quote! { #name as i32 },
+                ValueKind::String => quote! { self.send_str_to_guest(&#name)? },
             };
-            let param_type = value_type_to_rust_as_syn_type(param_type);
+            let param_type = value_type_to_rust_as_syn_type(param_type, false);
 
             param_names.push(name.clone());
             params_signature.push(quote! {
@@ -46,12 +47,13 @@ pub(crate) fn gen_exports(input: TokenStream) -> proc_macro2::TokenStream {
         }
 
         let (ret_type, ret_prop_type, ret_deserialization) = if let Some(ret_type) = ret {
-            let pub_type = value_type_to_rust_as_syn_type(ret_type);
+            let pub_type = value_type_to_rust_as_syn_type(ret_type, true);
             let internal_type = value_type_to_repr_as_token_stream(ret_type);
             let deserialization = match ret_type.kind() {
                 ValueKind::Native => quote! { Ok(call_return as #pub_type) },
                 ValueKind::FatPtr => quote! { self.read_from_guest(call_return) },
                 ValueKind::Bool => quote! { Ok(call_return == 1) },
+                ValueKind::String => quote! { self.read_string_from_guest(call_return) },
             };
 
             (quote! { #pub_type }, internal_type, deserialization)
@@ -94,8 +96,8 @@ pub(crate) fn gen_exports(input: TokenStream) -> proc_macro2::TokenStream {
                     memory: wasmtime::Memory,
                     store: wasmtime::Store<S>,
 
-                    alloc: wasmtime::TypedFunc<super::__shared::Size, super::__shared::Ptr>,
-                    free: wasmtime::TypedFunc<super::__shared::FatPtr, ()>,
+                    alloc: super::AllocFunc,
+                    free: super::FreeFunc,
                     pre_main: wasmtime::TypedFunc<(), ()>,
                     main: wasmtime::TypedFunc<(), ()>,
                 }
@@ -121,29 +123,46 @@ pub(crate) fn gen_exports(input: TokenStream) -> proc_macro2::TokenStream {
                         }
                     }
 
+                    fn clone_bytes_to_guest(&mut self, bytes: &[u8]) -> wasmtime::Result<super::__shared::FatPtr> {
+                        let size = bytes.len().try_into()?;
+                        let ptr = self.alloc.call(&mut self.store, size)?;
+                        self.memory.write(&mut self.store, ptr as usize, bytes)?;
+                        Ok(super::__shared::to_fat_ptr(ptr, size))
+                    }
+
                     fn send_to_guest<T: ?Sized + serde::Serialize>(
                         &mut self,
                         data: &T,
                     ) -> wasmtime::Result<super::__shared::FatPtr> {
-                        let encoded = bincode::serialize(&data)?;
-                        let size = encoded.len().try_into()?;
-                        let ptr = self.alloc.call(&mut self.store, size)?;
-                        self.memory.write(&mut self.store, ptr as usize, &encoded)?;
-                        Ok(super::__shared::to_fat_ptr(ptr, size))
+                        let encoded: Vec<u8> = bincode::serialize(&data)?;
+                        self.clone_bytes_to_guest(&encoded)
+                    }
+
+                    fn send_str_to_guest(&mut self, str: &str) -> wasmtime::Result<super::__shared::FatPtr> {
+                        self.clone_bytes_to_guest(str.as_bytes())
+                    }
+
+                    fn read_to_buffer(&mut self, fat_ptr: super::__shared::FatPtr) -> wasmtime::Result<Vec<u8>> {
+                        let (ptr, size) = super::__shared::from_fat_ptr(fat_ptr);
+                        let mut buffer = vec![0; size as usize];
+                        self.memory
+                            .read(&self.store, ptr as usize, &mut buffer)?;
+                        self.free.call(&mut self.store, fat_ptr).unwrap();
+
+                        Ok(buffer)
                     }
 
                     fn read_from_guest<T: serde::de::DeserializeOwned>(
                         &mut self,
                         fat_ptr: super::__shared::FatPtr,
                     ) -> wasmtime::Result<T> {
-                        let (ptr, size) = super::__shared::from_fat_ptr(fat_ptr);
-                        let mut buffer = vec![0; size as usize];
-                        self.memory
-                            .read(&mut self.store, ptr as usize, &mut buffer)?;
-                        let decoded: T = bincode::deserialize(&buffer)?;
+                        let buffer = self.read_to_buffer(fat_ptr)?;
+                        Ok(bincode::deserialize(&buffer)?)
+                    }
 
-                        self.free.call(&mut self.store, fat_ptr).unwrap();
-                        Ok(decoded)
+                    fn read_string_from_guest(&mut self, fat_ptr: super::__shared::FatPtr) -> wasmtime::Result<String> {
+                        let buffer = self.read_to_buffer(fat_ptr)?;
+                        Ok(String::from_utf8(buffer)?)
                     }
 
                     pub fn call_pre_main(&mut self) -> wasmtime::Result<()> {
@@ -179,7 +198,7 @@ pub(crate) fn impl_imports(input: TokenStream) -> proc_macro2::TokenStream {
         for p in params {
             // TODO: make proper panic messages
             let name: Ident = syn::parse_str(&p.name).expect("t");
-            let pub_type = value_type_to_rust_as_syn_type(p.param_type);
+            let pub_type = value_type_to_rust_as_syn_type(p.param_type, true);
             let param_internal_type = value_type_to_repr_as_token_stream(p.param_type);
             let deserialization = match p.param_type.kind() {
                 ValueKind::Native => quote! { #name as #pub_type },
@@ -188,6 +207,9 @@ pub(crate) fn impl_imports(input: TokenStream) -> proc_macro2::TokenStream {
                 }
                 ValueKind::Bool => {
                     quote! { #name == 1 }
+                }
+                ValueKind::String => {
+                    quote! { read_string_ref_from_guest(&mut caller, #name).unwrap() }
                 }
             };
 
@@ -211,9 +233,12 @@ pub(crate) fn impl_imports(input: TokenStream) -> proc_macro2::TokenStream {
                     quote! { send_to_guest(&mut caller, &call_return).unwrap() }
                 }
                 ValueKind::Bool => quote! { call_return as i32 },
+                ValueKind::String => {
+                    quote! { send_string_to_guest(&mut caller, call_return).unwrap() }
+                }
             };
 
-            let ret_type = value_type_to_rust_as_syn_type(ret_type);
+            let ret_type = value_type_to_rust_as_syn_type(ret_type, false);
 
             (
                 quote! { -> #ret_type },
@@ -254,6 +279,15 @@ pub(crate) fn impl_imports(input: TokenStream) -> proc_macro2::TokenStream {
         quote! {
             pub mod imports {
                 pub trait Imports {
+                    fn get_memory(&self) -> Option<wasmtime::Memory>;
+                    fn set_memory(&mut self, memory: wasmtime::Memory);
+
+                    fn get_free(&self) -> Option<super::FreeFunc>;
+                    fn set_free(&mut self, free: super::FreeFunc);
+
+                    fn get_alloc(&self) -> Option<super::AllocFunc>;
+                    fn set_alloc(&mut self, alloc: super::AllocFunc);
+
                     #( #trait_methods )*
                 }
 
@@ -272,34 +306,87 @@ pub(crate) fn impl_imports(input: TokenStream) -> proc_macro2::TokenStream {
                         (memory, func.typed::<Params, Results>(caller).unwrap())
                     }
 
-                    fn read_from_guest<U: Imports, T: serde::de::DeserializeOwned>(
+                    fn read_to_buffer<U: Imports>(
                         mut caller: &mut wasmtime::Caller<U>,
                         fat_ptr: super::__shared::FatPtr,
-                    ) -> wasmtime::Result<T> {
-                        let (memory, free) = get_memory_and::<U, super::__shared::FatPtr, ()>(caller, "__custom_free");
+                        call_free: bool,
+                    ) -> wasmtime::Result<Vec<u8>> {
+                        let memory = caller.data().get_memory();
+                        let free = caller.data().get_free();
+                        let (memory, free) = if free.is_some() {
+                            (memory.unwrap(), free.unwrap())
+                        } else {
+                            get_memory_and(caller, "__custom_free")
+                        };
 
                         let (ptr, size) = super::__shared::from_fat_ptr(fat_ptr);
                         let mut buffer = vec![0; size as usize];
-                        memory.read(&mut caller, ptr as usize, &mut buffer)?;
-                        let decoded: T = bincode::deserialize(&buffer)?;
+                        memory.read(&caller, ptr as usize, &mut buffer)?;
+                        if call_free {
+                            free.call(&mut caller, fat_ptr)?;
+                        }
 
-                        free.call(&mut caller, fat_ptr)?;
-                        Ok(decoded)
+                        let data = caller.data_mut();
+                        data.set_memory(memory);
+                        data.set_free(free);
+
+                        Ok(buffer)
+                    }
+
+                    fn read_from_guest<U: Imports, T: serde::de::DeserializeOwned>(
+                        caller: &mut wasmtime::Caller<U>,
+                        fat_ptr: super::__shared::FatPtr,
+                    ) -> wasmtime::Result<T> {
+                        let buffer = read_to_buffer(caller, fat_ptr, true)?;
+                        Ok(bincode::deserialize(&buffer)?)
+                    }
+
+                    fn read_string_ref_from_guest<U: Imports>(
+                        caller: &mut wasmtime::Caller<U>,
+                        fat_ptr: super::__shared::FatPtr,
+                    ) -> wasmtime::Result<String> {
+                        let buffer = read_to_buffer(caller, fat_ptr, false)?;
+                        Ok(String::from_utf8(buffer)?)
+                    }
+
+                    fn clone_bytes_to_guest<U: Imports>(
+                        mut caller: &mut wasmtime::Caller<U>,
+                        bytes: &[u8],
+                    ) -> wasmtime::Result<super::__shared::FatPtr> {
+                        let (memory, alloc) = {
+                            let data = caller.data();
+                            (data.get_memory(), data.get_alloc())
+                        };
+                        let (memory, alloc) = if alloc.is_some() {
+                            (memory.unwrap(), alloc.unwrap())
+                        } else {
+                            get_memory_and(caller, "__custom_alloc")
+                        };
+
+                        let size = bytes.len().try_into()?;
+                        let ptr = alloc.call(&mut caller, size)?;
+                        memory.write(&mut caller, ptr as usize, bytes)?;
+
+                        let data = caller.data_mut();
+                        data.set_memory(memory);
+                        data.set_alloc(alloc);
+
+                        Ok(super::__shared::to_fat_ptr(ptr, size))
                     }
 
                     fn send_to_guest<U: Imports, T: ?Sized + serde::Serialize>(
-                        mut caller: &mut wasmtime::Caller<U>,
+                        caller: &mut wasmtime::Caller<U>,
                         data: &T,
                     ) -> wasmtime::Result<super::__shared::FatPtr> {
-                        let (memory, alloc) = get_memory_and::<U, super::__shared::Size, super::__shared::Ptr>(caller, "__custom_alloc");
+                        let bytes = bincode::serialize(&data)?;
+                        clone_bytes_to_guest(caller, &bytes)
+                    }
 
-                        let encoded = bincode::serialize(&data)?;
-                        let size = encoded.len().try_into()?;
-
-                        let ptr = alloc.call(&mut caller, size)?;
-                        memory.write(&mut caller, ptr as usize, &encoded)?;
-
-                        Ok(super::__shared::to_fat_ptr(ptr, size))
+                    fn send_string_to_guest<U: Imports>(
+                        caller: &mut wasmtime::Caller<U>,
+                        string: String,
+                    ) -> wasmtime::Result<super::__shared::FatPtr> {
+                        clone_bytes_to_guest(caller, string.as_bytes())
                     }
 
                     #( #linker_funcs )*

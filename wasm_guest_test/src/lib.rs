@@ -1,20 +1,40 @@
+use std::time::Instant;
+
 #[no_mangle]
 extern "C" fn main() {
     altv::log!("~gl~start!");
-
-    altv::natives::do_screen_fade_out(0);
-    altv::natives::do_screen_fade_in(3000);
-
-    let mut screen_in = true;
     altv::set_interval(
         move || {
-            screen_in = !screen_in;
-            if screen_in {
-                altv::natives::do_screen_fade_out(2000);
-            } else {
-                altv::natives::do_screen_fade_in(2000);
-            }
+            let now = Instant::now();
+            bench();
+            altv::dbg!(now.elapsed());
         },
-        2000,
+        1500,
     );
+}
+
+fn bench() {
+    use altv::__imports::*;
+
+    let sound_name = "win".to_string();
+    let sound_ref = "dlc_vw_casino_lucky_wheel_sounds".to_string();
+
+    for _ in 1..=100 {
+        for _ in 1..=90 {
+            let id = natives_get_sound_id();
+            natives_play_sound_from_coord(
+                id,
+                &sound_name,
+                1111.052,
+                229.8579,
+                -49.133,
+                &sound_ref,
+                0,
+                0,
+                0,
+            );
+
+            natives_release_sound_id(id);
+        }
+    }
 }

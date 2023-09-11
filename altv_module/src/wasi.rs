@@ -21,6 +21,22 @@ pub struct State {
 
     // TODO: some safe wrapper over this unsafe shit
     pub resource_ptr: *mut sdk::shared::AltResource,
+
+    memory: Option<wasmtime::Memory>,
+    free: Option<host::FreeFunc>,
+    alloc: Option<host::AllocFunc>,
+}
+
+impl State {
+    pub fn new(wasi: WasiCtx, resource_ptr: *mut sdk::shared::AltResource) -> Self {
+        Self {
+            wasi,
+            resource_ptr,
+            memory: None,
+            free: None,
+            alloc: None,
+        }
+    }
 }
 
 macro_rules! base_ptr_as {
@@ -34,6 +50,30 @@ macro_rules! base_ptr_as {
 }
 
 impl host::imports::Imports for State {
+    fn get_memory(&self) -> Option<wasmtime::Memory> {
+        self.memory
+    }
+
+    fn get_free(&self) -> Option<host::FreeFunc> {
+        self.free
+    }
+
+    fn get_alloc(&self) -> Option<host::AllocFunc> {
+        self.alloc
+    }
+
+    fn set_memory(&mut self, memory: wasmtime::Memory) {
+        self.memory.replace(memory);
+    }
+
+    fn set_free(&mut self, value: host::FreeFunc) {
+        self.free.replace(value);
+    }
+
+    fn set_alloc(&mut self, alloc: host::AllocFunc) {
+        self.alloc.replace(alloc);
+    }
+
     fn log_error(&self, message: String) {
         unsafe { altv_sdk::helpers::log_error_with_resource(&message, self.resource_ptr) }
     }
@@ -151,6 +191,77 @@ impl host::imports::Imports for State {
             let mut success = Default::default();
             sdk::natives::do_screen_fade_in(&mut success, duration);
             logger::debug!("do_screen_fade_in success: {success}");
+        }
+    }
+
+    fn natives_play_sound(
+        &self,
+        soundId: i32,
+        _audioName: String,
+        _audioRef: String,
+        _p3: u8,
+        _p4: i32,
+        _p5: u8,
+    ) {
+        unsafe {
+            let mut success = Default::default();
+            sdk::natives::play_sound(&mut success, soundId, _audioName, _audioRef, _p3, _p4, _p5);
+            // logger::debug!("play_sound success: {success}");
+        }
+    }
+
+    fn natives_play_sound_from_coord(
+        &self,
+        soundId: i32,
+        _audioName: String,
+        x: f32,
+        y: f32,
+        z: f32,
+        _audioRef: String,
+        _isNetwork: u8,
+        _range: i32,
+        _p8: u8,
+    ) {
+        unsafe {
+            let mut success = Default::default();
+            sdk::natives::play_sound_from_coord(
+                &mut success,
+                soundId,
+                _audioName,
+                x,
+                y,
+                z,
+                _audioRef,
+                _isNetwork,
+                _range,
+                _p8,
+            );
+            // logger::debug!("play_sound_from_coord success: {success}");
+        }
+    }
+
+    fn natives_get_sound_id(&self) -> i32 {
+        unsafe {
+            let mut success = Default::default();
+            let result = sdk::natives::get_sound_id(&mut success);
+            // logger::debug!("get_sound_id success: {success}");
+            result
+        }
+    }
+
+    fn natives_release_sound_id(&self, sound_id: i32) {
+        unsafe {
+            let mut success = Default::default();
+            sdk::natives::release_sound_id(&mut success, sound_id);
+            // logger::debug!("release_sound_id success: {success}");
+        }
+    }
+
+    fn natives_stop_sound(&self, sound_id: i32) {
+        unsafe {
+            let mut success = Default::default();
+            sdk::natives::stop_sound(&mut success, sound_id);
+            // logger::debug!("stop_sound success: {success}");
         }
     }
 }

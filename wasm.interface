@@ -1,6 +1,6 @@
 imports {
-    log(message: String)
-    log_error(message: String)
+    log(message: Str)
+    log_error(message: Str)
 
     destroy_base_object(ptr: BaseObjectPtr)
     base_object_get_id(ptr: BaseObjectPtr) -> U32
@@ -29,6 +29,11 @@ imports {
 
     natives_do_screen_fade_out(duration: I32)
     natives_do_screen_fade_in(duration: I32)
+    natives_play_sound(soundId: I32, _audioName: Str, _audioRef: Str, _p3: U8, _p4: I32, _p5: U8)
+    natives_play_sound_from_coord(soundId: I32, _audioName: Str, x: F32, y: F32, z: F32, _audioRef: Str, _isNetwork: U8, _range: I32, _p8: U8)
+    natives_get_sound_id() -> I32
+    natives_release_sound_id(sound_id: I32)
+    natives_stop_sound(sound_id: I32)
 }
 
 exports {

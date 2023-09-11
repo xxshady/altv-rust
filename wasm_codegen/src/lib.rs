@@ -17,6 +17,10 @@ pub fn host(input: TokenStream) -> TokenStream {
     quote! {
         mod host {
             #shared
+
+            pub type FreeFunc = wasmtime::TypedFunc<FatPtr, ()>;
+            pub type AllocFunc = wasmtime::TypedFunc<Size, Ptr>;
+
             #exports
             #imports
         }

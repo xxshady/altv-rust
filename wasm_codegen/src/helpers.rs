@@ -48,6 +48,14 @@ pub(crate) fn value_type_to_repr_as_token_stream(
     repr_str.parse().unwrap()
 }
 
-pub(crate) fn value_type_to_rust_as_syn_type(value_type: ValueType) -> syn::Type {
-    syn::parse_str(value_type.rust()).expect("value_type_to_rust_type_as_token_stream failed")
+pub(crate) fn value_type_to_rust_as_syn_type(
+    value_type: ValueType,
+    deserialization: bool,
+) -> syn::Type {
+    syn::parse_str(if deserialization {
+        value_type.de().unwrap_or(value_type.rust())
+    } else {
+        value_type.rust()
+    })
+    .expect("value_type_to_rust_type_as_token_stream failed")
 }

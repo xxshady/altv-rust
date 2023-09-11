@@ -11,7 +11,7 @@ pub use log::warn;
 struct Logger {}
 
 thread_local! {
-    pub static LOG_IMPL: Cell<fn(String)> = Cell::new(|_| {});
+    pub static LOG_IMPL: Cell<fn(&str)> = Cell::new(|_| {});
 }
 
 impl Log for Logger {
@@ -37,13 +37,13 @@ impl Log for Logger {
         };
 
         LOG_IMPL.with(|v| {
-            (v.get())(format!("{module_path} {content}"));
+            (v.get())(&format!("{module_path} {content}"));
         });
     }
     fn flush(&self) {}
 }
 
-pub fn init(log_impl: fn(String)) -> Result<(), log::SetLoggerError> {
+pub fn init(log_impl: fn(&str)) -> Result<(), log::SetLoggerError> {
     let level = option_env!("LOG_LEVEL").unwrap_or("debug");
 
     LOG_IMPL.with(|v| {

@@ -18,5 +18,6 @@ pub(crate) fn shared_mod() -> proc_macro2::TokenStream {
                 ((ptr as u64) << 32) | (size as u64)
             }
         }
+        pub use __shared::{FatPtr, Ptr, Size};
     }
 }

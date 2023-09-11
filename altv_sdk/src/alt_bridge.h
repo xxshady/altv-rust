@@ -1401,4 +1401,85 @@ namespace natives {
         ctx->Push(duration);
         *success = native->Invoke(ctx);
     }
+
+    // TEST
+    static char* SaveString(const char* str) {
+        if (str == nullptr) return nullptr;
+        static char* stringValues[256] = { 0 };
+        static int nextString = 0;
+        if (stringValues[nextString]) free(stringValues[nextString]);
+        char* _str = _strdup(str);
+        stringValues[nextString] = _str;
+        nextString = (nextString + 1) % 256;
+        return _str;
+    }
+
+    void play_sound(bool* success, i32 _soundId, std::string _audioName, std::string _audioRef, u8 _p3, i32 _p4, u8 _p5) {
+        static auto native = alt::ICore::Instance().GetNativeByHash(0x7FF4944CC209192D);
+        ctx->Reset();
+        ctx->Push(_soundId);
+        ctx->Push(SaveString(_audioName.c_str()));
+        ctx->Push(SaveString(_audioRef.c_str()));
+        ctx->Push((int32_t)_p3);
+        ctx->Push(_p4);
+        ctx->Push((int32_t)_p5);
+        if (!native->Invoke(ctx)) {
+            *success = false;
+            return;
+        }
+        *success = true;
+    }
+
+    void play_sound_from_coord(bool* success, int32_t _soundId, std::string _audioName, float _x, float _y, float _z, std::string _audioRef, uint8_t _isNetwork, int32_t _range, uint8_t _p8) {
+        static auto native = alt::ICore::Instance().GetNativeByHash(0x8D8686B622B88120);
+        ctx->Reset();
+        ctx->Push(_soundId);
+        ctx->Push(SaveString(_audioName.c_str()));
+        ctx->Push(_x);
+        ctx->Push(_y);
+        ctx->Push(_z);
+        ctx->Push(SaveString(_audioRef.c_str()));
+        ctx->Push((int32_t)_isNetwork);
+        ctx->Push(_range);
+        ctx->Push((int32_t)_p8);
+        if (!native->Invoke(ctx)) {
+            *success = false;
+            return;
+        }
+        *success = true;
+    }
+
+    int32_t get_sound_id(bool* success) {
+        static auto native = alt::ICore::Instance().GetNativeByHash(0x430386FE9BF80B45);
+        ctx->Reset();
+        if (!native->Invoke(ctx)) {
+            *success = false;
+            return 0;
+        }
+        *success = true;
+        return ctx->ResultInt();
+    }
+
+    void release_sound_id(bool* success, int32_t _soundId) {
+        static auto native = alt::ICore::Instance().GetNativeByHash(0x353FC880830B88FA);
+        ctx->Reset();
+        ctx->Push(_soundId);
+        if (!native->Invoke(ctx)) {
+            *success = false;
+            return;
+        }
+        *success = true;
+    }
+
+
+    void stop_sound(bool* success, int32_t _soundId) {
+        static auto native = alt::ICore::Instance().GetNativeByHash(0xA3B0C41BA5CC0BB5);
+        ctx->Reset();
+        ctx->Push(_soundId);
+        if (!native->Invoke(ctx)) {
+            *success = false;
+            return;
+        }
+        *success = true;
+    }
 }

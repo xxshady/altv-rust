@@ -32,8 +32,9 @@ pub(crate) fn gen_imports(input: TokenStream) -> proc_macro2::TokenStream {
                 ValueKind::Native => quote! { #name as #internal_type },
                 ValueKind::FatPtr => quote! { super::__internal::send_to_host(&#name) },
                 ValueKind::Bool => quote! { #name as i32 },
+                ValueKind::String => quote! { super::__internal::send_str_to_host(#name) },
             };
-            let param_type = value_type_to_rust_as_syn_type(param_type);
+            let param_type = value_type_to_rust_as_syn_type(param_type, false);
 
             param_names.push(name.clone());
             params_signature.push(quote! {
@@ -44,7 +45,7 @@ pub(crate) fn gen_imports(input: TokenStream) -> proc_macro2::TokenStream {
         }
 
         let (ret_type, internal_ret, ret_deserialization) = if let Some(ret_type) = ret {
-            let pub_type = value_type_to_rust_as_syn_type(ret_type);
+            let pub_type = value_type_to_rust_as_syn_type(ret_type, true);
             let internal_ret_type = value_type_to_repr_as_token_stream(ret_type);
             let deserialization = match ret_type.kind() {
                 ValueKind::Native => quote! { call_return as #pub_type },
@@ -52,6 +53,9 @@ pub(crate) fn gen_imports(input: TokenStream) -> proc_macro2::TokenStream {
                     quote! { super::__internal::read_from_host(call_return) }
                 }
                 ValueKind::Bool => quote! { call_return == 1 },
+                ValueKind::String => {
+                    quote! { super::__internal::read_string_from_host(call_return) }
+                }
             };
 
             (
@@ -112,7 +116,7 @@ pub(crate) fn impl_exports(input: TokenStream) -> proc_macro2::TokenStream {
 
         for p in params {
             let name: Ident = syn::parse_str(&p.name).expect("dt");
-            let pub_type = value_type_to_rust_as_syn_type(p.param_type);
+            let pub_type = value_type_to_rust_as_syn_type(p.param_type, true);
             let param_internal_type = value_type_to_repr_as_token_stream(p.param_type);
             let deserialization = match p.param_type.kind() {
                 ValueKind::Native => quote! { #name as #pub_type },
@@ -120,6 +124,9 @@ pub(crate) fn impl_exports(input: TokenStream) -> proc_macro2::TokenStream {
                     quote! { super::__internal::read_from_host(#name) }
                 }
                 ValueKind::Bool => quote! { #name == 1 },
+                ValueKind::String => {
+                    quote! { super::__internal::read_string_from_host(#name) }
+                }
             };
 
             param_trait_decls.push(quote! {
@@ -142,9 +149,12 @@ pub(crate) fn impl_exports(input: TokenStream) -> proc_macro2::TokenStream {
                     quote! { super::__internal::send_to_host(&call_return) }
                 }
                 ValueKind::Bool => quote! { call_return as i32 },
+                ValueKind::String => {
+                    quote! { super::__internal::send_string_to_host(call_return) }
+                }
             };
 
-            let ret_type = value_type_to_rust_as_syn_type(ret_type);
+            let ret_type = value_type_to_rust_as_syn_type(ret_type, false);
 
             (
                 quote! { -> #ret_type },
@@ -217,6 +227,11 @@ pub(crate) fn gen_helpers() -> proc_macro2::TokenStream {
                 std::alloc::Layout::array::<u8>(len as usize).unwrap()
             }
 
+            fn buffer_from_fat_ptr(fat_ptr: super::__shared::FatPtr) -> Vec<u8> {
+                let (ptr, size) = super::__shared::from_fat_ptr(fat_ptr);
+                unsafe { Vec::from_raw_parts(ptr as *mut u8, size as usize, size as usize) }
+            }
+
             pub(super) fn send_to_host<T: ?Sized + serde::Serialize>(data: &T) -> super::__shared::FatPtr {
                 let encoded = bincode::serialize(data).unwrap();
                 let ptr = encoded.as_ptr();
@@ -225,11 +240,29 @@ pub(crate) fn gen_helpers() -> proc_macro2::TokenStream {
                 super::__shared::to_fat_ptr(ptr as u32, size as u32)
             }
 
-            pub(super) fn read_from_host<T: serde::de::DeserializeOwned>(fat_ptr: super::__shared::FatPtr) -> T {
-                let (ptr, size) = super::__shared::from_fat_ptr(fat_ptr);
+            // used in params
+            pub(super) fn send_str_to_host(str: &str) -> super::__shared::FatPtr {
+                let ptr = str.as_ptr();
+                let size = str.len();
+                super::__shared::to_fat_ptr(ptr as u32, size as u32)
+            }
 
-                let buffer = unsafe { Vec::from_raw_parts(ptr as *mut u8, size as usize, size as usize) };
+            // used in return
+            pub(super) fn send_string_to_host(string: String) -> super::__shared::FatPtr {
+                let ptr = string.as_ptr();
+                let size = string.len();
+                std::mem::forget(string);
+                super::__shared::to_fat_ptr(ptr as u32, size as u32)
+            }
+
+            pub(super) fn read_from_host<T: serde::de::DeserializeOwned>(fat_ptr: super::__shared::FatPtr) -> T {
+                let buffer = buffer_from_fat_ptr(fat_ptr);
                 bincode::deserialize(&buffer).unwrap()
+            }
+
+            pub(super) fn read_string_from_host(fat_ptr: super::__shared::FatPtr) -> String {
+                let buffer = buffer_from_fat_ptr(fat_ptr);
+                String::from_utf8(buffer).unwrap()
             }
         }
     }
