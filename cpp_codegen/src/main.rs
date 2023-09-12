@@ -32,6 +32,12 @@ fn gen_default(class_name: &str, in_file: &str) {
 }
 
 fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) -> String>) {
+    let (class_name, prefix) = if class_name.starts_with("struct ") {
+        (class_name.replace("struct ", ""), "struct")
+    } else {
+        (class_name.to_string(), "class")
+    };
+
     let mut rust_functions_cpp_file = format!(
         "#pragma once\n\
         #define ALT_SERVER_API\n\
@@ -40,7 +46,7 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
     );
 
     let mut cpp_method_to_rust = |method: String| match cpp_method_to_rust_compatible_func(
-        class_name,
+        &class_name,
         method.clone(),
         custom_method_caller,
     ) {
@@ -61,7 +67,7 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
     let mut is_in_nested_class_block = false;
     let mut nested_class_block_brace = 0;
 
-    for line in content.lines() {
+    for line in get_lines_of_content_and_skip_useless(&content, &class_name, prefix) {
         let mut line = line.trim();
         // dbg!(line);
 
@@ -799,4 +805,22 @@ fn cpp_method_to_rust_compatible_func(
 
 fn is_it_delimiter_char(char: u8) -> bool {
     char == b' ' || char == b',' || char == b'(' || char == b')'
+}
+
+fn get_lines_of_content_and_skip_useless<'a>(
+    content: &'a str,
+    class_name: &'a str,
+    prefix: &'a str,
+) -> Vec<&'a str> {
+    let class_name_line = format!("{prefix} {class_name}");
+    let lines = content
+        .lines()
+        .skip_while(|line| !line.contains(&class_name_line));
+
+    let mut lines = lines.peekable();
+    if lines.peek().is_none() {
+        panic!("did not found class_name_line: {class_name_line:?}");
+    }
+
+    lines.collect()
 }
