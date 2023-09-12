@@ -22,6 +22,7 @@ pub mod ffi {
         #include "alt_classes/IMarker.h"
         #include "alt_classes/ICheckpoint.h"
         #include "alt_classes/CEvent.h"
+        #include "alt_classes/CCancellableEvent.h"
         #include "alt_classes/IResource.h"
         #include "alt_classes/IVoiceChannel.h"
 
@@ -106,6 +107,7 @@ pub mod ffi {
         generate_ns!("IBlip")
         generate_ns!("ICheckpoint")
         generate_ns!("CEvent")
+        generate_ns!("CCancellableEvent")
         generate_ns!("CConsoleCommandEvent")
         generate_ns!("CServerScriptEvent")
         generate_ns!("CClientScriptEvent")
