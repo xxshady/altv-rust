@@ -1084,6 +1084,10 @@ void read_alt_decoration(
 
 namespace events
 {
+    const alt::CCancellableEvent* to_cancellable(const alt::CEvent* event) {
+        return static_cast<const alt::CCancellableEvent*>(event);
+    }
+
     const alt::CConsoleCommandEvent* to_CConsoleCommandEvent(const alt::CEvent* event) {
         assert(event->GetType() == alt::CEvent::Type::CONSOLE_COMMAND_EVENT);
         return static_cast<const alt::CConsoleCommandEvent*>(event);

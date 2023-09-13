@@ -153,16 +153,20 @@ pub static HEADERS: &[(&str, &str)] = &[
         "../altv_sdk/cpp-sdk/script-objects/IConnectionInfo.h",
     ),
     (
-        "VehicleModelInfo",
+        "struct VehicleModelInfo",
         "../altv_sdk/cpp-sdk/types/VehicleModelInfo.h",
     ),
-    ("PedModelInfo", "../altv_sdk/cpp-sdk/types/PedModelInfo.h"),
     (
-        "WeaponModelInfo",
+        "struct PedModelInfo",
+        "../altv_sdk/cpp-sdk/types/PedModelInfo.h",
+    ),
+    (
+        "struct WeaponModelInfo",
         "../altv_sdk/cpp-sdk/types/WeaponModelInfo.h",
     ),
     // events
     ("CEvent", "../altv_sdk/cpp-sdk/events/CEvent.h"),
+    ("CCancellableEvent", "../altv_sdk/cpp-sdk/events/CEvent.h"),
     (
         "CWeaponDamageEvent",
         "../altv_sdk/cpp-sdk/events/CWeaponDamageEvent.h",

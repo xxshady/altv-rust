@@ -1,22 +1,28 @@
-use crate::{sdk, VoidResult};
+use crate::{
+    sdk::{self, CCancellableEvent},
+    VoidResult,
+};
 
 #[derive(Debug)]
 pub struct CancellableEvent {
-    base_event: altv_sdk::CEventPtr,
+    cancellable_ptr: *const sdk::alt::CCancellableEvent,
 }
 
 impl CancellableEvent {
     pub fn new(base_event: altv_sdk::CEventPtr) -> Self {
+        let ptr = unsafe { sdk::events::to_cancellable(base_event) };
+        assert!(!ptr.is_null());
+
         Self {
-            base_event
+            cancellable_ptr: ptr,
         }
     }
 
     pub fn cancel(&self) -> VoidResult {
-        if unsafe { sdk::CEvent::WasCancelled(self.base_event) } {
+        if unsafe { CCancellableEvent::WasCancelled(self.cancellable_ptr) } {
             anyhow::bail!("Event cannot be cancelled multiple times")
         } else {
-            unsafe { sdk::CEvent::Cancel(self.base_event) }
+            unsafe { CCancellableEvent::Cancel(self.cancellable_ptr) }
             Ok(())
         }
     }
