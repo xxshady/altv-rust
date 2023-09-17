@@ -76,8 +76,4 @@ impl connection_info::ConnectionInfo {
     pub fn discord_user_id(&self) -> SomeResult<i64> {
         Ok(unsafe { sdk::IConnectionInfo::GetDiscordUserID(self.raw_ptr()?) })
     }
-
-    pub fn cloud_auth_hash(&self) -> SomeResult<String> {
-        Ok(unsafe { sdk::IConnectionInfo::GetCloudAuthHash(self.raw_ptr()?) }.to_string())
-    }
 }
