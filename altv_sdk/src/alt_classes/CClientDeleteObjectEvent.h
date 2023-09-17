@@ -4,5 +4,8 @@
 
 namespace CClientDeleteObjectEvent {
 
+alt::IPlayer* GetTarget(const alt::CClientDeleteObjectEvent* ptr) {
+    return ptr->GetTarget();
+}
 
 } // namespace

@@ -250,6 +250,9 @@ Vector3Wrapper GetSpeedVector(const alt::IVehicle* ptr) {
 u16 GetMaxGear(const alt::IVehicle* ptr) {
     return ptr->GetMaxGear();
 }
+void SetSteeringAngle(alt::IVehicle* ptr, f32 value) {
+    return ptr->SetSteeringAngle(value);
+}
 void SetCurrentGear(alt::IVehicle* ptr, u16 currentGear) {
     return ptr->SetCurrentGear(currentGear);
 }
