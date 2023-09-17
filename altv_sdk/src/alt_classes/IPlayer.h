@@ -352,9 +352,6 @@ void ClearTasks(alt::IPlayer* ptr) {
 void PlayScenario(alt::IPlayer* ptr, const StdStringClone name) {
     return ptr->PlayScenario(name);
 }
-std::string GetCloudAuthHash(const alt::IPlayer* ptr) {
-    return ptr->GetCloudAuthHash();
-}
 std::vector<StreamedEntityWrapper> GetStreamedEntities(const alt::IPlayer* ptr) {
     auto alt_vec = ptr->GetStreamedEntities();
     std::vector<StreamedEntityWrapper> vec {};
