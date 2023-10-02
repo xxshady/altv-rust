@@ -66,6 +66,7 @@ jobs:
         run: |
           set PATH=%PATH:C:\Program Files\LLVM\bin;=%
           echo %PATH%
+
           cargo test --doc
 
       - name: Server Test
@@ -76,4 +77,5 @@ jobs:
         run: |
           set PATH=%PATH:C:\Program Files\LLVM\bin;=%
           echo %PATH%
+
           cargo run --bin run_test

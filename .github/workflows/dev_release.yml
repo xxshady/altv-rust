@@ -38,7 +38,12 @@ jobs:
       # TODO: cache
 
       - name: Build
+        shell: cmd
+        # temp workaround https://github.com/google/autocxx/issues/1327
         run: |
+          set PATH=%PATH:C:\Program Files\LLVM\bin;=%
+          echo %PATH%
+
           cd altv_module
           cargo build --release
 
