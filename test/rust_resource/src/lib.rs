@@ -33,9 +33,16 @@ use resource::test_resource;
 mod events;
 use events::test_events;
 
+mod ped;
+use ped::test_ped;
+
 #[altv::main]
 fn main() -> impl altv::IntoVoidResult {
     std::env::set_var("RUST_BACKTRACE", "full");
+
+    altv::log!("#################### ped");
+    // should be before core funcs because of changes in stream distance
+    test_ped();
 
     altv::log!("#################### core_funcs");
     test_core_funcs();
