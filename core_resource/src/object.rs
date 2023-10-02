@@ -32,7 +32,16 @@ impl object::Object {
         pos: impl Into<Vector3>,
         rot: impl Into<Vector3>,
     ) -> SomeResult<object::ObjectContainer> {
-        Self::new_with_params(model, pos, rot, 255, 0, 100)
+        Self::new_with_streaming_distance(model, pos, rot, 0)
+    }
+
+    pub fn new_with_streaming_distance(
+        model: impl IntoHash,
+        pos: impl Into<Vector3>,
+        rot: impl Into<Vector3>,
+        streaming_distance: u32,
+    ) -> SomeResult<object::ObjectContainer> {
+        Self::new_with_params(model, pos, rot, 255, 0, 100, streaming_distance)
     }
 
     /// Creates new instance of Object with custom params.
@@ -50,7 +59,8 @@ impl object::Object {
     ///    altv::Vector3::new(1.0, 2.0, 3.0),
     ///    150,
     ///    0,
-    ///    999
+    ///    999,
+    ///    300,
     /// )?;
     /// # Ok(()) }
     /// ```
@@ -61,6 +71,7 @@ impl object::Object {
         alpha: u8,
         texture_variation: u8,
         lod_distance: u16,
+        streaming_distance: u32,
     ) -> SomeResult<object::ObjectContainer> {
         let pos = pos.into();
         let rot = rot.into();
@@ -78,6 +89,7 @@ impl object::Object {
                 alpha,
                 texture_variation,
                 lod_distance,
+                streaming_distance,
             ),
             anyhow::bail!("Object model is incorrect or there is no free id for new entity")
         ))

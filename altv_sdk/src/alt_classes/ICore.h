@@ -136,14 +136,17 @@ void StopResource(const StdStringClone name) {
 void RestartResource(const StdStringClone name) {
     return alt::ICore::Instance().RestartResource(name);
 }
+void TriggerClientRPCAnswer(alt::IPlayer* target, u16 answerID, MValueMutWrapper args, const StdStringClone error) {
+    return alt::ICore::Instance().TriggerClientRPCAnswer(target, answerID, args.ptr, error);
+}
 void SetSyncedMetaData(const StdStringClone key, MValueMutWrapper val) {
     return alt::ICore::Instance().SetSyncedMetaData(key, val.ptr);
 }
 void DeleteSyncedMetaData(const StdStringClone key) {
     return alt::ICore::Instance().DeleteSyncedMetaData(key);
 }
-alt::IVehicle* CreateVehicle(u32 model, f32 pos_x, f32 pos_y, f32 pos_z, f32 rot_x, f32 rot_y, f32 rot_z) {
-    return alt::ICore::Instance().CreateVehicle(model, { pos_x, pos_y, pos_z }, { rot_x, rot_y, rot_z });
+alt::IVehicle* CreateVehicle(u32 model, f32 pos_x, f32 pos_y, f32 pos_z, f32 rot_x, f32 rot_y, f32 rot_z, u32 streamingDistance) {
+    return alt::ICore::Instance().CreateVehicle(model, { pos_x, pos_y, pos_z }, { rot_x, rot_y, rot_z }, streamingDistance);
 }
 alt::ICheckpoint* CreateCheckpoint(u8 type, f32 pos_x, f32 pos_y, f32 pos_z, f32 radius, f32 height, u8 color_r, u8 color_g, u8 color_b, u8 color_a, u32 streamingDistance) {
     return alt::ICore::Instance().CreateCheckpoint(type, { pos_x, pos_y, pos_z }, radius, height, { color_r, color_g, color_b, color_a }, streamingDistance);
@@ -195,8 +198,8 @@ Config::Value::ValuePtr GetServerConfig() {
 void SetWorldProfiler(bool state) {
     return alt::ICore::Instance().SetWorldProfiler(state);
 }
-alt::IPed* CreatePed(u32 model, f32 pos_x, f32 pos_y, f32 pos_z, f32 rot_x, f32 rot_y, f32 rot_z) {
-    return alt::ICore::Instance().CreatePed(model, { pos_x, pos_y, pos_z }, { rot_x, rot_y, rot_z });
+alt::IPed* CreatePed(u32 model, f32 pos_x, f32 pos_y, f32 pos_z, f32 rot_x, f32 rot_y, f32 rot_z, u32 streamingDistance) {
+    return alt::ICore::Instance().CreatePed(model, { pos_x, pos_y, pos_z }, { rot_x, rot_y, rot_z }, streamingDistance);
 }
 BaseObjectVector GetEntitiesInDimension(i32 dimension, u64 allowedTypes) {
     auto alt_vec = alt::ICore::Instance().GetEntitiesInDimension(dimension, allowedTypes);
@@ -231,8 +234,8 @@ BaseObjectVector GetClosestEntities(f32 position_x, f32 position_y, f32 position
     }
     return vec;
 }
-alt::IObject* CreateObject(u32 model, f32 pos_x, f32 pos_y, f32 pos_z, f32 rot_x, f32 rot_y, f32 rot_z, u8 alpha, u8 textureVariation, u16 lodDistance) {
-    return alt::ICore::Instance().CreateObject(model, { pos_x, pos_y, pos_z }, { rot_x, rot_y, rot_z }, alpha, textureVariation, lodDistance);
+alt::IObject* CreateObject(u32 model, f32 pos_x, f32 pos_y, f32 pos_z, f32 rot_x, f32 rot_y, f32 rot_z, u8 alpha, u8 textureVariation, u16 lodDistance, u32 streamingDistance) {
+    return alt::ICore::Instance().CreateObject(model, { pos_x, pos_y, pos_z }, { rot_x, rot_y, rot_z }, alpha, textureVariation, lodDistance, streamingDistance);
 }
 u32 GetAmmoHashForWeaponHash(u32 weaponHash) {
     return alt::ICore::Instance().GetAmmoHashForWeaponHash(weaponHash);

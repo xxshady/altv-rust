@@ -173,4 +173,13 @@ pub trait Entity<InheritPtrs: inherit_ptrs::traits::Entity>:
     fn timestamp(&self) -> SomeResult<u32> {
         Ok(unsafe { sdk::IEntity::GetTimestamp(self.raw_ptr()?) })
     }
+
+    fn streaming_distance(&self) -> SomeResult<u32> {
+        Ok(unsafe { sdk::IEntity::GetStreamingDistance(self.raw_ptr()?) })
+    }
+
+    fn set_streaming_distance(&self, value: u32) -> VoidResult {
+        unsafe { sdk::IEntity::SetStreamingDistance(self.raw_ptr()?, value) }
+        Ok(())
+    }
 }

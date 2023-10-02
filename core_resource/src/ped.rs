@@ -14,6 +14,15 @@ impl ped::Ped {
         pos: impl Into<Vector3>,
         rot: impl Into<Vector3>,
     ) -> SomeResult<ped::PedContainer> {
+        Self::new_with_streaming_distance(model, pos, rot, 0)
+    }
+
+    pub fn new_with_streaming_distance(
+        model: impl IntoHash,
+        pos: impl Into<Vector3>,
+        rot: impl Into<Vector3>,
+        streaming_distance: u32,
+    ) -> SomeResult<ped::PedContainer> {
         let pos = pos.into();
         let rot = rot.into();
 
@@ -27,6 +36,7 @@ impl ped::Ped {
                 rot.x(),
                 rot.y(),
                 rot.z(),
+                streaming_distance,
             ),
             anyhow::bail!("Ped model is incorrect or there is no free id for new entity")
         ))
