@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include "../cpp-sdk/SDK.h"
 #include "../cpp-sdk/events/CMetaDataChangeEvent.h"
 #include <string>
