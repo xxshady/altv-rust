@@ -1,6 +1,6 @@
 use crate::{
     base_objects::AnyBaseObject,
-    helpers::{self, IntoHash},
+    helpers::{self, IntoHash, Hash},
     sdk,
     vector::Vector3,
 };
@@ -181,4 +181,11 @@ pub fn migration_distance() -> u32 {
 
 pub fn set_migration_distance(value: u32) {
     unsafe { sdk::ICore::SetMigrationDistance(value) }
+}
+
+pub fn loaded_vehicle_models() -> Vec<Hash> {
+    unsafe { sdk::ICore::GetLoadedVehicleModels() }
+        .into_iter()
+        .copied()
+        .collect()
 }

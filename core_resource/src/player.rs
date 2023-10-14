@@ -1112,6 +1112,10 @@ impl player::Player {
         unsafe { sdk::IPlayer::SetNetworkOwnershipDisabled(self.raw_ptr()?, disable) }
         Ok(())
     }
+
+    pub fn cloud_id(&self) -> SomeResult<String> {
+        Ok(unsafe { sdk::IPlayer::GetCloudID(self.raw_ptr()?) }.to_string())
+    }
 }
 
 impl StreamSyncedEntityMeta for player::Player {}
