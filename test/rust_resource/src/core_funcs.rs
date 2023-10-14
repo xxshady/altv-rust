@@ -28,4 +28,12 @@ pub(crate) fn test_core_funcs() {
     test_property!(migration_distance, 50);
     test_property!(col_shape_tick_rate, 1000);
     test_property!(sync_send_thread_count, 1);
+
+    let models = altv::loaded_vehicle_models();
+    dbg!(&models.len());
+
+    assert!(models.contains(&altv::hash("sultan")));
+    assert!(models.contains(&altv::hash("sultan2")));
+    assert!(models.contains(&altv::hash("sultan3")));
+    assert!(models.contains(&altv::hash("elegy")));
 }
