@@ -1092,3 +1092,27 @@ impl ClientRequestObjectEvent {
         self.cancellable.cancel()
     }
 }
+
+#[derive(Debug)]
+pub struct PlayerHeal {
+    pub player: player::PlayerContainer,
+    pub old_health: u16,
+    pub new_health: u16,
+    pub old_armour: u16,
+    pub new_armour: u16,
+}
+
+impl PlayerHeal {
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(event, CPlayerHealEvent);
+
+        use sdk::CPlayerHealEvent as E;
+        Self {
+            player: get_non_null_player(E::GetTarget(event), resource),
+            old_health: E::GetOldHealth(event),
+            new_health: E::GetNewHealth(event),
+            old_armour: E::GetOldArmour(event),
+            new_armour: E::GetNewArmour(event),
+        }
+    }
+}

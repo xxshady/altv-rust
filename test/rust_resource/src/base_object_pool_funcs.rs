@@ -24,12 +24,12 @@ pub(crate) fn test_base_object_pool_funcs() {
 }
 
 fn get_by_id() {
-    let marker = altv::Marker::new(altv::MarkerType::MarkerArrow, 0, 0);
-    let id = dbg!(marker.id()).unwrap();
+    let blip = altv::Blip::new_global_point(0).unwrap();
+    let id = dbg!(blip.id()).unwrap();
 
-    dbg!(altv::Marker::get_by_id(id).unwrap());
+    dbg!(altv::Blip::get_by_id(id).unwrap());
 
-    let none = altv::Marker::get_by_id(id + 1);
+    let none = altv::Blip::get_by_id(id + 1);
     dbg!(&none);
     assert_eq!(none, None);
 
@@ -41,15 +41,14 @@ fn get_by_id() {
 
     altv::log!("get_by_id after destroy");
 
-    marker.destroy().unwrap();
+    blip.destroy().unwrap();
 
-    let none = altv::Marker::get_by_id(id);
+    let none = altv::Blip::get_by_id(id);
     dbg!(&none);
     assert_eq!(none, None);
 }
 
 fn all() {
-    assert_eq!(altv::Marker::all().len(), 0);
     assert_eq!(altv::Blip::all().len(), 0);
 
     altv::Blip::new_global_point(0).unwrap();

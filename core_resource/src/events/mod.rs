@@ -246,6 +246,7 @@ supported_sdk_events!(
     PlayerRequestControl,
     PlayerDimensionChange,
     PlayerChangeInteriorEvent,
+    PlayerHeal,
 
     VehicleAttach,
     VehicleDetach,

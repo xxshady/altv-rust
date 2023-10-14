@@ -47,10 +47,6 @@ impl player::Player {
         Ok(())
     }
 
-    pub fn cloud_auth_hash(&self) -> SomeResult<String> {
-        Ok(unsafe { sdk::IPlayer::GetCloudAuthHash(self.raw_ptr()?) }.to_string())
-    }
-
     pub fn set_model(&self, model: impl IntoHash) -> VoidResult {
         unsafe { sdk::IPlayer::SetModel(self.raw_ptr()?, model.into_hash()) }
         Ok(())
@@ -1115,6 +1111,10 @@ impl player::Player {
     pub fn disable_net_ownership(&self, disable: bool) -> VoidResult {
         unsafe { sdk::IPlayer::SetNetworkOwnershipDisabled(self.raw_ptr()?, disable) }
         Ok(())
+    }
+
+    pub fn cloud_id(&self) -> SomeResult<String> {
+        Ok(unsafe { sdk::IPlayer::GetCloudID(self.raw_ptr()?) }.to_string())
     }
 }
 

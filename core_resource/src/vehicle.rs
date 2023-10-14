@@ -18,6 +18,15 @@ impl vehicle::Vehicle {
         pos: impl Into<Vector3>,
         rot: impl Into<Vector3>,
     ) -> SomeResult<vehicle::VehicleContainer> {
+        Self::new_with_streaming_distance(model, pos, rot, 0)
+    }
+
+    pub fn new_with_streaming_distance(
+        model: impl IntoHash,
+        pos: impl Into<Vector3>,
+        rot: impl Into<Vector3>,
+        streaming_distance: u32,
+    ) -> SomeResult<vehicle::VehicleContainer> {
         let pos = pos.into();
         let rot = rot.into();
 
@@ -31,6 +40,7 @@ impl vehicle::Vehicle {
                 rot.x(),
                 rot.y(),
                 rot.z(),
+                streaming_distance,
             ),
             anyhow::bail!("Vehicle model is incorrect or there is no free id for new entity")
         ))

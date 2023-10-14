@@ -76,5 +76,11 @@ bool HasCollision(const alt::IEntity* ptr) {
 void SetCollision(alt::IEntity* ptr, bool state) {
     return ptr->SetCollision(state);
 }
+u32 GetStreamingDistance(const alt::IEntity* ptr) {
+    return ptr->GetStreamingDistance();
+}
+void SetStreamingDistance(alt::IEntity* ptr, u32 streamingDistance) {
+    return ptr->SetStreamingDistance(streamingDistance);
+}
 
 } // namespace

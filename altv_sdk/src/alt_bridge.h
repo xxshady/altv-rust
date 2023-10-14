@@ -919,7 +919,8 @@ void read_vehicle_model_info(
     u8* out_dashboard_color,
     bool* out_modkits,
     bool* out_has_auto_attach_trailer,
-    bool* can_attach_cars
+    bool* can_attach_cars,
+    u32* handling_name_hash
 ) {
     *out_model_type = static_cast<u8>(ptr->modelType);
     *out_wheels_count = ptr->wheelsCount;
@@ -940,6 +941,7 @@ void read_vehicle_model_info(
 
     *out_has_auto_attach_trailer = ptr->hasAutoAttachTrailer;
     *can_attach_cars = ptr->canAttachCars;
+    *handling_name_hash = ptr->handlingNameHash;
 }
 
 std::string read_vehicle_model_info_title(const alt::VehicleModelInfo* ptr) {
@@ -1070,6 +1072,10 @@ void read_alt_decoration(
 
 namespace events
 {
+    const alt::CCancellableEvent* to_cancellable(const alt::CEvent* event) {
+        return static_cast<const alt::CCancellableEvent*>(event);
+    }
+
     const alt::CConsoleCommandEvent* to_CConsoleCommandEvent(const alt::CEvent* event) {
         assert(event->GetType() == alt::CEvent::Type::CONSOLE_COMMAND_EVENT);
         return static_cast<const alt::CConsoleCommandEvent*>(event);
@@ -1194,6 +1200,11 @@ namespace events
     const alt::CConnectionQueueRemoveEvent* to_CConnectionQueueRemoveEvent(const alt::CEvent* event) {
         assert(event->GetType() == alt::CEvent::Type::CONNECTION_QUEUE_REMOVE);
         return static_cast<const alt::CConnectionQueueRemoveEvent*>(event);
+    }
+
+    const alt::CPlayerHealEvent* to_CPlayerHealEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::PLAYER_HEAL);
+        return static_cast<const alt::CPlayerHealEvent*>(event);
     }
 
     const alt::CVehicleAttachEvent* to_CVehicleAttachEvent(const alt::CEvent* event) {

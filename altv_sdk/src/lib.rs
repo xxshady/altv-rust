@@ -22,6 +22,7 @@ pub mod ffi {
         #include "alt_classes/IMarker.h"
         #include "alt_classes/ICheckpoint.h"
         #include "alt_classes/CEvent.h"
+        #include "alt_classes/CCancellableEvent.h"
         #include "alt_classes/IResource.h"
         #include "alt_classes/IVoiceChannel.h"
 
@@ -54,6 +55,7 @@ pub mod ffi {
         #include "alt_classes/CPlayerChangeInteriorEvent.h"
         #include "alt_classes/CConnectionQueueAddEvent.h"
         #include "alt_classes/CConnectionQueueRemoveEvent.h"
+        #include "alt_classes/CPlayerHealEvent.h"
 
         #include "alt_classes/CVehicleAttachEvent.h"
         #include "alt_classes/CVehicleDetachEvent.h"
@@ -105,6 +107,7 @@ pub mod ffi {
         generate_ns!("IBlip")
         generate_ns!("ICheckpoint")
         generate_ns!("CEvent")
+        generate_ns!("CCancellableEvent")
         generate_ns!("CConsoleCommandEvent")
         generate_ns!("CServerScriptEvent")
         generate_ns!("CClientScriptEvent")
@@ -135,6 +138,7 @@ pub mod ffi {
         generate_ns!("CPlayerChangeInteriorEvent")
         generate_ns!("CConnectionQueueAddEvent")
         generate_ns!("CConnectionQueueRemoveEvent")
+        generate_ns!("CPlayerHealEvent")
 
         generate_ns!("CVehicleAttachEvent")
         generate_ns!("CVehicleDetachEvent")
@@ -346,26 +350,32 @@ pub mod ffi {
     }
     pub use alt_bridge::*;
 
+    #[allow(improper_ctypes_definitions)]
     #[repr(transparent)]
     pub struct ResourceStartCallback(pub extern "C" fn(name: &str, full_main_path: &str));
     impl_extern_type_callback!(ResourceStartCallback, "callbacks::ResourceStartCallback");
 
+    #[allow(improper_ctypes_definitions)]
     #[repr(transparent)]
     pub struct ResourceStopCallback(pub extern "C" fn(name: &str));
     impl_extern_type_callback!(ResourceStopCallback, "callbacks::ResourceStopCallback");
 
     #[repr(transparent)]
+    #[allow(improper_ctypes_definitions)]
     pub struct RuntimeResourceDestroyImplCallback(pub extern "C" fn());
     impl_extern_type_callback!(
         RuntimeResourceDestroyImplCallback,
         "callbacks::RuntimeResourceDestroyImplCallback"
     );
 
+    #[allow(improper_ctypes_definitions)]
     #[repr(transparent)]
     pub struct RuntimeOnTickCallback(pub extern "C" fn());
     impl_extern_type_callback!(RuntimeOnTickCallback, "callbacks::RuntimeOnTickCallback");
 
+    #[allow(improper_ctypes_definitions)]
     #[repr(transparent)]
+
     pub struct ResourceOnEventCallback(
         pub extern "C" fn(name: &str, event: *const alt_bridge::alt::CEvent),
     );
@@ -374,6 +384,7 @@ pub mod ffi {
         "callbacks::ResourceOnEventCallback"
     );
 
+    #[allow(improper_ctypes_definitions)]
     #[repr(transparent)]
     pub struct ResourceOnCreateBaseObjectCallback(
         pub extern "C" fn(name: &str, base_object: *mut alt_bridge::alt::IBaseObject),
@@ -383,6 +394,7 @@ pub mod ffi {
         "callbacks::ResourceOnCreateBaseObjectCallback"
     );
 
+    #[allow(improper_ctypes_definitions)]
     #[repr(transparent)]
     pub struct ResourceOnRemoveBaseObjectCallback(
         pub extern "C" fn(name: &str, base_object: *mut alt_bridge::alt::IBaseObject),

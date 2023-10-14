@@ -86,6 +86,7 @@ lazy_static::lazy_static! {
             ("std::unordered_map<std::string, MValue>", "MValueUnorderedMapWrapper"),
             ("std::unordered_map<std::shared_ptr<IEntity>, uint32_t>", "EntityAnimHashPairsWrapper"),
             ("CVoiceConnectionEvent::State", "VoiceConnectionState"),
+            ("std::vector<uint32_t>&", "std::vector<u32>"),
         ])
     };
 
@@ -151,16 +152,20 @@ pub static HEADERS: &[(&str, &str)] = &[
         "../altv_sdk/cpp-sdk/script-objects/IConnectionInfo.h",
     ),
     (
-        "VehicleModelInfo",
+        "struct VehicleModelInfo",
         "../altv_sdk/cpp-sdk/types/VehicleModelInfo.h",
     ),
-    ("PedModelInfo", "../altv_sdk/cpp-sdk/types/PedModelInfo.h"),
     (
-        "WeaponModelInfo",
+        "struct PedModelInfo",
+        "../altv_sdk/cpp-sdk/types/PedModelInfo.h",
+    ),
+    (
+        "struct WeaponModelInfo",
         "../altv_sdk/cpp-sdk/types/WeaponModelInfo.h",
     ),
     // events
     ("CEvent", "../altv_sdk/cpp-sdk/events/CEvent.h"),
+    ("CCancellableEvent", "../altv_sdk/cpp-sdk/events/CEvent.h"),
     (
         "CWeaponDamageEvent",
         "../altv_sdk/cpp-sdk/events/CWeaponDamageEvent.h",
@@ -254,6 +259,10 @@ pub static HEADERS: &[(&str, &str)] = &[
     (
         "CPlayerChangeInteriorEvent",
         "../altv_sdk/cpp-sdk/events/CPlayerChangeInteriorEvent.h",
+    ),
+    (
+        "CPlayerHealEvent",
+        "../altv_sdk/cpp-sdk/events/CPlayerHealEvent.h",
     ),
     // vehicle
     (

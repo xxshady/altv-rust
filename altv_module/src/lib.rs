@@ -11,6 +11,7 @@ mod helpers;
 mod required_sdk_events;
 mod resource_manager;
 
+#[allow(improper_ctypes_definitions)]
 type ResourceMainFn = unsafe extern "C" fn(
     altv_module_version: String, // should always be FIRST arg for backward compatibility!!!
     core: *mut sdk::alt::ICore,
@@ -176,13 +177,13 @@ pub unsafe extern "C" fn altMain(core: *mut sdk::alt::ICore) -> bool {
     logger::init().unwrap();
 
     logger::debug!("set_alt_core");
-    sdk::set_alt_core(core as *mut sdk::alt::ICore);
+    sdk::set_alt_core(core);
 
     logger::debug!("create_script_runtime");
     let runtime = sdk::create_script_runtime();
 
     logger::debug!("register_script_runtime");
-    sdk::register_script_runtime(core as *mut sdk::alt::ICore, "rs", runtime);
+    sdk::register_script_runtime(core, "rs", runtime);
 
     logger::debug!("setup_callbacks");
     sdk::setup_callbacks(

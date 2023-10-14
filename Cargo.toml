@@ -1,4 +1,5 @@
 [workspace]
+resolver = "2"
 
 members = [
     "core_shared",
@@ -16,8 +17,8 @@ members = [
 ]
 
 [workspace.package]
-version = "15.0.0-rc.4"
-rust-version = "1.68.2"
+version = "15.0.0-dev.75"
+rust-version = "1.73.0"
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/xxshady/altv-rust"
@@ -25,7 +26,7 @@ readme = "README.md"
 
 [workspace.dependencies]
 cxx = "1.0.91"
-autocxx = "0.25.0"
+autocxx = "0.26.0"
 anyhow = { package = "lmnkjgkj-std-backtrace-anyhow", version = "0.0.1" }
 paste = "1.0.11"
 lazy_static = "1.4.0"

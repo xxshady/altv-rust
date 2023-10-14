@@ -43,11 +43,11 @@ std::string GetIp(const alt::IConnectionInfo* ptr) {
 i64 GetDiscordUserID(const alt::IConnectionInfo* ptr) {
     return ptr->GetDiscordUserID();
 }
-std::string GetCloudAuthHash(const alt::IConnectionInfo* ptr) {
-    return ptr->GetCloudAuthHash();
-}
 std::string GetText(const alt::IConnectionInfo* ptr) {
     return ptr->GetText();
+}
+std::string GetCloudID(const alt::IConnectionInfo* ptr) {
+    return ptr->GetCloudID();
 }
 void Accept(alt::IConnectionInfo* ptr, bool sendNames) {
     return ptr->Accept(sendNames);

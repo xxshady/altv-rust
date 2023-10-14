@@ -1,4 +1,7 @@
-use crate::{helpers::IntoHash, sdk, structs};
+use crate::{
+    helpers::{IntoHash, Hash},
+    sdk, structs,
+};
 
 #[derive(Debug)]
 pub struct VehicleModelInfo {
@@ -16,6 +19,7 @@ pub struct VehicleModelInfo {
     pub has_auto_attach_trailer: bool,
     pub bones: Vec<structs::BoneInfo>,
     pub can_attach_cars: bool,
+    pub handling_name_hash: Hash,
 
     ptr: *const sdk::alt::VehicleModelInfo,
 }
@@ -43,6 +47,9 @@ impl VehicleModelInfo {
             mut can_attach_cars,
         ) = Default::default();
 
+        // it did not fit into first tuple xd
+        let (mut handling_name_hash,) = Default::default();
+
         unsafe {
             sdk::read_vehicle_model_info(
                 ptr,
@@ -58,6 +65,7 @@ impl VehicleModelInfo {
                 &mut mod_kits as *mut bool,
                 &mut has_auto_attach_trailer,
                 &mut can_attach_cars,
+                &mut handling_name_hash,
             )
         };
         let model_type = altv_sdk::VehicleModelType::try_from(model_type).unwrap();
@@ -92,6 +100,7 @@ impl VehicleModelInfo {
             has_auto_attach_trailer,
             bones,
             can_attach_cars,
+            handling_name_hash,
 
             ptr,
         })

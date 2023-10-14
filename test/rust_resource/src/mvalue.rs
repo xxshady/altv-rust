@@ -23,6 +23,7 @@ macro_rules! to_and_from {
                 serialized_value
             );
 
+            #[allow(clippy::redundant_closure_call)]
             $( $eq(deserialized, serialized_value); )?
         )+ )+
     };
