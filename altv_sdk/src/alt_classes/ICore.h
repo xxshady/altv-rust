@@ -186,6 +186,9 @@ void StopServer() {
 const alt::VehicleModelInfo* GetVehicleModelByHash(u32 hash) {
     return &alt::ICore::Instance().GetVehicleModelByHash(hash);
 }
+const std::vector<u32> GetLoadedVehicleModels() {
+    return alt::ICore::Instance().GetLoadedVehicleModels();
+}
 const alt::PedModelInfo* GetPedModelByHash(u32 hash) {
     return &alt::ICore::Instance().GetPedModelByHash(hash);
 }

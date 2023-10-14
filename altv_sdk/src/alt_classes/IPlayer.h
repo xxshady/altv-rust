@@ -426,5 +426,8 @@ bool IsNetworkOwnershipDisabled(const alt::IPlayer* ptr) {
 void SetNetworkOwnershipDisabled(alt::IPlayer* ptr, bool disabled) {
     return ptr->SetNetworkOwnershipDisabled(disabled);
 }
+std::string GetCloudID(const alt::IPlayer* ptr) {
+    return ptr->GetCloudID();
+}
 
 } // namespace
