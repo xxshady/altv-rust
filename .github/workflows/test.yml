@@ -51,6 +51,9 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: recursive
+
+      - name: Install latest stable rust
+        run: rustup update
           
       - name: Cache
         uses: actions/cache@v3
