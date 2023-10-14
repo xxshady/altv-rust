@@ -919,7 +919,8 @@ void read_vehicle_model_info(
     u8* out_dashboard_color,
     bool* out_modkits,
     bool* out_has_auto_attach_trailer,
-    bool* can_attach_cars
+    bool* can_attach_cars,
+    u32* handling_name_hash
 ) {
     *out_model_type = static_cast<u8>(ptr->modelType);
     *out_wheels_count = ptr->wheelsCount;
@@ -940,6 +941,7 @@ void read_vehicle_model_info(
 
     *out_has_auto_attach_trailer = ptr->hasAutoAttachTrailer;
     *can_attach_cars = ptr->canAttachCars;
+    *handling_name_hash = ptr->handlingNameHash;
 }
 
 std::string read_vehicle_model_info_title(const alt::VehicleModelInfo* ptr) {
