@@ -1,2 +1,3 @@
 [registries.crates-io]
+# cargo-release breaks without it
 protocol = "git"

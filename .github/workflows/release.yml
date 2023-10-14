@@ -14,8 +14,8 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install stable rust
-        uses: dtolnay/rust-toolchain@stable
+      - name: Install latest stable rust
+        run: rustup update
 
       # TODO: cache
 
@@ -38,8 +38,8 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install stable rust
-        uses: dtolnay/rust-toolchain@stable
+      - name: Install latest stable rust
+        run: rustup update
 
       # TODO: cache
       
