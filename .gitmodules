@@ -1,3 +1,6 @@
 [submodule "altv_sdk/cpp-sdk"]
 	path = altv_sdk/cpp-sdk
 	url = https://github.com/altmp/cpp-sdk
+[submodule "wasmgen"]
+	path = wasmgen
+	url = https://github.com/xxshady/wasmgen
