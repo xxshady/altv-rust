@@ -87,6 +87,8 @@ lazy_static::lazy_static! {
             ("std::unordered_map<std::shared_ptr<IEntity>, uint32_t>", "EntityAnimHashPairsWrapper"),
             ("CVoiceConnectionEvent::State", "VoiceConnectionState"),
             ("std::vector<uint32_t>&", "std::vector<u32>"),
+            ("CloudAuthResult", "CloudAuthResult_t"),
+            ("Benefit", "Benefit_t"),
         ])
     };
 

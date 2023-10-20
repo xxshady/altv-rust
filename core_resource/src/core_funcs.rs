@@ -189,3 +189,11 @@ pub fn loaded_vehicle_models() -> Vec<Hash> {
         .copied()
         .collect()
 }
+
+pub fn add_client_config_key(key: impl ToString) {
+    unsafe { sdk::ICore::AddClientConfigKey(key.to_string()) }
+}
+
+pub fn has_benefit(benefit: altv_sdk::Benefit) -> bool {
+    unsafe { sdk::ICore::HasBenefit(benefit as u8) }
+}

@@ -556,7 +556,6 @@ fn cpp_method_to_rust_compatible_func(
                 "alt::AmmoFlags" => {
                     format!("bool {name}_infiniteAmmo, bool {name}_addSmokeOnExplosion, bool {name}_fuse, bool {name}_fixedAfterExplosion")
                 }
-
                 _ => format!(
                     "{}{type_name} {name}",
                     (if *is_const { "const " } else { "" }),
@@ -614,6 +613,8 @@ fn cpp_method_to_rust_compatible_func(
                         {name}_fixedAfterExplosion\n        \
                     )"
                 ),
+                "CloudAuthResult_t" => format!("static_cast<alt::CloudAuthResult>({name})"),
+                "Benefit_t" => format!("static_cast<alt::Benefit>({name})"),
                 _ => name.to_string(),
             }
         })
@@ -764,6 +765,8 @@ fn cpp_method_to_rust_compatible_func(
                 return wrapper"
             )
         },
+        "Benefit_t" => |v: &str| format!("return static_cast<uint8_t>({v})"),
+        "CloudAuthResult_t" => |v: &str| format!("return static_cast<uint8_t>({v})"),
         _ => |v: &str| format!("return {v}"),
     };
 

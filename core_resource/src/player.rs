@@ -1116,6 +1116,22 @@ impl player::Player {
     pub fn cloud_id(&self) -> SomeResult<String> {
         Ok(unsafe { sdk::IPlayer::GetCloudID(self.raw_ptr()?) }.to_string())
     }
+
+    pub fn cloud_auth_result(&self) -> SomeResult<altv_sdk::CloudAuthResult> {
+        Ok(altv_sdk::CloudAuthResult::try_from(unsafe {
+            sdk::IPlayer::GetCloudAuthResult(self.raw_ptr()?)
+        })
+        .unwrap())
+    }
+
+    pub fn get_blood_damage_base64(&self) -> SomeResult<String> {
+        Ok(unsafe { sdk::IPlayer::GetBloodDamageBase64(self.raw_ptr()?) }.to_string())
+    }
+
+    pub fn set_blood_damage_base64(&self, blood_damage: impl ToString) -> VoidResult {
+        unsafe { sdk::IPlayer::SetBloodDamageBase64(self.raw_ptr()?, blood_damage.to_string()) }
+        Ok(())
+    }
 }
 
 impl StreamSyncedEntityMeta for player::Player {}

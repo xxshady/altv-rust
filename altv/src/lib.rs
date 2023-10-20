@@ -74,7 +74,8 @@ pub use exports::{
 
 pub use altv_sdk::{
     BaseObjectType, BlipType, ColShapeType, ExplosionType, MarkerType, PlayerBodyPart,
-    PlayerConnectDeniedReason, VehicleModelType, AmmoSpecialType, VoiceConnectionState,
+    PlayerConnectDeniedReason, VehicleModelType, AmmoSpecialType, VoiceConnectionState, Benefit,
+    CloudAuthResult,
 };
 
 pub const DEFAULT_DIMENSION: i32 = 0;

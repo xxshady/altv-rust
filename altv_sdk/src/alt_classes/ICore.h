@@ -136,6 +136,9 @@ void StopResource(const StdStringClone name) {
 void RestartResource(const StdStringClone name) {
     return alt::ICore::Instance().RestartResource(name);
 }
+void AddClientConfigKey(const StdStringClone key) {
+    return alt::ICore::Instance().AddClientConfigKey(key);
+}
 void TriggerClientRPCAnswer(alt::IPlayer* target, u16 answerID, MValueMutWrapper args, const StdStringClone error) {
     return alt::ICore::Instance().TriggerClientRPCAnswer(target, answerID, args.ptr, error);
 }
@@ -320,6 +323,9 @@ void SetStreamingDistance(u32 _distance) {
 }
 void SetMigrationDistance(u32 _distance) {
     return alt::ICore::Instance().SetMigrationDistance(_distance);
+}
+bool HasBenefit(Benefit_t benefit) {
+    return alt::ICore::Instance().HasBenefit(static_cast<alt::Benefit>(benefit));
 }
 
 } // namespace

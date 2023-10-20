@@ -429,5 +429,14 @@ void SetNetworkOwnershipDisabled(alt::IPlayer* ptr, bool disabled) {
 std::string GetCloudID(const alt::IPlayer* ptr) {
     return ptr->GetCloudID();
 }
+CloudAuthResult_t GetCloudAuthResult(const alt::IPlayer* ptr) {
+    return static_cast<uint8_t>(ptr->GetCloudAuthResult());
+}
+std::string GetBloodDamageBase64(const alt::IPlayer* ptr) {
+    return ptr->GetBloodDamageBase64();
+}
+void SetBloodDamageBase64(alt::IPlayer* ptr, const StdStringClone _base64) {
+    return ptr->SetBloodDamageBase64(_base64);
+}
 
 } // namespace

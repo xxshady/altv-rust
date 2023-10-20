@@ -126,6 +126,24 @@ fn generate_cpp_to_rust_bindings(out_dir: &str) {
         "voice_connection_state.rs",
         out_dir,
     );
+
+    generate_rust_enum_from_cpp(
+        "CloudAuthResult",
+        "u8",
+        "cpp-sdk/types/CloudAuthResult.h",
+        "enum class CloudAuthResult : uint8_t",
+        "cloud_auth_result.rs",
+        out_dir,
+    );
+
+    generate_rust_enum_from_cpp(
+        "Benefit",
+        "u8",
+        "cpp-sdk/types/Benefit.h",
+        "enum class Benefit : uint8_t",
+        "benefit.rs",
+        out_dir,
+    );
 }
 
 fn build_rust() {

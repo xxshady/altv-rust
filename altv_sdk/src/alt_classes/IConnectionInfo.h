@@ -49,6 +49,9 @@ std::string GetText(const alt::IConnectionInfo* ptr) {
 std::string GetCloudID(const alt::IConnectionInfo* ptr) {
     return ptr->GetCloudID();
 }
+CloudAuthResult_t GetCloudAuthResult(const alt::IConnectionInfo* ptr) {
+    return static_cast<uint8_t>(ptr->GetCloudAuthResult());
+}
 void Accept(alt::IConnectionInfo* ptr, bool sendNames) {
     return ptr->Accept(sendNames);
 }

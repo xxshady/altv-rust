@@ -37,6 +37,8 @@ using PlayerConnectDeniedReason = uint8_t;
 using ExplosionType = int8_t;
 using AmmoSpecialType_t = uint32_t;
 using VoiceConnectionState = uint8_t;
+using CloudAuthResult_t = uint8_t;
+using Benefit_t = uint8_t;
 
 // used for const std::string& return values in altv event classes
 using StdStringClone = std::string;

@@ -1,3 +1,3 @@
 #pragma once
 
-#define ALT_SDK_VERSION "bbbfc04"
+#define ALT_SDK_VERSION "06a9759"

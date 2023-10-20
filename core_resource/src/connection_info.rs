@@ -80,4 +80,11 @@ impl connection_info::ConnectionInfo {
     pub fn cloud_id(&self) -> SomeResult<String> {
         Ok(unsafe { sdk::IConnectionInfo::GetCloudID(self.raw_ptr()?) }.to_string())
     }
+
+    pub fn cloud_auth_result(&self) -> SomeResult<altv_sdk::CloudAuthResult> {
+        Ok(altv_sdk::CloudAuthResult::try_from(unsafe {
+            sdk::IConnectionInfo::GetCloudAuthResult(self.raw_ptr()?)
+        })
+        .unwrap())
+    }
 }

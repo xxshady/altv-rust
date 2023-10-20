@@ -461,3 +461,5 @@ include_out_dir!("/vehicle_model_type.rs");
 include_out_dir!("/config_value_type.rs");
 include_out_dir!("/ammo_special_type.rs");
 include_out_dir!("/voice_connection_state.rs");
+include_out_dir!("/cloud_auth_result.rs");
+include_out_dir!("/benefit.rs");
