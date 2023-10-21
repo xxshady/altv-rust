@@ -12,7 +12,11 @@ pub mod structs;
 macro_rules! log_user_handler_error {
     ($event_name:expr, $result:expr) => {
         if let Err(err) = $result {
-            logger::error!("handler of event {:?} failed with error: {:?}", stringify!($event_name), err);
+            logger::error!(
+                "handler of event {:?} failed with error: {:?}",
+                stringify!($event_name),
+                err
+            );
         }
     };
 }
@@ -72,7 +76,7 @@ macro_rules! supported_sdk_events {
                 )+ }
             }
         }
-        
+
         impl std::fmt::Debug for SDKHandler {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 let str = format!("{}", match self {
@@ -84,12 +88,12 @@ macro_rules! supported_sdk_events {
         }
 
         pub(crate) fn sdk_context_from_supported_event_type(
-            event_type: SupportedEventType, 
+            event_type: SupportedEventType,
             event_ptr: altv_sdk::CEventPtr,
             resource: &Resource,
         ) -> SDKContext {
             match event_type { $(
-                SupportedEventType::$event_name => 
+                SupportedEventType::$event_name =>
                     SDKContext::$event_name(unsafe { sdk_contexts::$event_name::new(event_ptr, resource) }),
             )+ }
         }
@@ -136,7 +140,7 @@ macro_rules! custom_events {
         pub enum CustomContext { $($(
             $custom_event_name(custom_contexts::$custom_event_name),
         )+)+ }
-        
+
         impl std::fmt::Debug for CustomContext {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 let str = format!("{}", match self {
@@ -223,14 +227,11 @@ supported_sdk_events!(
     ServerStarted,
     ResourceStart,
     ResourceStop,
-
     ColshapeEvent,
     ServerScriptEvent,
     ClientScriptEvent,
     ConsoleCommandEvent,
-
     NetownerChange,
-    
     PlayerConnect,
     PlayerDisconnect,
     WeaponDamageEvent,
@@ -247,36 +248,33 @@ supported_sdk_events!(
     PlayerDimensionChange,
     PlayerChangeInteriorEvent,
     PlayerHeal,
-
     VehicleAttach,
     VehicleDetach,
     VehicleDestroy,
     VehicleDamage,
     VehicleHorn,
     VehicleSiren,
-
     StartProjectileEvent,
     FireEvent,
     ExplosionEvent,
-
     ConnectionQueueAdd,
     ConnectionQueueRemove,
-
     GlobalMetaChange,
     GlobalSyncedMetaChange,
     SyncedMetaChange,
     StreamSyncedMetaChange,
     LocalSyncedMetaChange,
-
     VoiceConnectionEvent,
-
     RequestSyncedScene,
     StartSyncedScene,
     StopSyncedScene,
     UpdateSyncedScene,
-
     ClientDeleteObjectEvent,
     ClientRequestObjectEvent,
+    PedDeath,
+    GivePedScriptedTask,
+    PedDamage,
+    PedHeal,
 );
 
 custom_events!(
@@ -318,7 +316,12 @@ impl EventManager {
         };
     }
 
-    pub fn on_supported_sdk_event(&mut self, event_type: SupportedEventType, event_ptr: altv_sdk::CEventPtr, resource: &Resource) {
+    pub fn on_supported_sdk_event(
+        &mut self,
+        event_type: SupportedEventType,
+        event_ptr: altv_sdk::CEventPtr,
+        resource: &Resource,
+    ) {
         let context = sdk_context_from_supported_event_type(event_type, event_ptr, resource);
 
         if let Some(handlers) = self.user_sdk_handlers.get_mut(&event_type) {
@@ -326,11 +329,16 @@ impl EventManager {
         } else {
             logger::debug!("no user sdk handlers for event: {event_type:?}");
         }
-        
+
         self.handle_custom_event_type(event_type, context, resource);
     }
 
-    fn handle_custom_event_type(&mut self, event_type: SupportedEventType, context: SDKContext, resource: &Resource) {
+    fn handle_custom_event_type(
+        &mut self,
+        event_type: SupportedEventType,
+        context: SDKContext,
+        resource: &Resource,
+    ) {
         let Some(custom_types) = get_custom_event_types_from_sdk_type(event_type) else {
             logger::debug!("no custom sdk handlers for event: {event_type:?}");
             return;
@@ -345,7 +353,7 @@ impl EventManager {
             let context = custom_context_from_event_type(*custom_type, &context, resource);
             let Some(context) = context else {
                 logger::debug!("custom event: {custom_type:?} context does not exist or event should not be called now");
-                continue;  
+                continue;
             };
 
             call_user_custom_handlers(&context, handlers);
@@ -367,7 +375,7 @@ impl EventManager {
 
         self.user_custom_handlers
             .entry(custom_event_type)
-            .or_insert(vec![])
+            .or_default()
             .push(handler);
 
         self.toggle_sdk_event(custom_event_type.into(), true);
@@ -375,11 +383,7 @@ impl EventManager {
 
     fn toggle_sdk_event(&self, event_type: SupportedEventType, state: bool) {
         Resource::with(|r| {
-            (r.module_handlers.toggle_event_type)(
-                r.name.clone(),
-                event_type.into(),
-                state,
-            );
+            (r.module_handlers.toggle_event_type)(r.name.clone(), event_type.into(), state);
         });
     }
 }

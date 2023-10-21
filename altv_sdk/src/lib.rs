@@ -93,6 +93,12 @@ pub mod ffi {
         #include "alt_classes/CClientDeleteObjectEvent.h"
         #include "alt_classes/CClientRequestObjectEvent.h"
 
+        // ped
+        #include "alt_classes/CGivePedScriptedTaskEvent.h"
+        #include "alt_classes/CPedDeathEvent.h"
+        #include "alt_classes/CPedDamageEvent.h"
+        #include "alt_classes/CPedHealEvent.h"
+
         name!(alt_bridge)
 
         generate_ns!("ICore")
@@ -171,6 +177,11 @@ pub mod ffi {
 
         generate_ns!("CClientDeleteObjectEvent")
         generate_ns!("CClientRequestObjectEvent")
+
+        generate_ns!("CGivePedScriptedTaskEvent")
+        generate_ns!("CPedDeathEvent")
+        generate_ns!("CPedDamageEvent")
+        generate_ns!("CPedHealEvent")
 
         // defined in alt_bridge
         generate_ns!("events")

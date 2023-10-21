@@ -1318,6 +1318,26 @@ namespace events
         assert(event->GetType() == alt::CEvent::Type::CLIENT_REQUEST_OBJECT_EVENT);
         return static_cast<const alt::CClientRequestObjectEvent*>(event);
     }
+
+    const alt::CGivePedScriptedTaskEvent* to_CGivePedScriptedTaskEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::GIVE_PED_SCRIPTED_TASK);
+        return static_cast<const alt::CGivePedScriptedTaskEvent*>(event);
+    }
+
+    const alt::CPedDeathEvent* to_CPedDeathEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::PED_DEATH);
+        return static_cast<const alt::CPedDeathEvent*>(event);
+    }
+
+    const alt::CPedDamageEvent* to_CPedDamageEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::PED_DAMAGE);
+        return static_cast<const alt::CPedDamageEvent*>(event);
+    }
+
+    const alt::CPedHealEvent* to_CPedHealEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::PED_HEAL);
+        return static_cast<const alt::CPedHealEvent*>(event);
+    }
 } // namespace events
 
 namespace config_node

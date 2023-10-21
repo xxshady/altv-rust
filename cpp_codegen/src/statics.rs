@@ -371,4 +371,21 @@ pub static HEADERS: &[(&str, &str)] = &[
         "../altv_sdk/cpp-sdk/events/CClientRequestObjectEvent.h",
     ),
     ("IResource", "../altv_sdk/cpp-sdk/IResource.h"),
+    // ped
+    (
+        "CGivePedScriptedTaskEvent",
+        "../altv_sdk/cpp-sdk/events/CGivePedScriptedTaskEvent.h",
+    ),
+    (
+        "CPedDeathEvent",
+        "../altv_sdk/cpp-sdk/events/CPedDeathEvent.h",
+    ),
+    (
+        "CPedDamageEvent",
+        "../altv_sdk/cpp-sdk/events/CPedDamageEvent.h",
+    ),
+    (
+        "CPedHealEvent",
+        "../altv_sdk/cpp-sdk/events/CPedHealEvent.h",
+    ),
 ];

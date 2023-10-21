@@ -7,7 +7,7 @@ use std::ptr::NonNull;
 use crate::{
     base_objects::{
         extra_pools::{AnyEntity, AnyWorldObject, EntityRawPtr, WorldObjectRawPtr},
-        player, AnyBaseObject,
+        player, AnyBaseObject, ped,
     },
     quaternion::Quaternion,
     resource::Resource,
@@ -207,6 +207,19 @@ pub fn get_player(
         .get_by_ptr(ptr)
         .unwrap();
     Some(player)
+}
+
+pub fn get_non_null_ped(ptr: *mut sdk::alt::IPed, resource: &Resource) -> ped::PedContainer {
+    get_ped(ptr, resource).unwrap()
+}
+
+pub fn get_ped(ptr: *mut sdk::alt::IPed, resource: &Resource) -> Option<ped::PedContainer> {
+    let Some(ptr) = NonNull::new(ptr) else {
+        return None;
+    };
+
+    let ped = resource.base_objects.borrow().ped.get_by_ptr(ptr).unwrap();
+    Some(ped)
 }
 
 #[macro_export]

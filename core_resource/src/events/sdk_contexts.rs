@@ -9,7 +9,7 @@ use crate::{
     base_objects::{
         col_shape, connection_info,
         extra_pools::{AnyEntity, AnyWorldObject},
-        player, vehicle, AnyBaseObject,
+        player, vehicle, AnyBaseObject, ped,
     },
     events::helpers::{
         base_event_to_specific, get_non_null_base_object_from_event, get_vehicle_from_event,
@@ -17,6 +17,7 @@ use crate::{
     helpers::{
         get_entity_by_ptr, get_non_null_entity_by_ptr, get_non_null_player,
         get_non_null_world_object_by_ptr, get_player, read_cpp_str_vec, read_cpp_vector3, Hash,
+        get_non_null_ped,
     },
     resource::Resource,
     vector::Vector3,
@@ -1113,6 +1114,94 @@ impl PlayerHeal {
             new_health: E::GetNewHealth(event),
             old_armour: E::GetOldArmour(event),
             new_armour: E::GetNewArmour(event),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct PedDeath {
+    pub ped: ped::PedContainer,
+    pub killer: Option<AnyEntity>,
+    pub weapon_hash: Hash,
+}
+
+impl PedDeath {
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(event, CPedDeathEvent);
+
+        use sdk::CPedDeathEvent as E;
+        Self {
+            ped: get_non_null_ped(E::GetTarget(event), resource),
+            killer: get_entity_by_ptr(E::GetKiller(event), resource),
+            weapon_hash: E::GetWeapon(event),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct GivePedScriptedTask {
+    pub source: player::PlayerContainer,
+    pub ped: ped::PedContainer,
+    pub task_type: u32,
+}
+
+impl GivePedScriptedTask {
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(event, CGivePedScriptedTaskEvent);
+
+        use sdk::CGivePedScriptedTaskEvent as E;
+        Self {
+            source: get_non_null_player(E::GetSource(event), resource),
+            ped: get_non_null_ped(E::GetTarget(event), resource),
+            task_type: E::GetTaskType(event),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct PedDamage {
+    pub ped: ped::PedContainer,
+    pub attacker: Option<AnyEntity>,
+    pub health_damage: u16,
+    pub armour_damage: u16,
+    pub weapon_hash: Hash,
+}
+
+impl PedDamage {
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(event, CPedDamageEvent);
+
+        use sdk::CPedDamageEvent as E;
+        Self {
+            ped: get_non_null_ped(E::GetTarget(event), resource),
+            attacker: get_entity_by_ptr(E::GetAttacker(event), resource),
+            health_damage: E::GetHealthDamage(event),
+            armour_damage: E::GetHealthDamage(event),
+            weapon_hash: E::GetWeapon(event),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct PedHeal {
+    pub ped: ped::PedContainer,
+    pub new_health: u16,
+    pub old_health: u16,
+    pub new_armour: u16,
+    pub old_armour: u16,
+}
+
+impl PedHeal {
+    pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
+        let event = base_event_to_specific!(event, CPedHealEvent);
+
+        use sdk::CPedHealEvent as E;
+        Self {
+            ped: get_non_null_ped(E::GetTarget(event), resource),
+            new_health: E::GetNewHealth(event),
+            old_health: E::GetOldHealth(event),
+            new_armour: E::GetNewArmour(event),
+            old_armour: E::GetOldArmour(event),
         }
     }
 }

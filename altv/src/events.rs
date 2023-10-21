@@ -130,6 +130,11 @@ on_sdk_event!(on_synced_scene_start, StartSyncedScene);
 on_sdk_event!(on_synced_scene_stop, StopSyncedScene);
 on_sdk_event!(on_synced_scene_update, UpdateSyncedScene);
 
+on_sdk_event!(on_ped_death, PedDeath);
+on_sdk_event!(on_give_ped_scripted_task, GivePedScriptedTask);
+on_sdk_event!(on_ped_damage, PedDamage);
+on_sdk_event!(on_ped_heal, PedHeal);
+
 macro_rules! on_custom_event {
     ($func_name:ident, $event_name:ident) => {
         pub fn $func_name<V: IntoVoidResult>(
