@@ -1,31 +1,34 @@
 use crate::{
-    base_objects::{col_shape, extra_pools::AnyWorldObject, player, vehicle},
+    base_objects::{
+        extra_pools::{AnyWorldObject, AnyColShape},
+        player, vehicle,
+    },
     resource::Resource,
+    helpers,
 };
 
 use super::sdk_contexts::{ColshapeEvent, ResourceStart, ResourceStop, VoiceConnectionEvent};
 
 macro_rules! entity_enter_or_leave_col_shape {
     ($bool_state:literal, $key_name:ident, $any_entity:path) => {
-        pub fn new(context: &ColshapeEvent, _: &Resource) -> Option<Self> {
+        pub fn new(context: &ColshapeEvent, resource: &Resource) -> Option<Self> {
             if context.state != $bool_state {
                 return None;
             };
 
             let $any_entity($key_name) = &context.world_object else {
-                                        logger::debug!(
-                                            "{}_enter_or_leave_col_shape received {:?} -> skip",
-                                            stringify!($key_name), &context.world_object
-                                        );
-                                        return None;
-                                    };
+                logger::debug!(
+                    "{}_enter_or_leave_col_shape received {:?} -> skip",
+                    stringify!($key_name),
+                    &context.world_object
+                );
+                return None;
+            };
             let $key_name = $key_name.clone();
 
             Some(Self {
-                col_shape: Resource::with_base_objects_mut(|v, _| {
-                    v.col_shape.get_by_ptr(context.col_shape)
-                })
-                .unwrap(),
+                col_shape: helpers::get_col_shape_by_ptr(context.col_shape.as_ptr(), resource)
+                    .unwrap(),
                 $key_name,
             })
         }
@@ -34,7 +37,7 @@ macro_rules! entity_enter_or_leave_col_shape {
 
 #[derive(Debug)]
 pub struct VehicleEnterColShape {
-    pub col_shape: col_shape::ColShapeContainer,
+    pub col_shape: AnyColShape,
     pub vehicle: vehicle::VehicleContainer,
 }
 
@@ -44,7 +47,7 @@ impl VehicleEnterColShape {
 
 #[derive(Debug)]
 pub struct VehicleLeaveColShape {
-    pub col_shape: col_shape::ColShapeContainer,
+    pub col_shape: AnyColShape,
     pub vehicle: vehicle::VehicleContainer,
 }
 
@@ -54,7 +57,7 @@ impl VehicleLeaveColShape {
 
 #[derive(Debug)]
 pub struct PlayerEnterColShape {
-    pub col_shape: col_shape::ColShapeContainer,
+    pub col_shape: AnyColShape,
     pub player: player::PlayerContainer,
 }
 
@@ -64,7 +67,7 @@ impl PlayerEnterColShape {
 
 #[derive(Debug)]
 pub struct PlayerLeaveColShape {
-    pub col_shape: col_shape::ColShapeContainer,
+    pub col_shape: AnyColShape,
     pub player: player::PlayerContainer,
 }
 

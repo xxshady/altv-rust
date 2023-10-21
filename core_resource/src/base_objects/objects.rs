@@ -2,11 +2,11 @@ use std::{fmt::Debug, ptr::NonNull, rc::Rc};
 
 use super::{
     base_impl::mvalue::impl_deserialize_for,
-    extra_pools::{Entity, WorldObject},
+    extra_pools::{Entity, WorldObject, ColShape},
     pool_funcs::BaseObjectPoolFuncs,
     BaseObjectContainer, BaseObjectId, BaseObjectManager, BaseObjectWrapper,
 };
-use crate::{col_shape::ColShapy, sdk};
+use crate::sdk;
 
 macro_rules! base_objects {
     (@internal $(
@@ -291,11 +291,46 @@ macro_rules! base_objects {
 }
 
 base_objects!(
-    ColShape: [
+    ColShapeCircle: [
         altv_sdk::BaseObjectType::Colshape,
         @inherit_classes: WorldColShape, [
             WorldObject,
-            ColShapy,
+            ColShape,
+        ],
+    ],
+    ColShapeCylinder: [
+        altv_sdk::BaseObjectType::Colshape,
+        @inherit_classes: WorldColShape, [
+            WorldObject,
+            ColShape,
+        ],
+    ],
+    ColShapeCuboid: [
+        altv_sdk::BaseObjectType::Colshape,
+        @inherit_classes: WorldColShape, [
+            WorldObject,
+            ColShape,
+        ],
+    ],
+    ColShapePoly: [
+        altv_sdk::BaseObjectType::Colshape,
+        @inherit_classes: WorldColShape, [
+            WorldObject,
+            ColShape,
+        ],
+    ],
+    ColShapeRect: [
+        altv_sdk::BaseObjectType::Colshape,
+        @inherit_classes: WorldColShape, [
+            WorldObject,
+            ColShape,
+        ],
+    ],
+    ColShapeSphere: [
+        altv_sdk::BaseObjectType::Colshape,
+        @inherit_classes: WorldColShape, [
+            WorldObject,
+            ColShape,
         ],
     ],
     Vehicle: [
@@ -354,7 +389,7 @@ base_objects!(
         altv_sdk::BaseObjectType::Checkpoint,
         @inherit_classes: WorldColShape, [
             WorldObject,
-            ColShapy,
+            ColShape,
         ],
     ],
     ConnectionInfo: [

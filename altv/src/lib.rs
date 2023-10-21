@@ -20,7 +20,6 @@ pub use exports::{
     Vector3,
 
     // base objects
-    ColShape, ColShapeContainer,
     Player, PlayerContainer,
     Vehicle, VehicleContainer,
     Ped, PedContainer,
@@ -31,10 +30,14 @@ pub use exports::{
     VoiceChannel, VoiceChannelContainer,
     Marker, MarkerContainer,
     Checkpoint, CheckpointContainer,
+    ColShapeCircle, ColShapeCircleContainer,
 
     WorldObject,
+    AnyWorldObject,
     Entity,
     AnyEntity,
+    ColShape,
+    AnyColShape,
     AttachToEntityBoneIndex,
     AttachToEntityBoneName,
     PlayerDateTime,
@@ -50,7 +53,6 @@ pub use exports::{
     core_funcs::*,
     config_node::*,
     Resource,
-    ColShapy,
     result::{VoidResult, IntoVoidResult, SomeResult},
     AnyBaseObject,
     BaseObjectPoolFuncs,
@@ -116,7 +118,7 @@ pub mod prelude {
         mvalue::DeserializeMValueArgs,
 
         BaseObjectPoolFuncs,
-        ColShapy,
+        ColShape,
         Entity,
         ValidBaseObject,
         WorldObject,

@@ -2,7 +2,7 @@ use std::rc::Rc;
 
 use super::{
     base_impl::inherit_ptrs::BaseObjectInheritPtrs, object, objects::AnyBaseObject, ped, player,
-    vehicle, BaseObjectContainer,
+    col_shape_circle, vehicle, BaseObjectContainer, checkpoint,
 };
 use crate::SomeResult;
 
@@ -11,6 +11,9 @@ pub use entity::{Entity, EntityRawPtr, SyncId};
 
 mod world_object;
 pub use world_object::{WorldObject, WorldObjectRawPtr};
+
+mod col_shape;
+pub use col_shape::{ColShape, ColShapeRawPtr, ColShapeNonNull};
 
 macro_rules! extra_pool_enum {
     (@internal
@@ -96,4 +99,9 @@ extra_pool_enum!(WorldObject, WorldObjectRawPtr: [
     Vehicle, vehicle;
     Ped, ped;
     Object, object;
+]);
+
+extra_pool_enum!(ColShape, ColShapeRawPtr: [
+    ColShapeCircle, col_shape_circle;
+    Checkpoint, checkpoint;
 ]);

@@ -768,6 +768,15 @@ fn cpp_method_to_rust_compatible_func(
         },
         "Benefit_t" => |v: &str| format!("return static_cast<uint8_t>({v})"),
         "CloudAuthResult_t" => |v: &str| format!("return static_cast<uint8_t>({v})"),
+        "Vector2Vec" => |v: &str| {
+            format!(
+                "auto vec = create_vector2_vec();\n    \
+            for (const auto& v : {v}) {{\n        \
+                push_to_vector2_vec(vec, v[0], v[1]);\n    \
+            }}\n    \
+            return vec"
+            )
+        },
         _ => |v: &str| format!("return {v}"),
     };
 

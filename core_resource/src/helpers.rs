@@ -6,7 +6,9 @@ use std::ptr::NonNull;
 
 use crate::{
     base_objects::{
-        extra_pools::{AnyEntity, AnyWorldObject, EntityRawPtr, WorldObjectRawPtr},
+        extra_pools::{
+            AnyEntity, AnyWorldObject, EntityRawPtr, WorldObjectRawPtr, ColShapeRawPtr, AnyColShape,
+        },
         player, AnyBaseObject,
     },
     quaternion::Quaternion,
@@ -132,6 +134,7 @@ pub(crate) fn get_entity_by_ptr(entity: EntityRawPtr, resource: &Resource) -> Op
     if entity.is_null() {
         return None;
     }
+
     let entity = unsafe { sdk::entity::to_base_object(entity) };
     let entity = NonNull::new(entity).unwrap();
     let base_object = resource.base_objects.borrow().get_by_ptr(entity).unwrap();
@@ -154,6 +157,7 @@ pub(crate) fn get_world_object_by_ptr(
     if world_object.is_null() {
         return None;
     }
+
     let world_object = unsafe { sdk::world_object::to_base_object(world_object) };
     let world_object = NonNull::new(world_object).unwrap();
     let base_object = resource
@@ -163,6 +167,25 @@ pub(crate) fn get_world_object_by_ptr(
         .unwrap();
     let world_object = base_object.try_into().unwrap();
     Some(world_object)
+}
+
+pub(crate) fn get_col_shape_by_ptr(
+    col_shape: ColShapeRawPtr,
+    resource: &Resource,
+) -> Option<AnyColShape> {
+    if col_shape.is_null() {
+        return None;
+    }
+
+    let col_shape = unsafe { sdk::col_shape::to_base_object(col_shape) };
+    let col_shape = NonNull::new(col_shape).unwrap();
+    let base_object = resource
+        .base_objects
+        .borrow()
+        .get_by_ptr(col_shape)
+        .unwrap();
+    let col_shape = base_object.try_into().unwrap();
+    Some(col_shape)
 }
 
 pub trait IntoF32: Copy {

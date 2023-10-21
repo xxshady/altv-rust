@@ -704,6 +704,30 @@ namespace base_object
         return dynamic_cast<alt::IColShape*>(base_object);
     }
 
+    alt::IColShapeCircle* to_col_shape_circle(alt::IBaseObject* base_object) {
+        return dynamic_cast<alt::IColShapeCircle*>(base_object);
+    }
+
+    alt::IColShapeCuboid* to_col_shape_cuboid(alt::IBaseObject* base_object) {
+        return dynamic_cast<alt::IColShapeCuboid*>(base_object);
+    }
+
+    alt::IColShapeCylinder* to_col_shape_cylinder(alt::IBaseObject* base_object) {
+        return dynamic_cast<alt::IColShapeCylinder*>(base_object);
+    }
+
+    alt::IColShapePoly* to_col_shape_poly(alt::IBaseObject* base_object) {
+        return dynamic_cast<alt::IColShapePoly*>(base_object);
+    }
+
+    alt::IColShapeRect* to_col_shape_rect(alt::IBaseObject* base_object) {
+        return dynamic_cast<alt::IColShapeRect*>(base_object);
+    }
+
+    alt::IColShapeSphere* to_col_shape_sphere(alt::IBaseObject* base_object) {
+        return dynamic_cast<alt::IColShapeSphere*>(base_object);
+    }
+
     alt::IBlip* to_blip(alt::IBaseObject* base_object) {
         return dynamic_cast<alt::IBlip*>(base_object);
     }
@@ -754,7 +778,91 @@ namespace col_shape {
     alt::IBaseObject* to_base_object(alt::IColShape* col_shape) {
         return static_cast<alt::IBaseObject*>(col_shape);
     }
+
+    alt::IColShapeCircle* to_col_shape_circle(alt::IColShape* col_shape) {
+        return dynamic_cast<alt::IColShapeCircle*>(col_shape);
+    }
+
+    alt::IColShapeCuboid* to_col_shape_cuboid(alt::IColShape* col_shape) {
+        return dynamic_cast<alt::IColShapeCuboid*>(col_shape);
+    }
+
+    alt::IColShapeCylinder* to_col_shape_cylinder(alt::IColShape* col_shape) {
+        return dynamic_cast<alt::IColShapeCylinder*>(col_shape);
+    }
+
+    alt::IColShapePoly* to_col_shape_poly(alt::IColShape* col_shape) {
+        return dynamic_cast<alt::IColShapePoly*>(col_shape);
+    }
+
+    alt::IColShapeRect* to_col_shape_rect(alt::IColShape* col_shape) {
+        return dynamic_cast<alt::IColShapeRect*>(col_shape);
+    }
+
+    alt::IColShapeSphere* to_col_shape_sphere(alt::IColShape* col_shape) {
+        return dynamic_cast<alt::IColShapeSphere*>(col_shape);
+    }
 } // namespace colshape
+
+namespace col_shape_circle {
+    alt::IBaseObject* to_base_object(alt::IColShapeCircle* col_shape) {
+        return static_cast<alt::IBaseObject*>(col_shape);
+    }
+
+    alt::IColShape* to_col_shape(alt::IColShapeCircle* col_shape) {
+        return static_cast<alt::IColShape*>(col_shape);
+    }
+}
+
+namespace col_shape_cylinder {
+    alt::IBaseObject* to_base_object(alt::IColShapeCylinder* col_shape) {
+        return static_cast<alt::IBaseObject*>(col_shape);
+    }
+
+    alt::IColShape* to_col_shape(alt::IColShapeCylinder* col_shape) {
+        return static_cast<alt::IColShape*>(col_shape);
+    }
+}
+
+namespace col_shape_cuboid {
+    alt::IBaseObject* to_base_object(alt::IColShapeCuboid* col_shape) {
+        return static_cast<alt::IBaseObject*>(col_shape);
+    }
+
+    alt::IColShape* to_col_shape(alt::IColShapeCuboid* col_shape) {
+        return static_cast<alt::IColShape*>(col_shape);
+    }
+}
+
+namespace col_shape_poly {
+    alt::IBaseObject* to_base_object(alt::IColShapePoly* col_shape) {
+        return static_cast<alt::IBaseObject*>(col_shape);
+    }
+
+    alt::IColShape* to_col_shape(alt::IColShapePoly* col_shape) {
+        return static_cast<alt::IColShape*>(col_shape);
+    }
+}
+
+namespace col_shape_rect {
+    alt::IBaseObject* to_base_object(alt::IColShapeRect* col_shape) {
+        return static_cast<alt::IBaseObject*>(col_shape);
+    }
+
+    alt::IColShape* to_col_shape(alt::IColShapeRect* col_shape) {
+        return static_cast<alt::IColShape*>(col_shape);
+    }
+}
+
+namespace col_shape_sphere {
+    alt::IBaseObject* to_base_object(alt::IColShapeSphere* col_shape) {
+        return static_cast<alt::IBaseObject*>(col_shape);
+    }
+
+    alt::IColShape* to_col_shape(alt::IColShapeSphere* col_shape) {
+        return static_cast<alt::IColShape*>(col_shape);
+    }
+}
 
 namespace vehicle
 {

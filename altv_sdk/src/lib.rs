@@ -17,7 +17,15 @@ pub mod ffi {
         #include "alt_classes/IVehicle.h"
         #include "alt_classes/IPed.h"
         #include "alt_classes/IObject.h"
+
         #include "alt_classes/IColShape.h"
+        #include "alt_classes/IColShapeCircle.h"
+        #include "alt_classes/IColShapeCuboid.h"
+        #include "alt_classes/IColShapeCylinder.h"
+        #include "alt_classes/IColShapePoly.h"
+        #include "alt_classes/IColShapeRect.h"
+        #include "alt_classes/IColShapeSphere.h"
+
         #include "alt_classes/IBlip.h"
         #include "alt_classes/IMarker.h"
         #include "alt_classes/ICheckpoint.h"
@@ -103,7 +111,15 @@ pub mod ffi {
         generate_ns!("IVehicle")
         generate_ns!("IPed")
         generate_ns!("IObject")
+
         generate_ns!("IColShape")
+        generate_ns!("IColShapeCircle")
+        generate_ns!("IColShapeCuboid")
+        generate_ns!("IColShapeCylinder")
+        generate_ns!("IColShapePoly")
+        generate_ns!("IColShapeRect")
+        generate_ns!("IColShapeSphere")
+
         generate_ns!("IBlip")
         generate_ns!("ICheckpoint")
         generate_ns!("CEvent")
@@ -237,6 +253,12 @@ pub mod ffi {
         generate_ns!("ped")
         generate_ns!("object")
         generate_ns!("col_shape")
+        generate_ns!("col_shape_circle")
+        generate_ns!("col_shape_cuboid")
+        generate_ns!("col_shape_rect")
+        generate_ns!("col_shape_poly")
+        generate_ns!("col_shape_cylinder")
+        generate_ns!("col_shape_sphere")
         generate_ns!("virtual_entity")
         generate_ns!("virtual_entity_group")
         generate_ns!("blip")

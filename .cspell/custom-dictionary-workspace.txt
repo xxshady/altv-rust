@@ -1,7 +1,7 @@
 -DALT_SERVER_API
 # Custom Dictionary Words
 altv
-ColShapy
+ColShape
 cxxbridge
 dlopen
 improper_ctypes_definitions

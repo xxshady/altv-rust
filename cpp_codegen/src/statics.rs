@@ -129,6 +129,30 @@ pub static HEADERS: &[(&str, &str)] = &[
         "IColShape",
         "../altv_sdk/cpp-sdk/script-objects/IColShape.h",
     ),
+    (
+        "IColShapeSphere",
+        "../altv_sdk/cpp-sdk/script-objects/IColShape.h",
+    ),
+    (
+        "IColShapeCylinder",
+        "../altv_sdk/cpp-sdk/script-objects/IColShape.h",
+    ),
+    (
+        "IColShapeCircle",
+        "../altv_sdk/cpp-sdk/script-objects/IColShape.h",
+    ),
+    (
+        "IColShapeRect",
+        "../altv_sdk/cpp-sdk/script-objects/IColShape.h",
+    ),
+    (
+        "IColShapeCuboid",
+        "../altv_sdk/cpp-sdk/script-objects/IColShape.h",
+    ),
+    (
+        "IColShapePoly",
+        "../altv_sdk/cpp-sdk/script-objects/IColShape.h",
+    ),
     ("IBlip", "../altv_sdk/cpp-sdk/script-objects/IBlip.h"),
     (
         "ICheckpoint",

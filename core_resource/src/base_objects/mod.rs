@@ -18,18 +18,11 @@ pub(crate) use objects::Store;
 pub use objects::AnyBaseObject;
 pub(crate) use objects::PendingDestroyOrCreation;
 
-pub(crate) use objects::blip;
-pub(crate) use objects::checkpoint;
-pub(crate) use objects::col_shape;
-pub(crate) use objects::connection_info;
-pub(crate) use objects::marker;
-pub(crate) use objects::object;
-pub(crate) use objects::ped;
-pub(crate) use objects::player;
-pub(crate) use objects::vehicle;
-pub(crate) use objects::virtual_entity;
-pub(crate) use objects::virtual_entity_group;
-pub(crate) use objects::voice_channel;
+pub(crate) use objects::{
+    blip, checkpoint, marker, object, ped, player, vehicle, virtual_entity, virtual_entity_group,
+    voice_channel, connection_info, col_shape_circle, col_shape_cuboid, col_shape_cylinder,
+    col_shape_poly, col_shape_rect, col_shape_sphere,
+};
 
 pub use pool_funcs::BaseObjectPoolFuncs;
 

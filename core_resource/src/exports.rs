@@ -11,8 +11,10 @@ pub use crate::{
     base_objects::{
         blip::{Blip, BlipContainer},
         checkpoint::{Checkpoint, CheckpointContainer},
-        col_shape::{ColShape, ColShapeContainer},
-        extra_pools::{AnyEntity, AnyWorldObject, Entity, SyncId, WorldObject},
+        col_shape_circle::{ColShapeCircle, ColShapeCircleContainer},
+        extra_pools::{
+            AnyEntity, AnyWorldObject, Entity, SyncId, WorldObject, AnyColShape, ColShape,
+        },
         marker::{Marker, MarkerContainer},
         object::{Object, ObjectContainer},
         ped::{Ped, PedContainer},
@@ -23,7 +25,6 @@ pub use crate::{
         voice_channel::{VoiceChannel, VoiceChannelContainer},
         AnyBaseObject, BaseObjectId, BaseObjectPoolFuncs, BaseObjectWrapper, ValidBaseObject,
     },
-    col_shape::ColShapy,
     helpers::{hash, Hash},
     init,
     ped_model_info::PedModelInfo,

@@ -7,8 +7,8 @@ use mvalue::ConstMValue;
 use crate::{
     alt_resource::AltResource,
     base_objects::{
-        col_shape, connection_info,
-        extra_pools::{AnyEntity, AnyWorldObject},
+        connection_info,
+        extra_pools::{AnyEntity, AnyWorldObject, ColShapeNonNull},
         player, vehicle, AnyBaseObject,
     },
     events::helpers::{
@@ -105,7 +105,7 @@ impl ResourceStop {
 
 #[derive(Debug)]
 pub struct ColshapeEvent {
-    pub col_shape: col_shape::ColShapeMutPtr,
+    pub col_shape: ColShapeNonNull,
     pub world_object: AnyWorldObject,
     pub state: bool,
 }

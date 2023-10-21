@@ -1,6 +1,6 @@
 use std::{cell::RefCell, rc::Rc};
 
-use altv::mvalue::{DynMValueArgs};
+use altv::mvalue::DynMValueArgs;
 
 pub(crate) fn test_script_events() {
     use altv::events;

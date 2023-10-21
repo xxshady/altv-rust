@@ -12,7 +12,6 @@ mod base_objects;
 mod blip;
 mod checkpoint;
 mod client_events;
-mod col_shape;
 mod config_node;
 mod connection_info;
 mod core_funcs;
@@ -37,6 +36,7 @@ mod vehicle_model_info;
 mod ped_model_info;
 mod weapon_model_info;
 mod mvalue_hash_map;
+mod col_shapes;
 
 pub use result::{IntoVoidResult, SomeResult, VoidResult};
 
