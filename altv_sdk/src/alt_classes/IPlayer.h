@@ -278,9 +278,6 @@ RGBAWrapper GetHeadBlendPaletteColor(const alt::IPlayer* ptr, u8 id) {
 void SetHeadBlendData(alt::IPlayer* ptr, u32 shapeFirstID, u32 shapeSecondID, u32 shapeThirdID, u32 skinFirstID, u32 skinSecondID, u32 skinThirdID, f32 shapeMix, f32 skinMix, f32 thirdMix) {
     return ptr->SetHeadBlendData(shapeFirstID, shapeSecondID, shapeThirdID, skinFirstID, skinSecondID, skinThirdID, shapeMix, skinMix, thirdMix);
 }
-void RemoveHeadBlendData(alt::IPlayer* ptr) {
-    return ptr->RemoveHeadBlendData();
-}
 alt::HeadBlendData GetHeadBlendData(const alt::IPlayer* ptr) {
     return ptr->GetHeadBlendData();
 }

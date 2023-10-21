@@ -160,11 +160,6 @@ impl player::Player {
         self.set_head_blend_data(Default::default())
     }
 
-    pub fn remove_head_blend_data(&self) -> VoidResult {
-        unsafe { sdk::IPlayer::RemoveHeadBlendData(self.raw_ptr()?) }
-        Ok(())
-    }
-
     pub fn health(&self) -> SomeResult<u16> {
         Ok(unsafe { sdk::IPlayer::GetHealth(self.raw_ptr()?) })
     }
