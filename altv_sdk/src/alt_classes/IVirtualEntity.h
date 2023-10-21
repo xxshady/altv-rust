@@ -30,6 +30,9 @@ bool IsVisible(const alt::IVirtualEntity* ptr) {
 void SetStreamSyncedMetaData(alt::IVirtualEntity* ptr, const StdStringClone key, MValueMutWrapper val) {
     return ptr->SetStreamSyncedMetaData(key, val.ptr);
 }
+void SetMultipleStreamSyncedMetaData(alt::IVirtualEntity* ptr, const MValueUnorderedMapWrapper& values) {
+    return ptr->SetMultipleStreamSyncedMetaData(values.value);
+}
 void DeleteStreamSyncedMetaData(alt::IVirtualEntity* ptr, const StdStringClone key) {
     return ptr->DeleteStreamSyncedMetaData(key);
 }

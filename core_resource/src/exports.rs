@@ -38,6 +38,7 @@ pub use crate::{
     vector::{Vector2, Vector3},
     vehicle_model_info::VehicleModelInfo,
     weapon_model_info::WeaponModelInfo,
+    mvalue_hash_map::MValueHashMap,
 };
 
 pub mod logging {

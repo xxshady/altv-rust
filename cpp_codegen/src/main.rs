@@ -604,6 +604,7 @@ fn cpp_method_to_rust_compatible_func(
                     "---VoiceConnectionState is not implemented as passed param".to_string()
                 }
                 "MValueUnorderedMapWrapper" => format!("{name}.value"),
+                "MValueUnorderedMapWrapper&" => format!("{name}.value"),
                 "PlayerVector" => format!("player_wrapper_vec_to_alt({name})"),
                 "alt::AmmoFlags" => format!(
                     "create_ammo_flags_from_params(\n        \

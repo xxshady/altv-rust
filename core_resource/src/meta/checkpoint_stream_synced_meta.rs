@@ -3,8 +3,10 @@ use std::{marker::PhantomData, rc::Rc};
 use serde::{de::DeserializeOwned, Serialize};
 
 use crate::{
+    VoidResult, SomeResult,
     base_objects::{checkpoint::CheckpointRc, ValidBaseObject},
-    helpers, sdk, SomeResult,
+    helpers, sdk,
+    mvalue_hash_map::MValueHashMap,
 };
 
 pub struct StreamSyncedCheckpointMetaEntry<V> {
@@ -53,5 +55,16 @@ where
         Ok(helpers::read_cpp_str_vec(unsafe {
             sdk::ICheckpoint::GetStreamSyncedMetaDataKeys(checkpoint.raw_ptr()?)
         }))
+    }
+
+    fn set_multiple_stream_synced_meta(self: &Rc<Self>, meta: MValueHashMap) -> VoidResult {
+        let checkpoint: CheckpointRc = self.clone().into();
+        unsafe {
+            sdk::ICheckpoint::SetMultipleStreamSyncedMetaData(
+                checkpoint.raw_ptr()?,
+                meta.to_cpp()?.as_ref().unwrap(),
+            )
+        }
+        Ok(())
     }
 }

@@ -84,6 +84,8 @@ lazy_static::lazy_static! {
             ("Config::Value::ValuePtr", "Config::Value::ValuePtr"),
 
             ("std::unordered_map<std::string, MValue>", "MValueUnorderedMapWrapper"),
+            ("std::unordered_map<std::string, MValue>&", "MValueUnorderedMapWrapper&"),
+            ("std::unordered_map<std::string, alt::MValue>&", "MValueUnorderedMapWrapper&"),
             ("std::unordered_map<std::shared_ptr<IEntity>, uint32_t>", "EntityAnimHashPairsWrapper"),
             ("CVoiceConnectionEvent::State", "VoiceConnectionState"),
             ("std::vector<uint32_t>&", "std::vector<u32>"),

@@ -4,7 +4,8 @@ use serde::{de::DeserializeOwned, Serialize};
 
 use crate::{
     base_objects::{extra_pools::AnyEntity, ValidBaseObject},
-    helpers, sdk, SomeResult,
+    helpers, sdk, SomeResult, VoidResult,
+    mvalue_hash_map::MValueHashMap,
 };
 
 pub struct StreamSyncedEntityMetaEntry<V> {
@@ -52,5 +53,16 @@ where
         Ok(helpers::read_cpp_str_vec(unsafe {
             sdk::IEntity::GetStreamSyncedMetaDataKeys(entity.raw_ptr()?)
         }))
+    }
+
+    fn set_multiple_stream_synced_meta(self: &Rc<Self>, meta: MValueHashMap) -> VoidResult {
+        let entity: AnyEntity = self.clone().into();
+        unsafe {
+            sdk::IEntity::SetMultipleStreamSyncedMetaData(
+                entity.raw_ptr()?,
+                meta.to_cpp()?.as_ref().unwrap(),
+            )
+        }
+        Ok(())
     }
 }

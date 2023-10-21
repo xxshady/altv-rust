@@ -1,4 +1,6 @@
-use altv::{Entity, prelude::*, meta::StreamSyncedEntityMetaEntry};
+use std::collections::HashMap;
+
+use altv::{Entity, prelude::*, meta::StreamSyncedEntityMetaEntry, MValueHashMap, mvalue::DynMValue};
 
 pub(crate) fn test_ped() {
     let ped = altv::Ped::new("mp_m_freemode_01", 0, 0).unwrap();
@@ -14,4 +16,34 @@ pub(crate) fn test_ped() {
     entry.set(&123).unwrap();
     assert_eq!(dbg!(entry.get().unwrap()), Some(123));
     assert!(dbg!(entry.has().unwrap()));
+
+    let meta = HashMap::from([
+        ("a".to_string(), &123),
+        ("b".to_string(), &1234),
+        ("c".to_string(), &12345),
+    ]);
+
+    ped.set_multiple_stream_synced_meta(MValueHashMap::new(
+        meta.clone()
+            .into_iter()
+            .map(|(key, value)| (key, value as DynMValue))
+            .collect(),
+    ))
+    .unwrap();
+
+    let keys = ped.stream_synced_meta_keys().unwrap();
+    dbg!(&keys);
+
+    meta.into_iter().for_each(|(key, expected)| {
+        assert!(keys.contains(&key));
+
+        let value = ped
+            .stream_synced_meta_entry::<i32>(key)
+            .unwrap()
+            .get()
+            .unwrap()
+            .unwrap();
+
+        assert_eq!(*expected, value);
+    });
 }

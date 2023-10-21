@@ -36,6 +36,7 @@ mod voice_channel;
 mod vehicle_model_info;
 mod ped_model_info;
 mod weapon_model_info;
+mod mvalue_hash_map;
 
 pub use result::{IntoVoidResult, SomeResult, VoidResult};
 

@@ -1,5 +1,4 @@
-use autocxx::prelude::*;
-use std::{collections::HashMap, ptr::NonNull};
+use std::ptr::NonNull;
 
 use crate::{
     base_objects::{virtual_entity, virtual_entity_group},
@@ -9,6 +8,7 @@ use crate::{
     sdk,
     vector::Vector3,
     SomeResult, VoidResult,
+    exports::MValueHashMap,
 };
 
 /// # **`VirtualEntity implementation`**
@@ -37,12 +37,7 @@ impl virtual_entity::VirtualEntity {
         pos: impl Into<Vector3>,
         streaming_distance: u32,
     ) -> SomeResult<virtual_entity::VirtualEntityContainer> {
-        Self::new_with_stream_meta(
-            group,
-            pos,
-            streaming_distance,
-            HashMap::<String, &dyn erased_serde::Serialize>::new(),
-        )
+        Self::new_with_stream_meta(group, pos, streaming_distance, Default::default())
     }
 
     /// Creates new instance of VirtualEntity with initial stream synced meta.
@@ -63,7 +58,9 @@ impl virtual_entity::VirtualEntity {
     ///     group.clone(),
     ///     altv::Vector3::new(0, 0, 72),
     ///     10,
-    ///     HashMap::from([("example", &123 as altv::DynMValue)]),
+    ///     altv::MValueHashMap::new(
+    ///         HashMap::from([("example".to_string(), &123 as altv::DynMValue)])
+    ///     ),
     /// )?;
     /// # Ok(()) }
     /// ```
@@ -71,21 +68,11 @@ impl virtual_entity::VirtualEntity {
         group: virtual_entity_group::VirtualEntityGroupContainer,
         pos: impl Into<Vector3>,
         streaming_distance: u32,
-        stream_synced_meta: HashMap<impl ToString, &dyn erased_serde::Serialize>,
+        stream_synced_meta: MValueHashMap,
     ) -> SomeResult<virtual_entity::VirtualEntityContainer> {
         let group = group.raw_ptr()?;
         let pos = pos.into();
-
-        let mut mvalue_map = unsafe { sdk::create_mvalue_unordered_map() }.within_unique_ptr();
-        for (key, value) in stream_synced_meta {
-            unsafe {
-                sdk::push_to_mvalue_unordered_map(
-                    mvalue_map.as_mut().unwrap(),
-                    key.to_string(),
-                    mvalue::to_mvalue(value)?.get(),
-                )
-            }
-        }
+        let meta = stream_synced_meta.to_cpp()?;
 
         Ok(helpers::create_base_object!(
             virtual_entity,
@@ -95,7 +82,7 @@ impl virtual_entity::VirtualEntity {
                 pos.y(),
                 pos.z(),
                 streaming_distance,
-                mvalue_map,
+                meta,
             ),
             panic!("Failed to create VirtualEntity")
         ))
@@ -109,8 +96,12 @@ impl virtual_entity::VirtualEntity {
         let group_ptr = unsafe { sdk::IVirtualEntity::GetGroup(self.raw_ptr()?) };
         let group_ptr = NonNull::new(group_ptr).unwrap();
 
-        let Some(group) = Resource::with_base_objects_mut(|v, _| v.virtual_entity_group.get_by_ptr(group_ptr)) else {
-            anyhow::bail!("VirtualEntityGroup not found in the pool (usually this should never happen)")
+        let Some(group) =
+            Resource::with_base_objects_mut(|v, _| v.virtual_entity_group.get_by_ptr(group_ptr))
+        else {
+            anyhow::bail!(
+                "VirtualEntityGroup not found in the pool (usually this should never happen)"
+            )
         };
         Ok(group)
     }

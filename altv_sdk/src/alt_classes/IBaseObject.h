@@ -21,6 +21,9 @@ ConstMValueWrapper GetMetaData(const alt::IBaseObject* ptr, const StdStringClone
 void SetMetaData(alt::IBaseObject* ptr, const StdStringClone key, MValueMutWrapper val) {
     return ptr->SetMetaData(key, val.ptr);
 }
+void SetMultipleMetaData(alt::IBaseObject* ptr, const MValueUnorderedMapWrapper& values) {
+    return ptr->SetMultipleMetaData(values.value);
+}
 void DeleteMetaData(alt::IBaseObject* ptr, const StdStringClone key) {
     return ptr->DeleteMetaData(key);
 }
@@ -40,6 +43,9 @@ std::vector<std::string> GetSyncedMetaDataKeys(const alt::IBaseObject* ptr) {
 }
 void SetSyncedMetaData(alt::IBaseObject* ptr, const StdStringClone key, MValueMutWrapper val) {
     return ptr->SetSyncedMetaData(key, val.ptr);
+}
+void SetMultipleSyncedMetaData(alt::IBaseObject* ptr, const MValueUnorderedMapWrapper& values) {
+    return ptr->SetMultipleSyncedMetaData(values.value);
 }
 void DeleteSyncedMetaData(alt::IBaseObject* ptr, const StdStringClone key) {
     return ptr->DeleteSyncedMetaData(key);

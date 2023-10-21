@@ -49,6 +49,9 @@ void SetNetworkOwner(alt::IEntity* ptr, alt::IPlayer* player, bool disableMigrat
 void SetStreamSyncedMetaData(alt::IEntity* ptr, const StdStringClone key, MValueMutWrapper val) {
     return ptr->SetStreamSyncedMetaData(key, val.ptr);
 }
+void SetMultipleStreamSyncedMetaData(alt::IEntity* ptr, const MValueUnorderedMapWrapper& values) {
+    return ptr->SetMultipleStreamSyncedMetaData(values.value);
+}
 void DeleteStreamSyncedMetaData(alt::IEntity* ptr, const StdStringClone key) {
     return ptr->DeleteStreamSyncedMetaData(key);
 }

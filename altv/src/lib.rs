@@ -70,6 +70,7 @@ pub use exports::{
         ByteBuf,
         // Bytes TODO: implement bytes deserialization
     },
+    MValueHashMap,
 };
 
 pub use altv_sdk::{
