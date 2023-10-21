@@ -4,7 +4,8 @@ use serde::{de::DeserializeOwned, Serialize};
 
 use crate::{
     base_objects::{BaseObjectWrapperRc, BasePtr, ValidBaseObject},
-    helpers, sdk, SomeResult,
+    helpers, sdk, SomeResult, VoidResult,
+    mvalue_hash_map::MValueHashMap,
 };
 
 pub struct NormalBaseObjectMetaEntry<V, T, InheritPtrs: Clone> {
@@ -54,5 +55,16 @@ where
         Ok(helpers::read_cpp_str_vec(unsafe {
             sdk::IBaseObject::GetMetaDataKeys(base_object.raw_base_ptr()?)
         }))
+    }
+
+    fn set_multiple_meta(self: &Rc<Self>, meta: MValueHashMap) -> VoidResult {
+        let base_object: BaseObjectWrapperRc<T, InheritPtrs> = self.clone().into();
+        unsafe {
+            sdk::IBaseObject::SetMultipleMetaData(
+                base_object.raw_base_ptr()?,
+                meta.to_cpp()?.as_ref().unwrap(),
+            )
+        }
+        Ok(())
     }
 }
