@@ -60,6 +60,14 @@ async fn main() {
     };
 
     let branch = env::var("ALTV_BRANCH").unwrap();
+    let branch = match branch.as_str() {
+        "release" | "rc" | "dev" => branch,
+        _ => {
+            println!("fallback to altv dev branch");
+            "dev".to_string()
+        }
+    };
+    println!("using altv branch: {branch}");
 
     let cdn = "https://cdn.alt-mp.com";
     let cdn_data = format!("{cdn}/data/{branch}/data");
