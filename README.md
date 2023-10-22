@@ -25,7 +25,7 @@ API documentation can be found [here](https://docs.rs/altv)
 
 ## How to use
 
-If you are on **Linux** you need to [install LLVM](https://rust-lang.github.io/rust-bindgen/requirements.html#installing-clang)
+If you are on **Linux** you need to [install LLVM](https://rust-lang.github.io/rust-bindgen/requirements.html#installing-clang)<br>
 If you are on **Windows** you need to have installed Visual Studio with MSVC compiler (usually installed with Rust using Rustup)
 
 > If you have similar error: `src/alt_bridge.h:5:10: fatal error: 'memory' file not found` when installing or building altv_internal_sdk, try [this](https://stackoverflow.com/questions/26333823/clang-doesnt-see-basic-headers/75546125#75546125)
