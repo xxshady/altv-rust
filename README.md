@@ -4,6 +4,7 @@
 <br>
 
 # Server-side alt:V API for Rust
+
 [![crates.io](https://img.shields.io/crates/v/altv.svg)](https://crates.io/crates/altv)
 
 ```rust
@@ -24,8 +25,10 @@ API documentation can be found [here](https://docs.rs/altv)
 
 ## How to use
 
-Before start writing your server-side in Rust you need to [install LLVM](https://rust-lang.github.io/rust-bindgen/requirements.html#installing-clang)
-> If you are on Windows, don't forget to set `LIBCLANG_PATH` as an environment variable
+Before all this, you need to [install LLVM](https://rust-lang.github.io/rust-bindgen/requirements.html#installing-clang)<br>
+> On Windows set LIBCLANG_PATH as an environment variable pointing to the bin directory of your LLVM install. For example, if you installed LLVM to D:\programs\LLVM, then you'd set the value to be D:\programs\LLVM\bin
+
+If you are on **Windows** you also need to set have installed Visual Studio with MSVC compiler (usually installed with Rust using Rustup)
 
 > If you have similar error: `src/alt_bridge.h:5:10: fatal error: 'memory' file not found` when installing or building altv_internal_sdk, try [this](https://stackoverflow.com/questions/26333823/clang-doesnt-see-basic-headers/75546125#75546125)
 
@@ -34,6 +37,7 @@ Before start writing your server-side in Rust you need to [install LLVM](https:/
 1. Create new cargo package with `cargo new altv-resource --lib`
 
 2. Configure cargo to compile your crate as `cdylib` in your `Cargo.toml`
+
 ```toml
 [lib]
 crate-type = ['cdylib']
@@ -42,6 +46,7 @@ crate-type = ['cdylib']
 3. After that you can install [`altv`](https://crates.io/crates/altv) crate with: `cargo add altv`
 
 4. Next step will be to add main function to your resource (`src/lib.rs`)
+
 ```rust
 use altv::prelude::*; // Entity, WorldObject traits
 
@@ -60,6 +65,7 @@ fn main() -> impl altv::IntoVoidResult {
 8. Copy compiled `.dll` or `.so` to resource directory
 
 9. Create [`resource.toml`](https://docs.altv.mp/articles/configs/resource.html) with this content:
+
 ```toml
 type = 'rs'
 main = 'example.dll' # your compiled .dll or .so
@@ -69,9 +75,10 @@ main = 'example.dll' # your compiled .dll or .so
 
 11. Now you can download rust-module `.dll` or `.so` from [latest release](https://github.com/xxshady/altv-rust/releases) or with [`cargo-altvup`](https://github.com/xxshady/cargo-altvup)
 
-12. Copy it to `modules` directory of your server
+12. Copy it to `modules` directory of your server (if you do not use [`cargo-altvup`](https://github.com/xxshady/cargo-altvup))
 
 13. Add `rust-module` to [`server.toml`](https://docs.altv.mp/articles/configs/server.html) like that:
+
 ```toml
 modules = ['rust-module']
 ```
