@@ -46,6 +46,9 @@ i64 GetDiscordUserID(const alt::IConnectionInfo* ptr) {
 std::string GetText(const alt::IConnectionInfo* ptr) {
     return ptr->GetText();
 }
+std::string GetCloudID(const alt::IConnectionInfo* ptr) {
+    return ptr->GetCloudID();
+}
 void Accept(alt::IConnectionInfo* ptr, bool sendNames) {
     return ptr->Accept(sendNames);
 }

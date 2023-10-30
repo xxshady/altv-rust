@@ -1,4 +1,6 @@
 mod result;
+use std::cell::{RefCell, Cell};
+
 pub use result::{IntoVoidResult, SomeResult, VoidResult};
 
 mod logging;
@@ -25,11 +27,11 @@ pub use api::Api;
 
 pub mod natives;
 
-pub use altv_wasm_shared::Vector3;
-
 mod helpers;
 mod state;
 use crate::state::State;
+
+pub use altv_wasm_shared::Vector3;
 use altv_wasm_shared::BaseObjectTypeRaw;
 
 wasm_codegen::guest!("../wasm.interface");

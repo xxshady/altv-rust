@@ -1,12 +1,12 @@
-use altv_wasm_shared::Vector3;
-use autocxx::{prelude::UniquePtr, WithinUniquePtr};
+use autocxx::prelude::*;
 use wasmtime_wasi::WasiCtx;
 use altv_sdk::ffi as sdk;
-
-use crate::resource_manager::set_pending_base_object;
+use crate::{resource_manager::set_pending_base_object, helpers::read_cpp_vector3};
 
 wasm_codegen::host!("../wasm.interface");
 pub use host::imports;
+
+use self::imports::Imports;
 
 pub type Exports = host::exports::Exports<State>;
 
@@ -21,6 +21,7 @@ pub struct State {
 
     // TODO: some safe wrapper over this unsafe shit
     pub resource_ptr: *mut sdk::shared::AltResource,
+    pub big_call_ptr: host::Ptr,
 
     memory: Option<wasmtime::Memory>,
     free: Option<host::FreeFunc>,
@@ -35,6 +36,7 @@ impl State {
             memory: None,
             free: None,
             alloc: None,
+            big_call_ptr: 0,
         }
     }
 }
@@ -50,6 +52,10 @@ macro_rules! base_ptr_as {
 }
 
 impl host::imports::Imports for State {
+    fn get_big_call_ptr(&self) -> u32 {
+        self.big_call_ptr
+    }
+
     fn get_memory(&self) -> Option<wasmtime::Memory> {
         self.memory
     }
@@ -264,12 +270,76 @@ impl host::imports::Imports for State {
             // logger::debug!("stop_sound success: {success}");
         }
     }
-}
 
-fn read_cpp_vector3(cpp_vector: UniquePtr<sdk::Vector3Wrapper>) -> Vector3 {
-    let (mut x, mut y, mut z) = Default::default();
-    unsafe {
-        sdk::read_vector3(cpp_vector.as_ref().unwrap(), &mut x, &mut y, &mut z);
+    fn natives_draw_marker(
+        &self,
+        type_: i32,
+        x: f32,
+        y: f32,
+        z: f32,
+        dirX_: f32,
+        dirY_: f32,
+        dirZ_: f32,
+        rotX_: f32,
+        rotY_: f32,
+        rotZ_: f32,
+        scaleX_: f32,
+        scaleY_: f32,
+        scaleZ_: f32,
+        red_: i32,
+        green_: i32,
+        blue_: i32,
+        alpha_: i32,
+        bobUpAndDown_: bool,
+        faceCamera_: bool,
+        p19_: i32,
+        rotate_: bool,
+        textureDict: String,
+        textureName: String,
+        drawOnEnts_: bool,
+    ) {
+        logger::debug!("draw_marker {x}, {y}, {z}");
+        let success = unsafe {
+            let texture_dict = sdk::natives::create_c_string_ptr(textureDict).within_unique_ptr();
+            let texture_name = sdk::natives::create_c_string_ptr(textureName).within_unique_ptr();
+            sdk::natives::draw_marker(
+                type_,
+                x,
+                y,
+                z,
+                dirX_,
+                dirY_,
+                dirZ_,
+                rotX_,
+                rotY_,
+                rotZ_,
+                scaleX_,
+                scaleY_,
+                scaleZ_,
+                red_,
+                green_,
+                blue_,
+                alpha_,
+                bobUpAndDown_,
+                faceCamera_,
+                p19_,
+                rotate_,
+                texture_dict.as_ref().unwrap(),
+                texture_name.as_ref().unwrap(),
+                drawOnEnts_,
+            )
+        };
+        logger::debug!("draw_marker success: {success}");
     }
-    Vector3 { x, y, z }
+
+    fn request_streamed_texture_dict(&self, dict: String) {
+        logger::debug!("texture dict: {dict:?}");
+
+        let success = unsafe {
+            let dict = sdk::natives::create_c_string_ptr(dict).within_unique_ptr();
+            sdk::natives::request_streamed_texture_dict(dict.as_ref().unwrap(), false)
+        };
+
+        logger::debug!("request_streamed_texture_dict success: {success}");
+    }
 }

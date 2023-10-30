@@ -266,6 +266,7 @@ pub mod ffi {
 
         // Vector3Wrapper
         generate!("Vector3Wrapper")
+        generate!("create_vector3")
         generate!("read_vector3")
 
         // Vector2Wrapper

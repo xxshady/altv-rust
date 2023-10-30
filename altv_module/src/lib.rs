@@ -1,8 +1,9 @@
+use autocxx::prelude::*;
 use altv_sdk::ffi as sdk;
 use std::ffi::CString;
 use crate::{
     resource_manager::{RESOURCE_MANAGER_INSTANCE, ResourceController},
-    helpers::handle_base_object_creation_or_deletion,
+    helpers::{handle_base_object_creation_or_deletion, read_cpp_vector3},
 };
 
 mod resource_manager;
@@ -68,6 +69,17 @@ extern "C" fn resource_start(
                 // manager.borrow_mut().remove(&resource_name);
 
                 success = false;
+
+            // TEST
+            } else {
+                // unsafe {
+                //     let mut str = sdk::natives::create_null_c_string_ptr().within_unique_ptr();
+                //     sdk::natives::get_display_name_from_vehicle_model(str.pin_mut(), 0x3404691C);
+                //     logger::debug!(
+                //         "read str: {}",
+                //         sdk::natives::read_c_string_ptr(str.as_ref().unwrap())
+                //     );
+                // }
             }
         }
 
@@ -103,6 +115,39 @@ extern "C" fn runtime_resource_impl_create(resource_name: &str) {
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_on_tick(resource_name: &str) {
+    // TEST
+    // unsafe {
+    //     let (mut success, mut ground_z) = Default::default();
+    //     let mut normal = sdk::create_vector3().within_unique_ptr();
+    //     let success = sdk::natives::get_ground_z_and_normal_for_3d_coord(
+    //         &mut success,
+    //         &mut ground_z,
+    //         normal.pin_mut(),
+    //         0.0,
+    //         0.0,
+    //         999.0,
+    //     );
+    //     let normal = read_cpp_vector3(normal);
+    //     logger::debug!(
+    //         "get_ground_z_and_normal_for_3d_coord success: {success} z: {ground_z} normal: {:.3} {:.3} {:.3}",
+    //         normal.x, normal.y, normal.z
+    //     );
+
+    //     let (mut local_player,) = Default::default();
+    //     let success = sdk::natives::player_ped_id(&mut local_player);
+    //     logger::debug!("player_ped_id success: {success}");
+
+    //     let mut coords = sdk::create_vector3().within_unique_ptr();
+    //     let success = sdk::natives::get_entity_coords(coords.pin_mut(), local_player, true);
+    //     let coords = read_cpp_vector3(coords);
+    //     logger::debug!(
+    //         "get_entity_coords success: {success} coords: {:.3} {:.3} {:.3}",
+    //         coords.x,
+    //         coords.y,
+    //         coords.z,
+    //     );
+    // }
+
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
         let mut manager = manager.borrow_mut();
 

@@ -34,6 +34,35 @@ imports {
     natives_get_sound_id() -> I32
     natives_release_sound_id(sound_id: I32)
     natives_stop_sound(sound_id: I32)
+    
+    natives_draw_marker(
+        type_: I32,
+        x: F32,
+        y: F32,
+        z: F32,
+        dirX_: F32,
+        dirY_: F32,
+        dirZ_: F32,
+        rotX_: F32,
+        rotY_: F32,
+        rotZ_: F32,
+        scaleX_: F32,
+        scaleY_: F32,
+        scaleZ_: F32,
+        red_: I32,
+        green_: I32,
+        blue_: I32,
+        alpha_: I32,
+        bobUpAndDown_: Bool,
+        faceCamera_: Bool,
+        p19_: I32,
+        rotate_: Bool,
+        textureDict: Str,
+        textureName: Str,
+        drawOnEnts_: Bool
+    )
+
+    request_streamed_texture_dict(dict: Str)
 }
 
 exports {

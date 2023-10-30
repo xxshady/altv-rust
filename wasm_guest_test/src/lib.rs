@@ -3,14 +3,48 @@ use std::time::Instant;
 #[no_mangle]
 extern "C" fn main() {
     altv::log!("~gl~start!");
+
     altv::set_interval(
-        move || {
-            let now = Instant::now();
-            bench();
-            altv::dbg!(now.elapsed());
+        || {
+            altv::__imports::request_streamed_texture_dict(&"mpleaderboard".to_string());
+            altv::natives::draw_marker(
+                0,
+                0.0,
+                0.0,
+                71.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                1.0,
+                1.0,
+                255,
+                0,
+                0,
+                180,
+                false,
+                true,
+                0,
+                false,
+                &"mpleaderboard".to_string(),
+                &"leaderboard_audio_3".to_string(),
+                false,
+            );
         },
-        1500,
+        0,
     );
+
+    // altv::set_interval(
+    //     move || {
+    //         let now = Instant::now();
+    //         bench();
+    //         altv::dbg!(now.elapsed());
+    //     },
+    //     1500,
+    // );
 }
 
 fn bench() {
