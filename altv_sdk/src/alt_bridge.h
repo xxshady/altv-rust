@@ -47,6 +47,10 @@ alt::ICore* get_alt_core() {
     return &alt::ICore::Instance();
 }
 
+void set_runtime(alt::IScriptRuntime* runtime) {
+    RustRuntime::set_instance(static_cast<RustRuntime*>(runtime));
+}
+
 alt::IScriptRuntime* create_script_runtime() {
     return new RustRuntime();
 }
@@ -57,7 +61,7 @@ void register_script_runtime(
     alt::IScriptRuntime* runtime
 ) {
     core->RegisterScriptRuntime(resource_type, runtime);
-    RustRuntime::set_instance(static_cast<RustRuntime*>(runtime));
+    set_runtime(runtime);
 }
 
 std::vector<u8> read_file(

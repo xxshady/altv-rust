@@ -103,6 +103,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "altv_module_host"
+version = "15.0.0-dev.72"
+dependencies = [
+ "altv_internal_logger",
+ "altv_internal_sdk",
+ "cxx",
+ "libloading",
+ "process_path",
+]
+
+[[package]]
 name = "altv_wasm"
 version = "15.0.0-dev.72"
 dependencies = [
@@ -1537,6 +1548,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "18fb31db3f9bddb2ea821cde30a9f70117e3f119938b5ee630b7403aa6e2ead9"
 dependencies = [
  "unicode-ident",
+]
+
+[[package]]
+name = "process_path"
+version = "0.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f676f11eb0b3e2ea0fbaee218fa6b806689e2297b8c8adc5bf73df465c4f6171"
+dependencies = [
+ "libc",
+ "winapi",
 ]
 
 [[package]]

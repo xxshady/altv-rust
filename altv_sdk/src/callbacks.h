@@ -34,4 +34,19 @@ namespace callbacks {
             resource_on_remove_base_object
         );
     }
+
+    using AltCore = shared::AltCore;
+    using ConsoleCommandCallback = shared::ConsoleCommandCallback;
+
+    void setup_command(alt::ICore* core, std::string const& name, ConsoleCommandCallback callback) {
+        auto callback_ = [=](const std::vector<std::string>& args) {
+            // for some reason CxxVector<CxxString> did not work, it contained garbage on rust side
+            std::stringstream ss;
+            for (auto& arg : args) {
+                ss << arg << " ";
+            }
+            callback(ss.str());
+            };
+        core->SubscribeCommand(name, callback_);
+    }
 }

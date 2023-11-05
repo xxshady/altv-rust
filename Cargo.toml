@@ -21,6 +21,7 @@ members = [
     "altv_wasm",
     "wasmgen/wasm_codegen",
     "wasm_guest_test",
+    "altv_module_host",
 ]
 
 [workspace.package]
