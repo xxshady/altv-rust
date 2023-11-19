@@ -1,6 +1,3 @@
-// TODO: fix names
-#![allow(nonstandard_style)]
-
 mod result;
 
 pub use result::{IntoVoidResult, SomeResult, VoidResult};
