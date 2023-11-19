@@ -68,7 +68,7 @@ impl ResourceController {
 
         let instance = linker.instantiate(&mut store, &module)?;
 
-        Ok(Exports::new(store, instance))
+        Ok(Exports::new(|s| &mut s.big_call_ptr, store, instance))
     }
 
     pub fn call_main(&self) -> wasmtime::Result<()> {
@@ -78,23 +78,26 @@ impl ResourceController {
         exports.call_main()
     }
 
-    pub fn call_export(
+    pub fn call_export<T>(
         &self,
-        call: impl FnOnce(&mut wasi::Exports) -> wasmtime::Result<()>,
-    ) -> Result<(), ()> {
+        call: impl FnOnce(&mut wasi::Exports) -> wasmtime::Result<T>,
+    ) -> wasmtime::Result<T> {
         let mut exports = self.exports.borrow_mut();
         let res = call(&mut *exports);
 
-        if let Err(err) = res {
-            logger::error!(
-                "Resource: {:?} internal export call failed with error: {err:?}",
-                self.name
-            );
-            self.log_error_message();
-            Err(())
-        } else {
-            self.ensure_error_message_is_empty();
-            Ok(())
+        match res {
+            Ok(v) => {
+                self.ensure_error_message_is_empty();
+                Ok(v)
+            }
+            Err(err) => {
+                logger::error!(
+                    "Resource: {:?} internal export call failed with error: {err:?}",
+                    self.name
+                );
+                self.log_error_message();
+                Err(err)
+            }
         }
     }
 

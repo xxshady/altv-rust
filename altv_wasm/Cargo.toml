@@ -10,7 +10,6 @@ readme.workspace = true
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-wasm_codegen = { path = "../wasm_codegen" }
 altv_wasm_shared = { path = "../altv_wasm_shared" }
 logger = { path = "../logger", package = "altv_internal_logger", version = "=15.0.0-dev.72" }
 custom-print = "1.0.0"
@@ -18,3 +17,7 @@ serde = { workspace = true }
 bincode = { workspace = true }
 paste = { workspace = true }
 anyhow = { workspace = true }
+shared.path = '../shared'
+
+[build-dependencies]
+build_helper.path = '../wasmgen/build_helper'

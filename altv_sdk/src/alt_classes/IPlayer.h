@@ -145,5 +145,8 @@ void SetNonSpatialVolume(alt::IPlayer* ptr, f32 volume) {
 void RemoveFilter(alt::IPlayer* ptr) {
     return ptr->RemoveFilter();
 }
+std::string GetTaskData(const alt::IPlayer* ptr) {
+    return ptr->GetTaskData();
+}
 
 } // namespace

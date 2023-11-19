@@ -1,43 +1,60 @@
+types {
+    type: i8 kind: Native repr: I32 can_be_param: true
+    type: i16 kind: Native repr: I32 can_be_param: true
+    type: i32 kind: Native repr: I32 can_be_param: true
+    type: u8 kind: Native repr: U32 can_be_param: true
+    type: u16 kind: Native repr: U32 can_be_param: true
+    type: u32 kind: Native repr: U32 can_be_param: true
+    type: i64 kind: Native repr: I64 can_be_param: true
+    type: u64 kind: Native repr: U64 can_be_param: true
+    type: f32 kind: Native repr: F32 can_be_param: true
+    type: f64 kind: Native repr: F64 can_be_param: true
+    type: bool kind: Bool repr: I32 can_be_param: true
+    type: altv_wasm_shared::BaseObjectPtr kind: Native repr: U64 can_be_param: true
+    type: altv_wasm_shared::BaseObjectTypeRaw kind: Native repr: U32 can_be_param: true
+
+    type: String kind: String repr: FatPtr can_be_param: false
+    type: &String de: String kind: String repr: FatPtr can_be_param: true
+
+    type: Option<&String> de: Option<String> kind: FatPtr repr: FatPtr can_be_param: true
+
+    type: Option<bool> kind: FatPtr repr: FatPtr can_be_param: true
+    type: shared::Vector3 kind: FatPtr repr: FatPtr can_be_param: true
+    type: Option<&shared::Vector3> de: Option<shared::Vector3> kind: FatPtr repr: FatPtr can_be_param: true
+}
+
 imports {
-    log(message: Str)
-    log_error(message: Str)
+    log(message: &String)
+    log_error(message: &String)
 
-    destroy_base_object(ptr: BaseObjectPtr)
-    base_object_get_id(ptr: BaseObjectPtr) -> U32
-    base_object_get_remote_id(ptr: BaseObjectPtr) -> U32
+    destroy_base_object(ptr: altv_wasm_shared::BaseObjectPtr)
+    base_object_get_id(ptr: altv_wasm_shared::BaseObjectPtr) -> u32
+    base_object_get_remote_id(ptr: altv_wasm_shared::BaseObjectPtr) -> u32
 
-    world_object_get_pos(ptr: BaseObjectPtr) -> Vector3
-    world_object_set_pos(ptr: BaseObjectPtr, value: Vector3)
-    world_object_get_dimension(ptr: BaseObjectPtr) -> I32
-    world_object_set_dimension(ptr: BaseObjectPtr, value: I32)
+    world_object_get_pos(ptr: altv_wasm_shared::BaseObjectPtr) -> shared::Vector3
+    world_object_set_pos(ptr: altv_wasm_shared::BaseObjectPtr, value: shared::Vector3)
+    world_object_get_dimension(ptr: altv_wasm_shared::BaseObjectPtr) -> i32
+    world_object_set_dimension(ptr: altv_wasm_shared::BaseObjectPtr, value: i32)
 
     create_local_vehicle(
-        model: U32,
-        dimension: I32,
-        pos_x: F32,
-        pos_y: F32,
-        pos_z: F32,
-        rot_x: F32,
-        rot_y: F32,
-        rot_z: F32,
-        use_streaming: Bool,
-        streaming_distance: U32
-    ) -> BaseObjectPtr
+        model: u32,
+        dimension: i32,
+        pos_x: f32,
+        pos_y: f32,
+        pos_z: f32,
+        rot_x: f32,
+        rot_y: f32,
+        rot_z: f32,
+        use_streaming: bool,
+        streaming_distance: u32
+    ) -> altv_wasm_shared::BaseObjectPtr
     
-    vehicle_set_fuel_level(ptr: BaseObjectPtr, value: F32)
-    vehicle_get_fuel_level(ptr: BaseObjectPtr) -> F32
-
-    natives_do_screen_fade_out(duration: I32)
-    natives_do_screen_fade_in(duration: I32)
-    natives_play_sound(soundId: I32, _audioName: Str, _audioRef: Str, _p3: U8, _p4: I32, _p5: U8)
-    natives_play_sound_from_coord(soundId: I32, _audioName: Str, x: F32, y: F32, z: F32, _audioRef: Str, _isNetwork: U8, _range: I32, _p8: U8)
-    natives_get_sound_id() -> I32
-    natives_release_sound_id(sound_id: I32)
-    natives_stop_sound(sound_id: I32)
+    vehicle_set_fuel_level(ptr: altv_wasm_shared::BaseObjectPtr, value: f32)
+    vehicle_get_fuel_level(ptr: altv_wasm_shared::BaseObjectPtr) -> f32
 }
 
 exports {
     on_tick()
-    on_base_object_create(ptr: BaseObjectPtr, ty: BaseObjectType)
-    on_base_object_destroy(ptr: BaseObjectPtr, ty: BaseObjectType)
+    on_base_object_create(ptr: altv_wasm_shared::BaseObjectPtr, ty: altv_wasm_shared::BaseObjectTypeRaw)
+    on_base_object_destroy(ptr: altv_wasm_shared::BaseObjectPtr, ty: altv_wasm_shared::BaseObjectTypeRaw)
 }

@@ -9,6 +9,7 @@ pub mod ffi {
 
     include_cpp! {
         #include "alt_bridge.h"
+        #include "natives.h"
         #include "alt_classes/ICore.h"
         #include "alt_classes/IBaseObject.h"
         #include "alt_classes/IWorldObject.h"
@@ -178,6 +179,7 @@ pub mod ffi {
 
         generate!("set_alt_core")
         generate!("get_alt_core")
+        generate!("set_runtime")
         generate!("create_script_runtime")
         generate!("register_script_runtime")
         generate!("read_file")
@@ -266,6 +268,9 @@ pub mod ffi {
 
         // Vector3Wrapper
         generate!("Vector3Wrapper")
+        generate!("create_vector3")
+        generate!("create_vector3_with_values")
+        
         generate!("read_vector3")
 
         // Vector2Wrapper
@@ -426,6 +431,11 @@ pub mod ffi {
         "callbacks::ResourceOnRemoveBaseObjectCallback"
     );
 
+    #[allow(improper_ctypes_definitions)]
+    #[repr(transparent)]
+    pub struct ConsoleCommandCallback(pub extern "C" fn(args: &str));
+    impl_extern_type_callback!(ConsoleCommandCallback, "callbacks::ConsoleCommandCallback");
+
     #[cxx::bridge(namespace = "callbacks")]
     mod callbacks {
         unsafe extern "C++" {
@@ -450,6 +460,16 @@ pub mod ffi {
                 resource_on_event: ResourceOnEventCallback,
                 resource_on_create_base_object: ResourceOnCreateBaseObjectCallback,
                 resource_on_remove_base_object: ResourceOnRemoveBaseObjectCallback,
+            );
+
+            type ConsoleCommandCallback = super::ConsoleCommandCallback;
+
+            type AltCore;
+
+            unsafe fn setup_command(
+                core: *mut AltCore,
+                name: &CxxString,
+                callback: ConsoleCommandCallback,
             );
         }
     }

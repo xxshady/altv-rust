@@ -121,6 +121,12 @@ void ToggleEvent(u16 type, bool state) {
 VoiceConnectionState GetVoiceConnectionState() {
     return static_cast<uint8_t>(alt::ICore::Instance().GetVoiceConnectionState());
 }
+u32 GetNetTime() {
+    return alt::ICore::Instance().GetNetTime();
+}
+void TriggerServerRPCAnswer(u16 answerID, MValueMutWrapper args, const StdStringClone error) {
+    return alt::ICore::Instance().TriggerServerRPCAnswer(answerID, args.ptr, error);
+}
 bool AreControlsEnabled() {
     return alt::ICore::Instance().AreControlsEnabled();
 }

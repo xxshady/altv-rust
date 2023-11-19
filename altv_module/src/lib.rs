@@ -1,8 +1,9 @@
+use autocxx::prelude::*;
 use altv_sdk::ffi as sdk;
 use std::ffi::CString;
 use crate::{
     resource_manager::{RESOURCE_MANAGER_INSTANCE, ResourceController},
-    helpers::handle_base_object_creation_or_deletion,
+    helpers::{handle_base_object_creation_or_deletion},
 };
 
 mod resource_manager;
@@ -119,7 +120,7 @@ extern "C" fn resource_on_tick(resource_name: &str) {
 }
 
 #[allow(improper_ctypes_definitions)]
-extern "C" fn resource_on_event(resource_name: &str, event: altv_sdk::CEventPtr) {}
+extern "C" fn resource_on_event(_resource_name: &str, _event: altv_sdk::CEventPtr) {}
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_on_create_base_object(
@@ -144,60 +145,27 @@ extern "C" fn resource_on_remove_base_object(
 }
 
 #[no_mangle]
-#[allow(clippy::missing_safety_doc)]
-pub unsafe extern "C" fn CreateScriptRuntime(
-    core: *mut sdk::alt::ICore,
-) -> *mut sdk::alt::IScriptRuntime {
-    if core.is_null() {
-        panic!("CreateScriptRuntime core is null");
-    }
-
+fn main(core: usize, runtime: usize) {
     logger::init(|message| altv_sdk::helpers::log(&message)).unwrap();
 
-    std::panic::set_hook(Box::new(|info| {
-        logger::error!("panic: {info}");
-    }));
+    unsafe {
+        sdk::set_alt_core(core as *mut _);
+        sdk::set_runtime(runtime as *mut _);
+        logger::debug!("after set_alt_core & set_runtime");
 
-    sdk::set_alt_core(core);
-    logger::debug!("after set_alt_core");
+        logger::debug!("setup_callbacks");
+        sdk::setup_callbacks(
+            sdk::ResourceStartCallback(resource_start),
+            sdk::ResourceStopCallback(resource_stop),
+            sdk::RuntimeResourceDestroyImplCallback(runtime_resource_destroy_impl),
+            sdk::RuntimeResourceImplCreateCallback(runtime_resource_impl_create),
+            sdk::ResourceOnTickCallback(resource_on_tick),
+            sdk::ResourceOnEventCallback(resource_on_event),
+            sdk::ResourceOnCreateBaseObjectCallback(resource_on_create_base_object),
+            sdk::ResourceOnRemoveBaseObjectCallback(resource_on_remove_base_object),
+        );
 
-    let runtime = sdk::create_script_runtime();
-
-    logger::debug!("register_script_runtime");
-    sdk::register_script_runtime(core, "rs", runtime);
-
-    logger::debug!("setup_callbacks");
-    sdk::setup_callbacks(
-        sdk::ResourceStartCallback(resource_start),
-        sdk::ResourceStopCallback(resource_stop),
-        sdk::RuntimeResourceDestroyImplCallback(runtime_resource_destroy_impl),
-        sdk::RuntimeResourceImplCreateCallback(runtime_resource_impl_create),
-        sdk::ResourceOnTickCallback(resource_on_tick),
-        sdk::ResourceOnEventCallback(resource_on_event),
-        sdk::ResourceOnCreateBaseObjectCallback(resource_on_create_base_object),
-        sdk::ResourceOnRemoveBaseObjectCallback(resource_on_remove_base_object),
-    );
-
-    logger::debug!("natives::init");
-    sdk::natives::init();
-
-    logger::info!("{ALTV_MODULE_VERSION}");
-
-    runtime
-}
-
-#[no_mangle]
-#[allow(clippy::missing_safety_doc)]
-pub unsafe extern "C" fn GetSDKHash() -> *const std::ffi::c_char {
-    // TODO: use CString
-    std::ffi::CStr::from_bytes_with_nul(altv_sdk::ALT_SDK_VERSION)
-        .unwrap()
-        .as_ptr()
-}
-
-#[no_mangle]
-#[allow(clippy::missing_safety_doc)]
-pub unsafe extern "C" fn GetType() -> *const std::ffi::c_char {
-    let string = CString::new("rs").expect("Failed to create string in GetType");
-    string.into_raw()
+        logger::debug!("natives::init");
+        sdk::natives::init();
+    }
 }

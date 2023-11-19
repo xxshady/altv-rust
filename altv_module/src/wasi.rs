@@ -1,30 +1,28 @@
-use altv_wasm_shared::Vector3;
-use autocxx::{prelude::UniquePtr, WithinUniquePtr};
+use autocxx::prelude::*;
 use wasmtime_wasi::WasiCtx;
 use altv_sdk::ffi as sdk;
+use sdk_helpers::read_cpp_vector3;
+use shared::Vector3;
+use crate::{
+    resource_manager::set_pending_base_object,
+    helpers,
+};
 
-use crate::resource_manager::set_pending_base_object;
+pub use wasm_host::gen::imports;
 
-wasm_codegen::host!("../wasm.interface");
-pub use host::imports;
-
-pub type Exports = host::exports::Exports<State>;
-
-impl std::fmt::Debug for Exports {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Exports {{}}")
-    }
-}
+pub type Exports = wasm_host::gen::exports::Exports<State>;
 
 pub struct State {
     pub wasi: WasiCtx,
 
     // TODO: some safe wrapper over this unsafe shit
     pub resource_ptr: *mut sdk::shared::AltResource,
+    pub big_call_ptr: wasm_host::gen::Ptr,
 
     memory: Option<wasmtime::Memory>,
-    free: Option<host::FreeFunc>,
-    alloc: Option<host::AllocFunc>,
+    free: Option<wasm_host::gen::FreeFunc>,
+    alloc: Option<wasm_host::gen::AllocFunc>,
+    natives: wasm_host_natives::WasmNatives,
 }
 
 impl State {
@@ -35,6 +33,8 @@ impl State {
             memory: None,
             free: None,
             alloc: None,
+            big_call_ptr: 0,
+            natives: wasm_host_natives::WasmNatives,
         }
     }
 }
@@ -49,16 +49,26 @@ macro_rules! base_ptr_as {
     };
 }
 
-impl host::imports::Imports for State {
+impl wasm_host::gen::imports::Imports for State {
+    type ExtraInterface_wasm_natives = wasm_host_natives::WasmNatives;
+
+    fn get_wasm_natives(&self) -> &Self::ExtraInterface_wasm_natives {
+        &self.natives
+    }
+
+    fn get_big_call_ptr(&self) -> u32 {
+        self.big_call_ptr
+    }
+
     fn get_memory(&self) -> Option<wasmtime::Memory> {
         self.memory
     }
 
-    fn get_free(&self) -> Option<host::FreeFunc> {
+    fn get_free(&self) -> Option<wasm_host::gen::FreeFunc> {
         self.free
     }
 
-    fn get_alloc(&self) -> Option<host::AllocFunc> {
+    fn get_alloc(&self) -> Option<wasm_host::gen::AllocFunc> {
         self.alloc
     }
 
@@ -66,11 +76,11 @@ impl host::imports::Imports for State {
         self.memory.replace(memory);
     }
 
-    fn set_free(&mut self, value: host::FreeFunc) {
+    fn set_free(&mut self, value: wasm_host::gen::FreeFunc) {
         self.free.replace(value);
     }
 
-    fn set_alloc(&mut self, alloc: host::AllocFunc) {
+    fn set_alloc(&mut self, alloc: wasm_host::gen::AllocFunc) {
         self.alloc.replace(alloc);
     }
 
@@ -99,7 +109,7 @@ impl host::imports::Imports for State {
     fn world_object_get_pos(
         &self,
         ptr: altv_wasm_shared::BaseObjectPtr,
-    ) -> altv_wasm_shared::Vector3 {
+    ) -> Vector3 {
         read_cpp_vector3(
             unsafe { sdk::IWorldObject::GetPosition(base_ptr_as!(world_object, ptr)) }
                 .within_unique_ptr(),
@@ -110,7 +120,7 @@ impl host::imports::Imports for State {
         &self,
         ptr: altv_wasm_shared::BaseObjectPtr,
         // TODO: maybe use three parameters instead for better performance?
-        value: altv_wasm_shared::Vector3,
+        value: Vector3,
     ) {
         unsafe {
             sdk::IWorldObject::SetPosition(
@@ -177,99 +187,4 @@ impl host::imports::Imports for State {
         assert!(!vehicle.is_null());
         unsafe { sdk::IVehicle::SetFuelLevel(vehicle, value) }
     }
-
-    fn natives_do_screen_fade_out(&self, duration: i32) {
-        unsafe {
-            let mut success = Default::default();
-            sdk::natives::do_screen_fade_out(&mut success, duration);
-            logger::debug!("do_screen_fade_out success: {success}");
-        }
-    }
-
-    fn natives_do_screen_fade_in(&self, duration: i32) {
-        unsafe {
-            let mut success = Default::default();
-            sdk::natives::do_screen_fade_in(&mut success, duration);
-            logger::debug!("do_screen_fade_in success: {success}");
-        }
-    }
-
-    fn natives_play_sound(
-        &self,
-        soundId: i32,
-        _audioName: String,
-        _audioRef: String,
-        _p3: u8,
-        _p4: i32,
-        _p5: u8,
-    ) {
-        unsafe {
-            let mut success = Default::default();
-            sdk::natives::play_sound(&mut success, soundId, _audioName, _audioRef, _p3, _p4, _p5);
-            // logger::debug!("play_sound success: {success}");
-        }
-    }
-
-    fn natives_play_sound_from_coord(
-        &self,
-        soundId: i32,
-        _audioName: String,
-        x: f32,
-        y: f32,
-        z: f32,
-        _audioRef: String,
-        _isNetwork: u8,
-        _range: i32,
-        _p8: u8,
-    ) {
-        unsafe {
-            let mut success = Default::default();
-            sdk::natives::play_sound_from_coord(
-                &mut success,
-                soundId,
-                _audioName,
-                x,
-                y,
-                z,
-                _audioRef,
-                _isNetwork,
-                _range,
-                _p8,
-            );
-            // logger::debug!("play_sound_from_coord success: {success}");
-        }
-    }
-
-    fn natives_get_sound_id(&self) -> i32 {
-        unsafe {
-            let mut success = Default::default();
-            let result = sdk::natives::get_sound_id(&mut success);
-            // logger::debug!("get_sound_id success: {success}");
-            result
-        }
-    }
-
-    fn natives_release_sound_id(&self, sound_id: i32) {
-        unsafe {
-            let mut success = Default::default();
-            sdk::natives::release_sound_id(&mut success, sound_id);
-            // logger::debug!("release_sound_id success: {success}");
-        }
-    }
-
-    fn natives_stop_sound(&self, sound_id: i32) {
-        unsafe {
-            let mut success = Default::default();
-            sdk::natives::stop_sound(&mut success, sound_id);
-            // logger::debug!("stop_sound success: {success}");
-        }
-    }
-}
-
-fn read_cpp_vector3(cpp_vector: UniquePtr<sdk::Vector3Wrapper>) -> Vector3 {
-    let (mut x, mut y, mut z) = Default::default();
-    unsafe {
-        sdk::read_vector3(cpp_vector.as_ref().unwrap(), &mut x, &mut y, &mut z);
-    }
-    Vector3 { x, y, z }
 }

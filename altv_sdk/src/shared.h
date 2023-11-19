@@ -35,6 +35,8 @@ using ExplosionType = int8_t;
 namespace shared {
     using AltResourceImpl = alt::IResource::Impl;
     using AltResource = alt::IResource;
+    using AltRuntime = alt::IScriptRuntime;
+    using AltCore = alt::ICore;
 
     using ResourceStartCallback = bool (*)(rust::Str name, rust::Str full_main_path, AltResourceImpl* resource_impl, AltResource* resource);
     using ResourceStopCallback = void (*)(rust::Str name);
@@ -44,4 +46,6 @@ namespace shared {
     using ResourceOnEventCallback = void (*)(rust::Str name, const alt::CEvent* event);
     using ResourceOnCreateBaseObjectCallback = void (*)(rust::Str name, alt::IBaseObject* base_object);
     using ResourceOnRemoveBaseObjectCallback = void (*)(rust::Str name, alt::IBaseObject* base_object);
+
+    using ConsoleCommandCallback = void (*)(rust::Str args);
 }

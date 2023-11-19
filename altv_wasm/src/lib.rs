@@ -1,4 +1,5 @@
 mod result;
+
 pub use result::{IntoVoidResult, SomeResult, VoidResult};
 
 mod logging;
@@ -25,20 +26,18 @@ pub use api::Api;
 
 pub mod natives;
 
-pub use altv_wasm_shared::Vector3;
-
 mod helpers;
 mod state;
 use crate::state::State;
+
+pub use shared::Vector3;
 use altv_wasm_shared::BaseObjectTypeRaw;
 
-wasm_codegen::guest!("../wasm.interface");
-
+mod wasi_guest_gen;
 #[doc(hidden)]
-pub use guest::exports as __exports;
-
+pub use wasi_guest_gen::exports as __exports;
 #[doc(hidden)]
-pub use guest::imports as __imports;
+pub use wasi_guest_gen::imports as __imports;
 
 #[no_mangle]
 extern "C" fn __pre_main() {

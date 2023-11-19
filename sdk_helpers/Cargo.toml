@@ -1,0 +1,16 @@
+[package]
+name = "sdk_helpers"
+version.workspace = true
+rust-version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+readme.workspace = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "=15.0.0-dev.72" }
+serde = { workspace = true }
+autocxx = { workspace = true }
+shared.path = '../shared'
