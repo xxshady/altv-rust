@@ -1,31 +1,28 @@
 use autocxx::prelude::*;
 use wasmtime_wasi::WasiCtx;
 use altv_sdk::ffi as sdk;
-use crate::{resource_manager::set_pending_base_object, helpers::read_cpp_vector3};
+use sdk_helpers::read_cpp_vector3;
+use shared::Vector3;
+use crate::{
+    resource_manager::set_pending_base_object,
+    helpers,
+};
 
-wasm_codegen::host!("../wasm.interface");
-pub use host::imports;
+pub use wasm_host::gen::imports;
 
-use self::imports::Imports;
-
-pub type Exports = host::exports::Exports<State>;
-
-impl std::fmt::Debug for Exports {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Exports {{}}")
-    }
-}
+pub type Exports = wasm_host::gen::exports::Exports<State>;
 
 pub struct State {
     pub wasi: WasiCtx,
 
     // TODO: some safe wrapper over this unsafe shit
     pub resource_ptr: *mut sdk::shared::AltResource,
-    pub big_call_ptr: host::Ptr,
+    pub big_call_ptr: wasm_host::gen::Ptr,
 
     memory: Option<wasmtime::Memory>,
-    free: Option<host::FreeFunc>,
-    alloc: Option<host::AllocFunc>,
+    free: Option<wasm_host::gen::FreeFunc>,
+    alloc: Option<wasm_host::gen::AllocFunc>,
+    natives: wasm_host_natives::WasmNatives,
 }
 
 impl State {
@@ -37,6 +34,7 @@ impl State {
             free: None,
             alloc: None,
             big_call_ptr: 0,
+            natives: wasm_host_natives::WasmNatives,
         }
     }
 }
@@ -51,7 +49,13 @@ macro_rules! base_ptr_as {
     };
 }
 
-impl host::imports::Imports for State {
+impl wasm_host::gen::imports::Imports for State {
+    type ExtraInterface_wasm_natives = wasm_host_natives::WasmNatives;
+
+    fn get_wasm_natives(&self) -> &Self::ExtraInterface_wasm_natives {
+        &self.natives
+    }
+
     fn get_big_call_ptr(&self) -> u32 {
         self.big_call_ptr
     }
@@ -60,11 +64,11 @@ impl host::imports::Imports for State {
         self.memory
     }
 
-    fn get_free(&self) -> Option<host::FreeFunc> {
+    fn get_free(&self) -> Option<wasm_host::gen::FreeFunc> {
         self.free
     }
 
-    fn get_alloc(&self) -> Option<host::AllocFunc> {
+    fn get_alloc(&self) -> Option<wasm_host::gen::AllocFunc> {
         self.alloc
     }
 
@@ -72,11 +76,11 @@ impl host::imports::Imports for State {
         self.memory.replace(memory);
     }
 
-    fn set_free(&mut self, value: host::FreeFunc) {
+    fn set_free(&mut self, value: wasm_host::gen::FreeFunc) {
         self.free.replace(value);
     }
 
-    fn set_alloc(&mut self, alloc: host::AllocFunc) {
+    fn set_alloc(&mut self, alloc: wasm_host::gen::AllocFunc) {
         self.alloc.replace(alloc);
     }
 
@@ -105,7 +109,7 @@ impl host::imports::Imports for State {
     fn world_object_get_pos(
         &self,
         ptr: altv_wasm_shared::BaseObjectPtr,
-    ) -> altv_wasm_shared::Vector3 {
+    ) -> Vector3 {
         read_cpp_vector3(
             unsafe { sdk::IWorldObject::GetPosition(base_ptr_as!(world_object, ptr)) }
                 .within_unique_ptr(),
@@ -116,7 +120,7 @@ impl host::imports::Imports for State {
         &self,
         ptr: altv_wasm_shared::BaseObjectPtr,
         // TODO: maybe use three parameters instead for better performance?
-        value: altv_wasm_shared::Vector3,
+        value: Vector3,
     ) {
         unsafe {
             sdk::IWorldObject::SetPosition(
@@ -182,164 +186,5 @@ impl host::imports::Imports for State {
         let vehicle = unsafe { sdk::base_object::to_vehicle(ptr as _) };
         assert!(!vehicle.is_null());
         unsafe { sdk::IVehicle::SetFuelLevel(vehicle, value) }
-    }
-
-    fn natives_do_screen_fade_out(&self, duration: i32) {
-        unsafe {
-            let mut success = Default::default();
-            sdk::natives::do_screen_fade_out(&mut success, duration);
-            logger::debug!("do_screen_fade_out success: {success}");
-        }
-    }
-
-    fn natives_do_screen_fade_in(&self, duration: i32) {
-        unsafe {
-            let mut success = Default::default();
-            sdk::natives::do_screen_fade_in(&mut success, duration);
-            logger::debug!("do_screen_fade_in success: {success}");
-        }
-    }
-
-    fn natives_play_sound(
-        &self,
-        soundId: i32,
-        _audioName: String,
-        _audioRef: String,
-        _p3: u8,
-        _p4: i32,
-        _p5: u8,
-    ) {
-        unsafe {
-            let mut success = Default::default();
-            sdk::natives::play_sound(&mut success, soundId, _audioName, _audioRef, _p3, _p4, _p5);
-            // logger::debug!("play_sound success: {success}");
-        }
-    }
-
-    fn natives_play_sound_from_coord(
-        &self,
-        soundId: i32,
-        _audioName: String,
-        x: f32,
-        y: f32,
-        z: f32,
-        _audioRef: String,
-        _isNetwork: u8,
-        _range: i32,
-        _p8: u8,
-    ) {
-        unsafe {
-            let mut success = Default::default();
-            sdk::natives::play_sound_from_coord(
-                &mut success,
-                soundId,
-                _audioName,
-                x,
-                y,
-                z,
-                _audioRef,
-                _isNetwork,
-                _range,
-                _p8,
-            );
-            // logger::debug!("play_sound_from_coord success: {success}");
-        }
-    }
-
-    fn natives_get_sound_id(&self) -> i32 {
-        unsafe {
-            let mut success = Default::default();
-            let result = sdk::natives::get_sound_id(&mut success);
-            // logger::debug!("get_sound_id success: {success}");
-            result
-        }
-    }
-
-    fn natives_release_sound_id(&self, sound_id: i32) {
-        unsafe {
-            let mut success = Default::default();
-            sdk::natives::release_sound_id(&mut success, sound_id);
-            // logger::debug!("release_sound_id success: {success}");
-        }
-    }
-
-    fn natives_stop_sound(&self, sound_id: i32) {
-        unsafe {
-            let mut success = Default::default();
-            sdk::natives::stop_sound(&mut success, sound_id);
-            // logger::debug!("stop_sound success: {success}");
-        }
-    }
-
-    fn natives_draw_marker(
-        &self,
-        type_: i32,
-        x: f32,
-        y: f32,
-        z: f32,
-        dirX_: f32,
-        dirY_: f32,
-        dirZ_: f32,
-        rotX_: f32,
-        rotY_: f32,
-        rotZ_: f32,
-        scaleX_: f32,
-        scaleY_: f32,
-        scaleZ_: f32,
-        red_: i32,
-        green_: i32,
-        blue_: i32,
-        alpha_: i32,
-        bobUpAndDown_: bool,
-        faceCamera_: bool,
-        p19_: i32,
-        rotate_: bool,
-        textureDict: String,
-        textureName: String,
-        drawOnEnts_: bool,
-    ) {
-        logger::debug!("draw_marker {x}, {y}, {z}");
-        let success = unsafe {
-            let texture_dict = sdk::natives::create_c_string_ptr(textureDict).within_unique_ptr();
-            let texture_name = sdk::natives::create_c_string_ptr(textureName).within_unique_ptr();
-            sdk::natives::draw_marker(
-                type_,
-                x,
-                y,
-                z,
-                dirX_,
-                dirY_,
-                dirZ_,
-                rotX_,
-                rotY_,
-                rotZ_,
-                scaleX_,
-                scaleY_,
-                scaleZ_,
-                red_,
-                green_,
-                blue_,
-                alpha_,
-                bobUpAndDown_,
-                faceCamera_,
-                p19_,
-                rotate_,
-                texture_dict.as_ref().unwrap(),
-                texture_name.as_ref().unwrap(),
-                drawOnEnts_,
-            )
-        };
-        logger::debug!("draw_marker success: {success}");
-    }
-
-    fn request_streamed_texture_dict(&self, dict: String) {
-        logger::debug!("texture dict: {dict:?}");
-
-        let success = unsafe {
-            let dict = sdk::natives::create_c_string_ptr(dict).within_unique_ptr();
-            sdk::natives::request_streamed_texture_dict(dict.as_ref().unwrap(), false)
-        };
-
-        logger::debug!("request_streamed_texture_dict success: {success}");
     }
 }

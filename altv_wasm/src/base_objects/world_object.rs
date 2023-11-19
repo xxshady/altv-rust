@@ -1,4 +1,4 @@
-use altv_wasm_shared::Vector3;
+use shared::Vector3;
 
 use crate::__imports;
 use super::base::private::Ptr;

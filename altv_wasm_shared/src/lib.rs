@@ -1,4 +1,5 @@
-use serde::{Deserialize, Serialize};
+#[allow(nonstandard_style)]
+pub mod natives_result;
 
 pub type BaseObjectPtr = u64;
 
@@ -80,9 +81,3 @@ impl TryFrom<BaseObjectTypeRaw> for BaseObjectType {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Vector3 {
-    pub x: f32,
-    pub y: f32,
-    pub z: f32,
-}

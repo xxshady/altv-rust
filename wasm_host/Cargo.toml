@@ -1,0 +1,22 @@
+[package]
+name = "wasm_host"
+version.workspace = true
+rust-version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+readme.workspace = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+serde = { workspace = true }
+bincode = { workspace = true }
+wasmtime = { workspace = true }
+wasmtime-wasi = { workspace = true }
+altv_wasm_shared.path = '../altv_wasm_shared'
+sdk_helpers.path = '../sdk_helpers'
+shared.path = '../shared'
+
+[build-dependencies]
+build_helper.path = '../wasmgen/build_helper'

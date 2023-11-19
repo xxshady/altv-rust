@@ -5,10 +5,11 @@ use std::ptr::NonNull;
 pub mod ffi {
     use crate::helpers::impl_extern_type_callback;
     use autocxx::prelude::*;
-    use cxx::{type_id, ExternType, CxxVector, CxxString};
+    use cxx::{type_id, ExternType};
 
     include_cpp! {
         #include "alt_bridge.h"
+        #include "natives.h"
         #include "alt_classes/ICore.h"
         #include "alt_classes/IBaseObject.h"
         #include "alt_classes/IWorldObject.h"
@@ -268,6 +269,8 @@ pub mod ffi {
         // Vector3Wrapper
         generate!("Vector3Wrapper")
         generate!("create_vector3")
+        generate!("create_vector3_with_values")
+        
         generate!("read_vector3")
 
         // Vector2Wrapper

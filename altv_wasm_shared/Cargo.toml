@@ -11,3 +11,4 @@ readme.workspace = true
 
 [dependencies]
 serde = { workspace = true }
+shared.path = '../shared'

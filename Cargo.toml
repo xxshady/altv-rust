@@ -22,6 +22,10 @@ members = [
     "wasmgen/wasm_codegen",
     "wasm_guest_test",
     "altv_module_host",
+    "wasm_host",
+    "sdk_helpers",
+    "shared",
+    "natives_codegen"
 ]
 
 [workspace.package]
@@ -45,6 +49,8 @@ quote = "1.0.32"
 syn = "2.0.28"
 proc-macro2 = "1.0.66"
 bincode = "1.3.3"
+wasmtime = "12.0.1"
+wasmtime-wasi = "12.0.1"
 
 [workspace.metadata.release]
 pre-release-commit-message = "release new version: {{version}}"
