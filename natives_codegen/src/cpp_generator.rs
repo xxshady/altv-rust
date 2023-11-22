@@ -271,9 +271,7 @@ mod cpp_impls {
     cpp_impls!(
 
         // i32
-        Any: @decl: "i32 {}", @push: "ctx->Push({});", @return: "*{} = ctx->ResultInt();", @ref_decl: "i32* {}";
         I32: @decl: "i32 {}", @push: "ctx->Push({});", @return: "*{} = ctx->ResultInt();", @ref_decl: "i32* {}";
-        MemoryBuffer: @decl: "i32 {}", @push: "ctx->Push({});", @return: "*{} = ctx->ResultInt();", @ref_decl: "i32* {}";
         Interior: @decl: "i32 {}", @push: "ctx->Push({});", @return: "*{} = ctx->ResultInt();", @ref_decl: "i32* {}";
         Cam: @decl: "i32 {}", @push: "ctx->Push({});", @return: "*{} = ctx->ResultInt();", @ref_decl: "i32* {}";
         FireId: @decl: "i32 {}", @push: "ctx->Push({});", @return: "*{} = ctx->ResultInt();", @ref_decl: "i32* {}";
@@ -301,7 +299,6 @@ mod cpp_impls {
 
         F32: @decl: "f32 {}", @push: "ctx->Push({});", @return: "*{} = ctx->ResultFloat();", @ref_decl: "f32* {}";
         Boolean: @decl: "bool {}", @push: "ctx->Push({});", @return: "*{} = ctx->ResultBool();", @ref_decl: "bool* {}";
-        Void: @decl: "/* VOID {} */", @push: "/* VOID {} */", @return: "/* VOID {} */", @ref_decl: "/* VOID {} */";
         Vector3:
             @decl: "Vector3Wrapper {}",
             @push: "
@@ -332,5 +329,11 @@ mod cpp_impls {
                 char* alt_{0} = save_c_string(\"\"); // creating new empty string because {0} is nullptr
                 ctx->Push(alt_{0});
             ";
+
+        // unused stuff
+        Void: @decl: "/* VOID {} */", @push: "/* VOID {} */", @return: "/* VOID {} */", @ref_decl: "/* VOID {} */";
+        MemoryBuffer: @decl: "/* MEMORY_BUFFER {} */", @push: "/* MEMORY_BUFFER {} */", @return: "/* MEMORY_BUFFER {} */", @ref_decl: "/* MEMORY_BUFFER {} */";
+
+        Any: @decl: "i32 {}", @push: "ctx->Push({});", @return: "*{} = ctx->ResultInt();", @ref_decl: "void* {}";
     );
 }

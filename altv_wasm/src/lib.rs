@@ -30,6 +30,9 @@ mod helpers;
 mod state;
 use crate::state::State;
 
+mod memory_buffer;
+pub use memory_buffer::{MemoryBuffer, MemoryBufferCreateError};
+
 pub use shared::Vector3;
 use altv_wasm_shared::BaseObjectTypeRaw;
 

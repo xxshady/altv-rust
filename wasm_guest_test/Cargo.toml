@@ -8,6 +8,7 @@ edition = { workspace = true }
 [dependencies]
 stats_alloc = "0.1.10"
 altv = { path = "../altv_wasm", package = "altv_wasm" }
+bincode = { workspace = true }
 
 [lib]
 crate-type = ["cdylib"]

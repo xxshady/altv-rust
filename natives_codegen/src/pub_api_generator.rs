@@ -25,7 +25,7 @@ pub(crate) fn gen(native: &Native) -> String {
             format!(
                 "{}: {}",
                 p.name,
-                native_type_to_rust(p.r#type.clone(), ValuePos::GuestParam)
+                native_type_to_rust(p.r#type.clone(), ValuePos::GuestParam, p.r#ref)
             )
         })
         .collect::<Vec<_>>()

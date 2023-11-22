@@ -14,11 +14,25 @@ pub(crate) fn gen(natives: &[Native]) -> File {
 
     file.write_all(
         formatdoc! {"
+        use std::cell::RefCell;
         use altv_wasm_shared::natives_result::*;
         use altv_sdk::ffi as sdk;
         use autocxx::prelude::*;
+        use memory_buffer::MemoryBufferManager;
 
-        pub struct WasmNatives;
+        mod memory_buffer;
+
+        pub struct WasmNatives {{
+            pub memory_buffers: RefCell<MemoryBufferManager>,
+        }}
+
+        impl WasmNatives {{
+            pub fn new() -> Self {{
+                Self {{
+                    memory_buffers: RefCell::new(MemoryBufferManager::new()),
+                }}
+            }}
+        }}
 
         impl wasm_host::gen::imports::extra_interfaces::wasm_natives for WasmNatives {{
             {call_impls}
@@ -73,7 +87,7 @@ fn gen_one(native: &Native) -> String {
 
     for p in params.iter() {
         let native_type = p.r#type.clone();
-        let cpp_value = cpp_value_of(native_type.clone(), &p.name);
+        let cpp_value = cpp_value_of(native_type.clone(), &p.name, p.r#ref);
 
         param_serializations.push({
             let ser = if p.r#ref {
@@ -97,7 +111,7 @@ fn gen_one(native: &Native) -> String {
             param_declarations.push(format!(
                 "{}: {}",
                 p.name,
-                native_type_to_rust(native_type, ValuePos::HostParam)
+                native_type_to_rust(native_type, ValuePos::HostParam, p.r#ref)
             ));
 
             if p.r#ref {
@@ -115,7 +129,7 @@ fn gen_one(native: &Native) -> String {
 
     for p in params {
         let native_type = p.r#type.clone();
-        let cpp_value = cpp_value_of(native_type.clone(), &p.name);
+        let cpp_value = cpp_value_of(native_type.clone(), &p.name, p.r#ref);
 
         param_calls.push({
             let call = if p.r#ref {
@@ -183,12 +197,10 @@ impl CppValue {
     }
 }
 
-fn cpp_value_of(native_type: NativeType, param_name: &str) -> CppValue {
+fn cpp_value_of(native_type: NativeType, param_name: &str, r#ref: bool) -> CppValue {
     match native_type {
         // i32
         NativeType::I32
-        | NativeType::Any
-        | NativeType::MemoryBuffer // TODO: implement memory buffer
         | NativeType::Interior
         | NativeType::Cam
         | NativeType::FireId
@@ -202,8 +214,7 @@ fn cpp_value_of(native_type: NativeType, param_name: &str) -> CppValue {
         | NativeType::TaskSequence
         | NativeType::ColourIndex
         | NativeType::Sphere
-        | NativeType::Pickup
-        => CppValue::primitive(param_name),
+        | NativeType::Pickup => CppValue::primitive(param_name),
 
         // u32
         NativeType::Hash
@@ -213,8 +224,7 @@ fn cpp_value_of(native_type: NativeType, param_name: &str) -> CppValue {
         | NativeType::Player
         | NativeType::ScrHandle
         | NativeType::Vehicle
-        | NativeType::Train
-         => CppValue::primitive(param_name),
+        | NativeType::Train => CppValue::primitive(param_name),
 
         NativeType::F32 => CppValue::primitive(param_name),
         NativeType::String => CppValue {
@@ -241,5 +251,24 @@ fn cpp_value_of(native_type: NativeType, param_name: &str) -> CppValue {
         },
         NativeType::Void => unreachable!(),
         NativeType::Boolean => CppValue::primitive(param_name),
+
+        // Any ref is used for memory buffers
+        NativeType::MemoryBuffer => unreachable!(),
+        NativeType::Any => {
+            if r#ref {
+                CppValue {
+                    ser_ref: format!(
+                        "self.memory_buffers.borrow_mut().get_mut_ptr({param_name}) as *mut c_void"
+                    ),
+                    call_ref: format!("{param_name}"),
+
+                    des: format!("0"), // does not matter anyway
+                    ser: format!("MEMORY BUFFER IS ALWAYS REF"),
+                    call: format!("MEMORY BUFFER IS ALWAYS REF"),
+                }
+            } else {
+                CppValue::primitive(param_name)
+            }
+        }
     }
 }

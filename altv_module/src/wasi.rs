@@ -2,11 +2,8 @@ use autocxx::prelude::*;
 use wasmtime_wasi::WasiCtx;
 use altv_sdk::ffi as sdk;
 use sdk_helpers::read_cpp_vector3;
-use shared::Vector3;
-use crate::{
-    resource_manager::set_pending_base_object,
-    helpers,
-};
+use shared::{Vector3, MemoryBufferId};
+use crate::{resource_manager::set_pending_base_object, helpers};
 
 pub use wasm_host::gen::imports;
 
@@ -34,7 +31,7 @@ impl State {
             free: None,
             alloc: None,
             big_call_ptr: 0,
-            natives: wasm_host_natives::WasmNatives,
+            natives: wasm_host_natives::WasmNatives::new(),
         }
     }
 }
@@ -106,10 +103,7 @@ impl wasm_host::gen::imports::Imports for State {
         unsafe { sdk::IBaseObject::GetRemoteID(ptr as _) }
     }
 
-    fn world_object_get_pos(
-        &self,
-        ptr: altv_wasm_shared::BaseObjectPtr,
-    ) -> Vector3 {
+    fn world_object_get_pos(&self, ptr: altv_wasm_shared::BaseObjectPtr) -> Vector3 {
         read_cpp_vector3(
             unsafe { sdk::IWorldObject::GetPosition(base_ptr_as!(world_object, ptr)) }
                 .within_unique_ptr(),
@@ -186,5 +180,17 @@ impl wasm_host::gen::imports::Imports for State {
         let vehicle = unsafe { sdk::base_object::to_vehicle(ptr as _) };
         assert!(!vehicle.is_null());
         unsafe { sdk::IVehicle::SetFuelLevel(vehicle, value) }
+    }
+
+    fn alloc_memory_buffer(&self, size: u16) -> MemoryBufferId {
+        self.natives.memory_buffers.borrow_mut().alloc(size)
+    }
+
+    fn dealloc_memory_buffer(&self, id: MemoryBufferId) {
+        self.natives.memory_buffers.borrow_mut().dealloc(id);
+    }
+
+    fn read_memory_buffer(&self, id: MemoryBufferId) -> Vec<u8> {
+        self.natives.memory_buffers.borrow_mut().read(id)
     }
 }

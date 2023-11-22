@@ -51,7 +51,7 @@ fn gen_funcs(natives: &[Native]) -> String {
              }: &Native| {
                 let param_declarations: String = params
                     .iter()
-                    .map(|p| format!("{}: {}", p.name, native_type_to_interface(p.r#type.clone())))
+                    .map(|p| format!("{}: {}", &p.name, native_type_to_interface(p.r#type.clone(), p.r#ref)))
                     .collect::<Vec<_>>()
                     .join(", ");
 
@@ -83,11 +83,9 @@ fn gen_types(natives: &[Native]) -> String {
         .join("\n    ")
 }
 
-fn native_type_to_interface(native_type: NativeType) -> &'static str {
+fn native_type_to_interface(native_type: NativeType, r#ref: bool) -> &'static str {
     match native_type {
         NativeType::I32
-        | NativeType::Any
-        | NativeType::MemoryBuffer // TODO: implement memory buffer
         | NativeType::Interior
         | NativeType::Cam
         | NativeType::FireId
@@ -121,6 +119,13 @@ fn native_type_to_interface(native_type: NativeType) -> &'static str {
         NativeType::Boolean => "bool",
 
         NativeType::Void => panic!("Void must not be used anywhere"),
+
+        // Any ref is used for memory buffers
+        NativeType::MemoryBuffer => unreachable!(),
+        NativeType::Any => {
+            if r#ref { "shared::MemoryBufferId" }
+            else { "i32" }
+        },
     }
 }
 

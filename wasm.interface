@@ -21,6 +21,9 @@ types {
     type: Option<bool> kind: FatPtr repr: FatPtr can_be_param: true
     type: shared::Vector3 kind: FatPtr repr: FatPtr can_be_param: true
     type: Option<&shared::Vector3> de: Option<shared::Vector3> kind: FatPtr repr: FatPtr can_be_param: true
+
+    type: shared::MemoryBufferId kind: Native repr: U32 can_be_param: true
+    type: Vec<u8> kind: FatPtr repr: FatPtr can_be_param: false
 }
 
 imports {
@@ -51,6 +54,10 @@ imports {
     
     vehicle_set_fuel_level(ptr: altv_wasm_shared::BaseObjectPtr, value: f32)
     vehicle_get_fuel_level(ptr: altv_wasm_shared::BaseObjectPtr) -> f32
+
+    alloc_memory_buffer(size: u16) -> shared::MemoryBufferId
+    dealloc_memory_buffer(id: shared::MemoryBufferId)
+    read_memory_buffer(id: shared::MemoryBufferId) -> Vec<u8>
 }
 
 exports {

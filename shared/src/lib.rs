@@ -6,3 +6,5 @@ pub struct Vector3 {
     pub y: f32,
     pub z: f32,
 }
+
+pub type MemoryBufferId = u8;

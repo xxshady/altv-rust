@@ -2704,6 +2704,7 @@ name = "wasm_guest_test"
 version = "15.0.0-dev.72"
 dependencies = [
  "altv_wasm",
+ "bincode",
  "stats_alloc",
 ]
 

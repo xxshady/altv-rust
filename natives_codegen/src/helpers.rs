@@ -6,11 +6,9 @@ pub(crate) enum ValuePos {
     GuestResult,
 }
 
-pub(crate) fn native_type_to_rust(native_type: NativeType, pos: ValuePos) -> &'static str {
+pub(crate) fn native_type_to_rust(native_type: NativeType, pos: ValuePos, r#ref: bool) -> &'static str {
     match native_type {
         NativeType::I32
-        | NativeType::Any
-        | NativeType::MemoryBuffer // TODO: implement memory buffer
         | NativeType::Interior
         | NativeType::Cam
         | NativeType::FireId
@@ -55,6 +53,13 @@ pub(crate) fn native_type_to_rust(native_type: NativeType, pos: ValuePos) -> &'s
         },
         NativeType::Void => "()",
         NativeType::Boolean => "bool",
+
+        // Any ref is used for memory buffers
+        NativeType::MemoryBuffer => unreachable!(),
+        NativeType::Any => {
+            if r#ref { "shared::MemoryBufferId" }
+            else { "i32" }
+        },
     }
 }
 

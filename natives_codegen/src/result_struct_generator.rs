@@ -20,7 +20,7 @@ pub(crate) fn gen(native: &Native) -> String {
 
     let ret_declaration = format!(
         "pub ret: {},",
-        native_type_to_rust(results[0].clone(), ValuePos::GuestResult)
+        native_type_to_rust(results[0].clone(), ValuePos::GuestResult, false)
     );
 
     let ref_param_declarations: String = params
@@ -32,7 +32,7 @@ pub(crate) fn gen(native: &Native) -> String {
             Some(format!(
                 "pub {}: {}",
                 p.name,
-                native_type_to_rust(p.r#type.clone(), ValuePos::GuestResult)
+                native_type_to_rust(p.r#type.clone(), ValuePos::GuestResult, p.r#ref),
             ))
         })
         .collect::<Vec<_>>()
