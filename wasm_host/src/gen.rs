@@ -156,7 +156,7 @@ mod host {
                     store,
                 };
                 {
-                    let (ptr, size) = exports
+                    let (ptr, _size) = exports
                         .alloc_bytes(
                             &[1_u8; super::__shared::BYTES_TO_STORE_U64_32_TIMES],
                         )
@@ -281,7 +281,7 @@ mod host {
     );
     pub mod imports {
         pub trait Imports {
-            type ExtraInterface_wasm_natives: extra_interfaces::wasm_natives;
+            type ExtraInterfaceWasmNatives: extra_interfaces::WasmNatives;
             fn get_memory(&self) -> Option<wasmtime::Memory>;
             fn set_memory(&mut self, memory: wasmtime::Memory);
             fn get_free(&self) -> Option<super::FreeFunc>;
@@ -289,7 +289,7 @@ mod host {
             fn get_alloc(&self) -> Option<super::AllocFunc>;
             fn set_alloc(&mut self, alloc: super::AllocFunc);
             fn get_big_call_ptr(&self) -> super::Ptr;
-            fn get_wasm_natives(&self) -> &Self::ExtraInterface_wasm_natives;
+            fn get_wasm_natives(&self) -> &Self::ExtraInterfaceWasmNatives;
             fn log(&self, message: String);
             fn log_error(&self, message: String);
             fn destroy_base_object(&self, ptr: altv_wasm_shared::BaseObjectPtr);
@@ -343,12 +343,12 @@ mod host {
             fn read_memory_buffer(&self, id: shared::MemoryBufferId) -> Vec<u8>;
         }
         pub mod extra_interfaces {
-            pub trait wasm_natives: Sized {
+            pub trait WasmNatives: Sized {
                 fn native_get_dlc_weapon_data(
                     &self,
-                    dlcWeaponIndex_: i32,
-                    outData_: shared::MemoryBufferId,
-                ) -> altv_wasm_shared::natives_result::ResultOf_get_dlc_weapon_data;
+                    dlc_weapon_index_: i32,
+                    out_data_: shared::MemoryBufferId,
+                ) -> altv_wasm_shared::natives_result::ResultOfGetDlcWeaponData;
             }
         }
         pub fn add_to_linker<U: Imports>(linker: &mut wasmtime::Linker<U>) {
@@ -769,7 +769,7 @@ mod host {
                         {
                             match func_index {
                                 0u32 => {
-                                    let (dlcWeaponIndex_, outData_) = read_big_call_args(
+                                    let (dlc_weapon_index_, out_data_) = read_big_call_args(
                                             &mut caller,
                                         )
                                         .with_borrow(|big_call_args| {
@@ -786,7 +786,7 @@ mod host {
                                     let call_return = caller
                                         .data()
                                         .get_wasm_natives()
-                                        .native_get_dlc_weapon_data(dlcWeaponIndex_, outData_);
+                                        .native_get_dlc_weapon_data(dlc_weapon_index_, out_data_);
                                     send_to_guest(&mut caller, &call_return).unwrap()
                                 }
                                 _ => {

@@ -53,12 +53,12 @@ namespace natives {
     bool is_c_string_ptr_null(const CStringPtr& str_ref) {
         return str_ref.ptr == nullptr;
     }
-Success get_dlc_weapon_data(bool* native_return, void* outData_, i32 dlcWeaponIndex_) {
+Success get_dlc_weapon_data(bool* native_return, void* out_data_, i32 dlc_weapon_index_) {
     static auto native = alt::ICore::Instance().GetNativeByHash(0x79923CD21BECE14E);
     ctx->Reset();
 
-    ctx->Push(dlcWeaponIndex_);
-    ctx->Push(outData_);
+    ctx->Push(dlc_weapon_index_);
+    ctx->Push(out_data_);
 
     Success result = native->Invoke(ctx);
     if (result) {

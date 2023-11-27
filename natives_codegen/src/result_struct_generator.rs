@@ -2,7 +2,7 @@ use indoc::formatdoc;
 use std::fs::{self, File};
 
 use crate::{
-    helpers::{native_type_to_rust, ValuePos},
+    helpers::{native_type_to_rust, ValuePos, ascii_snake_to_pascal_case},
     parser::Native,
 };
 
@@ -51,5 +51,5 @@ pub(crate) fn gen(native: &Native) -> String {
 }
 
 pub(crate) fn result_struct_name_of(native_name: &str) -> String {
-    format!("ResultOf_{native_name}")
+    ascii_snake_to_pascal_case(&format!("ResultOf_{native_name}"))
 }

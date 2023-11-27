@@ -1,10 +1,10 @@
 types {
-    type: altv_wasm_shared::natives_result::ResultOf_get_dlc_weapon_data kind: FatPtr repr: FatPtr can_be_param: false
+    type: altv_wasm_shared::natives_result::ResultOfGetDlcWeaponData kind: FatPtr repr: FatPtr can_be_param: false
 }
 
 imports {
     native[
-        get_dlc_weapon_data(dlcWeaponIndex_: i32, outData_: shared::MemoryBufferId) -> altv_wasm_shared::natives_result::ResultOf_get_dlc_weapon_data
+        get_dlc_weapon_data(dlc_weapon_index_: i32, out_data_: shared::MemoryBufferId) -> altv_wasm_shared::natives_result::ResultOfGetDlcWeaponData
     ]
 }
 

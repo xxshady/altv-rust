@@ -47,9 +47,9 @@ macro_rules! base_ptr_as {
 }
 
 impl wasm_host::gen::imports::Imports for State {
-    type ExtraInterface_wasm_natives = wasm_host_natives::WasmNatives;
+    type ExtraInterfaceWasmNatives = wasm_host_natives::WasmNatives;
 
-    fn get_wasm_natives(&self) -> &Self::ExtraInterface_wasm_natives {
+    fn get_wasm_natives(&self) -> &Self::ExtraInterfaceWasmNatives {
         &self.natives
     }
 

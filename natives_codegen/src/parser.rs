@@ -2,6 +2,8 @@ use std::{collections::BTreeMap, fs};
 
 use serde_json::Value;
 
+use crate::helpers::ascii_camel_or_pascal_to_snake_case;
+
 #[derive(serde::Deserialize, Debug, Clone)]
 pub(crate) enum NativeType {
     Any,
@@ -131,12 +133,12 @@ pub(crate) fn parse(local_file_path: &str, remote_file_path: &str) -> Vec<Native
                 results.push(serde_json::from_str(&format!("\"{}\"", raw_native.results)).unwrap());
             }
 
-            // renaming param names to avoid name collision with internal params
             let params = raw_native
                 .params
                 .into_iter()
                 .map(|v| Param {
-                    name: format!("{}_", v.name),
+                    // adding '_' to param names to avoid name collision with internal params
+                    name: format!("{}_", ascii_camel_or_pascal_to_snake_case(&v.name)),
                     ..v
                 })
                 .collect();

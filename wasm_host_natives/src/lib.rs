@@ -18,27 +18,27 @@ impl WasmNatives {
     }
 }
 
-impl wasm_host::gen::imports::extra_interfaces::wasm_natives for WasmNatives {
-    fn native_get_dlc_weapon_data(&self, dlcWeaponIndex_: i32,
-outData_: shared::MemoryBufferId) -> ResultOf_get_dlc_weapon_data {
-    unsafe {
-        let mut native_return = Default::default();
-let mut dlcWeaponIndex_ = dlcWeaponIndex_;
-let mut outData_ = self.memory_buffers.borrow_mut().get_mut_ptr(outData_) as *mut c_void;
-        let success = sdk::natives::get_dlc_weapon_data(
-            &mut native_return,
-outData_,
-dlcWeaponIndex_,
-        );
-        let native_return = native_return;
-let outData_ = 0;
-        
-        ResultOf_get_dlc_weapon_data {
-            success,
-            ret: native_return,
-            outData_
+impl wasm_host::gen::imports::extra_interfaces::WasmNatives for WasmNatives {
+    fn native_get_dlc_weapon_data(
+        &self,
+        dlc_weapon_index_: i32,
+        out_data_: shared::MemoryBufferId,
+    ) -> ResultOfGetDlcWeaponData {
+        unsafe {
+            let mut native_return = Default::default();
+            let mut dlc_weapon_index_ = dlc_weapon_index_;
+            let mut out_data_ =
+                self.memory_buffers.borrow_mut().get_mut_ptr(out_data_) as *mut c_void;
+            let success =
+                sdk::natives::get_dlc_weapon_data(&mut native_return, out_data_, dlc_weapon_index_);
+            let native_return = native_return;
+            let out_data_ = 0;
+
+            ResultOfGetDlcWeaponData {
+                success,
+                ret: native_return,
+                out_data_,
+            }
         }
     }
-}
-
 }

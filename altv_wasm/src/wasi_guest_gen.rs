@@ -458,9 +458,9 @@ mod guest {
             fn __custom_imports_native(func_index: u32) -> u64;
         }
         pub fn native_get_dlc_weapon_data(
-            dlcWeaponIndex_: i32,
-            outData_: shared::MemoryBufferId,
-        ) -> altv_wasm_shared::natives_result::ResultOf_get_dlc_weapon_data {
+            dlc_weapon_index_: i32,
+            out_data_: shared::MemoryBufferId,
+        ) -> altv_wasm_shared::natives_result::ResultOfGetDlcWeaponData {
             #[allow(clippy::unnecessary_cast)]
             {
                 let mut big_call_args = unsafe {
@@ -474,11 +474,13 @@ mod guest {
                 };
                 big_call_args
                     .extend_from_slice(
-                        &super::__shared::NumAsU64Arr::into_bytes(dlcWeaponIndex_ as i32),
+                        &super::__shared::NumAsU64Arr::into_bytes(
+                            dlc_weapon_index_ as i32,
+                        ),
                     );
                 big_call_args
                     .extend_from_slice(
-                        &super::__shared::NumAsU64Arr::into_bytes(outData_ as u32),
+                        &super::__shared::NumAsU64Arr::into_bytes(out_data_ as u32),
                     );
                 std::mem::forget(big_call_args);
                 #[allow(unused_variables, clippy::let_unit_value)]
