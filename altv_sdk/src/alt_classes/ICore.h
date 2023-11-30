@@ -397,5 +397,14 @@ alt::ICheckpoint* GetCheckpointByGameID(u32 gameID) {
 bool IsWebViewGpuAccelerationActive() {
     return alt::ICore::Instance().IsWebViewGpuAccelerationActive();
 }
+u32 GetPoolSize(const StdStringClone pool) {
+    return alt::ICore::Instance().GetPoolSize(pool);
+}
+u32 GetPoolCount(const StdStringClone pool) {
+    return alt::ICore::Instance().GetPoolCount(pool);
+}
+std::vector<u32> GetPoolEntities(const StdStringClone pool) {
+    return alt::ICore::Instance().GetPoolEntities(pool);
+}
 
 } // namespace
