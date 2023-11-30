@@ -1,4 +1,8 @@
-use std::{fmt::Debug, time, cell::RefMut};
+use std::{
+    fmt::Debug,
+    time::{self, Duration},
+    cell::RefMut,
+};
 
 use anyhow::bail;
 
@@ -172,11 +176,14 @@ impl Timer {
     }
 }
 
-pub fn set_timeout<R: IntoVoidResult>(callback: impl FnOnce() -> R + 'static, ms: u64) -> Timer {
+pub fn set_timeout<R: IntoVoidResult>(
+    callback: impl FnOnce() -> R + 'static,
+    duration: Duration,
+) -> Timer {
     let mut callback = Some(callback);
     create_timer(
         Box::new(move || (callback.take().unwrap())().into_void_result()),
-        ms,
+        duration.as_millis() as u64, // TODO: use Duration
         true,
     )
 }

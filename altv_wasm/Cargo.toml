@@ -18,6 +18,7 @@ bincode = { workspace = true }
 paste = { workspace = true }
 anyhow = { workspace = true }
 shared.path = '../shared'
+futures = "0.3.29"
 
 [build-dependencies]
 build_helper.path = '../wasmgen/build_helper'

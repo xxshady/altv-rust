@@ -38,9 +38,10 @@ use altv_wasm_shared::BaseObjectTypeRaw;
 
 mod wasi_guest_gen;
 #[doc(hidden)]
-pub use wasi_guest_gen::exports as __exports;
-#[doc(hidden)]
-pub use wasi_guest_gen::imports as __imports;
+pub use wasi_guest_gen::{exports as __exports, imports as __imports};
+
+mod asynch;
+pub use asynch::{spawn as spawn_async, timer::wait};
 
 #[no_mangle]
 extern "C" fn __pre_main() {
@@ -54,8 +55,13 @@ extern "C" fn __pre_main() {
 
 impl __exports::Exports for __exports::ExportsImpl {
     fn on_tick() {
-        State::with_timers_mut(|mut timers, state| {
-            timers.process_timers(state.timer_schedule.borrow_mut());
+        State::with(|state| {
+            // order is important, timers should be called before async executor
+            state
+                .timers
+                .borrow_mut()
+                .process_timers(state.timer_schedule.borrow_mut());
+            state.async_executor.borrow_mut().run();
         });
     }
 

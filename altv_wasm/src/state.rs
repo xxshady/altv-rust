@@ -1,6 +1,6 @@
 use std::cell::{RefCell, RefMut, Ref};
 
-use crate::{timers, base_objects};
+use crate::{timers, base_objects, asynch};
 
 thread_local! {
     pub(crate) static STATE: RefCell<Option<State>> =
@@ -12,6 +12,7 @@ pub(crate) struct State {
     pub(crate) timers: RefCell<timers::TimerManager>,
     pub(crate) timer_schedule: RefCell<timers::ScheduleState>,
     pub(crate) base_objects: RefCell<base_objects::objects::BaseObjectManager>,
+    pub(crate) async_executor: RefCell<asynch::Executor>,
 }
 
 macro_rules! with_state {
@@ -77,4 +78,5 @@ impl State {
     impl_borrow_mut_fn!(timer_schedule, timers::ScheduleState);
     impl_borrow_mut_fn!(base_objects, base_objects::objects::BaseObjectManager);
     impl_borrow_fn!(base_objects, base_objects::objects::BaseObjectManager);
+    impl_borrow_fn!(async_executor, asynch::Executor);
 }

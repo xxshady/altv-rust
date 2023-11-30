@@ -3,7 +3,7 @@ use wasmtime_wasi::WasiCtx;
 use altv_sdk::ffi as sdk;
 use sdk_helpers::read_cpp_vector3;
 use shared::{Vector3, MemoryBufferId};
-use crate::{resource_manager::set_pending_base_object, helpers};
+use crate::resource_manager::set_pending_base_object;
 
 pub use wasm_host::gen::imports;
 
