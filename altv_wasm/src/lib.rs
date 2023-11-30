@@ -42,6 +42,7 @@ pub use wasi_guest_gen::{exports as __exports, imports as __imports};
 
 mod asynch;
 pub use asynch::{spawn as spawn_async, timer::wait};
+pub use futures;
 
 #[no_mangle]
 extern "C" fn __pre_main() {
