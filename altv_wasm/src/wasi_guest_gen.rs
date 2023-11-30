@@ -490,10 +490,10 @@ mod guest {
         }
     }
     const _: &str = include_str!(
-        r#"C:\\Users\\fasti\\Documents\\dev\\rust\\altv-rust\\altv_wasm\\../wasm.interface"#
+        r#"C:\\dev\\rust\\altv-rust\\altv_wasm\\../wasm.interface"#
     );
     const _: &str = include_str!(
-        r#"C:\\Users\\fasti\\Documents\\dev\\rust\\altv-rust\\altv_wasm\\../wasm_natives.interface"#
+        r#"C:\\dev\\rust\\altv-rust\\altv_wasm\\../wasm_natives.interface"#
     );
     pub mod exports {
         pub trait Exports {
@@ -544,7 +544,7 @@ mod guest {
         }
     }
     const _: &str = include_str!(
-        r#"C:\\Users\\fasti\\Documents\\dev\\rust\\altv-rust\\altv_wasm\\../wasm.interface"#
+        r#"C:\\dev\\rust\\altv-rust\\altv_wasm\\../wasm.interface"#
     );
 }
 pub use guest::*;

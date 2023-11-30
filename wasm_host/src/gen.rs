@@ -277,7 +277,7 @@ mod host {
         }
     }
     const _: &str = include_str!(
-        r#"C:\\Users\\fasti\\Documents\\dev\\rust\\altv-rust\\wasm_host\\../wasm.interface"#
+        r#"C:\\dev\\rust\\altv-rust\\wasm_host\\../wasm.interface"#
     );
     pub mod imports {
         pub trait Imports {
@@ -803,10 +803,10 @@ mod host {
         }
     }
     const _: &str = include_str!(
-        r#"C:\\Users\\fasti\\Documents\\dev\\rust\\altv-rust\\wasm_host\\../wasm.interface"#
+        r#"C:\\dev\\rust\\altv-rust\\wasm_host\\../wasm.interface"#
     );
     const _: &str = include_str!(
-        r#"C:\\Users\\fasti\\Documents\\dev\\rust\\altv-rust\\wasm_host\\../wasm_natives.interface"#
+        r#"C:\\dev\\rust\\altv-rust\\wasm_host\\../wasm_natives.interface"#
     );
 }
 pub use host::*;
