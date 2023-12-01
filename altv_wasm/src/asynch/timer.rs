@@ -2,6 +2,8 @@ use std::{
     future::{Future, poll_fn},
     task::Poll,
     time::{Duration, Instant},
+    rc::Rc,
+    cell::Cell,
 };
 use anyhow::anyhow;
 
@@ -37,8 +39,14 @@ pub fn wait_for(
     timeout: Duration,
 ) -> impl Future<Output = VoidResult> {
     let now = Instant::now();
+    let expecting_poll = Rc::new(Cell::new(true));
 
     poll_fn(move |cx| {
+        if !expecting_poll.get() {
+            return Poll::Pending;
+        }
+        expecting_poll.set(false);
+
         if callback() {
             return Poll::Ready(Ok(()));
         }
@@ -47,8 +55,10 @@ pub fn wait_for(
         }
 
         let waker = cx.waker().clone();
+        let expecting_poll = expecting_poll.clone();
         set_timeout(
             Box::new(move || {
+                expecting_poll.set(true);
                 waker.wake();
             }),
             Duration::ZERO,
