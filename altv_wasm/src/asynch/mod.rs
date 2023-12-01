@@ -4,7 +4,7 @@ use futures::{
     Future,
 };
 
-use crate::state::State;
+use crate::{state::State, IntoVoidResult};
 
 pub(crate) mod timer;
 
@@ -28,9 +28,17 @@ impl Default for Executor {
     }
 }
 
-pub fn spawn<Fut>(future: Fut) -> Result<(), SpawnError>
+pub fn spawn<R, F>(future: F) -> Result<(), SpawnError>
 where
-    Fut: Future<Output = ()> + 'static,
+    R: IntoVoidResult,
+    F: Future<Output = R> + 'static,
 {
-    State::with_async_executor_ref(|e, _| e.spawner.spawn_local(future))
+    State::with_async_executor_ref(|e, _| {
+        e.spawner.spawn_local(async {
+            let res = future.await.into_void_result();
+            if let Err(err) = res {
+                logger::error!("Spawned task failed with error: {err:?}");
+            }
+        })
+    })
 }

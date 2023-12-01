@@ -85,7 +85,7 @@ impl TimerManager {
             if now >= timer.next_call_time {
                 let res = (timer.callback)();
                 if let Err(err) = res {
-                    logger::error!("timer callback failed with error: {err:?}");
+                    logger::error!("Timer callback failed with error: {err:?}");
                 }
 
                 if timer.once {
