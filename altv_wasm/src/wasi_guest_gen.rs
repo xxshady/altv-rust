@@ -201,6 +201,19 @@ mod guest {
                 let call_return = unsafe { __custom_imports_log_error(message) };
             }
         }
+        pub fn log_warn(message: &String) {
+            #[link(wasm_import_module = "__custom_imports")]
+            extern "C" {
+                #[link_name = stringify!(log_warn)]
+                fn __custom_imports_log_warn(message: super::__shared::FatPtr);
+            }
+            #[allow(clippy::unnecessary_cast)]
+            {
+                let message = super::__internal::send_str_to_host(message);
+                #[allow(unused_variables, clippy::let_unit_value)]
+                let call_return = unsafe { __custom_imports_log_warn(message) };
+            }
+        }
         pub fn destroy_base_object(ptr: altv_wasm_shared::BaseObjectPtr) {
             #[link(wasm_import_module = "__custom_imports")]
             extern "C" {

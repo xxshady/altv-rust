@@ -85,6 +85,10 @@ impl wasm_host::gen::imports::Imports for State {
         unsafe { altv_sdk::helpers::log_error_with_resource(&message, self.resource_ptr) }
     }
 
+    fn log_warn(&self, message: String) {
+        unsafe { altv_sdk::helpers::log_warning_with_resource(&message, self.resource_ptr) }
+    }
+
     fn log(&self, message: String) {
         unsafe { altv_sdk::helpers::log_with_resource(&message, self.resource_ptr) }
     }

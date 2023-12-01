@@ -8,7 +8,7 @@ extern "C" fn main() {
         let now: Instant = Instant::now();
         altv::wait_for(
             || {
-                if now.elapsed() >= Duration::from_millis(500) {
+                if now.elapsed() >= Duration::from_millis(1500) {
                     true
                 } else {
                     false
@@ -16,12 +16,11 @@ extern "C" fn main() {
             },
             Duration::from_secs(1),
         )
-        .await
-        .unwrap();
+        .await?;
 
         altv::dbg!(now.elapsed());
 
-        // Ok(())
+        Ok(())
     })
     .unwrap();
 }

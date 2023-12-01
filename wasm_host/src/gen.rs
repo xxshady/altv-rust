@@ -292,6 +292,7 @@ mod host {
             fn get_wasm_natives(&self) -> &Self::ExtraInterfaceWasmNatives;
             fn log(&self, message: String);
             fn log_error(&self, message: String);
+            fn log_warn(&self, message: String);
             fn destroy_base_object(&self, ptr: altv_wasm_shared::BaseObjectPtr);
             fn base_object_get_id(&self, ptr: altv_wasm_shared::BaseObjectPtr) -> u32;
             fn base_object_get_remote_id(
@@ -495,6 +496,25 @@ mod host {
                                 .unwrap();
                             #[allow(unused_variables, clippy::let_unit_value)]
                             let call_return = caller.data().log_error(message);
+                        }
+                    },
+                )
+                .unwrap();
+            linker
+                .func_wrap(
+                    "__custom_imports",
+                    stringify!(log_warn),
+                    #[allow(unused_mut)]
+                    |mut caller: wasmtime::Caller<U>, message: super::__shared::FatPtr| {
+                        #[allow(clippy::unnecessary_cast)]
+                        {
+                            let message = read_string_ref_from_guest(
+                                    &mut caller,
+                                    message,
+                                )
+                                .unwrap();
+                            #[allow(unused_variables, clippy::let_unit_value)]
+                            let call_return = caller.data().log_warn(message);
                         }
                     },
                 )

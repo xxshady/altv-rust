@@ -49,9 +49,17 @@ pub use futures;
 
 #[no_mangle]
 extern "C" fn __pre_main() {
-    logger::init(|msg| {
+    logger::init(|msg, level| {
         let msg = msg.to_string();
-        __imports::log(&msg);
+
+        use logger::Level as L;
+        match level {
+            L::Debug => __imports::log(&msg),
+            L::Error => __imports::log_error(&msg),
+            L::Warn => __imports::log_warn(&msg),
+            L::Info => __imports::log(&msg),
+            L::Trace => __imports::log(&msg),
+        }
     })
     .unwrap();
     State::init();

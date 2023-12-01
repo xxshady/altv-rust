@@ -23,7 +23,7 @@ pub unsafe extern "C" fn CreateScriptRuntime(
         panic!("CreateScriptRuntime core is null");
     }
 
-    logger::init(|message| altv_sdk::helpers::log(&message)).unwrap();
+    logger::init(|message, _level| altv_sdk::helpers::log(&message)).unwrap();
 
     std::panic::set_hook(Box::new(|info| {
         logger::error!("panic: {info}");

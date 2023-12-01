@@ -149,7 +149,20 @@ extern "C" fn resource_on_remove_base_object(
 
 #[no_mangle]
 fn main(core: usize, runtime: usize) {
-    logger::init(|message| altv_sdk::helpers::log(&message)).unwrap();
+    logger::init(|message, level| {
+        use logger::Level as L;
+
+        unsafe {
+            match level {
+                L::Debug => altv_sdk::helpers::log(message),
+                L::Error => altv_sdk::helpers::log_error(message),
+                L::Warn => altv_sdk::helpers::log_warning(message),
+                L::Info => altv_sdk::helpers::log(message),
+                L::Trace => altv_sdk::helpers::log(message),
+            }
+        }
+    })
+    .unwrap();
 
     std::panic::set_hook(Box::new(|info| {
         logger::error!("panic: {info}");

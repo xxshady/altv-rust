@@ -1,17 +1,16 @@
 use std::cell::Cell;
 use std::str::FromStr;
 
-use log::{Level, LevelFilter, Log};
+use log::{LevelFilter, Log};
 
-pub use log::debug;
-pub use log::error;
-pub use log::info;
-pub use log::warn;
+pub use log::{debug, error, info, warn, Level};
 
 struct Logger {}
 
+type OutputImpl = fn(&str, Level);
+
 thread_local! {
-    pub static LOG_IMPL: Cell<fn(&str)> = Cell::new(|_| {});
+    static LOG_IMPL: Cell<OutputImpl> = Cell::new(|_, _| {});
 }
 
 impl Log for Logger {
@@ -30,20 +29,15 @@ impl Log for Logger {
         }
 
         let content = record.args().to_string();
-        let content = match record.level() {
-            Level::Warn => format!("~yl~{content}"),
-            Level::Error => format!("~rl~{content}"),
-            _ => content,
-        };
 
         LOG_IMPL.with(|v| {
-            (v.get())(&format!("{module_path} {content}"));
+            (v.get())(&format!("{module_path} {content}"), record.level());
         });
     }
     fn flush(&self) {}
 }
 
-pub fn init(log_impl: fn(&str)) -> Result<(), log::SetLoggerError> {
+pub fn init(log_impl: OutputImpl) -> Result<(), log::SetLoggerError> {
     let level = option_env!("LOG_LEVEL").unwrap_or("debug");
 
     LOG_IMPL.with(|v| {

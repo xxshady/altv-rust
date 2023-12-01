@@ -29,6 +29,7 @@ types {
 imports {
     log(message: &String)
     log_error(message: &String)
+    log_warn(message: &String)
 
     destroy_base_object(ptr: altv_wasm_shared::BaseObjectPtr)
     base_object_get_id(ptr: altv_wasm_shared::BaseObjectPtr) -> u32

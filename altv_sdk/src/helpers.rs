@@ -26,7 +26,13 @@ pub fn log(str: &str) {
 
 pub unsafe fn log_error(str: &str) {
     unsafe {
-        ffi::ICore::LogError(format!("[rust] {str}"), std::ptr::null_mut());
+        ffi::ICore::LogError(str, std::ptr::null_mut());
+    }
+}
+
+pub unsafe fn log_warning(str: &str) {
+    unsafe {
+        ffi::ICore::LogWarning(str, std::ptr::null_mut());
     }
 }
 
@@ -39,5 +45,11 @@ pub unsafe fn log_error_with_resource(str: &str, resource: *mut ffi::alt::IResou
 pub unsafe fn log_with_resource(str: &str, resource: *mut ffi::alt::IResource) {
     unsafe {
         ffi::ICore::LogColored(str, resource);
+    }
+}
+
+pub unsafe fn log_warning_with_resource(str: &str, resource: *mut ffi::alt::IResource) {
+    unsafe {
+        ffi::ICore::LogWarning(str, resource);
     }
 }
