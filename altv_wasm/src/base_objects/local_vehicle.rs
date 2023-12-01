@@ -66,21 +66,6 @@ impl LocalVehicleManager {
 }
 
 impl LocalVehicle {
-    /// Calls destroy method of [`LocalVehicleManager`] for you.<br>
-    /// To get [`LocalVehicleManager`] you can use `altv::local_vehicles()`
-    /// ```
-    /// # let vehicle = altv::local_vehicles().new();
-    /// let mut manager = altv::local_vehicles;
-    /// // your vehicle instance
-    /// vehicle.destroy(&mut manager);
-    /// ```
-    ///
-    /// You can also call destroy method of local vehicle manager directly:
-    /// ```
-    /// # let vehicle = altv::local_vehicles().new();
-    /// let mut manager = altv::local_vehicles;
-    /// manager.destroy(vehicle);
-    /// ```
     pub fn destroy(self, manager: &mut LocalVehicleManager) {
         manager.destroy(self);
     }
