@@ -117,19 +117,6 @@ impl wasmtime_wasi::WasiFile for Stderr {
         Ok(FdFlags::APPEND)
     }
     async fn write_vectored<'a>(&self, bufs: &[std::io::IoSlice<'a>]) -> Result<u64, Error> {
-        // let all_bufs_len = bufs.len();
-        // let (idx, buf) = bufs
-        //     .iter()
-        //     .enumerate()
-        //     .find(|(_idx, b)| !b.is_empty())
-        //     .map_or((0, &[][..]), |(idx, b)| (idx, &**b));
-        // logger::debug!(
-        //     "write_vectored first buf idx: {} len: {}, all bufs: {}",
-        //     idx,
-        //     buf.len(),
-        //     all_bufs_len
-        // );
-
         let buf = bufs
             .iter()
             .find(|b| !b.is_empty())

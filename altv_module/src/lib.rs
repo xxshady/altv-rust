@@ -105,16 +105,19 @@ extern "C" fn runtime_resource_impl_create(resource_name: &str) {
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_on_tick(resource_name: &str) {
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
-        let mut manager = manager.borrow_mut();
+        let manager_ref = manager.borrow();
 
-        let Some(controller) = manager.get_by_name(resource_name) else {
+        let Some(controller) = manager_ref.get_by_name(resource_name) else {
             logger::error!("resource_on_tick unknown resource: {resource_name}");
             return;
         };
 
         let res = controller.call_export(|e| e.call_on_tick());
+        drop(manager_ref);
         if res.is_err() {
-            manager.resource_panicked(resource_name.to_string());
+            manager
+                .borrow_mut()
+                .resource_panicked(resource_name.to_string());
         }
     });
 }
@@ -147,6 +150,10 @@ extern "C" fn resource_on_remove_base_object(
 #[no_mangle]
 fn main(core: usize, runtime: usize) {
     logger::init(|message| altv_sdk::helpers::log(&message)).unwrap();
+
+    std::panic::set_hook(Box::new(|info| {
+        logger::error!("panic: {info}");
+    }));
 
     unsafe {
         sdk::set_alt_core(core as *mut _);
