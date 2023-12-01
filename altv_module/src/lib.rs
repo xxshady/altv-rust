@@ -108,7 +108,7 @@ extern "C" fn resource_on_tick(resource_name: &str) {
         let manager_ref = manager.borrow();
 
         let Some(controller) = manager_ref.get_by_name(resource_name) else {
-            logger::error!("resource_on_tick unknown resource: {resource_name}");
+            logger::debug!("resource_on_tick unknown resource: {resource_name}");
             return;
         };
 
