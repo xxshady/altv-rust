@@ -1,55 +1,35 @@
 use std::{
     future::{Future, poll_fn},
-    pin::Pin,
-    task::{Context, Poll},
+    task::Poll,
     time::{Duration, Instant},
 };
 use anyhow::anyhow;
 
 use crate::{timers::set_timeout, VoidResult};
 
-pub(crate) struct Timer {
-    dest: Instant,
-    duration: Duration,
-    timer_was_set: bool,
-}
+pub fn wait(duration: Duration) -> impl Future {
+    let dest = Instant::now() + duration;
+    let mut timer_was_set = false;
 
-impl Timer {
-    pub(crate) fn new(duration: Duration) -> Self {
-        Timer {
-            dest: Instant::now() + duration,
-            duration,
-            timer_was_set: false,
-        }
-    }
-}
-
-impl Future for Timer {
-    type Output = ();
-    fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-        if Instant::now() >= self.dest {
+    poll_fn(move |cx| {
+        if Instant::now() >= dest {
             return Poll::Ready(());
         }
-
-        // waker could be shared between different tasks (futures)
-        if !self.timer_was_set {
-            self.timer_was_set = true;
-
-            let waker = cx.waker().clone();
-            set_timeout(
-                Box::new(move || {
-                    waker.wake();
-                }),
-                self.duration,
-            );
+        if timer_was_set {
+            return Poll::Pending;
         }
+        timer_was_set = true;
+
+        let waker = cx.waker().clone();
+        set_timeout(
+            Box::new(|| {
+                waker.wake();
+            }),
+            duration,
+        );
 
         Poll::Pending
-    }
-}
-
-pub fn wait(duration: Duration) -> impl Future {
-    Timer::new(duration)
+    })
 }
 
 pub fn wait_for(

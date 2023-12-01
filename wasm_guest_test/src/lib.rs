@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use altv::{SharedVehicle, WorldObject, ClientWorldObject, Vector3};
 
 #[no_mangle]
@@ -62,4 +64,9 @@ extern "C" fn main() {
     //     },
     //     2500,
     // );
+
+    altv::spawn_async(async {
+        altv::wait(Duration::from_millis(500)).await;
+    })
+    .unwrap();
 }
