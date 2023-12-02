@@ -24,6 +24,8 @@ types {
 
     type: shared::MemoryBufferId kind: Native repr: U32 can_be_param: true
     type: Vec<u8> kind: FatPtr repr: FatPtr can_be_param: false
+
+    type: altv_wasm_shared::RawEvent kind: FatPtr repr: FatPtr can_be_param: true
 }
 
 imports {
@@ -65,4 +67,5 @@ exports {
     on_tick()
     on_base_object_create(ptr: altv_wasm_shared::BaseObjectPtr, ty: altv_wasm_shared::BaseObjectTypeRaw)
     on_base_object_destroy(ptr: altv_wasm_shared::BaseObjectPtr, ty: altv_wasm_shared::BaseObjectTypeRaw)
+    on_event(event: altv_wasm_shared::RawEvent)
 }

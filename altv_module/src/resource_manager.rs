@@ -1,6 +1,6 @@
 use std::{
     cell::{RefCell, Cell},
-    collections::{hash_map, HashMap, HashSet},
+    collections::{HashMap, HashSet},
 };
 use altv_sdk::ffi as sdk;
 use crate::{
@@ -141,10 +141,6 @@ pub struct ResourceManager {
 }
 
 impl ResourceManager {
-    pub fn resources_iter(&self) -> hash_map::Iter<String, ResourceController> {
-        self.resources.iter()
-    }
-
     pub fn get_by_name(&self, name: &str) -> Option<&ResourceController> {
         self.resources.get(name)
     }

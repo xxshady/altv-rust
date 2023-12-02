@@ -519,6 +519,7 @@ mod guest {
                 ptr: altv_wasm_shared::BaseObjectPtr,
                 ty: altv_wasm_shared::BaseObjectTypeRaw,
             );
+            fn on_event(event: altv_wasm_shared::RawEvent);
         }
         pub struct ExportsImpl;
         #[no_mangle]
@@ -553,6 +554,15 @@ mod guest {
                     ptr,
                     ty,
                 );
+            }
+        }
+        #[no_mangle]
+        extern "C" fn __custom_exports_on_event(event: super::__shared::FatPtr) {
+            #[allow(clippy::unnecessary_cast)]
+            {
+                let event = super::__internal::read_from_host(event);
+                #[allow(unused_variables, clippy::let_unit_value)]
+                let call_return = <ExportsImpl as Exports>::on_event(event);
             }
         }
     }

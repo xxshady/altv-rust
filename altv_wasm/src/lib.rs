@@ -47,6 +47,8 @@ pub use asynch::{
 };
 pub use futures;
 
+pub mod event;
+
 #[no_mangle]
 extern "C" fn __pre_main() {
     logger::init(|msg, level| {
@@ -83,5 +85,22 @@ impl __exports::Exports for __exports::ExportsImpl {
 
     fn on_base_object_destroy(ptr: altv_wasm_shared::BaseObjectPtr, ty: BaseObjectTypeRaw) {
         State::with_base_objects_mut(|mut v, _| v.on_destroy(ptr, ty.try_into().unwrap()));
+    }
+
+    fn on_event(raw: altv_wasm_shared::RawEvent) {
+        use altv_wasm_shared::RawEvent as RE;
+
+        let context = match raw {
+            RE::EnteredVehicle { vehicle, seat } => {
+                event::contexts::EventContext::EnteredVehicle(event::contexts::EnteredVehicle {
+                    vehicle: Vehicle::new(vehicle),
+                    seat,
+                })
+            }
+        };
+
+        State::with_events_mut(|mut events, _| {
+            events.call_handlers(context);
+        });
     }
 }

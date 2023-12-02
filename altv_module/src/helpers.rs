@@ -1,7 +1,4 @@
 use crate::resource_manager::{RESOURCE_MANAGER_INSTANCE, is_pending_base_object};
-use altv_sdk::ffi as sdk;
-use shared::Vector3;
-use autocxx::prelude::*;
 
 pub fn handle_base_object_creation_or_deletion(
     resource_name: &str,

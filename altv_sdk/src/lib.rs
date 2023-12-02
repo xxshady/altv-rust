@@ -270,7 +270,7 @@ pub mod ffi {
         generate!("Vector3Wrapper")
         generate!("create_vector3")
         generate!("create_vector3_with_values")
-        
+
         generate!("read_vector3")
 
         // Vector2Wrapper
