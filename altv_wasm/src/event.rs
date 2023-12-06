@@ -5,6 +5,8 @@ use altv_wasm_shared::EventType;
 use crate::{Vehicle, state::State};
 
 pub mod contexts {
+    use crate::base_objects::any_vehicle::AnyVehicle;
+
     use super::*;
 
     pub(crate) enum EventContext {
@@ -22,7 +24,7 @@ pub mod contexts {
 
     #[derive(Debug)]
     pub struct EnteredVehicle {
-        pub vehicle: Vehicle,
+        pub vehicle: AnyVehicle,
         pub seat: u8,
     }
 }

@@ -16,6 +16,7 @@ pub use base_objects::{
     remote::RemoteBaseObject,
     shared_vehicle::SharedVehicle,
     world_object::{WorldObject, ClientWorldObject},
+    any_vehicle::AnyVehicle,
 };
 
 mod hash;
@@ -28,13 +29,13 @@ pub mod natives;
 
 mod helpers;
 mod state;
-use crate::state::State;
+use crate::{state::State, base_objects::local_vehicle::LocalVehicleToken};
 
 mod memory_buffer;
 pub use memory_buffer::{MemoryBuffer, MemoryBufferCreateError};
 
 pub use shared::Vector3;
-use altv_wasm_shared::BaseObjectTypeRaw;
+use altv_wasm_shared::{BaseObjectTypeRaw, BaseObjectType};
 
 mod wasi_guest_gen;
 #[doc(hidden)]
@@ -91,12 +92,17 @@ impl __exports::Exports for __exports::ExportsImpl {
         use altv_wasm_shared::RawEvent as RE;
 
         let context = match raw {
-            RE::EnteredVehicle { vehicle, seat } => {
-                event::contexts::EventContext::EnteredVehicle(event::contexts::EnteredVehicle {
-                    vehicle: Vehicle::new(vehicle),
-                    seat,
-                })
-            }
+            RE::EnteredVehicle {
+                vehicle: (ptr, ty),
+                seat,
+            } => event::contexts::EventContext::EnteredVehicle(event::contexts::EnteredVehicle {
+                vehicle: match ty {
+                    BaseObjectType::Vehicle => AnyVehicle::Server(Vehicle::new(ptr)),
+                    BaseObjectType::LocalVehicle => AnyVehicle::Local(LocalVehicleToken(ptr)),
+                    _ => panic!("unknown vehicle type: {ty:?}"),
+                },
+                seat,
+            }),
         };
 
         State::with_events_mut(|mut events, _| {

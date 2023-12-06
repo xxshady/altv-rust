@@ -1,5 +1,5 @@
 use altv_sdk::ffi as sdk;
-use altv_wasm_shared::BaseObjectPtr;
+use altv_wasm_shared::{BaseObjectPtr, BaseObjectType};
 use crate::{
     resource_manager::{RESOURCE_MANAGER_INSTANCE, ResourceController},
     helpers::handle_base_object_creation_or_deletion,
@@ -160,7 +160,15 @@ extern "C" fn resource_on_event(resource_name: &str, event: altv_sdk::CEventPtr)
         use sdk::CPlayerEnterVehicleEvent as EV;
         let event = unsafe { sdk::events::to_CPlayerEnterVehicleEvent(event) };
         let instance = altv_wasm_shared::RawEvent::EnteredVehicle {
-            vehicle: unsafe { sdk::vehicle::to_base_object(EV::GetTarget(event)) } as BaseObjectPtr,
+            vehicle: {
+                let base_ptr = unsafe { sdk::vehicle::to_base_object(EV::GetTarget(event)) };
+                let ty = unsafe { sdk::IBaseObject::GetType(base_ptr) };
+
+                (
+                    base_ptr as BaseObjectPtr,
+                    BaseObjectType::try_from(ty).unwrap(),
+                )
+            },
             seat: unsafe { EV::GetSeat(event) },
         };
 

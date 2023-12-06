@@ -1,3 +1,5 @@
+use serde::{Serialize, Deserialize};
+
 pub mod natives_result;
 
 mod event;
@@ -7,7 +9,7 @@ pub type BaseObjectPtr = u64;
 pub type BaseObjectTypeRaw = u8;
 
 // TODO: add proper generation of enums from cpp sdk
-#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy, Serialize, Deserialize)]
 pub enum BaseObjectType {
     Player,
     Vehicle,
