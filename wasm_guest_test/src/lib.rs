@@ -21,6 +21,9 @@ extern "C" fn main() {
             altv::log!("ignoring server vehicle");
             return;
         };
+
+        // tho this shit does not save you from runtime errors
+        // so there is no difference between this and Rc<RefCell> way in serverside api?
         let veh = api.local_vehicles.get_by_token(veh).unwrap();
 
         // (****) cannot be called while veh is in use
