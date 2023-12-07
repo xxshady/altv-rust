@@ -3,7 +3,7 @@ use altv_wasm_shared::BaseObjectPtr;
 use crate::{__imports, state::State};
 use super::{
     base::private::Ptr,
-    objects::local_vehicle::LocalVehicle,
+    objects::local_vehicle::{LocalVehicle, LocalVehicleLocked},
     shared_vehicle::SharedVehicle,
     world_object::{WorldObject, ClientWorldObject},
 };
@@ -65,14 +65,7 @@ impl LocalVehicleManager {
 
         __imports::destroy_base_object(object.ptr());
     }
-
-    pub fn get_by_token(&mut self, token: &LocalVehicleToken) -> Option<&LocalVehicle> {
-        self.all().iter().find(|v| v.ptr() == token.0)
-    }
 }
-
-#[derive(Debug)]
-pub struct LocalVehicleToken(pub(crate) BaseObjectPtr);
 
 impl LocalVehicle {
     pub fn destroy(self, manager: &mut LocalVehicleManager) {
@@ -83,3 +76,7 @@ impl LocalVehicle {
 impl SharedVehicle for LocalVehicle {}
 impl WorldObject for LocalVehicle {}
 impl ClientWorldObject for LocalVehicle {}
+
+impl<'m, M> SharedVehicle for LocalVehicleLocked<'m, M> {}
+impl<'m, M> WorldObject for LocalVehicleLocked<'m, M> {}
+impl<'m, M> ClientWorldObject for LocalVehicleLocked<'m, M> {}

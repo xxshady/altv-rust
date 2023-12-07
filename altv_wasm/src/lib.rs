@@ -1,5 +1,7 @@
 mod result;
 
+use std::cell::Cell;
+
 pub use result::{IntoVoidResult, SomeResult, VoidResult};
 
 mod logging;
@@ -29,13 +31,13 @@ pub mod natives;
 
 mod helpers;
 mod state;
-use crate::{state::State, base_objects::local_vehicle::LocalVehicleToken};
+use crate::{state::State, base_objects::objects::local_vehicle::LocalVehicleLocked};
 
 mod memory_buffer;
 pub use memory_buffer::{MemoryBuffer, MemoryBufferCreateError};
 
 pub use shared::Vector3;
-use altv_wasm_shared::{BaseObjectTypeRaw, BaseObjectType};
+use altv_wasm_shared::{BaseObjectTypeRaw, BaseObjectType, BaseObjectPtr};
 
 mod wasi_guest_gen;
 #[doc(hidden)]
@@ -98,7 +100,15 @@ impl __exports::Exports for __exports::ExportsImpl {
             } => event::contexts::EventContext::EnteredVehicle(event::contexts::EnteredVehicle {
                 vehicle: match ty {
                     BaseObjectType::Vehicle => AnyVehicle::Server(Vehicle::new(ptr)),
-                    BaseObjectType::LocalVehicle => AnyVehicle::Local(LocalVehicleToken(ptr)),
+                    BaseObjectType::LocalVehicle => AnyVehicle::Local({
+                        // TODO: improve this, temp workaround
+                        thread_local! {
+                            static PTR: Cell<BaseObjectPtr> = Cell::default();
+                        }
+                        PTR.set(ptr);
+
+                        |manager| LocalVehicleLocked::new(PTR.get(), manager)
+                    }),
                     _ => panic!("unknown vehicle type: {ty:?}"),
                 },
                 seat,

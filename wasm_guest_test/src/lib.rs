@@ -16,23 +16,30 @@ extern "C" fn main() {
     altv::event::add_handler(EventHandler::EnteredVehicle(Box::new(move |cx| {
         dbg!(cx);
 
-        // wtf is this? i dont currently have a better idea on how to make this safe so user cant abuse it (****)
-        let altv::AnyVehicle::Local(ref veh) = cx.vehicle else {
+        // TODO: this must not be allowed
+        api.local_vehicles.destroy(veh_.take().unwrap());
+
+        let altv::AnyVehicle::Local(ref get_veh) = cx.vehicle else {
             altv::log!("ignoring server vehicle");
             return;
         };
 
-        // tho this shit does not save you from runtime errors
-        // so there is no difference between this and Rc<RefCell> way in serverside api?
-        let veh = api.local_vehicles.get_by_token(veh).unwrap();
+        // TODO: do not allow multiple calls:
+        // note: i tried FnOnce but it did not work with current implementation
+        // because event context is passed by shared reference
+        get_veh(&api.local_vehicles);
+        get_veh(&api.local_vehicles);
 
-        // (****) cannot be called while veh is in use
+        let veh = get_veh(&api.local_vehicles);
+
+        // cannot be called while veh is in use
         // api.local_vehicles.destroy(veh_.take().unwrap());
 
         dbg!(veh.fuel_level());
         dbg!(veh.set_fuel_level(1.0));
         dbg!(veh.fuel_level());
 
+        // veh is not used anymore so we can safely destroy it
         api.local_vehicles.destroy(veh_.take().unwrap());
 
         // ------------------------------------------------------------------------
