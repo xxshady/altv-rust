@@ -5,3 +5,4 @@ pub mod vehicle;
 pub mod remote;
 pub mod shared_vehicle;
 pub mod world_object;
+pub mod any_vehicle;

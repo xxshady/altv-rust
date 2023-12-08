@@ -1,12 +1,15 @@
-#[allow(nonstandard_style)]
+use serde::{Serialize, Deserialize};
+
 pub mod natives_result;
 
-pub type BaseObjectPtr = u64;
+mod event;
+pub use event::RawEvent;
 
+pub type BaseObjectPtr = u64;
 pub type BaseObjectTypeRaw = u8;
 
 // TODO: add proper generation of enums from cpp sdk
-#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy, Serialize, Deserialize)]
 pub enum BaseObjectType {
     Player,
     Vehicle,
@@ -41,6 +44,7 @@ pub enum BaseObjectType {
     Size,
 }
 
+// TODO: add proper generation of enums from cpp sdk
 impl TryFrom<BaseObjectTypeRaw> for BaseObjectType {
     type Error = ();
     fn try_from(v: BaseObjectTypeRaw) -> Result<Self, Self::Error> {
@@ -81,3 +85,186 @@ impl TryFrom<BaseObjectTypeRaw> for BaseObjectType {
     }
 }
 
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
+pub enum EventType {
+    None,
+    // server
+    ServerStarted,
+    ClientRequestObjectEvent,
+    ClientDeleteObjectEvent,
+    // shared
+    PlayerConnect,
+    PlayerDisconnect,
+    PlayerConnectDenied,
+    PlayerSpawn,
+    ConnectionQueueAdd,
+    ConnectionQueueRemove,
+    ResourceStart,
+    ResourceStop,
+    ResourceError,
+    ServerScriptEvent,
+    ClientScriptEvent,
+    MetaChange,
+    SyncedMetaChange,
+    StreamSyncedMetaChange,
+    GlobalMetaChange,
+    GlobalSyncedMetaChange,
+    LocalSyncedMetaChange,
+    PlayerDamage,
+    PlayerDeath,
+    PlayerHeal,
+    FireEvent,
+    ExplosionEvent,
+    StartProjectileEvent,
+    WeaponDamageEvent,
+    VehicleDestroy,
+    VehicleDamage,
+    RequestSyncedScene,
+    StartSyncedScene,
+    StopSyncedScene,
+    UpdateSyncedScene,
+    ColshapeEvent,
+    PlayerEnterVehicle,
+    PlayerStartEnterVehicle,
+    PlayerEnteringVehicle,
+    PlayerLeaveVehicle,
+    PlayerStartLeaveVehicle,
+    PlayerChangeVehicleSeat,
+    PlayerWeaponChange,
+    PlayerRequestControl,
+    PlayerStartTalking,
+    PlayerStopTalking,
+    VehicleAttach,
+    VehicleDetach,
+    VehicleHorn,
+    VehicleSiren,
+    NetownerChange,
+    CreateBaseObjectEvent,
+    RemoveBaseObjectEvent,
+    ConsoleCommandEvent,
+    PlayerChangeAnimationEvent,
+    PlayerChangeInteriorEvent,
+    PlayerWeaponShootEvent,
+    PlayerBulletHitEvent,
+    PlayerDimensionChange,
+    GivePedScriptedTask,
+    ScriptRpcEvent,
+    ScriptRpcAnswerEvent,
+    // client
+    ConnectionComplete,
+    DisconnectEvent,
+    WebViewEvent,
+    KeyboardEvent,
+    GameEntityCreate,
+    GameEntityDestroy,
+    WebSocketClientEvent,
+    AudioEvent,
+    TaskChange,
+    Spawned,
+    RmluiEvent,
+    WindowFocusChange,
+    WindowResolutionChange,
+    EntityHitEntity,
+    WorldObjectPositionChange,
+    WorldObjectStreamIn,
+    WorldObjectStreamOut,
+    VoiceConnectionEvent,
+    PedDamage,
+    PedDeath,
+    PedHeal,
+    All,
+    Size,
+}
+
+impl TryFrom<u16> for EventType {
+    type Error = ();
+    fn try_from(v: u16) -> Result<Self, Self::Error> {
+        Ok(match v {
+            v if v == Self::None as u16 => Self::None,
+            v if v == Self::ServerStarted as u16 => Self::ServerStarted,
+            v if v == Self::ClientRequestObjectEvent as u16 => Self::ClientRequestObjectEvent,
+            v if v == Self::ClientDeleteObjectEvent as u16 => Self::ClientDeleteObjectEvent,
+            v if v == Self::PlayerConnect as u16 => Self::PlayerConnect,
+            v if v == Self::PlayerDisconnect as u16 => Self::PlayerDisconnect,
+            v if v == Self::PlayerConnectDenied as u16 => Self::PlayerConnectDenied,
+            v if v == Self::PlayerSpawn as u16 => Self::PlayerSpawn,
+            v if v == Self::ConnectionQueueAdd as u16 => Self::ConnectionQueueAdd,
+            v if v == Self::ConnectionQueueRemove as u16 => Self::ConnectionQueueRemove,
+            v if v == Self::ResourceStart as u16 => Self::ResourceStart,
+            v if v == Self::ResourceStop as u16 => Self::ResourceStop,
+            v if v == Self::ResourceError as u16 => Self::ResourceError,
+            v if v == Self::ServerScriptEvent as u16 => Self::ServerScriptEvent,
+            v if v == Self::ClientScriptEvent as u16 => Self::ClientScriptEvent,
+            v if v == Self::MetaChange as u16 => Self::MetaChange,
+            v if v == Self::SyncedMetaChange as u16 => Self::SyncedMetaChange,
+            v if v == Self::StreamSyncedMetaChange as u16 => Self::StreamSyncedMetaChange,
+            v if v == Self::GlobalMetaChange as u16 => Self::GlobalMetaChange,
+            v if v == Self::GlobalSyncedMetaChange as u16 => Self::GlobalSyncedMetaChange,
+            v if v == Self::LocalSyncedMetaChange as u16 => Self::LocalSyncedMetaChange,
+            v if v == Self::PlayerDamage as u16 => Self::PlayerDamage,
+            v if v == Self::PlayerDeath as u16 => Self::PlayerDeath,
+            v if v == Self::PlayerHeal as u16 => Self::PlayerHeal,
+            v if v == Self::FireEvent as u16 => Self::FireEvent,
+            v if v == Self::ExplosionEvent as u16 => Self::ExplosionEvent,
+            v if v == Self::StartProjectileEvent as u16 => Self::StartProjectileEvent,
+            v if v == Self::WeaponDamageEvent as u16 => Self::WeaponDamageEvent,
+            v if v == Self::VehicleDestroy as u16 => Self::VehicleDestroy,
+            v if v == Self::VehicleDamage as u16 => Self::VehicleDamage,
+            v if v == Self::RequestSyncedScene as u16 => Self::RequestSyncedScene,
+            v if v == Self::StartSyncedScene as u16 => Self::StartSyncedScene,
+            v if v == Self::StopSyncedScene as u16 => Self::StopSyncedScene,
+            v if v == Self::UpdateSyncedScene as u16 => Self::UpdateSyncedScene,
+            v if v == Self::ColshapeEvent as u16 => Self::ColshapeEvent,
+            v if v == Self::PlayerEnterVehicle as u16 => Self::PlayerEnterVehicle,
+            v if v == Self::PlayerStartEnterVehicle as u16 => Self::PlayerStartEnterVehicle,
+            v if v == Self::PlayerEnteringVehicle as u16 => Self::PlayerEnteringVehicle,
+            v if v == Self::PlayerLeaveVehicle as u16 => Self::PlayerLeaveVehicle,
+            v if v == Self::PlayerStartLeaveVehicle as u16 => Self::PlayerStartLeaveVehicle,
+            v if v == Self::PlayerChangeVehicleSeat as u16 => Self::PlayerChangeVehicleSeat,
+            v if v == Self::PlayerWeaponChange as u16 => Self::PlayerWeaponChange,
+            v if v == Self::PlayerRequestControl as u16 => Self::PlayerRequestControl,
+            v if v == Self::PlayerStartTalking as u16 => Self::PlayerStartTalking,
+            v if v == Self::PlayerStopTalking as u16 => Self::PlayerStopTalking,
+            v if v == Self::VehicleAttach as u16 => Self::VehicleAttach,
+            v if v == Self::VehicleDetach as u16 => Self::VehicleDetach,
+            v if v == Self::VehicleHorn as u16 => Self::VehicleHorn,
+            v if v == Self::VehicleSiren as u16 => Self::VehicleSiren,
+            v if v == Self::NetownerChange as u16 => Self::NetownerChange,
+            v if v == Self::CreateBaseObjectEvent as u16 => Self::CreateBaseObjectEvent,
+            v if v == Self::RemoveBaseObjectEvent as u16 => Self::RemoveBaseObjectEvent,
+            v if v == Self::ConsoleCommandEvent as u16 => Self::ConsoleCommandEvent,
+            v if v == Self::PlayerChangeAnimationEvent as u16 => Self::PlayerChangeAnimationEvent,
+            v if v == Self::PlayerChangeInteriorEvent as u16 => Self::PlayerChangeInteriorEvent,
+            v if v == Self::PlayerWeaponShootEvent as u16 => Self::PlayerWeaponShootEvent,
+            v if v == Self::PlayerBulletHitEvent as u16 => Self::PlayerBulletHitEvent,
+            v if v == Self::PlayerDimensionChange as u16 => Self::PlayerDimensionChange,
+            v if v == Self::GivePedScriptedTask as u16 => Self::GivePedScriptedTask,
+            v if v == Self::ScriptRpcEvent as u16 => Self::ScriptRpcEvent,
+            v if v == Self::ScriptRpcAnswerEvent as u16 => Self::ScriptRpcAnswerEvent,
+            v if v == Self::ConnectionComplete as u16 => Self::ConnectionComplete,
+            v if v == Self::DisconnectEvent as u16 => Self::DisconnectEvent,
+            v if v == Self::WebViewEvent as u16 => Self::WebViewEvent,
+            v if v == Self::KeyboardEvent as u16 => Self::KeyboardEvent,
+            v if v == Self::GameEntityCreate as u16 => Self::GameEntityCreate,
+            v if v == Self::GameEntityDestroy as u16 => Self::GameEntityDestroy,
+            v if v == Self::WebSocketClientEvent as u16 => Self::WebSocketClientEvent,
+            v if v == Self::AudioEvent as u16 => Self::AudioEvent,
+            v if v == Self::TaskChange as u16 => Self::TaskChange,
+            v if v == Self::Spawned as u16 => Self::Spawned,
+            v if v == Self::RmluiEvent as u16 => Self::RmluiEvent,
+            v if v == Self::WindowFocusChange as u16 => Self::WindowFocusChange,
+            v if v == Self::WindowResolutionChange as u16 => Self::WindowResolutionChange,
+            v if v == Self::EntityHitEntity as u16 => Self::EntityHitEntity,
+            v if v == Self::WorldObjectPositionChange as u16 => Self::WorldObjectPositionChange,
+            v if v == Self::WorldObjectStreamIn as u16 => Self::WorldObjectStreamIn,
+            v if v == Self::WorldObjectStreamOut as u16 => Self::WorldObjectStreamOut,
+            v if v == Self::VoiceConnectionEvent as u16 => Self::VoiceConnectionEvent,
+            v if v == Self::PedDamage as u16 => Self::PedDamage,
+            v if v == Self::PedDeath as u16 => Self::PedDeath,
+            v if v == Self::PedHeal as u16 => Self::PedHeal,
+            v if v == Self::All as u16 => Self::All,
+            v if v == Self::Size as u16 => Self::Size,
+            _ => return Err(()),
+        })
+    }
+}

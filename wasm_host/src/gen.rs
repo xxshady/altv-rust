@@ -117,6 +117,7 @@ mod host {
             prop_on_tick: wasmtime::TypedFunc<(), ()>,
             prop_on_base_object_create: wasmtime::TypedFunc<(u64, u32), ()>,
             prop_on_base_object_destroy: wasmtime::TypedFunc<(u64, u32), ()>,
+            prop_on_event: wasmtime::TypedFunc<(super::__shared::FatPtr,), ()>,
             memory: wasmtime::Memory,
             store: wasmtime::Store<S>,
             alloc: super::AllocFunc,
@@ -144,6 +145,12 @@ mod host {
                         .get_typed_func(
                             &mut store,
                             stringify!(__custom_exports_on_base_object_destroy),
+                        )
+                        .unwrap(),
+                    prop_on_event: instance
+                        .get_typed_func(
+                            &mut store,
+                            stringify!(__custom_exports_on_event),
                         )
                         .unwrap(),
                     memory: instance.get_memory(&mut store, "memory").unwrap(),
@@ -271,6 +278,20 @@ mod host {
                     let call_return = self
                         .prop_on_base_object_destroy
                         .call(&mut self.store, (ptr, ty))?;
+                    Ok(())
+                }
+            }
+            pub fn call_on_event(
+                &mut self,
+                event: altv_wasm_shared::RawEvent,
+            ) -> wasmtime::Result<()> {
+                #[allow(clippy::unnecessary_cast)]
+                {
+                    let event = self.send_to_guest(&event)?;
+                    #[allow(unused_variables, clippy::let_unit_value)]
+                    let call_return = self
+                        .prop_on_event
+                        .call(&mut self.store, (event,))?;
                     Ok(())
                 }
             }

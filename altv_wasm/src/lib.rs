@@ -1,5 +1,4 @@
 mod result;
-
 pub use result::{IntoVoidResult, SomeResult, VoidResult};
 
 mod logging;
@@ -16,6 +15,7 @@ pub use base_objects::{
     remote::RemoteBaseObject,
     shared_vehicle::SharedVehicle,
     world_object::{WorldObject, ClientWorldObject},
+    any_vehicle::AnyVehicle,
 };
 
 mod hash;
@@ -34,7 +34,7 @@ mod memory_buffer;
 pub use memory_buffer::{MemoryBuffer, MemoryBufferCreateError};
 
 pub use shared::Vector3;
-use altv_wasm_shared::BaseObjectTypeRaw;
+use altv_wasm_shared::{BaseObjectTypeRaw, BaseObjectType, BaseObjectPtr};
 
 mod wasi_guest_gen;
 #[doc(hidden)]
@@ -46,6 +46,8 @@ pub use asynch::{
     timer::{wait, wait_for},
 };
 pub use futures;
+
+pub mod event;
 
 #[no_mangle]
 extern "C" fn __pre_main() {
@@ -83,5 +85,27 @@ impl __exports::Exports for __exports::ExportsImpl {
 
     fn on_base_object_destroy(ptr: altv_wasm_shared::BaseObjectPtr, ty: BaseObjectTypeRaw) {
         State::with_base_objects_mut(|mut v, _| v.on_destroy(ptr, ty.try_into().unwrap()));
+    }
+
+    fn on_event(raw: altv_wasm_shared::RawEvent) {
+        use altv_wasm_shared::RawEvent as RE;
+
+        let context = match raw {
+            RE::EnteredVehicle {
+                vehicle: (ptr, ty),
+                seat,
+            } => event::contexts::EventContext::EnteredVehicle(event::contexts::EnteredVehicle {
+                vehicle: match ty {
+                    BaseObjectType::Vehicle => AnyVehicle::Server(Vehicle::new(ptr)),
+                    BaseObjectType::LocalVehicle => todo!(),
+                    _ => panic!("unknown vehicle type: {ty:?}"),
+                },
+                seat,
+            }),
+        };
+
+        State::with_events_mut(|mut events, _| {
+            events.call_handlers(context);
+        });
     }
 }

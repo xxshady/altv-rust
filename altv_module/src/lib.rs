@@ -1,9 +1,8 @@
-use autocxx::prelude::*;
 use altv_sdk::ffi as sdk;
-use std::ffi::CString;
+use altv_wasm_shared::{BaseObjectPtr, BaseObjectType};
 use crate::{
     resource_manager::{RESOURCE_MANAGER_INSTANCE, ResourceController},
-    helpers::{handle_base_object_creation_or_deletion},
+    helpers::handle_base_object_creation_or_deletion,
 };
 
 mod resource_manager;
@@ -14,7 +13,7 @@ mod wasi_stdout_err;
 
 type ResourceName = String;
 
-const ALTV_MODULE_VERSION: &str = env!("CARGO_PKG_VERSION");
+// const ALTV_MODULE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_start(
@@ -123,7 +122,65 @@ extern "C" fn resource_on_tick(resource_name: &str) {
 }
 
 #[allow(improper_ctypes_definitions)]
-extern "C" fn resource_on_event(_resource_name: &str, _event: altv_sdk::CEventPtr) {}
+extern "C" fn resource_on_event(resource_name: &str, event: altv_sdk::CEventPtr) {
+    use altv_sdk::EventType as E;
+
+    if event.is_null() {
+        panic!("resource_on_event event is null");
+    }
+
+    let raw_type = unsafe { sdk::CEvent::GetType(event) };
+
+    let event_type = E::try_from(raw_type).unwrap();
+
+    if let E::CreateBaseObjectEvent | E::RemoveBaseObjectEvent = event_type {
+        logger::debug!("ignoring create/remove baseobject event");
+        return;
+    }
+
+    logger::debug!(
+        "resource_on_event resource_name: {}, event: {:?}",
+        resource_name,
+        event_type
+    );
+
+    RESOURCE_MANAGER_INSTANCE.with(|manager| {
+        let manager_ref = manager.borrow();
+
+        let Some(controller) = manager_ref.get_by_name(resource_name) else {
+            logger::debug!("resource_on_event unknown resource: {resource_name}");
+            return;
+        };
+
+        // TEST
+        if event_type != E::PlayerEnterVehicle {
+            return;
+        }
+
+        use sdk::CPlayerEnterVehicleEvent as EV;
+        let event = unsafe { sdk::events::to_CPlayerEnterVehicleEvent(event) };
+        let instance = altv_wasm_shared::RawEvent::EnteredVehicle {
+            vehicle: {
+                let base_ptr = unsafe { sdk::vehicle::to_base_object(EV::GetTarget(event)) };
+                let ty = unsafe { sdk::IBaseObject::GetType(base_ptr) };
+
+                (
+                    base_ptr as BaseObjectPtr,
+                    BaseObjectType::try_from(ty).unwrap(),
+                )
+            },
+            seat: unsafe { EV::GetSeat(event) },
+        };
+
+        let res = controller.call_export(|e| e.call_on_event(instance));
+        drop(manager_ref);
+        if res.is_err() {
+            manager
+                .borrow_mut()
+                .resource_panicked(resource_name.to_string());
+        }
+    });
+}
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_on_create_base_object(
@@ -187,5 +244,8 @@ fn main(core: usize, runtime: usize) {
 
         logger::debug!("natives::init");
         sdk::natives::init();
+
+        // TEST
+        sdk::ICore::ToggleEvent(altv_sdk::EventType::PlayerEnterVehicle as u16, true);
     }
 }
