@@ -52,12 +52,11 @@ macro_rules! objects {
 
     $(
         pub(crate) mod [<$class:snake>] {
-            use super::super::base::private::{BaseObject, BaseObjectLocked};
+            use super::super::base::private::BaseObject;
 
             #[derive(Debug)]
             pub struct [<$class Type>];
             pub type $class = BaseObject<[<$class Type>]>;
-            pub type [<$class Locked>]<'m, M> = BaseObjectLocked<'m, [<$class Type>], M>;
         }
     )+
     } };

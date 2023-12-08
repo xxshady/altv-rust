@@ -1,7 +1,4 @@
 mod result;
-
-use std::cell::Cell;
-
 pub use result::{IntoVoidResult, SomeResult, VoidResult};
 
 mod logging;
@@ -31,7 +28,7 @@ pub mod natives;
 
 mod helpers;
 mod state;
-use crate::{state::State, base_objects::objects::local_vehicle::LocalVehicleLocked};
+use crate::state::State;
 
 mod memory_buffer;
 pub use memory_buffer::{MemoryBuffer, MemoryBufferCreateError};
@@ -100,15 +97,7 @@ impl __exports::Exports for __exports::ExportsImpl {
             } => event::contexts::EventContext::EnteredVehicle(event::contexts::EnteredVehicle {
                 vehicle: match ty {
                     BaseObjectType::Vehicle => AnyVehicle::Server(Vehicle::new(ptr)),
-                    BaseObjectType::LocalVehicle => AnyVehicle::Local({
-                        // TODO: improve this, temp workaround
-                        thread_local! {
-                            static PTR: Cell<BaseObjectPtr> = Cell::default();
-                        }
-                        PTR.set(ptr);
-
-                        |manager| LocalVehicleLocked::new(PTR.get(), manager)
-                    }),
+                    BaseObjectType::LocalVehicle => todo!(),
                     _ => panic!("unknown vehicle type: {ty:?}"),
                 },
                 seat,

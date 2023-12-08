@@ -1,9 +1,7 @@
-use altv_wasm_shared::BaseObjectPtr;
-
 use crate::{__imports, state::State};
 use super::{
     base::private::Ptr,
-    objects::local_vehicle::{LocalVehicle, LocalVehicleLocked},
+    objects::local_vehicle::LocalVehicle,
     shared_vehicle::SharedVehicle,
     world_object::{WorldObject, ClientWorldObject},
 };
@@ -76,7 +74,3 @@ impl LocalVehicle {
 impl SharedVehicle for LocalVehicle {}
 impl WorldObject for LocalVehicle {}
 impl ClientWorldObject for LocalVehicle {}
-
-impl<'m, M> SharedVehicle for LocalVehicleLocked<'m, M> {}
-impl<'m, M> WorldObject for LocalVehicleLocked<'m, M> {}
-impl<'m, M> ClientWorldObject for LocalVehicleLocked<'m, M> {}
