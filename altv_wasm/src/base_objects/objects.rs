@@ -1,30 +1,33 @@
-use std::collections::{HashSet, hash_set};
-
+use std::collections::{HashSet, HashMap};
 use altv_wasm_shared::{BaseObjectPtr, BaseObjectType};
+use crate::__imports;
+
+#[derive(Debug)]
+pub(crate) struct ObjectData {
+    ref_count: u32,
+    ty: BaseObjectType,
+}
+
+pub(crate) type AllBaseObjects = HashMap<BaseObjectPtr, ObjectData>;
 
 macro_rules! objects {
     ( $( $class:ident )+ ) => { paste::paste! {
         #[derive(Debug, Default)]
         pub(crate) struct BaseObjectManager {
-            pub(crate) all: HashSet<BaseObjectPtr>,
+            pub(crate) all: AllBaseObjects,
         $(
-            [<$class:snake>]: HashSet<BaseObjectPtr>,
+            pub(crate) [<$class:snake>]: HashSet<BaseObjectPtr>,
         )+
         }
 
         impl BaseObjectManager {
-        $(
-            pub(crate) fn [<$class:snake _iter>](&self) -> hash_set::Iter<BaseObjectPtr> {
-                self.[<$class:snake>].iter()
-            }
-        )+
-
             pub(crate) fn on_create(&mut self, ptr: BaseObjectPtr, ty: BaseObjectType) {
                 logger::debug!("on_create base object ty: {ty:?}");
 
+                self.all.insert(ptr, ObjectData { ref_count: 0, ty });
+
                 match ty { $(
                     BaseObjectType::$class => {
-                        self.all.insert(ptr);
                         self.[<$class:snake>].insert(ptr);
                     }
                 )+
@@ -34,18 +37,39 @@ macro_rules! objects {
                 }
             }
 
-            pub(crate) fn on_destroy(&mut self, ptr: BaseObjectPtr, ty: BaseObjectType) {
+            pub(crate) fn on_destroy(&mut self, ptr: BaseObjectPtr) {
+                let data = self.all.remove(&ptr).unwrap();
+                let ty = data.ty;
+
                 logger::debug!("on_destroy base object ty: {ty:?}");
 
                 match ty { $(
                     BaseObjectType::$class => {
-                        self.all.remove(&ptr);
                         self.[<$class:snake>].remove(&ptr);
                     }
                 )+
                     _ => {
                         logger::error!("Create unknown base object: {ptr:?} {ty:?}");
                     }
+                }
+            }
+
+            pub(crate) fn add_ref(all: &mut AllBaseObjects, ptr: BaseObjectPtr) {
+                logger::debug!("add_ref {ptr:?}");
+
+                all.entry(ptr).and_modify(|data| data.ref_count += 1);
+            }
+
+            pub(crate) fn remove_ref(&mut self, ptr: BaseObjectPtr) {
+                logger::debug!("remove_ref {ptr:?}");
+
+                let data = self.all.get(&ptr).unwrap();
+
+                if data.ref_count == 1 {
+                    self.on_destroy(ptr);
+                    __imports::destroy_base_object(ptr);
+                } else {
+                    self.all.entry(ptr).and_modify(|data| data.ref_count -= 1);
                 }
             }
         }

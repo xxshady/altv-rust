@@ -2,7 +2,7 @@ use std::{collections::HashMap, fmt::Debug};
 
 use altv_wasm_shared::EventType;
 
-use crate::{Vehicle, state::State};
+use crate::state::State;
 
 pub mod contexts {
     use crate::base_objects::any_vehicle::AnyVehicle;

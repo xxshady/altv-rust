@@ -4,33 +4,61 @@ use super::{
     world_object::WorldObject,
 };
 
-#[derive(Debug, Default)]
-pub struct VehicleManager {
-    objects: Vec<Vehicle>,
-}
-
-impl VehicleManager {
-    pub fn all(&mut self) -> &[Vehicle] {
-        State::with_base_objects_ref(|base_objects, _| {
-            self.objects = base_objects
-                .vehicle_iter()
-                .map(|ptr| Vehicle::new(*ptr))
-                .collect();
+impl Vehicle {
+    /// Read all created objects.<br>
+    /// ### Why does it take a closure?
+    /// To eliminate holding `&[Vehicle]` for longer than a tick at **compile time**.
+    /// Consider this example if we would have `altv::Vehicle::all() -> &[Vehicle]` instead:
+    /// ```
+    /// async {
+    ///     let [veh] = altv::Vehicle::all() else {
+    ///         unreachable!()
+    ///     };
+    ///     altv::wait(Duration::from_secs(10)).await;
+    ///     // vehicle may already be destroyed by serverside here
+    ///     veh.id();
+    /// };
+    /// ```
+    ///
+    /// # Example
+    /// ```
+    /// let count = altv::Vehicle::read_all(|vehicles| vehicles.len());
+    /// altv::log!("vehicles count: {count}");
+    /// ```
+    pub fn read_all<R>(reader: impl FnOnce(&[Vehicle]) -> R) -> R {
+        let vehicles = State::with_base_objects_ref(|objects, _| {
+            objects
+                .vehicle
+                .iter()
+                .map(|ptr| Vehicle::internal_new_borrowed(*ptr))
+                .collect::<Vec<_>>()
         });
 
-        &self.objects
+        reader(&vehicles)
     }
 
-    pub fn get_by_id(&mut self, id: u32) -> Option<&Vehicle> {
-        self.all().iter().find(|v| v.id() == id)
+    /// Returns `None` if object was not found
+    pub fn read_by_id<R>(id: u32, reader: impl FnOnce(&Vehicle) -> R) -> Option<R> {
+        Self::read_all(|all| {
+            let object = all.iter().find(|v| v.id() == id);
+            let Some(object) = object else {
+                return None;
+            };
+            Some(reader(object))
+        })
     }
 
-    pub fn get_by_remote_id(&mut self, id: u32) -> Option<&Vehicle> {
-        self.all().iter().find(|v| v.remote_id() == id)
+    /// Returns `None` if object was not found
+    pub fn read_by_remote_id<R>(id: u32, reader: impl FnOnce(&Vehicle) -> R) -> Option<R> {
+        Self::read_all(|all| {
+            let object = all.iter().find(|v| v.remote_id() == id);
+            let Some(object) = object else {
+                return None;
+            };
+            Some(reader(object))
+        })
     }
 }
-
-impl Vehicle {}
 
 impl RemoteBaseObject for Vehicle {}
 impl SharedVehicle for Vehicle {}

@@ -1,19 +1,12 @@
 use crate::{__imports, state::State};
 use super::{
-    base::private::Ptr,
-    objects::local_vehicle::LocalVehicle,
+    objects::{local_vehicle::LocalVehicle, BaseObjectManager},
     shared_vehicle::SharedVehicle,
     world_object::{WorldObject, ClientWorldObject},
 };
 
-#[derive(Debug, Default)]
-pub struct LocalVehicleManager {
-    objects: Vec<LocalVehicle>,
-}
-
-impl LocalVehicleManager {
-    pub fn create(
-        &mut self,
+impl LocalVehicle {
+    pub fn new(
         model: u32,
         dimension: i32,
         pos_x: f32,
@@ -40,34 +33,25 @@ impl LocalVehicleManager {
 
         State::with_base_objects_mut(|mut base_objects, _| {
             base_objects.on_create(ptr, altv_wasm_shared::BaseObjectType::LocalVehicle);
-        });
-
-        LocalVehicle::new(ptr)
+            LocalVehicle::internal_new_owned(ptr, &mut base_objects.all)
+        })
     }
 
-    pub fn all(&mut self) -> &[LocalVehicle] {
-        State::with_base_objects_ref(|base_objects, _| {
-            self.objects = base_objects
-                .local_vehicle_iter()
-                .map(|ptr| LocalVehicle::new(*ptr))
-                .collect();
+    pub fn read_all<R>(reader: impl FnOnce(&[LocalVehicle]) -> R) -> R {
+        let vehicles = State::with(|state| {
+            // wtf did not know it was possible
+            let BaseObjectManager {
+                all,
+                local_vehicle,
+                vehicle: _,
+            } = &mut *state.base_objects.borrow_mut();
+
+            let ptrs = local_vehicle.iter();
+            ptrs.map(|ptr| LocalVehicle::internal_new_owned(*ptr, all))
+                .collect::<Vec<_>>()
         });
 
-        &self.objects
-    }
-
-    pub fn destroy(&mut self, object: LocalVehicle) {
-        State::with_base_objects_mut(|mut base_objects, _| {
-            base_objects.on_destroy(object.ptr(), altv_wasm_shared::BaseObjectType::LocalVehicle);
-        });
-
-        __imports::destroy_base_object(object.ptr());
-    }
-}
-
-impl LocalVehicle {
-    pub fn destroy(self, manager: &mut LocalVehicleManager) {
-        manager.destroy(self);
+        reader(&vehicles)
     }
 }
 

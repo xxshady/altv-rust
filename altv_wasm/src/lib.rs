@@ -10,8 +10,6 @@ pub use timers::{set_timeout, set_interval};
 mod base_objects;
 pub use base_objects::{
     objects::{vehicle::Vehicle, local_vehicle::LocalVehicle},
-    local_vehicle::LocalVehicleManager,
-    vehicle::VehicleManager,
     remote::RemoteBaseObject,
     shared_vehicle::SharedVehicle,
     world_object::{WorldObject, ClientWorldObject},
@@ -20,9 +18,6 @@ pub use base_objects::{
 
 mod hash;
 pub use hash::{Hash, IntoHash, hash};
-
-mod api;
-pub use api::Api;
 
 pub mod natives;
 
@@ -34,7 +29,7 @@ mod memory_buffer;
 pub use memory_buffer::{MemoryBuffer, MemoryBufferCreateError};
 
 pub use shared::Vector3;
-use altv_wasm_shared::{BaseObjectTypeRaw, BaseObjectType, BaseObjectPtr};
+use altv_wasm_shared::{BaseObjectTypeRaw, BaseObjectType};
 
 mod wasi_guest_gen;
 #[doc(hidden)]
@@ -84,7 +79,7 @@ impl __exports::Exports for __exports::ExportsImpl {
     }
 
     fn on_base_object_destroy(ptr: altv_wasm_shared::BaseObjectPtr, ty: BaseObjectTypeRaw) {
-        State::with_base_objects_mut(|mut v, _| v.on_destroy(ptr, ty.try_into().unwrap()));
+        State::with_base_objects_mut(|mut v, _| v.on_destroy(ptr));
     }
 
     fn on_event(raw: altv_wasm_shared::RawEvent) {
@@ -96,8 +91,17 @@ impl __exports::Exports for __exports::ExportsImpl {
                 seat,
             } => event::contexts::EventContext::EnteredVehicle(event::contexts::EnteredVehicle {
                 vehicle: match ty {
-                    BaseObjectType::Vehicle => AnyVehicle::Server(Vehicle::new(ptr)),
-                    BaseObjectType::LocalVehicle => todo!(),
+                    BaseObjectType::Vehicle => {
+                        AnyVehicle::Server(Vehicle::internal_new_borrowed(ptr))
+                    }
+                    BaseObjectType::LocalVehicle => {
+                        State::with_base_objects_mut(|mut objects, _| {
+                            AnyVehicle::Local(LocalVehicle::internal_new_owned(
+                                ptr,
+                                &mut objects.all,
+                            ))
+                        })
+                    }
                     _ => panic!("unknown vehicle type: {ty:?}"),
                 },
                 seat,
