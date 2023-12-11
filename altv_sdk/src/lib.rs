@@ -396,13 +396,13 @@ pub mod ffi {
         "callbacks::RuntimeResourceImplCreateCallback"
     );
 
+    #[allow(improper_ctypes_definitions)]
     #[repr(transparent)]
     pub struct ResourceOnTickCallback(pub extern "C" fn(resource_name: &str));
     impl_extern_type_callback!(ResourceOnTickCallback, "callbacks::ResourceOnTickCallback");
 
     #[allow(improper_ctypes_definitions)]
     #[repr(transparent)]
-
     pub struct ResourceOnEventCallback(
         pub extern "C" fn(name: &str, event: *const alt_bridge::alt::CEvent),
     );
