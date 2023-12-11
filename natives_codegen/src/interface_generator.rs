@@ -51,7 +51,13 @@ fn gen_funcs(natives: &[Native]) -> String {
              }: &Native| {
                 let param_declarations: String = params
                     .iter()
-                    .map(|p| format!("{}: {}", &p.name, native_type_to_interface(p.r#type.clone(), p.r#ref)))
+                    .map(|p| {
+                        format!(
+                            "{}: {}",
+                            &p.internal_name,
+                            native_type_to_interface(p.r#type.clone(), p.r#ref)
+                        )
+                    })
                     .collect::<Vec<_>>()
                     .join(", ");
 
@@ -99,19 +105,16 @@ fn native_type_to_interface(native_type: NativeType, r#ref: bool) -> &'static st
         | NativeType::TaskSequence
         | NativeType::ColourIndex
         | NativeType::Sphere
-        | NativeType::Pickup
-        => "i32",
+        | NativeType::Pickup => "i32",
 
         NativeType::Hash
         | NativeType::Entity
         | NativeType::Object
         | NativeType::Ped
-
         | NativeType::Player
         | NativeType::ScrHandle
         | NativeType::Vehicle
-        | NativeType::Train
-         => "u32",
+        | NativeType::Train => "u32",
 
         NativeType::F32 => "f32",
         NativeType::String => "Option<&String>",
@@ -123,9 +126,12 @@ fn native_type_to_interface(native_type: NativeType, r#ref: bool) -> &'static st
         // Any ref is used for memory buffers
         NativeType::MemoryBuffer => unreachable!(),
         NativeType::Any => {
-            if r#ref { "shared::MemoryBufferId" }
-            else { "i32" }
-        },
+            if r#ref {
+                "shared::MemoryBufferId"
+            } else {
+                "i32"
+            }
+        }
     }
 }
 

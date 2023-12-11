@@ -8,7 +8,7 @@ use crate::{
 };
 
 pub(crate) fn prepare() -> fs::File {
-    File::create("out/pub_api.rs").unwrap()
+    File::create("../altv_wasm/src/natives.rs").unwrap()
 }
 
 pub(crate) fn gen(native: &Native) -> String {
@@ -24,7 +24,7 @@ pub(crate) fn gen(native: &Native) -> String {
         .map(|p| {
             format!(
                 "{}: {}",
-                p.name,
+                p.rust_name,
                 native_type_to_rust(p.r#type.clone(), ValuePos::GuestParam, p.r#ref)
             )
         })
@@ -33,7 +33,7 @@ pub(crate) fn gen(native: &Native) -> String {
 
     let passed_params = params
         .iter()
-        .map(|p| p.name.clone())
+        .map(|p| p.rust_name.clone())
         .collect::<Vec<_>>()
         .join(",\n");
 
@@ -41,8 +41,8 @@ pub(crate) fn gen(native: &Native) -> String {
     let result_struct_name = result_struct_name_of(&name);
 
     formatdoc! {"
-        fn {name}({param_declarations}) -> {result_struct_name} {{
-            {internal_name}({passed_params})
+        pub fn {name}({param_declarations}) -> altv_wasm_shared::natives_result::{result_struct_name} {{
+            crate::__imports::{internal_name}({passed_params})
         }}
     "}
 }

@@ -113,14 +113,28 @@ pub(crate) fn gen(native: &Native) -> String {
 
     let native_return = cpp_impls::cpp_param_from_param(&Param {
         r#type: results[0].clone(),
-        name: NATIVE_RETURN_IDENT.to_string(),
+        internal_name: NATIVE_RETURN_IDENT.to_string(),
+        rust_name: NATIVE_RETURN_IDENT.to_string(),
         r#ref: true,
     });
     let native_return_read = native_return.context_return();
 
-    let mut result_declarations = vec![native_return.ref_declaration()];
+    let native_return_declaration = if native_return.variant() == "Any" {
+        cpp_impls::cpp_param_from_param(&Param {
+            r#type: NativeType::I32,
+            internal_name: NATIVE_RETURN_IDENT.to_string(),
+            rust_name: NATIVE_RETURN_IDENT.to_string(),
+            r#ref: true,
+        })
+        .ref_declaration()
+    } else {
+        native_return.ref_declaration()
+    };
+
+    let mut result_declarations = vec![native_return_declaration];
 
     result_declarations.append(&mut result_param_declarations);
+
     let result_declarations = result_declarations
         .into_iter()
         .filter(|v| !v.contains("VOID"))
@@ -185,6 +199,7 @@ pub(crate) fn gen(native: &Native) -> String {
 }
 
 trait CppParam {
+    fn variant(&self) -> &str;
     fn is_ref(&self) -> bool;
     fn declaration(&self) -> String;
     fn ref_declaration(&self) -> String;
@@ -211,11 +226,16 @@ macro_rules! cpp_impls {
     )+ ) => {
         $(
             struct $variant {
+                variant: &'static str,
                 name: StdString,
                 r#ref: bool,
             }
 
             impl CppParam for $variant {
+                fn variant(&self) -> &str {
+                    &self.variant
+                }
+
                 fn is_ref(&self) -> bool {
                     self.r#ref
                 }
@@ -254,7 +274,8 @@ macro_rules! cpp_impls {
             match param.r#type {
                 $(
                     NativeType::$variant => Box::new($variant {
-                        name: param.name.clone(),
+                        variant: stringify!($variant),
+                        name: param.internal_name.clone(),
                         r#ref: param.r#ref,
                     }),
                 )+

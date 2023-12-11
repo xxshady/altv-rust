@@ -1,4 +1,3 @@
-use serde::{Deserialize, Serialize};
 use altv_sdk::ffi as sdk;
 use autocxx::prelude::*;
 use shared::Vector3;

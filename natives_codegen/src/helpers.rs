@@ -80,7 +80,7 @@ pub(crate) fn ascii_camel_or_pascal_to_snake_case(str: &str) -> String {
     };
 
     for c in str.chars() {
-        if (c.is_uppercase() || c == '_') && current_part.len() > 1 {
+        if (c.is_uppercase() || c == '_') && current_part.len() > 0 {
             if c != '_' {
                 current_part.push('_');
             }

@@ -1,6 +1,7 @@
 use std::{collections::BTreeMap, fs};
 
 use serde_json::Value;
+use check_keyword::CheckKeyword;
 
 use crate::helpers::ascii_camel_or_pascal_to_snake_case;
 
@@ -51,14 +52,14 @@ pub(crate) enum NativeType {
 
 #[derive(serde::Deserialize, Debug)]
 struct RawNative {
-    name: String,
-    params: Vec<Param>,
+    params: Vec<RawParam>,
+    #[serde(alias = "altName")]
+    pub alt_name: String,
 
     // Not JSON format, needs to be parsed separately
     results: String,
 }
 
-#[derive(serde::Deserialize, Debug)]
 pub(crate) struct Native {
     pub name: String,
     pub hash: String,
@@ -69,9 +70,17 @@ pub(crate) struct Native {
 }
 
 #[derive(serde::Deserialize, Debug, Clone)]
-pub(crate) struct Param {
+pub(crate) struct RawParam {
     pub r#type: NativeType,
     pub name: String,
+    pub r#ref: bool,
+}
+
+#[derive(Clone)]
+pub(crate) struct Param {
+    pub r#type: NativeType,
+    pub internal_name: String,
+    pub rust_name: String,
     pub r#ref: bool,
 }
 
@@ -137,14 +146,16 @@ pub(crate) fn parse(local_file_path: &str, remote_file_path: &str) -> Vec<Native
                 .params
                 .into_iter()
                 .map(|v| Param {
-                    // adding '_' to param names to avoid name collision with internal params
-                    name: format!("{}_", ascii_camel_or_pascal_to_snake_case(&v.name)),
-                    ..v
+                    // adding '_' to param names to avoid name collision with internal params and keywords
+                    internal_name: format!("{}_", ascii_camel_or_pascal_to_snake_case(&v.name)),
+                    rust_name: ascii_camel_or_pascal_to_snake_case(&v.name).into_safe(),
+                    r#ref: v.r#ref,
+                    r#type: v.r#type,
                 })
                 .collect();
 
             let native = Native {
-                name: raw_native.name.to_lowercase(),
+                name: ascii_camel_or_pascal_to_snake_case(&raw_native.alt_name),
                 hash,
                 params,
                 results,

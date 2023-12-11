@@ -31,7 +31,7 @@ pub(crate) fn gen(native: &Native) -> String {
             }
             Some(format!(
                 "pub {}: {}",
-                p.name,
+                p.internal_name,
                 native_type_to_rust(p.r#type.clone(), ValuePos::GuestResult, p.r#ref),
             ))
         })

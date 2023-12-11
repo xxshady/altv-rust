@@ -14,6 +14,7 @@ pub(crate) fn gen(natives: &[Native]) -> File {
 
     file.write_all(
         formatdoc! {"
+        #![allow(unused_mut)]
         use std::cell::RefCell;
         use altv_wasm_shared::natives_result::*;
         use altv_sdk::ffi as sdk;
@@ -34,7 +35,7 @@ pub(crate) fn gen(natives: &[Native]) -> File {
             }}
         }}
 
-        impl wasm_host::gen::imports::extra_interfaces::wasm_natives for WasmNatives {{
+        impl wasm_host::gen::imports::extra_interfaces::WasmNatives for WasmNatives {{
             {call_impls}
         }}
     "}
@@ -76,7 +77,8 @@ fn gen_one(native: &Native) -> String {
                 0,
                 Param {
                     r#type,
-                    name: NATIVE_RETURN_IDENT.to_string(),
+                    internal_name: NATIVE_RETURN_IDENT.to_string(),
+                    rust_name: NATIVE_RETURN_IDENT.to_string(),
                     r#ref: true,
                 },
             );
@@ -87,7 +89,7 @@ fn gen_one(native: &Native) -> String {
 
     for p in params.iter() {
         let native_type = p.r#type.clone();
-        let cpp_value = cpp_value_of(native_type.clone(), &p.name, p.r#ref);
+        let cpp_value = cpp_value_of(native_type.clone(), &p.internal_name, p.r#ref);
 
         param_serializations.push({
             let ser = if p.r#ref {
@@ -96,26 +98,26 @@ fn gen_one(native: &Native) -> String {
                 cpp_value.ser
             };
 
-            format!("let mut {} = {ser};", p.name)
+            format!("let mut {} = {ser};", p.internal_name)
         });
 
         if p.r#ref {
             param_deserializations.push(format!(
                 "let {name} = {des};",
-                name = p.name,
+                name = p.internal_name,
                 des = cpp_value.des
             ))
         }
 
-        if p.name != NATIVE_RETURN_IDENT {
+        if p.internal_name != NATIVE_RETURN_IDENT {
             param_declarations.push(format!(
                 "{}: {}",
-                p.name,
+                p.internal_name,
                 native_type_to_rust(native_type, ValuePos::HostParam, p.r#ref)
             ));
 
             if p.r#ref {
-                result_param_names.push(p.name.clone());
+                result_param_names.push(p.internal_name.clone());
             }
         }
     }
@@ -129,7 +131,7 @@ fn gen_one(native: &Native) -> String {
 
     for p in params {
         let native_type = p.r#type.clone();
-        let cpp_value = cpp_value_of(native_type.clone(), &p.name, p.r#ref);
+        let cpp_value = cpp_value_of(native_type.clone(), &p.internal_name, p.r#ref);
 
         param_calls.push({
             let call = if p.r#ref {
@@ -188,10 +190,10 @@ struct CppValue {
 impl CppValue {
     fn primitive(param_name: &str) -> CppValue {
         CppValue {
-            ser: format!("{param_name}"),
-            ser_ref: format!("Default::default()"),
-            des: format!("{param_name}"),
-            call: format!("{param_name}"),
+            ser: param_name.to_string(),
+            ser_ref: if param_name == NATIVE_RETURN_IDENT { "Default::default()".to_string() } else { param_name.to_string() },
+            des: param_name.to_string(),
+            call: param_name.to_string(),
             call_ref: format!("&mut {param_name}"),
         }
     }
@@ -255,19 +257,25 @@ fn cpp_value_of(native_type: NativeType, param_name: &str, r#ref: bool) -> CppVa
         // Any ref is used for memory buffers
         NativeType::MemoryBuffer => unreachable!(),
         NativeType::Any => {
-            if r#ref {
-                CppValue {
-                    ser_ref: format!(
-                        "self.memory_buffers.borrow_mut().get_mut_ptr({param_name}) as *mut c_void"
-                    ),
-                    call_ref: format!("{param_name}"),
-
-                    des: format!("0"), // does not matter anyway
-                    ser: format!("MEMORY BUFFER IS ALWAYS REF"),
-                    call: format!("MEMORY BUFFER IS ALWAYS REF"),
-                }
-            } else {
-                CppValue::primitive(param_name)
+            match (r#ref, param_name) {
+                (true, NATIVE_RETURN_IDENT) => {
+                    CppValue::primitive(param_name)
+                },
+                (true, _) => {
+                    CppValue {
+                        ser_ref: format!(
+                            "self.memory_buffers.borrow_mut().get_mut_ptr({param_name}) as *mut c_void"
+                        ),
+                        call_ref: param_name.to_string(),
+    
+                        des: format!("0"), // does not matter anyway
+                        ser: format!("MEMORY BUFFER IS ALWAYS REF"),
+                        call: format!("MEMORY BUFFER IS ALWAYS REF"),
+                    }
+                },
+                (false, _) => {
+                    CppValue::primitive(param_name)
+                },
             }
         }
     }

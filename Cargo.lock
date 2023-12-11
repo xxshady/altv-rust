@@ -494,6 +494,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
+name = "check_keyword"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e4d532198271d4fb82f944bd25527e760a6cfc966c7d592525e092d4c6a4f787"
+
+[[package]]
 name = "clang-sys"
 version = "1.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1633,6 +1639,7 @@ dependencies = [
 name = "natives_codegen"
 version = "0.1.0"
 dependencies = [
+ "check_keyword",
  "indoc 2.0.4",
  "reqwest",
  "serde",

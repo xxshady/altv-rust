@@ -1,4 +1,4 @@
-use std::{fs, io::Write};
+use std::io::Write;
 
 use parser::parse;
 
@@ -16,10 +16,17 @@ fn main() {
 
     let mut cpp_file = cpp_generator::prepare();
     let mut result_struct_file = result_struct_generator::prepare();
-    // let mut pub_api_file = pub_api_generator::prepare(); // TODO: pub api wrappers
+    let mut pub_api_file = pub_api_generator::prepare();
 
-    let natives = natives.into_iter().filter(|n| n.name == "get_dlc_weapon_data").collect::<Vec<_>>();
-    dbg!(natives.len());
+    // let natives = natives
+    //     .into_iter()
+    //     .filter(|n| n.name == "get_dlc_weapon_data")
+    //     .collect::<Vec<_>>();
+    // let natives = natives
+    //     .into_iter()
+    //     .filter(|n| n.name == "datafile_get_file_dict_for_additional_data_file")
+    //     .collect::<Vec<_>>();
+    // dbg!(natives.len());
 
     for native in &natives {
         cpp_file
@@ -30,9 +37,9 @@ fn main() {
             .write_all(result_struct_generator::gen(&native).as_bytes())
             .unwrap();
 
-        // pub_api_file
-        //     .write_all(pub_api_generator::gen(&native).as_bytes())
-        //     .unwrap();
+        pub_api_file
+            .write_all(pub_api_generator::gen(&native).as_bytes())
+            .unwrap();
     }
 
     cpp_file.write_all(b"}").unwrap();
