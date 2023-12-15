@@ -1048,9 +1048,9 @@ std::string read_weapon_model_info_ammo_type(const alt::WeaponModelInfo* ptr) {
     return ptr->ammoType;
 }
 
-std::string read_weapon_model_info_model_name(const alt::WeaponModelInfo* ptr) {
-    return ptr->modelName;
-}
+// std::string read_weapon_model_info_model_name(const alt::WeaponModelInfo* ptr) {
+//     return ptr->modelName;
+// }
 
 std::string read_weapon_model_info_ammo_model_name(const alt::WeaponModelInfo* ptr) {
     return ptr->ammoModelName;
