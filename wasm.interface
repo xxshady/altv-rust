@@ -58,6 +58,8 @@ imports {
     vehicle_set_fuel_level(ptr: altv_wasm_shared::BaseObjectPtr, value: f32)
     vehicle_get_fuel_level(ptr: altv_wasm_shared::BaseObjectPtr) -> f32
 
+    entity_get_script_id(ptr: altv_wasm_shared::BaseObjectPtr) -> u32
+
     alloc_memory_buffer(size: u16) -> shared::MemoryBufferId
     dealloc_memory_buffer(id: shared::MemoryBufferId)
     read_memory_buffer(id: shared::MemoryBufferId) -> Vec<u8>

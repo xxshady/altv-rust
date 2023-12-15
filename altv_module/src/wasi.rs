@@ -186,6 +186,12 @@ impl wasm_host::gen::imports::Imports for State {
         unsafe { sdk::IVehicle::SetFuelLevel(vehicle, value) }
     }
 
+    fn entity_get_script_id(&self, ptr: altv_wasm_shared::BaseObjectPtr) -> u32 {
+        let entity = unsafe { sdk::base_object::to_entity(ptr as _) };
+        assert!(!entity.is_null());
+        unsafe { sdk::IEntity::GetScriptID(entity) }
+    }
+
     fn alloc_memory_buffer(&self, size: u16) -> MemoryBufferId {
         self.natives.memory_buffers.borrow_mut().alloc(size)
     }
