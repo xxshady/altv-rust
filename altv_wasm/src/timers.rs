@@ -190,7 +190,11 @@ pub fn set_timeout<R: IntoVoidResult>(
 
 pub fn set_interval<R: IntoVoidResult>(
     mut callback: impl FnMut() -> R + 'static,
-    ms: u64,
+    duration: Duration,
 ) -> Timer {
-    create_timer(Box::new(move || callback().into_void_result()), ms, false)
+    create_timer(
+        Box::new(move || callback().into_void_result()),
+        duration.as_millis() as u64, // TODO: use Duration
+        false,
+    )
 }
