@@ -2,10 +2,13 @@ use std::collections::{HashSet, HashMap};
 use altv_wasm_shared::{BaseObjectPtr, BaseObjectType};
 use crate::__imports;
 
+use super::kind::BaseObjectKind;
+
 #[derive(Debug)]
 pub(crate) struct ObjectData {
     ref_count: u32,
     ty: BaseObjectType,
+    pub(crate) kind: BaseObjectKind,
 }
 
 pub(crate) type AllBaseObjects = HashMap<BaseObjectPtr, ObjectData>;
@@ -21,10 +24,10 @@ macro_rules! objects {
         }
 
         impl BaseObjectManager {
-            pub(crate) fn on_create(&mut self, ptr: BaseObjectPtr, ty: BaseObjectType) {
+            pub(crate) fn on_create(&mut self, ptr: BaseObjectPtr, ty: BaseObjectType, kind: BaseObjectKind) {
                 logger::debug!("on_create base object ty: {ty:?}");
 
-                self.all.insert(ptr, ObjectData { ref_count: 0, ty });
+                self.all.insert(ptr, ObjectData { ref_count: 0, ty, kind });
 
                 match ty { $(
                     BaseObjectType::$class => {

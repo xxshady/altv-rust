@@ -13,7 +13,7 @@ pub trait WorldObject: Ptr {
     }
 }
 
-// TODO: world object setters for server entities
+// TODO: world object setters for server entities (netowner checks)
 // pub trait ServerWorldObject: WorldObject {
 //     fn set_pos(&self, value: Vector3) -> VoidResult {
 //         __imports::world_object_set_pos(self.ptr(), value);

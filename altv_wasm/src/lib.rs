@@ -14,6 +14,7 @@ pub use base_objects::{
     shared_vehicle::SharedVehicle,
     world_object::{WorldObject, ClientWorldObject},
     any_vehicle::AnyVehicle,
+    local_vehicle::{LocalVehicleStatic, LocalVehicleStreamed},
 };
 
 mod hash;
@@ -23,7 +24,10 @@ pub mod natives;
 
 mod helpers;
 mod state;
-use crate::state::State;
+use crate::{
+    state::State,
+    base_objects::{objects::ObjectData, kind::BaseObjectKind},
+};
 
 mod memory_buffer;
 pub use memory_buffer::{MemoryBuffer, MemoryBufferCreateError};
@@ -75,7 +79,13 @@ impl __exports::Exports for __exports::ExportsImpl {
     }
 
     fn on_base_object_create(ptr: altv_wasm_shared::BaseObjectPtr, ty: BaseObjectTypeRaw) {
-        State::with_base_objects_mut(|mut v, _| v.on_create(ptr, ty.try_into().unwrap()));
+        let ty = ty.try_into().unwrap();
+        let kind = match ty {
+            BaseObjectType::LocalVehicle => BaseObjectKind::LocalVehicleUnknown,
+            _ => BaseObjectKind::Other,
+        };
+
+        State::with_base_objects_mut(|mut v, _| v.on_create(ptr, ty, kind));
     }
 
     fn on_base_object_destroy(ptr: altv_wasm_shared::BaseObjectPtr, ty: BaseObjectTypeRaw) {
@@ -92,14 +102,23 @@ impl __exports::Exports for __exports::ExportsImpl {
             } => event::contexts::EventContext::EnteredVehicle(event::contexts::EnteredVehicle {
                 vehicle: match ty {
                     BaseObjectType::Vehicle => {
-                        AnyVehicle::Server(Vehicle::internal_new_borrowed(ptr))
+                        AnyVehicle::Vehicle(Vehicle::internal_new_borrowed(ptr))
                     }
                     BaseObjectType::LocalVehicle => {
-                        State::with_base_objects_mut(|mut objects, _| {
-                            AnyVehicle::Local(LocalVehicle::internal_new_owned(
+                        State::with_base_objects_mut(|mut objects, _| match objects.all.get(&ptr) {
+                            None => {
+                                panic!("Unknown local vehicle ptr: {ptr}");
+                            }
+                            Some(ObjectData {
+                                kind: BaseObjectKind::LocalVehicleUnknown,
+                                ..
+                            }) => {
+                                AnyVehicle::LocalVehicle(LocalVehicle::internal_new_borrowed(ptr))
+                            }
+                            Some(_) => AnyVehicle::LocalVehicle(LocalVehicle::internal_new_owned(
                                 ptr,
                                 &mut objects.all,
-                            ))
+                            )),
                         })
                     }
                     _ => panic!("unknown vehicle type: {ty:?}"),

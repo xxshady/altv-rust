@@ -1,14 +1,27 @@
 use indoc::formatdoc;
-use std::fs::{self, File};
+use std::{
+    fs::{self, File},
+    io::Write,
+};
 
 use crate::{
     helpers::{internal_name_of, native_type_to_rust, ValuePos},
-    parser::Native,
+    parser::{Native, NativeType},
     result_struct_generator::result_struct_name_of,
 };
 
 pub(crate) fn prepare() -> fs::File {
-    File::create("../altv_wasm/src/natives.rs").unwrap()
+    let mut file = File::create("../altv_wasm/src/natives.rs").unwrap();
+
+    file.write_all(
+        formatdoc! {"
+            use crate::base_objects::script_id::VehicleScriptId;
+        "}
+        .as_bytes(),
+    )
+    .unwrap();
+
+    file
 }
 
 pub(crate) fn gen(native: &Native) -> String {
@@ -25,7 +38,12 @@ pub(crate) fn gen(native: &Native) -> String {
             format!(
                 "{}: {}",
                 p.rust_name,
-                native_type_to_rust(p.r#type.clone(), ValuePos::GuestParam, p.r#ref)
+                pub_api_types::native_type_to_pub_api(
+                    p.r#type.clone(),
+                    ValuePos::GuestParam,
+                    p.r#ref
+                )
+                .r#type()
             )
         })
         .collect::<Vec<_>>()
@@ -33,7 +51,10 @@ pub(crate) fn gen(native: &Native) -> String {
 
     let passed_params = params
         .iter()
-        .map(|p| p.rust_name.clone())
+        .map(|p| {
+            pub_api_types::native_type_to_pub_api(p.r#type.clone(), ValuePos::GuestParam, p.r#ref)
+                .usage(&p.rust_name)
+        })
         .collect::<Vec<_>>()
         .join(",\n");
 
@@ -45,4 +66,56 @@ pub(crate) fn gen(native: &Native) -> String {
             crate::__imports::{internal_name}({passed_params})
         }}
     "}
+}
+
+mod pub_api_types {
+    use super::*;
+
+    pub(super) trait PubApiType {
+        fn r#type(&self) -> &'static str;
+        fn usage(&self, param_name: &str) -> String;
+    }
+
+    pub(super) struct Vehicle {
+        r#type: &'static str,
+    }
+
+    impl PubApiType for Vehicle {
+        fn r#type(&self) -> &'static str {
+            self.r#type
+        }
+
+        fn usage(&self, param_name: &str) -> String {
+            format!("{param_name}.0")
+        }
+    }
+
+    pub(super) struct AnythingElse {
+        r#type: &'static str,
+    }
+
+    impl PubApiType for AnythingElse {
+        fn r#type(&self) -> &'static str {
+            self.r#type
+        }
+
+        fn usage(&self, param_name: &str) -> String {
+            param_name.to_string()
+        }
+    }
+
+    pub(super) fn native_type_to_pub_api(
+        native_type: NativeType,
+        pos: ValuePos,
+        r#ref: bool,
+    ) -> Box<dyn PubApiType> {
+        match native_type {
+            NativeType::Vehicle => Box::new(Vehicle {
+                r#type: "&VehicleScriptId",
+            }),
+            _ => Box::new(AnythingElse {
+                r#type: native_type_to_rust(native_type, pos, r#ref),
+            }),
+        }
+    }
 }

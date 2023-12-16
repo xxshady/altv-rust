@@ -1,8 +1,11 @@
 pub mod base;
 pub mod objects;
-pub mod local_vehicle;
 pub mod vehicle;
 pub mod remote;
 pub mod shared_vehicle;
 pub mod world_object;
+pub mod any_entity;
 pub mod any_vehicle;
+pub mod local_vehicle;
+pub mod script_id;
+pub(crate) mod kind;

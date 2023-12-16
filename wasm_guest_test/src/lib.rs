@@ -1,6 +1,6 @@
-use std::time::Duration;
+use std::{time::Duration, rc::Rc, cell::RefCell};
 
-use altv::{event::EventHandler, dbg};
+use altv::{event::EventHandler, dbg, natives, log};
 
 #[no_mangle]
 extern "C" fn main() {
@@ -8,66 +8,52 @@ extern "C" fn main() {
 
     // TODO: retrieve base objects that were created before this resource started
 
-    let veh = altv::LocalVehicle::new(altv::hash("sultan"), 0, 0., 0., 72., 0., 0., 0., false, 0);
-    let mut veh = Some(veh);
+    let veh = Rc::new(RefCell::new(None));
 
-    altv::event::add_handler(EventHandler::EnteredVehicle(Box::new(move |cx| {
-        let all_count = altv::LocalVehicle::read_all(|all| {
-            dbg!(all);
-            all.len()
-        });
-        dbg!(all_count);
+    let v = veh.clone();
+    altv::spawn_async(async move {
+        let veh_ =
+            altv::LocalVehicle::new_static(altv::hash("driftremus"), 0, 0., 0., 72., 0., 0., 0.)
+                .await?;
 
-        dbg!(veh.as_ref().unwrap().id());
-        veh.take().unwrap(); // drop it
+        let s = veh_.script_id();
+        natives::set_vehicle_custom_primary_colour(s, 255, 0, 0);
 
-        let altv::AnyVehicle::Local(ref veh) = cx.vehicle else {
-            unreachable!();
-        };
-        dbg!(veh.id());
+        v.borrow_mut().replace(veh_);
 
-        let all_count = altv::LocalVehicle::read_all(|all| {
-            dbg!(all);
-            all.len()
-        });
-        dbg!(all_count);
-
-        altv::set_timeout(
-            || {
-                let all_count = altv::LocalVehicle::read_all(|all| {
-                    dbg!(all);
-                    all.len()
-                });
-                dbg!(all_count);
-            },
-            Duration::from_millis(500),
-        );
-    })));
-
-    altv::spawn_async(async {
-        loop {
-            altv::Vehicle::read_all(|all| {
-                altv::log!("all vehicles count: {}", all.len());
-                if all.len() == 0 {
-                    return;
-                }
-                let [veh] = all else {
-                    unreachable!();
-                };
-                altv::Vehicle::read_by_id(veh.id(), |v| {
-                    dbg!(v.id() == veh.id());
-
-                    altv::Vehicle::read_all(|all| {
-                        dbg!(all.iter().map(|v| v.id()).collect::<Vec<_>>());
-                    });
-
-                    // altv::Vehicle::read_by_id(v.id(), |vv| {
-                    //     dbg!(vv.id() == veh.id());
-                    // });
-                });
-            });
-            altv::wait(Duration::from_secs(1)).await;
-        }
+        Ok(())
     })
     .unwrap();
+
+    altv::event::add_handler(EventHandler::EnteredVehicle(Box::new(move |cx| {
+        let altv::AnyVehicle::LocalVehicle(ref veh_ref) = cx.vehicle else {
+            unreachable!();
+        };
+        dbg!(veh_ref.id());
+
+        {
+            let veh = veh.borrow();
+            let veh = veh.as_ref().unwrap();
+
+            if veh_ref != veh {
+                log!("entered other local vehicle");
+                return;
+            }
+        }
+
+        let veh = veh.borrow_mut().take().unwrap();
+        let s = veh.script_id();
+        natives::set_vehicle_mod_kit(s, 0);
+        natives::set_vehicle_custom_primary_colour(s, 0, 255, 0);
+
+        altv::spawn_async(async move {
+            let s = veh.script_id();
+            for i in 1..=10 {
+                natives::set_vehicle_mod(s, 0, i, false);
+                altv::wait(Duration::from_millis(500)).await;
+            }
+            std::mem::forget(veh);
+        })
+        .unwrap();
+    })));
 }

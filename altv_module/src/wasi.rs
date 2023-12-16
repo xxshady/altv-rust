@@ -170,7 +170,6 @@ impl wasm_host::gen::imports::Imports for State {
         set_pending_base_object(false);
 
         let ptr = unsafe { sdk::local_vehicle::to_base_object(local_vehicle) };
-        assert!(!ptr.is_null());
         ptr as altv_wasm_shared::BaseObjectPtr
     }
 

@@ -1,3 +1,4 @@
+use crate::base_objects::script_id::VehicleScriptId;
 pub fn app_get_float(property: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfAppGetFloat {
     crate::__imports::native_app_get_float(property)
 }
@@ -61,16 +62,16 @@ pub fn start_audio_scene(scene: Option<&String>) -> altv_wasm_shared::natives_re
 pub fn unrequest_tennis_banks() -> altv_wasm_shared::natives_result::ResultOfUnrequestTennisBanks {
     crate::__imports::native_unrequest_tennis_banks()
 }
-pub fn set_vehicle_audio_body_damage_factor(vehicle: u32,
+pub fn set_vehicle_audio_body_damage_factor(vehicle: &VehicleScriptId,
 intensity: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleAudioBodyDamageFactor {
-    crate::__imports::native_set_vehicle_audio_body_damage_factor(vehicle,
+    crate::__imports::native_set_vehicle_audio_body_damage_factor(vehicle.0,
 intensity)
 }
 pub fn is_ambient_zone_enabled(ambient_zone: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfIsAmbientZoneEnabled {
     crate::__imports::native_is_ambient_zone_enabled(ambient_zone)
 }
-pub fn get_vehicle_default_horn(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleDefaultHorn {
-    crate::__imports::native_get_vehicle_default_horn(vehicle)
+pub fn get_vehicle_default_horn(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleDefaultHorn {
+    crate::__imports::native_get_vehicle_default_horn(vehicle.0)
 }
 pub fn prepare_synchronized_audio_event_for_scene(scene_i_d: i32,
 audio_event: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfPrepareSynchronizedAudioEventForScene {
@@ -85,12 +86,12 @@ track_list_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfU
     crate::__imports::native_unlock_radio_station_track_list(radio_station,
 track_list_name)
 }
-pub fn can_vehicle_receive_cb_radio(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfCanVehicleReceiveCbRadio {
-    crate::__imports::native_can_vehicle_receive_cb_radio(vehicle)
+pub fn can_vehicle_receive_cb_radio(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfCanVehicleReceiveCbRadio {
+    crate::__imports::native_can_vehicle_receive_cb_radio(vehicle.0)
 }
-pub fn set_vehicle_horn_sound_index(vehicle: u32,
+pub fn set_vehicle_horn_sound_index(vehicle: &VehicleScriptId,
 value: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleHornSoundIndex {
-    crate::__imports::native_set_vehicle_horn_sound_index(vehicle,
+    crate::__imports::native_set_vehicle_horn_sound_index(vehicle.0,
 value)
 }
 pub fn start_alarm(alarm_name: Option<&String>,
@@ -130,8 +131,8 @@ voice_group_hash: u32) -> altv_wasm_shared::natives_result::ResultOfSetPedVoiceG
     crate::__imports::native_set_ped_voice_group_from_race_to_pvg(ped,
 voice_group_hash)
 }
-pub fn is_vehicle_radio_on(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleRadioOn {
-    crate::__imports::native_is_vehicle_radio_on(vehicle)
+pub fn is_vehicle_radio_on(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleRadioOn {
+    crate::__imports::native_is_vehicle_radio_on(vehicle.0)
 }
 pub fn release_mission_audio_bank() -> altv_wasm_shared::natives_result::ResultOfReleaseMissionAudioBank {
     crate::__imports::native_release_mission_audio_bank()
@@ -198,17 +199,17 @@ voice_group: u32) -> altv_wasm_shared::natives_result::ResultOfSetPedRaceAndVoic
 p1,
 voice_group)
 }
-pub fn blip_siren(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfBlipSiren {
-    crate::__imports::native_blip_siren(vehicle)
+pub fn blip_siren(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfBlipSiren {
+    crate::__imports::native_blip_siren(vehicle.0)
 }
-pub fn set_veh_radio_station(vehicle: u32,
+pub fn set_veh_radio_station(vehicle: &VehicleScriptId,
 radio_station: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfSetVehRadioStation {
-    crate::__imports::native_set_veh_radio_station(vehicle,
+    crate::__imports::native_set_veh_radio_station(vehicle.0,
 radio_station)
 }
-pub fn enable_vehicle_fanbelt_damage(vehicle: u32,
+pub fn enable_vehicle_fanbelt_damage(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfEnableVehicleFanbeltDamage {
-    crate::__imports::native_enable_vehicle_fanbelt_damage(vehicle,
+    crate::__imports::native_enable_vehicle_fanbelt_damage(vehicle.0,
 toggle)
 }
 pub fn set_ambient_zone_state_persistent(ambient_zone: Option<&String>,
@@ -229,9 +230,9 @@ sound_set: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfLoadStr
     crate::__imports::native_load_stream(stream_name,
 sound_set)
 }
-pub fn set_siren_with_no_driver(vehicle: u32,
+pub fn set_siren_with_no_driver(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetSirenWithNoDriver {
-    crate::__imports::native_set_siren_with_no_driver(vehicle,
+    crate::__imports::native_set_siren_with_no_driver(vehicle.0,
 toggle)
 }
 pub fn play_stream_from_position(x: f32,
@@ -268,9 +269,9 @@ pub fn unblock_speech_context_group(p0: Option<&String>) -> altv_wasm_shared::na
 pub fn is_radio_station_favourited(radio_station: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfIsRadioStationFavourited {
     crate::__imports::native_is_radio_station_favourited(radio_station)
 }
-pub fn enable_vehicle_exhaust_pops(vehicle: u32,
+pub fn enable_vehicle_exhaust_pops(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfEnableVehicleExhaustPops {
-    crate::__imports::native_enable_vehicle_exhaust_pops(vehicle,
+    crate::__imports::native_enable_vehicle_exhaust_pops(vehicle.0,
 toggle)
 }
 pub fn set_radio_frontend_fade_time(fade_time: f32) -> altv_wasm_shared::natives_result::ResultOfSetRadioFrontendFadeTime {
@@ -347,9 +348,9 @@ toggle)
 pub fn get_music_vol_slider() -> altv_wasm_shared::natives_result::ResultOfGetMusicVolSlider {
     crate::__imports::native_get_music_vol_slider()
 }
-pub fn play_vehicle_door_open_sound(vehicle: u32,
+pub fn play_vehicle_door_open_sound(vehicle: &VehicleScriptId,
 door_id: i32) -> altv_wasm_shared::natives_result::ResultOfPlayVehicleDoorOpenSound {
-    crate::__imports::native_play_vehicle_door_open_sound(vehicle,
+    crate::__imports::native_play_vehicle_door_open_sound(vehicle.0,
 door_id)
 }
 pub fn preload_script_conversation(p0: bool,
@@ -364,23 +365,23 @@ p3)
 pub fn set_cutscene_audio_override(name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfSetCutsceneAudioOverride {
     crate::__imports::native_set_cutscene_audio_override(name)
 }
-pub fn set_vehicle_radio_enabled(vehicle: u32,
+pub fn set_vehicle_radio_enabled(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleRadioEnabled {
-    crate::__imports::native_set_vehicle_radio_enabled(vehicle,
+    crate::__imports::native_set_vehicle_radio_enabled(vehicle.0,
 toggle)
 }
 pub fn set_gps_active(active: bool) -> altv_wasm_shared::natives_result::ResultOfSetGpsActive {
     crate::__imports::native_set_gps_active(active)
 }
-pub fn override_veh_horn(vehicle: u32,
+pub fn override_veh_horn(vehicle: &VehicleScriptId,
 r#override: bool,
 horn_hash: i32) -> altv_wasm_shared::natives_result::ResultOfOverrideVehHorn {
-    crate::__imports::native_override_veh_horn(vehicle,
+    crate::__imports::native_override_veh_horn(vehicle.0,
 r#override,
 horn_hash)
 }
-pub fn set_veh_has_normal_radio(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfSetVehHasNormalRadio {
-    crate::__imports::native_set_veh_has_normal_radio(vehicle)
+pub fn set_veh_has_normal_radio(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetVehHasNormalRadio {
+    crate::__imports::native_set_veh_has_normal_radio(vehicle.0)
 }
 pub fn get_current_track_play_time(radio_station_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfGetCurrentTrackPlayTime {
     crate::__imports::native_get_current_track_play_time(radio_station_name)
@@ -398,9 +399,9 @@ pub fn set_ped_voice_full(ped: u32) -> altv_wasm_shared::natives_result::ResultO
 pub fn get_sound_id() -> altv_wasm_shared::natives_result::ResultOfGetSoundId {
     crate::__imports::native_get_sound_id()
 }
-pub fn set_siren_can_be_controlled_by_audio(vehicle: u32,
+pub fn set_siren_can_be_controlled_by_audio(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetSirenCanBeControlledByAudio {
-    crate::__imports::native_set_siren_can_be_controlled_by_audio(vehicle,
+    crate::__imports::native_set_siren_can_be_controlled_by_audio(vehicle.0,
 p1)
 }
 pub fn lock_radio_station(radio_station_name: Option<&String>,
@@ -421,9 +422,9 @@ p2: bool) -> altv_wasm_shared::natives_result::ResultOfDoesContextExistForThisPe
 speech_name,
 p2)
 }
-pub fn set_vehicle_boost_active(vehicle: u32,
+pub fn set_vehicle_boost_active(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleBoostActive {
-    crate::__imports::native_set_vehicle_boost_active(vehicle,
+    crate::__imports::native_set_vehicle_boost_active(vehicle.0,
 toggle)
 }
 pub fn request_tennis_banks(ped: u32) -> altv_wasm_shared::natives_result::ResultOfRequestTennisBanks {
@@ -451,9 +452,9 @@ p2)
 pub fn get_stream_play_time() -> altv_wasm_shared::natives_result::ResultOfGetStreamPlayTime {
     crate::__imports::native_get_stream_play_time()
 }
-pub fn force_use_audio_game_object(vehicle: u32,
+pub fn force_use_audio_game_object(vehicle: &VehicleScriptId,
 audio_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfForceUseAudioGameObject {
-    crate::__imports::native_force_use_audio_game_object(vehicle,
+    crate::__imports::native_force_use_audio_game_object(vehicle.0,
 audio_name)
 }
 pub fn get_audible_music_track_text_id() -> altv_wasm_shared::natives_result::ResultOfGetAudibleMusicTrackTextId {
@@ -489,9 +490,9 @@ sound_set: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfLoadStr
 start_offset,
 sound_set)
 }
-pub fn set_vehicle_audio_engine_damage_factor(vehicle: u32,
+pub fn set_vehicle_audio_engine_damage_factor(vehicle: &VehicleScriptId,
 damage_factor: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleAudioEngineDamageFactor {
-    crate::__imports::native_set_vehicle_audio_engine_damage_factor(vehicle,
+    crate::__imports::native_set_vehicle_audio_engine_damage_factor(vehicle.0,
 damage_factor)
 }
 pub fn cancel_music_event(event_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfCancelMusicEvent {
@@ -516,8 +517,8 @@ p5)
 pub fn refresh_closest_ocean_shoreline() -> altv_wasm_shared::natives_result::ResultOfRefreshClosestOceanShoreline {
     crate::__imports::native_refresh_closest_ocean_shoreline()
 }
-pub fn is_vehicle_audibly_damaged(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleAudiblyDamaged {
-    crate::__imports::native_is_vehicle_audibly_damaged(vehicle)
+pub fn is_vehicle_audibly_damaged(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleAudiblyDamaged {
+    crate::__imports::native_is_vehicle_audibly_damaged(vehicle.0)
 }
 pub fn get_ambient_voice_name_hash(ped: u32) -> altv_wasm_shared::natives_result::ResultOfGetAmbientVoiceNameHash {
     crate::__imports::native_get_ambient_voice_name_hash(ped)
@@ -533,9 +534,9 @@ p1)
 pub fn set_conversation_audio_placeholder(p0: bool) -> altv_wasm_shared::natives_result::ResultOfSetConversationAudioPlaceholder {
     crate::__imports::native_set_conversation_audio_placeholder(p0)
 }
-pub fn play_vehicle_door_close_sound(vehicle: u32,
+pub fn play_vehicle_door_close_sound(vehicle: &VehicleScriptId,
 door_id: i32) -> altv_wasm_shared::natives_result::ResultOfPlayVehicleDoorCloseSound {
-    crate::__imports::native_play_vehicle_door_close_sound(vehicle,
+    crate::__imports::native_play_vehicle_door_close_sound(vehicle.0,
 door_id)
 }
 pub fn link_static_emitter_to_entity(emitter_name: Option<&String>,
@@ -546,8 +547,8 @@ entity)
 pub fn release_ambient_audio_bank() -> altv_wasm_shared::natives_result::ResultOfReleaseAmbientAudioBank {
     crate::__imports::native_release_ambient_audio_bank()
 }
-pub fn trigger_siren_audio(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfTriggerSirenAudio {
-    crate::__imports::native_trigger_siren_audio(vehicle)
+pub fn trigger_siren_audio(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfTriggerSirenAudio {
+    crate::__imports::native_trigger_siren_audio(vehicle.0)
 }
 pub fn is_mission_news_story_unlocked(news_story: i32) -> altv_wasm_shared::natives_result::ResultOfIsMissionNewsStoryUnlocked {
     crate::__imports::native_is_mission_news_story_unlocked(news_story)
@@ -587,9 +588,9 @@ pub fn skip_radio_forward() -> altv_wasm_shared::natives_result::ResultOfSkipRad
 pub fn is_mission_complete_ready_for_ui() -> altv_wasm_shared::natives_result::ResultOfIsMissionCompleteReadyForUi {
     crate::__imports::native_is_mission_complete_ready_for_ui()
 }
-pub fn set_player_vehicle_alarm_audio_active(vehicle: u32,
+pub fn set_player_vehicle_alarm_audio_active(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetPlayerVehicleAlarmAudioActive {
-    crate::__imports::native_set_player_vehicle_alarm_audio_active(vehicle,
+    crate::__imports::native_set_player_vehicle_alarm_audio_active(vehicle.0,
 toggle)
 }
 pub fn trigger_music_event(event_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfTriggerMusicEvent {
@@ -626,9 +627,9 @@ toggle: bool) -> altv_wasm_shared::natives_result::ResultOfOverrideMicrophoneSet
     crate::__imports::native_override_microphone_settings(hash,
 toggle)
 }
-pub fn set_horn_enabled(vehicle: u32,
+pub fn set_horn_enabled(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetHornEnabled {
-    crate::__imports::native_set_horn_enabled(vehicle,
+    crate::__imports::native_set_horn_enabled(vehicle.0,
 toggle)
 }
 pub fn set_radio_station_music_only(radio_station: Option<&String>,
@@ -804,12 +805,12 @@ p2: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleConversationsPe
 p1,
 p2)
 }
-pub fn set_horn_permanently_on(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfSetHornPermanentlyOn {
-    crate::__imports::native_set_horn_permanently_on(vehicle)
+pub fn set_horn_permanently_on(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetHornPermanentlyOn {
+    crate::__imports::native_set_horn_permanently_on(vehicle.0)
 }
-pub fn set_horn_permanently_on_time(vehicle: u32,
+pub fn set_horn_permanently_on_time(vehicle: &VehicleScriptId,
 time: f32) -> altv_wasm_shared::natives_result::ResultOfSetHornPermanentlyOnTime {
-    crate::__imports::native_set_horn_permanently_on_time(vehicle,
+    crate::__imports::native_set_horn_permanently_on_time(vehicle.0,
 time)
 }
 pub fn stop_ped_speaking(ped: u32,
@@ -817,8 +818,8 @@ shaking: bool) -> altv_wasm_shared::natives_result::ResultOfStopPedSpeaking {
     crate::__imports::native_stop_ped_speaking(ped,
 shaking)
 }
-pub fn is_horn_active(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsHornActive {
-    crate::__imports::native_is_horn_active(vehicle)
+pub fn is_horn_active(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsHornActive {
+    crate::__imports::native_is_horn_active(vehicle.0)
 }
 pub fn prepare_alarm(alarm_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfPrepareAlarm {
     crate::__imports::native_prepare_alarm(alarm_name)
@@ -882,8 +883,8 @@ p1: bool) -> altv_wasm_shared::natives_result::ResultOfStopPedSpeakingSynced {
     crate::__imports::native_stop_ped_speaking_synced(ped,
 p1)
 }
-pub fn get_vehicle_default_horn_ignore_mods(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleDefaultHornIgnoreMods {
-    crate::__imports::native_get_vehicle_default_horn_ignore_mods(vehicle)
+pub fn get_vehicle_default_horn_ignore_mods(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleDefaultHornIgnoreMods {
+    crate::__imports::native_get_vehicle_default_horn_ignore_mods(vehicle.0)
 }
 pub fn set_emitter_radio_station(emitter_name: Option<&String>,
 radio_station: Option<&String>,
@@ -952,8 +953,8 @@ x3,
 y3,
 z3)
 }
-pub fn play_stream_from_vehicle(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfPlayStreamFromVehicle {
-    crate::__imports::native_play_stream_from_vehicle(vehicle)
+pub fn play_stream_from_vehicle(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfPlayStreamFromVehicle {
+    crate::__imports::native_play_stream_from_vehicle(vehicle.0)
 }
 pub fn enable_stunt_jump_audio() -> altv_wasm_shared::natives_result::ResultOfEnableStuntJumpAudio {
     crate::__imports::native_enable_stunt_jump_audio()
@@ -969,9 +970,9 @@ toggle)
 pub fn stop_audio_scenes() -> altv_wasm_shared::natives_result::ResultOfStopAudioScenes {
     crate::__imports::native_stop_audio_scenes()
 }
-pub fn set_vehicle_radio_loud(vehicle: u32,
+pub fn set_vehicle_radio_loud(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleRadioLoud {
-    crate::__imports::native_set_vehicle_radio_loud(vehicle,
+    crate::__imports::native_set_vehicle_radio_loud(vehicle.0,
 toggle)
 }
 pub fn play_pain(ped: u32,
@@ -1008,13 +1009,13 @@ hash: u32) -> altv_wasm_shared::natives_result::ResultOfUseFootstepScriptSweeten
 p1,
 hash)
 }
-pub fn enable_stall_warning_sounds(vehicle: u32,
+pub fn enable_stall_warning_sounds(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfEnableStallWarningSounds {
-    crate::__imports::native_enable_stall_warning_sounds(vehicle,
+    crate::__imports::native_enable_stall_warning_sounds(vehicle.0,
 toggle)
 }
-pub fn set_veh_forced_radio_this_frame(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfSetVehForcedRadioThisFrame {
-    crate::__imports::native_set_veh_forced_radio_this_frame(vehicle)
+pub fn set_veh_forced_radio_this_frame(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetVehForcedRadioThisFrame {
+    crate::__imports::native_set_veh_forced_radio_this_frame(vehicle.0)
 }
 pub fn set_radio_auto_unfreeze(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetRadioAutoUnfreeze {
     crate::__imports::native_set_radio_auto_unfreeze(toggle)
@@ -1124,11 +1125,11 @@ toggle: bool) -> altv_wasm_shared::natives_result::ResultOfOverridePlayerGroundM
     crate::__imports::native_override_player_ground_material(hash,
 toggle)
 }
-pub fn reset_vehicle_startup_rev_sound(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfResetVehicleStartupRevSound {
-    crate::__imports::native_reset_vehicle_startup_rev_sound(vehicle)
+pub fn reset_vehicle_startup_rev_sound(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfResetVehicleStartupRevSound {
+    crate::__imports::native_reset_vehicle_startup_rev_sound(vehicle.0)
 }
-pub fn get_vehicle_horn_sound_index(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleHornSoundIndex {
-    crate::__imports::native_get_vehicle_horn_sound_index(vehicle)
+pub fn get_vehicle_horn_sound_index(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleHornSoundIndex {
+    crate::__imports::native_get_vehicle_horn_sound_index(vehicle.0)
 }
 pub fn freeze_microphone() -> altv_wasm_shared::natives_result::ResultOfFreezeMicrophone {
     crate::__imports::native_freeze_microphone()
@@ -1159,9 +1160,9 @@ p1)
 pub fn stop_smoke_grenade_explosion_sounds() -> altv_wasm_shared::natives_result::ResultOfStopSmokeGrenadeExplosionSounds {
     crate::__imports::native_stop_smoke_grenade_explosion_sounds()
 }
-pub fn set_audio_vehicle_priority(vehicle: u32,
+pub fn set_audio_vehicle_priority(vehicle: &VehicleScriptId,
 p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetAudioVehiclePriority {
-    crate::__imports::native_set_audio_vehicle_priority(vehicle,
+    crate::__imports::native_set_audio_vehicle_priority(vehicle.0,
 p1)
 }
 pub fn play_sound_from_entity(sound_id: i32,
@@ -1230,10 +1231,10 @@ pub fn block_death_jingle(toggle: bool) -> altv_wasm_shared::natives_result::Res
 pub fn get_num_unlocked_radio_stations() -> altv_wasm_shared::natives_result::ResultOfGetNumUnlockedRadioStations {
     crate::__imports::native_get_num_unlocked_radio_stations()
 }
-pub fn set_vehicle_startup_rev_sound(vehicle: u32,
+pub fn set_vehicle_startup_rev_sound(vehicle: &VehicleScriptId,
 p1: Option<&String>,
 p2: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfSetVehicleStartupRevSound {
-    crate::__imports::native_set_vehicle_startup_rev_sound(vehicle,
+    crate::__imports::native_set_vehicle_startup_rev_sound(vehicle.0,
 p1,
 p2)
 }
@@ -1242,9 +1243,9 @@ p1: bool) -> altv_wasm_shared::natives_result::ResultOfOverrideUnderwaterStream 
     crate::__imports::native_override_underwater_stream(p0,
 p1)
 }
-pub fn set_vehicle_missile_warning_enabled(vehicle: u32,
+pub fn set_vehicle_missile_warning_enabled(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleMissileWarningEnabled {
-    crate::__imports::native_set_vehicle_missile_warning_enabled(vehicle,
+    crate::__imports::native_set_vehicle_missile_warning_enabled(vehicle.0,
 toggle)
 }
 pub fn set_ambient_zone_list_state_persistent(ambient_zone: Option<&String>,
@@ -1257,9 +1258,9 @@ p2)
 pub fn reset_ped_audio_flags(ped: u32) -> altv_wasm_shared::natives_result::ResultOfResetPedAudioFlags {
     crate::__imports::native_reset_ped_audio_flags(ped)
 }
-pub fn set_siren_bypass_mp_driver_check(vehicle: u32,
+pub fn set_siren_bypass_mp_driver_check(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetSirenBypassMpDriverCheck {
-    crate::__imports::native_set_siren_bypass_mp_driver_check(vehicle,
+    crate::__imports::native_set_siren_bypass_mp_driver_check(vehicle.0,
 toggle)
 }
 pub fn get_player_radio_station_name() -> altv_wasm_shared::natives_result::ResultOfGetPlayerRadioStationName {
@@ -1282,9 +1283,9 @@ p2: bool) -> altv_wasm_shared::natives_result::ResultOfPlayPedRingtone {
 ped,
 p2)
 }
-pub fn use_siren_as_horn(vehicle: u32,
+pub fn use_siren_as_horn(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfUseSirenAsHorn {
-    crate::__imports::native_use_siren_as_horn(vehicle,
+    crate::__imports::native_use_siren_as_horn(vehicle.0,
 toggle)
 }
 pub fn hint_script_audio_bank(audio_bank: Option<&String>,
@@ -1783,10 +1784,10 @@ pub fn set_follow_vehicle_cam_seat_this_update(seat_index: i32) -> altv_wasm_sha
 pub fn set_gameplay_hint_camera_relative_side_offset(x_offset: f32) -> altv_wasm_shared::natives_result::ResultOfSetGameplayHintCameraRelativeSideOffset {
     crate::__imports::native_set_gameplay_hint_camera_relative_side_offset(x_offset)
 }
-pub fn trigger_vehicle_part_broken_camera_shake(vehicle: u32,
+pub fn trigger_vehicle_part_broken_camera_shake(vehicle: &VehicleScriptId,
 p1: i32,
 p2: f32) -> altv_wasm_shared::natives_result::ResultOfTriggerVehiclePartBrokenCameraShake {
-    crate::__imports::native_trigger_vehicle_part_broken_camera_shake(vehicle,
+    crate::__imports::native_trigger_vehicle_part_broken_camera_shake(vehicle.0,
 p1,
 p2)
 }
@@ -2090,7 +2091,7 @@ pub fn get_follow_ped_cam_view_mode() -> altv_wasm_shared::natives_result::Resul
     crate::__imports::native_get_follow_ped_cam_view_mode()
 }
 pub fn attach_cam_to_vehicle_bone(cam: i32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 bone_index: i32,
 relative_rotation: bool,
 rot_x: f32,
@@ -2101,7 +2102,7 @@ offset_y: f32,
 offset_z: f32,
 fixed_direction: bool) -> altv_wasm_shared::natives_result::ResultOfAttachCamToVehicleBone {
     crate::__imports::native_attach_cam_to_vehicle_bone(cam,
-vehicle,
+vehicle.0,
 bone_index,
 relative_rotation,
 rot_x,
@@ -2183,7 +2184,7 @@ pub fn set_use_hi_dof() -> altv_wasm_shared::natives_result::ResultOfSetUseHiDof
 pub fn get_final_rendered_cam_coord() -> altv_wasm_shared::natives_result::ResultOfGetFinalRenderedCamCoord {
     crate::__imports::native_get_final_rendered_cam_coord()
 }
-pub fn set_gameplay_vehicle_hint(vehicle: u32,
+pub fn set_gameplay_vehicle_hint(vehicle: &VehicleScriptId,
 offset_x: f32,
 offset_y: f32,
 offset_z: f32,
@@ -2191,7 +2192,7 @@ p4: bool,
 time: i32,
 ease_in_time: i32,
 ease_out_time: i32) -> altv_wasm_shared::natives_result::ResultOfSetGameplayVehicleHint {
-    crate::__imports::native_set_gameplay_vehicle_hint(vehicle,
+    crate::__imports::native_set_gameplay_vehicle_hint(vehicle.0,
 offset_x,
 offset_y,
 offset_z,
@@ -2568,9 +2569,9 @@ p1,
 p2,
 p3)
 }
-pub fn set_in_vehicle_cam_state_this_update(p0: u32,
+pub fn set_in_vehicle_cam_state_this_update(p0: &VehicleScriptId,
 p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetInVehicleCamStateThisUpdate {
-    crate::__imports::native_set_in_vehicle_cam_state_this_update(p0,
+    crate::__imports::native_set_in_vehicle_cam_state_this_update(p0.0,
 p1)
 }
 pub fn disable_gameplay_cam_altitude_fov_scaling_this_update() -> altv_wasm_shared::natives_result::ResultOfDisableGameplayCamAltitudeFovScalingThisUpdate {
@@ -3981,8 +3982,8 @@ dead_flag,
 ragdoll_flag,
 clear_area)
 }
-pub fn set_vehicle_as_no_longer_needed(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleAsNoLongerNeeded {
-    crate::__imports::native_set_vehicle_as_no_longer_needed(vehicle)
+pub fn set_vehicle_as_no_longer_needed(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetVehicleAsNoLongerNeeded {
+    crate::__imports::native_set_vehicle_as_no_longer_needed(vehicle.0)
 }
 pub fn set_entity_cant_cause_collision_damaged_entity(entity1: u32,
 entity2: u32) -> altv_wasm_shared::natives_result::ResultOfSetEntityCantCauseCollisionDamagedEntity {
@@ -5277,9 +5278,9 @@ pub fn cascade_shadows_init_session() -> altv_wasm_shared::natives_result::Resul
 pub fn release_bink_movie(bink_movie: i32) -> altv_wasm_shared::natives_result::ResultOfReleaseBinkMovie {
     crate::__imports::native_release_bink_movie(bink_movie)
 }
-pub fn does_vehicle_have_crew_emblem(vehicle: u32,
+pub fn does_vehicle_have_crew_emblem(vehicle: &VehicleScriptId,
 p1: i32) -> altv_wasm_shared::natives_result::ResultOfDoesVehicleHaveCrewEmblem {
-    crate::__imports::native_does_vehicle_have_crew_emblem(vehicle,
+    crate::__imports::native_does_vehicle_have_crew_emblem(vehicle.0,
 p1)
 }
 pub fn animpostfx_stop(effect_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfAnimpostfxStop {
@@ -6072,7 +6073,7 @@ pub fn save_high_quality_photo(unused: i32) -> altv_wasm_shared::natives_result:
 pub fn get_load_high_quality_photo_status(p0: i32) -> altv_wasm_shared::natives_result::ResultOfGetLoadHighQualityPhotoStatus {
     crate::__imports::native_get_load_high_quality_photo_status(p0)
 }
-pub fn add_vehicle_crew_emblem(vehicle: u32,
+pub fn add_vehicle_crew_emblem(vehicle: &VehicleScriptId,
 ped: u32,
 bone_index: i32,
 x1: f32,
@@ -6087,7 +6088,7 @@ z3: f32,
 scale: f32,
 p13: i32,
 alpha: i32) -> altv_wasm_shared::natives_result::ResultOfAddVehicleCrewEmblem {
-    crate::__imports::native_add_vehicle_crew_emblem(vehicle,
+    crate::__imports::native_add_vehicle_crew_emblem(vehicle.0,
 ped,
 bone_index,
 x1,
@@ -6210,9 +6211,9 @@ pub fn push_timecycle_modifier() -> altv_wasm_shared::natives_result::ResultOfPu
 pub fn get_status_of_create_mission_creator_photo_preview() -> altv_wasm_shared::natives_result::ResultOfGetStatusOfCreateMissionCreatorPhotoPreview {
     crate::__imports::native_get_status_of_create_mission_creator_photo_preview()
 }
-pub fn wash_decals_from_vehicle(vehicle: u32,
+pub fn wash_decals_from_vehicle(vehicle: &VehicleScriptId,
 p1: f32) -> altv_wasm_shared::natives_result::ResultOfWashDecalsFromVehicle {
-    crate::__imports::native_wash_decals_from_vehicle(vehicle,
+    crate::__imports::native_wash_decals_from_vehicle(vehicle.0,
 p1)
 }
 pub fn draw_shadowed_spot_light(pos_x: f32,
@@ -7025,9 +7026,9 @@ green,
 blue,
 alpha)
 }
-pub fn set_particle_fx_cam_inside_nonplayer_vehicle(vehicle: u32,
+pub fn set_particle_fx_cam_inside_nonplayer_vehicle(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetParticleFxCamInsideNonplayerVehicle {
-    crate::__imports::native_set_particle_fx_cam_inside_nonplayer_vehicle(vehicle,
+    crate::__imports::native_set_particle_fx_cam_inside_nonplayer_vehicle(vehicle.0,
 p1)
 }
 pub fn set_on_island_x_for_taken_photo(p0: i32) -> altv_wasm_shared::natives_result::ResultOfSetOnIslandXforTakenPhoto {
@@ -7418,9 +7419,9 @@ pub fn pass_keyboard_input_to_scaleform(scaleform_handle: i32) -> altv_wasm_shar
 pub fn animpostfx_stop_and_flush_requests(effect_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfAnimpostfxStopAndFlushRequests {
     crate::__imports::native_animpostfx_stop_and_flush_requests(effect_name)
 }
-pub fn remove_vehicle_crew_emblem(vehicle: u32,
+pub fn remove_vehicle_crew_emblem(vehicle: &VehicleScriptId,
 p1: i32) -> altv_wasm_shared::natives_result::ResultOfRemoveVehicleCrewEmblem {
-    crate::__imports::native_remove_vehicle_crew_emblem(vehicle,
+    crate::__imports::native_remove_vehicle_crew_emblem(vehicle.0,
 p1)
 }
 pub fn cascade_shadows_set_cascade_bounds(p0: i32,
@@ -7764,8 +7765,8 @@ p25)
 pub fn scaleform_movie_method_add_param_player_name_string(string: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfScaleformMovieMethodAddParamPlayerNameString {
     crate::__imports::native_scaleform_movie_method_add_param_player_name_string(string)
 }
-pub fn remove_decals_from_vehicle(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfRemoveDecalsFromVehicle {
-    crate::__imports::native_remove_decals_from_vehicle(vehicle)
+pub fn remove_decals_from_vehicle(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfRemoveDecalsFromVehicle {
+    crate::__imports::native_remove_decals_from_vehicle(vehicle.0)
 }
 pub fn set_particle_fx_override(old_asset: Option<&String>,
 new_asset: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfSetParticleFxOverride {
@@ -8030,9 +8031,9 @@ alpha)
 pub fn get_timecycle_modifier_index() -> altv_wasm_shared::natives_result::ResultOfGetTimecycleModifierIndex {
     crate::__imports::native_get_timecycle_modifier_index()
 }
-pub fn get_vehicle_crew_emblem_request_state(vehicle: u32,
+pub fn get_vehicle_crew_emblem_request_state(vehicle: &VehicleScriptId,
 p1: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleCrewEmblemRequestState {
-    crate::__imports::native_get_vehicle_crew_emblem_request_state(vehicle,
+    crate::__imports::native_get_vehicle_crew_emblem_request_state(vehicle.0,
 p1)
 }
 pub fn seethrough_set_noise_max(amount: f32) -> altv_wasm_shared::natives_result::ResultOfSeethroughSetNoiseMax {
@@ -12724,9 +12725,9 @@ pub fn cell_cam_set_selfie_mode_side_offset_scaling(p0: f32) -> altv_wasm_shared
     crate::__imports::native_cell_cam_set_selfie_mode_side_offset_scaling(p0)
 }
 pub fn get_mobile_phone_rotation(rotation: Option<&shared::Vector3>,
-p1: u32) -> altv_wasm_shared::natives_result::ResultOfGetMobilePhoneRotation {
+p1: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetMobilePhoneRotation {
     crate::__imports::native_get_mobile_phone_rotation(rotation,
-p1)
+p1.0)
 }
 pub fn cell_cam_set_selfie_mode_vert_pan_offset(vert_pan: f32) -> altv_wasm_shared::natives_result::ResultOfCellCamSetSelfieModeVertPanOffset {
     crate::__imports::native_cell_cam_set_selfie_mode_vert_pan_offset(vert_pan)
@@ -15955,11 +15956,11 @@ toggle)
 pub fn ugc_has_modify_finished() -> altv_wasm_shared::natives_result::ResultOfUgcHasModifyFinished {
     crate::__imports::native_ugc_has_modify_finished()
 }
-pub fn network_explode_heli(vehicle: u32,
+pub fn network_explode_heli(vehicle: &VehicleScriptId,
 is_audible: bool,
 is_invisible: bool,
 net_id: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkExplodeHeli {
-    crate::__imports::native_network_explode_heli(vehicle,
+    crate::__imports::native_network_explode_heli(vehicle.0,
 is_audible,
 is_invisible,
 net_id)
@@ -16061,11 +16062,11 @@ pub fn network_session_cancel_invite() -> altv_wasm_shared::natives_result::Resu
 pub fn network_is_in_platform_party() -> altv_wasm_shared::natives_result::ResultOfNetworkIsInPlatformParty {
     crate::__imports::native_network_is_in_platform_party()
 }
-pub fn network_explode_vehicle(vehicle: u32,
+pub fn network_explode_vehicle(vehicle: &VehicleScriptId,
 is_audible: bool,
 is_invisible: bool,
 net_id: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkExplodeVehicle {
-    crate::__imports::native_network_explode_vehicle(vehicle,
+    crate::__imports::native_network_explode_vehicle(vehicle.0,
 is_audible,
 is_invisible,
 net_id)
@@ -16839,9 +16840,9 @@ pub fn network_get_num_transition_non_async_gamers() -> altv_wasm_shared::native
 pub fn ugc_clear_offline_query() -> altv_wasm_shared::natives_result::ResultOfUgcClearOfflineQuery {
     crate::__imports::native_ugc_clear_offline_query()
 }
-pub fn set_network_vehicle_as_ghost(vehicle: u32,
+pub fn set_network_vehicle_as_ghost(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetNetworkVehicleAsGhost {
-    crate::__imports::native_set_network_vehicle_as_ghost(vehicle,
+    crate::__imports::native_set_network_vehicle_as_ghost(vehicle.0,
 toggle)
 }
 pub fn network_request_invite_confirmed_event() -> altv_wasm_shared::natives_result::ResultOfNetworkRequestInviteConfirmedEvent {
@@ -17346,9 +17347,9 @@ p2: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkGetAssistedKillOfEn
 entity,
 p2)
 }
-pub fn set_network_enable_high_speed_edge_fall_detection(vehicle: u32,
+pub fn set_network_enable_high_speed_edge_fall_detection(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetNetworkEnableHighSpeedEdgeFallDetection {
-    crate::__imports::native_set_network_enable_high_speed_edge_fall_detection(vehicle,
+    crate::__imports::native_set_network_enable_high_speed_edge_fall_detection(vehicle.0,
 toggle)
 }
 pub fn network_is_host_of_this_script() -> altv_wasm_shared::natives_result::ResultOfNetworkIsHostOfThisScript {
@@ -17811,9 +17812,9 @@ pub fn ugc_clear_modify_result() -> altv_wasm_shared::natives_result::ResultOfUg
 pub fn network_session_force_cancel_invite() -> altv_wasm_shared::natives_result::ResultOfNetworkSessionForceCancelInvite {
     crate::__imports::native_network_session_force_cancel_invite()
 }
-pub fn set_network_vehicle_max_position_delta_multiplier(vehicle: u32,
+pub fn set_network_vehicle_max_position_delta_multiplier(vehicle: &VehicleScriptId,
 multiplier: f32) -> altv_wasm_shared::natives_result::ResultOfSetNetworkVehicleMaxPositionDeltaMultiplier {
-    crate::__imports::native_set_network_vehicle_max_position_delta_multiplier(vehicle,
+    crate::__imports::native_set_network_vehicle_max_position_delta_multiplier(vehicle.0,
 multiplier)
 }
 pub fn get_time_difference(time_a: i32,
@@ -18042,8 +18043,8 @@ p1: bool) -> altv_wasm_shared::natives_result::ResultOfNetworkSessionChangeSlots
     crate::__imports::native_network_session_change_slots(slots,
 p1)
 }
-pub fn veh_to_net(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfVehToNet {
-    crate::__imports::native_veh_to_net(vehicle)
+pub fn veh_to_net(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfVehToNet {
+    crate::__imports::native_veh_to_net(vehicle.0)
 }
 pub fn network_get_primary_clan_data_pending() -> altv_wasm_shared::natives_result::ResultOfNetworkGetPrimaryClanDataPending {
     crate::__imports::native_network_get_primary_clan_data_pending()
@@ -20385,11 +20386,11 @@ p8)
 pub fn is_point_on_road(x: f32,
 y: f32,
 z: f32,
-vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsPointOnRoad {
+vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsPointOnRoad {
     crate::__imports::native_is_point_on_road(x,
 y,
 z,
-vehicle)
+vehicle.0)
 }
 pub fn get_closest_road(x: f32,
 y: f32,
@@ -22469,13 +22470,13 @@ pub fn get_ped_relationship_group_hash(ped: u32) -> altv_wasm_shared::natives_re
 pub fn is_ped_in_parachute_free_fall(ped: u32) -> altv_wasm_shared::natives_result::ResultOfIsPedInParachuteFreeFall {
     crate::__imports::native_is_ped_in_parachute_free_fall(ped)
 }
-pub fn create_ped_inside_vehicle(vehicle: u32,
+pub fn create_ped_inside_vehicle(vehicle: &VehicleScriptId,
 ped_type: i32,
 model_hash: u32,
 seat: i32,
 is_network: bool,
 b_script_host_ped: bool) -> altv_wasm_shared::natives_result::ResultOfCreatePedInsideVehicle {
-    crate::__imports::native_create_ped_inside_vehicle(vehicle,
+    crate::__imports::native_create_ped_inside_vehicle(vehicle.0,
 ped_type,
 model_hash,
 seat,
@@ -22794,12 +22795,12 @@ toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetPedPlaysHeadOnHorn
 toggle)
 }
 pub fn set_ped_vehicle_forced_seat_usage(ped: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 seat_index: i32,
 flags: i32,
 p4: i32) -> altv_wasm_shared::natives_result::ResultOfSetPedVehicleForcedSeatUsage {
     crate::__imports::native_set_ped_vehicle_forced_seat_usage(ped,
-vehicle,
+vehicle.0,
 seat_index,
 flags,
 p4)
@@ -22883,9 +22884,9 @@ pos_z)
 pub fn get_peds_jacker(ped: u32) -> altv_wasm_shared::natives_result::ResultOfGetPedsJacker {
     crate::__imports::native_get_peds_jacker(ped)
 }
-pub fn create_random_ped_as_driver(vehicle: u32,
+pub fn create_random_ped_as_driver(vehicle: &VehicleScriptId,
 return_handle: bool) -> altv_wasm_shared::natives_result::ResultOfCreateRandomPedAsDriver {
-    crate::__imports::native_create_random_ped_as_driver(vehicle,
+    crate::__imports::native_create_random_ped_as_driver(vehicle.0,
 return_handle)
 }
 pub fn is_ped_group_member(ped: u32,
@@ -23008,10 +23009,10 @@ pub fn set_ped_should_play_normal_scenario_exit(ped: u32) -> altv_wasm_shared::n
     crate::__imports::native_set_ped_should_play_normal_scenario_exit(ped)
 }
 pub fn is_ped_in_vehicle(ped: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 at_get_in: bool) -> altv_wasm_shared::natives_result::ResultOfIsPedInVehicle {
     crate::__imports::native_is_ped_in_vehicle(ped,
-vehicle,
+vehicle.0,
 at_get_in)
 }
 pub fn is_mobile_phone_to_ped_ear(ped: u32) -> altv_wasm_shared::natives_result::ResultOfIsMobilePhoneToPedEar {
@@ -23059,9 +23060,9 @@ instantly: bool) -> altv_wasm_shared::natives_result::ResultOfRemovePedHelmet {
 instantly)
 }
 pub fn is_ped_sitting_in_vehicle(ped: u32,
-vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsPedSittingInVehicle {
+vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsPedSittingInVehicle {
     crate::__imports::native_is_ped_sitting_in_vehicle(ped,
-vehicle)
+vehicle.0)
 }
 pub fn set_ped_is_avoided_by_others(p0: i32,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetPedIsAvoidedByOthers {
@@ -23793,14 +23794,14 @@ toggle: bool) -> altv_wasm_shared::natives_result::ResultOfBlockPedFromGeneratin
 toggle)
 }
 pub fn set_ped_defensive_sphere_attached_to_vehicle(ped: u32,
-target: u32,
+target: &VehicleScriptId,
 x_offset: f32,
 y_offset: f32,
 z_offset: f32,
 radius: f32,
 p6: bool) -> altv_wasm_shared::natives_result::ResultOfSetPedDefensiveSphereAttachedToVehicle {
     crate::__imports::native_set_ped_defensive_sphere_attached_to_vehicle(ped,
-target,
+target.0,
 x_offset,
 y_offset,
 z_offset,
@@ -23910,9 +23911,9 @@ p1: f32) -> altv_wasm_shared::natives_result::ResultOfSetPedInjuredOnGroundBehav
 p1)
 }
 pub fn is_ped_on_specific_vehicle(ped: u32,
-vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsPedOnSpecificVehicle {
+vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsPedOnSpecificVehicle {
     crate::__imports::native_is_ped_on_specific_vehicle(ped,
-vehicle)
+vehicle.0)
 }
 pub fn set_ped_should_play_directed_normal_scenario_exit(p0: i32,
 p1: i32,
@@ -24099,10 +24100,10 @@ pub fn get_ped_alertness(ped: u32) -> altv_wasm_shared::natives_result::ResultOf
     crate::__imports::native_get_ped_alertness(ped)
 }
 pub fn set_ped_into_vehicle(ped: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 seat_index: i32) -> altv_wasm_shared::natives_result::ResultOfSetPedIntoVehicle {
     crate::__imports::native_set_ped_into_vehicle(ped,
-vehicle,
+vehicle.0,
 seat_index)
 }
 pub fn release_ped_preload_prop_data(ped: u32) -> altv_wasm_shared::natives_result::ResultOfReleasePedPreloadPropData {
@@ -25066,9 +25067,9 @@ pub fn is_wanted_and_has_been_seen_by_cops(player: u32) -> altv_wasm_shared::nat
     crate::__imports::native_is_wanted_and_has_been_seen_by_cops(player)
 }
 pub fn set_player_may_only_enter_this_vehicle(player: u32,
-vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfSetPlayerMayOnlyEnterThisVehicle {
+vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetPlayerMayOnlyEnterThisVehicle {
     crate::__imports::native_set_player_may_only_enter_this_vehicle(player,
-vehicle)
+vehicle.0)
 }
 pub fn set_player_parachute_smoke_trail_color(player: u32,
 r: i32,
@@ -27452,12 +27453,12 @@ value: f32) -> altv_wasm_shared::natives_result::ResultOfStatIncrement {
     crate::__imports::native_stat_increment(stat_name,
 value)
 }
-pub fn playstats_race_checkpoint(p0: u32,
+pub fn playstats_race_checkpoint(p0: &VehicleScriptId,
 p1: i32,
 p2: i32,
 p3: i32,
 p4: i32) -> altv_wasm_shared::natives_result::ResultOfPlaystatsRaceCheckpoint {
-    crate::__imports::native_playstats_race_checkpoint(p0,
+    crate::__imports::native_playstats_race_checkpoint(p0.0,
 p1,
 p2,
 p3,
@@ -28869,7 +28870,7 @@ p1,
 p2)
 }
 pub fn task_vehicle_park(ped: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 x: f32,
 y: f32,
 z: f32,
@@ -28878,7 +28879,7 @@ mode: i32,
 radius: f32,
 keep_engine_on: bool) -> altv_wasm_shared::natives_result::ResultOfTaskVehiclePark {
     crate::__imports::native_task_vehicle_park(ped,
-vehicle,
+vehicle.0,
 x,
 y,
 z,
@@ -28891,8 +28892,8 @@ pub fn task_clear_look_at(ped: u32) -> altv_wasm_shared::natives_result::ResultO
     crate::__imports::native_task_clear_look_at(ped)
 }
 pub fn task_vehicle_escort(ped: u32,
-vehicle: u32,
-target_vehicle: u32,
+vehicle: &VehicleScriptId,
+target_vehicle: &VehicleScriptId,
 mode: i32,
 speed: f32,
 driving_style: i32,
@@ -28900,8 +28901,8 @@ min_distance: f32,
 min_height_above_terrain: i32,
 no_roads_distance: f32) -> altv_wasm_shared::natives_result::ResultOfTaskVehicleEscort {
     crate::__imports::native_task_vehicle_escort(ped,
-vehicle,
-target_vehicle,
+vehicle.0,
+target_vehicle.0,
 mode,
 speed,
 driving_style,
@@ -28952,9 +28953,9 @@ nav_flags,
 instant_blend_to_aim,
 firing_pattern)
 }
-pub fn vehicle_waypoint_playback_override_speed(vehicle: u32,
+pub fn vehicle_waypoint_playback_override_speed(vehicle: &VehicleScriptId,
 speed: f32) -> altv_wasm_shared::natives_result::ResultOfVehicleWaypointPlaybackOverrideSpeed {
-    crate::__imports::native_vehicle_waypoint_playback_override_speed(vehicle,
+    crate::__imports::native_vehicle_waypoint_playback_override_speed(vehicle.0,
 speed)
 }
 pub fn task_scripted_animation(ped: u32,
@@ -28983,7 +28984,7 @@ unk_delay,
 play_enter_anim)
 }
 pub fn task_vehicle_drive_to_coord_longrange(ped: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 x: f32,
 y: f32,
 z: f32,
@@ -28991,7 +28992,7 @@ speed: f32,
 drive_mode: i32,
 stop_range: f32) -> altv_wasm_shared::natives_result::ResultOfTaskVehicleDriveToCoordLongrange {
     crate::__imports::native_task_vehicle_drive_to_coord_longrange(ped,
-vehicle,
+vehicle.0,
 x,
 y,
 z,
@@ -29000,8 +29001,8 @@ drive_mode,
 stop_range)
 }
 pub fn task_boat_mission(ped_driver: u32,
-vehicle: u32,
-target_vehicle: u32,
+vehicle: &VehicleScriptId,
+target_vehicle: &VehicleScriptId,
 target_ped: u32,
 x: f32,
 y: f32,
@@ -29012,8 +29013,8 @@ driving_style: i32,
 target_reached: f32,
 boat_flags: i32) -> altv_wasm_shared::natives_result::ResultOfTaskBoatMission {
     crate::__imports::native_task_boat_mission(ped_driver,
-vehicle,
-target_vehicle,
+vehicle.0,
+target_vehicle.0,
 target_ped,
 x,
 y,
@@ -29072,7 +29073,7 @@ clamp_max_search_distance,
 target_heading)
 }
 pub fn task_vehicle_goto_navmesh(ped: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 x: f32,
 y: f32,
 z: f32,
@@ -29080,7 +29081,7 @@ speed: f32,
 behavior_flag: i32,
 stopping_range: f32) -> altv_wasm_shared::natives_result::ResultOfTaskVehicleGotoNavmesh {
     crate::__imports::native_task_vehicle_goto_navmesh(ped,
-vehicle,
+vehicle.0,
 x,
 y,
 z,
@@ -29111,7 +29112,7 @@ x: f32,
 y: f32,
 z: f32,
 move_blend_ratio: f32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 use_long_range_vehicle_pathing: bool,
 driving_flags: i32,
 max_range_to_shoot_targets: f32,
@@ -29124,7 +29125,7 @@ x,
 y,
 z,
 move_blend_ratio,
-vehicle,
+vehicle.0,
 use_long_range_vehicle_pathing,
 driving_flags,
 max_range_to_shoot_targets,
@@ -29145,7 +29146,7 @@ z,
 duration)
 }
 pub fn task_vehicle_heli_protect(pilot: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 entity_to_follow: u32,
 target_speed: f32,
 driving_flags: i32,
@@ -29153,7 +29154,7 @@ radius: f32,
 altitude: i32,
 heli_flags: i32) -> altv_wasm_shared::natives_result::ResultOfTaskVehicleHeliProtect {
     crate::__imports::native_task_vehicle_heli_protect(pilot,
-vehicle,
+vehicle.0,
 entity_to_follow,
 target_speed,
 driving_flags,
@@ -29253,8 +29254,8 @@ node_id2: i32) -> altv_wasm_shared::natives_result::ResultOfAddPatrolRouteLink {
 node_id2)
 }
 pub fn task_plane_mission(pilot: u32,
-aircraft: u32,
-target_vehicle: u32,
+aircraft: &VehicleScriptId,
+target_vehicle: &VehicleScriptId,
 target_ped: u32,
 destination_x: f32,
 destination_y: f32,
@@ -29267,8 +29268,8 @@ max_z: f32,
 min_z: f32,
 precise: bool) -> altv_wasm_shared::natives_result::ResultOfTaskPlaneMission {
     crate::__imports::native_task_plane_mission(pilot,
-aircraft,
-target_vehicle,
+aircraft.0,
+target_vehicle.0,
 target_ped,
 destination_x,
 destination_y,
@@ -29388,7 +29389,7 @@ flags)
 }
 pub fn task_drive_by(driver_ped: u32,
 target_ped: u32,
-target_vehicle: u32,
+target_vehicle: &VehicleScriptId,
 target_x: f32,
 target_y: f32,
 target_z: f32,
@@ -29398,7 +29399,7 @@ push_underneath_driving_task_if_driving: bool,
 firing_pattern: u32) -> altv_wasm_shared::natives_result::ResultOfTaskDriveBy {
     crate::__imports::native_task_drive_by(driver_ped,
 target_ped,
-target_vehicle,
+target_vehicle.0,
 target_x,
 target_y,
 target_z,
@@ -29437,7 +29438,7 @@ pub fn is_task_move_network_ready_for_transition(ped: u32) -> altv_wasm_shared::
     crate::__imports::native_is_task_move_network_ready_for_transition(ped)
 }
 pub fn task_vehicle_follow_waypoint_recording(ped: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 w_p_recording: Option<&String>,
 p3: i32,
 p4: i32,
@@ -29447,7 +29448,7 @@ p7: f32,
 p8: bool,
 p9: f32) -> altv_wasm_shared::natives_result::ResultOfTaskVehicleFollowWaypointRecording {
     crate::__imports::native_task_vehicle_follow_waypoint_recording(ped,
-vehicle,
+vehicle.0,
 w_p_recording,
 p3,
 p4,
@@ -29567,8 +29568,8 @@ speed: f32) -> altv_wasm_shared::natives_result::ResultOfSetDriveTaskMaxCruiseSp
     crate::__imports::native_set_drive_task_max_cruise_speed(ped,
 speed)
 }
-pub fn get_vehicle_waypoint_target_point(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleWaypointTargetPoint {
-    crate::__imports::native_get_vehicle_waypoint_target_point(vehicle)
+pub fn get_vehicle_waypoint_target_point(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleWaypointTargetPoint {
+    crate::__imports::native_get_vehicle_waypoint_target_point(vehicle.0)
 }
 pub fn task_put_ped_directly_into_cover(ped: u32,
 x: f32,
@@ -29661,11 +29662,11 @@ pub fn waypoint_playback_stop_aiming_or_shooting(ped: u32) -> altv_wasm_shared::
     crate::__imports::native_waypoint_playback_stop_aiming_or_shooting(ped)
 }
 pub fn task_vehicle_drive_wander(ped: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 speed: f32,
 driving_style: i32) -> altv_wasm_shared::natives_result::ResultOfTaskVehicleDriveWander {
     crate::__imports::native_task_vehicle_drive_wander(ped,
-vehicle,
+vehicle.0,
 speed,
 driving_style)
 }
@@ -29728,14 +29729,14 @@ points: i32) -> altv_wasm_shared::natives_result::ResultOfWaypointRecordingGetNu
     crate::__imports::native_waypoint_recording_get_num_points(name,
 points)
 }
-pub fn get_active_vehicle_mission_type(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetActiveVehicleMissionType {
-    crate::__imports::native_get_active_vehicle_mission_type(vehicle)
+pub fn get_active_vehicle_mission_type(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetActiveVehicleMissionType {
+    crate::__imports::native_get_active_vehicle_mission_type(vehicle.0)
 }
 pub fn set_exclusive_scenario_group(scenario_group: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfSetExclusiveScenarioGroup {
     crate::__imports::native_set_exclusive_scenario_group(scenario_group)
 }
-pub fn clear_vehicle_crash_task(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfClearVehicleCrashTask {
-    crate::__imports::native_clear_vehicle_crash_task(vehicle)
+pub fn clear_vehicle_crash_task(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfClearVehicleCrashTask {
+    crate::__imports::native_clear_vehicle_crash_task(vehicle.0)
 }
 pub fn is_ped_sprinting(ped: u32) -> altv_wasm_shared::natives_result::ResultOfIsPedSprinting {
     crate::__imports::native_is_ped_sprinting(ped)
@@ -29820,7 +29821,7 @@ x: f32,
 y: f32,
 z: f32,
 move_blend_ratio: f32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 use_long_range_vehicle_pathing: bool,
 driving_flags: i32,
 max_range_to_shoot_targets: f32) -> altv_wasm_shared::natives_result::ResultOfTaskGoToCoordAnyMeans {
@@ -29829,7 +29830,7 @@ x,
 y,
 z,
 move_blend_ratio,
-vehicle,
+vehicle.0,
 use_long_range_vehicle_pathing,
 driving_flags,
 max_range_to_shoot_targets)
@@ -29839,8 +29840,8 @@ cruise_speed: f32) -> altv_wasm_shared::natives_result::ResultOfSetDriveTaskCrui
     crate::__imports::native_set_drive_task_cruise_speed(driver,
 cruise_speed)
 }
-pub fn vehicle_waypoint_playback_use_default_speed(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfVehicleWaypointPlaybackUseDefaultSpeed {
-    crate::__imports::native_vehicle_waypoint_playback_use_default_speed(vehicle)
+pub fn vehicle_waypoint_playback_use_default_speed(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfVehicleWaypointPlaybackUseDefaultSpeed {
+    crate::__imports::native_vehicle_waypoint_playback_use_default_speed(vehicle.0)
 }
 pub fn add_vehicle_subtask_attack_coord(ped: u32,
 x: f32,
@@ -29899,8 +29900,8 @@ distance: f32) -> altv_wasm_shared::natives_result::ResultOfSetTaskVehicleChaseI
 distance)
 }
 pub fn task_vehicle_mission(driver: u32,
-vehicle: u32,
-vehicle_target: u32,
+vehicle: &VehicleScriptId,
+vehicle_target: &VehicleScriptId,
 mission_type: i32,
 cruise_speed: f32,
 driving_style: i32,
@@ -29908,8 +29909,8 @@ target_reached: f32,
 straight_line_distance: f32,
 drive_against_traffic: bool) -> altv_wasm_shared::natives_result::ResultOfTaskVehicleMission {
     crate::__imports::native_task_vehicle_mission(driver,
-vehicle,
-vehicle_target,
+vehicle.0,
+vehicle_target.0,
 mission_type,
 cruise_speed,
 driving_style,
@@ -29958,10 +29959,10 @@ duration,
 flags,
 priority)
 }
-pub fn task_vehicle_play_anim(vehicle: u32,
+pub fn task_vehicle_play_anim(vehicle: &VehicleScriptId,
 animation_set: Option<&String>,
 animation_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfTaskVehiclePlayAnim {
-    crate::__imports::native_task_vehicle_play_anim(vehicle,
+    crate::__imports::native_task_vehicle_play_anim(vehicle.0,
 animation_set,
 animation_name)
 }
@@ -30125,10 +30126,10 @@ disable_blocking_clip,
 instant_blend_to_aim)
 }
 pub fn task_shuffle_to_next_vehicle_seat(ped: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 use_alternate_shuffle: bool) -> altv_wasm_shared::natives_result::ResultOfTaskShuffleToNextVehicleSeat {
     crate::__imports::native_task_shuffle_to_next_vehicle_seat(ped,
-vehicle,
+vehicle.0,
 use_alternate_shuffle)
 }
 pub fn task_sweep_aim_position(ped: u32,
@@ -30168,8 +30169,8 @@ p2: bool) -> altv_wasm_shared::natives_result::ResultOfWaypointPlaybackOverrideS
 p1,
 p2)
 }
-pub fn task_everyone_leave_vehicle(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfTaskEveryoneLeaveVehicle {
-    crate::__imports::native_task_everyone_leave_vehicle(vehicle)
+pub fn task_everyone_leave_vehicle(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfTaskEveryoneLeaveVehicle {
+    crate::__imports::native_task_everyone_leave_vehicle(vehicle.0)
 }
 pub fn assisted_movement_request_route(route: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfAssistedMovementRequestRoute {
     crate::__imports::native_assisted_movement_request_route(route)
@@ -30291,8 +30292,8 @@ use_player_launch_force: bool) -> altv_wasm_shared::natives_result::ResultOfTask
     crate::__imports::native_task_climb(ped,
 use_player_launch_force)
 }
-pub fn vehicle_waypoint_playback_pause(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfVehicleWaypointPlaybackPause {
-    crate::__imports::native_vehicle_waypoint_playback_pause(vehicle)
+pub fn vehicle_waypoint_playback_pause(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfVehicleWaypointPlaybackPause {
+    crate::__imports::native_vehicle_waypoint_playback_pause(vehicle.0)
 }
 pub fn task_perform_sequence_locally(ped: u32,
 task_sequence_id: i32) -> altv_wasm_shared::natives_result::ResultOfTaskPerformSequenceLocally {
@@ -30390,14 +30391,14 @@ pub fn is_task_move_network_active(ped: u32) -> altv_wasm_shared::natives_result
     crate::__imports::native_is_task_move_network_active(ped)
 }
 pub fn task_plane_taxi(pilot: u32,
-aircraft: u32,
+aircraft: &VehicleScriptId,
 x: f32,
 y: f32,
 z: f32,
 cruise_speed: f32,
 target_reached: f32) -> altv_wasm_shared::natives_result::ResultOfTaskPlaneTaxi {
     crate::__imports::native_task_plane_taxi(pilot,
-aircraft,
+aircraft.0,
 x,
 y,
 z,
@@ -30432,7 +30433,7 @@ time,
 flags)
 }
 pub fn task_vehicle_mission_ped_target(ped: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 ped_target: u32,
 mission_type: i32,
 max_speed: f32,
@@ -30441,7 +30442,7 @@ min_distance: f32,
 straight_line_distance: f32,
 drive_against_traffic: bool) -> altv_wasm_shared::natives_result::ResultOfTaskVehicleMissionPedTarget {
     crate::__imports::native_task_vehicle_mission_ped_target(ped,
-vehicle,
+vehicle.0,
 ped_target,
 mission_type,
 max_speed,
@@ -30471,12 +30472,12 @@ pub fn task_clear_defensive_area(ped: u32) -> altv_wasm_shared::natives_result::
     crate::__imports::native_task_clear_defensive_area(ped)
 }
 pub fn task_open_vehicle_door(ped: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 time_out: i32,
 seat: i32,
 speed: f32) -> altv_wasm_shared::natives_result::ResultOfTaskOpenVehicleDoor {
     crate::__imports::native_task_open_vehicle_door(ped,
-vehicle,
+vehicle.0,
 time_out,
 seat,
 speed)
@@ -30548,14 +30549,14 @@ anim_dictionary,
 animation_name,
 blend_delta)
 }
-pub fn get_vehicle_waypoint_progress(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleWaypointProgress {
-    crate::__imports::native_get_vehicle_waypoint_progress(vehicle)
+pub fn get_vehicle_waypoint_progress(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleWaypointProgress {
+    crate::__imports::native_get_vehicle_waypoint_progress(vehicle.0)
 }
 pub fn task_warp_ped_into_vehicle(ped: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 seat: i32) -> altv_wasm_shared::natives_result::ResultOfTaskWarpPedIntoVehicle {
     crate::__imports::native_task_warp_ped_into_vehicle(ped,
-vehicle,
+vehicle.0,
 seat)
 }
 pub fn task_aim_gun_at_entity(ped: u32,
@@ -30568,9 +30569,9 @@ duration,
 instant_blend_to_aim)
 }
 pub fn task_get_off_boat(ped: u32,
-boat: u32) -> altv_wasm_shared::natives_result::ResultOfTaskGetOffBoat {
+boat: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfTaskGetOffBoat {
     crate::__imports::native_task_get_off_boat(ped,
-boat)
+boat.0)
 }
 pub fn get_task_rappel_down_wall_state(ped: u32) -> altv_wasm_shared::natives_result::ResultOfGetTaskRappelDownWallState {
     crate::__imports::native_get_task_rappel_down_wall_state(ped)
@@ -30778,14 +30779,14 @@ y,
 z)
 }
 pub fn task_heli_escort_heli(pilot: u32,
-heli1: u32,
-heli2: u32,
+heli1: &VehicleScriptId,
+heli2: &VehicleScriptId,
 offset_x: f32,
 offset_y: f32,
 offset_z: f32) -> altv_wasm_shared::natives_result::ResultOfTaskHeliEscortHeli {
     crate::__imports::native_task_heli_escort_heli(pilot,
-heli1,
-heli2,
+heli1.0,
+heli2.0,
 offset_x,
 offset_y,
 offset_z)
@@ -30819,7 +30820,7 @@ x: f32,
 y: f32,
 z: f32,
 move_blend_ratio: f32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 use_long_range_vehicle_pathing: bool,
 driving_flags: i32,
 max_range_to_shoot_targets: f32,
@@ -30833,7 +30834,7 @@ x,
 y,
 z,
 move_blend_ratio,
-vehicle,
+vehicle.0,
 use_long_range_vehicle_pathing,
 driving_flags,
 max_range_to_shoot_targets,
@@ -30878,7 +30879,7 @@ can_chat_to_peds,
 use_head_look_at)
 }
 pub fn task_plane_land(pilot: u32,
-plane: u32,
+plane: &VehicleScriptId,
 runway_start_x: f32,
 runway_start_y: f32,
 runway_start_z: f32,
@@ -30886,7 +30887,7 @@ runway_end_x: f32,
 runway_end_y: f32,
 runway_end_z: f32) -> altv_wasm_shared::natives_result::ResultOfTaskPlaneLand {
     crate::__imports::native_task_plane_land(pilot,
-plane,
+plane.0,
 runway_start_x,
 runway_start_y,
 runway_start_z,
@@ -30895,14 +30896,14 @@ runway_end_y,
 runway_end_z)
 }
 pub fn task_enter_vehicle(ped: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 timeout: i32,
 seat: i32,
 speed: f32,
 flag: i32,
 override_entry_clipset_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfTaskEnterVehicle {
     crate::__imports::native_task_enter_vehicle(ped,
-vehicle,
+vehicle.0,
 timeout,
 seat,
 speed,
@@ -30910,13 +30911,13 @@ flag,
 override_entry_clipset_name)
 }
 pub fn task_submarine_goto_and_stop(ped: u32,
-submarine: u32,
+submarine: &VehicleScriptId,
 x: f32,
 y: f32,
 z: f32,
 autopilot: bool) -> altv_wasm_shared::natives_result::ResultOfTaskSubmarineGotoAndStop {
     crate::__imports::native_task_submarine_goto_and_stop(ped,
-submarine,
+submarine.0,
 x,
 y,
 z,
@@ -30935,11 +30936,11 @@ pub fn clear_driveby_task_underneath_driving_task(ped: u32) -> altv_wasm_shared:
     crate::__imports::native_clear_driveby_task_underneath_driving_task(ped)
 }
 pub fn task_vehicle_temp_action(driver: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 action: i32,
 time: i32) -> altv_wasm_shared::natives_result::ResultOfTaskVehicleTempAction {
     crate::__imports::native_task_vehicle_temp_action(driver,
-vehicle,
+vehicle.0,
 action,
 time)
 }
@@ -30988,7 +30989,7 @@ set)
 }
 pub fn set_mounted_weapon_target(shooting_ped: u32,
 target_ped: u32,
-target_vehicle: u32,
+target_vehicle: &VehicleScriptId,
 x: f32,
 y: f32,
 z: f32,
@@ -30996,7 +30997,7 @@ task_mode: i32,
 ignore_target_veh_dead_check: bool) -> altv_wasm_shared::natives_result::ResultOfSetMountedWeaponTarget {
     crate::__imports::native_set_mounted_weapon_target(shooting_ped,
 target_ped,
-target_vehicle,
+target_vehicle.0,
 x,
 y,
 z,
@@ -31057,10 +31058,10 @@ give_parachute_item,
 instant)
 }
 pub fn task_leave_vehicle(ped: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 flags: i32) -> altv_wasm_shared::natives_result::ResultOfTaskLeaveVehicle {
     crate::__imports::native_task_leave_vehicle(ped,
-vehicle,
+vehicle.0,
 flags)
 }
 pub fn task_seek_cover_to_cover_point(ped: u32,
@@ -31160,8 +31161,8 @@ driving_style: i32) -> altv_wasm_shared::natives_result::ResultOfSetDriveTaskDri
 driving_style)
 }
 pub fn task_heli_mission(pilot: u32,
-aircraft: u32,
-target_vehicle: u32,
+aircraft: &VehicleScriptId,
+target_vehicle: &VehicleScriptId,
 target_ped: u32,
 destination_x: f32,
 destination_y: f32,
@@ -31175,8 +31176,8 @@ min_height: i32,
 slow_down_distance: f32,
 behavior_flags: i32) -> altv_wasm_shared::natives_result::ResultOfTaskHeliMission {
     crate::__imports::native_task_heli_mission(pilot,
-aircraft,
-target_vehicle,
+aircraft.0,
+target_vehicle.0,
 target_ped,
 destination_x,
 destination_y,
@@ -31193,11 +31194,11 @@ behavior_flags)
 pub fn remove_all_cover_blocking_areas() -> altv_wasm_shared::natives_result::ResultOfRemoveAllCoverBlockingAreas {
     crate::__imports::native_remove_all_cover_blocking_areas()
 }
-pub fn clear_primary_vehicle_task(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfClearPrimaryVehicleTask {
-    crate::__imports::native_clear_primary_vehicle_task(vehicle)
+pub fn clear_primary_vehicle_task(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfClearPrimaryVehicleTask {
+    crate::__imports::native_clear_primary_vehicle_task(vehicle.0)
 }
-pub fn vehicle_waypoint_playback_resume(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfVehicleWaypointPlaybackResume {
-    crate::__imports::native_vehicle_waypoint_playback_resume(vehicle)
+pub fn vehicle_waypoint_playback_resume(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfVehicleWaypointPlaybackResume {
+    crate::__imports::native_vehicle_waypoint_playback_resume(vehicle.0)
 }
 pub fn control_mounted_weapon(ped: u32) -> altv_wasm_shared::natives_result::ResultOfControlMountedWeapon {
     crate::__imports::native_control_mounted_weapon(ped)
@@ -31242,7 +31243,7 @@ pub fn clear_ped_tasks(ped: u32) -> altv_wasm_shared::natives_result::ResultOfCl
     crate::__imports::native_clear_ped_tasks(ped)
 }
 pub fn task_vehicle_drive_to_coord(ped: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 x: f32,
 y: f32,
 z: f32,
@@ -31253,7 +31254,7 @@ driving_mode: i32,
 stop_range: f32,
 straight_line_distance: f32) -> altv_wasm_shared::natives_result::ResultOfTaskVehicleDriveToCoord {
     crate::__imports::native_task_vehicle_drive_to_coord(ped,
-vehicle,
+vehicle.0,
 x,
 y,
 z,
@@ -31299,13 +31300,13 @@ entity)
 }
 pub fn set_driveby_task_target(shooting_ped: u32,
 target_ped: u32,
-target_vehicle: u32,
+target_vehicle: &VehicleScriptId,
 x: f32,
 y: f32,
 z: f32) -> altv_wasm_shared::natives_result::ResultOfSetDrivebyTaskTarget {
     crate::__imports::native_set_driveby_task_target(shooting_ped,
 target_ped,
-target_vehicle,
+target_vehicle.0,
 x,
 y,
 z)
@@ -31427,7 +31428,7 @@ mover_blend_delta,
 ik_flags)
 }
 pub fn task_vehicle_mission_coors_target(ped: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 x: f32,
 y: f32,
 z: f32,
@@ -31438,7 +31439,7 @@ target_reached: f32,
 straight_line_distance: f32,
 drive_against_traffic: bool) -> altv_wasm_shared::natives_result::ResultOfTaskVehicleMissionCoorsTarget {
     crate::__imports::native_task_vehicle_mission_coors_target(ped,
-vehicle,
+vehicle.0,
 x,
 y,
 z,
@@ -31485,11 +31486,11 @@ target: u32) -> altv_wasm_shared::natives_result::ResultOfTaskArrestPed {
     crate::__imports::native_task_arrest_ped(ped,
 target)
 }
-pub fn is_waypoint_playback_going_on_for_vehicle(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsWaypointPlaybackGoingOnForVehicle {
-    crate::__imports::native_is_waypoint_playback_going_on_for_vehicle(vehicle)
+pub fn is_waypoint_playback_going_on_for_vehicle(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsWaypointPlaybackGoingOnForVehicle {
+    crate::__imports::native_is_waypoint_playback_going_on_for_vehicle(vehicle.0)
 }
 pub fn task_plane_goto_precise_vtol(ped: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 x: f32,
 y: f32,
 z: f32,
@@ -31499,7 +31500,7 @@ use_desired_orientation: bool,
 desired_orientation: f32,
 autopilot: bool) -> altv_wasm_shared::natives_result::ResultOfTaskPlaneGotoPreciseVtol {
     crate::__imports::native_task_plane_goto_precise_vtol(ped,
-vehicle,
+vehicle.0,
 x,
 y,
 z,
@@ -31539,13 +31540,13 @@ y,
 z)
 }
 pub fn task_vehicle_follow(driver: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 target_entity: u32,
 speed: f32,
 driving_style: i32,
 min_distance: i32) -> altv_wasm_shared::natives_result::ResultOfTaskVehicleFollow {
     crate::__imports::native_task_vehicle_follow(driver,
-vehicle,
+vehicle.0,
 target_entity,
 speed,
 driving_style,
@@ -31554,34 +31555,34 @@ min_distance)
 pub fn remove_waypoint_recording(name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfRemoveWaypointRecording {
     crate::__imports::native_remove_waypoint_recording(name)
 }
-pub fn remove_vehicle_high_detail_model(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfRemoveVehicleHighDetailModel {
-    crate::__imports::native_remove_vehicle_high_detail_model(vehicle)
+pub fn remove_vehicle_high_detail_model(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfRemoveVehicleHighDetailModel {
+    crate::__imports::native_remove_vehicle_high_detail_model(vehicle.0)
 }
-pub fn is_vehicle_mod_gen9_exclusive(vehicle: u32,
+pub fn is_vehicle_mod_gen9_exclusive(vehicle: &VehicleScriptId,
 mod_type: i32,
 mod_index: i32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleModGen9Exclusive {
-    crate::__imports::native_is_vehicle_mod_gen9_exclusive(vehicle,
+    crate::__imports::native_is_vehicle_mod_gen9_exclusive(vehicle.0,
 mod_type,
 mod_index)
 }
 pub fn get_vehicle_class_estimated_max_speed(vehicle_class: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleClassEstimatedMaxSpeed {
     crate::__imports::native_get_vehicle_class_estimated_max_speed(vehicle_class)
 }
-pub fn set_tyre_wear_rate(vehicle: u32,
+pub fn set_tyre_wear_rate(vehicle: &VehicleScriptId,
 wheel_index: i32,
 multiplier: f32) -> altv_wasm_shared::natives_result::ResultOfSetTyreWearRate {
-    crate::__imports::native_set_tyre_wear_rate(vehicle,
+    crate::__imports::native_set_tyre_wear_rate(vehicle.0,
 wheel_index,
 multiplier)
 }
-pub fn set_arrive_distance_override_for_vehicle_persuit_attack(vehicle: u32,
+pub fn set_arrive_distance_override_for_vehicle_persuit_attack(vehicle: &VehicleScriptId,
 p1: f32) -> altv_wasm_shared::natives_result::ResultOfSetArriveDistanceOverrideForVehiclePersuitAttack {
-    crate::__imports::native_set_arrive_distance_override_for_vehicle_persuit_attack(vehicle,
+    crate::__imports::native_set_arrive_distance_override_for_vehicle_persuit_attack(vehicle.0,
 p1)
 }
-pub fn set_vehicle_has_been_driven_flag(vehicle: u32,
+pub fn set_vehicle_has_been_driven_flag(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleHasBeenDrivenFlag {
-    crate::__imports::native_set_vehicle_has_been_driven_flag(vehicle,
+    crate::__imports::native_set_vehicle_has_been_driven_flag(vehicle.0,
 toggle)
 }
 pub fn vehicle_set_override_extenable_side_ratio(p0: i32,
@@ -31589,11 +31590,11 @@ p1: i32) -> altv_wasm_shared::natives_result::ResultOfVehicleSetOverrideExtenabl
     crate::__imports::native_vehicle_set_override_extenable_side_ratio(p0,
 p1)
 }
-pub fn get_last_shunt_vehicle(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetLastShuntVehicle {
-    crate::__imports::native_get_last_shunt_vehicle(vehicle)
+pub fn get_last_shunt_vehicle(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetLastShuntVehicle {
+    crate::__imports::native_get_last_shunt_vehicle(vehicle.0)
 }
-pub fn get_is_vehicle_disabled_by_emp(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetIsVehicleDisabledByEmp {
-    crate::__imports::native_get_is_vehicle_disabled_by_emp(vehicle)
+pub fn get_is_vehicle_disabled_by_emp(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetIsVehicleDisabledByEmp {
+    crate::__imports::native_get_is_vehicle_disabled_by_emp(vehicle.0)
 }
 pub fn get_random_vehicle_model_in_memory(p0: bool,
 model_hash: u32,
@@ -31602,27 +31603,27 @@ success_indicator: i32) -> altv_wasm_shared::natives_result::ResultOfGetRandomVe
 model_hash,
 success_indicator)
 }
-pub fn set_vehicle_turret_target(vehicle: u32,
+pub fn set_vehicle_turret_target(vehicle: &VehicleScriptId,
 p1: bool,
 x: f32,
 y: f32,
 z: f32,
 p5: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleTurretTarget {
-    crate::__imports::native_set_vehicle_turret_target(vehicle,
+    crate::__imports::native_set_vehicle_turret_target(vehicle.0,
 p1,
 x,
 y,
 z,
 p5)
 }
-pub fn set_should_lerp_from_ai_to_full_recording(vehicle: u32,
+pub fn set_should_lerp_from_ai_to_full_recording(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetShouldLerpFromAiToFullRecording {
-    crate::__imports::native_set_should_lerp_from_ai_to_full_recording(vehicle,
+    crate::__imports::native_set_should_lerp_from_ai_to_full_recording(vehicle.0,
 p1)
 }
-pub fn set_vehicle_inactive_during_playback(vehicle: u32,
+pub fn set_vehicle_inactive_during_playback(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleInactiveDuringPlayback {
-    crate::__imports::native_set_vehicle_inactive_during_playback(vehicle,
+    crate::__imports::native_set_vehicle_inactive_during_playback(vehicle.0,
 toggle)
 }
 pub fn set_vehicle_can_eject_passengers_if_locked(p0: i32,
@@ -31630,37 +31631,37 @@ p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleCanEjectPassenge
     crate::__imports::native_set_vehicle_can_eject_passengers_if_locked(p0,
 p1)
 }
-pub fn set_vehicle_drops_money_when_blown_up(vehicle: u32,
+pub fn set_vehicle_drops_money_when_blown_up(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDropsMoneyWhenBlownUp {
-    crate::__imports::native_set_vehicle_drops_money_when_blown_up(vehicle,
+    crate::__imports::native_set_vehicle_drops_money_when_blown_up(vehicle.0,
 toggle)
 }
-pub fn has_preload_mods_finished(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfHasPreloadModsFinished {
-    crate::__imports::native_has_preload_mods_finished(vehicle)
+pub fn has_preload_mods_finished(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfHasPreloadModsFinished {
+    crate::__imports::native_has_preload_mods_finished(vehicle.0)
 }
-pub fn set_vehicle_is_racing(vehicle: u32,
+pub fn set_vehicle_is_racing(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleIsRacing {
-    crate::__imports::native_set_vehicle_is_racing(vehicle,
+    crate::__imports::native_set_vehicle_is_racing(vehicle.0,
 toggle)
 }
-pub fn get_train_carriage(train: u32,
+pub fn get_train_carriage(train: &VehicleScriptId,
 trailer_number: i32) -> altv_wasm_shared::natives_result::ResultOfGetTrainCarriage {
-    crate::__imports::native_get_train_carriage(train,
+    crate::__imports::native_get_train_carriage(train.0,
 trailer_number)
 }
-pub fn get_submarine_number_of_air_leaks(submarine: u32) -> altv_wasm_shared::natives_result::ResultOfGetSubmarineNumberOfAirLeaks {
-    crate::__imports::native_get_submarine_number_of_air_leaks(submarine)
+pub fn get_submarine_number_of_air_leaks(submarine: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetSubmarineNumberOfAirLeaks {
+    crate::__imports::native_get_submarine_number_of_air_leaks(submarine.0)
 }
-pub fn set_vehicle_rudder_broken(vehicle: u32,
+pub fn set_vehicle_rudder_broken(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleRudderBroken {
-    crate::__imports::native_set_vehicle_rudder_broken(vehicle,
+    crate::__imports::native_set_vehicle_rudder_broken(vehicle.0,
 toggle)
 }
-pub fn set_heli_combat_offset(vehicle: u32,
+pub fn set_heli_combat_offset(vehicle: &VehicleScriptId,
 x: f32,
 y: f32,
 z: f32) -> altv_wasm_shared::natives_result::ResultOfSetHeliCombatOffset {
-    crate::__imports::native_set_heli_combat_offset(vehicle,
+    crate::__imports::native_set_heli_combat_offset(vehicle.0,
 x,
 y,
 z)
@@ -31668,9 +31669,9 @@ z)
 pub fn clear_vehicle_generator_area_of_interest() -> altv_wasm_shared::natives_result::ResultOfClearVehicleGeneratorAreaOfInterest {
     crate::__imports::native_clear_vehicle_generator_area_of_interest()
 }
-pub fn set_boat_disable_avoidance(vehicle: u32,
+pub fn set_boat_disable_avoidance(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetBoatDisableAvoidance {
-    crate::__imports::native_set_boat_disable_avoidance(vehicle,
+    crate::__imports::native_set_boat_disable_avoidance(vehicle.0,
 p1)
 }
 pub fn set_vehicle_influences_wanted_level(p0: i32,
@@ -31678,26 +31679,26 @@ p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleInfluencesWante
     crate::__imports::native_set_vehicle_influences_wanted_level(p0,
 p1)
 }
-pub fn get_hydraulic_suspension_raise_factor(vehicle: u32,
+pub fn get_hydraulic_suspension_raise_factor(vehicle: &VehicleScriptId,
 wheel_id: i32) -> altv_wasm_shared::natives_result::ResultOfGetHydraulicSuspensionRaiseFactor {
-    crate::__imports::native_get_hydraulic_suspension_raise_factor(vehicle,
+    crate::__imports::native_get_hydraulic_suspension_raise_factor(vehicle.0,
 wheel_id)
 }
-pub fn set_plane_section_damage_scale(vehicle: u32,
+pub fn set_plane_section_damage_scale(vehicle: &VehicleScriptId,
 p1: i32,
 p2: i32) -> altv_wasm_shared::natives_result::ResultOfSetPlaneSectionDamageScale {
-    crate::__imports::native_set_plane_section_damage_scale(vehicle,
+    crate::__imports::native_set_plane_section_damage_scale(vehicle.0,
 p1,
 p2)
 }
-pub fn vehicle_start_parachuting(vehicle: u32,
+pub fn vehicle_start_parachuting(vehicle: &VehicleScriptId,
 active: bool) -> altv_wasm_shared::natives_result::ResultOfVehicleStartParachuting {
-    crate::__imports::native_vehicle_start_parachuting(vehicle,
+    crate::__imports::native_vehicle_start_parachuting(vehicle.0,
 active)
 }
-pub fn set_vehicle_can_deform_wheels(vehicle: u32,
+pub fn set_vehicle_can_deform_wheels(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleCanDeformWheels {
-    crate::__imports::native_set_vehicle_can_deform_wheels(vehicle,
+    crate::__imports::native_set_vehicle_can_deform_wheels(vehicle.0,
 toggle)
 }
 pub fn set_cargobob_pickup_rope_type(p0: i32,
@@ -31705,22 +31706,22 @@ p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetCargobobPickupRopeType 
     crate::__imports::native_set_cargobob_pickup_rope_type(p0,
 p1)
 }
-pub fn detach_vehicle_from_cargobob(vehicle: u32,
-cargobob: u32) -> altv_wasm_shared::natives_result::ResultOfDetachVehicleFromCargobob {
-    crate::__imports::native_detach_vehicle_from_cargobob(vehicle,
-cargobob)
+pub fn detach_vehicle_from_cargobob(vehicle: &VehicleScriptId,
+cargobob: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfDetachVehicleFromCargobob {
+    crate::__imports::native_detach_vehicle_from_cargobob(vehicle.0,
+cargobob.0)
 }
 pub fn get_total_duration_of_vehicle_recording(recording: i32,
 script: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfGetTotalDurationOfVehicleRecording {
     crate::__imports::native_get_total_duration_of_vehicle_recording(recording,
 script)
 }
-pub fn get_vehicle_window_tint(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleWindowTint {
-    crate::__imports::native_get_vehicle_window_tint(vehicle)
+pub fn get_vehicle_window_tint(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleWindowTint {
+    crate::__imports::native_get_vehicle_window_tint(vehicle.0)
 }
-pub fn allow_boat_boom_to_animate(vehicle: u32,
+pub fn allow_boat_boom_to_animate(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfAllowBoatBoomToAnimate {
-    crate::__imports::native_allow_boat_boom_to_animate(vehicle,
+    crate::__imports::native_allow_boat_boom_to_animate(vehicle.0,
 toggle)
 }
 pub fn stop_all_garage_activity() -> altv_wasm_shared::natives_result::ResultOfStopAllGarageActivity {
@@ -31737,70 +31738,70 @@ pub fn get_total_duration_of_vehicle_recording_id(id: i32) -> altv_wasm_shared::
 pub fn remove_road_node_speed_zone(speedzone: i32) -> altv_wasm_shared::natives_result::ResultOfRemoveRoadNodeSpeedZone {
     crate::__imports::native_remove_road_node_speed_zone(speedzone)
 }
-pub fn set_vehicle_handling_override(vehicle: u32,
+pub fn set_vehicle_handling_override(vehicle: &VehicleScriptId,
 hash: u32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleHandlingOverride {
-    crate::__imports::native_set_vehicle_handling_override(vehicle,
+    crate::__imports::native_set_vehicle_handling_override(vehicle.0,
 hash)
 }
-pub fn set_short_slowdown_for_landing(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfSetShortSlowdownForLanding {
-    crate::__imports::native_set_short_slowdown_for_landing(vehicle)
+pub fn set_short_slowdown_for_landing(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetShortSlowdownForLanding {
+    crate::__imports::native_set_short_slowdown_for_landing(vehicle.0)
 }
-pub fn set_dont_process_vehicle_glass(vehicle: u32,
+pub fn set_dont_process_vehicle_glass(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetDontProcessVehicleGlass {
-    crate::__imports::native_set_dont_process_vehicle_glass(vehicle,
+    crate::__imports::native_set_dont_process_vehicle_glass(vehicle.0,
 toggle)
 }
-pub fn set_vehicle_turret_speed_this_frame(vehicle: u32,
+pub fn set_vehicle_turret_speed_this_frame(vehicle: &VehicleScriptId,
 speed: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleTurretSpeedThisFrame {
-    crate::__imports::native_set_vehicle_turret_speed_this_frame(vehicle,
+    crate::__imports::native_set_vehicle_turret_speed_this_frame(vehicle.0,
 speed)
 }
-pub fn set_vehicle_fixed(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleFixed {
-    crate::__imports::native_set_vehicle_fixed(vehicle)
+pub fn set_vehicle_fixed(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetVehicleFixed {
+    crate::__imports::native_set_vehicle_fixed(vehicle.0)
 }
-pub fn are_all_vehicle_windows_intact(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfAreAllVehicleWindowsIntact {
-    crate::__imports::native_are_all_vehicle_windows_intact(vehicle)
+pub fn are_all_vehicle_windows_intact(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfAreAllVehicleWindowsIntact {
+    crate::__imports::native_are_all_vehicle_windows_intact(vehicle.0)
 }
-pub fn set_can_use_hydraulics(vehicle: u32,
+pub fn set_can_use_hydraulics(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetCanUseHydraulics {
-    crate::__imports::native_set_can_use_hydraulics(vehicle,
+    crate::__imports::native_set_can_use_hydraulics(vehicle.0,
 toggle)
 }
-pub fn does_extra_exist(vehicle: u32,
+pub fn does_extra_exist(vehicle: &VehicleScriptId,
 extra_id: i32) -> altv_wasm_shared::natives_result::ResultOfDoesExtraExist {
-    crate::__imports::native_does_extra_exist(vehicle,
+    crate::__imports::native_does_extra_exist(vehicle.0,
 extra_id)
 }
-pub fn is_vehicle_in_burnout(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleInBurnout {
-    crate::__imports::native_is_vehicle_in_burnout(vehicle)
+pub fn is_vehicle_in_burnout(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleInBurnout {
+    crate::__imports::native_is_vehicle_in_burnout(vehicle.0)
 }
-pub fn set_wheelie_enabled(vehicle: u32,
+pub fn set_wheelie_enabled(vehicle: &VehicleScriptId,
 enabled: bool) -> altv_wasm_shared::natives_result::ResultOfSetWheelieEnabled {
-    crate::__imports::native_set_wheelie_enabled(vehicle,
+    crate::__imports::native_set_wheelie_enabled(vehicle.0,
 enabled)
 }
 pub fn set_disable_vehicle_explosions_damage(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetDisableVehicleExplosionsDamage {
     crate::__imports::native_set_disable_vehicle_explosions_damage(toggle)
 }
-pub fn is_vehicle_attached_to_tow_truck(tow_truck: u32,
-vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleAttachedToTowTruck {
-    crate::__imports::native_is_vehicle_attached_to_tow_truck(tow_truck,
-vehicle)
+pub fn is_vehicle_attached_to_tow_truck(tow_truck: &VehicleScriptId,
+vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleAttachedToTowTruck {
+    crate::__imports::native_is_vehicle_attached_to_tow_truck(tow_truck.0,
+vehicle.0)
 }
-pub fn set_vehicle_searchlight(heli: u32,
+pub fn set_vehicle_searchlight(heli: &VehicleScriptId,
 toggle: bool,
 can_be_used_by_a_i: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleSearchlight {
-    crate::__imports::native_set_vehicle_searchlight(heli,
+    crate::__imports::native_set_vehicle_searchlight(heli.0,
 toggle,
 can_be_used_by_a_i)
 }
-pub fn set_train_cruise_speed(train: u32,
+pub fn set_train_cruise_speed(train: &VehicleScriptId,
 speed: f32) -> altv_wasm_shared::natives_result::ResultOfSetTrainCruiseSpeed {
-    crate::__imports::native_set_train_cruise_speed(train,
+    crate::__imports::native_set_train_cruise_speed(train.0,
 speed)
 }
-pub fn attach_vehicle_on_to_trailer(vehicle: u32,
-trailer: u32,
+pub fn attach_vehicle_on_to_trailer(vehicle: &VehicleScriptId,
+trailer: &VehicleScriptId,
 offset_x: f32,
 offset_y: f32,
 offset_z: f32,
@@ -31811,8 +31812,8 @@ rotation_x: f32,
 rotation_y: f32,
 rotation_z: f32,
 disable_collisions: f32) -> altv_wasm_shared::natives_result::ResultOfAttachVehicleOnToTrailer {
-    crate::__imports::native_attach_vehicle_on_to_trailer(vehicle,
-trailer,
+    crate::__imports::native_attach_vehicle_on_to_trailer(vehicle.0,
+trailer.0,
 offset_x,
 offset_y,
 offset_z,
@@ -31824,37 +31825,37 @@ rotation_y,
 rotation_z,
 disable_collisions)
 }
-pub fn does_cargobob_have_pick_up_rope(cargobob: u32) -> altv_wasm_shared::natives_result::ResultOfDoesCargobobHavePickUpRope {
-    crate::__imports::native_does_cargobob_have_pick_up_rope(cargobob)
+pub fn does_cargobob_have_pick_up_rope(cargobob: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfDoesCargobobHavePickUpRope {
+    crate::__imports::native_does_cargobob_have_pick_up_rope(cargobob.0)
 }
-pub fn set_vehicle_custom_path_node_streaming_radius(vehicle: u32,
+pub fn set_vehicle_custom_path_node_streaming_radius(vehicle: &VehicleScriptId,
 p1: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleCustomPathNodeStreamingRadius {
-    crate::__imports::native_set_vehicle_custom_path_node_streaming_radius(vehicle,
+    crate::__imports::native_set_vehicle_custom_path_node_streaming_radius(vehicle.0,
 p1)
 }
-pub fn set_vehicle_friction_override(vehicle: u32,
+pub fn set_vehicle_friction_override(vehicle: &VehicleScriptId,
 friction: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleFrictionOverride {
-    crate::__imports::native_set_vehicle_friction_override(vehicle,
+    crate::__imports::native_set_vehicle_friction_override(vehicle.0,
 friction)
 }
-pub fn set_vehicle_can_leak_petrol(vehicle: u32,
+pub fn set_vehicle_can_leak_petrol(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleCanLeakPetrol {
-    crate::__imports::native_set_vehicle_can_leak_petrol(vehicle,
+    crate::__imports::native_set_vehicle_can_leak_petrol(vehicle.0,
 toggle)
 }
-pub fn set_convertible_roof_latch_state(vehicle: u32,
+pub fn set_convertible_roof_latch_state(vehicle: &VehicleScriptId,
 state: bool) -> altv_wasm_shared::natives_result::ResultOfSetConvertibleRoofLatchState {
-    crate::__imports::native_set_convertible_roof_latch_state(vehicle,
+    crate::__imports::native_set_convertible_roof_latch_state(vehicle.0,
 state)
 }
-pub fn set_vehicle_has_unbreakable_lights(vehicle: u32,
+pub fn set_vehicle_has_unbreakable_lights(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleHasUnbreakableLights {
-    crate::__imports::native_set_vehicle_has_unbreakable_lights(vehicle,
+    crate::__imports::native_set_vehicle_has_unbreakable_lights(vehicle.0,
 toggle)
 }
-pub fn set_open_rear_doors_on_explosion(vehicle: u32,
+pub fn set_open_rear_doors_on_explosion(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetOpenRearDoorsOnExplosion {
-    crate::__imports::native_set_open_rear_doors_on_explosion(vehicle,
+    crate::__imports::native_set_open_rear_doors_on_explosion(vehicle.0,
 toggle)
 }
 pub fn vehicle_set_enable_ramp_car_side_impulse(p0: i32,
@@ -31865,45 +31866,45 @@ p1)
 pub fn has_vehicle_asset_loaded(vehicle_asset: i32) -> altv_wasm_shared::natives_result::ResultOfHasVehicleAssetLoaded {
     crate::__imports::native_has_vehicle_asset_loaded(vehicle_asset)
 }
-pub fn is_playback_going_on_for_vehicle(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsPlaybackGoingOnForVehicle {
-    crate::__imports::native_is_playback_going_on_for_vehicle(vehicle)
+pub fn is_playback_going_on_for_vehicle(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsPlaybackGoingOnForVehicle {
+    crate::__imports::native_is_playback_going_on_for_vehicle(vehicle.0)
 }
-pub fn get_vehicle_trailer_vehicle(vehicle: u32,
-trailer: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleTrailerVehicle {
-    crate::__imports::native_get_vehicle_trailer_vehicle(vehicle,
-trailer)
+pub fn get_vehicle_trailer_vehicle(vehicle: &VehicleScriptId,
+trailer: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleTrailerVehicle {
+    crate::__imports::native_get_vehicle_trailer_vehicle(vehicle.0,
+trailer.0)
 }
-pub fn set_vehicle_stays_frozen_when_cleaned_up(vehicle: u32,
+pub fn set_vehicle_stays_frozen_when_cleaned_up(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleStaysFrozenWhenCleanedUp {
-    crate::__imports::native_set_vehicle_stays_frozen_when_cleaned_up(vehicle,
+    crate::__imports::native_set_vehicle_stays_frozen_when_cleaned_up(vehicle.0,
 toggle)
 }
-pub fn set_vehicle_use_alternate_handling(vehicle: u32,
+pub fn set_vehicle_use_alternate_handling(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleUseAlternateHandling {
-    crate::__imports::native_set_vehicle_use_alternate_handling(vehicle,
+    crate::__imports::native_set_vehicle_use_alternate_handling(vehicle.0,
 toggle)
 }
-pub fn get_is_wheels_retracted(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetIsWheelsRetracted {
-    crate::__imports::native_get_is_wheels_retracted(vehicle)
+pub fn get_is_wheels_retracted(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetIsWheelsRetracted {
+    crate::__imports::native_get_is_wheels_retracted(vehicle.0)
 }
-pub fn set_vehicle_allow_homing_missle_lockon_synced(vehicle: u32,
+pub fn set_vehicle_allow_homing_missle_lockon_synced(vehicle: &VehicleScriptId,
 can_be_locked_on: bool,
 p2: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleAllowHomingMissleLockonSynced {
-    crate::__imports::native_set_vehicle_allow_homing_missle_lockon_synced(vehicle,
+    crate::__imports::native_set_vehicle_allow_homing_missle_lockon_synced(vehicle.0,
 can_be_locked_on,
 p2)
 }
-pub fn is_vehicle_high_detail(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleHighDetail {
-    crate::__imports::native_is_vehicle_high_detail(vehicle)
+pub fn is_vehicle_high_detail(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleHighDetail {
+    crate::__imports::native_is_vehicle_high_detail(vehicle.0)
 }
-pub fn set_vehicle_mod_kit(vehicle: u32,
+pub fn set_vehicle_mod_kit(vehicle: &VehicleScriptId,
 mod_kit: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleModKit {
-    crate::__imports::native_set_vehicle_mod_kit(vehicle,
+    crate::__imports::native_set_vehicle_mod_kit(vehicle.0,
 mod_kit)
 }
-pub fn force_playback_recorded_vehicle_update(vehicle: u32,
+pub fn force_playback_recorded_vehicle_update(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfForcePlaybackRecordedVehicleUpdate {
-    crate::__imports::native_force_playback_recorded_vehicle_update(vehicle,
+    crate::__imports::native_force_playback_recorded_vehicle_update(vehicle.0,
 p1)
 }
 pub fn set_cargobob_exclude_from_pickup_entity(p0: i32,
@@ -31911,26 +31912,26 @@ p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetCargobobExcludeFromPick
     crate::__imports::native_set_cargobob_exclude_from_pickup_entity(p0,
 p1)
 }
-pub fn set_vehicle_act_as_if_high_speed_for_frag_smashing(vehicle: u32,
+pub fn set_vehicle_act_as_if_high_speed_for_frag_smashing(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleActAsIfHighSpeedForFragSmashing {
-    crate::__imports::native_set_vehicle_act_as_if_high_speed_for_frag_smashing(vehicle,
+    crate::__imports::native_set_vehicle_act_as_if_high_speed_for_frag_smashing(vehicle.0,
 p1)
 }
-pub fn set_vehicle_headlight_shadows(vehicle: u32,
+pub fn set_vehicle_headlight_shadows(vehicle: &VehicleScriptId,
 p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleHeadlightShadows {
-    crate::__imports::native_set_vehicle_headlight_shadows(vehicle,
+    crate::__imports::native_set_vehicle_headlight_shadows(vehicle.0,
 p1)
 }
-pub fn set_vehicle_extra_colours(vehicle: u32,
+pub fn set_vehicle_extra_colours(vehicle: &VehicleScriptId,
 pearlescent_color: i32,
 wheel_color: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleExtraColours {
-    crate::__imports::native_set_vehicle_extra_colours(vehicle,
+    crate::__imports::native_set_vehicle_extra_colours(vehicle.0,
 pearlescent_color,
 wheel_color)
 }
-pub fn set_vehicle_doors_locked_for_all_teams(vehicle: u32,
+pub fn set_vehicle_doors_locked_for_all_teams(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDoorsLockedForAllTeams {
-    crate::__imports::native_set_vehicle_doors_locked_for_all_teams(vehicle,
+    crate::__imports::native_set_vehicle_doors_locked_for_all_teams(vehicle.0,
 toggle)
 }
 pub fn get_rotation_of_vehicle_recording_at_time(recording: i32,
@@ -31940,14 +31941,14 @@ script: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfGetRotatio
 time,
 script)
 }
-pub fn set_vehicle_can_engine_missfire(vehicle: u32,
+pub fn set_vehicle_can_engine_missfire(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleCanEngineMissfire {
-    crate::__imports::native_set_vehicle_can_engine_missfire(vehicle,
+    crate::__imports::native_set_vehicle_can_engine_missfire(vehicle.0,
 toggle)
 }
-pub fn set_vehicle_active_for_ped_navigation(vehicle: u32,
+pub fn set_vehicle_active_for_ped_navigation(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleActiveForPedNavigation {
-    crate::__imports::native_set_vehicle_active_for_ped_navigation(vehicle,
+    crate::__imports::native_set_vehicle_active_for_ped_navigation(vehicle.0,
 toggle)
 }
 pub fn set_disable_weapon_blade_forces(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetDisableWeaponBladeForces {
@@ -31958,9 +31959,9 @@ script: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfGetVehicle
     crate::__imports::native_get_vehicle_recording_id(recording,
 script)
 }
-pub fn get_ped_using_vehicle_door(vehicle: u32,
+pub fn get_ped_using_vehicle_door(vehicle: &VehicleScriptId,
 doord: i32) -> altv_wasm_shared::natives_result::ResultOfGetPedUsingVehicleDoor {
-    crate::__imports::native_get_ped_using_vehicle_door(vehicle,
+    crate::__imports::native_get_ped_using_vehicle_door(vehicle.0,
 doord)
 }
 pub fn set_train_track_spawn_frequency(track_index: i32,
@@ -31968,79 +31969,79 @@ frequency: i32) -> altv_wasm_shared::natives_result::ResultOfSetTrainTrackSpawnF
     crate::__imports::native_set_train_track_spawn_frequency(track_index,
 frequency)
 }
-pub fn reset_vehicle_wheels(vehicle: u32,
+pub fn reset_vehicle_wheels(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfResetVehicleWheels {
-    crate::__imports::native_reset_vehicle_wheels(vehicle,
+    crate::__imports::native_reset_vehicle_wheels(vehicle.0,
 toggle)
 }
 pub fn delete_script_vehicle_generator(vehicle_generator: i32) -> altv_wasm_shared::natives_result::ResultOfDeleteScriptVehicleGenerator {
     crate::__imports::native_delete_script_vehicle_generator(vehicle_generator)
 }
-pub fn set_vehicle_reduce_grip(vehicle: u32,
+pub fn set_vehicle_reduce_grip(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleReduceGrip {
-    crate::__imports::native_set_vehicle_reduce_grip(vehicle,
+    crate::__imports::native_set_vehicle_reduce_grip(vehicle.0,
 toggle)
 }
-pub fn is_vehicle_seat_free(vehicle: u32,
+pub fn is_vehicle_seat_free(vehicle: &VehicleScriptId,
 seat_index: i32,
 is_task_running: bool) -> altv_wasm_shared::natives_result::ResultOfIsVehicleSeatFree {
-    crate::__imports::native_is_vehicle_seat_free(vehicle,
+    crate::__imports::native_is_vehicle_seat_free(vehicle.0,
 seat_index,
 is_task_running)
 }
 pub fn allow_train_to_be_removed_by_population(p0: i32) -> altv_wasm_shared::natives_result::ResultOfAllowTrainToBeRemovedByPopulation {
     crate::__imports::native_allow_train_to_be_removed_by_population(p0)
 }
-pub fn set_vehicle_respects_locks_when_has_driver(vehicle: u32,
+pub fn set_vehicle_respects_locks_when_has_driver(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleRespectsLocksWhenHasDriver {
-    crate::__imports::native_set_vehicle_respects_locks_when_has_driver(vehicle,
+    crate::__imports::native_set_vehicle_respects_locks_when_has_driver(vehicle.0,
 p1)
 }
-pub fn disable_plane_aileron(vehicle: u32,
+pub fn disable_plane_aileron(vehicle: &VehicleScriptId,
 p1: bool,
 p2: bool) -> altv_wasm_shared::natives_result::ResultOfDisablePlaneAileron {
-    crate::__imports::native_disable_plane_aileron(vehicle,
+    crate::__imports::native_disable_plane_aileron(vehicle.0,
 p1,
 p2)
 }
 pub fn set_vehicle_density_multiplier_this_frame(multiplier: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDensityMultiplierThisFrame {
     crate::__imports::native_set_vehicle_density_multiplier_this_frame(multiplier)
 }
-pub fn set_vehicle_engine_on(vehicle: u32,
+pub fn set_vehicle_engine_on(vehicle: &VehicleScriptId,
 value: bool,
 instantly: bool,
 disable_auto_start: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleEngineOn {
-    crate::__imports::native_set_vehicle_engine_on(vehicle,
+    crate::__imports::native_set_vehicle_engine_on(vehicle.0,
 value,
 instantly,
 disable_auto_start)
 }
-pub fn get_vehicle_number_of_passengers(vehicle: u32,
+pub fn get_vehicle_number_of_passengers(vehicle: &VehicleScriptId,
 include_driver: bool,
 include_dead_occupants: bool) -> altv_wasm_shared::natives_result::ResultOfGetVehicleNumberOfPassengers {
-    crate::__imports::native_get_vehicle_number_of_passengers(vehicle,
+    crate::__imports::native_get_vehicle_number_of_passengers(vehicle.0,
 include_driver,
 include_dead_occupants)
 }
-pub fn can_anchor_boat_here_ignore_players(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfCanAnchorBoatHereIgnorePlayers {
-    crate::__imports::native_can_anchor_boat_here_ignore_players(vehicle)
+pub fn can_anchor_boat_here_ignore_players(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfCanAnchorBoatHereIgnorePlayers {
+    crate::__imports::native_can_anchor_boat_here_ignore_players(vehicle.0)
 }
-pub fn set_disable_pretend_occupants(vehicle: u32,
+pub fn set_disable_pretend_occupants(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetDisablePretendOccupants {
-    crate::__imports::native_set_disable_pretend_occupants(vehicle,
+    crate::__imports::native_set_disable_pretend_occupants(vehicle.0,
 toggle)
 }
-pub fn get_vehicle_door_lock_status(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleDoorLockStatus {
-    crate::__imports::native_get_vehicle_door_lock_status(vehicle)
+pub fn get_vehicle_door_lock_status(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleDoorLockStatus {
+    crate::__imports::native_get_vehicle_door_lock_status(vehicle.0)
 }
-pub fn does_vehicle_have_weapons(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfDoesVehicleHaveWeapons {
-    crate::__imports::native_does_vehicle_have_weapons(vehicle)
+pub fn does_vehicle_have_weapons(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfDoesVehicleHaveWeapons {
+    crate::__imports::native_does_vehicle_have_weapons(vehicle.0)
 }
-pub fn bring_vehicle_to_halt(vehicle: u32,
+pub fn bring_vehicle_to_halt(vehicle: &VehicleScriptId,
 distance: f32,
 duration: i32,
 p3: bool) -> altv_wasm_shared::natives_result::ResultOfBringVehicleToHalt {
-    crate::__imports::native_bring_vehicle_to_halt(vehicle,
+    crate::__imports::native_bring_vehicle_to_halt(vehicle.0,
 distance,
 duration,
 p3)
@@ -32048,109 +32049,109 @@ p3)
 pub fn set_far_draw_vehicles(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetFarDrawVehicles {
     crate::__imports::native_set_far_draw_vehicles(toggle)
 }
-pub fn can_anchor_boat_here(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfCanAnchorBoatHere {
-    crate::__imports::native_can_anchor_boat_here(vehicle)
+pub fn can_anchor_boat_here(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfCanAnchorBoatHere {
+    crate::__imports::native_can_anchor_boat_here(vehicle.0)
 }
 pub fn set_disable_bmx_extra_trick_forces(p0: i32) -> altv_wasm_shared::natives_result::ResultOfSetDisableBmxExtraTrickForces {
     crate::__imports::native_set_disable_bmx_extra_trick_forces(p0)
 }
-pub fn set_disable_explode_from_body_damage_on_collision(vehicle: u32,
+pub fn set_disable_explode_from_body_damage_on_collision(vehicle: &VehicleScriptId,
 value: f32) -> altv_wasm_shared::natives_result::ResultOfSetDisableExplodeFromBodyDamageOnCollision {
-    crate::__imports::native_set_disable_explode_from_body_damage_on_collision(vehicle,
+    crate::__imports::native_set_disable_explode_from_body_damage_on_collision(vehicle.0,
 value)
 }
-pub fn set_vehicle_generates_engine_shocking_events(vehicle: u32,
+pub fn set_vehicle_generates_engine_shocking_events(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleGeneratesEngineShockingEvents {
-    crate::__imports::native_set_vehicle_generates_engine_shocking_events(vehicle,
+    crate::__imports::native_set_vehicle_generates_engine_shocking_events(vehicle.0,
 toggle)
 }
-pub fn is_vehicle_bumper_bouncing(vehicle: u32,
+pub fn is_vehicle_bumper_bouncing(vehicle: &VehicleScriptId,
 front_bumper: bool) -> altv_wasm_shared::natives_result::ResultOfIsVehicleBumperBouncing {
-    crate::__imports::native_is_vehicle_bumper_bouncing(vehicle,
+    crate::__imports::native_is_vehicle_bumper_bouncing(vehicle.0,
 front_bumper)
 }
-pub fn set_hydraulics_control(vehicle: u32,
+pub fn set_hydraulics_control(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetHydraulicsControl {
-    crate::__imports::native_set_hydraulics_control(vehicle,
+    crate::__imports::native_set_hydraulics_control(vehicle.0,
 toggle)
 }
-pub fn vehicle_set_ramp_and_ramming_cars_take_damage(vehicle: u32,
+pub fn vehicle_set_ramp_and_ramming_cars_take_damage(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfVehicleSetRampAndRammingCarsTakeDamage {
-    crate::__imports::native_vehicle_set_ramp_and_ramming_cars_take_damage(vehicle,
+    crate::__imports::native_vehicle_set_ramp_and_ramming_cars_take_damage(vehicle.0,
 toggle)
 }
-pub fn get_vehicle_layout_hash(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleLayoutHash {
-    crate::__imports::native_get_vehicle_layout_hash(vehicle)
+pub fn get_vehicle_layout_hash(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleLayoutHash {
+    crate::__imports::native_get_vehicle_layout_hash(vehicle.0)
 }
-pub fn is_any_ped_rappelling_from_heli(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsAnyPedRappellingFromHeli {
-    crate::__imports::native_is_any_ped_rappelling_from_heli(vehicle)
+pub fn is_any_ped_rappelling_from_heli(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsAnyPedRappellingFromHeli {
+    crate::__imports::native_is_any_ped_rappelling_from_heli(vehicle.0)
 }
-pub fn get_vehicle_class(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleClass {
-    crate::__imports::native_get_vehicle_class(vehicle)
+pub fn get_vehicle_class(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleClass {
+    crate::__imports::native_get_vehicle_class(vehicle.0)
 }
-pub fn is_vehicle_stopped_at_traffic_lights(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleStoppedAtTrafficLights {
-    crate::__imports::native_is_vehicle_stopped_at_traffic_lights(vehicle)
+pub fn is_vehicle_stopped_at_traffic_lights(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleStoppedAtTrafficLights {
+    crate::__imports::native_is_vehicle_stopped_at_traffic_lights(vehicle.0)
 }
-pub fn set_increase_wheel_crush_damage(vehicle: u32,
+pub fn set_increase_wheel_crush_damage(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetIncreaseWheelCrushDamage {
-    crate::__imports::native_set_increase_wheel_crush_damage(vehicle,
+    crate::__imports::native_set_increase_wheel_crush_damage(vehicle.0,
 toggle)
 }
-pub fn attach_vehicle_to_tow_truck(tow_truck: u32,
-vehicle: u32,
+pub fn attach_vehicle_to_tow_truck(tow_truck: &VehicleScriptId,
+vehicle: &VehicleScriptId,
 rear: bool,
 hook_offset_x: f32,
 hook_offset_y: f32,
 hook_offset_z: f32) -> altv_wasm_shared::natives_result::ResultOfAttachVehicleToTowTruck {
-    crate::__imports::native_attach_vehicle_to_tow_truck(tow_truck,
-vehicle,
+    crate::__imports::native_attach_vehicle_to_tow_truck(tow_truck.0,
+vehicle.0,
 rear,
 hook_offset_x,
 hook_offset_y,
 hook_offset_z)
 }
-pub fn set_vehicle_wheels_can_break(vehicle: u32,
+pub fn set_vehicle_wheels_can_break(vehicle: &VehicleScriptId,
 enabled: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleWheelsCanBreak {
-    crate::__imports::native_set_vehicle_wheels_can_break(vehicle,
+    crate::__imports::native_set_vehicle_wheels_can_break(vehicle.0,
 enabled)
 }
-pub fn start_playback_recorded_vehicle_using_ai(vehicle: u32,
+pub fn start_playback_recorded_vehicle_using_ai(vehicle: &VehicleScriptId,
 recording: i32,
 script: Option<&String>,
 speed: f32,
 driving_style: i32) -> altv_wasm_shared::natives_result::ResultOfStartPlaybackRecordedVehicleUsingAi {
-    crate::__imports::native_start_playback_recorded_vehicle_using_ai(vehicle,
+    crate::__imports::native_start_playback_recorded_vehicle_using_ai(vehicle.0,
 recording,
 script,
 speed,
 driving_style)
 }
-pub fn toggle_vehicle_mod(vehicle: u32,
+pub fn toggle_vehicle_mod(vehicle: &VehicleScriptId,
 mod_type: i32,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfToggleVehicleMod {
-    crate::__imports::native_toggle_vehicle_mod(vehicle,
+    crate::__imports::native_toggle_vehicle_mod(vehicle.0,
 mod_type,
 toggle)
 }
-pub fn transform_to_car(vehicle: u32,
+pub fn transform_to_car(vehicle: &VehicleScriptId,
 no_animation: bool) -> altv_wasm_shared::natives_result::ResultOfTransformToCar {
-    crate::__imports::native_transform_to_car(vehicle,
+    crate::__imports::native_transform_to_car(vehicle.0,
 no_animation)
 }
-pub fn set_plane_engine_health(vehicle: u32,
+pub fn set_plane_engine_health(vehicle: &VehicleScriptId,
 health: f32) -> altv_wasm_shared::natives_result::ResultOfSetPlaneEngineHealth {
-    crate::__imports::native_set_plane_engine_health(vehicle,
+    crate::__imports::native_set_plane_engine_health(vehicle.0,
 health)
 }
-pub fn set_trailer_inverse_mass_scale(vehicle: u32,
+pub fn set_trailer_inverse_mass_scale(vehicle: &VehicleScriptId,
 p1: f32) -> altv_wasm_shared::natives_result::ResultOfSetTrailerInverseMassScale {
-    crate::__imports::native_set_trailer_inverse_mass_scale(vehicle,
+    crate::__imports::native_set_trailer_inverse_mass_scale(vehicle.0,
 p1)
 }
-pub fn set_vehicle_neon_enabled(vehicle: u32,
+pub fn set_vehicle_neon_enabled(vehicle: &VehicleScriptId,
 index: i32,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleNeonEnabled {
-    crate::__imports::native_set_vehicle_neon_enabled(vehicle,
+    crate::__imports::native_set_vehicle_neon_enabled(vehicle.0,
 index,
 toggle)
 }
@@ -32160,31 +32161,31 @@ pub fn get_vehicle_model_number_of_seats(model_hash: u32) -> altv_wasm_shared::n
 pub fn set_garbage_trucks(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetGarbageTrucks {
     crate::__imports::native_set_garbage_trucks(toggle)
 }
-pub fn set_vehicle_has_been_owned_by_player(vehicle: u32,
+pub fn set_vehicle_has_been_owned_by_player(vehicle: &VehicleScriptId,
 owned: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleHasBeenOwnedByPlayer {
-    crate::__imports::native_set_vehicle_has_been_owned_by_player(vehicle,
+    crate::__imports::native_set_vehicle_has_been_owned_by_player(vehicle.0,
 owned)
 }
-pub fn set_vehicle_disable_towing(vehicle: u32,
+pub fn set_vehicle_disable_towing(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDisableTowing {
-    crate::__imports::native_set_vehicle_disable_towing(vehicle,
+    crate::__imports::native_set_vehicle_disable_towing(vehicle.0,
 toggle)
 }
-pub fn get_vehicle_livery(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleLivery {
-    crate::__imports::native_get_vehicle_livery(vehicle)
+pub fn get_vehicle_livery(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleLivery {
+    crate::__imports::native_get_vehicle_livery(vehicle.0)
 }
 pub fn can_cargobob_pick_up_entity(p0: i32,
 p1: i32) -> altv_wasm_shared::natives_result::ResultOfCanCargobobPickUpEntity {
     crate::__imports::native_can_cargobob_pick_up_entity(p0,
 p1)
 }
-pub fn set_vehicle_will_tell_others_to_hurry(vehicle: u32,
+pub fn set_vehicle_will_tell_others_to_hurry(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleWillTellOthersToHurry {
-    crate::__imports::native_set_vehicle_will_tell_others_to_hurry(vehicle,
+    crate::__imports::native_set_vehicle_will_tell_others_to_hurry(vehicle.0,
 p1)
 }
-pub fn get_vehicle_num_of_broken_loosen_parts(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleNumOfBrokenLoosenParts {
-    crate::__imports::native_get_vehicle_num_of_broken_loosen_parts(vehicle)
+pub fn get_vehicle_num_of_broken_loosen_parts(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleNumOfBrokenLoosenParts {
+    crate::__imports::native_get_vehicle_num_of_broken_loosen_parts(vehicle.0)
 }
 pub fn add_road_node_speed_zone(x: f32,
 y: f32,
@@ -32199,34 +32200,34 @@ radius,
 speed,
 p5)
 }
-pub fn are_any_vehicle_seats_free(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfAreAnyVehicleSeatsFree {
-    crate::__imports::native_are_any_vehicle_seats_free(vehicle)
+pub fn are_any_vehicle_seats_free(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfAreAnyVehicleSeatsFree {
+    crate::__imports::native_are_any_vehicle_seats_free(vehicle.0)
 }
-pub fn set_disable_hover_mode_flight(vehicle: u32,
+pub fn set_disable_hover_mode_flight(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetDisableHoverModeFlight {
-    crate::__imports::native_set_disable_hover_mode_flight(vehicle,
+    crate::__imports::native_set_disable_hover_mode_flight(vehicle.0,
 toggle)
 }
-pub fn get_position_in_recording(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetPositionInRecording {
-    crate::__imports::native_get_position_in_recording(vehicle)
+pub fn get_position_in_recording(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetPositionInRecording {
+    crate::__imports::native_get_position_in_recording(vehicle.0)
 }
-pub fn set_vehicle_timed_explosion(vehicle: u32,
+pub fn set_vehicle_timed_explosion(vehicle: &VehicleScriptId,
 ped: u32,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleTimedExplosion {
-    crate::__imports::native_set_vehicle_timed_explosion(vehicle,
+    crate::__imports::native_set_vehicle_timed_explosion(vehicle.0,
 ped,
 toggle)
 }
-pub fn get_drift_tyres_set(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetDriftTyresSet {
-    crate::__imports::native_get_drift_tyres_set(vehicle)
+pub fn get_drift_tyres_set(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetDriftTyresSet {
+    crate::__imports::native_get_drift_tyres_set(vehicle.0)
 }
 pub fn get_vehicle_class_max_acceleration(vehicle_class: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleClassMaxAcceleration {
     crate::__imports::native_get_vehicle_class_max_acceleration(vehicle_class)
 }
-pub fn set_door_allowed_to_be_broken_off(vehicle: u32,
+pub fn set_door_allowed_to_be_broken_off(vehicle: &VehicleScriptId,
 door_id: i32,
 is_breakable: bool) -> altv_wasm_shared::natives_result::ResultOfSetDoorAllowedToBeBrokenOff {
-    crate::__imports::native_set_door_allowed_to_be_broken_off(vehicle,
+    crate::__imports::native_set_door_allowed_to_be_broken_off(vehicle.0,
 door_id,
 is_breakable)
 }
@@ -32250,9 +32251,9 @@ p4,
 p5,
 p6)
 }
-pub fn set_vehicle_can_be_used_by_fleeing_peds(vehicle: u32,
+pub fn set_vehicle_can_be_used_by_fleeing_peds(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleCanBeUsedByFleeingPeds {
-    crate::__imports::native_set_vehicle_can_be_used_by_fleeing_peds(vehicle,
+    crate::__imports::native_set_vehicle_can_be_used_by_fleeing_peds(vehicle.0,
 toggle)
 }
 pub fn has_vehicle_recording_been_loaded(recording: i32,
@@ -32260,107 +32261,107 @@ script: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfHasVehicle
     crate::__imports::native_has_vehicle_recording_been_loaded(recording,
 script)
 }
-pub fn can_shuffle_seat(vehicle: u32,
+pub fn can_shuffle_seat(vehicle: &VehicleScriptId,
 seat_index: i32) -> altv_wasm_shared::natives_result::ResultOfCanShuffleSeat {
-    crate::__imports::native_can_shuffle_seat(vehicle,
+    crate::__imports::native_can_shuffle_seat(vehicle.0,
 seat_index)
 }
-pub fn set_vehicle_flight_nozzle_position(vehicle: u32,
+pub fn set_vehicle_flight_nozzle_position(vehicle: &VehicleScriptId,
 angle_ratio: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleFlightNozzlePosition {
-    crate::__imports::native_set_vehicle_flight_nozzle_position(vehicle,
+    crate::__imports::native_set_vehicle_flight_nozzle_position(vehicle.0,
 angle_ratio)
 }
-pub fn set_render_train_as_derailed(train: u32,
+pub fn set_render_train_as_derailed(train: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetRenderTrainAsDerailed {
-    crate::__imports::native_set_render_train_as_derailed(train,
+    crate::__imports::native_set_render_train_as_derailed(train.0,
 toggle)
 }
-pub fn set_vehicle_is_considered_by_player(vehicle: u32,
+pub fn set_vehicle_is_considered_by_player(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleIsConsideredByPlayer {
-    crate::__imports::native_set_vehicle_is_considered_by_player(vehicle,
+    crate::__imports::native_set_vehicle_is_considered_by_player(vehicle.0,
 toggle)
 }
-pub fn disable_vehicle_turret_movement_this_frame(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfDisableVehicleTurretMovementThisFrame {
-    crate::__imports::native_disable_vehicle_turret_movement_this_frame(vehicle)
+pub fn disable_vehicle_turret_movement_this_frame(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfDisableVehicleTurretMovementThisFrame {
+    crate::__imports::native_disable_vehicle_turret_movement_this_frame(vehicle.0)
 }
-pub fn force_submarine_surface_mode(vehicle: u32,
+pub fn force_submarine_surface_mode(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfForceSubmarineSurfaceMode {
-    crate::__imports::native_force_submarine_surface_mode(vehicle,
+    crate::__imports::native_force_submarine_surface_mode(vehicle.0,
 toggle)
 }
-pub fn set_vehicle_colour_combination(vehicle: u32,
+pub fn set_vehicle_colour_combination(vehicle: &VehicleScriptId,
 color_combination: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleColourCombination {
-    crate::__imports::native_set_vehicle_colour_combination(vehicle,
+    crate::__imports::native_set_vehicle_colour_combination(vehicle.0,
 color_combination)
 }
-pub fn get_num_mod_kits(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetNumModKits {
-    crate::__imports::native_get_num_mod_kits(vehicle)
+pub fn get_num_mod_kits(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetNumModKits {
+    crate::__imports::native_get_num_mod_kits(vehicle.0)
 }
-pub fn set_allow_vehicle_explodes_on_contact(vehicle: u32,
+pub fn set_allow_vehicle_explodes_on_contact(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetAllowVehicleExplodesOnContact {
-    crate::__imports::native_set_allow_vehicle_explodes_on_contact(vehicle,
+    crate::__imports::native_set_allow_vehicle_explodes_on_contact(vehicle.0,
 toggle)
 }
 pub fn set_all_vehicle_generators_active() -> altv_wasm_shared::natives_result::ResultOfSetAllVehicleGeneratorsActive {
     crate::__imports::native_set_all_vehicle_generators_active()
 }
-pub fn set_vehicle_lights(vehicle: u32,
+pub fn set_vehicle_lights(vehicle: &VehicleScriptId,
 state: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleLights {
-    crate::__imports::native_set_vehicle_lights(vehicle,
+    crate::__imports::native_set_vehicle_lights(vehicle.0,
 state)
 }
-pub fn close_bomb_bay_doors(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfCloseBombBayDoors {
-    crate::__imports::native_close_bomb_bay_doors(vehicle)
+pub fn close_bomb_bay_doors(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfCloseBombBayDoors {
+    crate::__imports::native_close_bomb_bay_doors(vehicle.0)
 }
-pub fn set_vehicle_occupants_take_explosive_damage(vehicle: u32,
+pub fn set_vehicle_occupants_take_explosive_damage(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleOccupantsTakeExplosiveDamage {
-    crate::__imports::native_set_vehicle_occupants_take_explosive_damage(vehicle,
+    crate::__imports::native_set_vehicle_occupants_take_explosive_damage(vehicle.0,
 toggle)
 }
 pub fn set_ambient_vehicle_neon_enabled(p0: bool) -> altv_wasm_shared::natives_result::ResultOfSetAmbientVehicleNeonEnabled {
     crate::__imports::native_set_ambient_vehicle_neon_enabled(p0)
 }
-pub fn get_vehicle_current_time_in_slip_stream(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleCurrentTimeInSlipStream {
-    crate::__imports::native_get_vehicle_current_time_in_slip_stream(vehicle)
+pub fn get_vehicle_current_time_in_slip_stream(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleCurrentTimeInSlipStream {
+    crate::__imports::native_get_vehicle_current_time_in_slip_stream(vehicle.0)
 }
-pub fn set_vehicle_custom_secondary_colour(vehicle: u32,
+pub fn set_vehicle_custom_secondary_colour(vehicle: &VehicleScriptId,
 r: i32,
 g: i32,
 b: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleCustomSecondaryColour {
-    crate::__imports::native_set_vehicle_custom_secondary_colour(vehicle,
+    crate::__imports::native_set_vehicle_custom_secondary_colour(vehicle.0,
 r,
 g,
 b)
 }
-pub fn get_has_rocket_boost(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetHasRocketBoost {
-    crate::__imports::native_get_has_rocket_boost(vehicle)
+pub fn get_has_rocket_boost(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetHasRocketBoost {
+    crate::__imports::native_get_has_rocket_boost(vehicle.0)
 }
 pub fn set_vehicle_combat_mode(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleCombatMode {
     crate::__imports::native_set_vehicle_combat_mode(toggle)
 }
-pub fn stabilise_entity_attached_to_heli(vehicle: u32,
+pub fn stabilise_entity_attached_to_heli(vehicle: &VehicleScriptId,
 entity: u32,
 p2: f32) -> altv_wasm_shared::natives_result::ResultOfStabiliseEntityAttachedToHeli {
-    crate::__imports::native_stabilise_entity_attached_to_heli(vehicle,
+    crate::__imports::native_stabilise_entity_attached_to_heli(vehicle.0,
 entity,
 p2)
 }
-pub fn set_vehicle_can_be_targetted(vehicle: u32,
+pub fn set_vehicle_can_be_targetted(vehicle: &VehicleScriptId,
 state: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleCanBeTargetted {
-    crate::__imports::native_set_vehicle_can_be_targetted(vehicle,
+    crate::__imports::native_set_vehicle_can_be_targetted(vehicle.0,
 state)
 }
 pub fn find_handler_vehicle_container_is_attached_to(entity: u32) -> altv_wasm_shared::natives_result::ResultOfFindHandlerVehicleContainerIsAttachedTo {
     crate::__imports::native_find_handler_vehicle_container_is_attached_to(entity)
 }
-pub fn set_disable_vehicle_petrol_tank_damage(vehicle: u32,
+pub fn set_disable_vehicle_petrol_tank_damage(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetDisableVehiclePetrolTankDamage {
-    crate::__imports::native_set_disable_vehicle_petrol_tank_damage(vehicle,
+    crate::__imports::native_set_disable_vehicle_petrol_tank_damage(vehicle.0,
 toggle)
 }
-pub fn set_forklift_fork_height(vehicle: u32,
+pub fn set_forklift_fork_height(vehicle: &VehicleScriptId,
 height: f32) -> altv_wasm_shared::natives_result::ResultOfSetForkliftForkHeight {
-    crate::__imports::native_set_forklift_fork_height(vehicle,
+    crate::__imports::native_set_forklift_fork_height(vehicle.0,
 height)
 }
 pub fn get_random_vehicle_in_sphere(x: f32,
@@ -32376,92 +32377,92 @@ radius,
 model_hash,
 flags)
 }
-pub fn set_tyre_wear_rate_scale(vehicle: u32,
+pub fn set_tyre_wear_rate_scale(vehicle: &VehicleScriptId,
 wheel_index: i32,
 multiplier: f32) -> altv_wasm_shared::natives_result::ResultOfSetTyreWearRateScale {
-    crate::__imports::native_set_tyre_wear_rate_scale(vehicle,
+    crate::__imports::native_set_tyre_wear_rate_scale(vehicle.0,
 wheel_index,
 multiplier)
 }
 pub fn is_this_model_a_quadbike(model: u32) -> altv_wasm_shared::natives_result::ResultOfIsThisModelAquadbike {
     crate::__imports::native_is_this_model_a_quadbike(model)
 }
-pub fn set_reduced_suspension_force(vehicle: u32,
+pub fn set_reduced_suspension_force(vehicle: &VehicleScriptId,
 enable: bool) -> altv_wasm_shared::natives_result::ResultOfSetReducedSuspensionForce {
-    crate::__imports::native_set_reduced_suspension_force(vehicle,
+    crate::__imports::native_set_reduced_suspension_force(vehicle.0,
 enable)
 }
-pub fn get_outriggers_deployed(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetOutriggersDeployed {
-    crate::__imports::native_get_outriggers_deployed(vehicle)
+pub fn get_outriggers_deployed(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetOutriggersDeployed {
+    crate::__imports::native_get_outriggers_deployed(vehicle.0)
 }
-pub fn set_vehicle_enveff_scale(vehicle: u32,
+pub fn set_vehicle_enveff_scale(vehicle: &VehicleScriptId,
 fade: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleEnveffScale {
-    crate::__imports::native_set_vehicle_enveff_scale(vehicle,
+    crate::__imports::native_set_vehicle_enveff_scale(vehicle.0,
 fade)
 }
-pub fn set_vehicle_door_auto_lock(vehicle: u32,
+pub fn set_vehicle_door_auto_lock(vehicle: &VehicleScriptId,
 door_id: i32,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDoorAutoLock {
-    crate::__imports::native_set_vehicle_door_auto_lock(vehicle,
+    crate::__imports::native_set_vehicle_door_auto_lock(vehicle.0,
 door_id,
 toggle)
 }
-pub fn get_number_of_vehicle_colours(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetNumberOfVehicleColours {
-    crate::__imports::native_get_number_of_vehicle_colours(vehicle)
+pub fn get_number_of_vehicle_colours(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetNumberOfVehicleColours {
+    crate::__imports::native_get_number_of_vehicle_colours(vehicle.0)
 }
-pub fn get_vehicle_extra_colours(vehicle: u32,
+pub fn get_vehicle_extra_colours(vehicle: &VehicleScriptId,
 pearlescent_color: i32,
 wheel_color: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleExtraColours {
-    crate::__imports::native_get_vehicle_extra_colours(vehicle,
+    crate::__imports::native_get_vehicle_extra_colours(vehicle.0,
 pearlescent_color,
 wheel_color)
 }
-pub fn attach_vehicle_to_trailer(vehicle: u32,
-trailer: u32,
+pub fn attach_vehicle_to_trailer(vehicle: &VehicleScriptId,
+trailer: &VehicleScriptId,
 radius: f32) -> altv_wasm_shared::natives_result::ResultOfAttachVehicleToTrailer {
-    crate::__imports::native_attach_vehicle_to_trailer(vehicle,
-trailer,
+    crate::__imports::native_attach_vehicle_to_trailer(vehicle.0,
+trailer.0,
 radius)
 }
-pub fn is_rocket_boost_active(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsRocketBoostActive {
-    crate::__imports::native_is_rocket_boost_active(vehicle)
+pub fn is_rocket_boost_active(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsRocketBoostActive {
+    crate::__imports::native_is_rocket_boost_active(vehicle.0)
 }
-pub fn is_vehicle_parachute_deployed(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleParachuteDeployed {
-    crate::__imports::native_is_vehicle_parachute_deployed(vehicle)
+pub fn is_vehicle_parachute_deployed(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleParachuteDeployed {
+    crate::__imports::native_is_vehicle_parachute_deployed(vehicle.0)
 }
-pub fn get_vehicle_xenon_light_color_index(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleXenonLightColorIndex {
-    crate::__imports::native_get_vehicle_xenon_light_color_index(vehicle)
+pub fn get_vehicle_xenon_light_color_index(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleXenonLightColorIndex {
+    crate::__imports::native_get_vehicle_xenon_light_color_index(vehicle.0)
 }
-pub fn get_submarine_is_under_design_depth(submarine: u32) -> altv_wasm_shared::natives_result::ResultOfGetSubmarineIsUnderDesignDepth {
-    crate::__imports::native_get_submarine_is_under_design_depth(submarine)
+pub fn get_submarine_is_under_design_depth(submarine: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetSubmarineIsUnderDesignDepth {
+    crate::__imports::native_get_submarine_is_under_design_depth(submarine.0)
 }
-pub fn set_vehicle_strong(vehicle: u32,
+pub fn set_vehicle_strong(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleStrong {
-    crate::__imports::native_set_vehicle_strong(vehicle,
+    crate::__imports::native_set_vehicle_strong(vehicle.0,
 toggle)
 }
-pub fn is_vehicle_door_fully_open(vehicle: u32,
+pub fn is_vehicle_door_fully_open(vehicle: &VehicleScriptId,
 door_id: i32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleDoorFullyOpen {
-    crate::__imports::native_is_vehicle_door_fully_open(vehicle,
+    crate::__imports::native_is_vehicle_door_fully_open(vehicle.0,
 door_id)
 }
-pub fn set_heli_tail_boom_can_break_off(vehicle: u32,
+pub fn set_heli_tail_boom_can_break_off(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetHeliTailBoomCanBreakOff {
-    crate::__imports::native_set_heli_tail_boom_can_break_off(vehicle,
+    crate::__imports::native_set_heli_tail_boom_can_break_off(vehicle.0,
 toggle)
 }
-pub fn start_playback_recorded_vehicle(vehicle: u32,
+pub fn start_playback_recorded_vehicle(vehicle: &VehicleScriptId,
 recording: i32,
 script: Option<&String>,
 p3: bool) -> altv_wasm_shared::natives_result::ResultOfStartPlaybackRecordedVehicle {
-    crate::__imports::native_start_playback_recorded_vehicle(vehicle,
+    crate::__imports::native_start_playback_recorded_vehicle(vehicle.0,
 recording,
 script,
 p3)
 }
-pub fn set_heli_main_rotor_health(vehicle: u32,
+pub fn set_heli_main_rotor_health(vehicle: &VehicleScriptId,
 health: f32) -> altv_wasm_shared::natives_result::ResultOfSetHeliMainRotorHealth {
-    crate::__imports::native_set_heli_main_rotor_health(vehicle,
+    crate::__imports::native_set_heli_main_rotor_health(vehicle.0,
 health)
 }
 pub fn set_vehicle_homing_lockedonto_state(p0: i32,
@@ -32469,19 +32470,19 @@ p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleHomingLockedonto
     crate::__imports::native_set_vehicle_homing_lockedonto_state(p0,
 p1)
 }
-pub fn set_vehicle_ai_can_use_exclusive_seats(vehicle: u32,
+pub fn set_vehicle_ai_can_use_exclusive_seats(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleAiCanUseExclusiveSeats {
-    crate::__imports::native_set_vehicle_ai_can_use_exclusive_seats(vehicle,
+    crate::__imports::native_set_vehicle_ai_can_use_exclusive_seats(vehicle.0,
 toggle)
 }
-pub fn attach_vehicle_to_cargobob(vehicle: u32,
-cargobob: u32,
+pub fn attach_vehicle_to_cargobob(vehicle: &VehicleScriptId,
+cargobob: &VehicleScriptId,
 p2: i32,
 x: f32,
 y: f32,
 z: f32) -> altv_wasm_shared::natives_result::ResultOfAttachVehicleToCargobob {
-    crate::__imports::native_attach_vehicle_to_cargobob(vehicle,
-cargobob,
+    crate::__imports::native_attach_vehicle_to_cargobob(vehicle.0,
+cargobob.0,
 p2,
 x,
 y,
@@ -32490,107 +32491,107 @@ z)
 pub fn set_vehicle_use_boost_button_for_wheel_retract(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleUseBoostButtonForWheelRetract {
     crate::__imports::native_set_vehicle_use_boost_button_for_wheel_retract(toggle)
 }
-pub fn is_plane_landing_gear_intact(plane: u32) -> altv_wasm_shared::natives_result::ResultOfIsPlaneLandingGearIntact {
-    crate::__imports::native_is_plane_landing_gear_intact(plane)
+pub fn is_plane_landing_gear_intact(plane: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsPlaneLandingGearIntact {
+    crate::__imports::native_is_plane_landing_gear_intact(plane.0)
 }
-pub fn set_transform_to_submarine_uses_alternate_input(vehicle: u32,
+pub fn set_transform_to_submarine_uses_alternate_input(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetTransformToSubmarineUsesAlternateInput {
-    crate::__imports::native_set_transform_to_submarine_uses_alternate_input(vehicle,
+    crate::__imports::native_set_transform_to_submarine_uses_alternate_input(vehicle.0,
 toggle)
 }
-pub fn is_vehicle_model(vehicle: u32,
+pub fn is_vehicle_model(vehicle: &VehicleScriptId,
 model: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleModel {
-    crate::__imports::native_is_vehicle_model(vehicle,
+    crate::__imports::native_is_vehicle_model(vehicle.0,
 model)
 }
-pub fn set_formation_leader(vehicle: u32,
+pub fn set_formation_leader(vehicle: &VehicleScriptId,
 x: f32,
 y: f32,
 z: f32,
 p4: f32) -> altv_wasm_shared::natives_result::ResultOfSetFormationLeader {
-    crate::__imports::native_set_formation_leader(vehicle,
+    crate::__imports::native_set_formation_leader(vehicle.0,
 x,
 y,
 z,
 p4)
 }
-pub fn set_vehicle_can_save_in_garage(vehicle: u32,
+pub fn set_vehicle_can_save_in_garage(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleCanSaveInGarage {
-    crate::__imports::native_set_vehicle_can_save_in_garage(vehicle,
+    crate::__imports::native_set_vehicle_can_save_in_garage(vehicle.0,
 toggle)
 }
-pub fn get_vehicle_num_of_broken_off_parts(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleNumOfBrokenOffParts {
-    crate::__imports::native_get_vehicle_num_of_broken_off_parts(vehicle)
+pub fn get_vehicle_num_of_broken_off_parts(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleNumOfBrokenOffParts {
+    crate::__imports::native_get_vehicle_num_of_broken_off_parts(vehicle.0)
 }
-pub fn set_vehicle_steer_bias(vehicle: u32,
+pub fn set_vehicle_steer_bias(vehicle: &VehicleScriptId,
 value: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleSteerBias {
-    crate::__imports::native_set_vehicle_steer_bias(vehicle,
+    crate::__imports::native_set_vehicle_steer_bias(vehicle.0,
 value)
 }
-pub fn get_current_playback_for_vehicle(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetCurrentPlaybackForVehicle {
-    crate::__imports::native_get_current_playback_for_vehicle(vehicle)
+pub fn get_current_playback_for_vehicle(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetCurrentPlaybackForVehicle {
+    crate::__imports::native_get_current_playback_for_vehicle(vehicle.0)
 }
 pub fn set_ground_effect_reduces_drag(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetGroundEffectReducesDrag {
     crate::__imports::native_set_ground_effect_reduces_drag(toggle)
 }
-pub fn is_vehicle_alarm_activated(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleAlarmActivated {
-    crate::__imports::native_is_vehicle_alarm_activated(vehicle)
+pub fn is_vehicle_alarm_activated(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleAlarmActivated {
+    crate::__imports::native_is_vehicle_alarm_activated(vehicle.0)
 }
-pub fn set_special_flight_mode_target_ratio(vehicle: u32,
+pub fn set_special_flight_mode_target_ratio(vehicle: &VehicleScriptId,
 target_ratio: f32) -> altv_wasm_shared::natives_result::ResultOfSetSpecialFlightModeTargetRatio {
-    crate::__imports::native_set_special_flight_mode_target_ratio(vehicle,
+    crate::__imports::native_set_special_flight_mode_target_ratio(vehicle.0,
 target_ratio)
 }
-pub fn set_vehicle_mod_color1(vehicle: u32,
+pub fn set_vehicle_mod_color1(vehicle: &VehicleScriptId,
 paint_type: i32,
 color: i32,
 pearlescent_color: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleModColor1 {
-    crate::__imports::native_set_vehicle_mod_color1(vehicle,
+    crate::__imports::native_set_vehicle_mod_color1(vehicle.0,
 paint_type,
 color,
 pearlescent_color)
 }
-pub fn clear_vehicle_petroltank_fire_culprit(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfClearVehiclePetroltankFireCulprit {
-    crate::__imports::native_clear_vehicle_petroltank_fire_culprit(vehicle)
+pub fn clear_vehicle_petroltank_fire_culprit(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfClearVehiclePetroltankFireCulprit {
+    crate::__imports::native_clear_vehicle_petroltank_fire_culprit(vehicle.0)
 }
-pub fn release_preload_mods(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfReleasePreloadMods {
-    crate::__imports::native_release_preload_mods(vehicle)
+pub fn release_preload_mods(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfReleasePreloadMods {
+    crate::__imports::native_release_preload_mods(vehicle.0)
 }
-pub fn set_vehicle_weapon_restricted_ammo(vehicle: u32,
+pub fn set_vehicle_weapon_restricted_ammo(vehicle: &VehicleScriptId,
 weapon_index: i32,
 capacity: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleWeaponRestrictedAmmo {
-    crate::__imports::native_set_vehicle_weapon_restricted_ammo(vehicle,
+    crate::__imports::native_set_vehicle_weapon_restricted_ammo(vehicle.0,
 weapon_index,
 capacity)
 }
-pub fn get_vehicle_mod_identifier_hash(vehicle: u32,
+pub fn get_vehicle_mod_identifier_hash(vehicle: &VehicleScriptId,
 mod_type: i32,
 mod_index: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleModIdentifierHash {
-    crate::__imports::native_get_vehicle_mod_identifier_hash(vehicle,
+    crate::__imports::native_get_vehicle_mod_identifier_hash(vehicle.0,
 mod_type,
 mod_index)
 }
-pub fn set_vehicle_weapon_damage_scale(vehicle: u32,
+pub fn set_vehicle_weapon_damage_scale(vehicle: &VehicleScriptId,
 multiplier: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleWeaponDamageScale {
-    crate::__imports::native_set_vehicle_weapon_damage_scale(vehicle,
+    crate::__imports::native_set_vehicle_weapon_damage_scale(vehicle.0,
 multiplier)
 }
 pub fn is_this_model_a_boat(model: u32) -> altv_wasm_shared::natives_result::ResultOfIsThisModelAboat {
     crate::__imports::native_is_this_model_a_boat(model)
 }
-pub fn set_vehicle_engine_health(vehicle: u32,
+pub fn set_vehicle_engine_health(vehicle: &VehicleScriptId,
 health: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleEngineHealth {
-    crate::__imports::native_set_vehicle_engine_health(vehicle,
+    crate::__imports::native_set_vehicle_engine_health(vehicle.0,
 health)
 }
-pub fn set_disable_vehicle_petrol_tank_fires(vehicle: u32,
+pub fn set_disable_vehicle_petrol_tank_fires(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetDisableVehiclePetrolTankFires {
-    crate::__imports::native_set_disable_vehicle_petrol_tank_fires(vehicle,
+    crate::__imports::native_set_disable_vehicle_petrol_tank_fires(vehicle.0,
 toggle)
 }
-pub fn is_vehicle_bumper_broken_off(vehicle: u32,
+pub fn is_vehicle_bumper_broken_off(vehicle: &VehicleScriptId,
 front_bumper: bool) -> altv_wasm_shared::natives_result::ResultOfIsVehicleBumperBrokenOff {
-    crate::__imports::native_is_vehicle_bumper_broken_off(vehicle,
+    crate::__imports::native_is_vehicle_bumper_broken_off(vehicle.0,
 front_bumper)
 }
 pub fn remove_vehicles_from_generators_in_area(x1: f32,
@@ -32608,70 +32609,70 @@ y2,
 z2,
 p6)
 }
-pub fn is_vehicle_window_intact(vehicle: u32,
+pub fn is_vehicle_window_intact(vehicle: &VehicleScriptId,
 window_index: i32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleWindowIntact {
-    crate::__imports::native_is_vehicle_window_intact(vehicle,
+    crate::__imports::native_is_vehicle_window_intact(vehicle.0,
 window_index)
 }
-pub fn set_vehicle_wheel_type(vehicle: u32,
+pub fn set_vehicle_wheel_type(vehicle: &VehicleScriptId,
 wheel_type: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleWheelType {
-    crate::__imports::native_set_vehicle_wheel_type(vehicle,
+    crate::__imports::native_set_vehicle_wheel_type(vehicle.0,
 wheel_type)
 }
 pub fn instantly_fill_vehicle_population() -> altv_wasm_shared::natives_result::ResultOfInstantlyFillVehiclePopulation {
     crate::__imports::native_instantly_fill_vehicle_population()
 }
-pub fn is_vehicle_producing_slip_stream(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleProducingSlipStream {
-    crate::__imports::native_is_vehicle_producing_slip_stream(vehicle)
+pub fn is_vehicle_producing_slip_stream(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleProducingSlipStream {
+    crate::__imports::native_is_vehicle_producing_slip_stream(vehicle.0)
 }
-pub fn get_vehicle_mod_color2_name(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleModColor2Name {
-    crate::__imports::native_get_vehicle_mod_color2_name(vehicle)
+pub fn get_vehicle_mod_color2_name(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleModColor2Name {
+    crate::__imports::native_get_vehicle_mod_color2_name(vehicle.0)
 }
-pub fn set_vehicle_on_ground_properly(vehicle: u32,
+pub fn set_vehicle_on_ground_properly(vehicle: &VehicleScriptId,
 p1: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleOnGroundProperly {
-    crate::__imports::native_set_vehicle_on_ground_properly(vehicle,
+    crate::__imports::native_set_vehicle_on_ground_properly(vehicle.0,
 p1)
 }
-pub fn set_transform_rate_for_animation(vehicle: u32,
+pub fn set_transform_rate_for_animation(vehicle: &VehicleScriptId,
 transform_rate: f32) -> altv_wasm_shared::natives_result::ResultOfSetTransformRateForAnimation {
-    crate::__imports::native_set_transform_rate_for_animation(vehicle,
+    crate::__imports::native_set_transform_rate_for_animation(vehicle.0,
 transform_rate)
 }
-pub fn set_disable_wanted_cones_response(vehicle: u32,
+pub fn set_disable_wanted_cones_response(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetDisableWantedConesResponse {
-    crate::__imports::native_set_disable_wanted_cones_response(vehicle,
+    crate::__imports::native_set_disable_wanted_cones_response(vehicle.0,
 toggle)
 }
-pub fn is_vehicle_stolen(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleStolen {
-    crate::__imports::native_is_vehicle_stolen(vehicle)
+pub fn is_vehicle_stolen(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleStolen {
+    crate::__imports::native_is_vehicle_stolen(vehicle.0)
 }
 pub fn get_vehicle_class_max_braking(vehicle_class: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleClassMaxBraking {
     crate::__imports::native_get_vehicle_class_max_braking(vehicle_class)
 }
-pub fn is_vehicle_driveable(vehicle: u32,
+pub fn is_vehicle_driveable(vehicle: &VehicleScriptId,
 is_on_fire_check: bool) -> altv_wasm_shared::natives_result::ResultOfIsVehicleDriveable {
-    crate::__imports::native_is_vehicle_driveable(vehicle,
+    crate::__imports::native_is_vehicle_driveable(vehicle.0,
 is_on_fire_check)
 }
 pub fn get_number_of_vehicle_number_plates() -> altv_wasm_shared::natives_result::ResultOfGetNumberOfVehicleNumberPlates {
     crate::__imports::native_get_number_of_vehicle_number_plates()
 }
-pub fn set_vehicle_can_be_visibly_damaged(vehicle: u32,
+pub fn set_vehicle_can_be_visibly_damaged(vehicle: &VehicleScriptId,
 state: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleCanBeVisiblyDamaged {
-    crate::__imports::native_set_vehicle_can_be_visibly_damaged(vehicle,
+    crate::__imports::native_set_vehicle_can_be_visibly_damaged(vehicle.0,
 state)
 }
-pub fn set_plane_propeller_health(plane: u32,
+pub fn set_plane_propeller_health(plane: &VehicleScriptId,
 health: f32) -> altv_wasm_shared::natives_result::ResultOfSetPlanePropellerHealth {
-    crate::__imports::native_set_plane_propeller_health(plane,
+    crate::__imports::native_set_plane_propeller_health(plane.0,
 health)
 }
-pub fn is_vehicle_siren_on(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleSirenOn {
-    crate::__imports::native_is_vehicle_siren_on(vehicle)
+pub fn is_vehicle_siren_on(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleSirenOn {
+    crate::__imports::native_is_vehicle_siren_on(vehicle.0)
 }
-pub fn vehicle_set_parachute_model_override(vehicle: u32,
+pub fn vehicle_set_parachute_model_override(vehicle: &VehicleScriptId,
 model_hash: u32) -> altv_wasm_shared::natives_result::ResultOfVehicleSetParachuteModelOverride {
-    crate::__imports::native_vehicle_set_parachute_model_override(vehicle,
+    crate::__imports::native_vehicle_set_parachute_model_override(vehicle.0,
 model_hash)
 }
 pub fn set_force_vehicle_engine_damage_by_bullet(p0: i32,
@@ -32679,67 +32680,67 @@ p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetForceVehicleEngineDama
     crate::__imports::native_set_force_vehicle_engine_damage_by_bullet(p0,
 p1)
 }
-pub fn set_vehicle_damage_scale(vehicle: u32,
+pub fn set_vehicle_damage_scale(vehicle: &VehicleScriptId,
 p1: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDamageScale {
-    crate::__imports::native_set_vehicle_damage_scale(vehicle,
+    crate::__imports::native_set_vehicle_damage_scale(vehicle.0,
 p1)
 }
-pub fn does_vehicle_allow_rappel(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfDoesVehicleAllowRappel {
-    crate::__imports::native_does_vehicle_allow_rappel(vehicle)
+pub fn does_vehicle_allow_rappel(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfDoesVehicleAllowRappel {
+    crate::__imports::native_does_vehicle_allow_rappel(vehicle.0)
 }
-pub fn set_police_focus_will_track_vehicle(vehicle: u32,
+pub fn set_police_focus_will_track_vehicle(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetPoliceFocusWillTrackVehicle {
-    crate::__imports::native_set_police_focus_will_track_vehicle(vehicle,
+    crate::__imports::native_set_police_focus_will_track_vehicle(vehicle.0,
 toggle)
 }
-pub fn get_vehicle_deformation_at_pos(vehicle: u32,
+pub fn get_vehicle_deformation_at_pos(vehicle: &VehicleScriptId,
 offset_x: f32,
 offset_y: f32,
 offset_z: f32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleDeformationAtPos {
-    crate::__imports::native_get_vehicle_deformation_at_pos(vehicle,
+    crate::__imports::native_get_vehicle_deformation_at_pos(vehicle.0,
 offset_x,
 offset_y,
 offset_z)
 }
-pub fn set_vehicle_colours(vehicle: u32,
+pub fn set_vehicle_colours(vehicle: &VehicleScriptId,
 color_primary: i32,
 color_secondary: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleColours {
-    crate::__imports::native_set_vehicle_colours(vehicle,
+    crate::__imports::native_set_vehicle_colours(vehicle.0,
 color_primary,
 color_secondary)
 }
 pub fn get_vehicle_class_max_agility(vehicle_class: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleClassMaxAgility {
     crate::__imports::native_get_vehicle_class_max_agility(vehicle_class)
 }
-pub fn disable_individual_plane_propeller(vehicle: u32,
+pub fn disable_individual_plane_propeller(vehicle: &VehicleScriptId,
 propeller: i32) -> altv_wasm_shared::natives_result::ResultOfDisableIndividualPlanePropeller {
-    crate::__imports::native_disable_individual_plane_propeller(vehicle,
+    crate::__imports::native_disable_individual_plane_propeller(vehicle.0,
 propeller)
 }
-pub fn get_vehicle_has_kers(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleHasKers {
-    crate::__imports::native_get_vehicle_has_kers(vehicle)
+pub fn get_vehicle_has_kers(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleHasKers {
+    crate::__imports::native_get_vehicle_has_kers(vehicle.0)
 }
-pub fn set_vehicle_doors_locked_for_player(vehicle: u32,
+pub fn set_vehicle_doors_locked_for_player(vehicle: &VehicleScriptId,
 player: u32,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDoorsLockedForPlayer {
-    crate::__imports::native_set_vehicle_doors_locked_for_player(vehicle,
+    crate::__imports::native_set_vehicle_doors_locked_for_player(vehicle.0,
 player,
 toggle)
 }
-pub fn set_vehicle_can_leak_oil(vehicle: u32,
+pub fn set_vehicle_can_leak_oil(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleCanLeakOil {
-    crate::__imports::native_set_vehicle_can_leak_oil(vehicle,
+    crate::__imports::native_set_vehicle_can_leak_oil(vehicle.0,
 toggle)
 }
 pub fn network_enable_empty_crowding_vehicles_removal(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfNetworkEnableEmptyCrowdingVehiclesRemoval {
     crate::__imports::native_network_enable_empty_crowding_vehicles_removal(toggle)
 }
-pub fn get_mod_slot_name(vehicle: u32,
+pub fn get_mod_slot_name(vehicle: &VehicleScriptId,
 mod_type: i32) -> altv_wasm_shared::natives_result::ResultOfGetModSlotName {
-    crate::__imports::native_get_mod_slot_name(vehicle,
+    crate::__imports::native_get_mod_slot_name(vehicle.0,
 mod_type)
 }
-pub fn get_can_vehicle_be_placed_here(vehicle: u32,
+pub fn get_can_vehicle_be_placed_here(vehicle: &VehicleScriptId,
 x: f32,
 y: f32,
 z: f32,
@@ -32748,7 +32749,7 @@ rot_y: f32,
 rot_z: f32,
 p7: i32,
 p8: i32) -> altv_wasm_shared::natives_result::ResultOfGetCanVehicleBePlacedHere {
-    crate::__imports::native_get_can_vehicle_be_placed_here(vehicle,
+    crate::__imports::native_get_can_vehicle_be_placed_here(vehicle.0,
 x,
 y,
 z,
@@ -32758,43 +32759,43 @@ rot_z,
 p7,
 p8)
 }
-pub fn set_can_respray_vehicle(vehicle: u32,
+pub fn set_can_respray_vehicle(vehicle: &VehicleScriptId,
 state: bool) -> altv_wasm_shared::natives_result::ResultOfSetCanResprayVehicle {
-    crate::__imports::native_set_can_respray_vehicle(vehicle,
+    crate::__imports::native_set_can_respray_vehicle(vehicle.0,
 state)
 }
-pub fn is_vehicle_a_convertible(vehicle: u32,
+pub fn is_vehicle_a_convertible(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfIsVehicleAconvertible {
-    crate::__imports::native_is_vehicle_a_convertible(vehicle,
+    crate::__imports::native_is_vehicle_a_convertible(vehicle.0,
 p1)
 }
-pub fn set_wheels_retracted_instantly(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfSetWheelsRetractedInstantly {
-    crate::__imports::native_set_wheels_retracted_instantly(vehicle)
+pub fn set_wheels_retracted_instantly(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetWheelsRetractedInstantly {
+    crate::__imports::native_set_wheels_retracted_instantly(vehicle.0)
 }
 pub fn get_vehicle_model_acceleration_max_mods(model_hash: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleModelAccelerationMaxMods {
     crate::__imports::native_get_vehicle_model_acceleration_max_mods(model_hash)
 }
-pub fn is_extra_broken_off(vehicle: u32,
+pub fn is_extra_broken_off(vehicle: &VehicleScriptId,
 extra_id: i32) -> altv_wasm_shared::natives_result::ResultOfIsExtraBrokenOff {
-    crate::__imports::native_is_extra_broken_off(vehicle,
+    crate::__imports::native_is_extra_broken_off(vehicle.0,
 extra_id)
 }
-pub fn get_fake_suspension_lowering_amount(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetFakeSuspensionLoweringAmount {
-    crate::__imports::native_get_fake_suspension_lowering_amount(vehicle)
+pub fn get_fake_suspension_lowering_amount(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetFakeSuspensionLoweringAmount {
+    crate::__imports::native_get_fake_suspension_lowering_amount(vehicle.0)
 }
 pub fn get_vehicle_model_max_traction(model_hash: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleModelMaxTraction {
     crate::__imports::native_get_vehicle_model_max_traction(model_hash)
 }
-pub fn get_vehicle_estimated_max_speed(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleEstimatedMaxSpeed {
-    crate::__imports::native_get_vehicle_estimated_max_speed(vehicle)
+pub fn get_vehicle_estimated_max_speed(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleEstimatedMaxSpeed {
+    crate::__imports::native_get_vehicle_estimated_max_speed(vehicle.0)
 }
-pub fn set_glider_active(vehicle: u32,
+pub fn set_glider_active(vehicle: &VehicleScriptId,
 state: bool) -> altv_wasm_shared::natives_result::ResultOfSetGliderActive {
-    crate::__imports::native_set_glider_active(vehicle,
+    crate::__imports::native_set_glider_active(vehicle.0,
 state)
 }
-pub fn stop_playback_recorded_vehicle(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfStopPlaybackRecordedVehicle {
-    crate::__imports::native_stop_playback_recorded_vehicle(vehicle)
+pub fn stop_playback_recorded_vehicle(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfStopPlaybackRecordedVehicle {
+    crate::__imports::native_stop_playback_recorded_vehicle(vehicle.0)
 }
 pub fn add_vehicle_combat_angled_avoidance_area(p0: f32,
 p1: f32,
@@ -32811,68 +32812,68 @@ p4,
 p5,
 p6)
 }
-pub fn clear_vehicle_custom_primary_colour(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfClearVehicleCustomPrimaryColour {
-    crate::__imports::native_clear_vehicle_custom_primary_colour(vehicle)
+pub fn clear_vehicle_custom_primary_colour(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfClearVehicleCustomPrimaryColour {
+    crate::__imports::native_clear_vehicle_custom_primary_colour(vehicle.0)
 }
-pub fn get_tyre_health(vehicle: u32,
+pub fn get_tyre_health(vehicle: &VehicleScriptId,
 wheel_index: i32) -> altv_wasm_shared::natives_result::ResultOfGetTyreHealth {
-    crate::__imports::native_get_tyre_health(vehicle,
+    crate::__imports::native_get_tyre_health(vehicle.0,
 wheel_index)
 }
 pub fn is_vehicle_weapon_disabled(weapon_hash: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 owner: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleWeaponDisabled {
     crate::__imports::native_is_vehicle_weapon_disabled(weapon_hash,
-vehicle,
+vehicle.0,
 owner)
 }
-pub fn set_vehicle_tank_turret_position(vehicle: u32,
+pub fn set_vehicle_tank_turret_position(vehicle: &VehicleScriptId,
 position: f32,
 p2: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleTankTurretPosition {
-    crate::__imports::native_set_vehicle_tank_turret_position(vehicle,
+    crate::__imports::native_set_vehicle_tank_turret_position(vehicle.0,
 position,
 p2)
 }
-pub fn set_cargobob_pickup_magnet_ensure_pickup_entity_upright(vehicle: u32,
+pub fn set_cargobob_pickup_magnet_ensure_pickup_entity_upright(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetCargobobPickupMagnetEnsurePickupEntityUpright {
-    crate::__imports::native_set_cargobob_pickup_magnet_ensure_pickup_entity_upright(vehicle,
+    crate::__imports::native_set_cargobob_pickup_magnet_ensure_pickup_entity_upright(vehicle.0,
 p1)
 }
-pub fn set_cargobob_force_dont_detach_vehicle(cargobob: u32,
+pub fn set_cargobob_force_dont_detach_vehicle(cargobob: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetCargobobForceDontDetachVehicle {
-    crate::__imports::native_set_cargobob_force_dont_detach_vehicle(cargobob,
+    crate::__imports::native_set_cargobob_force_dont_detach_vehicle(cargobob.0,
 toggle)
 }
-pub fn is_vehicle_stopped(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleStopped {
-    crate::__imports::native_is_vehicle_stopped(vehicle)
+pub fn is_vehicle_stopped(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleStopped {
+    crate::__imports::native_is_vehicle_stopped(vehicle.0)
 }
-pub fn get_time_position_in_recording(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetTimePositionInRecording {
-    crate::__imports::native_get_time_position_in_recording(vehicle)
+pub fn get_time_position_in_recording(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetTimePositionInRecording {
+    crate::__imports::native_get_time_position_in_recording(vehicle.0)
 }
-pub fn is_entity_attached_to_handler_frame(vehicle: u32,
+pub fn is_entity_attached_to_handler_frame(vehicle: &VehicleScriptId,
 entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityAttachedToHandlerFrame {
-    crate::__imports::native_is_entity_attached_to_handler_frame(vehicle,
+    crate::__imports::native_is_entity_attached_to_handler_frame(vehicle.0,
 entity)
 }
-pub fn set_vehicle_window_tint(vehicle: u32,
+pub fn set_vehicle_window_tint(vehicle: &VehicleScriptId,
 tint: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleWindowTint {
-    crate::__imports::native_set_vehicle_window_tint(vehicle,
+    crate::__imports::native_set_vehicle_window_tint(vehicle.0,
 tint)
 }
-pub fn does_vehicle_have_stuck_vehicle_check(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfDoesVehicleHaveStuckVehicleCheck {
-    crate::__imports::native_does_vehicle_have_stuck_vehicle_check(vehicle)
+pub fn does_vehicle_have_stuck_vehicle_check(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfDoesVehicleHaveStuckVehicleCheck {
+    crate::__imports::native_does_vehicle_have_stuck_vehicle_check(vehicle.0)
 }
-pub fn set_vehicle_tail_lights(vehicle: u32,
+pub fn set_vehicle_tail_lights(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleTailLights {
-    crate::__imports::native_set_vehicle_tail_lights(vehicle,
+    crate::__imports::native_set_vehicle_tail_lights(vehicle.0,
 toggle)
 }
-pub fn set_additional_rotation_for_recorded_vehicle_playback(vehicle: u32,
+pub fn set_additional_rotation_for_recorded_vehicle_playback(vehicle: &VehicleScriptId,
 x: f32,
 y: f32,
 z: f32,
 p4: i32) -> altv_wasm_shared::natives_result::ResultOfSetAdditionalRotationForRecordedVehiclePlayback {
-    crate::__imports::native_set_additional_rotation_for_recorded_vehicle_playback(vehicle,
+    crate::__imports::native_set_additional_rotation_for_recorded_vehicle_playback(vehicle.0,
 x,
 y,
 z,
@@ -32881,54 +32882,54 @@ p4)
 pub fn get_vehicle_model_value(vehicle_model: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleModelValue {
     crate::__imports::native_get_vehicle_model_value(vehicle_model)
 }
-pub fn set_mission_train_coords(train: u32,
+pub fn set_mission_train_coords(train: &VehicleScriptId,
 x: f32,
 y: f32,
 z: f32) -> altv_wasm_shared::natives_result::ResultOfSetMissionTrainCoords {
-    crate::__imports::native_set_mission_train_coords(train,
+    crate::__imports::native_set_mission_train_coords(train.0,
 x,
 y,
 z)
 }
-pub fn set_taxi_lights(vehicle: u32,
+pub fn set_taxi_lights(vehicle: &VehicleScriptId,
 state: bool) -> altv_wasm_shared::natives_result::ResultOfSetTaxiLights {
-    crate::__imports::native_set_taxi_lights(vehicle,
+    crate::__imports::native_set_taxi_lights(vehicle.0,
 state)
 }
-pub fn are_wings_of_plane_intact(plane: u32) -> altv_wasm_shared::natives_result::ResultOfAreWingsOfPlaneIntact {
-    crate::__imports::native_are_wings_of_plane_intact(plane)
+pub fn are_wings_of_plane_intact(plane: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfAreWingsOfPlaneIntact {
+    crate::__imports::native_are_wings_of_plane_intact(plane.0)
 }
-pub fn set_vehicle_can_break(vehicle: u32,
+pub fn set_vehicle_can_break(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleCanBreak {
-    crate::__imports::native_set_vehicle_can_break(vehicle,
+    crate::__imports::native_set_vehicle_can_break(vehicle.0,
 toggle)
 }
-pub fn set_peds_can_fall_off_this_vehicle_from_large_fall_damage(vehicle: u32,
+pub fn set_peds_can_fall_off_this_vehicle_from_large_fall_damage(vehicle: &VehicleScriptId,
 toggle: bool,
 p2: f32) -> altv_wasm_shared::natives_result::ResultOfSetPedsCanFallOffThisVehicleFromLargeFallDamage {
-    crate::__imports::native_set_peds_can_fall_off_this_vehicle_from_large_fall_damage(vehicle,
+    crate::__imports::native_set_peds_can_fall_off_this_vehicle_from_large_fall_damage(vehicle.0,
 toggle,
 p2)
 }
 pub fn get_boat_vehicle_model_agility(model_hash: u32) -> altv_wasm_shared::natives_result::ResultOfGetBoatVehicleModelAgility {
     crate::__imports::native_get_boat_vehicle_model_agility(model_hash)
 }
-pub fn set_drift_tyres(vehicle: u32,
+pub fn set_drift_tyres(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetDriftTyres {
-    crate::__imports::native_set_drift_tyres(vehicle,
+    crate::__imports::native_set_drift_tyres(vehicle.0,
 toggle)
 }
-pub fn set_vehicle_provides_cover(vehicle: u32,
+pub fn set_vehicle_provides_cover(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleProvidesCover {
-    crate::__imports::native_set_vehicle_provides_cover(vehicle,
+    crate::__imports::native_set_vehicle_provides_cover(vehicle.0,
 toggle)
 }
-pub fn delete_mission_train(train: u32) -> altv_wasm_shared::natives_result::ResultOfDeleteMissionTrain {
-    crate::__imports::native_delete_mission_train(train)
+pub fn delete_mission_train(train: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfDeleteMissionTrain {
+    crate::__imports::native_delete_mission_train(train.0)
 }
-pub fn set_invert_vehicle_controls(vehicle: u32,
+pub fn set_invert_vehicle_controls(vehicle: &VehicleScriptId,
 state: bool) -> altv_wasm_shared::natives_result::ResultOfSetInvertVehicleControls {
-    crate::__imports::native_set_invert_vehicle_controls(vehicle,
+    crate::__imports::native_set_invert_vehicle_controls(vehicle.0,
 state)
 }
 pub fn has_vehicle_petroltank_set_on_fire_by_entity(p0: i32,
@@ -32939,52 +32940,52 @@ p1)
 pub fn set_use_double_click_for_car_jump(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetUseDoubleClickForCarJump {
     crate::__imports::native_set_use_double_click_for_car_jump(toggle)
 }
-pub fn set_vehicle_allow_no_passengers_lockon(veh: u32,
+pub fn set_vehicle_allow_no_passengers_lockon(veh: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleAllowNoPassengersLockon {
-    crate::__imports::native_set_vehicle_allow_no_passengers_lockon(veh,
+    crate::__imports::native_set_vehicle_allow_no_passengers_lockon(veh.0,
 toggle)
 }
-pub fn get_vehicle_acceleration(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleAcceleration {
-    crate::__imports::native_get_vehicle_acceleration(vehicle)
+pub fn get_vehicle_acceleration(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleAcceleration {
+    crate::__imports::native_get_vehicle_acceleration(vehicle.0)
 }
-pub fn set_vehicle_no_explosion_damage_from_driver(vehicle: u32,
+pub fn set_vehicle_no_explosion_damage_from_driver(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleNoExplosionDamageFromDriver {
-    crate::__imports::native_set_vehicle_no_explosion_damage_from_driver(vehicle,
+    crate::__imports::native_set_vehicle_no_explosion_damage_from_driver(vehicle.0,
 toggle)
 }
-pub fn get_vehicle_livery2_count(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleLivery2Count {
-    crate::__imports::native_get_vehicle_livery2_count(vehicle)
+pub fn get_vehicle_livery2_count(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleLivery2Count {
+    crate::__imports::native_get_vehicle_livery2_count(vehicle.0)
 }
-pub fn override_plane_damage_threhsold(vehicle: u32,
+pub fn override_plane_damage_threhsold(vehicle: &VehicleScriptId,
 health: f32) -> altv_wasm_shared::natives_result::ResultOfOverridePlaneDamageThrehsold {
-    crate::__imports::native_override_plane_damage_threhsold(vehicle,
+    crate::__imports::native_override_plane_damage_threhsold(vehicle.0,
 health)
 }
-pub fn get_is_left_vehicle_headlight_damaged(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetIsLeftVehicleHeadlightDamaged {
-    crate::__imports::native_get_is_left_vehicle_headlight_damaged(vehicle)
+pub fn get_is_left_vehicle_headlight_damaged(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetIsLeftVehicleHeadlightDamaged {
+    crate::__imports::native_get_is_left_vehicle_headlight_damaged(vehicle.0)
 }
-pub fn clear_vehicle_custom_secondary_colour(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfClearVehicleCustomSecondaryColour {
-    crate::__imports::native_clear_vehicle_custom_secondary_colour(vehicle)
+pub fn clear_vehicle_custom_secondary_colour(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfClearVehicleCustomSecondaryColour {
+    crate::__imports::native_clear_vehicle_custom_secondary_colour(vehicle.0)
 }
-pub fn get_vehicle_livery2(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleLivery2 {
-    crate::__imports::native_get_vehicle_livery2(vehicle)
+pub fn get_vehicle_livery2(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleLivery2 {
+    crate::__imports::native_get_vehicle_livery2(vehicle.0)
 }
-pub fn roll_up_window(vehicle: u32,
+pub fn roll_up_window(vehicle: &VehicleScriptId,
 window_index: i32) -> altv_wasm_shared::natives_result::ResultOfRollUpWindow {
-    crate::__imports::native_roll_up_window(vehicle,
+    crate::__imports::native_roll_up_window(vehicle.0,
 window_index)
 }
 pub fn set_all_low_priority_vehicle_generators_active(active: bool) -> altv_wasm_shared::natives_result::ResultOfSetAllLowPriorityVehicleGeneratorsActive {
     crate::__imports::native_set_all_low_priority_vehicle_generators_active(active)
 }
-pub fn set_vehicle_extra_colour6(vehicle: u32,
+pub fn set_vehicle_extra_colour6(vehicle: &VehicleScriptId,
 color: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleExtraColour6 {
-    crate::__imports::native_set_vehicle_extra_colour6(vehicle,
+    crate::__imports::native_set_vehicle_extra_colour6(vehicle.0,
 color)
 }
-pub fn set_vehicle_livery(vehicle: u32,
+pub fn set_vehicle_livery(vehicle: &VehicleScriptId,
 livery: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleLivery {
-    crate::__imports::native_set_vehicle_livery(vehicle,
+    crate::__imports::native_set_vehicle_livery(vehicle.0,
 livery)
 }
 pub fn is_any_vehicle_near_point(x: f32,
@@ -32996,28 +32997,28 @@ y,
 z,
 radius)
 }
-pub fn is_any_entity_attached_to_handler_frame(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsAnyEntityAttachedToHandlerFrame {
-    crate::__imports::native_is_any_entity_attached_to_handler_frame(vehicle)
+pub fn is_any_entity_attached_to_handler_frame(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsAnyEntityAttachedToHandlerFrame {
+    crate::__imports::native_is_any_entity_attached_to_handler_frame(vehicle.0)
 }
-pub fn get_vehicle_mod_kit(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleModKit {
-    crate::__imports::native_get_vehicle_mod_kit(vehicle)
+pub fn get_vehicle_mod_kit(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleModKit {
+    crate::__imports::native_get_vehicle_mod_kit(vehicle.0)
 }
-pub fn pause_playback_recorded_vehicle(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfPausePlaybackRecordedVehicle {
-    crate::__imports::native_pause_playback_recorded_vehicle(vehicle)
+pub fn pause_playback_recorded_vehicle(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfPausePlaybackRecordedVehicle {
+    crate::__imports::native_pause_playback_recorded_vehicle(vehicle.0)
 }
 pub fn is_this_model_an_amphibious_car(model: u32) -> altv_wasm_shared::natives_result::ResultOfIsThisModelAnAmphibiousCar {
     crate::__imports::native_is_this_model_an_amphibious_car(model)
 }
-pub fn is_heli_landing_area_blocked(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsHeliLandingAreaBlocked {
-    crate::__imports::native_is_heli_landing_area_blocked(vehicle)
+pub fn is_heli_landing_area_blocked(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsHeliLandingAreaBlocked {
+    crate::__imports::native_is_heli_landing_area_blocked(vehicle.0)
 }
 pub fn is_entry_point_for_seat_clear(ped: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 seat_index: i32,
 side: bool,
 on_enter: bool) -> altv_wasm_shared::natives_result::ResultOfIsEntryPointForSeatClear {
     crate::__imports::native_is_entry_point_for_seat_clear(ped,
-vehicle,
+vehicle.0,
 seat_index,
 side,
 on_enter)
@@ -33037,33 +33038,33 @@ direction,
 p5,
 p6)
 }
-pub fn track_vehicle_visibility(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfTrackVehicleVisibility {
-    crate::__imports::native_track_vehicle_visibility(vehicle)
+pub fn track_vehicle_visibility(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfTrackVehicleVisibility {
+    crate::__imports::native_track_vehicle_visibility(vehicle.0)
 }
-pub fn get_is_door_valid(vehicle: u32,
+pub fn get_is_door_valid(vehicle: &VehicleScriptId,
 door_id: i32) -> altv_wasm_shared::natives_result::ResultOfGetIsDoorValid {
-    crate::__imports::native_get_is_door_valid(vehicle,
+    crate::__imports::native_get_is_door_valid(vehicle.0,
 door_id)
 }
-pub fn set_vehicle_forward_speed_xy(vehicle: u32,
+pub fn set_vehicle_forward_speed_xy(vehicle: &VehicleScriptId,
 speed: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleForwardSpeedXy {
-    crate::__imports::native_set_vehicle_forward_speed_xy(vehicle,
+    crate::__imports::native_set_vehicle_forward_speed_xy(vehicle.0,
 speed)
 }
 pub fn set_slow_down_effect_disabled(disabled: bool) -> altv_wasm_shared::natives_result::ResultOfSetSlowDownEffectDisabled {
     crate::__imports::native_set_slow_down_effect_disabled(disabled)
 }
-pub fn get_boat_boom_position_ratio(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetBoatBoomPositionRatio {
-    crate::__imports::native_get_boat_boom_position_ratio(vehicle)
+pub fn get_boat_boom_position_ratio(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetBoatBoomPositionRatio {
+    crate::__imports::native_get_boat_boom_position_ratio(vehicle.0)
 }
-pub fn set_playback_speed(vehicle: u32,
+pub fn set_playback_speed(vehicle: &VehicleScriptId,
 speed: f32) -> altv_wasm_shared::natives_result::ResultOfSetPlaybackSpeed {
-    crate::__imports::native_set_playback_speed(vehicle,
+    crate::__imports::native_set_playback_speed(vehicle.0,
 speed)
 }
-pub fn set_cargobob_pickup_magnet_reduced_strength(cargobob: u32,
+pub fn set_cargobob_pickup_magnet_reduced_strength(cargobob: &VehicleScriptId,
 p1: f32) -> altv_wasm_shared::natives_result::ResultOfSetCargobobPickupMagnetReducedStrength {
-    crate::__imports::native_set_cargobob_pickup_magnet_reduced_strength(cargobob,
+    crate::__imports::native_set_cargobob_pickup_magnet_reduced_strength(cargobob.0,
 p1)
 }
 pub fn set_override_vehicle_door_torque(p0: i32,
@@ -33073,95 +33074,95 @@ p2: i32) -> altv_wasm_shared::natives_result::ResultOfSetOverrideVehicleDoorTorq
 p1,
 p2)
 }
-pub fn get_vehicle_tyres_can_burst(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleTyresCanBurst {
-    crate::__imports::native_get_vehicle_tyres_can_burst(vehicle)
+pub fn get_vehicle_tyres_can_burst(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleTyresCanBurst {
+    crate::__imports::native_get_vehicle_tyres_can_burst(vehicle.0)
 }
-pub fn is_vehicle_stuck_timer_up(vehicle: u32,
+pub fn is_vehicle_stuck_timer_up(vehicle: &VehicleScriptId,
 p1: i32,
 ms: i32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleStuckTimerUp {
-    crate::__imports::native_is_vehicle_stuck_timer_up(vehicle,
+    crate::__imports::native_is_vehicle_stuck_timer_up(vehicle.0,
 p1,
 ms)
 }
-pub fn set_vehicle_is_stolen(vehicle: u32,
+pub fn set_vehicle_is_stolen(vehicle: &VehicleScriptId,
 is_stolen: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleIsStolen {
-    crate::__imports::native_set_vehicle_is_stolen(vehicle,
+    crate::__imports::native_set_vehicle_is_stolen(vehicle.0,
 is_stolen)
 }
-pub fn set_vehicle_handbrake(vehicle: u32,
+pub fn set_vehicle_handbrake(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleHandbrake {
-    crate::__imports::native_set_vehicle_handbrake(vehicle,
+    crate::__imports::native_set_vehicle_handbrake(vehicle.0,
 toggle)
 }
-pub fn set_cargobob_pickup_magnet_pull_rope_length(vehicle: u32,
+pub fn set_cargobob_pickup_magnet_pull_rope_length(vehicle: &VehicleScriptId,
 p1: f32) -> altv_wasm_shared::natives_result::ResultOfSetCargobobPickupMagnetPullRopeLength {
-    crate::__imports::native_set_cargobob_pickup_magnet_pull_rope_length(vehicle,
+    crate::__imports::native_set_cargobob_pickup_magnet_pull_rope_length(vehicle.0,
 p1)
 }
-pub fn get_vehicle_colour_combination(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleColourCombination {
-    crate::__imports::native_get_vehicle_colour_combination(vehicle)
+pub fn get_vehicle_colour_combination(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleColourCombination {
+    crate::__imports::native_get_vehicle_colour_combination(vehicle.0)
 }
-pub fn set_vehicle_impatience_timer(vehicle: u32,
+pub fn set_vehicle_impatience_timer(vehicle: &VehicleScriptId,
 p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleImpatienceTimer {
-    crate::__imports::native_set_vehicle_impatience_timer(vehicle,
+    crate::__imports::native_set_vehicle_impatience_timer(vehicle.0,
 p1)
 }
-pub fn attach_container_to_handler_frame_when_lined_up(vehicle: u32,
+pub fn attach_container_to_handler_frame_when_lined_up(vehicle: &VehicleScriptId,
 entity: u32) -> altv_wasm_shared::natives_result::ResultOfAttachContainerToHandlerFrameWhenLinedUp {
-    crate::__imports::native_attach_container_to_handler_frame_when_lined_up(vehicle,
+    crate::__imports::native_attach_container_to_handler_frame_when_lined_up(vehicle.0,
 entity)
 }
 pub fn has_vehicle_phone_explosive_device() -> altv_wasm_shared::natives_result::ResultOfHasVehiclePhoneExplosiveDevice {
     crate::__imports::native_has_vehicle_phone_explosive_device()
 }
-pub fn set_vehicle_mod(vehicle: u32,
+pub fn set_vehicle_mod(vehicle: &VehicleScriptId,
 mod_type: i32,
 mod_index: i32,
 custom_tires: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleMod {
-    crate::__imports::native_set_vehicle_mod(vehicle,
+    crate::__imports::native_set_vehicle_mod(vehicle.0,
 mod_type,
 mod_index,
 custom_tires)
 }
-pub fn pop_out_vehicle_windscreen(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfPopOutVehicleWindscreen {
-    crate::__imports::native_pop_out_vehicle_windscreen(vehicle)
+pub fn pop_out_vehicle_windscreen(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfPopOutVehicleWindscreen {
+    crate::__imports::native_pop_out_vehicle_windscreen(vehicle.0)
 }
-pub fn clear_vehicle_route_history(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfClearVehicleRouteHistory {
-    crate::__imports::native_clear_vehicle_route_history(vehicle)
+pub fn clear_vehicle_route_history(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfClearVehicleRouteHistory {
+    crate::__imports::native_clear_vehicle_route_history(vehicle.0)
 }
-pub fn set_cargobob_pickup_magnet_reduced_falloff(cargobob: u32,
+pub fn set_cargobob_pickup_magnet_reduced_falloff(cargobob: &VehicleScriptId,
 p1: f32) -> altv_wasm_shared::natives_result::ResultOfSetCargobobPickupMagnetReducedFalloff {
-    crate::__imports::native_set_cargobob_pickup_magnet_reduced_falloff(cargobob,
+    crate::__imports::native_set_cargobob_pickup_magnet_reduced_falloff(cargobob.0,
 p1)
 }
-pub fn set_vehicle_reduce_grip_level(vehicle: u32,
+pub fn set_vehicle_reduce_grip_level(vehicle: &VehicleScriptId,
 val: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleReduceGripLevel {
-    crate::__imports::native_set_vehicle_reduce_grip_level(vehicle,
+    crate::__imports::native_set_vehicle_reduce_grip_level(vehicle.0,
 val)
 }
-pub fn set_heli_control_lagging_rate_scalar(helicopter: u32,
+pub fn set_heli_control_lagging_rate_scalar(helicopter: &VehicleScriptId,
 multiplier: f32) -> altv_wasm_shared::natives_result::ResultOfSetHeliControlLaggingRateScalar {
-    crate::__imports::native_set_heli_control_lagging_rate_scalar(helicopter,
+    crate::__imports::native_set_heli_control_lagging_rate_scalar(helicopter.0,
 multiplier)
 }
-pub fn does_cargobob_have_pickup_magnet(cargobob: u32) -> altv_wasm_shared::natives_result::ResultOfDoesCargobobHavePickupMagnet {
-    crate::__imports::native_does_cargobob_have_pickup_magnet(cargobob)
+pub fn does_cargobob_have_pickup_magnet(cargobob: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfDoesCargobobHavePickupMagnet {
+    crate::__imports::native_does_cargobob_have_pickup_magnet(cargobob.0)
 }
-pub fn set_vehicle_tyre_fixed(vehicle: u32,
+pub fn set_vehicle_tyre_fixed(vehicle: &VehicleScriptId,
 tyre_index: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleTyreFixed {
-    crate::__imports::native_set_vehicle_tyre_fixed(vehicle,
+    crate::__imports::native_set_vehicle_tyre_fixed(vehicle.0,
 tyre_index)
 }
-pub fn get_tyre_wear_rate(vehicle: u32,
+pub fn get_tyre_wear_rate(vehicle: &VehicleScriptId,
 wheel_index: i32) -> altv_wasm_shared::natives_result::ResultOfGetTyreWearRate {
-    crate::__imports::native_get_tyre_wear_rate(vehicle,
+    crate::__imports::native_get_tyre_wear_rate(vehicle.0,
 wheel_index)
 }
-pub fn set_playback_to_use_ai_try_to_revert_back_later(vehicle: u32,
+pub fn set_playback_to_use_ai_try_to_revert_back_later(vehicle: &VehicleScriptId,
 time: i32,
 driving_style: i32,
 p3: bool) -> altv_wasm_shared::natives_result::ResultOfSetPlaybackToUseAiTryToRevertBackLater {
-    crate::__imports::native_set_playback_to_use_ai_try_to_revert_back_later(vehicle,
+    crate::__imports::native_set_playback_to_use_ai_try_to_revert_back_later(vehicle.0,
 time,
 driving_style,
 p3)
@@ -33169,36 +33170,36 @@ p3)
 pub fn get_vehicle_homing_lockedonto_state(p0: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleHomingLockedontoState {
     crate::__imports::native_get_vehicle_homing_lockedonto_state(p0)
 }
-pub fn set_vehicle_stop_instantly_when_player_inactive(vehicle: u32,
+pub fn set_vehicle_stop_instantly_when_player_inactive(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleStopInstantlyWhenPlayerInactive {
-    crate::__imports::native_set_vehicle_stop_instantly_when_player_inactive(vehicle,
+    crate::__imports::native_set_vehicle_stop_instantly_when_player_inactive(vehicle.0,
 toggle)
 }
-pub fn set_hover_mode_wing_ratio(vehicle: u32,
+pub fn set_hover_mode_wing_ratio(vehicle: &VehicleScriptId,
 ratio: f32) -> altv_wasm_shared::natives_result::ResultOfSetHoverModeWingRatio {
-    crate::__imports::native_set_hover_mode_wing_ratio(vehicle,
+    crate::__imports::native_set_hover_mode_wing_ratio(vehicle.0,
 ratio)
 }
-pub fn set_vehicle_petrol_tank_health(vehicle: u32,
+pub fn set_vehicle_petrol_tank_health(vehicle: &VehicleScriptId,
 health: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehiclePetrolTankHealth {
-    crate::__imports::native_set_vehicle_petrol_tank_health(vehicle,
+    crate::__imports::native_set_vehicle_petrol_tank_health(vehicle.0,
 health)
 }
-pub fn set_vehicle_custom_primary_colour(vehicle: u32,
+pub fn set_vehicle_custom_primary_colour(vehicle: &VehicleScriptId,
 r: i32,
 g: i32,
 b: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleCustomPrimaryColour {
-    crate::__imports::native_set_vehicle_custom_primary_colour(vehicle,
+    crate::__imports::native_set_vehicle_custom_primary_colour(vehicle.0,
 r,
 g,
 b)
 }
-pub fn get_does_vehicle_have_tombstone(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetDoesVehicleHaveTombstone {
-    crate::__imports::native_get_does_vehicle_have_tombstone(vehicle)
+pub fn get_does_vehicle_have_tombstone(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetDoesVehicleHaveTombstone {
+    crate::__imports::native_get_does_vehicle_have_tombstone(vehicle.0)
 }
-pub fn set_vehicle_explodes_on_high_explosion_damage(vehicle: u32,
+pub fn set_vehicle_explodes_on_high_explosion_damage(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleExplodesOnHighExplosionDamage {
-    crate::__imports::native_set_vehicle_explodes_on_high_explosion_damage(vehicle,
+    crate::__imports::native_set_vehicle_explodes_on_high_explosion_damage(vehicle.0,
 toggle)
 }
 pub fn set_cargobob_exta_pickup_range(p0: i32,
@@ -33206,23 +33207,23 @@ p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetCargobobExtaPickupRange
     crate::__imports::native_set_cargobob_exta_pickup_range(p0,
 p1)
 }
-pub fn set_bike_easy_to_land(vehicle: u32,
+pub fn set_bike_easy_to_land(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetBikeEasyToLand {
-    crate::__imports::native_set_bike_easy_to_land(vehicle,
+    crate::__imports::native_set_bike_easy_to_land(vehicle.0,
 toggle)
 }
 pub fn delete_all_trains() -> altv_wasm_shared::natives_result::ResultOfDeleteAllTrains {
     crate::__imports::native_delete_all_trains()
 }
-pub fn set_vehicle_tank_stationary(vehicle: u32,
+pub fn set_vehicle_tank_stationary(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleTankStationary {
-    crate::__imports::native_set_vehicle_tank_stationary(vehicle,
+    crate::__imports::native_set_vehicle_tank_stationary(vehicle.0,
 p1)
 }
-pub fn set_tyre_health(vehicle: u32,
+pub fn set_tyre_health(vehicle: &VehicleScriptId,
 wheel_index: i32,
 health: f32) -> altv_wasm_shared::natives_result::ResultOfSetTyreHealth {
-    crate::__imports::native_set_tyre_health(vehicle,
+    crate::__imports::native_set_tyre_health(vehicle.0,
 wheel_index,
 health)
 }
@@ -33237,151 +33238,151 @@ x_target,
 y_target,
 z_target)
 }
-pub fn is_taxi_light_on(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsTaxiLightOn {
-    crate::__imports::native_is_taxi_light_on(vehicle)
+pub fn is_taxi_light_on(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsTaxiLightOn {
+    crate::__imports::native_is_taxi_light_on(vehicle.0)
 }
-pub fn are_plane_propellers_intact(plane: u32) -> altv_wasm_shared::natives_result::ResultOfArePlanePropellersIntact {
-    crate::__imports::native_are_plane_propellers_intact(plane)
+pub fn are_plane_propellers_intact(plane: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfArePlanePropellersIntact {
+    crate::__imports::native_are_plane_propellers_intact(plane.0)
 }
-pub fn set_disable_map_collision(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfSetDisableMapCollision {
-    crate::__imports::native_set_disable_map_collision(vehicle)
+pub fn set_disable_map_collision(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetDisableMapCollision {
+    crate::__imports::native_set_disable_map_collision(vehicle.0)
 }
 pub fn vehicle_set_enable_normalise_ramp_car_vertical_veloctiy(p0: i32,
 p1: i32) -> altv_wasm_shared::natives_result::ResultOfVehicleSetEnableNormaliseRampCarVerticalVeloctiy {
     crate::__imports::native_vehicle_set_enable_normalise_ramp_car_vertical_veloctiy(p0,
 p1)
 }
-pub fn preload_vehicle_mod(vehicle: u32,
+pub fn preload_vehicle_mod(vehicle: &VehicleScriptId,
 mod_type: i32,
 mod_index: i32) -> altv_wasm_shared::natives_result::ResultOfPreloadVehicleMod {
-    crate::__imports::native_preload_vehicle_mod(vehicle,
+    crate::__imports::native_preload_vehicle_mod(vehicle.0,
 mod_type,
 mod_index)
 }
-pub fn set_boat_anchor(vehicle: u32,
+pub fn set_boat_anchor(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetBoatAnchor {
-    crate::__imports::native_set_boat_anchor(vehicle,
+    crate::__imports::native_set_boat_anchor(vehicle.0,
 toggle)
 }
-pub fn get_vehicle_neon_colour(vehicle: u32,
+pub fn get_vehicle_neon_colour(vehicle: &VehicleScriptId,
 r: i32,
 g: i32,
 b: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleNeonColour {
-    crate::__imports::native_get_vehicle_neon_colour(vehicle,
+    crate::__imports::native_get_vehicle_neon_colour(vehicle.0,
 r,
 g,
 b)
 }
-pub fn set_vehicle_dont_terminate_task_when_achieved(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDontTerminateTaskWhenAchieved {
-    crate::__imports::native_set_vehicle_dont_terminate_task_when_achieved(vehicle)
+pub fn set_vehicle_dont_terminate_task_when_achieved(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDontTerminateTaskWhenAchieved {
+    crate::__imports::native_set_vehicle_dont_terminate_task_when_achieved(vehicle.0)
 }
-pub fn fix_vehicle_window(vehicle: u32,
+pub fn fix_vehicle_window(vehicle: &VehicleScriptId,
 window_index: i32) -> altv_wasm_shared::natives_result::ResultOfFixVehicleWindow {
-    crate::__imports::native_fix_vehicle_window(vehicle,
+    crate::__imports::native_fix_vehicle_window(vehicle.0,
 window_index)
 }
-pub fn get_vehicle_mod(vehicle: u32,
+pub fn get_vehicle_mod(vehicle: &VehicleScriptId,
 mod_type: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleMod {
-    crate::__imports::native_get_vehicle_mod(vehicle,
+    crate::__imports::native_get_vehicle_mod(vehicle.0,
 mod_type)
 }
-pub fn set_vehicle_doors_shut(vehicle: u32,
+pub fn set_vehicle_doors_shut(vehicle: &VehicleScriptId,
 close_instantly: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDoorsShut {
-    crate::__imports::native_set_vehicle_doors_shut(vehicle,
+    crate::__imports::native_set_vehicle_doors_shut(vehicle.0,
 close_instantly)
 }
-pub fn explode_vehicle_in_cutscene(vehicle: u32,
+pub fn explode_vehicle_in_cutscene(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfExplodeVehicleInCutscene {
-    crate::__imports::native_explode_vehicle_in_cutscene(vehicle,
+    crate::__imports::native_explode_vehicle_in_cutscene(vehicle.0,
 p1)
 }
-pub fn set_should_reset_turret_in_scripted_cameras(vehicle: u32,
+pub fn set_should_reset_turret_in_scripted_cameras(vehicle: &VehicleScriptId,
 should_reset: bool) -> altv_wasm_shared::natives_result::ResultOfSetShouldResetTurretInScriptedCameras {
-    crate::__imports::native_set_should_reset_turret_in_scripted_cameras(vehicle,
+    crate::__imports::native_set_should_reset_turret_in_scripted_cameras(vehicle.0,
 should_reset)
 }
-pub fn set_position_offset_for_recorded_vehicle_playback(vehicle: u32,
+pub fn set_position_offset_for_recorded_vehicle_playback(vehicle: &VehicleScriptId,
 x: f32,
 y: f32,
 z: f32) -> altv_wasm_shared::natives_result::ResultOfSetPositionOffsetForRecordedVehiclePlayback {
-    crate::__imports::native_set_position_offset_for_recorded_vehicle_playback(vehicle,
+    crate::__imports::native_set_position_offset_for_recorded_vehicle_playback(vehicle.0,
 x,
 y,
 z)
 }
-pub fn set_vehicle_dirt_level(vehicle: u32,
+pub fn set_vehicle_dirt_level(vehicle: &VehicleScriptId,
 dirt_level: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDirtLevel {
-    crate::__imports::native_set_vehicle_dirt_level(vehicle,
+    crate::__imports::native_set_vehicle_dirt_level(vehicle.0,
 dirt_level)
 }
-pub fn set_vehicle_extended_removal_range(vehicle: u32,
+pub fn set_vehicle_extended_removal_range(vehicle: &VehicleScriptId,
 range: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleExtendedRemovalRange {
-    crate::__imports::native_set_vehicle_extended_removal_range(vehicle,
+    crate::__imports::native_set_vehicle_extended_removal_range(vehicle.0,
 range)
 }
-pub fn roll_down_window(vehicle: u32,
+pub fn roll_down_window(vehicle: &VehicleScriptId,
 window_index: i32) -> altv_wasm_shared::natives_result::ResultOfRollDownWindow {
-    crate::__imports::native_roll_down_window(vehicle,
+    crate::__imports::native_roll_down_window(vehicle.0,
 window_index)
 }
 pub fn set_speed_boost_effect_disabled(disabled: bool) -> altv_wasm_shared::natives_result::ResultOfSetSpeedBoostEffectDisabled {
     crate::__imports::native_set_speed_boost_effect_disabled(disabled)
 }
-pub fn create_pick_up_rope_for_cargobob(cargobob: u32,
+pub fn create_pick_up_rope_for_cargobob(cargobob: &VehicleScriptId,
 state: i32) -> altv_wasm_shared::natives_result::ResultOfCreatePickUpRopeForCargobob {
-    crate::__imports::native_create_pick_up_rope_for_cargobob(cargobob,
+    crate::__imports::native_create_pick_up_rope_for_cargobob(cargobob.0,
 state)
 }
-pub fn detach_container_from_handler_frame(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfDetachContainerFromHandlerFrame {
-    crate::__imports::native_detach_container_from_handler_frame(vehicle)
+pub fn detach_container_from_handler_frame(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfDetachContainerFromHandlerFrame {
+    crate::__imports::native_detach_container_from_handler_frame(vehicle.0)
 }
-pub fn stop_bringing_vehicle_to_halt(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfStopBringingVehicleToHalt {
-    crate::__imports::native_stop_bringing_vehicle_to_halt(vehicle)
+pub fn stop_bringing_vehicle_to_halt(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfStopBringingVehicleToHalt {
+    crate::__imports::native_stop_bringing_vehicle_to_halt(vehicle.0)
 }
-pub fn set_vehicle_door_open(vehicle: u32,
+pub fn set_vehicle_door_open(vehicle: &VehicleScriptId,
 door_id: i32,
 loose: bool,
 open_instantly: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDoorOpen {
-    crate::__imports::native_set_vehicle_door_open(vehicle,
+    crate::__imports::native_set_vehicle_door_open(vehicle.0,
 door_id,
 loose,
 open_instantly)
 }
-pub fn get_vehicle_number_plate_text(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleNumberPlateText {
-    crate::__imports::native_get_vehicle_number_plate_text(vehicle)
+pub fn get_vehicle_number_plate_text(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleNumberPlateText {
+    crate::__imports::native_get_vehicle_number_plate_text(vehicle.0)
 }
-pub fn get_vehicle_extra_colour5(vehicle: u32,
+pub fn get_vehicle_extra_colour5(vehicle: &VehicleScriptId,
 color: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleExtraColour5 {
-    crate::__imports::native_get_vehicle_extra_colour5(vehicle,
+    crate::__imports::native_get_vehicle_extra_colour5(vehicle.0,
 color)
 }
-pub fn get_vehicle_petrol_tank_health(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehiclePetrolTankHealth {
-    crate::__imports::native_get_vehicle_petrol_tank_health(vehicle)
+pub fn get_vehicle_petrol_tank_health(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehiclePetrolTankHealth {
+    crate::__imports::native_get_vehicle_petrol_tank_health(vehicle.0)
 }
-pub fn set_vehicle_allow_homing_missle_lockon(vehicle: u32,
+pub fn set_vehicle_allow_homing_missle_lockon(vehicle: &VehicleScriptId,
 toggle: bool,
 p2: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleAllowHomingMissleLockon {
-    crate::__imports::native_set_vehicle_allow_homing_missle_lockon(vehicle,
+    crate::__imports::native_set_vehicle_allow_homing_missle_lockon(vehicle.0,
 toggle,
 p2)
 }
-pub fn start_playback_recorded_vehicle_with_flags(vehicle: u32,
+pub fn start_playback_recorded_vehicle_with_flags(vehicle: &VehicleScriptId,
 recording: i32,
 script: Option<&String>,
 flags: i32,
 time: i32,
 driving_style: i32) -> altv_wasm_shared::natives_result::ResultOfStartPlaybackRecordedVehicleWithFlags {
-    crate::__imports::native_start_playback_recorded_vehicle_with_flags(vehicle,
+    crate::__imports::native_start_playback_recorded_vehicle_with_flags(vehicle.0,
 recording,
 script,
 flags,
 time,
 driving_style)
 }
-pub fn set_vehicle_extra(vehicle: u32,
+pub fn set_vehicle_extra(vehicle: &VehicleScriptId,
 extra_id: i32,
 disable: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleExtra {
-    crate::__imports::native_set_vehicle_extra(vehicle,
+    crate::__imports::native_set_vehicle_extra(vehicle.0,
 extra_id,
 disable)
 }
@@ -33401,13 +33402,13 @@ z2)
 pub fn is_this_model_a_car(model: u32) -> altv_wasm_shared::natives_result::ResultOfIsThisModelAcar {
     crate::__imports::native_is_this_model_a_car(model)
 }
-pub fn set_heli_resist_to_explosion(vehicle: u32,
+pub fn set_heli_resist_to_explosion(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetHeliResistToExplosion {
-    crate::__imports::native_set_heli_resist_to_explosion(vehicle,
+    crate::__imports::native_set_heli_resist_to_explosion(vehicle.0,
 toggle)
 }
-pub fn get_vehicle_trailer_parent_vehicle(trailer: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleTrailerParentVehicle {
-    crate::__imports::native_get_vehicle_trailer_parent_vehicle(trailer)
+pub fn get_vehicle_trailer_parent_vehicle(trailer: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleTrailerParentVehicle {
+    crate::__imports::native_get_vehicle_trailer_parent_vehicle(trailer.0)
 }
 pub fn set_random_trains(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetRandomTrains {
     crate::__imports::native_set_random_trains(toggle)
@@ -33417,23 +33418,23 @@ p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetAllowRammingSoopOrRamp 
     crate::__imports::native_set_allow_ramming_soop_or_ramp(p0,
 p1)
 }
-pub fn get_vehicle_mod_color2(vehicle: u32,
+pub fn get_vehicle_mod_color2(vehicle: &VehicleScriptId,
 paint_type: i32,
 color: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleModColor2 {
-    crate::__imports::native_get_vehicle_mod_color2(vehicle,
+    crate::__imports::native_get_vehicle_mod_color2(vehicle.0,
 paint_type,
 color)
 }
-pub fn set_vehicle_mod_color2(vehicle: u32,
+pub fn set_vehicle_mod_color2(vehicle: &VehicleScriptId,
 paint_type: i32,
 color: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleModColor2 {
-    crate::__imports::native_set_vehicle_mod_color2(vehicle,
+    crate::__imports::native_set_vehicle_mod_color2(vehicle.0,
 paint_type,
 color)
 }
-pub fn get_vehicle_weapon_restricted_ammo(vehicle: u32,
+pub fn get_vehicle_weapon_restricted_ammo(vehicle: &VehicleScriptId,
 weapon_index: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleWeaponRestrictedAmmo {
-    crate::__imports::native_get_vehicle_weapon_restricted_ammo(vehicle,
+    crate::__imports::native_get_vehicle_weapon_restricted_ammo(vehicle.0,
 weapon_index)
 }
 pub fn request_vehicle_asset(vehicle_hash: u32,
@@ -33441,53 +33442,53 @@ vehicle_asset: i32) -> altv_wasm_shared::natives_result::ResultOfRequestVehicleA
     crate::__imports::native_request_vehicle_asset(vehicle_hash,
 vehicle_asset)
 }
-pub fn set_rocket_boost_active(vehicle: u32,
+pub fn set_rocket_boost_active(vehicle: &VehicleScriptId,
 active: bool) -> altv_wasm_shared::natives_result::ResultOfSetRocketBoostActive {
-    crate::__imports::native_set_rocket_boost_active(vehicle,
+    crate::__imports::native_set_rocket_boost_active(vehicle.0,
 active)
 }
-pub fn set_disable_ped_stand_on_top(vehicle: u32,
+pub fn set_disable_ped_stand_on_top(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetDisablePedStandOnTop {
-    crate::__imports::native_set_disable_ped_stand_on_top(vehicle,
+    crate::__imports::native_set_disable_ped_stand_on_top(vehicle.0,
 toggle)
 }
 pub fn set_vehicle_detonation_mode(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDetonationMode {
     crate::__imports::native_set_vehicle_detonation_mode(toggle)
 }
-pub fn remove_vehicle_stuck_check(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfRemoveVehicleStuckCheck {
-    crate::__imports::native_remove_vehicle_stuck_check(vehicle)
+pub fn remove_vehicle_stuck_check(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfRemoveVehicleStuckCheck {
+    crate::__imports::native_remove_vehicle_stuck_check(vehicle.0)
 }
-pub fn get_vehicle_custom_secondary_colour(vehicle: u32,
+pub fn get_vehicle_custom_secondary_colour(vehicle: &VehicleScriptId,
 r: i32,
 g: i32,
 b: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleCustomSecondaryColour {
-    crate::__imports::native_get_vehicle_custom_secondary_colour(vehicle,
+    crate::__imports::native_get_vehicle_custom_secondary_colour(vehicle.0,
 r,
 g,
 b)
 }
-pub fn suppress_neons_on_vehicle(vehicle: u32,
+pub fn suppress_neons_on_vehicle(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSuppressNeonsOnVehicle {
-    crate::__imports::native_suppress_neons_on_vehicle(vehicle,
+    crate::__imports::native_suppress_neons_on_vehicle(vehicle.0,
 toggle)
 }
-pub fn get_last_ped_in_vehicle_seat(vehicle: u32,
+pub fn get_last_ped_in_vehicle_seat(vehicle: &VehicleScriptId,
 seat_index: i32) -> altv_wasm_shared::natives_result::ResultOfGetLastPedInVehicleSeat {
-    crate::__imports::native_get_last_ped_in_vehicle_seat(vehicle,
+    crate::__imports::native_get_last_ped_in_vehicle_seat(vehicle.0,
 seat_index)
 }
 pub fn set_random_boats(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetRandomBoats {
     crate::__imports::native_set_random_boats(toggle)
 }
-pub fn is_toggle_mod_on(vehicle: u32,
+pub fn is_toggle_mod_on(vehicle: &VehicleScriptId,
 mod_type: i32) -> altv_wasm_shared::natives_result::ResultOfIsToggleModOn {
-    crate::__imports::native_is_toggle_mod_on(vehicle,
+    crate::__imports::native_is_toggle_mod_on(vehicle.0,
 mod_type)
 }
-pub fn set_hydraulic_suspension_raise_factor(vehicle: u32,
+pub fn set_hydraulic_suspension_raise_factor(vehicle: &VehicleScriptId,
 wheel_id: i32,
 value: f32) -> altv_wasm_shared::natives_result::ResultOfSetHydraulicSuspensionRaiseFactor {
-    crate::__imports::native_set_hydraulic_suspension_raise_factor(vehicle,
+    crate::__imports::native_set_hydraulic_suspension_raise_factor(vehicle.0,
 wheel_id,
 value)
 }
@@ -33497,12 +33498,12 @@ pub fn set_car_high_speed_bump_severity_multiplier(multiplier: f32) -> altv_wasm
 pub fn get_vehicle_is_dummy(p0: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleIsDummy {
     crate::__imports::native_get_vehicle_is_dummy(p0)
 }
-pub fn roll_down_windows(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfRollDownWindows {
-    crate::__imports::native_roll_down_windows(vehicle)
+pub fn roll_down_windows(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfRollDownWindows {
+    crate::__imports::native_roll_down_windows(vehicle.0)
 }
-pub fn set_bounds_affect_water_probes(vehicle: u32,
+pub fn set_bounds_affect_water_probes(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetBoundsAffectWaterProbes {
-    crate::__imports::native_set_bounds_affect_water_probes(vehicle,
+    crate::__imports::native_set_bounds_affect_water_probes(vehicle.0,
 toggle)
 }
 pub fn set_ignore_planes_small_pitch_change(p0: i32,
@@ -33510,9 +33511,9 @@ p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetIgnorePlanesSmallPitchC
     crate::__imports::native_set_ignore_planes_small_pitch_change(p0,
 p1)
 }
-pub fn set_vehicle_weapon_can_target_objects(vehicle: u32,
+pub fn set_vehicle_weapon_can_target_objects(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleWeaponCanTargetObjects {
-    crate::__imports::native_set_vehicle_weapon_can_target_objects(vehicle,
+    crate::__imports::native_set_vehicle_weapon_can_target_objects(vehicle.0,
 toggle)
 }
 pub fn set_vehicle_bobblehead_velocity(x: f32,
@@ -33522,132 +33523,132 @@ p2: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleBobbleheadVeloci
 y,
 p2)
 }
-pub fn get_vehicle_attached_to_cargobob(cargobob: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleAttachedToCargobob {
-    crate::__imports::native_get_vehicle_attached_to_cargobob(cargobob)
+pub fn get_vehicle_attached_to_cargobob(cargobob: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleAttachedToCargobob {
+    crate::__imports::native_get_vehicle_attached_to_cargobob(cargobob.0)
 }
-pub fn set_pickup_rope_length_for_cargobob(cargobob: u32,
+pub fn set_pickup_rope_length_for_cargobob(cargobob: &VehicleScriptId,
 length1: f32,
 length2: f32,
 p3: bool) -> altv_wasm_shared::natives_result::ResultOfSetPickupRopeLengthForCargobob {
-    crate::__imports::native_set_pickup_rope_length_for_cargobob(cargobob,
+    crate::__imports::native_set_pickup_rope_length_for_cargobob(cargobob.0,
 length1,
 length2,
 p3)
 }
-pub fn set_trailer_legs_lowered(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfSetTrailerLegsLowered {
-    crate::__imports::native_set_trailer_legs_lowered(vehicle)
+pub fn set_trailer_legs_lowered(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetTrailerLegsLowered {
+    crate::__imports::native_set_trailer_legs_lowered(vehicle.0)
 }
-pub fn get_vehicle_livery_count(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleLiveryCount {
-    crate::__imports::native_get_vehicle_livery_count(vehicle)
+pub fn get_vehicle_livery_count(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleLiveryCount {
+    crate::__imports::native_get_vehicle_livery_count(vehicle.0)
 }
-pub fn open_bomb_bay_doors(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfOpenBombBayDoors {
-    crate::__imports::native_open_bomb_bay_doors(vehicle)
+pub fn open_bomb_bay_doors(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfOpenBombBayDoors {
+    crate::__imports::native_open_bomb_bay_doors(vehicle.0)
 }
-pub fn set_vehicle_force_interiorlight(vehicle: u32,
+pub fn set_vehicle_force_interiorlight(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleForceInteriorlight {
-    crate::__imports::native_set_vehicle_force_interiorlight(vehicle,
+    crate::__imports::native_set_vehicle_force_interiorlight(vehicle.0,
 toggle)
 }
-pub fn unpause_playback_recorded_vehicle(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfUnpausePlaybackRecordedVehicle {
-    crate::__imports::native_unpause_playback_recorded_vehicle(vehicle)
+pub fn unpause_playback_recorded_vehicle(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfUnpausePlaybackRecordedVehicle {
+    crate::__imports::native_unpause_playback_recorded_vehicle(vehicle.0)
 }
-pub fn set_force_fix_link_matrices(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfSetForceFixLinkMatrices {
-    crate::__imports::native_set_force_fix_link_matrices(vehicle)
+pub fn set_force_fix_link_matrices(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetForceFixLinkMatrices {
+    crate::__imports::native_set_force_fix_link_matrices(vehicle.0)
 }
-pub fn set_vehicle_use_more_restrictive_spawn_checks(vehicle: u32,
+pub fn set_vehicle_use_more_restrictive_spawn_checks(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleUseMoreRestrictiveSpawnChecks {
-    crate::__imports::native_set_vehicle_use_more_restrictive_spawn_checks(vehicle,
+    crate::__imports::native_set_vehicle_use_more_restrictive_spawn_checks(vehicle.0,
 p1)
 }
-pub fn get_mod_text_label(vehicle: u32,
+pub fn get_mod_text_label(vehicle: &VehicleScriptId,
 mod_type: i32,
 mod_value: i32) -> altv_wasm_shared::natives_result::ResultOfGetModTextLabel {
-    crate::__imports::native_get_mod_text_label(vehicle,
+    crate::__imports::native_get_mod_text_label(vehicle.0,
 mod_type,
 mod_value)
 }
-pub fn is_handler_frame_lined_up_with_container(vehicle: u32,
+pub fn is_handler_frame_lined_up_with_container(vehicle: &VehicleScriptId,
 entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsHandlerFrameLinedUpWithContainer {
-    crate::__imports::native_is_handler_frame_lined_up_with_container(vehicle,
+    crate::__imports::native_is_handler_frame_lined_up_with_container(vehicle.0,
 entity)
 }
-pub fn set_vehicle_gravity(vehicle: u32,
+pub fn set_vehicle_gravity(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleGravity {
-    crate::__imports::native_set_vehicle_gravity(vehicle,
+    crate::__imports::native_set_vehicle_gravity(vehicle.0,
 toggle)
 }
-pub fn set_vehicle_disable_height_map_avoidance(vehicle: u32,
+pub fn set_vehicle_disable_height_map_avoidance(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDisableHeightMapAvoidance {
-    crate::__imports::native_set_vehicle_disable_height_map_avoidance(vehicle,
+    crate::__imports::native_set_vehicle_disable_height_map_avoidance(vehicle.0,
 p1)
 }
-pub fn set_vehicle_undriveable(vehicle: u32,
+pub fn set_vehicle_undriveable(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleUndriveable {
-    crate::__imports::native_set_vehicle_undriveable(vehicle,
+    crate::__imports::native_set_vehicle_undriveable(vehicle.0,
 toggle)
 }
-pub fn does_vehicle_have_roof(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfDoesVehicleHaveRoof {
-    crate::__imports::native_does_vehicle_have_roof(vehicle)
+pub fn does_vehicle_have_roof(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfDoesVehicleHaveRoof {
+    crate::__imports::native_does_vehicle_have_roof(vehicle.0)
 }
-pub fn set_vehicle_fullbeam(vehicle: u32,
+pub fn set_vehicle_fullbeam(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleFullbeam {
-    crate::__imports::native_set_vehicle_fullbeam(vehicle,
+    crate::__imports::native_set_vehicle_fullbeam(vehicle.0,
 toggle)
 }
-pub fn set_vehicle_automatically_attaches(vehicle: u32,
+pub fn set_vehicle_automatically_attaches(vehicle: &VehicleScriptId,
 p1: bool,
 p2: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleAutomaticallyAttaches {
-    crate::__imports::native_set_vehicle_automatically_attaches(vehicle,
+    crate::__imports::native_set_vehicle_automatically_attaches(vehicle.0,
 p1,
 p2)
 }
 pub fn get_vehicle_model_acceleration(model_hash: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleModelAcceleration {
     crate::__imports::native_get_vehicle_model_acceleration(model_hash)
 }
-pub fn get_vehicle_neon_enabled(vehicle: u32,
+pub fn get_vehicle_neon_enabled(vehicle: &VehicleScriptId,
 index: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleNeonEnabled {
-    crate::__imports::native_get_vehicle_neon_enabled(vehicle,
+    crate::__imports::native_get_vehicle_neon_enabled(vehicle.0,
 index)
 }
-pub fn is_vehicle_sprayable(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleSprayable {
-    crate::__imports::native_is_vehicle_sprayable(vehicle)
+pub fn is_vehicle_sprayable(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleSprayable {
+    crate::__imports::native_is_vehicle_sprayable(vehicle.0)
 }
 pub fn find_spawn_coordinates_for_heli(ped: u32) -> altv_wasm_shared::natives_result::ResultOfFindSpawnCoordinatesForHeli {
     crate::__imports::native_find_spawn_coordinates_for_heli(ped)
 }
-pub fn set_vehicle_neon_colour(vehicle: u32,
+pub fn set_vehicle_neon_colour(vehicle: &VehicleScriptId,
 r: i32,
 g: i32,
 b: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleNeonColour {
-    crate::__imports::native_set_vehicle_neon_colour(vehicle,
+    crate::__imports::native_set_vehicle_neon_colour(vehicle.0,
 r,
 g,
 b)
 }
-pub fn set_hydraulic_vehicle_state(vehicle: u32,
+pub fn set_hydraulic_vehicle_state(vehicle: &VehicleScriptId,
 state: i32) -> altv_wasm_shared::natives_result::ResultOfSetHydraulicVehicleState {
-    crate::__imports::native_set_hydraulic_vehicle_state(vehicle,
+    crate::__imports::native_set_hydraulic_vehicle_state(vehicle.0,
 state)
 }
 pub fn set_disable_retracting_weapon_blades(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetDisableRetractingWeaponBlades {
     crate::__imports::native_set_disable_retracting_weapon_blades(toggle)
 }
-pub fn get_vehicle_dirt_level(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleDirtLevel {
-    crate::__imports::native_get_vehicle_dirt_level(vehicle)
+pub fn get_vehicle_dirt_level(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleDirtLevel {
+    crate::__imports::native_get_vehicle_dirt_level(vehicle.0)
 }
-pub fn get_vehicle_lock_on_target(vehicle: u32,
+pub fn get_vehicle_lock_on_target(vehicle: &VehicleScriptId,
 entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleLockOnTarget {
-    crate::__imports::native_get_vehicle_lock_on_target(vehicle,
+    crate::__imports::native_get_vehicle_lock_on_target(vehicle.0,
 entity)
 }
-pub fn raise_convertible_roof(vehicle: u32,
+pub fn raise_convertible_roof(vehicle: &VehicleScriptId,
 instantly_raise: bool) -> altv_wasm_shared::natives_result::ResultOfRaiseConvertibleRoof {
-    crate::__imports::native_raise_convertible_roof(vehicle,
+    crate::__imports::native_raise_convertible_roof(vehicle.0,
 instantly_raise)
 }
-pub fn set_boat_sinks_when_wrecked(vehicle: u32,
+pub fn set_boat_sinks_when_wrecked(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetBoatSinksWhenWrecked {
-    crate::__imports::native_set_boat_sinks_when_wrecked(vehicle,
+    crate::__imports::native_set_boat_sinks_when_wrecked(vehicle.0,
 toggle)
 }
 pub fn set_vehicle_steering_bias_scalar(p0: i32,
@@ -33655,149 +33656,149 @@ p1: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleSteeringBiasScal
     crate::__imports::native_set_vehicle_steering_bias_scalar(p0,
 p1)
 }
-pub fn detach_vehicle_from_trailer(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfDetachVehicleFromTrailer {
-    crate::__imports::native_detach_vehicle_from_trailer(vehicle)
+pub fn detach_vehicle_from_trailer(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfDetachVehicleFromTrailer {
+    crate::__imports::native_detach_vehicle_from_trailer(vehicle.0)
 }
-pub fn get_car_has_jump(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetCarHasJump {
-    crate::__imports::native_get_car_has_jump(vehicle)
+pub fn get_car_has_jump(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetCarHasJump {
+    crate::__imports::native_get_car_has_jump(vehicle.0)
 }
-pub fn set_vehicle_number_plate_text_index(vehicle: u32,
+pub fn set_vehicle_number_plate_text_index(vehicle: &VehicleScriptId,
 plate_index: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleNumberPlateTextIndex {
-    crate::__imports::native_set_vehicle_number_plate_text_index(vehicle,
+    crate::__imports::native_set_vehicle_number_plate_text_index(vehicle.0,
 plate_index)
 }
-pub fn get_vehicle_mod_modifier_value(vehicle: u32,
+pub fn get_vehicle_mod_modifier_value(vehicle: &VehicleScriptId,
 mod_type: i32,
 mod_index: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleModModifierValue {
-    crate::__imports::native_get_vehicle_mod_modifier_value(vehicle,
+    crate::__imports::native_get_vehicle_mod_modifier_value(vehicle.0,
 mod_type,
 mod_index)
 }
 pub fn set_ambient_vehicle_range_multiplier_this_frame(value: f32) -> altv_wasm_shared::natives_result::ResultOfSetAmbientVehicleRangeMultiplierThisFrame {
     crate::__imports::native_set_ambient_vehicle_range_multiplier_this_frame(value)
 }
-pub fn get_is_vehicle_secondary_colour_custom(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetIsVehicleSecondaryColourCustom {
-    crate::__imports::native_get_is_vehicle_secondary_colour_custom(vehicle)
+pub fn get_is_vehicle_secondary_colour_custom(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetIsVehicleSecondaryColourCustom {
+    crate::__imports::native_get_is_vehicle_secondary_colour_custom(vehicle.0)
 }
-pub fn set_disable_vehicle_engine_fires(vehicle: u32,
+pub fn set_disable_vehicle_engine_fires(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetDisableVehicleEngineFires {
-    crate::__imports::native_set_disable_vehicle_engine_fires(vehicle,
+    crate::__imports::native_set_disable_vehicle_engine_fires(vehicle.0,
 toggle)
 }
 pub fn has_instant_fill_vehicle_population_finished() -> altv_wasm_shared::natives_result::ResultOfHasInstantFillVehiclePopulationFinished {
     crate::__imports::native_has_instant_fill_vehicle_population_finished()
 }
-pub fn lower_forklift_forks(forklift: u32) -> altv_wasm_shared::natives_result::ResultOfLowerForkliftForks {
-    crate::__imports::native_lower_forklift_forks(forklift)
+pub fn lower_forklift_forks(forklift: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfLowerForkliftForks {
+    crate::__imports::native_lower_forklift_forks(forklift.0)
 }
 pub fn get_position_of_vehicle_recording_id_at_time(id: i32,
 time: f32) -> altv_wasm_shared::natives_result::ResultOfGetPositionOfVehicleRecordingIdAtTime {
     crate::__imports::native_get_position_of_vehicle_recording_id_at_time(id,
 time)
 }
-pub fn get_number_of_vehicle_doors(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetNumberOfVehicleDoors {
-    crate::__imports::native_get_number_of_vehicle_doors(vehicle)
+pub fn get_number_of_vehicle_doors(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetNumberOfVehicleDoors {
+    crate::__imports::native_get_number_of_vehicle_doors(vehicle.0)
 }
-pub fn set_vehicle_brake_lights(vehicle: u32,
+pub fn set_vehicle_brake_lights(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleBrakeLights {
-    crate::__imports::native_set_vehicle_brake_lights(vehicle,
+    crate::__imports::native_set_vehicle_brake_lights(vehicle.0,
 toggle)
 }
-pub fn remove_vehicle_mod(vehicle: u32,
+pub fn remove_vehicle_mod(vehicle: &VehicleScriptId,
 mod_type: i32) -> altv_wasm_shared::natives_result::ResultOfRemoveVehicleMod {
-    crate::__imports::native_remove_vehicle_mod(vehicle,
+    crate::__imports::native_remove_vehicle_mod(vehicle.0,
 mod_type)
 }
-pub fn set_vehicle_has_strong_axles(vehicle: u32,
+pub fn set_vehicle_has_strong_axles(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleHasStrongAxles {
-    crate::__imports::native_set_vehicle_has_strong_axles(vehicle,
+    crate::__imports::native_set_vehicle_has_strong_axles(vehicle.0,
 toggle)
 }
-pub fn modify_vehicle_top_speed(vehicle: u32,
+pub fn modify_vehicle_top_speed(vehicle: &VehicleScriptId,
 value: f32) -> altv_wasm_shared::natives_result::ResultOfModifyVehicleTopSpeed {
-    crate::__imports::native_modify_vehicle_top_speed(vehicle,
+    crate::__imports::native_modify_vehicle_top_speed(vehicle.0,
 value)
 }
-pub fn set_vehicle_lod_multiplier(vehicle: u32,
+pub fn set_vehicle_lod_multiplier(vehicle: &VehicleScriptId,
 multiplier: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleLodMultiplier {
-    crate::__imports::native_set_vehicle_lod_multiplier(vehicle,
+    crate::__imports::native_set_vehicle_lod_multiplier(vehicle.0,
 multiplier)
 }
-pub fn set_vehicle_door_shut(vehicle: u32,
+pub fn set_vehicle_door_shut(vehicle: &VehicleScriptId,
 door_id: i32,
 close_instantly: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDoorShut {
-    crate::__imports::native_set_vehicle_door_shut(vehicle,
+    crate::__imports::native_set_vehicle_door_shut(vehicle.0,
 door_id,
 close_instantly)
 }
-pub fn skip_time_in_playback_recorded_vehicle(vehicle: u32,
+pub fn skip_time_in_playback_recorded_vehicle(vehicle: &VehicleScriptId,
 time: f32) -> altv_wasm_shared::natives_result::ResultOfSkipTimeInPlaybackRecordedVehicle {
-    crate::__imports::native_skip_time_in_playback_recorded_vehicle(vehicle,
+    crate::__imports::native_skip_time_in_playback_recorded_vehicle(vehicle.0,
 time)
 }
-pub fn set_heli_can_pickup_entity_that_has_pick_up_disabled(vehicle: u32,
+pub fn set_heli_can_pickup_entity_that_has_pick_up_disabled(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetHeliCanPickupEntityThatHasPickUpDisabled {
-    crate::__imports::native_set_heli_can_pickup_entity_that_has_pick_up_disabled(vehicle,
+    crate::__imports::native_set_heli_can_pickup_entity_that_has_pick_up_disabled(vehicle.0,
 toggle)
 }
 pub fn is_this_model_a_jetski(model: u32) -> altv_wasm_shared::natives_result::ResultOfIsThisModelAjetski {
     crate::__imports::native_is_this_model_a_jetski(model)
 }
-pub fn set_vehicle_deformation_fixed(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDeformationFixed {
-    crate::__imports::native_set_vehicle_deformation_fixed(vehicle)
+pub fn set_vehicle_deformation_fixed(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDeformationFixed {
+    crate::__imports::native_set_vehicle_deformation_fixed(vehicle.0)
 }
 pub fn does_vehicle_exist_with_decorator(decorator: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfDoesVehicleExistWithDecorator {
     crate::__imports::native_does_vehicle_exist_with_decorator(decorator)
 }
-pub fn set_vehicle_number_plate_text(vehicle: u32,
+pub fn set_vehicle_number_plate_text(vehicle: &VehicleScriptId,
 plate_text: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfSetVehicleNumberPlateText {
-    crate::__imports::native_set_vehicle_number_plate_text(vehicle,
+    crate::__imports::native_set_vehicle_number_plate_text(vehicle.0,
 plate_text)
 }
-pub fn set_trailer_legs_raised(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfSetTrailerLegsRaised {
-    crate::__imports::native_set_trailer_legs_raised(vehicle)
+pub fn set_trailer_legs_raised(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetTrailerLegsRaised {
+    crate::__imports::native_set_trailer_legs_raised(vehicle.0)
 }
-pub fn set_vehicle_damage_scales(vehicle: u32,
+pub fn set_vehicle_damage_scales(vehicle: &VehicleScriptId,
 p1: i32,
 p2: i32,
 p3: i32,
 p4: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDamageScales {
-    crate::__imports::native_set_vehicle_damage_scales(vehicle,
+    crate::__imports::native_set_vehicle_damage_scales(vehicle.0,
 p1,
 p2,
 p3,
 p4)
 }
-pub fn set_vehicle_doors_locked_for_non_script_players(vehicle: u32,
+pub fn set_vehicle_doors_locked_for_non_script_players(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDoorsLockedForNonScriptPlayers {
-    crate::__imports::native_set_vehicle_doors_locked_for_non_script_players(vehicle,
+    crate::__imports::native_set_vehicle_doors_locked_for_non_script_players(vehicle.0,
 toggle)
 }
-pub fn remove_pick_up_rope_for_cargobob(cargobob: u32) -> altv_wasm_shared::natives_result::ResultOfRemovePickUpRopeForCargobob {
-    crate::__imports::native_remove_pick_up_rope_for_cargobob(cargobob)
+pub fn remove_pick_up_rope_for_cargobob(cargobob: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfRemovePickUpRopeForCargobob {
+    crate::__imports::native_remove_pick_up_rope_for_cargobob(cargobob.0)
 }
-pub fn set_disable_automatic_crash_task(vehicle: u32,
+pub fn set_disable_automatic_crash_task(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetDisableAutomaticCrashTask {
-    crate::__imports::native_set_disable_automatic_crash_task(vehicle,
+    crate::__imports::native_set_disable_automatic_crash_task(vehicle.0,
 toggle)
 }
-pub fn set_force_hd_vehicle(vehicle: u32,
+pub fn set_force_hd_vehicle(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetForceHdVehicle {
-    crate::__imports::native_set_force_hd_vehicle(vehicle,
+    crate::__imports::native_set_force_hd_vehicle(vehicle.0,
 toggle)
 }
-pub fn set_vehicle_engine_can_degrade(vehicle: u32,
+pub fn set_vehicle_engine_can_degrade(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleEngineCanDegrade {
-    crate::__imports::native_set_vehicle_engine_can_degrade(vehicle,
+    crate::__imports::native_set_vehicle_engine_can_degrade(vehicle.0,
 toggle)
 }
-pub fn set_vehicle_causes_swerving(vehicle: u32,
+pub fn set_vehicle_causes_swerving(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleCausesSwerving {
-    crate::__imports::native_set_vehicle_causes_swerving(vehicle,
+    crate::__imports::native_set_vehicle_causes_swerving(vehicle.0,
 toggle)
 }
-pub fn does_vehicle_have_searchlight(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfDoesVehicleHaveSearchlight {
-    crate::__imports::native_does_vehicle_have_searchlight(vehicle)
+pub fn does_vehicle_have_searchlight(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfDoesVehicleHaveSearchlight {
+    crate::__imports::native_does_vehicle_have_searchlight(vehicle.0)
 }
 pub fn get_entity_attached_to_cargobob(p0: i32) -> altv_wasm_shared::natives_result::ResultOfGetEntityAttachedToCargobob {
     crate::__imports::native_get_entity_attached_to_cargobob(p0)
@@ -33805,24 +33806,24 @@ pub fn get_entity_attached_to_cargobob(p0: i32) -> altv_wasm_shared::natives_res
 pub fn set_vehicle_shunt_on_stick(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleShuntOnStick {
     crate::__imports::native_set_vehicle_shunt_on_stick(toggle)
 }
-pub fn add_vehicle_phone_explosive_device(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfAddVehiclePhoneExplosiveDevice {
-    crate::__imports::native_add_vehicle_phone_explosive_device(vehicle)
+pub fn add_vehicle_phone_explosive_device(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfAddVehiclePhoneExplosiveDevice {
+    crate::__imports::native_add_vehicle_phone_explosive_device(vehicle.0)
 }
-pub fn set_vehicle_kers_allowed(vehicle: u32,
+pub fn set_vehicle_kers_allowed(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleKersAllowed {
-    crate::__imports::native_set_vehicle_kers_allowed(vehicle,
+    crate::__imports::native_set_vehicle_kers_allowed(vehicle.0,
 toggle)
 }
-pub fn force_sub_throttle_for_time(vehicle: u32,
+pub fn force_sub_throttle_for_time(vehicle: &VehicleScriptId,
 p1: f32,
 p2: f32) -> altv_wasm_shared::natives_result::ResultOfForceSubThrottleForTime {
-    crate::__imports::native_force_sub_throttle_for_time(vehicle,
+    crate::__imports::native_force_sub_throttle_for_time(vehicle.0,
 p1,
 p2)
 }
-pub fn set_cargobob_pickup_magnet_active(cargobob: u32,
+pub fn set_cargobob_pickup_magnet_active(cargobob: &VehicleScriptId,
 is_active: bool) -> altv_wasm_shared::natives_result::ResultOfSetCargobobPickupMagnetActive {
-    crate::__imports::native_set_cargobob_pickup_magnet_active(cargobob,
+    crate::__imports::native_set_cargobob_pickup_magnet_active(cargobob.0,
 is_active)
 }
 pub fn set_vehicle_generator_area_of_interest(x: f32,
@@ -33834,53 +33835,53 @@ y,
 z,
 radius)
 }
-pub fn have_vehicle_mods_streamed_in(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfHaveVehicleModsStreamedIn {
-    crate::__imports::native_have_vehicle_mods_streamed_in(vehicle)
+pub fn have_vehicle_mods_streamed_in(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfHaveVehicleModsStreamedIn {
+    crate::__imports::native_have_vehicle_mods_streamed_in(vehicle.0)
 }
-pub fn set_vehicle_flight_nozzle_position_immediate(vehicle: u32,
+pub fn set_vehicle_flight_nozzle_position_immediate(vehicle: &VehicleScriptId,
 angle: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleFlightNozzlePositionImmediate {
-    crate::__imports::native_set_vehicle_flight_nozzle_position_immediate(vehicle,
+    crate::__imports::native_set_vehicle_flight_nozzle_position_immediate(vehicle.0,
 angle)
 }
-pub fn get_landing_gear_state(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetLandingGearState {
-    crate::__imports::native_get_landing_gear_state(vehicle)
+pub fn get_landing_gear_state(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetLandingGearState {
+    crate::__imports::native_get_landing_gear_state(vehicle.0)
 }
 pub fn get_all_vehicles(vehs_struct: shared::MemoryBufferId) -> altv_wasm_shared::natives_result::ResultOfGetAllVehicles {
     crate::__imports::native_get_all_vehicles(vehs_struct)
 }
-pub fn set_vehicle_countermeasure_ammo(vehicle: u32,
+pub fn set_vehicle_countermeasure_ammo(vehicle: &VehicleScriptId,
 counter_measure_count: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleCountermeasureAmmo {
-    crate::__imports::native_set_vehicle_countermeasure_ammo(vehicle,
+    crate::__imports::native_set_vehicle_countermeasure_ammo(vehicle.0,
 counter_measure_count)
 }
-pub fn set_cargobob_pickup_magnet_set_ambient_mode(vehicle: u32,
+pub fn set_cargobob_pickup_magnet_set_ambient_mode(vehicle: &VehicleScriptId,
 p1: bool,
 p2: bool) -> altv_wasm_shared::natives_result::ResultOfSetCargobobPickupMagnetSetAmbientMode {
-    crate::__imports::native_set_cargobob_pickup_magnet_set_ambient_mode(vehicle,
+    crate::__imports::native_set_cargobob_pickup_magnet_set_ambient_mode(vehicle.0,
 p1,
 p2)
 }
-pub fn set_vehicle_act_as_if_has_siren_on(vehicle: u32,
+pub fn set_vehicle_act_as_if_has_siren_on(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleActAsIfHasSirenOn {
-    crate::__imports::native_set_vehicle_act_as_if_has_siren_on(vehicle,
+    crate::__imports::native_set_vehicle_act_as_if_has_siren_on(vehicle.0,
 p1)
 }
-pub fn start_vehicle_horn(vehicle: u32,
+pub fn start_vehicle_horn(vehicle: &VehicleScriptId,
 duration: i32,
 mode: u32,
 forever: bool) -> altv_wasm_shared::natives_result::ResultOfStartVehicleHorn {
-    crate::__imports::native_start_vehicle_horn(vehicle,
+    crate::__imports::native_start_vehicle_horn(vehicle.0,
 duration,
 mode,
 forever)
 }
-pub fn get_vehicle_plate_type(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehiclePlateType {
-    crate::__imports::native_get_vehicle_plate_type(vehicle)
+pub fn get_vehicle_plate_type(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehiclePlateType {
+    crate::__imports::native_get_vehicle_plate_type(vehicle.0)
 }
-pub fn set_bike_on_stand(vehicle: u32,
+pub fn set_bike_on_stand(vehicle: &VehicleScriptId,
 x: f32,
 y: f32) -> altv_wasm_shared::natives_result::ResultOfSetBikeOnStand {
-    crate::__imports::native_set_bike_on_stand(vehicle,
+    crate::__imports::native_set_bike_on_stand(vehicle.0,
 x,
 y)
 }
@@ -33890,9 +33891,9 @@ pub fn get_num_vehicle_window_tints() -> altv_wasm_shared::natives_result::Resul
 pub fn vehicle_set_jet_wash_force_enabled(p0: i32) -> altv_wasm_shared::natives_result::ResultOfVehicleSetJetWashForceEnabled {
     crate::__imports::native_vehicle_set_jet_wash_force_enabled(p0)
 }
-pub fn set_vehicle_in_car_mod_shop(vehicle: u32,
+pub fn set_vehicle_in_car_mod_shop(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleInCarModShop {
-    crate::__imports::native_set_vehicle_in_car_mod_shop(vehicle,
+    crate::__imports::native_set_vehicle_in_car_mod_shop(vehicle.0,
 toggle)
 }
 pub fn create_script_vehicle_generator(x: f32,
@@ -33930,56 +33931,56 @@ p14,
 p15,
 p16)
 }
-pub fn smash_vehicle_window(vehicle: u32,
+pub fn smash_vehicle_window(vehicle: &VehicleScriptId,
 window_index: i32) -> altv_wasm_shared::natives_result::ResultOfSmashVehicleWindow {
-    crate::__imports::native_smash_vehicle_window(vehicle,
+    crate::__imports::native_smash_vehicle_window(vehicle.0,
 window_index)
 }
-pub fn is_big_vehicle(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsBigVehicle {
-    crate::__imports::native_is_big_vehicle(vehicle)
+pub fn is_big_vehicle(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsBigVehicle {
+    crate::__imports::native_is_big_vehicle(vehicle.0)
 }
-pub fn set_vehicle_blip_throttle_randomly(vehicle: u32,
+pub fn set_vehicle_blip_throttle_randomly(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleBlipThrottleRandomly {
-    crate::__imports::native_set_vehicle_blip_throttle_randomly(vehicle,
+    crate::__imports::native_set_vehicle_blip_throttle_randomly(vehicle.0,
 p1)
 }
-pub fn get_in_vehicle_clipset_hash_for_seat(vehicle: u32,
+pub fn get_in_vehicle_clipset_hash_for_seat(vehicle: &VehicleScriptId,
 p1: i32) -> altv_wasm_shared::natives_result::ResultOfGetInVehicleClipsetHashForSeat {
-    crate::__imports::native_get_in_vehicle_clipset_hash_for_seat(vehicle,
+    crate::__imports::native_get_in_vehicle_clipset_hash_for_seat(vehicle.0,
 p1)
 }
 pub fn is_this_model_a_plane(model: u32) -> altv_wasm_shared::natives_result::ResultOfIsThisModelAplane {
     crate::__imports::native_is_this_model_a_plane(model)
 }
-pub fn get_vehicle_max_traction(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleMaxTraction {
-    crate::__imports::native_get_vehicle_max_traction(vehicle)
+pub fn get_vehicle_max_traction(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleMaxTraction {
+    crate::__imports::native_get_vehicle_max_traction(vehicle.0)
 }
-pub fn set_heli_blades_full_speed(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfSetHeliBladesFullSpeed {
-    crate::__imports::native_set_heli_blades_full_speed(vehicle)
+pub fn set_heli_blades_full_speed(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetHeliBladesFullSpeed {
+    crate::__imports::native_set_heli_blades_full_speed(vehicle.0)
 }
-pub fn set_cargobob_pickup_magnet_falloff(cargobob: u32,
+pub fn set_cargobob_pickup_magnet_falloff(cargobob: &VehicleScriptId,
 p1: f32) -> altv_wasm_shared::natives_result::ResultOfSetCargobobPickupMagnetFalloff {
-    crate::__imports::native_set_cargobob_pickup_magnet_falloff(cargobob,
+    crate::__imports::native_set_cargobob_pickup_magnet_falloff(cargobob.0,
 p1)
 }
-pub fn get_vehicle_colours(vehicle: u32,
+pub fn get_vehicle_colours(vehicle: &VehicleScriptId,
 color_primary: i32,
 color_secondary: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleColours {
-    crate::__imports::native_get_vehicle_colours(vehicle,
+    crate::__imports::native_get_vehicle_colours(vehicle.0,
 color_primary,
 color_secondary)
 }
 pub fn is_this_model_an_amphibious_quadbike(model: u32) -> altv_wasm_shared::natives_result::ResultOfIsThisModelAnAmphibiousQuadbike {
     crate::__imports::native_is_this_model_an_amphibious_quadbike(model)
 }
-pub fn set_vehicle_damage(vehicle: u32,
+pub fn set_vehicle_damage(vehicle: &VehicleScriptId,
 x_offset: f32,
 y_offset: f32,
 z_offset: f32,
 damage: f32,
 radius: f32,
 focus_on_model: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDamage {
-    crate::__imports::native_set_vehicle_damage(vehicle,
+    crate::__imports::native_set_vehicle_damage(vehicle.0,
 x_offset,
 y_offset,
 z_offset,
@@ -34000,25 +34001,25 @@ p3,
 p4,
 p5)
 }
-pub fn get_is_vehicle_shunting(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetIsVehicleShunting {
-    crate::__imports::native_get_is_vehicle_shunting(vehicle)
+pub fn get_is_vehicle_shunting(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetIsVehicleShunting {
+    crate::__imports::native_get_is_vehicle_shunting(vehicle.0)
 }
 pub fn set_fleeing_vehicles_use_switched_off_nodes(p0: i32) -> altv_wasm_shared::natives_result::ResultOfSetFleeingVehiclesUseSwitchedOffNodes {
     crate::__imports::native_set_fleeing_vehicles_use_switched_off_nodes(p0)
 }
-pub fn set_vehicle_doors_locked_for_all_players(vehicle: u32,
+pub fn set_vehicle_doors_locked_for_all_players(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDoorsLockedForAllPlayers {
-    crate::__imports::native_set_vehicle_doors_locked_for_all_players(vehicle,
+    crate::__imports::native_set_vehicle_doors_locked_for_all_players(vehicle.0,
 toggle)
 }
-pub fn set_vehicle_wheels_can_break_off_when_blow_up(vehicle: u32,
+pub fn set_vehicle_wheels_can_break_off_when_blow_up(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleWheelsCanBreakOffWhenBlowUp {
-    crate::__imports::native_set_vehicle_wheels_can_break_off_when_blow_up(vehicle,
+    crate::__imports::native_set_vehicle_wheels_can_break_off_when_blow_up(vehicle.0,
 toggle)
 }
-pub fn set_vehicle_ceiling_height(vehicle: u32,
+pub fn set_vehicle_ceiling_height(vehicle: &VehicleScriptId,
 height: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleCeilingHeight {
-    crate::__imports::native_set_vehicle_ceiling_height(vehicle,
+    crate::__imports::native_set_vehicle_ceiling_height(vehicle.0,
 height)
 }
 pub fn generate_vehicle_creation_pos_from_paths(out_vec: Option<&shared::Vector3>,
@@ -34043,9 +34044,9 @@ p8)
 pub fn network_cap_empty_crowding_vehicles_removal(p0: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkCapEmptyCrowdingVehiclesRemoval {
     crate::__imports::native_network_cap_empty_crowding_vehicles_removal(p0)
 }
-pub fn set_playback_to_use_ai(vehicle: u32,
+pub fn set_playback_to_use_ai(vehicle: &VehicleScriptId,
 driving_style: i32) -> altv_wasm_shared::natives_result::ResultOfSetPlaybackToUseAi {
-    crate::__imports::native_set_playback_to_use_ai(vehicle,
+    crate::__imports::native_set_playback_to_use_ai(vehicle.0,
 driving_style)
 }
 pub fn get_num_mod_colors(paint_type: i32,
@@ -34053,135 +34054,135 @@ p1: bool) -> altv_wasm_shared::natives_result::ResultOfGetNumModColors {
     crate::__imports::native_get_num_mod_colors(paint_type,
 p1)
 }
-pub fn set_vehicle_door_latched(vehicle: u32,
+pub fn set_vehicle_door_latched(vehicle: &VehicleScriptId,
 door_id: i32,
 p2: bool,
 p3: bool,
 p4: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDoorLatched {
-    crate::__imports::native_set_vehicle_door_latched(vehicle,
+    crate::__imports::native_set_vehicle_door_latched(vehicle.0,
 door_id,
 p2,
 p3,
 p4)
 }
-pub fn set_vehicle_livery2(vehicle: u32,
+pub fn set_vehicle_livery2(vehicle: &VehicleScriptId,
 livery: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleLivery2 {
-    crate::__imports::native_set_vehicle_livery2(vehicle,
+    crate::__imports::native_set_vehicle_livery2(vehicle.0,
 livery)
 }
-pub fn request_vehicle_high_detail_model(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfRequestVehicleHighDetailModel {
-    crate::__imports::native_request_vehicle_high_detail_model(vehicle)
+pub fn request_vehicle_high_detail_model(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfRequestVehicleHighDetailModel {
+    crate::__imports::native_request_vehicle_high_detail_model(vehicle.0)
 }
-pub fn remove_vehicle_window(vehicle: u32,
+pub fn remove_vehicle_window(vehicle: &VehicleScriptId,
 window_index: i32) -> altv_wasm_shared::natives_result::ResultOfRemoveVehicleWindow {
-    crate::__imports::native_remove_vehicle_window(vehicle,
+    crate::__imports::native_remove_vehicle_window(vehicle.0,
 window_index)
 }
-pub fn vehicle_set_parachute_model_tint_index(vehicle: u32,
+pub fn vehicle_set_parachute_model_tint_index(vehicle: &VehicleScriptId,
 texture_variation: i32) -> altv_wasm_shared::natives_result::ResultOfVehicleSetParachuteModelTintIndex {
-    crate::__imports::native_vehicle_set_parachute_model_tint_index(vehicle,
+    crate::__imports::native_vehicle_set_parachute_model_tint_index(vehicle.0,
 texture_variation)
 }
-pub fn is_vehicle_in_submarine_mode(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleInSubmarineMode {
-    crate::__imports::native_is_vehicle_in_submarine_mode(vehicle)
+pub fn is_vehicle_in_submarine_mode(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleInSubmarineMode {
+    crate::__imports::native_is_vehicle_in_submarine_mode(vehicle.0)
 }
-pub fn get_vehicle_max_number_of_passengers(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleMaxNumberOfPassengers {
-    crate::__imports::native_get_vehicle_max_number_of_passengers(vehicle)
+pub fn get_vehicle_max_number_of_passengers(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleMaxNumberOfPassengers {
+    crate::__imports::native_get_vehicle_max_number_of_passengers(vehicle.0)
 }
-pub fn set_can_adjust_ground_clearance(vehicle: u32,
+pub fn set_can_adjust_ground_clearance(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetCanAdjustGroundClearance {
-    crate::__imports::native_set_can_adjust_ground_clearance(vehicle,
+    crate::__imports::native_set_can_adjust_ground_clearance(vehicle.0,
 p1)
 }
-pub fn get_is_right_vehicle_headlight_damaged(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetIsRightVehicleHeadlightDamaged {
-    crate::__imports::native_get_is_right_vehicle_headlight_damaged(vehicle)
+pub fn get_is_right_vehicle_headlight_damaged(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetIsRightVehicleHeadlightDamaged {
+    crate::__imports::native_get_is_right_vehicle_headlight_damaged(vehicle.0)
 }
-pub fn get_vehicle_enveff_scale(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleEnveffScale {
-    crate::__imports::native_get_vehicle_enveff_scale(vehicle)
+pub fn get_vehicle_enveff_scale(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleEnveffScale {
+    crate::__imports::native_get_vehicle_enveff_scale(vehicle.0)
 }
-pub fn get_vehicle_can_deploy_parachute(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleCanDeployParachute {
-    crate::__imports::native_get_vehicle_can_deploy_parachute(vehicle)
+pub fn get_vehicle_can_deploy_parachute(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleCanDeployParachute {
+    crate::__imports::native_get_vehicle_can_deploy_parachute(vehicle.0)
 }
-pub fn is_vehicle_visible(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleVisible {
-    crate::__imports::native_is_vehicle_visible(vehicle)
+pub fn is_vehicle_visible(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleVisible {
+    crate::__imports::native_is_vehicle_visible(vehicle.0)
 }
-pub fn set_train_speed(train: u32,
+pub fn set_train_speed(train: &VehicleScriptId,
 speed: f32) -> altv_wasm_shared::natives_result::ResultOfSetTrainSpeed {
-    crate::__imports::native_set_train_speed(train,
+    crate::__imports::native_set_train_speed(train.0,
 speed)
 }
 pub fn clear_vehicle_phone_explosive_device() -> altv_wasm_shared::natives_result::ResultOfClearVehiclePhoneExplosiveDevice {
     crate::__imports::native_clear_vehicle_phone_explosive_device()
 }
-pub fn set_dip_straight_down_when_crashing_plane(vehicle: u32,
+pub fn set_dip_straight_down_when_crashing_plane(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetDipStraightDownWhenCrashingPlane {
-    crate::__imports::native_set_dip_straight_down_when_crashing_plane(vehicle,
+    crate::__imports::native_set_dip_straight_down_when_crashing_plane(vehicle.0,
 toggle)
 }
-pub fn set_vehicle_not_stealable_ambiently(vehicle: u32,
+pub fn set_vehicle_not_stealable_ambiently(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleNotStealableAmbiently {
-    crate::__imports::native_set_vehicle_not_stealable_ambiently(vehicle,
+    crate::__imports::native_set_vehicle_not_stealable_ambiently(vehicle.0,
 p1)
 }
-pub fn set_goon_boss_vehicle(vehicle: u32,
+pub fn set_goon_boss_vehicle(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetGoonBossVehicle {
-    crate::__imports::native_set_goon_boss_vehicle(vehicle,
+    crate::__imports::native_set_goon_boss_vehicle(vehicle.0,
 toggle)
 }
-pub fn set_vehicle_forward_speed(vehicle: u32,
+pub fn set_vehicle_forward_speed(vehicle: &VehicleScriptId,
 speed: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleForwardSpeed {
-    crate::__imports::native_set_vehicle_forward_speed(vehicle,
+    crate::__imports::native_set_vehicle_forward_speed(vehicle.0,
 speed)
 }
-pub fn skip_to_end_and_stop_playback_recorded_vehicle(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfSkipToEndAndStopPlaybackRecordedVehicle {
-    crate::__imports::native_skip_to_end_and_stop_playback_recorded_vehicle(vehicle)
+pub fn skip_to_end_and_stop_playback_recorded_vehicle(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSkipToEndAndStopPlaybackRecordedVehicle {
+    crate::__imports::native_skip_to_end_and_stop_playback_recorded_vehicle(vehicle.0)
 }
 pub fn is_this_model_a_train(model: u32) -> altv_wasm_shared::natives_result::ResultOfIsThisModelAtrain {
     crate::__imports::native_is_this_model_a_train(model)
 }
-pub fn get_heli_tail_boom_health(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetHeliTailBoomHealth {
-    crate::__imports::native_get_heli_tail_boom_health(vehicle)
+pub fn get_heli_tail_boom_health(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetHeliTailBoomHealth {
+    crate::__imports::native_get_heli_tail_boom_health(vehicle.0)
 }
 pub fn remove_vehicle_asset(vehicle_asset: i32) -> altv_wasm_shared::natives_result::ResultOfRemoveVehicleAsset {
     crate::__imports::native_remove_vehicle_asset(vehicle_asset)
 }
-pub fn set_last_driven_vehicle(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfSetLastDrivenVehicle {
-    crate::__imports::native_set_last_driven_vehicle(vehicle)
+pub fn set_last_driven_vehicle(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetLastDrivenVehicle {
+    crate::__imports::native_set_last_driven_vehicle(vehicle.0)
 }
-pub fn set_plane_turbulence_multiplier(vehicle: u32,
+pub fn set_plane_turbulence_multiplier(vehicle: &VehicleScriptId,
 multiplier: f32) -> altv_wasm_shared::natives_result::ResultOfSetPlaneTurbulenceMultiplier {
-    crate::__imports::native_set_plane_turbulence_multiplier(vehicle,
+    crate::__imports::native_set_plane_turbulence_multiplier(vehicle.0,
 multiplier)
 }
-pub fn is_mission_train(train: u32) -> altv_wasm_shared::natives_result::ResultOfIsMissionTrain {
-    crate::__imports::native_is_mission_train(train)
+pub fn is_mission_train(train: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsMissionTrain {
+    crate::__imports::native_is_mission_train(train.0)
 }
-pub fn get_vehicle_max_braking(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleMaxBraking {
-    crate::__imports::native_get_vehicle_max_braking(vehicle)
+pub fn get_vehicle_max_braking(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleMaxBraking {
+    crate::__imports::native_get_vehicle_max_braking(vehicle.0)
 }
-pub fn detach_vehicle_from_any_cargobob(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfDetachVehicleFromAnyCargobob {
-    crate::__imports::native_detach_vehicle_from_any_cargobob(vehicle)
+pub fn detach_vehicle_from_any_cargobob(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfDetachVehicleFromAnyCargobob {
+    crate::__imports::native_detach_vehicle_from_any_cargobob(vehicle.0)
 }
-pub fn get_is_vehicle_engine_running(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetIsVehicleEngineRunning {
-    crate::__imports::native_get_is_vehicle_engine_running(vehicle)
+pub fn get_is_vehicle_engine_running(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetIsVehicleEngineRunning {
+    crate::__imports::native_get_is_vehicle_engine_running(vehicle.0)
 }
-pub fn hide_tombstone(vehicle: u32,
+pub fn hide_tombstone(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfHideTombstone {
-    crate::__imports::native_hide_tombstone(vehicle,
+    crate::__imports::native_hide_tombstone(vehicle.0,
 toggle)
 }
-pub fn get_heli_tail_rotor_health(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetHeliTailRotorHealth {
-    crate::__imports::native_get_heli_tail_rotor_health(vehicle)
+pub fn get_heli_tail_rotor_health(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetHeliTailRotorHealth {
+    crate::__imports::native_get_heli_tail_rotor_health(vehicle.0)
 }
-pub fn is_playback_using_ai_going_on_for_vehicle(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsPlaybackUsingAiGoingOnForVehicle {
-    crate::__imports::native_is_playback_using_ai_going_on_for_vehicle(vehicle)
+pub fn is_playback_using_ai_going_on_for_vehicle(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsPlaybackUsingAiGoingOnForVehicle {
+    crate::__imports::native_is_playback_using_ai_going_on_for_vehicle(vehicle.0)
 }
-pub fn are_folding_wings_deployed(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfAreFoldingWingsDeployed {
-    crate::__imports::native_are_folding_wings_deployed(vehicle)
+pub fn are_folding_wings_deployed(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfAreFoldingWingsDeployed {
+    crate::__imports::native_are_folding_wings_deployed(vehicle.0)
 }
-pub fn detach_entity_from_cargobob(cargobob: u32,
+pub fn detach_entity_from_cargobob(cargobob: &VehicleScriptId,
 entity: u32) -> altv_wasm_shared::natives_result::ResultOfDetachEntityFromCargobob {
-    crate::__imports::native_detach_entity_from_cargobob(cargobob,
+    crate::__imports::native_detach_entity_from_cargobob(cargobob.0,
 entity)
 }
 pub fn create_vehicle(model_hash: u32,
@@ -34206,87 +34207,87 @@ script: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfRequestVeh
     crate::__imports::native_request_vehicle_recording(recording,
 script)
 }
-pub fn set_vehicle_disable_collision_upon_creation(vehicle: u32,
+pub fn set_vehicle_disable_collision_upon_creation(vehicle: &VehicleScriptId,
 disable: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDisableCollisionUponCreation {
-    crate::__imports::native_set_vehicle_disable_collision_upon_creation(vehicle,
+    crate::__imports::native_set_vehicle_disable_collision_upon_creation(vehicle.0,
 disable)
 }
-pub fn set_vehicle_force_afterburner(vehicle: u32,
+pub fn set_vehicle_force_afterburner(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleForceAfterburner {
-    crate::__imports::native_set_vehicle_force_afterburner(vehicle,
+    crate::__imports::native_set_vehicle_force_afterburner(vehicle.0,
 toggle)
 }
-pub fn set_disable_superdummy(vehicle: u32,
+pub fn set_disable_superdummy(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetDisableSuperdummy {
-    crate::__imports::native_set_disable_superdummy(vehicle,
+    crate::__imports::native_set_disable_superdummy(vehicle.0,
 p1)
 }
 pub fn is_ped_exclusive_driver_of_vehicle(ped: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 out_index: i32) -> altv_wasm_shared::natives_result::ResultOfIsPedExclusiveDriverOfVehicle {
     crate::__imports::native_is_ped_exclusive_driver_of_vehicle(ped,
-vehicle,
+vehicle.0,
 out_index)
 }
-pub fn is_boat_anchored(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsBoatAnchored {
-    crate::__imports::native_is_boat_anchored(vehicle)
+pub fn is_boat_anchored(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsBoatAnchored {
+    crate::__imports::native_is_boat_anchored(vehicle.0)
 }
-pub fn is_vehicle_on_all_wheels(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleOnAllWheels {
-    crate::__imports::native_is_vehicle_on_all_wheels(vehicle)
+pub fn is_vehicle_on_all_wheels(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleOnAllWheels {
+    crate::__imports::native_is_vehicle_on_all_wheels(vehicle.0)
 }
 pub fn get_display_name_from_vehicle_model(model_hash: u32) -> altv_wasm_shared::natives_result::ResultOfGetDisplayNameFromVehicleModel {
     crate::__imports::native_get_display_name_from_vehicle_model(model_hash)
 }
-pub fn set_deploy_folding_wings(vehicle: u32,
+pub fn set_deploy_folding_wings(vehicle: &VehicleScriptId,
 deploy: bool,
 p2: bool) -> altv_wasm_shared::natives_result::ResultOfSetDeployFoldingWings {
-    crate::__imports::native_set_deploy_folding_wings(vehicle,
+    crate::__imports::native_set_deploy_folding_wings(vehicle.0,
 deploy,
 p2)
 }
-pub fn allow_ambient_vehicles_to_avoid_adverse_conditions(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfAllowAmbientVehiclesToAvoidAdverseConditions {
-    crate::__imports::native_allow_ambient_vehicles_to_avoid_adverse_conditions(vehicle)
+pub fn allow_ambient_vehicles_to_avoid_adverse_conditions(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfAllowAmbientVehiclesToAvoidAdverseConditions {
+    crate::__imports::native_allow_ambient_vehicles_to_avoid_adverse_conditions(vehicle.0)
 }
-pub fn set_force_low_lod_anchor_mode(vehicle: u32,
+pub fn set_force_low_lod_anchor_mode(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetForceLowLodAnchorMode {
-    crate::__imports::native_set_force_low_lod_anchor_mode(vehicle,
+    crate::__imports::native_set_force_low_lod_anchor_mode(vehicle.0,
 p1)
 }
 pub fn get_last_driven_vehicle() -> altv_wasm_shared::natives_result::ResultOfGetLastDrivenVehicle {
     crate::__imports::native_get_last_driven_vehicle()
 }
-pub fn set_clear_freeze_waiting_on_collision_once_player_enters(vehicle: u32,
+pub fn set_clear_freeze_waiting_on_collision_once_player_enters(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetClearFreezeWaitingOnCollisionOncePlayerEnters {
-    crate::__imports::native_set_clear_freeze_waiting_on_collision_once_player_enters(vehicle,
+    crate::__imports::native_set_clear_freeze_waiting_on_collision_once_player_enters(vehicle.0,
 toggle)
 }
-pub fn set_vehicle_light_multiplier(vehicle: u32,
+pub fn set_vehicle_light_multiplier(vehicle: &VehicleScriptId,
 multiplier: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleLightMultiplier {
-    crate::__imports::native_set_vehicle_light_multiplier(vehicle,
+    crate::__imports::native_set_vehicle_light_multiplier(vehicle.0,
 multiplier)
 }
-pub fn get_vehicle_mod_variation(vehicle: u32,
+pub fn get_vehicle_mod_variation(vehicle: &VehicleScriptId,
 mod_type: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleModVariation {
-    crate::__imports::native_get_vehicle_mod_variation(vehicle,
+    crate::__imports::native_get_vehicle_mod_variation(vehicle.0,
 mod_type)
 }
 pub fn set_random_vehicle_density_multiplier_this_frame(multiplier: f32) -> altv_wasm_shared::natives_result::ResultOfSetRandomVehicleDensityMultiplierThisFrame {
     crate::__imports::native_set_random_vehicle_density_multiplier_this_frame(multiplier)
 }
-pub fn get_vehicle_wheel_type(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleWheelType {
-    crate::__imports::native_get_vehicle_wheel_type(vehicle)
+pub fn get_vehicle_wheel_type(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleWheelType {
+    crate::__imports::native_get_vehicle_wheel_type(vehicle.0)
 }
-pub fn get_vehicle_mod_color1_name(vehicle: u32,
+pub fn get_vehicle_mod_color1_name(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfGetVehicleModColor1Name {
-    crate::__imports::native_get_vehicle_mod_color1_name(vehicle,
+    crate::__imports::native_get_vehicle_mod_color1_name(vehicle.0,
 p1)
 }
-pub fn is_vehicle_stuck_on_roof(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleStuckOnRoof {
-    crate::__imports::native_is_vehicle_stuck_on_roof(vehicle)
+pub fn is_vehicle_stuck_on_roof(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleStuckOnRoof {
+    crate::__imports::native_is_vehicle_stuck_on_roof(vehicle.0)
 }
-pub fn get_livery_name(vehicle: u32,
+pub fn get_livery_name(vehicle: &VehicleScriptId,
 livery_index: i32) -> altv_wasm_shared::natives_result::ResultOfGetLiveryName {
-    crate::__imports::native_get_livery_name(vehicle,
+    crate::__imports::native_get_livery_name(vehicle.0,
 livery_index)
 }
 pub fn get_random_vehicle_back_bumper_in_sphere(p0: f32,
@@ -34307,103 +34308,103 @@ p6)
 pub fn is_this_model_a_bike(model: u32) -> altv_wasm_shared::natives_result::ResultOfIsThisModelAbike {
     crate::__imports::native_is_this_model_a_bike(model)
 }
-pub fn set_vehicle_cheat_power_increase(vehicle: u32,
+pub fn set_vehicle_cheat_power_increase(vehicle: &VehicleScriptId,
 value: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleCheatPowerIncrease {
-    crate::__imports::native_set_vehicle_cheat_power_increase(vehicle,
+    crate::__imports::native_set_vehicle_cheat_power_increase(vehicle.0,
 value)
 }
-pub fn set_vehicle_tyre_smoke_color(vehicle: u32,
+pub fn set_vehicle_tyre_smoke_color(vehicle: &VehicleScriptId,
 r: i32,
 g: i32,
 b: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleTyreSmokeColor {
-    crate::__imports::native_set_vehicle_tyre_smoke_color(vehicle,
+    crate::__imports::native_set_vehicle_tyre_smoke_color(vehicle.0,
 r,
 g,
 b)
 }
-pub fn set_vehicle_exclusive_driver(vehicle: u32,
+pub fn set_vehicle_exclusive_driver(vehicle: &VehicleScriptId,
 ped: u32,
 index: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleExclusiveDriver {
-    crate::__imports::native_set_vehicle_exclusive_driver(vehicle,
+    crate::__imports::native_set_vehicle_exclusive_driver(vehicle.0,
 ped,
 index)
 }
-pub fn is_vehicle_siren_audio_on(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleSirenAudioOn {
-    crate::__imports::native_is_vehicle_siren_audio_on(vehicle)
+pub fn is_vehicle_siren_audio_on(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleSirenAudioOn {
+    crate::__imports::native_is_vehicle_siren_audio_on(vehicle.0)
 }
-pub fn set_vehicle_indicator_lights(vehicle: u32,
+pub fn set_vehicle_indicator_lights(vehicle: &VehicleScriptId,
 turn_signal: i32,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleIndicatorLights {
-    crate::__imports::native_set_vehicle_indicator_lights(vehicle,
+    crate::__imports::native_set_vehicle_indicator_lights(vehicle.0,
 turn_signal,
 toggle)
 }
-pub fn get_vehicle_tyre_smoke_color(vehicle: u32,
+pub fn get_vehicle_tyre_smoke_color(vehicle: &VehicleScriptId,
 r: i32,
 g: i32,
 b: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleTyreSmokeColor {
-    crate::__imports::native_get_vehicle_tyre_smoke_color(vehicle,
+    crate::__imports::native_get_vehicle_tyre_smoke_color(vehicle.0,
 r,
 g,
 b)
 }
-pub fn get_vehicle_custom_primary_colour(vehicle: u32,
+pub fn get_vehicle_custom_primary_colour(vehicle: &VehicleScriptId,
 r: i32,
 g: i32,
 b: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleCustomPrimaryColour {
-    crate::__imports::native_get_vehicle_custom_primary_colour(vehicle,
+    crate::__imports::native_get_vehicle_custom_primary_colour(vehicle.0,
 r,
 g,
 b)
 }
-pub fn set_vehicle_doors_locked(vehicle: u32,
+pub fn set_vehicle_doors_locked(vehicle: &VehicleScriptId,
 door_lock_status: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDoorsLocked {
-    crate::__imports::native_set_vehicle_doors_locked(vehicle,
+    crate::__imports::native_set_vehicle_doors_locked(vehicle.0,
 door_lock_status)
 }
-pub fn set_use_desired_z_cruise_speed_for_landing(vehicle: u32,
+pub fn set_use_desired_z_cruise_speed_for_landing(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetUseDesiredZcruiseSpeedForLanding {
-    crate::__imports::native_set_use_desired_z_cruise_speed_for_landing(vehicle,
+    crate::__imports::native_set_use_desired_z_cruise_speed_for_landing(vehicle.0,
 toggle)
 }
-pub fn add_vehicle_upsidedown_check(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfAddVehicleUpsidedownCheck {
-    crate::__imports::native_add_vehicle_upsidedown_check(vehicle)
+pub fn add_vehicle_upsidedown_check(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfAddVehicleUpsidedownCheck {
+    crate::__imports::native_add_vehicle_upsidedown_check(vehicle.0)
 }
-pub fn get_vehicle_extra_colour6(vehicle: u32,
+pub fn get_vehicle_extra_colour6(vehicle: &VehicleScriptId,
 color: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleExtraColour6 {
-    crate::__imports::native_get_vehicle_extra_colour6(vehicle,
+    crate::__imports::native_get_vehicle_extra_colour6(vehicle.0,
 color)
 }
-pub fn set_vehicle_body_health(vehicle: u32,
+pub fn set_vehicle_body_health(vehicle: &VehicleScriptId,
 value: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleBodyHealth {
-    crate::__imports::native_set_vehicle_body_health(vehicle,
+    crate::__imports::native_set_vehicle_body_health(vehicle.0,
 value)
 }
-pub fn set_vehicle_doors_locked_for_team(vehicle: u32,
+pub fn set_vehicle_doors_locked_for_team(vehicle: &VehicleScriptId,
 team: i32,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDoorsLockedForTeam {
-    crate::__imports::native_set_vehicle_doors_locked_for_team(vehicle,
+    crate::__imports::native_set_vehicle_doors_locked_for_team(vehicle.0,
 team,
 toggle)
 }
-pub fn set_task_vehicle_goto_plane_min_height_above_terrain(plane: u32,
+pub fn set_task_vehicle_goto_plane_min_height_above_terrain(plane: &VehicleScriptId,
 height: i32) -> altv_wasm_shared::natives_result::ResultOfSetTaskVehicleGotoPlaneMinHeightAboveTerrain {
-    crate::__imports::native_set_task_vehicle_goto_plane_min_height_above_terrain(plane,
+    crate::__imports::native_set_task_vehicle_goto_plane_min_height_above_terrain(plane.0,
 height)
 }
-pub fn is_vehicle_door_damaged(veh: u32,
+pub fn is_vehicle_door_damaged(veh: &VehicleScriptId,
 door_i_d: i32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleDoorDamaged {
-    crate::__imports::native_is_vehicle_door_damaged(veh,
+    crate::__imports::native_is_vehicle_door_damaged(veh.0,
 door_i_d)
 }
-pub fn get_vehicle_health_percentage(vehicle: u32,
+pub fn get_vehicle_health_percentage(vehicle: &VehicleScriptId,
 max_engine_health: f32,
 max_petrol_tank_health: f32,
 max_body_health: f32,
 max_main_rotor_health: f32,
 max_tail_rotor_health: f32,
 max_unk_health: f32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleHealthPercentage {
-    crate::__imports::native_get_vehicle_health_percentage(vehicle,
+    crate::__imports::native_get_vehicle_health_percentage(vehicle.0,
 max_engine_health,
 max_petrol_tank_health,
 max_body_health,
@@ -34411,24 +34412,24 @@ max_main_rotor_health,
 max_tail_rotor_health,
 max_unk_health)
 }
-pub fn set_vehicle_keep_engine_on_when_abandoned(vehicle: u32,
+pub fn set_vehicle_keep_engine_on_when_abandoned(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleKeepEngineOnWhenAbandoned {
-    crate::__imports::native_set_vehicle_keep_engine_on_when_abandoned(vehicle,
+    crate::__imports::native_set_vehicle_keep_engine_on_when_abandoned(vehicle.0,
 toggle)
 }
-pub fn start_vehicle_alarm(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfStartVehicleAlarm {
-    crate::__imports::native_start_vehicle_alarm(vehicle)
+pub fn start_vehicle_alarm(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfStartVehicleAlarm {
+    crate::__imports::native_start_vehicle_alarm(vehicle.0)
 }
-pub fn get_vehicle_lights_state(vehicle: u32,
+pub fn get_vehicle_lights_state(vehicle: &VehicleScriptId,
 lights_on: bool,
 highbeams_on: bool) -> altv_wasm_shared::natives_result::ResultOfGetVehicleLightsState {
-    crate::__imports::native_get_vehicle_lights_state(vehicle,
+    crate::__imports::native_get_vehicle_lights_state(vehicle.0,
 lights_on,
 highbeams_on)
 }
-pub fn set_vehicle_neon_index_colour(vehicle: u32,
+pub fn set_vehicle_neon_index_colour(vehicle: &VehicleScriptId,
 index: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleNeonIndexColour {
-    crate::__imports::native_set_vehicle_neon_index_colour(vehicle,
+    crate::__imports::native_set_vehicle_neon_index_colour(vehicle.0,
 index)
 }
 pub fn set_carjack_mission_removal_parameters(p0: i32,
@@ -34436,26 +34437,26 @@ p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetCarjackMissionRemovalPa
     crate::__imports::native_set_carjack_mission_removal_parameters(p0,
 p1)
 }
-pub fn is_vehicle_tyre_burst(vehicle: u32,
+pub fn is_vehicle_tyre_burst(vehicle: &VehicleScriptId,
 wheel_i_d: i32,
 completely: bool) -> altv_wasm_shared::natives_result::ResultOfIsVehicleTyreBurst {
-    crate::__imports::native_is_vehicle_tyre_burst(vehicle,
+    crate::__imports::native_is_vehicle_tyre_burst(vehicle.0,
 wheel_i_d,
 completely)
 }
-pub fn explode_vehicle(vehicle: u32,
+pub fn explode_vehicle(vehicle: &VehicleScriptId,
 is_audible: bool,
 is_invisible: bool) -> altv_wasm_shared::natives_result::ResultOfExplodeVehicle {
-    crate::__imports::native_explode_vehicle(vehicle,
+    crate::__imports::native_explode_vehicle(vehicle.0,
 is_audible,
 is_invisible)
 }
-pub fn get_is_boat_capsized(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetIsBoatCapsized {
-    crate::__imports::native_get_is_boat_capsized(vehicle)
+pub fn get_is_boat_capsized(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetIsBoatCapsized {
+    crate::__imports::native_get_is_boat_capsized(vehicle.0)
 }
-pub fn set_vehicle_max_speed(vehicle: u32,
+pub fn set_vehicle_max_speed(vehicle: &VehicleScriptId,
 speed: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleMaxSpeed {
-    crate::__imports::native_set_vehicle_max_speed(vehicle,
+    crate::__imports::native_set_vehicle_max_speed(vehicle.0,
 speed)
 }
 pub fn set_vehicle_uses_mp_player_damage_multiplier(p0: i32,
@@ -34463,66 +34464,66 @@ p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleUsesMpPlayerDama
     crate::__imports::native_set_vehicle_uses_mp_player_damage_multiplier(p0,
 p1)
 }
-pub fn get_ped_in_vehicle_seat(vehicle: u32,
+pub fn get_ped_in_vehicle_seat(vehicle: &VehicleScriptId,
 seat_index: i32,
 p2: bool) -> altv_wasm_shared::natives_result::ResultOfGetPedInVehicleSeat {
-    crate::__imports::native_get_ped_in_vehicle_seat(vehicle,
+    crate::__imports::native_get_ped_in_vehicle_seat(vehicle.0,
 seat_index,
 p2)
 }
-pub fn set_mission_train_as_no_longer_needed(train: u32,
+pub fn set_mission_train_as_no_longer_needed(train: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetMissionTrainAsNoLongerNeeded {
-    crate::__imports::native_set_mission_train_as_no_longer_needed(train,
+    crate::__imports::native_set_mission_train_as_no_longer_needed(train.0,
 p1)
 }
-pub fn set_vehicle_interiorlight(vehicle: u32,
+pub fn set_vehicle_interiorlight(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleInteriorlight {
-    crate::__imports::native_set_vehicle_interiorlight(vehicle,
+    crate::__imports::native_set_vehicle_interiorlight(vehicle.0,
 toggle)
 }
 pub fn set_lights_cutoff_distance_tweak(distance: f32) -> altv_wasm_shared::natives_result::ResultOfSetLightsCutoffDistanceTweak {
     crate::__imports::native_set_lights_cutoff_distance_tweak(distance)
 }
-pub fn is_heli_part_broken(vehicle: u32,
+pub fn is_heli_part_broken(vehicle: &VehicleScriptId,
 p1: bool,
 p2: bool,
 p3: bool) -> altv_wasm_shared::natives_result::ResultOfIsHeliPartBroken {
-    crate::__imports::native_is_heli_part_broken(vehicle,
+    crate::__imports::native_is_heli_part_broken(vehicle.0,
 p1,
 p2,
 p3)
 }
-pub fn get_vehicle_has_parachute(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleHasParachute {
-    crate::__imports::native_get_vehicle_has_parachute(vehicle)
+pub fn get_vehicle_has_parachute(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleHasParachute {
+    crate::__imports::native_get_vehicle_has_parachute(vehicle.0)
 }
-pub fn set_cargobob_pickup_magnet_strength(cargobob: u32,
+pub fn set_cargobob_pickup_magnet_strength(cargobob: &VehicleScriptId,
 strength: f32) -> altv_wasm_shared::natives_result::ResultOfSetCargobobPickupMagnetStrength {
-    crate::__imports::native_set_cargobob_pickup_magnet_strength(cargobob,
+    crate::__imports::native_set_cargobob_pickup_magnet_strength(cargobob.0,
 strength)
 }
-pub fn get_does_vehicle_have_damage_decals(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetDoesVehicleHaveDamageDecals {
-    crate::__imports::native_get_does_vehicle_have_damage_decals(vehicle)
+pub fn get_does_vehicle_have_damage_decals(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetDoesVehicleHaveDamageDecals {
+    crate::__imports::native_get_does_vehicle_have_damage_decals(vehicle.0)
 }
-pub fn set_players_last_vehicle(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfSetPlayersLastVehicle {
-    crate::__imports::native_set_players_last_vehicle(vehicle)
+pub fn set_players_last_vehicle(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetPlayersLastVehicle {
+    crate::__imports::native_set_players_last_vehicle(vehicle.0)
 }
-pub fn set_boat_wrecked(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfSetBoatWrecked {
-    crate::__imports::native_set_boat_wrecked(vehicle)
+pub fn set_boat_wrecked(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetBoatWrecked {
+    crate::__imports::native_set_boat_wrecked(vehicle.0)
 }
-pub fn transform_to_submarine(vehicle: u32,
+pub fn transform_to_submarine(vehicle: &VehicleScriptId,
 no_animation: bool) -> altv_wasm_shared::natives_result::ResultOfTransformToSubmarine {
-    crate::__imports::native_transform_to_submarine(vehicle,
+    crate::__imports::native_transform_to_submarine(vehicle.0,
 no_animation)
 }
-pub fn set_vehicle_will_force_other_vehicles_to_stop(vehicle: u32,
+pub fn set_vehicle_will_force_other_vehicles_to_stop(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleWillForceOtherVehiclesToStop {
-    crate::__imports::native_set_vehicle_will_force_other_vehicles_to_stop(vehicle,
+    crate::__imports::native_set_vehicle_will_force_other_vehicles_to_stop(vehicle.0,
 toggle)
 }
-pub fn set_vehicle_individual_doors_locked(vehicle: u32,
+pub fn set_vehicle_individual_doors_locked(vehicle: &VehicleScriptId,
 door_id: i32,
 door_lock_status: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleIndividualDoorsLocked {
-    crate::__imports::native_set_vehicle_individual_doors_locked(vehicle,
+    crate::__imports::native_set_vehicle_individual_doors_locked(vehicle.0,
 door_id,
 door_lock_status)
 }
@@ -34532,14 +34533,14 @@ pub fn is_this_model_a_bicycle(model: u32) -> altv_wasm_shared::natives_result::
 pub fn get_vehicle_model_max_braking_max_mods(model_hash: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleModelMaxBrakingMaxMods {
     crate::__imports::native_get_vehicle_model_max_braking_max_mods(model_hash)
 }
-pub fn set_vehicle_name_debug(vehicle: u32,
+pub fn set_vehicle_name_debug(vehicle: &VehicleScriptId,
 name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfSetVehicleNameDebug {
-    crate::__imports::native_set_vehicle_name_debug(vehicle,
+    crate::__imports::native_set_vehicle_name_debug(vehicle.0,
 name)
 }
-pub fn get_entry_point_position(vehicle: u32,
+pub fn get_entry_point_position(vehicle: &VehicleScriptId,
 door_id: i32) -> altv_wasm_shared::natives_result::ResultOfGetEntryPointPosition {
-    crate::__imports::native_get_entry_point_position(vehicle,
+    crate::__imports::native_get_entry_point_position(vehicle.0,
 door_id)
 }
 pub fn set_pickup_rope_length_without_creating_rope_for_cargobob(p0: i32,
@@ -34549,8 +34550,8 @@ p2: i32) -> altv_wasm_shared::natives_result::ResultOfSetPickupRopeLengthWithout
 p1,
 p2)
 }
-pub fn is_vehicle_searchlight_on(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleSearchlightOn {
-    crate::__imports::native_is_vehicle_searchlight_on(vehicle)
+pub fn is_vehicle_searchlight_on(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleSearchlightOn {
+    crate::__imports::native_is_vehicle_searchlight_on(vehicle.0)
 }
 pub fn set_all_vehicle_generators_active_in_area(x1: f32,
 y1: f32,
@@ -34569,50 +34570,50 @@ z2,
 toggle,
 p7)
 }
-pub fn swing_boat_boom_freely(vehicle: u32,
+pub fn swing_boat_boom_freely(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSwingBoatBoomFreely {
-    crate::__imports::native_swing_boat_boom_freely(vehicle,
+    crate::__imports::native_swing_boat_boom_freely(vehicle.0,
 toggle)
 }
-pub fn set_hydraulic_wheel_state(vehicle: u32,
+pub fn set_hydraulic_wheel_state(vehicle: &VehicleScriptId,
 wheel_id: i32,
 state: i32,
 value: f32,
 p4: i32) -> altv_wasm_shared::natives_result::ResultOfSetHydraulicWheelState {
-    crate::__imports::native_set_hydraulic_wheel_state(vehicle,
+    crate::__imports::native_set_hydraulic_wheel_state(vehicle.0,
 wheel_id,
 state,
 value,
 p4)
 }
-pub fn detach_vehicle_from_tow_truck(tow_truck: u32,
-vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfDetachVehicleFromTowTruck {
-    crate::__imports::native_detach_vehicle_from_tow_truck(tow_truck,
-vehicle)
+pub fn detach_vehicle_from_tow_truck(tow_truck: &VehicleScriptId,
+vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfDetachVehicleFromTowTruck {
+    crate::__imports::native_detach_vehicle_from_tow_truck(tow_truck.0,
+vehicle.0)
 }
-pub fn set_vehicle_broken_parts_dont_affect_ai_handling(vehicle: u32,
+pub fn set_vehicle_broken_parts_dont_affect_ai_handling(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleBrokenPartsDontAffectAiHandling {
-    crate::__imports::native_set_vehicle_broken_parts_dont_affect_ai_handling(vehicle,
+    crate::__imports::native_set_vehicle_broken_parts_dont_affect_ai_handling(vehicle.0,
 p1)
 }
-pub fn set_vehicle_use_player_light_settings(vehicle: u32,
+pub fn set_vehicle_use_player_light_settings(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleUsePlayerLightSettings {
-    crate::__imports::native_set_vehicle_use_player_light_settings(vehicle,
+    crate::__imports::native_set_vehicle_use_player_light_settings(vehicle.0,
 toggle)
 }
-pub fn get_vehicle_engine_health(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleEngineHealth {
-    crate::__imports::native_get_vehicle_engine_health(vehicle)
+pub fn get_vehicle_engine_health(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleEngineHealth {
+    crate::__imports::native_get_vehicle_engine_health(vehicle.0)
 }
 pub fn set_vehicle_remove_aggressive_carjack_mission(p0: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleRemoveAggressiveCarjackMission {
     crate::__imports::native_set_vehicle_remove_aggressive_carjack_mission(p0)
 }
-pub fn set_vehicle_limit_speed_when_player_inactive(vehicle: u32,
+pub fn set_vehicle_limit_speed_when_player_inactive(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleLimitSpeedWhenPlayerInactive {
-    crate::__imports::native_set_vehicle_limit_speed_when_player_inactive(vehicle,
+    crate::__imports::native_set_vehicle_limit_speed_when_player_inactive(vehicle.0,
 toggle)
 }
-pub fn remove_vehicle_upsidedown_check(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfRemoveVehicleUpsidedownCheck {
-    crate::__imports::native_remove_vehicle_upsidedown_check(vehicle)
+pub fn remove_vehicle_upsidedown_check(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfRemoveVehicleUpsidedownCheck {
+    crate::__imports::native_remove_vehicle_upsidedown_check(vehicle.0)
 }
 pub fn get_random_vehicle_front_bumper_in_sphere(p0: f32,
 p1: f32,
@@ -34629,21 +34630,21 @@ p4,
 p5,
 p6)
 }
-pub fn set_submarine_crush_depths(vehicle: u32,
+pub fn set_submarine_crush_depths(vehicle: &VehicleScriptId,
 p1: bool,
 depth1: f32,
 depth2: f32,
 depth3: f32) -> altv_wasm_shared::natives_result::ResultOfSetSubmarineCrushDepths {
-    crate::__imports::native_set_submarine_crush_depths(vehicle,
+    crate::__imports::native_set_submarine_crush_depths(vehicle.0,
 p1,
 depth1,
 depth2,
 depth3)
 }
-pub fn set_turret_hidden(vehicle: u32,
+pub fn set_turret_hidden(vehicle: &VehicleScriptId,
 index: i32,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetTurretHidden {
-    crate::__imports::native_set_turret_hidden(vehicle,
+    crate::__imports::native_set_turret_hidden(vehicle.0,
 index,
 toggle)
 }
@@ -34652,62 +34653,62 @@ p1: i32) -> altv_wasm_shared::natives_result::ResultOfForceSubmarineNeurtalBuoya
     crate::__imports::native_force_submarine_neurtal_buoyancy(p0,
 p1)
 }
-pub fn is_vehicle_being_brought_to_halt(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleBeingBroughtToHalt {
-    crate::__imports::native_is_vehicle_being_brought_to_halt(vehicle)
+pub fn is_vehicle_being_brought_to_halt(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleBeingBroughtToHalt {
+    crate::__imports::native_is_vehicle_being_brought_to_halt(vehicle.0)
 }
 pub fn get_flying_vehicle_model_agility(model_hash: u32) -> altv_wasm_shared::natives_result::ResultOfGetFlyingVehicleModelAgility {
     crate::__imports::native_get_flying_vehicle_model_agility(model_hash)
 }
-pub fn set_override_nitrous_level(vehicle: u32,
+pub fn set_override_nitrous_level(vehicle: &VehicleScriptId,
 toggle: bool,
 level: f32,
 power: f32,
 recharge_time: f32,
 disable_sound: bool) -> altv_wasm_shared::natives_result::ResultOfSetOverrideNitrousLevel {
-    crate::__imports::native_set_override_nitrous_level(vehicle,
+    crate::__imports::native_set_override_nitrous_level(vehicle.0,
 toggle,
 level,
 power,
 recharge_time,
 disable_sound)
 }
-pub fn set_tyre_maximum_grip_difference_due_to_wear_rate(vehicle: u32,
+pub fn set_tyre_maximum_grip_difference_due_to_wear_rate(vehicle: &VehicleScriptId,
 wheel_index: i32,
 multiplier: f32) -> altv_wasm_shared::natives_result::ResultOfSetTyreMaximumGripDifferenceDueToWearRate {
-    crate::__imports::native_set_tyre_maximum_grip_difference_due_to_wear_rate(vehicle,
+    crate::__imports::native_set_tyre_maximum_grip_difference_due_to_wear_rate(vehicle.0,
 wheel_index,
 multiplier)
 }
-pub fn get_vehicle_individual_door_lock_status(vehicle: u32,
+pub fn get_vehicle_individual_door_lock_status(vehicle: &VehicleScriptId,
 door_id: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleIndividualDoorLockStatus {
-    crate::__imports::native_get_vehicle_individual_door_lock_status(vehicle,
+    crate::__imports::native_get_vehicle_individual_door_lock_status(vehicle.0,
 door_id)
 }
 pub fn set_number_of_parked_vehicles(value: i32) -> altv_wasm_shared::natives_result::ResultOfSetNumberOfParkedVehicles {
     crate::__imports::native_set_number_of_parked_vehicles(value)
 }
-pub fn set_vehicle_uses_large_rear_ramp(vehicle: u32,
+pub fn set_vehicle_uses_large_rear_ramp(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleUsesLargeRearRamp {
-    crate::__imports::native_set_vehicle_uses_large_rear_ramp(vehicle,
+    crate::__imports::native_set_vehicle_uses_large_rear_ramp(vehicle.0,
 toggle)
 }
-pub fn get_attached_pick_up_hook_position(cargobob: u32) -> altv_wasm_shared::natives_result::ResultOfGetAttachedPickUpHookPosition {
-    crate::__imports::native_get_attached_pick_up_hook_position(cargobob)
+pub fn get_attached_pick_up_hook_position(cargobob: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetAttachedPickUpHookPosition {
+    crate::__imports::native_get_attached_pick_up_hook_position(cargobob.0)
 }
-pub fn set_vehicle_alarm(vehicle: u32,
+pub fn set_vehicle_alarm(vehicle: &VehicleScriptId,
 state: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleAlarm {
-    crate::__imports::native_set_vehicle_alarm(vehicle,
+    crate::__imports::native_set_vehicle_alarm(vehicle.0,
 state)
 }
-pub fn set_disable_vertical_flight_mode_transition(vehicle: u32,
+pub fn set_disable_vertical_flight_mode_transition(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetDisableVerticalFlightModeTransition {
-    crate::__imports::native_set_disable_vertical_flight_mode_transition(vehicle,
+    crate::__imports::native_set_disable_vertical_flight_mode_transition(vehicle.0,
 toggle)
 }
 pub fn is_vehicle_in_garage_area(garage_name: Option<&String>,
-vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleInGarageArea {
+vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleInGarageArea {
     crate::__imports::native_is_vehicle_in_garage_area(garage_name,
-vehicle)
+vehicle.0)
 }
 pub fn set_cargobob_pickup_rope_damping_multiplier(p0: i32,
 p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetCargobobPickupRopeDampingMultiplier {
@@ -34717,23 +34718,23 @@ p1)
 pub fn set_vehicle_ready_for_cleanup(p0: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleReadyForCleanup {
     crate::__imports::native_set_vehicle_ready_for_cleanup(p0)
 }
-pub fn control_landing_gear(vehicle: u32,
+pub fn control_landing_gear(vehicle: &VehicleScriptId,
 state: i32) -> altv_wasm_shared::natives_result::ResultOfControlLandingGear {
-    crate::__imports::native_control_landing_gear(vehicle,
+    crate::__imports::native_control_landing_gear(vehicle.0,
 state)
 }
-pub fn lock_doors_when_no_longer_needed(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfLockDoorsWhenNoLongerNeeded {
-    crate::__imports::native_lock_doors_when_no_longer_needed(vehicle)
+pub fn lock_doors_when_no_longer_needed(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfLockDoorsWhenNoLongerNeeded {
+    crate::__imports::native_lock_doors_when_no_longer_needed(vehicle.0)
 }
-pub fn get_are_bomb_bay_doors_open(aircraft: u32) -> altv_wasm_shared::natives_result::ResultOfGetAreBombBayDoorsOpen {
-    crate::__imports::native_get_are_bomb_bay_doors_open(aircraft)
+pub fn get_are_bomb_bay_doors_open(aircraft: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetAreBombBayDoorsOpen {
+    crate::__imports::native_get_are_bomb_bay_doors_open(aircraft.0)
 }
-pub fn detach_vehicle_from_any_tow_truck(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfDetachVehicleFromAnyTowTruck {
-    crate::__imports::native_detach_vehicle_from_any_tow_truck(vehicle)
+pub fn detach_vehicle_from_any_tow_truck(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfDetachVehicleFromAnyTowTruck {
+    crate::__imports::native_detach_vehicle_from_any_tow_truck(vehicle.0)
 }
-pub fn set_special_flight_mode_ratio(vehicle: u32,
+pub fn set_special_flight_mode_ratio(vehicle: &VehicleScriptId,
 ratio: f32) -> altv_wasm_shared::natives_result::ResultOfSetSpecialFlightModeRatio {
-    crate::__imports::native_set_special_flight_mode_ratio(vehicle,
+    crate::__imports::native_set_special_flight_mode_ratio(vehicle.0,
 ratio)
 }
 pub fn get_position_of_vehicle_recording_at_time(recording: i32,
@@ -34743,9 +34744,9 @@ script: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfGetPositio
 time,
 script)
 }
-pub fn is_vehicle_extra_turned_on(vehicle: u32,
+pub fn is_vehicle_extra_turned_on(vehicle: &VehicleScriptId,
 extra_id: i32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleExtraTurnedOn {
-    crate::__imports::native_is_vehicle_extra_turned_on(vehicle,
+    crate::__imports::native_is_vehicle_extra_turned_on(vehicle.0,
 extra_id)
 }
 pub fn set_vehicle_avoid_player_vehicle_riot_van_mission(p0: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleAvoidPlayerVehicleRiotVanMission {
@@ -34756,10 +34757,10 @@ p1: i32) -> altv_wasm_shared::natives_result::ResultOfVehicleSetOverrideSideRati
     crate::__imports::native_vehicle_set_override_side_ratio(p0,
 p1)
 }
-pub fn is_vehicle_attached_to_cargobob(cargobob: u32,
-vehicle_attached: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleAttachedToCargobob {
-    crate::__imports::native_is_vehicle_attached_to_cargobob(cargobob,
-vehicle_attached)
+pub fn is_vehicle_attached_to_cargobob(cargobob: &VehicleScriptId,
+vehicle_attached: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleAttachedToCargobob {
+    crate::__imports::native_is_vehicle_attached_to_cargobob(cargobob.0,
+vehicle_attached.0)
 }
 pub fn set_disable_damage_with_picked_up_entity(p0: i32,
 p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetDisableDamageWithPickedUpEntity {
@@ -34769,29 +34770,29 @@ p1)
 pub fn set_disable_random_trains_this_frame(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetDisableRandomTrainsThisFrame {
     crate::__imports::native_set_disable_random_trains_this_frame(toggle)
 }
-pub fn get_vehicle_is_mercenary(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleIsMercenary {
-    crate::__imports::native_get_vehicle_is_mercenary(vehicle)
+pub fn get_vehicle_is_mercenary(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleIsMercenary {
+    crate::__imports::native_get_vehicle_is_mercenary(vehicle.0)
 }
-pub fn set_vehicle_door_broken(vehicle: u32,
+pub fn set_vehicle_door_broken(vehicle: &VehicleScriptId,
 door_id: i32,
 delete_door: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDoorBroken {
-    crate::__imports::native_set_vehicle_door_broken(vehicle,
+    crate::__imports::native_set_vehicle_door_broken(vehicle.0,
 door_id,
 delete_door)
 }
-pub fn set_vehicle_explodes_on_explosion_damage_at_zero_body_health(vehicle: u32,
+pub fn set_vehicle_explodes_on_explosion_damage_at_zero_body_health(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleExplodesOnExplosionDamageAtZeroBodyHealth {
-    crate::__imports::native_set_vehicle_explodes_on_explosion_damage_at_zero_body_health(vehicle,
+    crate::__imports::native_set_vehicle_explodes_on_explosion_damage_at_zero_body_health(vehicle.0,
 toggle)
 }
-pub fn reset_vehicle_stuck_timer(vehicle: u32,
+pub fn reset_vehicle_stuck_timer(vehicle: &VehicleScriptId,
 null_attributes: i32) -> altv_wasm_shared::natives_result::ResultOfResetVehicleStuckTimer {
-    crate::__imports::native_reset_vehicle_stuck_timer(vehicle,
+    crate::__imports::native_reset_vehicle_stuck_timer(vehicle.0,
 null_attributes)
 }
-pub fn set_vehicle_has_muted_sirens(vehicle: u32,
+pub fn set_vehicle_has_muted_sirens(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleHasMutedSirens {
-    crate::__imports::native_set_vehicle_has_muted_sirens(vehicle,
+    crate::__imports::native_set_vehicle_has_muted_sirens(vehicle.0,
 toggle)
 }
 pub fn set_script_vehicle_generator(vehicle_generator: i32,
@@ -34802,15 +34803,15 @@ enabled)
 pub fn set_random_boats_mp(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetRandomBoatsMp {
     crate::__imports::native_set_random_boats_mp(toggle)
 }
-pub fn get_vehicle_flight_nozzle_position(plane: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleFlightNozzlePosition {
-    crate::__imports::native_get_vehicle_flight_nozzle_position(plane)
+pub fn get_vehicle_flight_nozzle_position(plane: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleFlightNozzlePosition {
+    crate::__imports::native_get_vehicle_flight_nozzle_position(plane.0)
 }
-pub fn request_vehicle_dial(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfRequestVehicleDial {
-    crate::__imports::native_request_vehicle_dial(vehicle)
+pub fn request_vehicle_dial(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfRequestVehicleDial {
+    crate::__imports::native_request_vehicle_dial(vehicle.0)
 }
-pub fn set_dont_allow_player_to_enter_vehicle_if_locked_for_player(vehicle: u32,
+pub fn set_dont_allow_player_to_enter_vehicle_if_locked_for_player(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetDontAllowPlayerToEnterVehicleIfLockedForPlayer {
-    crate::__imports::native_set_dont_allow_player_to_enter_vehicle_if_locked_for_player(vehicle,
+    crate::__imports::native_set_dont_allow_player_to_enter_vehicle_if_locked_for_player(vehicle.0,
 p1)
 }
 pub fn get_vehicle_class_max_traction(vehicle_class: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleClassMaxTraction {
@@ -34819,196 +34820,196 @@ pub fn get_vehicle_class_max_traction(vehicle_class: i32) -> altv_wasm_shared::n
 pub fn get_vehicle_model_max_braking(model_hash: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleModelMaxBraking {
     crate::__imports::native_get_vehicle_model_max_braking(model_hash)
 }
-pub fn get_has_retractable_wheels(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetHasRetractableWheels {
-    crate::__imports::native_get_has_retractable_wheels(vehicle)
+pub fn get_has_retractable_wheels(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetHasRetractableWheels {
+    crate::__imports::native_get_has_retractable_wheels(vehicle.0)
 }
 pub fn is_this_model_a_heli(model: u32) -> altv_wasm_shared::natives_result::ResultOfIsThisModelAheli {
     crate::__imports::native_is_this_model_a_heli(model)
 }
-pub fn set_vehicle_steer_for_buildings(vehicle: u32,
+pub fn set_vehicle_steer_for_buildings(vehicle: &VehicleScriptId,
 p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleSteerForBuildings {
-    crate::__imports::native_set_vehicle_steer_for_buildings(vehicle,
+    crate::__imports::native_set_vehicle_steer_for_buildings(vehicle.0,
 p1)
 }
-pub fn lower_convertible_roof(vehicle: u32,
+pub fn lower_convertible_roof(vehicle: &VehicleScriptId,
 instantly_lower: bool) -> altv_wasm_shared::natives_result::ResultOfLowerConvertibleRoof {
-    crate::__imports::native_lower_convertible_roof(vehicle,
+    crate::__imports::native_lower_convertible_roof(vehicle.0,
 instantly_lower)
 }
 pub fn get_vehicle_class_from_name(model_hash: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleClassFromName {
     crate::__imports::native_get_vehicle_class_from_name(model_hash)
 }
-pub fn get_vehicle_size(vehicle: u32,
+pub fn get_vehicle_size(vehicle: &VehicleScriptId,
 out1: Option<&shared::Vector3>,
 out2: Option<&shared::Vector3>) -> altv_wasm_shared::natives_result::ResultOfGetVehicleSize {
-    crate::__imports::native_get_vehicle_size(vehicle,
+    crate::__imports::native_get_vehicle_size(vehicle.0,
 out1,
 out2)
 }
-pub fn set_vehicle_active_during_playback(vehicle: u32,
+pub fn set_vehicle_active_during_playback(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleActiveDuringPlayback {
-    crate::__imports::native_set_vehicle_active_during_playback(vehicle,
+    crate::__imports::native_set_vehicle_active_during_playback(vehicle.0,
 toggle)
 }
-pub fn set_script_rocket_boost_recharge_time(vehicle: u32,
+pub fn set_script_rocket_boost_recharge_time(vehicle: &VehicleScriptId,
 seconds: f32) -> altv_wasm_shared::natives_result::ResultOfSetScriptRocketBoostRechargeTime {
-    crate::__imports::native_set_script_rocket_boost_recharge_time(vehicle,
+    crate::__imports::native_set_script_rocket_boost_recharge_time(vehicle.0,
 seconds)
 }
 pub fn clear_last_driven_vehicle() -> altv_wasm_shared::natives_result::ResultOfClearLastDrivenVehicle {
     crate::__imports::native_clear_last_driven_vehicle()
 }
-pub fn set_vehicle_use_cutscene_wheel_compression(p0: u32,
+pub fn set_vehicle_use_cutscene_wheel_compression(p0: &VehicleScriptId,
 p1: bool,
 p2: bool,
 p3: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleUseCutsceneWheelCompression {
-    crate::__imports::native_set_vehicle_use_cutscene_wheel_compression(p0,
+    crate::__imports::native_set_vehicle_use_cutscene_wheel_compression(p0.0,
 p1,
 p2,
 p3)
 }
-pub fn set_vehicle_used_for_pilot_school(vehicle: u32,
+pub fn set_vehicle_used_for_pilot_school(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleUsedForPilotSchool {
-    crate::__imports::native_set_vehicle_used_for_pilot_school(vehicle,
+    crate::__imports::native_set_vehicle_used_for_pilot_school(vehicle.0,
 toggle)
 }
-pub fn set_plane_resist_to_explosion(vehicle: u32,
+pub fn set_plane_resist_to_explosion(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetPlaneResistToExplosion {
-    crate::__imports::native_set_plane_resist_to_explosion(vehicle,
+    crate::__imports::native_set_plane_resist_to_explosion(vehicle.0,
 toggle)
 }
 pub fn reset_formation_leader() -> altv_wasm_shared::natives_result::ResultOfResetFormationLeader {
     crate::__imports::native_reset_formation_leader()
 }
-pub fn set_cargobob_pickup_magnet_set_targeted_mode(vehicle: u32,
-cargobob: u32) -> altv_wasm_shared::natives_result::ResultOfSetCargobobPickupMagnetSetTargetedMode {
-    crate::__imports::native_set_cargobob_pickup_magnet_set_targeted_mode(vehicle,
-cargobob)
+pub fn set_cargobob_pickup_magnet_set_targeted_mode(vehicle: &VehicleScriptId,
+cargobob: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetCargobobPickupMagnetSetTargetedMode {
+    crate::__imports::native_set_cargobob_pickup_magnet_set_targeted_mode(vehicle.0,
+cargobob.0)
 }
 pub fn remove_vehicle_combat_avoidance_area(p0: i32) -> altv_wasm_shared::natives_result::ResultOfRemoveVehicleCombatAvoidanceArea {
     crate::__imports::native_remove_vehicle_combat_avoidance_area(p0)
 }
-pub fn is_turret_seat(vehicle: u32,
+pub fn is_turret_seat(vehicle: &VehicleScriptId,
 seat_index: i32) -> altv_wasm_shared::natives_result::ResultOfIsTurretSeat {
-    crate::__imports::native_is_turret_seat(vehicle,
+    crate::__imports::native_is_turret_seat(vehicle.0,
 seat_index)
 }
-pub fn pop_off_vehicle_roof_with_impulse(vehicle: u32,
+pub fn pop_off_vehicle_roof_with_impulse(vehicle: &VehicleScriptId,
 x: f32,
 y: f32,
 z: f32) -> altv_wasm_shared::natives_result::ResultOfPopOffVehicleRoofWithImpulse {
-    crate::__imports::native_pop_off_vehicle_roof_with_impulse(vehicle,
+    crate::__imports::native_pop_off_vehicle_roof_with_impulse(vehicle.0,
 x,
 y,
 z)
 }
-pub fn get_num_vehicle_mods(vehicle: u32,
+pub fn get_num_vehicle_mods(vehicle: &VehicleScriptId,
 mod_type: i32) -> altv_wasm_shared::natives_result::ResultOfGetNumVehicleMods {
-    crate::__imports::native_get_num_vehicle_mods(vehicle,
+    crate::__imports::native_get_num_vehicle_mods(vehicle.0,
 mod_type)
 }
-pub fn set_boat_remains_anchored_while_player_is_driver(vehicle: u32,
+pub fn set_boat_remains_anchored_while_player_is_driver(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetBoatRemainsAnchoredWhilePlayerIsDriver {
-    crate::__imports::native_set_boat_remains_anchored_while_player_is_driver(vehicle,
+    crate::__imports::native_set_boat_remains_anchored_while_player_is_driver(vehicle.0,
 toggle)
 }
-pub fn set_vehicle_xenon_light_color_index(vehicle: u32,
+pub fn set_vehicle_xenon_light_color_index(vehicle: &VehicleScriptId,
 color_index: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleXenonLightColorIndex {
-    crate::__imports::native_set_vehicle_xenon_light_color_index(vehicle,
+    crate::__imports::native_set_vehicle_xenon_light_color_index(vehicle.0,
 color_index)
 }
-pub fn get_vehicle_has_landing_gear(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleHasLandingGear {
-    crate::__imports::native_get_vehicle_has_landing_gear(vehicle)
+pub fn get_vehicle_has_landing_gear(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleHasLandingGear {
+    crate::__imports::native_get_vehicle_has_landing_gear(vehicle.0)
 }
-pub fn copy_vehicle_damages(source_vehicle: u32,
-target_vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfCopyVehicleDamages {
-    crate::__imports::native_copy_vehicle_damages(source_vehicle,
-target_vehicle)
+pub fn copy_vehicle_damages(source_vehicle: &VehicleScriptId,
+target_vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfCopyVehicleDamages {
+    crate::__imports::native_copy_vehicle_damages(source_vehicle.0,
+target_vehicle.0)
 }
-pub fn get_vehicle_cause_of_destruction(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleCauseOfDestruction {
-    crate::__imports::native_get_vehicle_cause_of_destruction(vehicle)
+pub fn get_vehicle_cause_of_destruction(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleCauseOfDestruction {
+    crate::__imports::native_get_vehicle_cause_of_destruction(vehicle.0)
 }
-pub fn get_heli_main_rotor_health(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetHeliMainRotorHealth {
-    crate::__imports::native_get_heli_main_rotor_health(vehicle)
+pub fn get_heli_main_rotor_health(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetHeliMainRotorHealth {
+    crate::__imports::native_get_heli_main_rotor_health(vehicle.0)
 }
-pub fn set_vehicle_brake(vehicle: u32,
+pub fn set_vehicle_brake(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleBrake {
-    crate::__imports::native_set_vehicle_brake(vehicle,
+    crate::__imports::native_set_vehicle_brake(vehicle.0,
 toggle)
 }
-pub fn set_aircraft_pilot_skill_noise_scalar(vehicle: u32,
+pub fn set_aircraft_pilot_skill_noise_scalar(vehicle: &VehicleScriptId,
 p1: f32) -> altv_wasm_shared::natives_result::ResultOfSetAircraftPilotSkillNoiseScalar {
-    crate::__imports::native_set_aircraft_pilot_skill_noise_scalar(vehicle,
+    crate::__imports::native_set_aircraft_pilot_skill_noise_scalar(vehicle.0,
 p1)
 }
-pub fn set_disable_turret_movement(vehicle: u32,
+pub fn set_disable_turret_movement(vehicle: &VehicleScriptId,
 turret_id: i32) -> altv_wasm_shared::natives_result::ResultOfSetDisableTurretMovement {
-    crate::__imports::native_set_disable_turret_movement(vehicle,
+    crate::__imports::native_set_disable_turret_movement(vehicle.0,
 turret_id)
 }
-pub fn get_vehicle_homing_lockon_state(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleHomingLockonState {
-    crate::__imports::native_get_vehicle_homing_lockon_state(vehicle)
+pub fn get_vehicle_homing_lockon_state(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleHomingLockonState {
+    crate::__imports::native_get_vehicle_homing_lockon_state(vehicle.0)
 }
 pub fn set_enable_vehicle_slipstreaming(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetEnableVehicleSlipstreaming {
     crate::__imports::native_set_enable_vehicle_slipstreaming(toggle)
 }
-pub fn set_heli_turbulence_scalar(vehicle: u32,
+pub fn set_heli_turbulence_scalar(vehicle: &VehicleScriptId,
 p1: f32) -> altv_wasm_shared::natives_result::ResultOfSetHeliTurbulenceScalar {
-    crate::__imports::native_set_heli_turbulence_scalar(vehicle,
+    crate::__imports::native_set_heli_turbulence_scalar(vehicle.0,
 p1)
 }
-pub fn is_vehicle_attached_to_trailer(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfIsVehicleAttachedToTrailer {
-    crate::__imports::native_is_vehicle_attached_to_trailer(vehicle)
+pub fn is_vehicle_attached_to_trailer(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfIsVehicleAttachedToTrailer {
+    crate::__imports::native_is_vehicle_attached_to_trailer(vehicle.0)
 }
-pub fn set_boat_low_lod_anchor_distance(vehicle: u32,
+pub fn set_boat_low_lod_anchor_distance(vehicle: &VehicleScriptId,
 value: f32) -> altv_wasm_shared::natives_result::ResultOfSetBoatLowLodAnchorDistance {
-    crate::__imports::native_set_boat_low_lod_anchor_distance(vehicle,
+    crate::__imports::native_set_boat_low_lod_anchor_distance(vehicle.0,
 value)
 }
-pub fn set_vehicle_may_be_used_by_goto_point_any_means(vehicle: u32,
+pub fn set_vehicle_may_be_used_by_goto_point_any_means(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleMayBeUsedByGotoPointAnyMeans {
-    crate::__imports::native_set_vehicle_may_be_used_by_goto_point_any_means(vehicle,
+    crate::__imports::native_set_vehicle_may_be_used_by_goto_point_any_means(vehicle.0,
 p1)
 }
-pub fn get_has_vehicle_been_hit_by_shunt(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetHasVehicleBeenHitByShunt {
-    crate::__imports::native_get_has_vehicle_been_hit_by_shunt(vehicle)
+pub fn get_has_vehicle_been_hit_by_shunt(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetHasVehicleBeenHitByShunt {
+    crate::__imports::native_get_has_vehicle_been_hit_by_shunt(vehicle.0)
 }
-pub fn get_vehicle_mod_color1(vehicle: u32,
+pub fn get_vehicle_mod_color1(vehicle: &VehicleScriptId,
 paint_type: i32,
 color: i32,
 pearlescent_color: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleModColor1 {
-    crate::__imports::native_get_vehicle_mod_color1(vehicle,
+    crate::__imports::native_get_vehicle_mod_color1(vehicle.0,
 paint_type,
 color,
 pearlescent_color)
 }
-pub fn get_vehicle_bomb_ammo(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleBombAmmo {
-    crate::__imports::native_get_vehicle_bomb_ammo(vehicle)
+pub fn get_vehicle_bomb_ammo(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleBombAmmo {
+    crate::__imports::native_get_vehicle_bomb_ammo(vehicle.0)
 }
-pub fn delete_vehicle(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfDeleteVehicle {
-    crate::__imports::native_delete_vehicle(vehicle)
+pub fn delete_vehicle(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfDeleteVehicle {
+    crate::__imports::native_delete_vehicle(vehicle.0)
 }
 pub fn set_parked_vehicle_density_multiplier_this_frame(multiplier: f32) -> altv_wasm_shared::natives_result::ResultOfSetParkedVehicleDensityMultiplierThisFrame {
     crate::__imports::native_set_parked_vehicle_density_multiplier_this_frame(multiplier)
 }
-pub fn set_vehicle_tyres_can_burst(vehicle: u32,
+pub fn set_vehicle_tyres_can_burst(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleTyresCanBurst {
-    crate::__imports::native_set_vehicle_tyres_can_burst(vehicle,
+    crate::__imports::native_set_vehicle_tyres_can_burst(vehicle.0,
 toggle)
 }
-pub fn network_use_high_precision_train_blending(vehicle: u32,
+pub fn network_use_high_precision_train_blending(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfNetworkUseHighPrecisionTrainBlending {
-    crate::__imports::native_network_use_high_precision_train_blending(vehicle,
+    crate::__imports::native_network_use_high_precision_train_blending(vehicle.0,
 toggle)
 }
-pub fn get_both_vehicle_headlights_damaged(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetBothVehicleHeadlightsDamaged {
-    crate::__imports::native_get_both_vehicle_headlights_damaged(vehicle)
+pub fn get_both_vehicle_headlights_damaged(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetBothVehicleHeadlightsDamaged {
+    crate::__imports::native_get_both_vehicle_headlights_damaged(vehicle.0)
 }
-pub fn set_vehicle_tyre_burst(vehicle: u32,
+pub fn set_vehicle_tyre_burst(vehicle: &VehicleScriptId,
 index: i32,
 on_rim: bool,
 p3: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleTyreBurst {
-    crate::__imports::native_set_vehicle_tyre_burst(vehicle,
+    crate::__imports::native_set_vehicle_tyre_burst(vehicle.0,
 index,
 on_rim,
 p3)
@@ -35018,9 +35019,9 @@ p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetBoatIgnoreLandProbes {
     crate::__imports::native_set_boat_ignore_land_probes(p0,
 p1)
 }
-pub fn set_cargobob_pickup_magnet_pull_strength(cargobob: u32,
+pub fn set_cargobob_pickup_magnet_pull_strength(cargobob: &VehicleScriptId,
 p1: f32) -> altv_wasm_shared::natives_result::ResultOfSetCargobobPickupMagnetPullStrength {
-    crate::__imports::native_set_cargobob_pickup_magnet_pull_strength(cargobob,
+    crate::__imports::native_set_cargobob_pickup_magnet_pull_strength(cargobob.0,
 p1)
 }
 pub fn set_disable_heli_explode_from_body_damage(p0: i32,
@@ -35028,40 +35029,40 @@ p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetDisableHeliExplodeFromB
     crate::__imports::native_set_disable_heli_explode_from_body_damage(p0,
 p1)
 }
-pub fn get_vehicle_colours_which_can_be_set(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleColoursWhichCanBeSet {
-    crate::__imports::native_get_vehicle_colours_which_can_be_set(vehicle)
+pub fn get_vehicle_colours_which_can_be_set(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleColoursWhichCanBeSet {
+    crate::__imports::native_get_vehicle_colours_which_can_be_set(vehicle.0)
 }
 pub fn detonate_vehicle_phone_explosive_device() -> altv_wasm_shared::natives_result::ResultOfDetonateVehiclePhoneExplosiveDevice {
     crate::__imports::native_detonate_vehicle_phone_explosive_device()
 }
-pub fn set_check_for_enough_room_for_ped(vehicle: u32,
+pub fn set_check_for_enough_room_for_ped(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetCheckForEnoughRoomForPed {
-    crate::__imports::native_set_check_for_enough_room_for_ped(vehicle,
+    crate::__imports::native_set_check_for_enough_room_for_ped(vehicle.0,
 p1)
 }
-pub fn set_script_ramp_impulse_scale(vehicle: u32,
+pub fn set_script_ramp_impulse_scale(vehicle: &VehicleScriptId,
 impulse_scale: f32) -> altv_wasm_shared::natives_result::ResultOfSetScriptRampImpulseScale {
-    crate::__imports::native_set_script_ramp_impulse_scale(vehicle,
+    crate::__imports::native_set_script_ramp_impulse_scale(vehicle.0,
 impulse_scale)
 }
-pub fn get_entity_attached_to_tow_truck(tow_truck: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityAttachedToTowTruck {
-    crate::__imports::native_get_entity_attached_to_tow_truck(tow_truck)
+pub fn get_entity_attached_to_tow_truck(tow_truck: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityAttachedToTowTruck {
+    crate::__imports::native_get_entity_attached_to_tow_truck(tow_truck.0)
 }
 pub fn set_vehicle_slipstreaming_should_time_out(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleSlipstreamingShouldTimeOut {
     crate::__imports::native_set_vehicle_slipstreaming_should_time_out(toggle)
 }
-pub fn set_use_higher_car_jump(vehicle: u32,
+pub fn set_use_higher_car_jump(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetUseHigherCarJump {
-    crate::__imports::native_set_use_higher_car_jump(vehicle,
+    crate::__imports::native_set_use_higher_car_jump(vehicle.0,
 toggle)
 }
-pub fn get_is_vehicle_primary_colour_custom(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetIsVehiclePrimaryColourCustom {
-    crate::__imports::native_get_is_vehicle_primary_colour_custom(vehicle)
+pub fn get_is_vehicle_primary_colour_custom(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetIsVehiclePrimaryColourCustom {
+    crate::__imports::native_get_is_vehicle_primary_colour_custom(vehicle.0)
 }
-pub fn disable_vehcile_dynamic_ambient_scales(vehicle: u32,
+pub fn disable_vehcile_dynamic_ambient_scales(vehicle: &VehicleScriptId,
 p1: i32,
 p2: i32) -> altv_wasm_shared::natives_result::ResultOfDisableVehcileDynamicAmbientScales {
-    crate::__imports::native_disable_vehcile_dynamic_ambient_scales(vehicle,
+    crate::__imports::native_disable_vehcile_dynamic_ambient_scales(vehicle.0,
 p1,
 p2)
 }
@@ -35075,39 +35076,39 @@ script: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfRemoveVehi
     crate::__imports::native_remove_vehicle_recording(recording,
 script)
 }
-pub fn get_vehicle_number_plate_text_index(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleNumberPlateTextIndex {
-    crate::__imports::native_get_vehicle_number_plate_text_index(vehicle)
+pub fn get_vehicle_number_plate_text_index(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleNumberPlateTextIndex {
+    crate::__imports::native_get_vehicle_number_plate_text_index(vehicle.0)
 }
-pub fn set_special_flight_mode_allowed(vehicle: u32,
+pub fn set_special_flight_mode_allowed(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetSpecialFlightModeAllowed {
-    crate::__imports::native_set_special_flight_mode_allowed(vehicle,
+    crate::__imports::native_set_special_flight_mode_allowed(vehicle.0,
 toggle)
 }
-pub fn set_vehicle_out_of_control(vehicle: u32,
+pub fn set_vehicle_out_of_control(vehicle: &VehicleScriptId,
 kill_driver: bool,
 explode_on_impact: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleOutOfControl {
-    crate::__imports::native_set_vehicle_out_of_control(vehicle,
+    crate::__imports::native_set_vehicle_out_of_control(vehicle.0,
 kill_driver,
 explode_on_impact)
 }
 pub fn disable_vehicle_explosion_break_off_parts() -> altv_wasm_shared::natives_result::ResultOfDisableVehicleExplosionBreakOffParts {
     crate::__imports::native_disable_vehicle_explosion_break_off_parts()
 }
-pub fn get_vehicle_body_health(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleBodyHealth {
-    crate::__imports::native_get_vehicle_body_health(vehicle)
+pub fn get_vehicle_body_health(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleBodyHealth {
+    crate::__imports::native_get_vehicle_body_health(vehicle.0)
 }
-pub fn set_vehicle_door_control(vehicle: u32,
+pub fn set_vehicle_door_control(vehicle: &VehicleScriptId,
 door_id: i32,
 speed: i32,
 angle: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleDoorControl {
-    crate::__imports::native_set_vehicle_door_control(vehicle,
+    crate::__imports::native_set_vehicle_door_control(vehicle.0,
 door_id,
 speed,
 angle)
 }
-pub fn set_convertible_roof(vehicle: u32,
+pub fn set_convertible_roof(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetConvertibleRoof {
-    crate::__imports::native_set_convertible_roof(vehicle,
+    crate::__imports::native_set_convertible_roof(vehicle.0,
 p1)
 }
 pub fn vehicle_set_extenable_side_target_ratio(p0: i32,
@@ -35115,56 +35116,56 @@ p1: i32) -> altv_wasm_shared::natives_result::ResultOfVehicleSetExtenableSideTar
     crate::__imports::native_vehicle_set_extenable_side_target_ratio(p0,
 p1)
 }
-pub fn get_vehicle_color(vehicle: u32,
+pub fn get_vehicle_color(vehicle: &VehicleScriptId,
 r: i32,
 g: i32,
 b: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleColor {
-    crate::__imports::native_get_vehicle_color(vehicle,
+    crate::__imports::native_get_vehicle_color(vehicle.0,
 r,
 g,
 b)
 }
-pub fn set_vehicle_extra_colour5(vehicle: u32,
+pub fn set_vehicle_extra_colour5(vehicle: &VehicleScriptId,
 color: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleExtraColour5 {
-    crate::__imports::native_set_vehicle_extra_colour5(vehicle,
+    crate::__imports::native_set_vehicle_extra_colour5(vehicle.0,
 color)
 }
 pub fn get_vehicle_model_estimated_max_speed(model_hash: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleModelEstimatedMaxSpeed {
     crate::__imports::native_get_vehicle_model_estimated_max_speed(model_hash)
 }
-pub fn swing_boat_boom_to_ratio(vehicle: u32,
+pub fn swing_boat_boom_to_ratio(vehicle: &VehicleScriptId,
 ratio: f32) -> altv_wasm_shared::natives_result::ResultOfSwingBoatBoomToRatio {
-    crate::__imports::native_swing_boat_boom_to_ratio(vehicle,
+    crate::__imports::native_swing_boat_boom_to_ratio(vehicle.0,
 ratio)
 }
-pub fn set_vehicle_siren(vehicle: u32,
+pub fn set_vehicle_siren(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleSiren {
-    crate::__imports::native_set_vehicle_siren(vehicle,
+    crate::__imports::native_set_vehicle_siren(vehicle.0,
 toggle)
 }
-pub fn set_vehicle_bomb_ammo(vehicle: u32,
+pub fn set_vehicle_bomb_ammo(vehicle: &VehicleScriptId,
 bomb_count: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleBombAmmo {
-    crate::__imports::native_set_vehicle_bomb_ammo(vehicle,
+    crate::__imports::native_set_vehicle_bomb_ammo(vehicle.0,
 bomb_count)
 }
 pub fn disable_vehicle_weapon(disabled: bool,
 weapon_hash: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 owner: u32) -> altv_wasm_shared::natives_result::ResultOfDisableVehicleWeapon {
     crate::__imports::native_disable_vehicle_weapon(disabled,
 weapon_hash,
-vehicle,
+vehicle.0,
 owner)
 }
 pub fn does_script_vehicle_generator_exist(vehicle_generator: i32) -> altv_wasm_shared::natives_result::ResultOfDoesScriptVehicleGeneratorExist {
     crate::__imports::native_does_script_vehicle_generator_exist(vehicle_generator)
 }
-pub fn set_wheels_extended_instantly(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfSetWheelsExtendedInstantly {
-    crate::__imports::native_set_wheels_extended_instantly(vehicle)
+pub fn set_wheels_extended_instantly(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetWheelsExtendedInstantly {
+    crate::__imports::native_set_wheels_extended_instantly(vehicle.0)
 }
-pub fn get_vehicle_doors_locked_for_player(vehicle: u32,
+pub fn get_vehicle_doors_locked_for_player(vehicle: &VehicleScriptId,
 player: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleDoorsLockedForPlayer {
-    crate::__imports::native_get_vehicle_doors_locked_for_player(vehicle,
+    crate::__imports::native_get_vehicle_doors_locked_for_player(vehicle.0,
 player)
 }
 pub fn get_closest_vehicle(x: f32,
@@ -35180,9 +35181,9 @@ radius,
 model_hash,
 flags)
 }
-pub fn are_plane_control_panels_intact(vehicle: u32,
+pub fn are_plane_control_panels_intact(vehicle: &VehicleScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfArePlaneControlPanelsIntact {
-    crate::__imports::native_are_plane_control_panels_intact(vehicle,
+    crate::__imports::native_are_plane_control_panels_intact(vehicle.0,
 p1)
 }
 pub fn set_distant_cars_enabled(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetDistantCarsEnabled {
@@ -35191,65 +35192,65 @@ pub fn set_distant_cars_enabled(toggle: bool) -> altv_wasm_shared::natives_resul
 pub fn get_make_name_from_vehicle_model(model_hash: u32) -> altv_wasm_shared::natives_result::ResultOfGetMakeNameFromVehicleModel {
     crate::__imports::native_get_make_name_from_vehicle_model(model_hash)
 }
-pub fn set_vehicle_is_wanted(vehicle: u32,
+pub fn set_vehicle_is_wanted(vehicle: &VehicleScriptId,
 state: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleIsWanted {
-    crate::__imports::native_set_vehicle_is_wanted(vehicle,
+    crate::__imports::native_set_vehicle_is_wanted(vehicle.0,
 state)
 }
-pub fn is_seat_warp_only(vehicle: u32,
+pub fn is_seat_warp_only(vehicle: &VehicleScriptId,
 seat_index: i32) -> altv_wasm_shared::natives_result::ResultOfIsSeatWarpOnly {
-    crate::__imports::native_is_seat_warp_only(vehicle,
+    crate::__imports::native_is_seat_warp_only(vehicle.0,
 seat_index)
 }
-pub fn get_vehicle_countermeasure_ammo(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleCountermeasureAmmo {
-    crate::__imports::native_get_vehicle_countermeasure_ammo(vehicle)
+pub fn get_vehicle_countermeasure_ammo(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleCountermeasureAmmo {
+    crate::__imports::native_get_vehicle_countermeasure_ammo(vehicle.0)
 }
-pub fn enable_vehicle_dynamic_ambient_scales(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfEnableVehicleDynamicAmbientScales {
-    crate::__imports::native_enable_vehicle_dynamic_ambient_scales(vehicle)
+pub fn enable_vehicle_dynamic_ambient_scales(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfEnableVehicleDynamicAmbientScales {
+    crate::__imports::native_enable_vehicle_dynamic_ambient_scales(vehicle.0)
 }
-pub fn set_aircraft_ignore_hightmap_optimisation(vehicle: u32,
+pub fn set_aircraft_ignore_hightmap_optimisation(vehicle: &VehicleScriptId,
 p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetAircraftIgnoreHightmapOptimisation {
-    crate::__imports::native_set_aircraft_ignore_hightmap_optimisation(vehicle,
+    crate::__imports::native_set_aircraft_ignore_hightmap_optimisation(vehicle.0,
 p1)
 }
-pub fn get_convertible_roof_state(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetConvertibleRoofState {
-    crate::__imports::native_get_convertible_roof_state(vehicle)
+pub fn get_convertible_roof_state(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetConvertibleRoofState {
+    crate::__imports::native_get_convertible_roof_state(vehicle.0)
 }
-pub fn set_vehicle_bulldozer_arm_position(vehicle: u32,
+pub fn set_vehicle_bulldozer_arm_position(vehicle: &VehicleScriptId,
 position: f32,
 p2: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleBulldozerArmPosition {
-    crate::__imports::native_set_vehicle_bulldozer_arm_position(vehicle,
+    crate::__imports::native_set_vehicle_bulldozer_arm_position(vehicle.0,
 position,
 p2)
 }
-pub fn set_global_position_offset_for_recorded_vehicle_playback(vehicle: u32,
+pub fn set_global_position_offset_for_recorded_vehicle_playback(vehicle: &VehicleScriptId,
 x: f32,
 y: f32,
 z: f32) -> altv_wasm_shared::natives_result::ResultOfSetGlobalPositionOffsetForRecordedVehiclePlayback {
-    crate::__imports::native_set_global_position_offset_for_recorded_vehicle_playback(vehicle,
+    crate::__imports::native_set_global_position_offset_for_recorded_vehicle_playback(vehicle.0,
 x,
 y,
 z)
 }
-pub fn set_vehicle_burnout(vehicle: u32,
+pub fn set_vehicle_burnout(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleBurnout {
-    crate::__imports::native_set_vehicle_burnout(vehicle,
+    crate::__imports::native_set_vehicle_burnout(vehicle.0,
 toggle)
 }
-pub fn set_vehicle_needs_to_be_hotwired(vehicle: u32,
+pub fn set_vehicle_needs_to_be_hotwired(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleNeedsToBeHotwired {
-    crate::__imports::native_set_vehicle_needs_to_be_hotwired(vehicle,
+    crate::__imports::native_set_vehicle_needs_to_be_hotwired(vehicle.0,
 toggle)
 }
-pub fn get_vehicle_mod_kit_type(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleModKitType {
-    crate::__imports::native_get_vehicle_mod_kit_type(vehicle)
+pub fn get_vehicle_mod_kit_type(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleModKitType {
+    crate::__imports::native_get_vehicle_mod_kit_type(vehicle.0)
 }
-pub fn set_car_boot_open(vehicle: u32) -> altv_wasm_shared::natives_result::ResultOfSetCarBootOpen {
-    crate::__imports::native_set_car_boot_open(vehicle)
+pub fn set_car_boot_open(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetCarBootOpen {
+    crate::__imports::native_set_car_boot_open(vehicle.0)
 }
-pub fn set_heli_blades_speed(vehicle: u32,
+pub fn set_heli_blades_speed(vehicle: &VehicleScriptId,
 speed: f32) -> altv_wasm_shared::natives_result::ResultOfSetHeliBladesSpeed {
-    crate::__imports::native_set_heli_blades_speed(vehicle,
+    crate::__imports::native_set_heli_blades_speed(vehicle.0,
 speed)
 }
 pub fn switch_train_track(track_id: i32,
@@ -35257,24 +35258,24 @@ state: bool) -> altv_wasm_shared::natives_result::ResultOfSwitchTrainTrack {
     crate::__imports::native_switch_train_track(track_id,
 state)
 }
-pub fn set_heli_tail_rotor_health(vehicle: u32,
+pub fn set_heli_tail_rotor_health(vehicle: &VehicleScriptId,
 health: f32) -> altv_wasm_shared::natives_result::ResultOfSetHeliTailRotorHealth {
-    crate::__imports::native_set_heli_tail_rotor_health(vehicle,
+    crate::__imports::native_set_heli_tail_rotor_health(vehicle.0,
 health)
 }
-pub fn get_vehicle_door_angle_ratio(vehicle: u32,
+pub fn get_vehicle_door_angle_ratio(vehicle: &VehicleScriptId,
 door_id: i32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleDoorAngleRatio {
-    crate::__imports::native_get_vehicle_door_angle_ratio(vehicle,
+    crate::__imports::native_get_vehicle_door_angle_ratio(vehicle.0,
 door_id)
 }
-pub fn set_vehicle_tow_truck_arm_position(vehicle: u32,
+pub fn set_vehicle_tow_truck_arm_position(vehicle: &VehicleScriptId,
 position: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleTowTruckArmPosition {
-    crate::__imports::native_set_vehicle_tow_truck_arm_position(vehicle,
+    crate::__imports::native_set_vehicle_tow_truck_arm_position(vehicle.0,
 position)
 }
-pub fn set_rocket_boost_fill(vehicle: u32,
+pub fn set_rocket_boost_fill(vehicle: &VehicleScriptId,
 percentage: f32) -> altv_wasm_shared::natives_result::ResultOfSetRocketBoostFill {
-    crate::__imports::native_set_rocket_boost_fill(vehicle,
+    crate::__imports::native_set_rocket_boost_fill(vehicle.0,
 percentage)
 }
 pub fn get_deep_ocean_scaler() -> altv_wasm_shared::natives_result::ResultOfGetDeepOceanScaler {
@@ -35661,11 +35662,11 @@ toggle: bool) -> altv_wasm_shared::natives_result::ResultOfHidePedWeaponForScrip
 toggle)
 }
 pub fn has_vehicle_got_projectile_attached(driver: u32,
-vehicle: u32,
+vehicle: &VehicleScriptId,
 weapon_hash: u32,
 p3: i32) -> altv_wasm_shared::natives_result::ResultOfHasVehicleGotProjectileAttached {
     crate::__imports::native_has_vehicle_got_projectile_attached(driver,
-vehicle,
+vehicle.0,
 weapon_hash,
 p3)
 }
