@@ -2,7 +2,7 @@ use std::collections::{HashSet, HashMap};
 use altv_wasm_shared::{BaseObjectPtr, BaseObjectType};
 use crate::__imports;
 
-use super::kind::BaseObjectKind;
+use super::{vehicle::VehicleData, kind::BaseObjectKind};
 
 #[derive(Debug)]
 pub(crate) struct ObjectData {
@@ -14,7 +14,7 @@ pub(crate) struct ObjectData {
 pub(crate) type AllBaseObjects = HashMap<BaseObjectPtr, ObjectData>;
 
 macro_rules! objects {
-    ( $( $class:ident )+ ) => { paste::paste! {
+    ( $( $class:ident: $data:ty )+ ) => { paste::paste! {
         #[derive(Debug, Default)]
         pub(crate) struct BaseObjectManager {
             pub(crate) all: AllBaseObjects,
@@ -79,17 +79,19 @@ macro_rules! objects {
 
     $(
         pub(crate) mod [<$class:snake>] {
-            use super::super::base::private::BaseObject;
+            #[allow(unused_imports)]
+            use super::*;
+            use super::{super::base::private::BaseObject};
 
             #[derive(Debug)]
             pub struct [<$class Type>];
-            pub type $class = BaseObject<[<$class Type>]>;
+            pub type $class = BaseObject<[<$class Type>], $data>;
         }
     )+
     } };
 }
 
 objects!(
-    Vehicle
-    LocalVehicle
+    Vehicle: VehicleData
+    LocalVehicle: ()
 );

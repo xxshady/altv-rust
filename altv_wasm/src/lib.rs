@@ -101,9 +101,11 @@ impl __exports::Exports for __exports::ExportsImpl {
                 seat,
             } => event::contexts::EventContext::EnteredVehicle(event::contexts::EnteredVehicle {
                 vehicle: match ty {
-                    BaseObjectType::Vehicle => {
-                        AnyVehicle::Vehicle(Vehicle::internal_new_borrowed(ptr))
-                    }
+                    BaseObjectType::Vehicle => AnyVehicle::Vehicle(match Vehicle::new(ptr) {
+                        Some(v) => v,
+                        // vehicle must be spawned
+                        None => unreachable!(),
+                    }),
                     BaseObjectType::LocalVehicle => {
                         State::with_base_objects_mut(|mut objects, _| match objects.all.get(&ptr) {
                             None => {
@@ -113,11 +115,16 @@ impl __exports::Exports for __exports::ExportsImpl {
                                 kind: BaseObjectKind::LocalVehicleUnknown,
                                 ..
                             }) => {
-                                AnyVehicle::LocalVehicle(LocalVehicle::internal_new_borrowed(ptr))
+                                // if instance is created by other resource pass it as borrowed
+                                AnyVehicle::LocalVehicle(LocalVehicle::internal_new_borrowed(
+                                    ptr,
+                                    (),
+                                ))
                             }
                             Some(_) => AnyVehicle::LocalVehicle(LocalVehicle::internal_new_owned(
                                 ptr,
                                 &mut objects.all,
+                                (),
                             )),
                         })
                     }

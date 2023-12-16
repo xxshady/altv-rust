@@ -43,7 +43,7 @@ impl LocalVehicle {
                         altv_wasm_shared::BaseObjectType::LocalVehicle,
                         BaseObjectKind::LocalVehicleStatic,
                     );
-                    LocalVehicle::internal_new_owned(ptr, &mut base_objects.all)
+                    LocalVehicle::internal_new_owned(ptr, &mut base_objects.all, ())
                 });
                 Ok(LocalVehicleStatic::new(instance, ptr))
             }
@@ -85,7 +85,7 @@ impl LocalVehicle {
                 altv_wasm_shared::BaseObjectType::LocalVehicle,
                 BaseObjectKind::LocalVehicleStreamed,
             );
-            LocalVehicle::internal_new_owned(ptr, &mut base_objects.all)
+            LocalVehicle::internal_new_owned(ptr, &mut base_objects.all, ())
         });
         Ok(LocalVehicleStreamed::new(instance, on_spawn, on_despawn))
     }
@@ -133,7 +133,7 @@ impl LocalVehicle {
 
             local_vehicle
                 .iter()
-                .map(|ptr| LocalVehicle::internal_new_owned(*ptr, all))
+                .map(|ptr| LocalVehicle::internal_new_owned(*ptr, all, ()))
                 .collect::<Vec<_>>()
         });
 

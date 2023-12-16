@@ -11,32 +11,39 @@ pub mod private {
     };
 
     #[derive(Debug)]
-    pub struct BaseObject<T> {
+    pub struct BaseObject<T, Data> {
         /// must be accessed directly only in `ptr` method
         ptr: BaseObjectPtr,
         __type: PhantomData<T>,
 
+        pub(crate) data: Data,
         pub(crate) owned: bool,
     }
 
-    impl<T> BaseObject<T> {
+    impl<T, Data> BaseObject<T, Data> {
         /// For objects created by alt:V (or by serverside), for example player object
-        pub(crate) fn internal_new_borrowed(ptr: BaseObjectPtr) -> Self {
+        pub(crate) fn internal_new_borrowed(ptr: BaseObjectPtr, data: Data) -> Self {
             Self {
                 ptr,
                 owned: false,
+                data,
                 __type: PhantomData,
             }
         }
 
         /// For objects created by this resource, for example webview object
-        pub(crate) fn internal_new_owned(ptr: BaseObjectPtr, all: &mut AllBaseObjects) -> Self {
+        pub(crate) fn internal_new_owned(
+            ptr: BaseObjectPtr,
+            all: &mut AllBaseObjects,
+            data: Data,
+        ) -> Self {
             BaseObjectManager::add_ref(all, ptr);
 
             Self {
                 ptr,
                 owned: true,
                 __type: PhantomData,
+                data,
             }
         }
     }
@@ -45,7 +52,7 @@ pub mod private {
         fn ptr(&self) -> BaseObjectPtr;
     }
 
-    impl<T> Ptr for BaseObject<T> {
+    impl<T, Data> Ptr for BaseObject<T, Data> {
         fn ptr(&self) -> BaseObjectPtr {
             let valid = State::with_base_objects_ref(|base_objects, _| {
                 base_objects.all.contains_key(&self.ptr)
@@ -64,13 +71,13 @@ pub mod private {
 
 use private::Ptr;
 
-impl<T> private::BaseObject<T> {
+impl<T, Data> private::BaseObject<T, Data> {
     pub fn id(&self) -> u32 {
         __imports::base_object_get_id(self.ptr())
     }
 }
 
-impl<T> Drop for private::BaseObject<T> {
+impl<T, Data> Drop for private::BaseObject<T, Data> {
     fn drop(&mut self) {
         if !self.owned {
             return;
