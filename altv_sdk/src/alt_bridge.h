@@ -1340,6 +1340,16 @@ namespace events
     //     assert(event->GetType() == alt::CEvent::Type::CLIENT_REQUEST_OBJECT_EVENT);
     //     return static_cast<const alt::CClientRequestObjectEvent*>(event);
     // }
+
+    const alt::CGameEntityCreateEvent* to_CGameEntityCreateEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::GAME_ENTITY_CREATE);
+        return static_cast<const alt::CGameEntityCreateEvent*>(event);
+    }
+
+    const alt::CGameEntityDestroyEvent* to_CGameEntityDestroyEvent(const alt::CEvent* event) {
+        assert(event->GetType() == alt::CEvent::Type::GAME_ENTITY_DESTROY);
+        return static_cast<const alt::CGameEntityDestroyEvent*>(event);
+    }
 } // namespace events
 
 namespace config_node

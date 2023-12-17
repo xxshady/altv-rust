@@ -3,7 +3,7 @@ use serde::{Serialize, Deserialize};
 pub mod natives_result;
 
 mod event;
-pub use event::RawEvent;
+pub use event::{RawEvent, BaseObjectWithType};
 
 pub type BaseObjectPtr = u64;
 pub type BaseObjectTypeRaw = u8;

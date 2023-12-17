@@ -94,6 +94,9 @@ pub mod ffi {
         // #include "alt_classes/CClientDeleteObjectEvent.h"
         // #include "alt_classes/CClientRequestObjectEvent.h"
 
+        #include "alt_classes/CGameEntityCreateEvent.h"
+        #include "alt_classes/CGameEntityDestroyEvent.h"
+
         name!(alt_bridge)
 
         generate_ns!("ICore")
@@ -152,6 +155,9 @@ pub mod ffi {
         generate_ns!("CStartProjectileEvent")
         generate_ns!("CExplosionEvent")
         generate_ns!("CFireEvent")
+
+        generate_ns!("CGameEntityCreateEvent")
+        generate_ns!("CGameEntityDestroyEvent")
 
         // generate_ns!("IConnectionInfo")
 

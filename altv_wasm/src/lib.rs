@@ -26,7 +26,10 @@ mod helpers;
 mod state;
 use crate::{
     state::State,
-    base_objects::{objects::ObjectData, kind::BaseObjectKind},
+    base_objects::{
+        kind::BaseObjectKind, any_entity::get_any_entity_by_ptr_ty,
+        any_vehicle::get_any_vehicle_by_ptr_ty,
+    },
 };
 
 mod memory_buffer;
@@ -100,42 +103,25 @@ impl __exports::Exports for __exports::ExportsImpl {
                 vehicle: (ptr, ty),
                 seat,
             } => event::contexts::EventContext::EnteredVehicle(event::contexts::EnteredVehicle {
-                vehicle: match ty {
-                    BaseObjectType::Vehicle => AnyVehicle::Vehicle(match Vehicle::new(ptr) {
-                        Some(v) => v,
-                        // vehicle must be spawned
-                        None => unreachable!(),
-                    }),
-                    BaseObjectType::LocalVehicle => {
-                        State::with_base_objects_mut(|mut objects, _| match objects.all.get(&ptr) {
-                            None => {
-                                panic!("Unknown local vehicle ptr: {ptr}");
-                            }
-                            Some(ObjectData {
-                                kind: BaseObjectKind::LocalVehicleUnknown,
-                                ..
-                            }) => {
-                                // if instance is created by other resource pass it as borrowed
-                                AnyVehicle::LocalVehicle(LocalVehicle::internal_new_borrowed(
-                                    ptr,
-                                    (),
-                                ))
-                            }
-                            Some(_) => AnyVehicle::LocalVehicle(LocalVehicle::internal_new_owned(
-                                ptr,
-                                &mut objects.all,
-                                (),
-                            )),
-                        })
-                    }
-                    _ => panic!("unknown vehicle type: {ty:?}"),
-                },
+                vehicle: get_any_vehicle_by_ptr_ty(ptr, ty),
                 seat,
             }),
+            RE::GameEntityCreate { entity: (ptr, ty) } => {
+                event::contexts::EventContext::GameEntityCreate(event::contexts::GameEntityCreate {
+                    entity: get_any_entity_by_ptr_ty(ptr, ty),
+                })
+            }
+            RE::GameEntityDestroy { entity: (ptr, ty) } => {
+                event::contexts::EventContext::GameEntityDestroy(
+                    event::contexts::GameEntityDestroy {
+                        entity: get_any_entity_by_ptr_ty(ptr, ty),
+                    },
+                )
+            }
         };
 
-        State::with_events_mut(|mut events, _| {
-            events.call_handlers(context);
+        State::with_events_mut(|mut events, state| {
+            events.call_handlers(context, state.event_schedule.borrow_mut());
         });
     }
 }

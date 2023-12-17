@@ -2,7 +2,7 @@ use altv_sdk::ffi as sdk;
 use altv_wasm_shared::{BaseObjectPtr, BaseObjectType};
 use crate::{
     resource_manager::{RESOURCE_MANAGER_INSTANCE, ResourceController},
-    helpers::handle_base_object_creation_or_deletion,
+    helpers::{handle_base_object_creation_or_deletion, serialize_base_object_for_event},
 };
 
 mod resource_manager;
@@ -124,17 +124,22 @@ extern "C" fn resource_on_tick(resource_name: &str) {
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_on_event(resource_name: &str, event: altv_sdk::CEventPtr) {
     use altv_sdk::EventType as E;
+    use altv_wasm_shared::RawEvent as RE;
 
     if event.is_null() {
         panic!("resource_on_event event is null");
     }
 
     let raw_type = unsafe { sdk::CEvent::GetType(event) };
-
     let event_type = E::try_from(raw_type).unwrap();
 
     if let E::CreateBaseObjectEvent | E::RemoveBaseObjectEvent = event_type {
         logger::debug!("ignoring create/remove baseobject event");
+        return;
+    }
+
+    // TODO: remove this
+    if let E::KeyboardEvent = event_type {
         return;
     }
 
@@ -152,24 +157,56 @@ extern "C" fn resource_on_event(resource_name: &str, event: altv_sdk::CEventPtr)
             return;
         };
 
-        // TEST
-        if event_type != E::PlayerEnterVehicle {
-            return;
-        }
+        let instance = match event_type {
+            E::PlayerEnterVehicle => {
+                use sdk::CPlayerEnterVehicleEvent as EV;
+                let event = unsafe { sdk::events::to_CPlayerEnterVehicleEvent(event) };
 
-        use sdk::CPlayerEnterVehicleEvent as EV;
-        let event = unsafe { sdk::events::to_CPlayerEnterVehicleEvent(event) };
-        let instance = altv_wasm_shared::RawEvent::EnteredVehicle {
-            vehicle: {
-                let base_ptr = unsafe { sdk::vehicle::to_base_object(EV::GetTarget(event)) };
-                let ty = unsafe { sdk::IBaseObject::GetType(base_ptr) };
+                RE::EnteredVehicle {
+                    vehicle: {
+                        let base_ptr =
+                            unsafe { sdk::vehicle::to_base_object(EV::GetTarget(event)) };
+                        let ty = unsafe { sdk::IBaseObject::GetType(base_ptr) };
 
-                (
-                    base_ptr as BaseObjectPtr,
-                    BaseObjectType::try_from(ty).unwrap(),
-                )
-            },
-            seat: unsafe { EV::GetSeat(event) },
+                        (
+                            base_ptr as BaseObjectPtr,
+                            BaseObjectType::try_from(ty).unwrap(),
+                        )
+                    },
+                    seat: unsafe { EV::GetSeat(event) },
+                }
+            }
+            E::GameEntityCreate => {
+                use sdk::CGameEntityCreateEvent as EV;
+                let event = unsafe { sdk::events::to_CGameEntityCreateEvent(event) };
+
+                RE::GameEntityCreate {
+                    entity: unsafe {
+                        serialize_base_object_for_event(
+                            EV::GetTarget(event),
+                            sdk::entity::to_base_object,
+                        )
+                    },
+                }
+            }
+            E::GameEntityDestroy => {
+                use sdk::CGameEntityDestroyEvent as EV;
+                let event = unsafe { sdk::events::to_CGameEntityDestroyEvent(event) };
+
+                RE::GameEntityDestroy {
+                    entity: unsafe {
+                        serialize_base_object_for_event(
+                            EV::GetTarget(event),
+                            sdk::entity::to_base_object,
+                        )
+                    },
+                }
+            }
+            // TEST
+            _ => {
+                logger::debug!("unknown event: {event_type:?}");
+                return;
+            }
         };
 
         let res = controller.call_export(|e| e.call_on_event(instance));
@@ -247,5 +284,7 @@ fn main(core: usize, runtime: usize) {
 
         // TEST
         sdk::ICore::ToggleEvent(altv_sdk::EventType::PlayerEnterVehicle as u16, true);
+        sdk::ICore::ToggleEvent(altv_sdk::EventType::GameEntityCreate as u16, true);
+        sdk::ICore::ToggleEvent(altv_sdk::EventType::GameEntityDestroy as u16, true);
     }
 }

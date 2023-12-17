@@ -7,22 +7,35 @@ extern "C" fn main() {
 
     // TODO: retrieve base objects that were created before this resource started
 
-    altv::set_interval(
-        || {
-            altv::Vehicle::read_all_spawned(|vehicles| {
-                let [first, ..] = vehicles else {
-                    log!("no first");
-                    return;
-                };
-
-                altv::Vehicle::read_by_remote_id(first.remote_id(), |veh| {
-                    dbg!(veh.script_id());
-                });
-
-                let vehs = vehicles.iter().map(|v| v.script_id()).collect::<Vec<_>>();
-                dbg!(vehs);
-            });
+    let v = altv::LocalVehicle::new_streamed(
+        altv::hash("driftremus"),
+        0,
+        3.,
+        0.,
+        71.0,
+        0.,
+        0.,
+        0.,
+        10,
+        |s| {
+            log!("spawn {s:?}");
+            natives::set_vehicle_colours(s, 10, 10);
         },
-        Duration::from_secs(1),
-    );
+        || {
+            log!("despawn");
+        },
+    )
+    .unwrap();
+
+    std::mem::forget(v);
+
+    // let c: Rc<RefCell<Option<altv::event::EventController>>> = Rc::default();
+    // let c_ = c.clone();
+    // c.borrow_mut()
+    //     .replace(altv::event::add_handler(EventHandler::GameEntityCreate(
+    //         Box::new(move |ctx| {
+    //             log!("create entity: {:?}", ctx.entity);
+    //             c_.take().unwrap().destroy();
+    //         }),
+    //     )));
 }

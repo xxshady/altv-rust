@@ -367,5 +367,13 @@ pub static HEADERS: &[(&str, &str)] = &[
         "CClientRequestObjectEvent",
         "../altv_sdk/cpp-sdk/events/CClientRequestObjectEvent.h",
     ),
+    (
+        "CGameEntityCreateEvent",
+        "../altv_sdk/cpp-sdk/events/CGameEntityCreateEvent.h",
+    ),
+    (
+        "CGameEntityDestroyEvent",
+        "../altv_sdk/cpp-sdk/events/CGameEntityDestroyEvent.h",
+    ),
     ("IResource", "../altv_sdk/cpp-sdk/IResource.h"),
 ];

@@ -3,7 +3,7 @@ use std::time::Duration;
 use altv_wasm_shared::BaseObjectPtr;
 use anyhow::{bail, anyhow};
 
-use crate::{__imports, state::State, wait_for, SomeResult};
+use crate::{__imports, state::State, wait_for, SomeResult, event};
 use super::{
     objects::{local_vehicle::LocalVehicle, BaseObjectManager},
     shared_vehicle::SharedVehicle,
@@ -11,6 +11,7 @@ use super::{
     script_id::VehicleScriptId,
     kind::BaseObjectKind,
     base::private::Ptr,
+    any_entity::AnyEntity,
 };
 
 impl LocalVehicle {
@@ -63,8 +64,8 @@ impl LocalVehicle {
         rot_y: f32,
         rot_z: f32,
         streaming_distance: u32,
-        on_spawn: impl FnMut(&VehicleScriptId),
-        on_despawn: impl FnMut(&VehicleScriptId),
+        on_spawn: impl FnMut(&VehicleScriptId) + 'static,
+        on_despawn: impl FnMut() + 'static,
     ) -> SomeResult<LocalVehicleStreamed> {
         let ptr = Self::create(
             model,
@@ -87,7 +88,9 @@ impl LocalVehicle {
             );
             LocalVehicle::internal_new_owned(ptr, &mut base_objects.all, ())
         });
-        Ok(LocalVehicleStreamed::new(instance, on_spawn, on_despawn))
+        Ok(LocalVehicleStreamed::new(
+            instance, ptr, on_spawn, on_despawn,
+        ))
     }
 
     fn create(
@@ -165,6 +168,7 @@ impl PartialEq<LocalVehicleStatic> for LocalVehicle {
     }
 }
 
+#[must_use = "Instance is immediately destroyed if ignored"]
 #[derive(Debug)]
 pub struct LocalVehicleStatic {
     instance: LocalVehicle,
@@ -201,24 +205,61 @@ impl std::ops::DerefMut for LocalVehicleStatic {
     }
 }
 
+#[must_use = "Instance is immediately destroyed if ignored"]
 #[derive(Debug)]
 pub struct LocalVehicleStreamed {
     instance: LocalVehicle,
+
+    // option because of Drop
+    event_controllers: Option<[event::EventController; 2]>,
 }
 
 impl LocalVehicleStreamed {
     pub(crate) fn new(
         instance: LocalVehicle,
-        on_spawn: impl FnMut(&VehicleScriptId),
-        on_despawn: impl FnMut(&VehicleScriptId),
+        ptr: BaseObjectPtr,
+        mut on_spawn: impl FnMut(&VehicleScriptId) + 'static,
+        mut on_despawn: impl FnMut() + 'static,
     ) -> Self {
-        Self { instance }
+        // TODO: static event handlers for these
+        Self {
+            instance,
+            event_controllers: Some([
+                event::add_handler(event::EventHandler::GameEntityCreate(Box::new(
+                    move |ctx| {
+                        let AnyEntity::LocalVehicle(ref veh) = ctx.entity else {
+                            return;
+                        };
+                        if veh.ptr() != ptr {
+                            return;
+                        }
+
+                        let script_id = __imports::entity_get_script_id(ptr);
+                        assert!(script_id != 0);
+                        on_spawn(&VehicleScriptId(script_id));
+                    },
+                ))),
+                event::add_handler(event::EventHandler::GameEntityDestroy(Box::new(
+                    move |ctx| {
+                        let AnyEntity::LocalVehicle(ref veh) = ctx.entity else {
+                            return;
+                        };
+                        if veh.ptr() != ptr {
+                            return;
+                        }
+                        on_despawn();
+                    },
+                ))),
+            ]),
+        }
     }
 }
 
 impl Drop for LocalVehicleStreamed {
     fn drop(&mut self) {
-        // TODO: remove event listeners
+        for c in self.event_controllers.take().unwrap() {
+            c.destroy();
+        }
     }
 }
 
