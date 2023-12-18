@@ -51,6 +51,9 @@ pub use futures;
 
 pub mod event;
 
+mod script_id;
+pub use script_id::VehicleScriptId;
+
 #[no_mangle]
 extern "C" fn __pre_main() {
     logger::init(|msg, level| {

@@ -1,9 +1,9 @@
 use altv_wasm_shared::BaseObjectPtr;
 
-use crate::{State, __imports};
+use crate::{State, __imports, script_id::VehicleScriptId};
 use super::{
     objects::vehicle::Vehicle, remote::RemoteBaseObject, shared_vehicle::SharedVehicle,
-    world_object::WorldObject, script_id::VehicleScriptId,
+    world_object::WorldObject,
 };
 
 impl Vehicle {

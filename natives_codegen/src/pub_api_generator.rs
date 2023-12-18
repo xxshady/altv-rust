@@ -15,7 +15,7 @@ pub(crate) fn prepare() -> fs::File {
 
     file.write_all(
         formatdoc! {"
-            use crate::base_objects::script_id::VehicleScriptId;
+            use crate::script_id::{{VehicleScriptId, AsEntityScriptId}};
         "}
         .as_bytes(),
     )
@@ -90,6 +90,20 @@ mod pub_api_types {
         }
     }
 
+    pub(super) struct Entity {
+        r#type: &'static str,
+    }
+
+    impl PubApiType for Entity {
+        fn r#type(&self) -> &'static str {
+            self.r#type
+        }
+
+        fn usage(&self, param_name: &str) -> String {
+            format!("{param_name}.as_entity_script_id()")
+        }
+    }
+
     pub(super) struct AnythingElse {
         r#type: &'static str,
     }
@@ -112,6 +126,9 @@ mod pub_api_types {
         match native_type {
             NativeType::Vehicle => Box::new(Vehicle {
                 r#type: "&VehicleScriptId",
+            }),
+            NativeType::Entity => Box::new(Entity {
+                r#type: "impl AsEntityScriptId",
             }),
             _ => Box::new(AnythingElse {
                 r#type: native_type_to_rust(native_type, pos, r#ref),

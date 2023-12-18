@@ -1,4 +1,4 @@
-use crate::base_objects::script_id::VehicleScriptId;
+use crate::script_id::{VehicleScriptId, AsEntityScriptId};
 pub fn app_get_float(property: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfAppGetFloat {
     crate::__imports::native_app_get_float(property)
 }
@@ -162,10 +162,10 @@ p1: f32) -> altv_wasm_shared::natives_result::ResultOfSetPedWallaDensity {
     crate::__imports::native_set_ped_walla_density(p0,
 p1)
 }
-pub fn add_entity_to_audio_mix_group(entity: u32,
+pub fn add_entity_to_audio_mix_group(entity: impl AsEntityScriptId,
 group_name: Option<&String>,
 p2: f32) -> altv_wasm_shared::natives_result::ResultOfAddEntityToAudioMixGroup {
-    crate::__imports::native_add_entity_to_audio_mix_group(entity,
+    crate::__imports::native_add_entity_to_audio_mix_group(entity.as_entity_script_id(),
 group_name,
 p2)
 }
@@ -178,9 +178,9 @@ pub fn clear_custom_radio_track_list(radio_station: Option<&String>) -> altv_was
 pub fn is_scripted_conversation_ongoing() -> altv_wasm_shared::natives_result::ResultOfIsScriptedConversationOngoing {
     crate::__imports::native_is_scripted_conversation_ongoing()
 }
-pub fn remove_entity_from_audio_mix_group(entity: u32,
+pub fn remove_entity_from_audio_mix_group(entity: impl AsEntityScriptId,
 p1: f32) -> altv_wasm_shared::natives_result::ResultOfRemoveEntityFromAudioMixGroup {
-    crate::__imports::native_remove_entity_from_audio_mix_group(entity,
+    crate::__imports::native_remove_entity_from_audio_mix_group(entity.as_entity_script_id(),
 p1)
 }
 pub fn is_mission_complete_playing() -> altv_wasm_shared::natives_result::ResultOfIsMissionCompletePlaying {
@@ -503,13 +503,13 @@ pub fn has_loaded_sp_data_set() -> altv_wasm_shared::natives_result::ResultOfHas
 }
 pub fn play_sound_from_entity_hash(sound_id: i32,
 model: u32,
-entity: u32,
+entity: impl AsEntityScriptId,
 sound_set_hash: u32,
 p4: i32,
 p5: i32) -> altv_wasm_shared::natives_result::ResultOfPlaySoundFromEntityHash {
     crate::__imports::native_play_sound_from_entity_hash(sound_id,
 model,
-entity,
+entity.as_entity_script_id(),
 sound_set_hash,
 p4,
 p5)
@@ -540,9 +540,9 @@ door_id: i32) -> altv_wasm_shared::natives_result::ResultOfPlayVehicleDoorCloseS
 door_id)
 }
 pub fn link_static_emitter_to_entity(emitter_name: Option<&String>,
-entity: u32) -> altv_wasm_shared::natives_result::ResultOfLinkStaticEmitterToEntity {
+entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfLinkStaticEmitterToEntity {
     crate::__imports::native_link_static_emitter_to_entity(emitter_name,
-entity)
+entity.as_entity_script_id())
 }
 pub fn release_ambient_audio_bank() -> altv_wasm_shared::natives_result::ResultOfReleaseAmbientAudioBank {
     crate::__imports::native_release_ambient_audio_bank()
@@ -689,9 +689,9 @@ pub fn play_stream_from_ped(ped: u32) -> altv_wasm_shared::natives_result::Resul
     crate::__imports::native_play_stream_from_ped(ped)
 }
 pub fn set_entity_for_null_conv_ped(p0: i32,
-entity: u32) -> altv_wasm_shared::natives_result::ResultOfSetEntityForNullConvPed {
+entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfSetEntityForNullConvPed {
     crate::__imports::native_set_entity_for_null_conv_ped(p0,
-entity)
+entity.as_entity_script_id())
 }
 pub fn interrupt_conversation_and_pause(ped: u32,
 p1: Option<&String>,
@@ -756,9 +756,9 @@ pub fn is_ambient_speech_disabled(ped: u32) -> altv_wasm_shared::natives_result:
     crate::__imports::native_is_ambient_speech_disabled(ped)
 }
 pub fn init_synch_scene_audio_with_entity(audio_event: Option<&String>,
-entity: u32) -> altv_wasm_shared::natives_result::ResultOfInitSynchSceneAudioWithEntity {
+entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfInitSynchSceneAudioWithEntity {
     crate::__imports::native_init_synch_scene_audio_with_entity(audio_event,
-entity)
+entity.as_entity_script_id())
 }
 pub fn set_ped_is_drunk(ped: u32,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetPedIsDrunk {
@@ -1167,13 +1167,13 @@ p1)
 }
 pub fn play_sound_from_entity(sound_id: i32,
 audio_name: Option<&String>,
-entity: u32,
+entity: impl AsEntityScriptId,
 audio_ref: Option<&String>,
 is_network: bool,
 p5: i32) -> altv_wasm_shared::natives_result::ResultOfPlaySoundFromEntity {
     crate::__imports::native_play_sound_from_entity(sound_id,
 audio_name,
-entity,
+entity.as_entity_script_id(),
 audio_ref,
 is_network,
 p5)
@@ -1490,7 +1490,7 @@ toggle)
 pub fn disable_cinematic_slow_mo_this_update() -> altv_wasm_shared::natives_result::ResultOfDisableCinematicSlowMoThisUpdate {
     crate::__imports::native_disable_cinematic_slow_mo_this_update()
 }
-pub fn set_gameplay_entity_hint(entity: u32,
+pub fn set_gameplay_entity_hint(entity: impl AsEntityScriptId,
 x_offset: f32,
 y_offset: f32,
 z_offset: f32,
@@ -1499,7 +1499,7 @@ time: i32,
 ease_in_time: i32,
 ease_out_time: i32,
 p8: i32) -> altv_wasm_shared::natives_result::ResultOfSetGameplayEntityHint {
-    crate::__imports::native_set_gameplay_entity_hint(entity,
+    crate::__imports::native_set_gameplay_entity_hint(entity.as_entity_script_id(),
 x_offset,
 y_offset,
 z_offset,
@@ -1530,7 +1530,7 @@ pub fn is_in_vehicle_mobile_phone_camera_rendering() -> altv_wasm_shared::native
     crate::__imports::native_is_in_vehicle_mobile_phone_camera_rendering()
 }
 pub fn hard_attach_cam_to_entity(cam: i32,
-entity: u32,
+entity: impl AsEntityScriptId,
 x_rot: f32,
 y_rot: f32,
 z_rot: f32,
@@ -1539,7 +1539,7 @@ y_offset: f32,
 z_offset: f32,
 is_relative: bool) -> altv_wasm_shared::natives_result::ResultOfHardAttachCamToEntity {
     crate::__imports::native_hard_attach_cam_to_entity(cam,
-entity,
+entity.as_entity_script_id(),
 x_rot,
 y_rot,
 z_rot,
@@ -1590,8 +1590,8 @@ view_mode: i32) -> altv_wasm_shared::natives_result::ResultOfSetCamViewModeForCo
     crate::__imports::native_set_cam_view_mode_for_context(context,
 view_mode)
 }
-pub fn set_gameplay_cam_ignore_entity_collision_this_update(entity: u32) -> altv_wasm_shared::natives_result::ResultOfSetGameplayCamIgnoreEntityCollisionThisUpdate {
-    crate::__imports::native_set_gameplay_cam_ignore_entity_collision_this_update(entity)
+pub fn set_gameplay_cam_ignore_entity_collision_this_update(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfSetGameplayCamIgnoreEntityCollisionThisUpdate {
+    crate::__imports::native_set_gameplay_cam_ignore_entity_collision_this_update(entity.as_entity_script_id())
 }
 pub fn set_gameplay_ped_hint(ped: u32,
 x1: f32,
@@ -1708,8 +1708,8 @@ pub fn are_widescreen_borders_active() -> altv_wasm_shared::natives_result::Resu
 pub fn set_gameplay_cam_motion_blur_scaling_this_update(p0: f32) -> altv_wasm_shared::natives_result::ResultOfSetGameplayCamMotionBlurScalingThisUpdate {
     crate::__imports::native_set_gameplay_cam_motion_blur_scaling_this_update(p0)
 }
-pub fn disable_cam_collision_for_object(entity: u32) -> altv_wasm_shared::natives_result::ResultOfDisableCamCollisionForObject {
-    crate::__imports::native_disable_cam_collision_for_object(entity)
+pub fn disable_cam_collision_for_object(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfDisableCamCollisionForObject {
+    crate::__imports::native_disable_cam_collision_for_object(entity.as_entity_script_id())
 }
 pub fn set_cam_coord(cam: i32,
 pos_x: f32,
@@ -1742,13 +1742,13 @@ pub fn get_rendering_cam() -> altv_wasm_shared::natives_result::ResultOfGetRende
     crate::__imports::native_get_rendering_cam()
 }
 pub fn point_cam_at_entity(cam: i32,
-entity: u32,
+entity: impl AsEntityScriptId,
 p2: f32,
 p3: f32,
 p4: f32,
 p5: bool) -> altv_wasm_shared::natives_result::ResultOfPointCamAtEntity {
     crate::__imports::native_point_cam_at_entity(cam,
-entity,
+entity.as_entity_script_id(),
 p2,
 p3,
 p4,
@@ -1923,11 +1923,11 @@ pub fn set_use_hi_dof_on_synced_scene_this_update() -> altv_wasm_shared::natives
 pub fn create_cinematic_shot(p0: u32,
 time: i32,
 p2: bool,
-entity: u32) -> altv_wasm_shared::natives_result::ResultOfCreateCinematicShot {
+entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfCreateCinematicShot {
     crate::__imports::native_create_cinematic_shot(p0,
 time,
 p2,
-entity)
+entity.as_entity_script_id())
 }
 pub fn get_gameplay_cam_relative_heading() -> altv_wasm_shared::natives_result::ResultOfGetGameplayCamRelativeHeading {
     crate::__imports::native_get_gameplay_cam_relative_heading()
@@ -2630,8 +2630,8 @@ height: f32) -> altv_wasm_shared::natives_result::ResultOfSetFlyCamMaxHeight {
     crate::__imports::native_set_fly_cam_max_height(cam,
 height)
 }
-pub fn set_gameplay_cam_entity_to_limit_focus_over_bounding_sphere_this_update(entity: u32) -> altv_wasm_shared::natives_result::ResultOfSetGameplayCamEntityToLimitFocusOverBoundingSphereThisUpdate {
-    crate::__imports::native_set_gameplay_cam_entity_to_limit_focus_over_bounding_sphere_this_update(entity)
+pub fn set_gameplay_cam_entity_to_limit_focus_over_bounding_sphere_this_update(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfSetGameplayCamEntityToLimitFocusOverBoundingSphereThisUpdate {
+    crate::__imports::native_set_gameplay_cam_entity_to_limit_focus_over_bounding_sphere_this_update(entity.as_entity_script_id())
 }
 pub fn shake_gameplay_cam(shake_name: Option<&String>,
 intensity: f32) -> altv_wasm_shared::natives_result::ResultOfShakeGameplayCam {
@@ -2639,13 +2639,13 @@ intensity: f32) -> altv_wasm_shared::natives_result::ResultOfShakeGameplayCam {
 intensity)
 }
 pub fn attach_cam_to_entity(cam: i32,
-entity: u32,
+entity: impl AsEntityScriptId,
 x_offset: f32,
 y_offset: f32,
 z_offset: f32,
 is_relative: bool) -> altv_wasm_shared::natives_result::ResultOfAttachCamToEntity {
     crate::__imports::native_attach_cam_to_entity(cam,
-entity,
+entity.as_entity_script_id(),
 x_offset,
 y_offset,
 z_offset,
@@ -3318,27 +3318,27 @@ pub fn datafile_has_valid_file_data(request_id: i32) -> altv_wasm_shared::native
 pub fn datafile_is_valid_request_id(index: i32) -> altv_wasm_shared::natives_result::ResultOfDatafileIsValidRequestId {
     crate::__imports::native_datafile_is_valid_request_id(index)
 }
-pub fn decor_remove(entity: u32,
+pub fn decor_remove(entity: impl AsEntityScriptId,
 property_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfDecorRemove {
-    crate::__imports::native_decor_remove(entity,
+    crate::__imports::native_decor_remove(entity.as_entity_script_id(),
 property_name)
 }
-pub fn decor_exist_on(entity: u32,
+pub fn decor_exist_on(entity: impl AsEntityScriptId,
 property_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfDecorExistOn {
-    crate::__imports::native_decor_exist_on(entity,
+    crate::__imports::native_decor_exist_on(entity.as_entity_script_id(),
 property_name)
 }
-pub fn decor_set_int(entity: u32,
+pub fn decor_set_int(entity: impl AsEntityScriptId,
 property_name: Option<&String>,
 value: i32) -> altv_wasm_shared::natives_result::ResultOfDecorSetInt {
-    crate::__imports::native_decor_set_int(entity,
+    crate::__imports::native_decor_set_int(entity.as_entity_script_id(),
 property_name,
 value)
 }
-pub fn decor_set_float(entity: u32,
+pub fn decor_set_float(entity: impl AsEntityScriptId,
 property_name: Option<&String>,
 value: f32) -> altv_wasm_shared::natives_result::ResultOfDecorSetFloat {
-    crate::__imports::native_decor_set_float(entity,
+    crate::__imports::native_decor_set_float(entity.as_entity_script_id(),
 property_name,
 value)
 }
@@ -3347,22 +3347,22 @@ r#type: i32) -> altv_wasm_shared::natives_result::ResultOfDecorIsRegisteredAsTyp
     crate::__imports::native_decor_is_registered_as_type(property_name,
 r#type)
 }
-pub fn decor_get_float(entity: u32,
+pub fn decor_get_float(entity: impl AsEntityScriptId,
 property_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfDecorGetFloat {
-    crate::__imports::native_decor_get_float(entity,
+    crate::__imports::native_decor_get_float(entity.as_entity_script_id(),
 property_name)
 }
-pub fn decor_set_bool(entity: u32,
+pub fn decor_set_bool(entity: impl AsEntityScriptId,
 property_name: Option<&String>,
 value: bool) -> altv_wasm_shared::natives_result::ResultOfDecorSetBool {
-    crate::__imports::native_decor_set_bool(entity,
+    crate::__imports::native_decor_set_bool(entity.as_entity_script_id(),
 property_name,
 value)
 }
-pub fn decor_set_time(entity: u32,
+pub fn decor_set_time(entity: impl AsEntityScriptId,
 property_name: Option<&String>,
 timestamp: i32) -> altv_wasm_shared::natives_result::ResultOfDecorSetTime {
-    crate::__imports::native_decor_set_time(entity,
+    crate::__imports::native_decor_set_time(entity.as_entity_script_id(),
 property_name,
 timestamp)
 }
@@ -3371,17 +3371,17 @@ r#type: i32) -> altv_wasm_shared::natives_result::ResultOfDecorRegister {
     crate::__imports::native_decor_register(property_name,
 r#type)
 }
-pub fn decor_get_int(entity: u32,
+pub fn decor_get_int(entity: impl AsEntityScriptId,
 property_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfDecorGetInt {
-    crate::__imports::native_decor_get_int(entity,
+    crate::__imports::native_decor_get_int(entity.as_entity_script_id(),
 property_name)
 }
 pub fn decor_register_lock() -> altv_wasm_shared::natives_result::ResultOfDecorRegisterLock {
     crate::__imports::native_decor_register_lock()
 }
-pub fn decor_get_bool(entity: u32,
+pub fn decor_get_bool(entity: impl AsEntityScriptId,
 property_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfDecorGetBool {
-    crate::__imports::native_decor_get_bool(entity,
+    crate::__imports::native_decor_get_bool(entity.as_entity_script_id(),
 property_name)
 }
 pub fn on_enter_mp() -> altv_wasm_shared::natives_result::ResultOfOnEnterMp {
@@ -3419,10 +3419,10 @@ pub fn on_enter_sp() -> altv_wasm_shared::natives_result::ResultOfOnEnterSp {
 pub fn dlc_check_cloud_data_correct() -> altv_wasm_shared::natives_result::ResultOfDlcCheckCloudDataCorrect {
     crate::__imports::native_dlc_check_cloud_data_correct()
 }
-pub fn has_entity_clear_los_to_entity_in_front(entity1: u32,
-entity2: u32) -> altv_wasm_shared::natives_result::ResultOfHasEntityClearLosToEntityInFront {
-    crate::__imports::native_has_entity_clear_los_to_entity_in_front(entity1,
-entity2)
+pub fn has_entity_clear_los_to_entity_in_front(entity1: impl AsEntityScriptId,
+entity2: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfHasEntityClearLosToEntityInFront {
+    crate::__imports::native_has_entity_clear_los_to_entity_in_front(entity1.as_entity_script_id(),
+entity2.as_entity_script_id())
 }
 pub fn remove_model_swap(x: f32,
 y: f32,
@@ -3439,13 +3439,13 @@ original_model,
 new_model,
 p6)
 }
-pub fn get_ped_index_from_entity_index(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetPedIndexFromEntityIndex {
-    crate::__imports::native_get_ped_index_from_entity_index(entity)
+pub fn get_ped_index_from_entity_index(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetPedIndexFromEntityIndex {
+    crate::__imports::native_get_ped_index_from_entity_index(entity.as_entity_script_id())
 }
-pub fn does_entity_have_drawable(entity: u32) -> altv_wasm_shared::natives_result::ResultOfDoesEntityHaveDrawable {
-    crate::__imports::native_does_entity_have_drawable(entity)
+pub fn does_entity_have_drawable(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfDoesEntityHaveDrawable {
+    crate::__imports::native_does_entity_have_drawable(entity.as_entity_script_id())
 }
-pub fn set_entity_coords(entity: u32,
+pub fn set_entity_coords(entity: impl AsEntityScriptId,
 x_pos: f32,
 y_pos: f32,
 z_pos: f32,
@@ -3453,7 +3453,7 @@ x_axis: bool,
 y_axis: bool,
 z_axis: bool,
 clear_area: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityCoords {
-    crate::__imports::native_set_entity_coords(entity,
+    crate::__imports::native_set_entity_coords(entity.as_entity_script_id(),
 x_pos,
 y_pos,
 z_pos,
@@ -3473,32 +3473,32 @@ p2,
 p3,
 p4)
 }
-pub fn set_entity_records_collisions(entity: u32,
+pub fn set_entity_records_collisions(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityRecordsCollisions {
-    crate::__imports::native_set_entity_records_collisions(entity,
+    crate::__imports::native_set_entity_records_collisions(entity.as_entity_script_id(),
 toggle)
 }
-pub fn get_entity_forward_vector(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityForwardVector {
-    crate::__imports::native_get_entity_forward_vector(entity)
+pub fn get_entity_forward_vector(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityForwardVector {
+    crate::__imports::native_get_entity_forward_vector(entity.as_entity_script_id())
 }
-pub fn is_entity_a_mission_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityAmissionEntity {
-    crate::__imports::native_is_entity_a_mission_entity(entity)
+pub fn is_entity_a_mission_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityAmissionEntity {
+    crate::__imports::native_is_entity_a_mission_entity(entity.as_entity_script_id())
 }
-pub fn set_entity_load_collision_flag(entity: u32,
+pub fn set_entity_load_collision_flag(entity: impl AsEntityScriptId,
 toggle: bool,
 p2: i32) -> altv_wasm_shared::natives_result::ResultOfSetEntityLoadCollisionFlag {
-    crate::__imports::native_set_entity_load_collision_flag(entity,
+    crate::__imports::native_set_entity_load_collision_flag(entity.as_entity_script_id(),
 toggle,
 p2)
 }
-pub fn set_entity_max_speed(entity: u32,
+pub fn set_entity_max_speed(entity: impl AsEntityScriptId,
 speed: f32) -> altv_wasm_shared::natives_result::ResultOfSetEntityMaxSpeed {
-    crate::__imports::native_set_entity_max_speed(entity,
+    crate::__imports::native_set_entity_max_speed(entity.as_entity_script_id(),
 speed)
 }
-pub fn is_entity_touching_model(entity: u32,
+pub fn is_entity_touching_model(entity: impl AsEntityScriptId,
 model_hash: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityTouchingModel {
-    crate::__imports::native_is_entity_touching_model(entity,
+    crate::__imports::native_is_entity_touching_model(entity.as_entity_script_id(),
 model_hash)
 }
 pub fn stop_synchronized_map_entity_anim(x1: f32,
@@ -3514,8 +3514,8 @@ x2,
 y2,
 z2)
 }
-pub fn is_entity_static(entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityStatic {
-    crate::__imports::native_is_entity_static(entity)
+pub fn is_entity_static(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityStatic {
+    crate::__imports::native_is_entity_static(entity.as_entity_script_id())
 }
 pub fn create_forced_object(x: f32,
 y: f32,
@@ -3530,39 +3530,39 @@ p3,
 model_hash,
 p5)
 }
-pub fn get_entity_max_health(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityMaxHealth {
-    crate::__imports::native_get_entity_max_health(entity)
+pub fn get_entity_max_health(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityMaxHealth {
+    crate::__imports::native_get_entity_max_health(entity.as_entity_script_id())
 }
-pub fn set_entity_max_health(entity: u32,
+pub fn set_entity_max_health(entity: impl AsEntityScriptId,
 value: i32) -> altv_wasm_shared::natives_result::ResultOfSetEntityMaxHealth {
-    crate::__imports::native_set_entity_max_health(entity,
+    crate::__imports::native_set_entity_max_health(entity.as_entity_script_id(),
 value)
 }
-pub fn set_entity_dynamic(entity: u32,
+pub fn set_entity_dynamic(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityDynamic {
-    crate::__imports::native_set_entity_dynamic(entity,
+    crate::__imports::native_set_entity_dynamic(entity.as_entity_script_id(),
 toggle)
 }
-pub fn set_entity_can_be_damaged(entity: u32,
+pub fn set_entity_can_be_damaged(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityCanBeDamaged {
-    crate::__imports::native_set_entity_can_be_damaged(entity,
+    crate::__imports::native_set_entity_can_be_damaged(entity.as_entity_script_id(),
 toggle)
 }
-pub fn is_entity_touching_entity(entity: u32,
-target_entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityTouchingEntity {
-    crate::__imports::native_is_entity_touching_entity(entity,
-target_entity)
+pub fn is_entity_touching_entity(entity: impl AsEntityScriptId,
+target_entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityTouchingEntity {
+    crate::__imports::native_is_entity_touching_entity(entity.as_entity_script_id(),
+target_entity.as_entity_script_id())
 }
-pub fn get_offset_from_entity_in_world_coords(entity: u32,
+pub fn get_offset_from_entity_in_world_coords(entity: impl AsEntityScriptId,
 offset_x: f32,
 offset_y: f32,
 offset_z: f32) -> altv_wasm_shared::natives_result::ResultOfGetOffsetFromEntityInWorldCoords {
-    crate::__imports::native_get_offset_from_entity_in_world_coords(entity,
+    crate::__imports::native_get_offset_from_entity_in_world_coords(entity.as_entity_script_id(),
 offset_x,
 offset_y,
 offset_z)
 }
-pub fn apply_force_to_entity_center_of_mass(entity: u32,
+pub fn apply_force_to_entity_center_of_mass(entity: impl AsEntityScriptId,
 force_type: i32,
 x: f32,
 y: f32,
@@ -3571,7 +3571,7 @@ p5: bool,
 is_direction_rel: bool,
 is_force_rel: bool,
 p8: bool) -> altv_wasm_shared::natives_result::ResultOfApplyForceToEntityCenterOfMass {
-    crate::__imports::native_apply_force_to_entity_center_of_mass(entity,
+    crate::__imports::native_apply_force_to_entity_center_of_mass(entity.as_entity_script_id(),
 force_type,
 x,
 y,
@@ -3581,48 +3581,48 @@ is_direction_rel,
 is_force_rel,
 p8)
 }
-pub fn set_entity_use_max_distance_for_water_reflection(entity: u32,
+pub fn set_entity_use_max_distance_for_water_reflection(entity: impl AsEntityScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityUseMaxDistanceForWaterReflection {
-    crate::__imports::native_set_entity_use_max_distance_for_water_reflection(entity,
+    crate::__imports::native_set_entity_use_max_distance_for_water_reflection(entity.as_entity_script_id(),
 p1)
 }
-pub fn set_entity_collision(entity: u32,
+pub fn set_entity_collision(entity: impl AsEntityScriptId,
 toggle: bool,
 keep_physics: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityCollision {
-    crate::__imports::native_set_entity_collision(entity,
+    crate::__imports::native_set_entity_collision(entity.as_entity_script_id(),
 toggle,
 keep_physics)
 }
-pub fn set_entity_velocity(entity: u32,
+pub fn set_entity_velocity(entity: impl AsEntityScriptId,
 x: f32,
 y: f32,
 z: f32) -> altv_wasm_shared::natives_result::ResultOfSetEntityVelocity {
-    crate::__imports::native_set_entity_velocity(entity,
+    crate::__imports::native_set_entity_velocity(entity.as_entity_script_id(),
 x,
 y,
 z)
 }
-pub fn is_entity_upsidedown(entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityUpsidedown {
-    crate::__imports::native_is_entity_upsidedown(entity)
+pub fn is_entity_upsidedown(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityUpsidedown {
+    crate::__imports::native_is_entity_upsidedown(entity.as_entity_script_id())
 }
-pub fn get_entity_height_above_ground(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityHeightAboveGround {
-    crate::__imports::native_get_entity_height_above_ground(entity)
+pub fn get_entity_height_above_ground(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityHeightAboveGround {
+    crate::__imports::native_get_entity_height_above_ground(entity.as_entity_script_id())
 }
-pub fn is_entity_playing_anim(entity: u32,
+pub fn is_entity_playing_anim(entity: impl AsEntityScriptId,
 anim_dict: Option<&String>,
 anim_name: Option<&String>,
 task_flag: i32) -> altv_wasm_shared::natives_result::ResultOfIsEntityPlayingAnim {
-    crate::__imports::native_is_entity_playing_anim(entity,
+    crate::__imports::native_is_entity_playing_anim(entity.as_entity_script_id(),
 anim_dict,
 anim_name,
 task_flag)
 }
-pub fn get_entity_of_type_attached_to_entity(entity: u32,
+pub fn get_entity_of_type_attached_to_entity(entity: impl AsEntityScriptId,
 model_hash: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityOfTypeAttachedToEntity {
-    crate::__imports::native_get_entity_of_type_attached_to_entity(entity,
+    crate::__imports::native_get_entity_of_type_attached_to_entity(entity.as_entity_script_id(),
 model_hash)
 }
-pub fn is_entity_at_coord(entity: u32,
+pub fn is_entity_at_coord(entity: impl AsEntityScriptId,
 x_pos: f32,
 y_pos: f32,
 z_pos: f32,
@@ -3632,7 +3632,7 @@ z_size: f32,
 p7: bool,
 p8: bool,
 p9: i32) -> altv_wasm_shared::natives_result::ResultOfIsEntityAtCoord {
-    crate::__imports::native_is_entity_at_coord(entity,
+    crate::__imports::native_is_entity_at_coord(entity.as_entity_script_id(),
 x_pos,
 y_pos,
 z_pos,
@@ -3643,38 +3643,38 @@ p7,
 p8,
 p9)
 }
-pub fn has_entity_anim_finished(entity: u32,
+pub fn has_entity_anim_finished(entity: impl AsEntityScriptId,
 anim_dict: Option<&String>,
 anim_name: Option<&String>,
 p3: i32) -> altv_wasm_shared::natives_result::ResultOfHasEntityAnimFinished {
-    crate::__imports::native_has_entity_anim_finished(entity,
+    crate::__imports::native_has_entity_anim_finished(entity.as_entity_script_id(),
 anim_dict,
 anim_name,
 p3)
 }
-pub fn get_entity_rotation_velocity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityRotationVelocity {
-    crate::__imports::native_get_entity_rotation_velocity(entity)
+pub fn get_entity_rotation_velocity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityRotationVelocity {
+    crate::__imports::native_get_entity_rotation_velocity(entity.as_entity_script_id())
 }
-pub fn does_entity_have_anim_director(entity: u32) -> altv_wasm_shared::natives_result::ResultOfDoesEntityHaveAnimDirector {
-    crate::__imports::native_does_entity_have_anim_director(entity)
+pub fn does_entity_have_anim_director(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfDoesEntityHaveAnimDirector {
+    crate::__imports::native_does_entity_have_anim_director(entity.as_entity_script_id())
 }
-pub fn get_offset_from_entity_given_world_coords(entity: u32,
+pub fn get_offset_from_entity_given_world_coords(entity: impl AsEntityScriptId,
 pos_x: f32,
 pos_y: f32,
 pos_z: f32) -> altv_wasm_shared::natives_result::ResultOfGetOffsetFromEntityGivenWorldCoords {
-    crate::__imports::native_get_offset_from_entity_given_world_coords(entity,
+    crate::__imports::native_get_offset_from_entity_given_world_coords(entity.as_entity_script_id(),
 pos_x,
 pos_y,
 pos_z)
 }
-pub fn set_entity_coords_no_offset(entity: u32,
+pub fn set_entity_coords_no_offset(entity: impl AsEntityScriptId,
 x_pos: f32,
 y_pos: f32,
 z_pos: f32,
 x_axis: bool,
 y_axis: bool,
 z_axis: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityCoordsNoOffset {
-    crate::__imports::native_set_entity_coords_no_offset(entity,
+    crate::__imports::native_set_entity_coords_no_offset(entity.as_entity_script_id(),
 x_pos,
 y_pos,
 z_pos,
@@ -3685,69 +3685,69 @@ z_axis)
 pub fn set_ped_as_no_longer_needed(ped: u32) -> altv_wasm_shared::natives_result::ResultOfSetPedAsNoLongerNeeded {
     crate::__imports::native_set_ped_as_no_longer_needed(ped)
 }
-pub fn is_entity_attached_to_any_vehicle(entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityAttachedToAnyVehicle {
-    crate::__imports::native_is_entity_attached_to_any_vehicle(entity)
+pub fn is_entity_attached_to_any_vehicle(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityAttachedToAnyVehicle {
+    crate::__imports::native_is_entity_attached_to_any_vehicle(entity.as_entity_script_id())
 }
-pub fn stop_entity_anim(entity: u32,
+pub fn stop_entity_anim(entity: impl AsEntityScriptId,
 animation: Option<&String>,
 anim_group: Option<&String>,
 p3: f32) -> altv_wasm_shared::natives_result::ResultOfStopEntityAnim {
-    crate::__imports::native_stop_entity_anim(entity,
+    crate::__imports::native_stop_entity_anim(entity.as_entity_script_id(),
 animation,
 anim_group,
 p3)
 }
-pub fn set_entity_anim_speed(entity: u32,
+pub fn set_entity_anim_speed(entity: impl AsEntityScriptId,
 anim_dictionary: Option<&String>,
 anim_name: Option<&String>,
 speed_multiplier: f32) -> altv_wasm_shared::natives_result::ResultOfSetEntityAnimSpeed {
-    crate::__imports::native_set_entity_anim_speed(entity,
+    crate::__imports::native_set_entity_anim_speed(entity.as_entity_script_id(),
 anim_dictionary,
 anim_name,
 speed_multiplier)
 }
-pub fn set_entity_motion_blur(entity: u32,
+pub fn set_entity_motion_blur(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityMotionBlur {
-    crate::__imports::native_set_entity_motion_blur(entity,
+    crate::__imports::native_set_entity_motion_blur(entity.as_entity_script_id(),
 toggle)
 }
-pub fn set_entity_noweapondecals(entity: u32,
+pub fn set_entity_noweapondecals(entity: impl AsEntityScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityNoweapondecals {
-    crate::__imports::native_set_entity_noweapondecals(entity,
+    crate::__imports::native_set_entity_noweapondecals(entity.as_entity_script_id(),
 p1)
 }
-pub fn get_entity_anim_current_time(entity: u32,
+pub fn get_entity_anim_current_time(entity: impl AsEntityScriptId,
 anim_dict: Option<&String>,
 anim_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfGetEntityAnimCurrentTime {
-    crate::__imports::native_get_entity_anim_current_time(entity,
+    crate::__imports::native_get_entity_anim_current_time(entity.as_entity_script_id(),
 anim_dict,
 anim_name)
 }
-pub fn set_entity_can_only_be_damaged_by_script_participants(entity: u32,
+pub fn set_entity_can_only_be_damaged_by_script_participants(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityCanOnlyBeDamagedByScriptParticipants {
-    crate::__imports::native_set_entity_can_only_be_damaged_by_script_participants(entity,
+    crate::__imports::native_set_entity_can_only_be_damaged_by_script_participants(entity.as_entity_script_id(),
 toggle)
 }
-pub fn set_allow_migrate_to_spectator(entity: u32,
+pub fn set_allow_migrate_to_spectator(entity: impl AsEntityScriptId,
 p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetAllowMigrateToSpectator {
-    crate::__imports::native_set_allow_migrate_to_spectator(entity,
+    crate::__imports::native_set_allow_migrate_to_spectator(entity.as_entity_script_id(),
 p1)
 }
-pub fn set_entity_invincible(entity: u32,
+pub fn set_entity_invincible(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityInvincible {
-    crate::__imports::native_set_entity_invincible(entity,
+    crate::__imports::native_set_entity_invincible(entity.as_entity_script_id(),
 toggle)
 }
-pub fn set_entity_should_freeze_waiting_on_collision(entity: u32,
+pub fn set_entity_should_freeze_waiting_on_collision(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityShouldFreezeWaitingOnCollision {
-    crate::__imports::native_set_entity_should_freeze_waiting_on_collision(entity,
+    crate::__imports::native_set_entity_should_freeze_waiting_on_collision(entity.as_entity_script_id(),
 toggle)
 }
-pub fn has_entity_clear_los_to_entity_adjust_for_cover(entity1: u32,
-entity2: u32,
+pub fn has_entity_clear_los_to_entity_adjust_for_cover(entity1: impl AsEntityScriptId,
+entity2: impl AsEntityScriptId,
 trace_type: i32) -> altv_wasm_shared::natives_result::ResultOfHasEntityClearLosToEntityAdjustForCover {
-    crate::__imports::native_has_entity_clear_los_to_entity_adjust_for_cover(entity1,
-entity2,
+    crate::__imports::native_has_entity_clear_los_to_entity_adjust_for_cover(entity1.as_entity_script_id(),
+entity2.as_entity_script_id(),
 trace_type)
 }
 pub fn create_model_hide_excluding_script_objects(x: f32,
@@ -3766,88 +3766,88 @@ p5)
 pub fn set_object_as_no_longer_needed(object: u32) -> altv_wasm_shared::natives_result::ResultOfSetObjectAsNoLongerNeeded {
     crate::__imports::native_set_object_as_no_longer_needed(object)
 }
-pub fn get_entity_coords(entity: u32,
+pub fn get_entity_coords(entity: impl AsEntityScriptId,
 alive: bool) -> altv_wasm_shared::natives_result::ResultOfGetEntityCoords {
-    crate::__imports::native_get_entity_coords(entity,
+    crate::__imports::native_get_entity_coords(entity.as_entity_script_id(),
 alive)
 }
-pub fn force_entity_ai_and_animation_update(entity: u32) -> altv_wasm_shared::natives_result::ResultOfForceEntityAiAndAnimationUpdate {
-    crate::__imports::native_force_entity_ai_and_animation_update(entity)
+pub fn force_entity_ai_and_animation_update(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfForceEntityAiAndAnimationUpdate {
+    crate::__imports::native_force_entity_ai_and_animation_update(entity.as_entity_script_id())
 }
-pub fn get_entity_lod_dist(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityLodDist {
-    crate::__imports::native_get_entity_lod_dist(entity)
+pub fn get_entity_lod_dist(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityLodDist {
+    crate::__imports::native_get_entity_lod_dist(entity.as_entity_script_id())
 }
-pub fn freeze_entity_position(entity: u32,
+pub fn freeze_entity_position(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfFreezeEntityPosition {
-    crate::__imports::native_freeze_entity_position(entity,
+    crate::__imports::native_freeze_entity_position(entity.as_entity_script_id(),
 toggle)
 }
-pub fn stop_synchronized_entity_anim(entity: u32,
+pub fn stop_synchronized_entity_anim(entity: impl AsEntityScriptId,
 p1: f32,
 p2: bool) -> altv_wasm_shared::natives_result::ResultOfStopSynchronizedEntityAnim {
-    crate::__imports::native_stop_synchronized_entity_anim(entity,
+    crate::__imports::native_stop_synchronized_entity_anim(entity.as_entity_script_id(),
 p1,
 p2)
 }
-pub fn set_entity_anim_current_time(entity: u32,
+pub fn set_entity_anim_current_time(entity: impl AsEntityScriptId,
 anim_dictionary: Option<&String>,
 anim_name: Option<&String>,
 time: f32) -> altv_wasm_shared::natives_result::ResultOfSetEntityAnimCurrentTime {
-    crate::__imports::native_set_entity_anim_current_time(entity,
+    crate::__imports::native_set_entity_anim_current_time(entity.as_entity_script_id(),
 anim_dictionary,
 anim_name,
 time)
 }
-pub fn set_entity_alpha(entity: u32,
+pub fn set_entity_alpha(entity: impl AsEntityScriptId,
 alpha_level: i32,
 skin: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityAlpha {
-    crate::__imports::native_set_entity_alpha(entity,
+    crate::__imports::native_set_entity_alpha(entity.as_entity_script_id(),
 alpha_level,
 skin)
 }
-pub fn get_world_position_of_entity_bone(entity: u32,
+pub fn get_world_position_of_entity_bone(entity: impl AsEntityScriptId,
 bone_index: i32) -> altv_wasm_shared::natives_result::ResultOfGetWorldPositionOfEntityBone {
-    crate::__imports::native_get_world_position_of_entity_bone(entity,
+    crate::__imports::native_get_world_position_of_entity_bone(entity.as_entity_script_id(),
 bone_index)
 }
-pub fn get_entity_bone_postion(entity: u32,
+pub fn get_entity_bone_postion(entity: impl AsEntityScriptId,
 bone_index: i32) -> altv_wasm_shared::natives_result::ResultOfGetEntityBonePostion {
-    crate::__imports::native_get_entity_bone_postion(entity,
+    crate::__imports::native_get_entity_bone_postion(entity.as_entity_script_id(),
 bone_index)
 }
-pub fn is_entity_visible(entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityVisible {
-    crate::__imports::native_is_entity_visible(entity)
+pub fn is_entity_visible(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityVisible {
+    crate::__imports::native_is_entity_visible(entity.as_entity_script_id())
 }
-pub fn get_entity_velocity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityVelocity {
-    crate::__imports::native_get_entity_velocity(entity)
+pub fn get_entity_velocity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityVelocity {
+    crate::__imports::native_get_entity_velocity(entity.as_entity_script_id())
 }
-pub fn get_entity_attached_to(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityAttachedTo {
-    crate::__imports::native_get_entity_attached_to(entity)
+pub fn get_entity_attached_to(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityAttachedTo {
+    crate::__imports::native_get_entity_attached_to(entity.as_entity_script_id())
 }
-pub fn reset_pickup_entity_glow(entity: u32) -> altv_wasm_shared::natives_result::ResultOfResetPickupEntityGlow {
-    crate::__imports::native_reset_pickup_entity_glow(entity)
+pub fn reset_pickup_entity_glow(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfResetPickupEntityGlow {
+    crate::__imports::native_reset_pickup_entity_glow(entity.as_entity_script_id())
 }
-pub fn set_entity_has_gravity(entity: u32,
+pub fn set_entity_has_gravity(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityHasGravity {
-    crate::__imports::native_set_entity_has_gravity(entity,
+    crate::__imports::native_set_entity_has_gravity(entity.as_entity_script_id(),
 toggle)
 }
-pub fn get_vehicle_index_from_entity_index(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleIndexFromEntityIndex {
-    crate::__imports::native_get_vehicle_index_from_entity_index(entity)
+pub fn get_vehicle_index_from_entity_index(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleIndexFromEntityIndex {
+    crate::__imports::native_get_vehicle_index_from_entity_index(entity.as_entity_script_id())
 }
-pub fn get_nearest_player_to_entity_on_team(entity: u32,
+pub fn get_nearest_player_to_entity_on_team(entity: impl AsEntityScriptId,
 team: i32) -> altv_wasm_shared::natives_result::ResultOfGetNearestPlayerToEntityOnTeam {
-    crate::__imports::native_get_nearest_player_to_entity_on_team(entity,
+    crate::__imports::native_get_nearest_player_to_entity_on_team(entity.as_entity_script_id(),
 team)
 }
-pub fn get_entity_anim_total_time(entity: u32,
+pub fn get_entity_anim_total_time(entity: impl AsEntityScriptId,
 anim_dict: Option<&String>,
 anim_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfGetEntityAnimTotalTime {
-    crate::__imports::native_get_entity_anim_total_time(entity,
+    crate::__imports::native_get_entity_anim_total_time(entity.as_entity_script_id(),
 anim_dict,
 anim_name)
 }
-pub fn is_entity_in_angled_area(entity: u32,
+pub fn is_entity_in_angled_area(entity: impl AsEntityScriptId,
 x1: f32,
 y1: f32,
 z1: f32,
@@ -3858,7 +3858,7 @@ width: f32,
 debug: bool,
 include_z: bool,
 p10: i32) -> altv_wasm_shared::natives_result::ResultOfIsEntityInAngledArea {
-    crate::__imports::native_is_entity_in_angled_area(entity,
+    crate::__imports::native_is_entity_in_angled_area(entity.as_entity_script_id(),
 x1,
 y1,
 z1,
@@ -3870,15 +3870,15 @@ debug,
 include_z,
 p10)
 }
-pub fn is_entity_a_ped(entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityAped {
-    crate::__imports::native_is_entity_a_ped(entity)
+pub fn is_entity_a_ped(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityAped {
+    crate::__imports::native_is_entity_a_ped(entity.as_entity_script_id())
 }
-pub fn is_entity_upright(entity: u32,
+pub fn is_entity_upright(entity: impl AsEntityScriptId,
 angle: f32) -> altv_wasm_shared::natives_result::ResultOfIsEntityUpright {
-    crate::__imports::native_is_entity_upright(entity,
+    crate::__imports::native_is_entity_upright(entity.as_entity_script_id(),
 angle)
 }
-pub fn is_entity_in_area(entity: u32,
+pub fn is_entity_in_area(entity: impl AsEntityScriptId,
 x1: f32,
 y1: f32,
 z1: f32,
@@ -3888,7 +3888,7 @@ z2: f32,
 p7: bool,
 p8: bool,
 p9: i32) -> altv_wasm_shared::natives_result::ResultOfIsEntityInArea {
-    crate::__imports::native_is_entity_in_area(entity,
+    crate::__imports::native_is_entity_in_area(entity.as_entity_script_id(),
 x1,
 y1,
 z1,
@@ -3899,60 +3899,60 @@ p7,
 p8,
 p9)
 }
-pub fn set_entity_trafficlight_override(entity: u32,
+pub fn set_entity_trafficlight_override(entity: impl AsEntityScriptId,
 state: i32) -> altv_wasm_shared::natives_result::ResultOfSetEntityTrafficlightOverride {
-    crate::__imports::native_set_entity_trafficlight_override(entity,
+    crate::__imports::native_set_entity_trafficlight_override(entity.as_entity_script_id(),
 state)
 }
-pub fn set_entity_lod_dist(entity: u32,
+pub fn set_entity_lod_dist(entity: impl AsEntityScriptId,
 value: i32) -> altv_wasm_shared::natives_result::ResultOfSetEntityLodDist {
-    crate::__imports::native_set_entity_lod_dist(entity,
+    crate::__imports::native_set_entity_lod_dist(entity.as_entity_script_id(),
 value)
 }
-pub fn get_entity_alpha(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityAlpha {
-    crate::__imports::native_get_entity_alpha(entity)
+pub fn get_entity_alpha(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityAlpha {
+    crate::__imports::native_get_entity_alpha(entity.as_entity_script_id())
 }
-pub fn get_entity_height(entity: u32,
+pub fn get_entity_height(entity: impl AsEntityScriptId,
 x: f32,
 y: f32,
 z: f32,
 at_top: bool,
 in_world_coords: bool) -> altv_wasm_shared::natives_result::ResultOfGetEntityHeight {
-    crate::__imports::native_get_entity_height(entity,
+    crate::__imports::native_get_entity_height(entity.as_entity_script_id(),
 x,
 y,
 z,
 at_top,
 in_world_coords)
 }
-pub fn set_entity_sort_bias(entity: u32,
+pub fn set_entity_sort_bias(entity: impl AsEntityScriptId,
 p1: f32) -> altv_wasm_shared::natives_result::ResultOfSetEntitySortBias {
-    crate::__imports::native_set_entity_sort_bias(entity,
+    crate::__imports::native_set_entity_sort_bias(entity.as_entity_script_id(),
 p1)
 }
-pub fn get_last_material_hit_by_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetLastMaterialHitByEntity {
-    crate::__imports::native_get_last_material_hit_by_entity(entity)
+pub fn get_last_material_hit_by_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetLastMaterialHitByEntity {
+    crate::__imports::native_get_last_material_hit_by_entity(entity.as_entity_script_id())
 }
-pub fn attach_entity_bone_to_entity_bone(entity1: u32,
-entity2: u32,
+pub fn attach_entity_bone_to_entity_bone(entity1: impl AsEntityScriptId,
+entity2: impl AsEntityScriptId,
 bone_index1: i32,
 bone_index2: i32,
 p4: bool,
 p5: bool) -> altv_wasm_shared::natives_result::ResultOfAttachEntityBoneToEntityBone {
-    crate::__imports::native_attach_entity_bone_to_entity_bone(entity1,
-entity2,
+    crate::__imports::native_attach_entity_bone_to_entity_bone(entity1.as_entity_script_id(),
+entity2.as_entity_script_id(),
 bone_index1,
 bone_index2,
 p4,
 p5)
 }
-pub fn is_entity_dead(entity: u32,
+pub fn is_entity_dead(entity: impl AsEntityScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfIsEntityDead {
-    crate::__imports::native_is_entity_dead(entity,
+    crate::__imports::native_is_entity_dead(entity.as_entity_script_id(),
 p1)
 }
-pub fn has_entity_been_damaged_by_any_ped(entity: u32) -> altv_wasm_shared::natives_result::ResultOfHasEntityBeenDamagedByAnyPed {
-    crate::__imports::native_has_entity_been_damaged_by_any_ped(entity)
+pub fn has_entity_been_damaged_by_any_ped(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfHasEntityBeenDamagedByAnyPed {
+    crate::__imports::native_has_entity_been_damaged_by_any_ped(entity.as_entity_script_id())
 }
 pub fn remove_forced_object(x: f32,
 y: f32,
@@ -3965,7 +3965,7 @@ z,
 p3,
 model_hash)
 }
-pub fn set_entity_coords_without_plants_reset(entity: u32,
+pub fn set_entity_coords_without_plants_reset(entity: impl AsEntityScriptId,
 x_pos: f32,
 y_pos: f32,
 z_pos: f32,
@@ -3973,7 +3973,7 @@ alive: bool,
 dead_flag: bool,
 ragdoll_flag: bool,
 clear_area: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityCoordsWithoutPlantsReset {
-    crate::__imports::native_set_entity_coords_without_plants_reset(entity,
+    crate::__imports::native_set_entity_coords_without_plants_reset(entity.as_entity_script_id(),
 x_pos,
 y_pos,
 z_pos,
@@ -3985,28 +3985,28 @@ clear_area)
 pub fn set_vehicle_as_no_longer_needed(vehicle: &VehicleScriptId) -> altv_wasm_shared::natives_result::ResultOfSetVehicleAsNoLongerNeeded {
     crate::__imports::native_set_vehicle_as_no_longer_needed(vehicle.0)
 }
-pub fn set_entity_cant_cause_collision_damaged_entity(entity1: u32,
-entity2: u32) -> altv_wasm_shared::natives_result::ResultOfSetEntityCantCauseCollisionDamagedEntity {
-    crate::__imports::native_set_entity_cant_cause_collision_damaged_entity(entity1,
-entity2)
+pub fn set_entity_cant_cause_collision_damaged_entity(entity1: impl AsEntityScriptId,
+entity2: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfSetEntityCantCauseCollisionDamagedEntity {
+    crate::__imports::native_set_entity_cant_cause_collision_damaged_entity(entity1.as_entity_script_id(),
+entity2.as_entity_script_id())
 }
-pub fn set_entity_requires_more_expensive_river_check(entity: u32,
+pub fn set_entity_requires_more_expensive_river_check(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityRequiresMoreExpensiveRiverCheck {
-    crate::__imports::native_set_entity_requires_more_expensive_river_check(entity,
+    crate::__imports::native_set_entity_requires_more_expensive_river_check(entity.as_entity_script_id(),
 toggle)
 }
-pub fn is_entity_a_vehicle(entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityAvehicle {
-    crate::__imports::native_is_entity_a_vehicle(entity)
+pub fn is_entity_a_vehicle(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityAvehicle {
+    crate::__imports::native_is_entity_a_vehicle(entity.as_entity_script_id())
 }
-pub fn set_entity_health(entity: u32,
+pub fn set_entity_health(entity: impl AsEntityScriptId,
 health: i32,
 p2: i32) -> altv_wasm_shared::natives_result::ResultOfSetEntityHealth {
-    crate::__imports::native_set_entity_health(entity,
+    crate::__imports::native_set_entity_health(entity.as_entity_script_id(),
 health,
 p2)
 }
-pub fn attach_entity_to_entity(entity1: u32,
-entity2: u32,
+pub fn attach_entity_to_entity(entity1: impl AsEntityScriptId,
+entity2: impl AsEntityScriptId,
 bone_index: i32,
 x_pos: f32,
 y_pos: f32,
@@ -4021,8 +4021,8 @@ is_ped: bool,
 vertex_index: i32,
 fixed_rot: bool,
 p15: i32) -> altv_wasm_shared::natives_result::ResultOfAttachEntityToEntity {
-    crate::__imports::native_attach_entity_to_entity(entity1,
-entity2,
+    crate::__imports::native_attach_entity_to_entity(entity1.as_entity_script_id(),
+entity2.as_entity_script_id(),
 bone_index,
 x_pos,
 y_pos,
@@ -4038,40 +4038,40 @@ vertex_index,
 fixed_rot,
 p15)
 }
-pub fn enable_entity_bullet_collision(entity: u32) -> altv_wasm_shared::natives_result::ResultOfEnableEntityBulletCollision {
-    crate::__imports::native_enable_entity_bullet_collision(entity)
+pub fn enable_entity_bullet_collision(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfEnableEntityBulletCollision {
+    crate::__imports::native_enable_entity_bullet_collision(entity.as_entity_script_id())
 }
-pub fn set_entity_only_damaged_by_relationship_group(entity: u32,
+pub fn set_entity_only_damaged_by_relationship_group(entity: impl AsEntityScriptId,
 p1: bool,
 p2: i32) -> altv_wasm_shared::natives_result::ResultOfSetEntityOnlyDamagedByRelationshipGroup {
-    crate::__imports::native_set_entity_only_damaged_by_relationship_group(entity,
+    crate::__imports::native_set_entity_only_damaged_by_relationship_group(entity.as_entity_script_id(),
 p1,
 p2)
 }
-pub fn get_nearest_player_to_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetNearestPlayerToEntity {
-    crate::__imports::native_get_nearest_player_to_entity(entity)
+pub fn get_nearest_player_to_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetNearestPlayerToEntity {
+    crate::__imports::native_get_nearest_player_to_entity(entity.as_entity_script_id())
 }
-pub fn does_entity_exist(entity: u32) -> altv_wasm_shared::natives_result::ResultOfDoesEntityExist {
-    crate::__imports::native_does_entity_exist(entity)
+pub fn does_entity_exist(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfDoesEntityExist {
+    crate::__imports::native_does_entity_exist(entity.as_entity_script_id())
 }
-pub fn set_entity_render_scorched(entity: u32,
+pub fn set_entity_render_scorched(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityRenderScorched {
-    crate::__imports::native_set_entity_render_scorched(entity,
+    crate::__imports::native_set_entity_render_scorched(entity.as_entity_script_id(),
 toggle)
 }
 pub fn is_an_entity(handle: u32) -> altv_wasm_shared::natives_result::ResultOfIsAnEntity {
     crate::__imports::native_is_an_entity(handle)
 }
-pub fn is_entity_at_entity(entity1: u32,
-entity2: u32,
+pub fn is_entity_at_entity(entity1: impl AsEntityScriptId,
+entity2: impl AsEntityScriptId,
 x_size: f32,
 y_size: f32,
 z_size: f32,
 p5: bool,
 p6: bool,
 p7: i32) -> altv_wasm_shared::natives_result::ResultOfIsEntityAtEntity {
-    crate::__imports::native_is_entity_at_entity(entity1,
-entity2,
+    crate::__imports::native_is_entity_at_entity(entity1.as_entity_script_id(),
+entity2.as_entity_script_id(),
 x_size,
 y_size,
 z_size,
@@ -4079,45 +4079,45 @@ p5,
 p6,
 p7)
 }
-pub fn does_entity_have_skeleton(entity: u32) -> altv_wasm_shared::natives_result::ResultOfDoesEntityHaveSkeleton {
-    crate::__imports::native_does_entity_have_skeleton(entity)
+pub fn does_entity_have_skeleton(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfDoesEntityHaveSkeleton {
+    crate::__imports::native_does_entity_have_skeleton(entity.as_entity_script_id())
 }
-pub fn set_entity_quaternion(entity: u32,
+pub fn set_entity_quaternion(entity: impl AsEntityScriptId,
 x: f32,
 y: f32,
 z: f32,
 w: f32) -> altv_wasm_shared::natives_result::ResultOfSetEntityQuaternion {
-    crate::__imports::native_set_entity_quaternion(entity,
+    crate::__imports::native_set_entity_quaternion(entity.as_entity_script_id(),
 x,
 y,
 z,
 w)
 }
-pub fn set_entity_is_in_vehicle(entity: u32) -> altv_wasm_shared::natives_result::ResultOfSetEntityIsInVehicle {
-    crate::__imports::native_set_entity_is_in_vehicle(entity)
+pub fn set_entity_is_in_vehicle(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfSetEntityIsInVehicle {
+    crate::__imports::native_set_entity_is_in_vehicle(entity.as_entity_script_id())
 }
-pub fn set_entity_only_damaged_by_player(entity: u32,
+pub fn set_entity_only_damaged_by_player(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityOnlyDamagedByPlayer {
-    crate::__imports::native_set_entity_only_damaged_by_player(entity,
+    crate::__imports::native_set_entity_only_damaged_by_player(entity.as_entity_script_id(),
 toggle)
 }
-pub fn get_entity_quaternion(entity: u32,
+pub fn get_entity_quaternion(entity: impl AsEntityScriptId,
 x: f32,
 y: f32,
 z: f32,
 w: f32) -> altv_wasm_shared::natives_result::ResultOfGetEntityQuaternion {
-    crate::__imports::native_get_entity_quaternion(entity,
+    crate::__imports::native_get_entity_quaternion(entity.as_entity_script_id(),
 x,
 y,
 z,
 w)
 }
-pub fn set_entity_lights(entity: u32,
+pub fn set_entity_lights(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityLights {
-    crate::__imports::native_set_entity_lights(entity,
+    crate::__imports::native_set_entity_lights(entity.as_entity_script_id(),
 toggle)
 }
-pub fn play_entity_anim(entity: u32,
+pub fn play_entity_anim(entity: impl AsEntityScriptId,
 anim_name: Option<&String>,
 anim_dict: Option<&String>,
 p3: f32,
@@ -4126,7 +4126,7 @@ stay_in_anim: bool,
 p6: bool,
 delta: f32,
 bitset: i32) -> altv_wasm_shared::natives_result::ResultOfPlayEntityAnim {
-    crate::__imports::native_play_entity_anim(entity,
+    crate::__imports::native_play_entity_anim(entity.as_entity_script_id(),
 anim_name,
 anim_dict,
 p3,
@@ -4136,39 +4136,39 @@ p6,
 delta,
 bitset)
 }
-pub fn get_entity_roll(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityRoll {
-    crate::__imports::native_get_entity_roll(entity)
+pub fn get_entity_roll(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityRoll {
+    crate::__imports::native_get_entity_roll(entity.as_entity_script_id())
 }
-pub fn set_entity_angular_velocity(entity: u32,
+pub fn set_entity_angular_velocity(entity: impl AsEntityScriptId,
 x: f32,
 y: f32,
 z: f32) -> altv_wasm_shared::natives_result::ResultOfSetEntityAngularVelocity {
-    crate::__imports::native_set_entity_angular_velocity(entity,
+    crate::__imports::native_set_entity_angular_velocity(entity.as_entity_script_id(),
 x,
 y,
 z)
 }
-pub fn get_entity_heading_from_eulers(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityHeadingFromEulers {
-    crate::__imports::native_get_entity_heading_from_eulers(entity)
+pub fn get_entity_heading_from_eulers(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityHeadingFromEulers {
+    crate::__imports::native_get_entity_heading_from_eulers(entity.as_entity_script_id())
 }
-pub fn set_entity_rotation(entity: u32,
+pub fn set_entity_rotation(entity: impl AsEntityScriptId,
 pitch: f32,
 roll: f32,
 yaw: f32,
 rotation_order: i32,
 p5: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityRotation {
-    crate::__imports::native_set_entity_rotation(entity,
+    crate::__imports::native_set_entity_rotation(entity.as_entity_script_id(),
 pitch,
 roll,
 yaw,
 rotation_order,
 p5)
 }
-pub fn get_entity_forward_y(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityForwardY {
-    crate::__imports::native_get_entity_forward_y(entity)
+pub fn get_entity_forward_y(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityForwardY {
+    crate::__imports::native_get_entity_forward_y(entity.as_entity_script_id())
 }
-pub fn is_entity_in_air(entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityInAir {
-    crate::__imports::native_is_entity_in_air(entity)
+pub fn is_entity_in_air(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityInAir {
+    crate::__imports::native_is_entity_in_air(entity.as_entity_script_id())
 }
 pub fn create_model_hide(x: f32,
 y: f32,
@@ -4183,21 +4183,21 @@ radius,
 model_hash,
 p5)
 }
-pub fn get_entity_type(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityType {
-    crate::__imports::native_get_entity_type(entity)
+pub fn get_entity_type(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityType {
+    crate::__imports::native_get_entity_type(entity.as_entity_script_id())
 }
-pub fn has_entity_collided_with_anything(entity: u32) -> altv_wasm_shared::natives_result::ResultOfHasEntityCollidedWithAnything {
-    crate::__imports::native_has_entity_collided_with_anything(entity)
+pub fn has_entity_collided_with_anything(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfHasEntityCollidedWithAnything {
+    crate::__imports::native_has_entity_collided_with_anything(entity.as_entity_script_id())
 }
-pub fn get_entity_forward_x(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityForwardX {
-    crate::__imports::native_get_entity_forward_x(entity)
+pub fn get_entity_forward_x(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityForwardX {
+    crate::__imports::native_get_entity_forward_x(entity.as_entity_script_id())
 }
-pub fn is_entity_an_object(entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityAnObject {
-    crate::__imports::native_is_entity_an_object(entity)
+pub fn is_entity_an_object(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityAnObject {
+    crate::__imports::native_is_entity_an_object(entity.as_entity_script_id())
 }
-pub fn set_entity_heading(entity: u32,
+pub fn set_entity_heading(entity: impl AsEntityScriptId,
 heading: f32) -> altv_wasm_shared::natives_result::ResultOfSetEntityHeading {
-    crate::__imports::native_set_entity_heading(entity,
+    crate::__imports::native_set_entity_heading(entity.as_entity_script_id(),
 heading)
 }
 pub fn create_model_swap(x: f32,
@@ -4215,101 +4215,101 @@ original_model,
 new_model,
 p6)
 }
-pub fn has_entity_been_damaged_by_any_object(entity: u32) -> altv_wasm_shared::natives_result::ResultOfHasEntityBeenDamagedByAnyObject {
-    crate::__imports::native_has_entity_been_damaged_by_any_object(entity)
+pub fn has_entity_been_damaged_by_any_object(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfHasEntityBeenDamagedByAnyObject {
+    crate::__imports::native_has_entity_been_damaged_by_any_object(entity.as_entity_script_id())
 }
-pub fn get_entity_upright_value(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityUprightValue {
-    crate::__imports::native_get_entity_upright_value(entity)
+pub fn get_entity_upright_value(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityUprightValue {
+    crate::__imports::native_get_entity_upright_value(entity.as_entity_script_id())
 }
-pub fn detach_entity(entity: u32,
+pub fn detach_entity(entity: impl AsEntityScriptId,
 dynamic: bool,
 collision: bool) -> altv_wasm_shared::natives_result::ResultOfDetachEntity {
-    crate::__imports::native_detach_entity(entity,
+    crate::__imports::native_detach_entity(entity.as_entity_script_id(),
 dynamic,
 collision)
 }
-pub fn get_entity_speed_vector(entity: u32,
+pub fn get_entity_speed_vector(entity: impl AsEntityScriptId,
 relative: bool) -> altv_wasm_shared::natives_result::ResultOfGetEntitySpeedVector {
-    crate::__imports::native_get_entity_speed_vector(entity,
+    crate::__imports::native_get_entity_speed_vector(entity.as_entity_script_id(),
 relative)
 }
-pub fn reset_entity_alpha(entity: u32) -> altv_wasm_shared::natives_result::ResultOfResetEntityAlpha {
-    crate::__imports::native_reset_entity_alpha(entity)
+pub fn reset_entity_alpha(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfResetEntityAlpha {
+    crate::__imports::native_reset_entity_alpha(entity.as_entity_script_id())
 }
-pub fn set_entity_completely_disable_collision(entity: u32,
+pub fn set_entity_completely_disable_collision(entity: impl AsEntityScriptId,
 toggle: bool,
 keep_physics: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityCompletelyDisableCollision {
-    crate::__imports::native_set_entity_completely_disable_collision(entity,
+    crate::__imports::native_set_entity_completely_disable_collision(entity.as_entity_script_id(),
 toggle,
 keep_physics)
 }
-pub fn get_entity_model(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityModel {
-    crate::__imports::native_get_entity_model(entity)
+pub fn get_entity_model(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityModel {
+    crate::__imports::native_get_entity_model(entity.as_entity_script_id())
 }
-pub fn set_entity_no_collision_entity(entity1: u32,
-entity2: u32,
+pub fn set_entity_no_collision_entity(entity1: impl AsEntityScriptId,
+entity2: impl AsEntityScriptId,
 this_frame_only: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityNoCollisionEntity {
-    crate::__imports::native_set_entity_no_collision_entity(entity1,
-entity2,
+    crate::__imports::native_set_entity_no_collision_entity(entity1.as_entity_script_id(),
+entity2.as_entity_script_id(),
 this_frame_only)
 }
-pub fn get_entity_script(entity: u32,
+pub fn get_entity_script(entity: impl AsEntityScriptId,
 script: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityScript {
-    crate::__imports::native_get_entity_script(entity,
+    crate::__imports::native_get_entity_script(entity.as_entity_script_id(),
 script)
 }
-pub fn clear_entity_last_damage_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfClearEntityLastDamageEntity {
-    crate::__imports::native_clear_entity_last_damage_entity(entity)
+pub fn clear_entity_last_damage_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfClearEntityLastDamageEntity {
+    crate::__imports::native_clear_entity_last_damage_entity(entity.as_entity_script_id())
 }
-pub fn get_last_entity_hit_by_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetLastEntityHitByEntity {
-    crate::__imports::native_get_last_entity_hit_by_entity(entity)
+pub fn get_last_entity_hit_by_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetLastEntityHitByEntity {
+    crate::__imports::native_get_last_entity_hit_by_entity(entity.as_entity_script_id())
 }
-pub fn set_can_climb_on_entity(entity: u32,
+pub fn set_can_climb_on_entity(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetCanClimbOnEntity {
-    crate::__imports::native_set_can_climb_on_entity(entity,
+    crate::__imports::native_set_can_climb_on_entity(entity.as_entity_script_id(),
 toggle)
 }
-pub fn set_entity_always_prerender(entity: u32,
+pub fn set_entity_always_prerender(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityAlwaysPrerender {
-    crate::__imports::native_set_entity_always_prerender(entity,
+    crate::__imports::native_set_entity_always_prerender(entity.as_entity_script_id(),
 toggle)
 }
-pub fn set_entity_as_mission_entity(entity: u32,
+pub fn set_entity_as_mission_entity(entity: impl AsEntityScriptId,
 p1: bool,
 p2: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityAsMissionEntity {
-    crate::__imports::native_set_entity_as_mission_entity(entity,
+    crate::__imports::native_set_entity_as_mission_entity(entity.as_entity_script_id(),
 p1,
 p2)
 }
-pub fn delete_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfDeleteEntity {
-    crate::__imports::native_delete_entity(entity)
+pub fn delete_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfDeleteEntity {
+    crate::__imports::native_delete_entity(entity.as_entity_script_id())
 }
-pub fn get_entity_rotation(entity: u32,
+pub fn get_entity_rotation(entity: impl AsEntityScriptId,
 rotation_order: i32) -> altv_wasm_shared::natives_result::ResultOfGetEntityRotation {
-    crate::__imports::native_get_entity_rotation(entity,
+    crate::__imports::native_get_entity_rotation(entity.as_entity_script_id(),
 rotation_order)
 }
-pub fn is_entity_attached_to_any_ped(entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityAttachedToAnyPed {
-    crate::__imports::native_is_entity_attached_to_any_ped(entity)
+pub fn is_entity_attached_to_any_ped(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityAttachedToAnyPed {
+    crate::__imports::native_is_entity_attached_to_any_ped(entity.as_entity_script_id())
 }
-pub fn set_entity_can_only_be_damaged_by_entity(entity1: u32,
-entity2: u32) -> altv_wasm_shared::natives_result::ResultOfSetEntityCanOnlyBeDamagedByEntity {
-    crate::__imports::native_set_entity_can_only_be_damaged_by_entity(entity1,
-entity2)
+pub fn set_entity_can_only_be_damaged_by_entity(entity1: impl AsEntityScriptId,
+entity2: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfSetEntityCanOnlyBeDamagedByEntity {
+    crate::__imports::native_set_entity_can_only_be_damaged_by_entity(entity1.as_entity_script_id(),
+entity2.as_entity_script_id())
 }
-pub fn get_entity_bone_count(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityBoneCount {
-    crate::__imports::native_get_entity_bone_count(entity)
+pub fn get_entity_bone_count(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityBoneCount {
+    crate::__imports::native_get_entity_bone_count(entity.as_entity_script_id())
 }
-pub fn is_entity_attached(entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityAttached {
-    crate::__imports::native_is_entity_attached(entity)
+pub fn is_entity_attached(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityAttached {
+    crate::__imports::native_is_entity_attached(entity.as_entity_script_id())
 }
-pub fn is_entity_in_zone(entity: u32,
+pub fn is_entity_in_zone(entity: impl AsEntityScriptId,
 zone: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfIsEntityInZone {
-    crate::__imports::native_is_entity_in_zone(entity,
+    crate::__imports::native_is_entity_in_zone(entity.as_entity_script_id(),
 zone)
 }
-pub fn set_entity_as_no_longer_needed(entity: u32) -> altv_wasm_shared::natives_result::ResultOfSetEntityAsNoLongerNeeded {
-    crate::__imports::native_set_entity_as_no_longer_needed(entity)
+pub fn set_entity_as_no_longer_needed(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfSetEntityAsNoLongerNeeded {
+    crate::__imports::native_set_entity_as_no_longer_needed(entity.as_entity_script_id())
 }
 pub fn play_synchronized_map_entity_anim(x1: f32,
 y1: f32,
@@ -4336,12 +4336,12 @@ p9,
 p10,
 p11)
 }
-pub fn get_entity_bone_object_rotation(entity: u32,
+pub fn get_entity_bone_object_rotation(entity: impl AsEntityScriptId,
 bone_index: i32) -> altv_wasm_shared::natives_result::ResultOfGetEntityBoneObjectRotation {
-    crate::__imports::native_get_entity_bone_object_rotation(entity,
+    crate::__imports::native_get_entity_bone_object_rotation(entity.as_entity_script_id(),
 bone_index)
 }
-pub fn get_entity_proofs(entity: u32,
+pub fn get_entity_proofs(entity: impl AsEntityScriptId,
 bullet_proof: bool,
 fire_proof: bool,
 explosion_proof: bool,
@@ -4350,7 +4350,7 @@ melee_proof: bool,
 steam_proof: bool,
 p7: bool,
 drown_proof: bool) -> altv_wasm_shared::natives_result::ResultOfGetEntityProofs {
-    crate::__imports::native_get_entity_proofs(entity,
+    crate::__imports::native_get_entity_proofs(entity.as_entity_script_id(),
 bullet_proof,
 fire_proof,
 explosion_proof,
@@ -4360,13 +4360,13 @@ steam_proof,
 p7,
 drown_proof)
 }
-pub fn set_entity_water_reflection_flag(entity: u32,
+pub fn set_entity_water_reflection_flag(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityWaterReflectionFlag {
-    crate::__imports::native_set_entity_water_reflection_flag(entity,
+    crate::__imports::native_set_entity_water_reflection_flag(entity.as_entity_script_id(),
 toggle)
 }
-pub fn attach_entity_to_entity_physically(entity1: u32,
-entity2: u32,
+pub fn attach_entity_to_entity_physically(entity1: impl AsEntityScriptId,
+entity2: impl AsEntityScriptId,
 bone_index1: i32,
 bone_index2: i32,
 x_pos1: f32,
@@ -4384,8 +4384,8 @@ p15: bool,
 collision: bool,
 p17: bool,
 p18: i32) -> altv_wasm_shared::natives_result::ResultOfAttachEntityToEntityPhysically {
-    crate::__imports::native_attach_entity_to_entity_physically(entity1,
-entity2,
+    crate::__imports::native_attach_entity_to_entity_physically(entity1.as_entity_script_id(),
+entity2.as_entity_script_id(),
 bone_index1,
 bone_index2,
 x_pos1,
@@ -4404,7 +4404,7 @@ collision,
 p17,
 p18)
 }
-pub fn apply_force_to_entity(entity: u32,
+pub fn apply_force_to_entity(entity: impl AsEntityScriptId,
 force_flags: i32,
 x: f32,
 y: f32,
@@ -4418,7 +4418,7 @@ ignore_up_vec: bool,
 is_force_rel: bool,
 p12: bool,
 p13: bool) -> altv_wasm_shared::natives_result::ResultOfApplyForceToEntity {
-    crate::__imports::native_apply_force_to_entity(entity,
+    crate::__imports::native_apply_force_to_entity(entity.as_entity_script_id(),
 force_flags,
 x,
 y,
@@ -4433,7 +4433,7 @@ is_force_rel,
 p12,
 p13)
 }
-pub fn play_synchronized_entity_anim(entity: u32,
+pub fn play_synchronized_entity_anim(entity: impl AsEntityScriptId,
 synced_scene: i32,
 animation: Option<&String>,
 prop_name: Option<&String>,
@@ -4441,7 +4441,7 @@ p4: f32,
 p5: f32,
 p6: i32,
 p7: f32) -> altv_wasm_shared::natives_result::ResultOfPlaySynchronizedEntityAnim {
-    crate::__imports::native_play_synchronized_entity_anim(entity,
+    crate::__imports::native_play_synchronized_entity_anim(entity.as_entity_script_id(),
 synced_scene,
 animation,
 prop_name,
@@ -4450,19 +4450,19 @@ p5,
 p6,
 p7)
 }
-pub fn has_entity_been_damaged_by_entity(entity1: u32,
-entity2: u32,
+pub fn has_entity_been_damaged_by_entity(entity1: impl AsEntityScriptId,
+entity2: impl AsEntityScriptId,
 p2: bool) -> altv_wasm_shared::natives_result::ResultOfHasEntityBeenDamagedByEntity {
-    crate::__imports::native_has_entity_been_damaged_by_entity(entity1,
-entity2,
+    crate::__imports::native_has_entity_been_damaged_by_entity(entity1.as_entity_script_id(),
+entity2.as_entity_script_id(),
 p2)
 }
-pub fn get_entity_collision_disabled(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityCollisionDisabled {
-    crate::__imports::native_get_entity_collision_disabled(entity)
+pub fn get_entity_collision_disabled(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityCollisionDisabled {
+    crate::__imports::native_get_entity_collision_disabled(entity.as_entity_script_id())
 }
-pub fn get_entity_bone_rotation(entity: u32,
+pub fn get_entity_bone_rotation(entity: impl AsEntityScriptId,
 bone_index: i32) -> altv_wasm_shared::natives_result::ResultOfGetEntityBoneRotation {
-    crate::__imports::native_get_entity_bone_rotation(entity,
+    crate::__imports::native_get_entity_bone_rotation(entity.as_entity_script_id(),
 bone_index)
 }
 pub fn set_pickup_collides_with_projectiles(p0: i32,
@@ -4470,44 +4470,44 @@ p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetPickupCollidesWithProje
     crate::__imports::native_set_pickup_collides_with_projectiles(p0,
 p1)
 }
-pub fn get_entity_bone_object_postion(entity: u32,
+pub fn get_entity_bone_object_postion(entity: impl AsEntityScriptId,
 bone_index: i32) -> altv_wasm_shared::natives_result::ResultOfGetEntityBoneObjectPostion {
-    crate::__imports::native_get_entity_bone_object_postion(entity,
+    crate::__imports::native_get_entity_bone_object_postion(entity.as_entity_script_id(),
 bone_index)
 }
-pub fn is_entity_attached_to_any_object(entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityAttachedToAnyObject {
-    crate::__imports::native_is_entity_attached_to_any_object(entity)
+pub fn is_entity_attached_to_any_object(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityAttachedToAnyObject {
+    crate::__imports::native_is_entity_attached_to_any_object(entity.as_entity_script_id())
 }
-pub fn is_entity_in_water(entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityInWater {
-    crate::__imports::native_is_entity_in_water(entity)
+pub fn is_entity_in_water(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityInWater {
+    crate::__imports::native_is_entity_in_water(entity.as_entity_script_id())
 }
-pub fn is_entity_waiting_for_world_collision(entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityWaitingForWorldCollision {
-    crate::__imports::native_is_entity_waiting_for_world_collision(entity)
+pub fn is_entity_waiting_for_world_collision(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityWaitingForWorldCollision {
+    crate::__imports::native_is_entity_waiting_for_world_collision(entity.as_entity_script_id())
 }
-pub fn set_entity_can_be_targeted_without_los(entity: u32,
+pub fn set_entity_can_be_targeted_without_los(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityCanBeTargetedWithoutLos {
-    crate::__imports::native_set_entity_can_be_targeted_without_los(entity,
+    crate::__imports::native_set_entity_can_be_targeted_without_los(entity.as_entity_script_id(),
 toggle)
 }
-pub fn get_entity_pitch(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityPitch {
-    crate::__imports::native_get_entity_pitch(entity)
+pub fn get_entity_pitch(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityPitch {
+    crate::__imports::native_get_entity_pitch(entity.as_entity_script_id())
 }
-pub fn get_entity_speed(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntitySpeed {
-    crate::__imports::native_get_entity_speed(entity)
+pub fn get_entity_speed(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntitySpeed {
+    crate::__imports::native_get_entity_speed(entity.as_entity_script_id())
 }
-pub fn is_entity_visible_to_script(entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityVisibleToScript {
-    crate::__imports::native_is_entity_visible_to_script(entity)
+pub fn is_entity_visible_to_script(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityVisibleToScript {
+    crate::__imports::native_is_entity_visible_to_script(entity.as_entity_script_id())
 }
-pub fn set_pick_up_by_cargobob_disabled(entity: u32,
+pub fn set_pick_up_by_cargobob_disabled(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetPickUpByCargobobDisabled {
-    crate::__imports::native_set_pick_up_by_cargobob_disabled(entity,
+    crate::__imports::native_set_pick_up_by_cargobob_disabled(entity.as_entity_script_id(),
 toggle)
 }
-pub fn get_object_index_from_entity_index(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetObjectIndexFromEntityIndex {
-    crate::__imports::native_get_object_index_from_entity_index(entity)
+pub fn get_object_index_from_entity_index(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetObjectIndexFromEntityIndex {
+    crate::__imports::native_get_object_index_from_entity_index(entity.as_entity_script_id())
 }
-pub fn get_entity_can_be_damaged(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityCanBeDamaged {
-    crate::__imports::native_get_entity_can_be_damaged(entity)
+pub fn get_entity_can_be_damaged(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityCanBeDamaged {
+    crate::__imports::native_get_entity_can_be_damaged(entity.as_entity_script_id())
 }
 pub fn remove_model_hide(x: f32,
 y: f32,
@@ -4522,82 +4522,82 @@ radius,
 model_hash,
 p5)
 }
-pub fn does_entity_have_physics(entity: u32) -> altv_wasm_shared::natives_result::ResultOfDoesEntityHavePhysics {
-    crate::__imports::native_does_entity_have_physics(entity)
+pub fn does_entity_have_physics(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfDoesEntityHavePhysics {
+    crate::__imports::native_does_entity_have_physics(entity.as_entity_script_id())
 }
-pub fn set_wait_for_collisions_before_probe(entity: u32,
+pub fn set_wait_for_collisions_before_probe(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetWaitForCollisionsBeforeProbe {
-    crate::__imports::native_set_wait_for_collisions_before_probe(entity,
+    crate::__imports::native_set_wait_for_collisions_before_probe(entity.as_entity_script_id(),
 toggle)
 }
-pub fn does_entity_belong_to_this_script(entity: u32,
+pub fn does_entity_belong_to_this_script(entity: impl AsEntityScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfDoesEntityBelongToThisScript {
-    crate::__imports::native_does_entity_belong_to_this_script(entity,
+    crate::__imports::native_does_entity_belong_to_this_script(entity.as_entity_script_id(),
 p1)
 }
-pub fn has_entity_been_damaged_by_any_vehicle(entity: u32) -> altv_wasm_shared::natives_result::ResultOfHasEntityBeenDamagedByAnyVehicle {
-    crate::__imports::native_has_entity_been_damaged_by_any_vehicle(entity)
+pub fn has_entity_been_damaged_by_any_vehicle(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfHasEntityBeenDamagedByAnyVehicle {
+    crate::__imports::native_has_entity_been_damaged_by_any_vehicle(entity.as_entity_script_id())
 }
-pub fn set_can_auto_vault_on_entity(entity: u32,
+pub fn set_can_auto_vault_on_entity(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetCanAutoVaultOnEntity {
-    crate::__imports::native_set_can_auto_vault_on_entity(entity,
+    crate::__imports::native_set_can_auto_vault_on_entity(entity.as_entity_script_id(),
 toggle)
 }
-pub fn set_entity_can_be_damaged_by_relationship_group(entity: u32,
+pub fn set_entity_can_be_damaged_by_relationship_group(entity: impl AsEntityScriptId,
 b_can_be_damaged: bool,
 rel_group: i32) -> altv_wasm_shared::natives_result::ResultOfSetEntityCanBeDamagedByRelationshipGroup {
-    crate::__imports::native_set_entity_can_be_damaged_by_relationship_group(entity,
+    crate::__imports::native_set_entity_can_be_damaged_by_relationship_group(entity.as_entity_script_id(),
 b_can_be_damaged,
 rel_group)
 }
-pub fn is_entity_occluded(entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityOccluded {
-    crate::__imports::native_is_entity_occluded(entity)
+pub fn is_entity_occluded(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityOccluded {
+    crate::__imports::native_is_entity_occluded(entity.as_entity_script_id())
 }
-pub fn get_collision_normal_of_last_hit_for_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetCollisionNormalOfLastHitForEntity {
-    crate::__imports::native_get_collision_normal_of_last_hit_for_entity(entity)
+pub fn get_collision_normal_of_last_hit_for_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetCollisionNormalOfLastHitForEntity {
+    crate::__imports::native_get_collision_normal_of_last_hit_for_entity(entity.as_entity_script_id())
 }
-pub fn is_entity_on_screen(entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityOnScreen {
-    crate::__imports::native_is_entity_on_screen(entity)
+pub fn is_entity_on_screen(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityOnScreen {
+    crate::__imports::native_is_entity_on_screen(entity.as_entity_script_id())
 }
-pub fn set_entity_mirror_reflection_flag(entity: u32,
+pub fn set_entity_mirror_reflection_flag(entity: impl AsEntityScriptId,
 p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityMirrorReflectionFlag {
-    crate::__imports::native_set_entity_mirror_reflection_flag(entity,
+    crate::__imports::native_set_entity_mirror_reflection_flag(entity.as_entity_script_id(),
 p1)
 }
-pub fn get_entity_submerged_level(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntitySubmergedLevel {
-    crate::__imports::native_get_entity_submerged_level(entity)
+pub fn get_entity_submerged_level(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntitySubmergedLevel {
+    crate::__imports::native_get_entity_submerged_level(entity.as_entity_script_id())
 }
-pub fn get_entity_heading(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityHeading {
-    crate::__imports::native_get_entity_heading(entity)
+pub fn get_entity_heading(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityHeading {
+    crate::__imports::native_get_entity_heading(entity.as_entity_script_id())
 }
-pub fn has_collision_loaded_around_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfHasCollisionLoadedAroundEntity {
-    crate::__imports::native_has_collision_loaded_around_entity(entity)
+pub fn has_collision_loaded_around_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfHasCollisionLoadedAroundEntity {
+    crate::__imports::native_has_collision_loaded_around_entity(entity.as_entity_script_id())
 }
-pub fn set_entity_is_target_priority(entity: u32,
+pub fn set_entity_is_target_priority(entity: impl AsEntityScriptId,
 p1: bool,
 p2: f32) -> altv_wasm_shared::natives_result::ResultOfSetEntityIsTargetPriority {
-    crate::__imports::native_set_entity_is_target_priority(entity,
+    crate::__imports::native_set_entity_is_target_priority(entity.as_entity_script_id(),
 p1,
 p2)
 }
-pub fn set_entity_visible(entity: u32,
+pub fn set_entity_visible(entity: impl AsEntityScriptId,
 toggle: bool,
 p2: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityVisible {
-    crate::__imports::native_set_entity_visible(entity,
+    crate::__imports::native_set_entity_visible(entity.as_entity_script_id(),
 toggle,
 p2)
 }
-pub fn has_anim_event_fired(entity: u32,
+pub fn has_anim_event_fired(entity: impl AsEntityScriptId,
 action_hash: u32) -> altv_wasm_shared::natives_result::ResultOfHasAnimEventFired {
-    crate::__imports::native_has_anim_event_fired(entity,
+    crate::__imports::native_has_anim_event_fired(entity.as_entity_script_id(),
 action_hash)
 }
-pub fn get_entity_matrix(entity: u32,
+pub fn get_entity_matrix(entity: impl AsEntityScriptId,
 forward_vector: Option<&shared::Vector3>,
 right_vector: Option<&shared::Vector3>,
 up_vector: Option<&shared::Vector3>,
 position: Option<&shared::Vector3>) -> altv_wasm_shared::natives_result::ResultOfGetEntityMatrix {
-    crate::__imports::native_get_entity_matrix(entity,
+    crate::__imports::native_get_entity_matrix(entity.as_entity_script_id(),
 forward_vector,
 right_vector,
 up_vector,
@@ -4614,21 +4614,21 @@ y,
 z,
 p4)
 }
-pub fn get_entity_health(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityHealth {
-    crate::__imports::native_get_entity_health(entity)
+pub fn get_entity_health(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityHealth {
+    crate::__imports::native_get_entity_health(entity.as_entity_script_id())
 }
-pub fn is_entity_attached_to_entity(from: u32,
-to: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityAttachedToEntity {
-    crate::__imports::native_is_entity_attached_to_entity(from,
-to)
+pub fn is_entity_attached_to_entity(from: impl AsEntityScriptId,
+to: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityAttachedToEntity {
+    crate::__imports::native_is_entity_attached_to_entity(from.as_entity_script_id(),
+to.as_entity_script_id())
 }
-pub fn process_entity_attachments(entity: u32) -> altv_wasm_shared::natives_result::ResultOfProcessEntityAttachments {
-    crate::__imports::native_process_entity_attachments(entity)
+pub fn process_entity_attachments(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfProcessEntityAttachments {
+    crate::__imports::native_process_entity_attachments(entity.as_entity_script_id())
 }
-pub fn get_entity_population_type(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityPopulationType {
-    crate::__imports::native_get_entity_population_type(entity)
+pub fn get_entity_population_type(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityPopulationType {
+    crate::__imports::native_get_entity_population_type(entity.as_entity_script_id())
 }
-pub fn set_entity_proofs(entity: u32,
+pub fn set_entity_proofs(entity: impl AsEntityScriptId,
 bullet_proof: bool,
 fire_proof: bool,
 explosion_proof: bool,
@@ -4637,7 +4637,7 @@ melee_proof: bool,
 steam_proof: bool,
 p7: bool,
 water_proof: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityProofs {
-    crate::__imports::native_set_entity_proofs(entity,
+    crate::__imports::native_set_entity_proofs(entity.as_entity_script_id(),
 bullet_proof,
 fire_proof,
 explosion_proof,
@@ -4647,26 +4647,26 @@ steam_proof,
 p7,
 water_proof)
 }
-pub fn get_entity_bone_index_by_name(entity: u32,
+pub fn get_entity_bone_index_by_name(entity: impl AsEntityScriptId,
 bone_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfGetEntityBoneIndexByName {
-    crate::__imports::native_get_entity_bone_index_by_name(entity,
+    crate::__imports::native_get_entity_bone_index_by_name(entity.as_entity_script_id(),
 bone_name)
 }
-pub fn has_entity_clear_los_to_entity(entity1: u32,
-entity2: u32,
+pub fn has_entity_clear_los_to_entity(entity1: impl AsEntityScriptId,
+entity2: impl AsEntityScriptId,
 trace_type: i32) -> altv_wasm_shared::natives_result::ResultOfHasEntityClearLosToEntity {
-    crate::__imports::native_has_entity_clear_los_to_entity(entity1,
-entity2,
+    crate::__imports::native_has_entity_clear_los_to_entity(entity1.as_entity_script_id(),
+entity2.as_entity_script_id(),
 trace_type)
 }
-pub fn attach_entity_bone_to_entity_bone_y_forward(entity1: u32,
-entity2: u32,
+pub fn attach_entity_bone_to_entity_bone_y_forward(entity1: impl AsEntityScriptId,
+entity2: impl AsEntityScriptId,
 bone_index1: i32,
 bone_index2: i32,
 p4: bool,
 p5: bool) -> altv_wasm_shared::natives_result::ResultOfAttachEntityBoneToEntityBoneYforward {
-    crate::__imports::native_attach_entity_bone_to_entity_bone_y_forward(entity1,
-entity2,
+    crate::__imports::native_attach_entity_bone_to_entity_bone_y_forward(entity1.as_entity_script_id(),
+entity2.as_entity_script_id(),
 bone_index1,
 bone_index2,
 p4,
@@ -4709,10 +4709,10 @@ pub fn suppress_agitation_events_next_frame() -> altv_wasm_shared::natives_resul
     crate::__imports::native_suppress_agitation_events_next_frame()
 }
 pub fn add_shocking_event_for_entity(event_type: i32,
-entity: u32,
+entity: impl AsEntityScriptId,
 duration: f32) -> altv_wasm_shared::natives_result::ResultOfAddShockingEventForEntity {
     crate::__imports::native_add_shocking_event_for_entity(event_type,
-entity,
+entity.as_entity_script_id(),
 duration)
 }
 pub fn set_decision_maker(ped: u32,
@@ -4747,11 +4747,11 @@ pub fn remove_all_shocking_events(p0: bool) -> altv_wasm_shared::natives_result:
 pub fn get_shop_ped_apparel_forced_prop_count(component_hash: u32) -> altv_wasm_shared::natives_result::ResultOfGetShopPedApparelForcedPropCount {
     crate::__imports::native_get_shop_ped_apparel_forced_prop_count(component_hash)
 }
-pub fn get_hash_name_for_component(entity: u32,
+pub fn get_hash_name_for_component(entity: impl AsEntityScriptId,
 component_id: i32,
 drawable_variant: i32,
 texture_variant: i32) -> altv_wasm_shared::natives_result::ResultOfGetHashNameForComponent {
-    crate::__imports::native_get_hash_name_for_component(entity,
+    crate::__imports::native_get_hash_name_for_component(entity.as_entity_script_id(),
 component_id,
 drawable_variant,
 texture_variant)
@@ -4837,11 +4837,11 @@ out_prop: shared::MemoryBufferId) -> altv_wasm_shared::natives_result::ResultOfG
     crate::__imports::native_get_shop_ped_prop(component_hash,
 out_prop)
 }
-pub fn get_hash_name_for_prop(entity: u32,
+pub fn get_hash_name_for_prop(entity: impl AsEntityScriptId,
 component_id: i32,
 prop_index: i32,
 prop_texture_index: i32) -> altv_wasm_shared::natives_result::ResultOfGetHashNameForProp {
-    crate::__imports::native_get_hash_name_for_prop(entity,
+    crate::__imports::native_get_hash_name_for_prop(entity.as_entity_script_id(),
 component_id,
 prop_index,
 prop_texture_index)
@@ -5052,8 +5052,8 @@ is_audible,
 is_invisible,
 camera_shake)
 }
-pub fn is_entity_on_fire(entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityOnFire {
-    crate::__imports::native_is_entity_on_fire(entity)
+pub fn is_entity_on_fire(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityOnFire {
+    crate::__imports::native_is_entity_on_fire(entity.as_entity_script_id())
 }
 pub fn is_explosion_in_area(explosion_type: i32,
 x1: f32,
@@ -5133,8 +5133,8 @@ z,
 max_children,
 is_gas_fire)
 }
-pub fn stop_entity_fire(entity: u32) -> altv_wasm_shared::natives_result::ResultOfStopEntityFire {
-    crate::__imports::native_stop_entity_fire(entity)
+pub fn stop_entity_fire(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfStopEntityFire {
+    crate::__imports::native_stop_entity_fire(entity.as_entity_script_id())
 }
 pub fn remove_script_fire(fire_handle: i32) -> altv_wasm_shared::natives_result::ResultOfRemoveScriptFire {
     crate::__imports::native_remove_script_fire(fire_handle)
@@ -5200,8 +5200,8 @@ is_invisible,
 camera_shake,
 no_damage)
 }
-pub fn start_entity_fire(entity: u32) -> altv_wasm_shared::natives_result::ResultOfStartEntityFire {
-    crate::__imports::native_start_entity_fire(entity)
+pub fn start_entity_fire(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfStartEntityFire {
+    crate::__imports::native_start_entity_fire(entity.as_entity_script_id())
 }
 pub fn create_checkpoint(r#type: i32,
 pos_x1: f32,
@@ -5243,7 +5243,7 @@ pub fn cascade_shadows_set_dynamic_depth_value(p0: f32) -> altv_wasm_shared::nat
     crate::__imports::native_cascade_shadows_set_dynamic_depth_value(p0)
 }
 pub fn start_particle_fx_non_looped_on_entity_bone(effect_name: Option<&String>,
-entity: u32,
+entity: impl AsEntityScriptId,
 offset_x: f32,
 offset_y: f32,
 offset_z: f32,
@@ -5256,7 +5256,7 @@ axis_x: bool,
 axis_y: bool,
 axis_z: bool) -> altv_wasm_shared::natives_result::ResultOfStartParticleFxNonLoopedOnEntityBone {
     crate::__imports::native_start_particle_fx_non_looped_on_entity_bone(effect_name,
-entity,
+entity.as_entity_script_id(),
 offset_x,
 offset_y,
 offset_z,
@@ -5348,7 +5348,7 @@ progress: f32) -> altv_wasm_shared::natives_result::ResultOfSetBinkMovieTime {
 progress)
 }
 pub fn start_particle_fx_non_looped_on_entity(effect_name: Option<&String>,
-entity: u32,
+entity: impl AsEntityScriptId,
 offset_x: f32,
 offset_y: f32,
 offset_z: f32,
@@ -5360,7 +5360,7 @@ axis_x: bool,
 axis_y: bool,
 axis_z: bool) -> altv_wasm_shared::natives_result::ResultOfStartParticleFxNonLoopedOnEntity {
     crate::__imports::native_start_particle_fx_non_looped_on_entity(effect_name,
-entity,
+entity.as_entity_script_id(),
 offset_x,
 offset_y,
 offset_z,
@@ -5536,7 +5536,7 @@ modifier_name2: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfAd
 modifier_name2)
 }
 pub fn start_particle_fx_looped_on_entity(effect_name: Option<&String>,
-entity: u32,
+entity: impl AsEntityScriptId,
 x_offset: f32,
 y_offset: f32,
 z_offset: f32,
@@ -5548,7 +5548,7 @@ x_axis: bool,
 y_axis: bool,
 z_axis: bool) -> altv_wasm_shared::natives_result::ResultOfStartParticleFxLoopedOnEntity {
     crate::__imports::native_start_particle_fx_looped_on_entity(effect_name,
-entity,
+entity.as_entity_script_id(),
 x_offset,
 y_offset,
 z_offset,
@@ -5625,12 +5625,12 @@ rotation_order)
 pub fn set_scaleform_movie_as_no_longer_needed(scaleform_handle: i32) -> altv_wasm_shared::natives_result::ResultOfSetScaleformMovieAsNoLongerNeeded {
     crate::__imports::native_set_scaleform_movie_as_no_longer_needed(scaleform_handle)
 }
-pub fn set_entity_icon_color(entity: u32,
+pub fn set_entity_icon_color(entity: impl AsEntityScriptId,
 red: i32,
 green: i32,
 blue: i32,
 alpha: i32) -> altv_wasm_shared::natives_result::ResultOfSetEntityIconColor {
-    crate::__imports::native_set_entity_icon_color(entity,
+    crate::__imports::native_set_entity_icon_color(entity.as_entity_script_id(),
 red,
 green,
 blue,
@@ -6397,7 +6397,7 @@ pub fn cascade_shadows_set_aircraft_mode(p0: bool) -> altv_wasm_shared::natives_
     crate::__imports::native_cascade_shadows_set_aircraft_mode(p0)
 }
 pub fn start_networked_particle_fx_looped_on_entity(effect_name: Option<&String>,
-entity: u32,
+entity: impl AsEntityScriptId,
 x_offset: f32,
 y_offset: f32,
 z_offset: f32,
@@ -6413,7 +6413,7 @@ g: f32,
 b: f32,
 a: f32) -> altv_wasm_shared::natives_result::ResultOfStartNetworkedParticleFxLoopedOnEntity {
     crate::__imports::native_start_networked_particle_fx_looped_on_entity(effect_name,
-entity,
+entity.as_entity_script_id(),
 x_offset,
 y_offset,
 z_offset,
@@ -6654,8 +6654,8 @@ pub fn abort_vehicle_crew_emblem_request(p0: i32) -> altv_wasm_shared::natives_r
 pub fn set_timecycle_modifier_strength(strength: f32) -> altv_wasm_shared::natives_result::ResultOfSetTimecycleModifierStrength {
     crate::__imports::native_set_timecycle_modifier_strength(strength)
 }
-pub fn attach_tv_audio_to_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfAttachTvAudioToEntity {
-    crate::__imports::native_attach_tv_audio_to_entity(entity)
+pub fn attach_tv_audio_to_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfAttachTvAudioToEntity {
+    crate::__imports::native_attach_tv_audio_to_entity(entity.as_entity_script_id())
 }
 pub fn move_vehicle_decals(p0: i32,
 p1: i32) -> altv_wasm_shared::natives_result::ResultOfMoveVehicleDecals {
@@ -6851,9 +6851,9 @@ z,
 range,
 p4)
 }
-pub fn add_entity_icon(entity: u32,
+pub fn add_entity_icon(entity: impl AsEntityScriptId,
 icon: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfAddEntityIcon {
-    crate::__imports::native_add_entity_icon(entity,
+    crate::__imports::native_add_entity_icon(entity.as_entity_script_id(),
 icon)
 }
 pub fn golf_trail_set_shader_params(p0: f32,
@@ -7153,8 +7153,8 @@ vertical_align: i32) -> altv_wasm_shared::natives_result::ResultOfSetScriptGfxAl
     crate::__imports::native_set_script_gfx_align(horizontal_align,
 vertical_align)
 }
-pub fn remove_particle_fx_from_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfRemoveParticleFxFromEntity {
-    crate::__imports::native_remove_particle_fx_from_entity(entity)
+pub fn remove_particle_fx_from_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfRemoveParticleFxFromEntity {
+    crate::__imports::native_remove_particle_fx_from_entity(entity.as_entity_script_id())
 }
 pub fn begin_scaleform_movie_method_on_frontend_header(method_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfBeginScaleformMovieMethodOnFrontendHeader {
     crate::__imports::native_begin_scaleform_movie_method_on_frontend_header(method_name)
@@ -7278,7 +7278,7 @@ pub fn is_decal_alive(decal: i32) -> altv_wasm_shared::natives_result::ResultOfI
     crate::__imports::native_is_decal_alive(decal)
 }
 pub fn start_particle_fx_looped_on_entity_bone(effect_name: Option<&String>,
-entity: u32,
+entity: impl AsEntityScriptId,
 x_offset: f32,
 y_offset: f32,
 z_offset: f32,
@@ -7291,7 +7291,7 @@ x_axis: bool,
 y_axis: bool,
 z_axis: bool) -> altv_wasm_shared::natives_result::ResultOfStartParticleFxLoopedOnEntityBone {
     crate::__imports::native_start_particle_fx_looped_on_entity_bone(effect_name,
-entity,
+entity.as_entity_script_id(),
 x_offset,
 y_offset,
 z_offset,
@@ -7305,7 +7305,7 @@ y_axis,
 z_axis)
 }
 pub fn start_networked_particle_fx_non_looped_on_entity(effect_name: Option<&String>,
-entity: u32,
+entity: impl AsEntityScriptId,
 offset_x: f32,
 offset_y: f32,
 offset_z: f32,
@@ -7317,7 +7317,7 @@ axis_x: bool,
 axis_y: bool,
 axis_z: bool) -> altv_wasm_shared::natives_result::ResultOfStartNetworkedParticleFxNonLoopedOnEntity {
     crate::__imports::native_start_networked_particle_fx_non_looped_on_entity(effect_name,
-entity,
+entity.as_entity_script_id(),
 offset_x,
 offset_y,
 offset_z,
@@ -7560,7 +7560,7 @@ z,
 radius)
 }
 pub fn start_networked_particle_fx_looped_on_entity_bone(effect_name: Option<&String>,
-entity: u32,
+entity: impl AsEntityScriptId,
 x_offset: f32,
 y_offset: f32,
 z_offset: f32,
@@ -7577,7 +7577,7 @@ g: f32,
 b: f32,
 a: f32) -> altv_wasm_shared::natives_result::ResultOfStartNetworkedParticleFxLoopedOnEntityBone {
     crate::__imports::native_start_networked_particle_fx_looped_on_entity_bone(effect_name,
-entity,
+entity.as_entity_script_id(),
 x_offset,
 y_offset,
 z_offset,
@@ -7597,8 +7597,8 @@ a)
 pub fn disable_screenblur_fade() -> altv_wasm_shared::natives_result::ResultOfDisableScreenblurFade {
     crate::__imports::native_disable_screenblur_fade()
 }
-pub fn update_lights_on_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfUpdateLightsOnEntity {
-    crate::__imports::native_update_lights_on_entity(entity)
+pub fn update_lights_on_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfUpdateLightsOnEntity {
+    crate::__imports::native_update_lights_on_entity(entity.as_entity_script_id())
 }
 pub fn has_scaleform_script_hud_movie_loaded(hud_component: i32) -> altv_wasm_shared::natives_result::ResultOfHasScaleformScriptHudMovieLoaded {
     crate::__imports::native_has_scaleform_script_hud_movie_loaded(hud_component)
@@ -7611,9 +7611,9 @@ p1)
 pub fn toggle_paused_renderphases(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfTogglePausedRenderphases {
     crate::__imports::native_toggle_paused_renderphases(toggle)
 }
-pub fn set_entity_icon_visibility(entity: u32,
+pub fn set_entity_icon_visibility(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityIconVisibility {
-    crate::__imports::native_set_entity_icon_visibility(entity,
+    crate::__imports::native_set_entity_icon_visibility(entity.as_entity_script_id(),
 toggle)
 }
 pub fn start_particle_fx_looped_at_coord(effect_name: Option<&String>,
@@ -8938,8 +8938,8 @@ subject,
 duration,
 clan_tag)
 }
-pub fn add_blip_for_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfAddBlipForEntity {
-    crate::__imports::native_add_blip_for_entity(entity)
+pub fn add_blip_for_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfAddBlipForEntity {
+    crate::__imports::native_add_blip_for_entity(entity.as_entity_script_id())
 }
 pub fn set_use_island_map(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetUseIslandMap {
     crate::__imports::native_set_use_island_map(toggle)
@@ -9722,11 +9722,11 @@ pub fn is_pause_menu_active() -> altv_wasm_shared::natives_result::ResultOfIsPau
     crate::__imports::native_is_pause_menu_active()
 }
 pub fn set_floating_help_text_to_entity(hud_index: i32,
-entity: u32,
+entity: impl AsEntityScriptId,
 offset_x: f32,
 offset_y: f32) -> altv_wasm_shared::natives_result::ResultOfSetFloatingHelpTextToEntity {
     crate::__imports::native_set_floating_help_text_to_entity(hud_index,
-entity,
+entity.as_entity_script_id(),
 offset_x,
 offset_y)
 }
@@ -9830,8 +9830,8 @@ pub fn end_text_command_set_blip_name(blip: i32) -> altv_wasm_shared::natives_re
 pub fn is_hud_component_active(id: i32) -> altv_wasm_shared::natives_result::ResultOfIsHudComponentActive {
     crate::__imports::native_is_hud_component_active(id)
 }
-pub fn get_blip_from_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetBlipFromEntity {
-    crate::__imports::native_get_blip_from_entity(entity)
+pub fn get_blip_from_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetBlipFromEntity {
+    crate::__imports::native_get_blip_from_entity(entity.as_entity_script_id())
 }
 pub fn set_radar_zoom_precise(zoom: f32) -> altv_wasm_shared::natives_result::ResultOfSetRadarZoomPrecise {
     crate::__imports::native_set_radar_zoom_precise(zoom)
@@ -10416,8 +10416,8 @@ y,
 z,
 interior_type)
 }
-pub fn get_interior_from_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetInteriorFromEntity {
-    crate::__imports::native_get_interior_from_entity(entity)
+pub fn get_interior_from_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetInteriorFromEntity {
+    crate::__imports::native_get_interior_from_entity(entity.as_entity_script_id())
 }
 pub fn clear_room_for_game_viewport() -> altv_wasm_shared::natives_result::ResultOfClearRoomForGameViewport {
     crate::__imports::native_clear_room_for_game_viewport()
@@ -10448,8 +10448,8 @@ p1: i32) -> altv_wasm_shared::natives_result::ResultOfForceActivatingTrackingOnE
     crate::__imports::native_force_activating_tracking_on_entity(p0,
 p1)
 }
-pub fn get_key_for_entity_in_room(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetKeyForEntityInRoom {
-    crate::__imports::native_get_key_for_entity_in_room(entity)
+pub fn get_key_for_entity_in_room(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetKeyForEntityInRoom {
+    crate::__imports::native_get_key_for_entity_in_room(entity.as_entity_script_id())
 }
 pub fn add_pickup_to_interior_room_by_name(pickup: i32,
 room_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfAddPickupToInteriorRoomByName {
@@ -10467,8 +10467,8 @@ entity_set_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfD
     crate::__imports::native_deactivate_interior_entity_set(interior,
 entity_set_name)
 }
-pub fn get_room_key_from_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetRoomKeyFromEntity {
-    crate::__imports::native_get_room_key_from_entity(entity)
+pub fn get_room_key_from_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetRoomKeyFromEntity {
+    crate::__imports::native_get_room_key_from_entity(entity.as_entity_script_id())
 }
 pub fn activate_interior_groups_using_camera() -> altv_wasm_shared::natives_result::ResultOfActivateInteriorGroupsUsingCamera {
     crate::__imports::native_activate_interior_groups_using_camera()
@@ -10479,10 +10479,10 @@ pub fn set_interior_in_use(interior: i32) -> altv_wasm_shared::natives_result::R
 pub fn enable_shadow_cull_model_this_frame(map_object_hash: u32) -> altv_wasm_shared::natives_result::ResultOfEnableShadowCullModelThisFrame {
     crate::__imports::native_enable_shadow_cull_model_this_frame(map_object_hash)
 }
-pub fn force_room_for_entity(entity: u32,
+pub fn force_room_for_entity(entity: impl AsEntityScriptId,
 interior: i32,
 room_hash_key: u32) -> altv_wasm_shared::natives_result::ResultOfForceRoomForEntity {
-    crate::__imports::native_force_room_for_entity(entity,
+    crate::__imports::native_force_room_for_entity(entity.as_entity_script_id(),
 interior,
 room_hash_key)
 }
@@ -10499,21 +10499,21 @@ toggle)
 pub fn is_interior_ready(interior: i32) -> altv_wasm_shared::natives_result::ResultOfIsInteriorReady {
     crate::__imports::native_is_interior_ready(interior)
 }
-pub fn set_is_exterior_only(entity: u32,
+pub fn set_is_exterior_only(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetIsExteriorOnly {
-    crate::__imports::native_set_is_exterior_only(entity,
+    crate::__imports::native_set_is_exterior_only(entity.as_entity_script_id(),
 toggle)
 }
 pub fn enable_stadium_probes_this_frame(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfEnableStadiumProbesThisFrame {
     crate::__imports::native_enable_stadium_probes_this_frame(toggle)
 }
-pub fn retain_entity_in_interior(entity: u32,
+pub fn retain_entity_in_interior(entity: impl AsEntityScriptId,
 interior: i32) -> altv_wasm_shared::natives_result::ResultOfRetainEntityInInterior {
-    crate::__imports::native_retain_entity_in_interior(entity,
+    crate::__imports::native_retain_entity_in_interior(entity.as_entity_script_id(),
 interior)
 }
-pub fn clear_interior_state_of_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfClearInteriorStateOfEntity {
-    crate::__imports::native_clear_interior_state_of_entity(entity)
+pub fn clear_interior_state_of_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfClearInteriorStateOfEntity {
+    crate::__imports::native_clear_interior_state_of_entity(entity.as_entity_script_id())
 }
 pub fn force_room_for_game_viewport(interior_i_d: i32,
 room_hash_key: u32) -> altv_wasm_shared::natives_result::ResultOfForceRoomForGameViewport {
@@ -10551,8 +10551,8 @@ z: f32) -> altv_wasm_shared::natives_result::ResultOfGetInteriorAtCoords {
 y,
 z)
 }
-pub fn clear_room_for_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfClearRoomForEntity {
-    crate::__imports::native_clear_room_for_entity(entity)
+pub fn clear_room_for_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfClearRoomForEntity {
+    crate::__imports::native_clear_room_for_entity(entity.as_entity_script_id())
 }
 pub fn is_interior_disabled(interior: i32) -> altv_wasm_shared::natives_result::ResultOfIsInteriorDisabled {
     crate::__imports::native_is_interior_disabled(interior)
@@ -11999,7 +11999,7 @@ check_vehicles: bool,
 check_peds: bool,
 p7: bool,
 p8: bool,
-ignore_entity: u32,
+ignore_entity: impl AsEntityScriptId,
 p10: bool) -> altv_wasm_shared::natives_result::ResultOfIsPositionOccupied {
     crate::__imports::native_is_position_occupied(x,
 y,
@@ -12010,7 +12010,7 @@ check_vehicles,
 check_peds,
 p7,
 p8,
-ignore_entity,
+ignore_entity.as_entity_script_id(),
 p10)
 }
 pub fn set_incident_requested_units(incident_id: i32,
@@ -12140,10 +12140,10 @@ owner_ped: u32,
 is_audible: bool,
 is_invisible: bool,
 speed: f32,
-entity: u32,
+entity: impl AsEntityScriptId,
 p14: bool,
 p15: bool,
-target_entity: u32,
+target_entity: impl AsEntityScriptId,
 p17: bool,
 p18: i32,
 p19: i32,
@@ -12161,10 +12161,10 @@ owner_ped,
 is_audible,
 is_invisible,
 speed,
-entity,
+entity.as_entity_script_id(),
 p14,
 p15,
-target_entity,
+target_entity.as_entity_script_id(),
 p17,
 p18,
 p19,
@@ -12433,7 +12433,7 @@ owner_ped: u32,
 is_audible: bool,
 is_invisible: bool,
 speed: f32,
-entity: u32,
+entity: impl AsEntityScriptId,
 p14: i32) -> altv_wasm_shared::natives_result::ResultOfShootSingleBulletBetweenCoordsIgnoreEntity {
     crate::__imports::native_shoot_single_bullet_between_coords_ignore_entity(x1,
 y1,
@@ -12448,7 +12448,7 @@ owner_ped,
 is_audible,
 is_invisible,
 speed,
-entity,
+entity.as_entity_script_id(),
 p14)
 }
 pub fn prevent_arrest_state_this_frame() -> altv_wasm_shared::natives_result::ResultOfPreventArrestStateThisFrame {
@@ -12738,8 +12738,8 @@ pub fn set_mobile_phone_dof_state(toggle: bool) -> altv_wasm_shared::natives_res
 pub fn destroy_mobile_phone() -> altv_wasm_shared::natives_result::ResultOfDestroyMobilePhone {
     crate::__imports::native_destroy_mobile_phone()
 }
-pub fn cell_cam_is_char_visible_no_face_check(entity: u32) -> altv_wasm_shared::natives_result::ResultOfCellCamIsCharVisibleNoFaceCheck {
-    crate::__imports::native_cell_cam_is_char_visible_no_face_check(entity)
+pub fn cell_cam_is_char_visible_no_face_check(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfCellCamIsCharVisibleNoFaceCheck {
+    crate::__imports::native_cell_cam_is_char_visible_no_face_check(entity.as_entity_script_id())
 }
 pub fn cell_horizontal_mode_toggle(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfCellHorizontalModeToggle {
     crate::__imports::native_cell_horizontal_mode_toggle(toggle)
@@ -15440,8 +15440,8 @@ time_b)
 pub fn network_get_platform_party_member_count() -> altv_wasm_shared::natives_result::ResultOfNetworkGetPlatformPartyMemberCount {
     crate::__imports::native_network_get_platform_party_member_count()
 }
-pub fn network_has_control_of_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkHasControlOfEntity {
-    crate::__imports::native_network_has_control_of_entity(entity)
+pub fn network_has_control_of_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfNetworkHasControlOfEntity {
+    crate::__imports::native_network_has_control_of_entity(entity.as_entity_script_id())
 }
 pub fn network_can_send_local_invite(gamer_handle: shared::MemoryBufferId) -> altv_wasm_shared::natives_result::ResultOfNetworkCanSendLocalInvite {
     crate::__imports::native_network_can_send_local_invite(gamer_handle)
@@ -15511,8 +15511,8 @@ pub fn network_is_signed_in() -> altv_wasm_shared::natives_result::ResultOfNetwo
 pub fn network_clear_followers() -> altv_wasm_shared::natives_result::ResultOfNetworkClearFollowers {
     crate::__imports::native_network_clear_followers()
 }
-pub fn network_register_entity_as_networked(entity: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkRegisterEntityAsNetworked {
-    crate::__imports::native_network_register_entity_as_networked(entity)
+pub fn network_register_entity_as_networked(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfNetworkRegisterEntityAsNetworked {
+    crate::__imports::native_network_register_entity_as_networked(entity.as_entity_script_id())
 }
 pub fn network_can_play_multiplayer_with_gamer(gamer_handle: shared::MemoryBufferId) -> altv_wasm_shared::natives_result::ResultOfNetworkCanPlayMultiplayerWithGamer {
     crate::__imports::native_network_can_play_multiplayer_with_gamer(gamer_handle)
@@ -15531,8 +15531,8 @@ xp_earned: i32) -> altv_wasm_shared::natives_result::ResultOfFacebookPostComplet
 cash_earned,
 xp_earned)
 }
-pub fn network_get_entity_is_local(entity: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkGetEntityIsLocal {
-    crate::__imports::native_network_get_entity_is_local(entity)
+pub fn network_get_entity_is_local(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfNetworkGetEntityIsLocal {
+    crate::__imports::native_network_get_entity_is_local(entity.as_entity_script_id())
 }
 pub fn can_register_mission_pickups(amount: i32) -> altv_wasm_shared::natives_result::ResultOfCanRegisterMissionPickups {
     crate::__imports::native_can_register_mission_pickups(amount)
@@ -15707,9 +15707,9 @@ p3)
 pub fn ugc_did_description_request_succeed(p0: i32) -> altv_wasm_shared::natives_result::ResultOfUgcDidDescriptionRequestSucceed {
     crate::__imports::native_ugc_did_description_request_succeed(p0)
 }
-pub fn network_conceal_entity(entity: u32,
+pub fn network_conceal_entity(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfNetworkConcealEntity {
-    crate::__imports::native_network_conceal_entity(entity,
+    crate::__imports::native_network_conceal_entity(entity.as_entity_script_id(),
 toggle)
 }
 pub fn network_is_connected_via_relay(player: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkIsConnectedViaRelay {
@@ -15827,10 +15827,10 @@ p1)
 pub fn network_clan_get_local_memberships_count() -> altv_wasm_shared::natives_result::ResultOfNetworkClanGetLocalMembershipsCount {
     crate::__imports::native_network_clan_get_local_memberships_count()
 }
-pub fn network_fade_in_entity(entity: u32,
+pub fn network_fade_in_entity(entity: impl AsEntityScriptId,
 state: bool,
 p2: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkFadeInEntity {
-    crate::__imports::native_network_fade_in_entity(entity,
+    crate::__imports::native_network_fade_in_entity(entity.as_entity_script_id(),
 state,
 p2)
 }
@@ -15846,8 +15846,8 @@ pub fn network_get_friend_count() -> altv_wasm_shared::natives_result::ResultOfN
 pub fn network_get_player_loudness(player: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkGetPlayerLoudness {
     crate::__imports::native_network_get_player_loudness(player)
 }
-pub fn is_entity_a_ghost(entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityAghost {
-    crate::__imports::native_is_entity_a_ghost(entity)
+pub fn is_entity_a_ghost(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityAghost {
+    crate::__imports::native_is_entity_a_ghost(entity.as_entity_script_id())
 }
 pub fn network_prevent_script_host_migration() -> altv_wasm_shared::natives_result::ResultOfNetworkPreventScriptHostMigration {
     crate::__imports::native_network_prevent_script_host_migration()
@@ -15866,8 +15866,8 @@ pub fn network_has_cached_player_head_blend_data(player: u32) -> altv_wasm_share
 pub fn network_session_was_invited() -> altv_wasm_shared::natives_result::ResultOfNetworkSessionWasInvited {
     crate::__imports::native_network_session_was_invited()
 }
-pub fn set_entity_locally_visible(entity: u32) -> altv_wasm_shared::natives_result::ResultOfSetEntityLocallyVisible {
-    crate::__imports::native_set_entity_locally_visible(entity)
+pub fn set_entity_locally_visible(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfSetEntityLocallyVisible {
+    crate::__imports::native_set_entity_locally_visible(entity.as_entity_script_id())
 }
 pub fn network_get_presence_invite_content_id(p0: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkGetPresenceInviteContentId {
     crate::__imports::native_network_get_presence_invite_content_id(p0)
@@ -15915,9 +15915,9 @@ pub fn network_set_script_controlling_teams(p0: i32) -> altv_wasm_shared::native
 pub fn delay_mp_store_open() -> altv_wasm_shared::natives_result::ResultOfDelayMpStoreOpen {
     crate::__imports::native_delay_mp_store_open()
 }
-pub fn network_allow_remote_attachment_modification(entity: u32,
+pub fn network_allow_remote_attachment_modification(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfNetworkAllowRemoteAttachmentModification {
-    crate::__imports::native_network_allow_remote_attachment_modification(entity,
+    crate::__imports::native_network_allow_remote_attachment_modification(entity.as_entity_script_id(),
 toggle)
 }
 pub fn network_get_presence_invite_session_id(p0: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkGetPresenceInviteSessionId {
@@ -16141,8 +16141,8 @@ debug_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfNetwor
 num_vars,
 debug_name)
 }
-pub fn network_get_last_vel_received_over_network(entity: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkGetLastVelReceivedOverNetwork {
-    crate::__imports::native_network_get_last_vel_received_over_network(entity)
+pub fn network_get_last_vel_received_over_network(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfNetworkGetLastVelReceivedOverNetwork {
+    crate::__imports::native_network_get_last_vel_received_over_network(entity.as_entity_script_id())
 }
 pub fn network_session_leave_single_player() -> altv_wasm_shared::natives_result::ResultOfNetworkSessionLeaveSinglePlayer {
     crate::__imports::native_network_session_leave_single_player()
@@ -16221,9 +16221,9 @@ gamer_handle_size: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkHand
 gamer_handle,
 gamer_handle_size)
 }
-pub fn network_trigger_damage_event_for_zero_weapon_hash(entity: u32,
+pub fn network_trigger_damage_event_for_zero_weapon_hash(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfNetworkTriggerDamageEventForZeroWeaponHash {
-    crate::__imports::native_network_trigger_damage_event_for_zero_weapon_hash(entity,
+    crate::__imports::native_network_trigger_damage_event_for_zero_weapon_hash(entity.as_entity_script_id(),
 toggle)
 }
 pub fn network_does_network_id_exist(net_id: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkDoesNetworkIdExist {
@@ -16318,9 +16318,9 @@ state)
 pub fn network_player_has_headset(player: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkPlayerHasHeadset {
     crate::__imports::native_network_player_has_headset(player)
 }
-pub fn network_set_no_longer_needed(entity: u32,
+pub fn network_set_no_longer_needed(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfNetworkSetNoLongerNeeded {
-    crate::__imports::native_network_set_no_longer_needed(entity,
+    crate::__imports::native_network_set_no_longer_needed(entity.as_entity_script_id(),
 toggle)
 }
 pub fn network_disable_proximity_migration(net_i_d: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkDisableProximityMigration {
@@ -16357,8 +16357,8 @@ pub fn network_can_receive_local_invite(gamer_handle: shared::MemoryBufferId) ->
 pub fn network_have_ros_leaderboard_write_priv() -> altv_wasm_shared::natives_result::ResultOfNetworkHaveRosLeaderboardWritePriv {
     crate::__imports::native_network_have_ros_leaderboard_write_priv()
 }
-pub fn network_is_entity_fading(entity: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkIsEntityFading {
-    crate::__imports::native_network_is_entity_fading(entity)
+pub fn network_is_entity_fading(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfNetworkIsEntityFading {
+    crate::__imports::native_network_is_entity_fading(entity.as_entity_script_id())
 }
 pub fn network_was_game_suspended() -> altv_wasm_shared::natives_result::ResultOfNetworkWasGameSuspended {
     crate::__imports::native_network_was_game_suspended()
@@ -16462,10 +16462,10 @@ a,
 b)
 }
 pub fn network_attach_synchronised_scene_to_entity(net_scene: i32,
-entity: u32,
+entity: impl AsEntityScriptId,
 bone: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkAttachSynchronisedSceneToEntity {
     crate::__imports::native_network_attach_synchronised_scene_to_entity(net_scene,
-entity,
+entity.as_entity_script_id(),
 bone)
 }
 pub fn network_session_set_unique_crew_limit_transition(p0: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkSessionSetUniqueCrewLimitTransition {
@@ -16524,9 +16524,9 @@ gamer_handle: shared::MemoryBufferId) -> altv_wasm_shared::natives_result::Resul
     crate::__imports::native_network_check_data_manager_for_handle(p0,
 gamer_handle)
 }
-pub fn set_entity_ghosted_for_ghost_players(entity: u32,
+pub fn set_entity_ghosted_for_ghost_players(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityGhostedForGhostPlayers {
-    crate::__imports::native_set_entity_ghosted_for_ghost_players(entity,
+    crate::__imports::native_set_entity_ghosted_for_ghost_players(entity.as_entity_script_id(),
 toggle)
 }
 pub fn network_start_respawn_search_in_angled_area_for_player(player: u32,
@@ -16564,10 +16564,10 @@ pub fn network_get_game_mode() -> altv_wasm_shared::natives_result::ResultOfNetw
     crate::__imports::native_network_get_game_mode()
 }
 pub fn network_get_assisted_damage_of_entity(player: u32,
-entity: u32,
+entity: impl AsEntityScriptId,
 p2: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkGetAssistedDamageOfEntity {
     crate::__imports::native_network_get_assisted_damage_of_entity(player,
-entity,
+entity.as_entity_script_id(),
 p2)
 }
 pub fn ugc_did_query_creators_succeed() -> altv_wasm_shared::natives_result::ResultOfUgcDidQueryCreatorsSucceed {
@@ -16863,8 +16863,8 @@ pub fn ugc_has_query_creators_finished() -> altv_wasm_shared::natives_result::Re
 pub fn network_is_player_in_mp_cutscene(player: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkIsPlayerInMpCutscene {
     crate::__imports::native_network_is_player_in_mp_cutscene(player)
 }
-pub fn network_get_last_entity_pos_received_over_network(entity: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkGetLastEntityPosReceivedOverNetwork {
-    crate::__imports::native_network_get_last_entity_pos_received_over_network(entity)
+pub fn network_get_last_entity_pos_received_over_network(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfNetworkGetLastEntityPosReceivedOverNetwork {
+    crate::__imports::native_network_get_last_entity_pos_received_over_network(entity.as_entity_script_id())
 }
 pub fn network_is_privilege_check_in_progress() -> altv_wasm_shared::natives_result::ResultOfNetworkIsPrivilegeCheckInProgress {
     crate::__imports::native_network_is_privilege_check_in_progress()
@@ -17049,12 +17049,12 @@ pub fn network_set_override_spectator_mode(toggle: bool) -> altv_wasm_shared::na
 pub fn ugc_get_content_has_player_record(p0: i32) -> altv_wasm_shared::natives_result::ResultOfUgcGetContentHasPlayerRecord {
     crate::__imports::native_ugc_get_content_has_player_record(p0)
 }
-pub fn network_is_entity_concealed(entity: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkIsEntityConcealed {
-    crate::__imports::native_network_is_entity_concealed(entity)
+pub fn network_is_entity_concealed(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfNetworkIsEntityConcealed {
+    crate::__imports::native_network_is_entity_concealed(entity.as_entity_script_id())
 }
-pub fn remove_all_sticky_bombs_from_entity(entity: u32,
+pub fn remove_all_sticky_bombs_from_entity(entity: impl AsEntityScriptId,
 ped: u32) -> altv_wasm_shared::natives_result::ResultOfRemoveAllStickyBombsFromEntity {
-    crate::__imports::native_remove_all_sticky_bombs_from_entity(entity,
+    crate::__imports::native_remove_all_sticky_bombs_from_entity(entity.as_entity_script_id(),
 ped)
 }
 pub fn fillout_pm_player_list_with_names(p0: shared::MemoryBufferId,
@@ -17120,8 +17120,8 @@ pub fn release_all_commerce_item_images() -> altv_wasm_shared::natives_result::R
 pub fn network_have_user_content_privileges(p0: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkHaveUserContentPrivileges {
     crate::__imports::native_network_have_user_content_privileges(p0)
 }
-pub fn network_unregister_networked_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkUnregisterNetworkedEntity {
-    crate::__imports::native_network_unregister_networked_entity(entity)
+pub fn network_unregister_networked_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfNetworkUnregisterNetworkedEntity {
+    crate::__imports::native_network_unregister_networked_entity(entity.as_entity_script_id())
 }
 pub fn network_get_transition_members(data: shared::MemoryBufferId,
 data_count: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkGetTransitionMembers {
@@ -17289,8 +17289,8 @@ pub fn network_is_inactive_profile(p0: shared::MemoryBufferId) -> altv_wasm_shar
 pub fn network_can_enter_multiplayer() -> altv_wasm_shared::natives_result::ResultOfNetworkCanEnterMultiplayer {
     crate::__imports::native_network_can_enter_multiplayer()
 }
-pub fn is_entity_in_ghost_collision(entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityInGhostCollision {
-    crate::__imports::native_is_entity_in_ghost_collision(entity)
+pub fn is_entity_in_ghost_collision(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityInGhostCollision {
+    crate::__imports::native_is_entity_in_ghost_collision(entity.as_entity_script_id())
 }
 pub fn network_add_invalid_object_model(model_hash: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkAddInvalidObjectModel {
     crate::__imports::native_network_add_invalid_object_model(model_hash)
@@ -17328,8 +17328,8 @@ content_type_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultO
     crate::__imports::native_ugc_get_get_by_content_id(content_id,
 content_type_name)
 }
-pub fn network_entity_get_object_id(entity: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkEntityGetObjectId {
-    crate::__imports::native_network_entity_get_object_id(entity)
+pub fn network_entity_get_object_id(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfNetworkEntityGetObjectId {
+    crate::__imports::native_network_entity_get_object_id(entity.as_entity_script_id())
 }
 pub fn network_get_player_owns_waypoint(player: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkGetPlayerOwnsWaypoint {
     crate::__imports::native_network_get_player_owns_waypoint(player)
@@ -17341,10 +17341,10 @@ pub fn network_should_show_strict_nat_warning() -> altv_wasm_shared::natives_res
     crate::__imports::native_network_should_show_strict_nat_warning()
 }
 pub fn network_get_assisted_kill_of_entity(player: u32,
-entity: u32,
+entity: impl AsEntityScriptId,
 p2: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkGetAssistedKillOfEntity {
     crate::__imports::native_network_get_assisted_kill_of_entity(player,
-entity,
+entity.as_entity_script_id(),
 p2)
 }
 pub fn set_network_enable_high_speed_edge_fall_detection(vehicle: &VehicleScriptId,
@@ -17414,9 +17414,9 @@ pub fn get_is_launch_from_live_area() -> altv_wasm_shared::natives_result::Resul
 pub fn get_network_time_accurate() -> altv_wasm_shared::natives_result::ResultOfGetNetworkTimeAccurate {
     crate::__imports::native_get_network_time_accurate()
 }
-pub fn network_trigger_damage_event_for_zero_damage(entity: u32,
+pub fn network_trigger_damage_event_for_zero_damage(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfNetworkTriggerDamageEventForZeroDamage {
-    crate::__imports::native_network_trigger_damage_event_for_zero_damage(entity,
+    crate::__imports::native_network_trigger_damage_event_for_zero_damage(entity.as_entity_script_id(),
 toggle)
 }
 pub fn network_is_local_player_invincible() -> altv_wasm_shared::natives_result::ResultOfNetworkIsLocalPlayerInvincible {
@@ -17782,8 +17782,8 @@ gamer_handle_size: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkHand
 gamer_handle,
 gamer_handle_size)
 }
-pub fn network_get_network_id_from_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkGetNetworkIdFromEntity {
-    crate::__imports::native_network_get_network_id_from_entity(entity)
+pub fn network_get_network_id_from_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfNetworkGetNetworkIdFromEntity {
+    crate::__imports::native_network_get_network_id_from_entity(entity.as_entity_script_id())
 }
 pub fn trigger_tuning_crc_hacker_check(player: u32,
 p1: Option<&String>,
@@ -17918,12 +17918,12 @@ p1: bool) -> altv_wasm_shared::natives_result::ResultOfSetRemotePlayerAsGhost {
     crate::__imports::native_set_remote_player_as_ghost(player,
 p1)
 }
-pub fn network_override_coords_and_heading(entity: u32,
+pub fn network_override_coords_and_heading(entity: impl AsEntityScriptId,
 x: f32,
 y: f32,
 z: f32,
 heading: f32) -> altv_wasm_shared::natives_result::ResultOfNetworkOverrideCoordsAndHeading {
-    crate::__imports::native_network_override_coords_and_heading(entity,
+    crate::__imports::native_network_override_coords_and_heading(entity.as_entity_script_id(),
 x,
 y,
 z,
@@ -17945,8 +17945,8 @@ pub fn ugc_get_content_is_verified(p0: i32) -> altv_wasm_shared::natives_result:
 pub fn network_clan_download_membership(gamer_handle: shared::MemoryBufferId) -> altv_wasm_shared::natives_result::ResultOfNetworkClanDownloadMembership {
     crate::__imports::native_network_clan_download_membership(gamer_handle)
 }
-pub fn network_get_predicted_velocity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkGetPredictedVelocity {
-    crate::__imports::native_network_get_predicted_velocity(entity)
+pub fn network_get_predicted_velocity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfNetworkGetPredictedVelocity {
+    crate::__imports::native_network_get_predicted_velocity(entity.as_entity_script_id())
 }
 pub fn network_access_tunable_bool(tunable_context: Option<&String>,
 tunable_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfNetworkAccessTunableBool {
@@ -18014,8 +18014,8 @@ pub fn network_get_max_friends() -> altv_wasm_shared::natives_result::ResultOfNe
 pub fn network_gamertag_from_handle_pending() -> altv_wasm_shared::natives_result::ResultOfNetworkGamertagFromHandlePending {
     crate::__imports::native_network_gamertag_from_handle_pending()
 }
-pub fn network_has_entity_been_registered_with_this_thread(entity: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkHasEntityBeenRegisteredWithThisThread {
-    crate::__imports::native_network_has_entity_been_registered_with_this_thread(entity)
+pub fn network_has_entity_been_registered_with_this_thread(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfNetworkHasEntityBeenRegisteredWithThisThread {
+    crate::__imports::native_network_has_entity_been_registered_with_this_thread(entity.as_entity_script_id())
 }
 pub fn network_clan_player_is_active(gamer_handle: shared::MemoryBufferId) -> altv_wasm_shared::natives_result::ResultOfNetworkClanPlayerIsActive {
     crate::__imports::native_network_clan_player_is_active(gamer_handle)
@@ -18061,8 +18061,8 @@ pub fn trigger_commerce_data_fetch(p0: i32) -> altv_wasm_shared::natives_result:
 pub fn reserve_network_mission_peds(amount: i32) -> altv_wasm_shared::natives_result::ResultOfReserveNetworkMissionPeds {
     crate::__imports::native_reserve_network_mission_peds(amount)
 }
-pub fn network_request_control_of_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkRequestControlOfEntity {
-    crate::__imports::native_network_request_control_of_entity(entity)
+pub fn network_request_control_of_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfNetworkRequestControlOfEntity {
+    crate::__imports::native_network_request_control_of_entity(entity.as_entity_script_id())
 }
 pub fn ugc_get_creators_by_user_id(p0: shared::MemoryBufferId,
 p1: shared::MemoryBufferId) -> altv_wasm_shared::natives_result::ResultOfUgcGetCreatorsByUserId {
@@ -18240,9 +18240,9 @@ p3)
 pub fn network_has_confirmed_invite() -> altv_wasm_shared::natives_result::ResultOfNetworkHasConfirmedInvite {
     crate::__imports::native_network_has_confirmed_invite()
 }
-pub fn network_get_destroyer_of_entity(entity: u32,
+pub fn network_get_destroyer_of_entity(entity: impl AsEntityScriptId,
 weapon_hash: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkGetDestroyerOfEntity {
-    crate::__imports::native_network_get_destroyer_of_entity(entity,
+    crate::__imports::native_network_get_destroyer_of_entity(entity.as_entity_script_id(),
 weapon_hash)
 }
 pub fn network_disable_leave_remote_ped_behind(toggle: bool) -> altv_wasm_shared::natives_result::ResultOfNetworkDisableLeaveRemotePedBehind {
@@ -18282,8 +18282,8 @@ default_value)
 pub fn network_session_host_single_player(p0: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkSessionHostSinglePlayer {
     crate::__imports::native_network_session_host_single_player(p0)
 }
-pub fn network_get_entity_is_networked(entity: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkGetEntityIsNetworked {
-    crate::__imports::native_network_get_entity_is_networked(entity)
+pub fn network_get_entity_is_networked(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfNetworkGetEntityIsNetworked {
+    crate::__imports::native_network_get_entity_is_networked(entity.as_entity_script_id())
 }
 pub fn cloud_is_checking_availability() -> altv_wasm_shared::natives_result::ResultOfCloudIsCheckingAvailability {
     crate::__imports::native_cloud_is_checking_availability()
@@ -18361,8 +18361,8 @@ pub fn network_has_view_gamer_user_content_result(gamer_handle: shared::MemoryBu
 pub fn ugc_get_content_user_id(p0: i32) -> altv_wasm_shared::natives_result::ResultOfUgcGetContentUserId {
     crate::__imports::native_ugc_get_content_user_id(p0)
 }
-pub fn network_use_logarithmic_blending_this_frame(entity: u32) -> altv_wasm_shared::natives_result::ResultOfNetworkUseLogarithmicBlendingThisFrame {
-    crate::__imports::native_network_use_logarithmic_blending_this_frame(entity)
+pub fn network_use_logarithmic_blending_this_frame(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfNetworkUseLogarithmicBlendingThisFrame {
+    crate::__imports::native_network_use_logarithmic_blending_this_frame(entity.as_entity_script_id())
 }
 pub fn network_get_entity_from_network_id(net_id: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkGetEntityFromNetworkId {
     crate::__imports::native_network_get_entity_from_network_id(net_id)
@@ -18507,9 +18507,9 @@ p1,
 p2,
 p3)
 }
-pub fn network_set_entity_can_blend(entity: u32,
+pub fn network_set_entity_can_blend(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfNetworkSetEntityCanBlend {
-    crate::__imports::native_network_set_entity_can_blend(entity,
+    crate::__imports::native_network_set_entity_can_blend(entity.as_entity_script_id(),
 toggle)
 }
 pub fn network_is_session_active() -> altv_wasm_shared::natives_result::ResultOfNetworkIsSessionActive {
@@ -18577,10 +18577,10 @@ time_b: i32) -> altv_wasm_shared::natives_result::ResultOfIsTimeMoreThan {
     crate::__imports::native_is_time_more_than(time_a,
 time_b)
 }
-pub fn network_fade_out_entity(entity: u32,
+pub fn network_fade_out_entity(entity: impl AsEntityScriptId,
 normal: bool,
 slow: bool) -> altv_wasm_shared::natives_result::ResultOfNetworkFadeOutEntity {
-    crate::__imports::native_network_fade_out_entity(entity,
+    crate::__imports::native_network_fade_out_entity(entity.as_entity_script_id(),
 normal,
 slow)
 }
@@ -18620,8 +18620,8 @@ pub fn ugc_get_content_num() -> altv_wasm_shared::natives_result::ResultOfUgcGet
 pub fn network_get_friend_name(friend_index: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkGetFriendName {
     crate::__imports::native_network_get_friend_name(friend_index)
 }
-pub fn set_entity_locally_invisible(entity: u32) -> altv_wasm_shared::natives_result::ResultOfSetEntityLocallyInvisible {
-    crate::__imports::native_set_entity_locally_invisible(entity)
+pub fn set_entity_locally_invisible(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfSetEntityLocallyInvisible {
+    crate::__imports::native_set_entity_locally_invisible(entity.as_entity_script_id())
 }
 pub fn can_register_mission_doors(p0: i32) -> altv_wasm_shared::natives_result::ResultOfCanRegisterMissionDoors {
     crate::__imports::native_can_register_mission_doors(p0)
@@ -18830,22 +18830,22 @@ pub fn get_cloud_time_as_string() -> altv_wasm_shared::natives_result::ResultOfG
 pub fn network_seed_random_number_generator(seed: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkSeedRandomNumberGenerator {
     crate::__imports::native_network_seed_random_number_generator(seed)
 }
-pub fn network_set_entity_only_exists_for_participants(entity: u32,
+pub fn network_set_entity_only_exists_for_participants(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfNetworkSetEntityOnlyExistsForParticipants {
-    crate::__imports::native_network_set_entity_only_exists_for_participants(entity,
+    crate::__imports::native_network_set_entity_only_exists_for_participants(entity.as_entity_script_id(),
 toggle)
 }
 pub fn network_session_set_matchmaking_mental_state(p0: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkSessionSetMatchmakingMentalState {
     crate::__imports::native_network_session_set_matchmaking_mental_state(p0)
 }
-pub fn network_add_entity_to_synchronised_scene(entity: u32,
+pub fn network_add_entity_to_synchronised_scene(entity: impl AsEntityScriptId,
 net_scene: i32,
 anim_dict: Option<&String>,
 anim_name: Option<&String>,
 speed: f32,
 speed_mulitiplier: f32,
 flag: i32) -> altv_wasm_shared::natives_result::ResultOfNetworkAddEntityToSynchronisedScene {
-    crate::__imports::native_network_add_entity_to_synchronised_scene(entity,
+    crate::__imports::native_network_add_entity_to_synchronised_scene(entity.as_entity_script_id(),
 net_scene,
 anim_dict,
 anim_name,
@@ -19232,11 +19232,11 @@ z,
 color_index)
 }
 pub fn is_object_entirely_inside_garage(garage_hash: u32,
-entity: u32,
+entity: impl AsEntityScriptId,
 p2: f32,
 p3: i32) -> altv_wasm_shared::natives_result::ResultOfIsObjectEntirelyInsideGarage {
     crate::__imports::native_is_object_entirely_inside_garage(garage_hash,
-entity,
+entity.as_entity_script_id(),
 p2,
 p3)
 }
@@ -19400,9 +19400,9 @@ toggle)
 pub fn set_object_glow_in_same_team(pickup: i32) -> altv_wasm_shared::natives_result::ResultOfSetObjectGlowInSameTeam {
     crate::__imports::native_set_object_glow_in_same_team(pickup)
 }
-pub fn set_projectiles_should_explode_on_contact(entity: u32,
+pub fn set_projectiles_should_explode_on_contact(entity: impl AsEntityScriptId,
 p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetProjectilesShouldExplodeOnContact {
-    crate::__imports::native_set_projectiles_should_explode_on_contact(entity,
+    crate::__imports::native_set_projectiles_should_explode_on_contact(entity.as_entity_script_id(),
 p1)
 }
 pub fn allow_portable_pickup_to_migrate_to_non_participants(pickup: i32,
@@ -19877,9 +19877,9 @@ pub fn open_all_barriers_for_race(p0: bool) -> altv_wasm_shared::natives_result:
 pub fn detach_portable_pickup_from_ped(pickup_object: u32) -> altv_wasm_shared::natives_result::ResultOfDetachPortablePickupFromPed {
     crate::__imports::native_detach_portable_pickup_from_ped(pickup_object)
 }
-pub fn set_entity_flag_suppress_shadow(entity: u32,
+pub fn set_entity_flag_suppress_shadow(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetEntityFlagSuppressShadow {
-    crate::__imports::native_set_entity_flag_suppress_shadow(entity,
+    crate::__imports::native_set_entity_flag_suppress_shadow(entity.as_entity_script_id(),
 toggle)
 }
 pub fn add_extended_pickup_probe_area(x: f32,
@@ -19977,10 +19977,10 @@ locked,
 heading)
 }
 pub fn is_object_partially_inside_garage(garage_hash: u32,
-entity: u32,
+entity: impl AsEntityScriptId,
 p2: i32) -> altv_wasm_shared::natives_result::ResultOfIsObjectPartiallyInsideGarage {
     crate::__imports::native_is_object_partially_inside_garage(garage_hash,
-entity,
+entity.as_entity_script_id(),
 p2)
 }
 pub fn set_tint_index_closest_building_of_type(x: f32,
@@ -21325,10 +21325,10 @@ prop_index,
 p2)
 }
 pub fn attach_synchronized_scene_to_entity(scene_i_d: i32,
-entity: u32,
+entity: impl AsEntityScriptId,
 bone_index: i32) -> altv_wasm_shared::natives_result::ResultOfAttachSynchronizedSceneToEntity {
     crate::__imports::native_attach_synchronized_scene_to_entity(scene_i_d,
-entity,
+entity.as_entity_script_id(),
 bone_index)
 }
 pub fn set_corpse_ragdoll_friction(ped: u32,
@@ -21693,9 +21693,9 @@ p3,
 p4)
 }
 pub fn is_ped_evasive_diving(ped: u32,
-evading_entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsPedEvasiveDiving {
+evading_entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsPedEvasiveDiving {
     crate::__imports::native_is_ped_evasive_diving(ped,
-evading_entity)
+evading_entity.as_entity_script_id())
 }
 pub fn create_nm_message(start_immediately: bool,
 message_id: i32) -> altv_wasm_shared::natives_result::ResultOfCreateNmMessage {
@@ -22524,9 +22524,9 @@ pub fn clear_ped_fall_upper_body_clipset_override(ped: u32) -> altv_wasm_shared:
     crate::__imports::native_clear_ped_fall_upper_body_clipset_override(ped)
 }
 pub fn is_ped_headtracking_entity(ped: u32,
-entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsPedHeadtrackingEntity {
+entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsPedHeadtrackingEntity {
     crate::__imports::native_is_ped_headtracking_entity(ped,
-entity)
+entity.as_entity_script_id())
 }
 pub fn get_vehicle_ped_is_trying_to_enter(ped: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehiclePedIsTryingToEnter {
     crate::__imports::native_get_vehicle_ped_is_trying_to_enter(ped)
@@ -23368,7 +23368,7 @@ pub fn is_ped_gesturing(p0: i32) -> altv_wasm_shared::natives_result::ResultOfIs
 }
 pub fn set_ik_target(ped: u32,
 ik_index: i32,
-entity_look_at: u32,
+entity_look_at: impl AsEntityScriptId,
 bone_look_at: i32,
 offset_x: f32,
 offset_y: f32,
@@ -23378,7 +23378,7 @@ blend_in_duration: i32,
 blend_out_duration: i32) -> altv_wasm_shared::natives_result::ResultOfSetIkTarget {
     crate::__imports::native_set_ik_target(ped,
 ik_index,
-entity_look_at,
+entity_look_at.as_entity_script_id(),
 bone_look_at,
 offset_x,
 offset_y,
@@ -24239,9 +24239,9 @@ pub fn get_is_entity_a_frag(object: u32) -> altv_wasm_shared::natives_result::Re
 pub fn start_rope_winding(rope_id: i32) -> altv_wasm_shared::natives_result::ResultOfStartRopeWinding {
     crate::__imports::native_start_rope_winding(rope_id)
 }
-pub fn set_use_kinematic_physics(entity: u32,
+pub fn set_use_kinematic_physics(entity: impl AsEntityScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetUseKinematicPhysics {
-    crate::__imports::native_set_use_kinematic_physics(entity,
+    crate::__imports::native_set_use_kinematic_physics(entity.as_entity_script_id(),
 toggle)
 }
 pub fn get_rope_last_vertex_coord(rope_id: i32) -> altv_wasm_shared::natives_result::ResultOfGetRopeLastVertexCoord {
@@ -24261,7 +24261,7 @@ x,
 y,
 z)
 }
-pub fn break_entity_glass(entity: u32,
+pub fn break_entity_glass(entity: impl AsEntityScriptId,
 p1: f32,
 p2: f32,
 p3: f32,
@@ -24272,7 +24272,7 @@ p7: f32,
 p8: f32,
 p9: i32,
 p10: bool) -> altv_wasm_shared::natives_result::ResultOfBreakEntityGlass {
-    crate::__imports::native_break_entity_glass(entity,
+    crate::__imports::native_break_entity_glass(entity.as_entity_script_id(),
 p1,
 p2,
 p3,
@@ -24293,8 +24293,8 @@ p1: bool) -> altv_wasm_shared::natives_result::ResultOfRopeSetSmoothReelin {
 p1)
 }
 pub fn attach_entities_to_rope(rope_id: i32,
-ent1: u32,
-ent2: u32,
+ent1: impl AsEntityScriptId,
+ent2: impl AsEntityScriptId,
 ent1_x: f32,
 ent1_y: f32,
 ent1_z: f32,
@@ -24307,8 +24307,8 @@ p11: bool,
 p12: shared::MemoryBufferId,
 p13: shared::MemoryBufferId) -> altv_wasm_shared::natives_result::ResultOfAttachEntitiesToRope {
     crate::__imports::native_attach_entities_to_rope(rope_id,
-ent1,
-ent2,
+ent1.as_entity_script_id(),
+ent2.as_entity_script_id(),
 ent1_x,
 ent1_y,
 ent1_z,
@@ -24322,13 +24322,13 @@ p12,
 p13)
 }
 pub fn attach_rope_to_entity(rope_id: i32,
-entity: u32,
+entity: impl AsEntityScriptId,
 x: f32,
 y: f32,
 z: f32,
 p5: bool) -> altv_wasm_shared::natives_result::ResultOfAttachRopeToEntity {
     crate::__imports::native_attach_rope_to_entity(rope_id,
-entity,
+entity.as_entity_script_id(),
 x,
 y,
 z,
@@ -24356,14 +24356,14 @@ toggle)
 pub fn rope_unload_textures() -> altv_wasm_shared::natives_result::ResultOfRopeUnloadTextures {
     crate::__imports::native_rope_unload_textures()
 }
-pub fn activate_physics(entity: u32) -> altv_wasm_shared::natives_result::ResultOfActivatePhysics {
-    crate::__imports::native_activate_physics(entity)
+pub fn activate_physics(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfActivatePhysics {
+    crate::__imports::native_activate_physics(entity.as_entity_script_id())
 }
 pub fn rope_get_distance_between_ends(rope_id: i32) -> altv_wasm_shared::natives_result::ResultOfRopeGetDistanceBetweenEnds {
     crate::__imports::native_rope_get_distance_between_ends(rope_id)
 }
-pub fn get_cgoffset(entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetCgoffset {
-    crate::__imports::native_get_cgoffset(entity)
+pub fn get_cgoffset(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetCgoffset {
+    crate::__imports::native_get_cgoffset(entity.as_entity_script_id())
 }
 pub fn is_rope_attached_at_both_ends(rope_id: i32) -> altv_wasm_shared::natives_result::ResultOfIsRopeAttachedAtBothEnds {
     crate::__imports::native_is_rope_attached_at_both_ends(rope_id)
@@ -24427,12 +24427,12 @@ p12,
 p13)
 }
 pub fn detach_rope_from_entity(rope_id: i32,
-entity: u32) -> altv_wasm_shared::natives_result::ResultOfDetachRopeFromEntity {
+entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfDetachRopeFromEntity {
     crate::__imports::native_detach_rope_from_entity(rope_id,
-entity)
+entity.as_entity_script_id())
 }
-pub fn set_cg_at_boundcenter(entity: u32) -> altv_wasm_shared::natives_result::ResultOfSetCgAtBoundcenter {
-    crate::__imports::native_set_cg_at_boundcenter(entity)
+pub fn set_cg_at_boundcenter(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfSetCgAtBoundcenter {
+    crate::__imports::native_set_cg_at_boundcenter(entity.as_entity_script_id())
 }
 pub fn rope_reset_length(rope_id: i32,
 length: f32) -> altv_wasm_shared::natives_result::ResultOfRopeResetLength {
@@ -24458,11 +24458,11 @@ length: f32) -> altv_wasm_shared::natives_result::ResultOfRopeForceLength {
     crate::__imports::native_rope_force_length(rope_id,
 length)
 }
-pub fn set_cgoffset(entity: u32,
+pub fn set_cgoffset(entity: impl AsEntityScriptId,
 x: f32,
 y: f32,
 z: f32) -> altv_wasm_shared::natives_result::ResultOfSetCgoffset {
-    crate::__imports::native_set_cgoffset(entity,
+    crate::__imports::native_set_cgoffset(entity.as_entity_script_id(),
 x,
 y,
 z)
@@ -24527,10 +24527,10 @@ vertex: i32) -> altv_wasm_shared::natives_result::ResultOfGetRopeVertexCoord {
     crate::__imports::native_get_rope_vertex_coord(rope_id,
 vertex)
 }
-pub fn set_damping(entity: u32,
+pub fn set_damping(entity: impl AsEntityScriptId,
 vertex: i32,
 value: f32) -> altv_wasm_shared::natives_result::ResultOfSetDamping {
-    crate::__imports::native_set_damping(entity,
+    crate::__imports::native_set_damping(entity.as_entity_script_id(),
 vertex,
 value)
 }
@@ -24620,9 +24620,9 @@ flags: i32) -> altv_wasm_shared::natives_result::ResultOfSetPlayerPhonePaletteId
 flags)
 }
 pub fn get_player_target_entity(player: u32,
-entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetPlayerTargetEntity {
+entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetPlayerTargetEntity {
     crate::__imports::native_get_player_target_entity(player,
-entity)
+entity.as_entity_script_id())
 }
 pub fn set_player_cloth_lock_counter(value: i32) -> altv_wasm_shared::natives_result::ResultOfSetPlayerClothLockCounter {
     crate::__imports::native_set_player_cloth_lock_counter(value)
@@ -24689,9 +24689,9 @@ pub fn clear_player_reserve_parachute_model_override(player: u32) -> altv_wasm_s
     crate::__imports::native_clear_player_reserve_parachute_model_override(player)
 }
 pub fn get_entity_player_is_free_aiming_at(player: u32,
-entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetEntityPlayerIsFreeAimingAt {
+entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetEntityPlayerIsFreeAimingAt {
     crate::__imports::native_get_entity_player_is_free_aiming_at(player,
-entity)
+entity.as_entity_script_id())
 }
 pub fn set_player_lockon_range_override(player: u32,
 range: f32) -> altv_wasm_shared::natives_result::ResultOfSetPlayerLockonRangeOverride {
@@ -24781,9 +24781,9 @@ wanted_level,
 disable_no_mission)
 }
 pub fn is_player_free_aiming_at_entity(player: u32,
-entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsPlayerFreeAimingAtEntity {
+entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsPlayerFreeAimingAtEntity {
     crate::__imports::native_is_player_free_aiming_at_entity(player,
-entity)
+entity.as_entity_script_id())
 }
 pub fn give_player_ragdoll_control(player: u32,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfGivePlayerRagdollControl {
@@ -25040,9 +25040,9 @@ pub fn is_player_targetting_anything(player: u32) -> altv_wasm_shared::natives_r
     crate::__imports::native_is_player_targetting_anything(player)
 }
 pub fn is_player_targetting_entity(player: u32,
-entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsPlayerTargettingEntity {
+entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsPlayerTargettingEntity {
     crate::__imports::native_is_player_targetting_entity(player,
-entity)
+entity.as_entity_script_id())
 }
 pub fn set_player_previous_variation_data(player: u32,
 p1: i32,
@@ -25124,9 +25124,9 @@ pub fn is_player_ready_for_cutscene(player: u32) -> altv_wasm_shared::natives_re
     crate::__imports::native_is_player_ready_for_cutscene(player)
 }
 pub fn add_player_targetable_entity(player: u32,
-entity: u32) -> altv_wasm_shared::natives_result::ResultOfAddPlayerTargetableEntity {
+entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfAddPlayerTargetableEntity {
     crate::__imports::native_add_player_targetable_entity(player,
-entity)
+entity.as_entity_script_id())
 }
 pub fn get_player_max_armour(player: u32) -> altv_wasm_shared::natives_result::ResultOfGetPlayerMaxArmour {
     crate::__imports::native_get_player_max_armour(player)
@@ -25172,9 +25172,9 @@ pub fn increase_player_jump_suppression_range(player: u32) -> altv_wasm_shared::
     crate::__imports::native_increase_player_jump_suppression_range(player)
 }
 pub fn remove_player_targetable_entity(player: u32,
-entity: u32) -> altv_wasm_shared::natives_result::ResultOfRemovePlayerTargetableEntity {
+entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfRemovePlayerTargetableEntity {
     crate::__imports::native_remove_player_targetable_entity(player,
-entity)
+entity.as_entity_script_id())
 }
 pub fn set_auto_give_parachute_when_enter_plane(player: u32,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetAutoGiveParachuteWhenEnterPlane {
@@ -25911,10 +25911,10 @@ pub fn register_script_variable(unk_variable: shared::MemoryBufferId) -> altv_wa
 pub fn force_check_script_variables() -> altv_wasm_shared::natives_result::ResultOfForceCheckScriptVariables {
     crate::__imports::native_force_check_script_variables()
 }
-pub fn start_shape_test_bounding_box(entity: u32,
+pub fn start_shape_test_bounding_box(entity: impl AsEntityScriptId,
 flags1: i32,
 flags2: i32) -> altv_wasm_shared::natives_result::ResultOfStartShapeTestBoundingBox {
-    crate::__imports::native_start_shape_test_bounding_box(entity,
+    crate::__imports::native_start_shape_test_bounding_box(entity.as_entity_script_id(),
 flags1,
 flags2)
 }
@@ -25926,7 +25926,7 @@ y2: f32,
 z2: f32,
 radius: f32,
 flags: i32,
-entity: u32,
+entity: impl AsEntityScriptId,
 p9: i32) -> altv_wasm_shared::natives_result::ResultOfStartShapeTestCapsule {
     crate::__imports::native_start_shape_test_capsule(x1,
 y1,
@@ -25936,16 +25936,16 @@ y2,
 z2,
 radius,
 flags,
-entity,
+entity.as_entity_script_id(),
 p9)
 }
-pub fn release_script_guid_from_entity(entity_hit: u32) -> altv_wasm_shared::natives_result::ResultOfReleaseScriptGuidFromEntity {
-    crate::__imports::native_release_script_guid_from_entity(entity_hit)
+pub fn release_script_guid_from_entity(entity_hit: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfReleaseScriptGuidFromEntity {
+    crate::__imports::native_release_script_guid_from_entity(entity_hit.as_entity_script_id())
 }
-pub fn start_shape_test_bound(entity: u32,
+pub fn start_shape_test_bound(entity: impl AsEntityScriptId,
 flags1: i32,
 flags2: i32) -> altv_wasm_shared::natives_result::ResultOfStartShapeTestBound {
-    crate::__imports::native_start_shape_test_bound(entity,
+    crate::__imports::native_start_shape_test_bound(entity.as_entity_script_id(),
 flags1,
 flags2)
 }
@@ -25956,7 +25956,7 @@ x2: f32,
 y2: f32,
 z2: f32,
 flags: i32,
-entity: u32,
+entity: impl AsEntityScriptId,
 p8: i32) -> altv_wasm_shared::natives_result::ResultOfStartExpensiveSynchronousShapeTestLosProbe {
     crate::__imports::native_start_expensive_synchronous_shape_test_los_probe(x1,
 y1,
@@ -25965,32 +25965,32 @@ x2,
 y2,
 z2,
 flags,
-entity,
+entity.as_entity_script_id(),
 p8)
 }
 pub fn get_shape_test_result(shape_test_handle: i32,
 hit: bool,
 end_coords: Option<&shared::Vector3>,
 surface_normal: Option<&shared::Vector3>,
-entity_hit: u32) -> altv_wasm_shared::natives_result::ResultOfGetShapeTestResult {
+entity_hit: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetShapeTestResult {
     crate::__imports::native_get_shape_test_result(shape_test_handle,
 hit,
 end_coords,
 surface_normal,
-entity_hit)
+entity_hit.as_entity_script_id())
 }
 pub fn get_shape_test_result_including_material(shape_test_handle: i32,
 hit: bool,
 end_coords: Option<&shared::Vector3>,
 surface_normal: Option<&shared::Vector3>,
 material_hash: u32,
-entity_hit: u32) -> altv_wasm_shared::natives_result::ResultOfGetShapeTestResultIncludingMaterial {
+entity_hit: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetShapeTestResultIncludingMaterial {
     crate::__imports::native_get_shape_test_result_including_material(shape_test_handle,
 hit,
 end_coords,
 surface_normal,
 material_hash,
-entity_hit)
+entity_hit.as_entity_script_id())
 }
 pub fn start_shape_test_los_probe(x1: f32,
 y1: f32,
@@ -25999,7 +25999,7 @@ x2: f32,
 y2: f32,
 z2: f32,
 flags: i32,
-entity: u32,
+entity: impl AsEntityScriptId,
 p8: i32) -> altv_wasm_shared::natives_result::ResultOfStartShapeTestLosProbe {
     crate::__imports::native_start_shape_test_los_probe(x1,
 y1,
@@ -26008,7 +26008,7 @@ x2,
 y2,
 z2,
 flags,
-entity,
+entity.as_entity_script_id(),
 p8)
 }
 pub fn start_shape_test_swept_sphere(x1: f32,
@@ -26019,7 +26019,7 @@ y2: f32,
 z2: f32,
 radius: f32,
 flags: i32,
-entity: u32,
+entity: impl AsEntityScriptId,
 p9: i32) -> altv_wasm_shared::natives_result::ResultOfStartShapeTestSweptSphere {
     crate::__imports::native_start_shape_test_swept_sphere(x1,
 y1,
@@ -26029,7 +26029,7 @@ y2,
 z2,
 radius,
 flags,
-entity,
+entity.as_entity_script_id(),
 p9)
 }
 pub fn start_shape_test_box(x: f32,
@@ -26043,7 +26043,7 @@ rot_y: f32,
 rot_z: f32,
 p9: i32,
 flags: i32,
-entity: u32,
+entity: impl AsEntityScriptId,
 p12: i32) -> altv_wasm_shared::natives_result::ResultOfStartShapeTestBox {
     crate::__imports::native_start_shape_test_box(x,
 y,
@@ -26056,18 +26056,18 @@ rot_y,
 rot_z,
 p9,
 flags,
-entity,
+entity.as_entity_script_id(),
 p12)
 }
 pub fn start_shape_test_mouse_cursor_los_probe(p_vec1: Option<&shared::Vector3>,
 p_vec2: Option<&shared::Vector3>,
 flag: i32,
-entity: u32,
+entity: impl AsEntityScriptId,
 flag2: i32) -> altv_wasm_shared::natives_result::ResultOfStartShapeTestMouseCursorLosProbe {
     crate::__imports::native_start_shape_test_mouse_cursor_los_probe(p_vec1,
 p_vec2,
 flag,
-entity,
+entity.as_entity_script_id(),
 flag2)
 }
 pub fn sc_inbox_get_total_num_messages() -> altv_wasm_shared::natives_result::ResultOfScInboxGetTotalNumMessages {
@@ -28122,8 +28122,8 @@ z)
 pub fn streamvol_is_valid(unused: i32) -> altv_wasm_shared::natives_result::ResultOfStreamvolIsValid {
     crate::__imports::native_streamvol_is_valid(unused)
 }
-pub fn set_restore_focus_entity(p0: u32) -> altv_wasm_shared::natives_result::ResultOfSetRestoreFocusEntity {
-    crate::__imports::native_set_restore_focus_entity(p0)
+pub fn set_restore_focus_entity(p0: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfSetRestoreFocusEntity {
+    crate::__imports::native_set_restore_focus_entity(p0.as_entity_script_id())
 }
 pub fn get_player_switch_interp_out_duration() -> altv_wasm_shared::natives_result::ResultOfGetPlayerSwitchInterpOutDuration {
     crate::__imports::native_get_player_switch_interp_out_duration()
@@ -28158,8 +28158,8 @@ pub fn set_player_switch_establishing_shot(name: Option<&String>) -> altv_wasm_s
 pub fn remove_anim_set(anim_set: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfRemoveAnimSet {
     crate::__imports::native_remove_anim_set(anim_set)
 }
-pub fn set_focus_entity(entity: u32) -> altv_wasm_shared::natives_result::ResultOfSetFocusEntity {
-    crate::__imports::native_set_focus_entity(entity)
+pub fn set_focus_entity(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfSetFocusEntity {
+    crate::__imports::native_set_focus_entity(entity.as_entity_script_id())
 }
 pub fn is_model_a_vehicle(model: u32) -> altv_wasm_shared::natives_result::ResultOfIsModelAvehicle {
     crate::__imports::native_is_model_a_vehicle(model)
@@ -28231,8 +28231,8 @@ pub fn has_collision_for_model_loaded(model: u32) -> altv_wasm_shared::natives_r
 pub fn does_anim_dict_exist(anim_dict: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfDoesAnimDictExist {
     crate::__imports::native_does_anim_dict_exist(anim_dict)
 }
-pub fn is_entity_focus(entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityFocus {
-    crate::__imports::native_is_entity_focus(entity)
+pub fn is_entity_focus(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityFocus {
+    crate::__imports::native_is_entity_focus(entity.as_entity_script_id())
 }
 pub fn has_clip_set_loaded(clip_set: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfHasClipSetLoaded {
     crate::__imports::native_has_clip_set_loaded(clip_set)
@@ -28760,17 +28760,17 @@ enabled: bool) -> altv_wasm_shared::natives_result::ResultOfSetScenarioGroupEnab
     crate::__imports::native_set_scenario_group_enabled(scenario_group,
 enabled)
 }
-pub fn set_anim_rate(entity: u32,
+pub fn set_anim_rate(entity: impl AsEntityScriptId,
 rate: f32,
 priority: i32,
 secondary: bool) -> altv_wasm_shared::natives_result::ResultOfSetAnimRate {
-    crate::__imports::native_set_anim_rate(entity,
+    crate::__imports::native_set_anim_rate(entity.as_entity_script_id(),
 rate,
 priority,
 secondary)
 }
 pub fn task_go_to_entity_while_aiming_at_coord(ped: u32,
-entity: u32,
+entity: impl AsEntityScriptId,
 aim_x: f32,
 aim_y: f32,
 aim_z: f32,
@@ -28782,7 +28782,7 @@ use_nav_mesh: bool,
 instant_blend_to_aim: bool,
 firing_pattern: u32) -> altv_wasm_shared::natives_result::ResultOfTaskGoToEntityWhileAimingAtCoord {
     crate::__imports::native_task_go_to_entity_while_aiming_at_coord(ped,
-entity,
+entity.as_entity_script_id(),
 aim_x,
 aim_y,
 aim_z,
@@ -28823,12 +28823,12 @@ p2,
 p3,
 p4)
 }
-pub fn task_shoot_at_entity(entity: u32,
-target: u32,
+pub fn task_shoot_at_entity(entity: impl AsEntityScriptId,
+target: impl AsEntityScriptId,
 duration: i32,
 firing_pattern: u32) -> altv_wasm_shared::natives_result::ResultOfTaskShootAtEntity {
-    crate::__imports::native_task_shoot_at_entity(entity,
-target,
+    crate::__imports::native_task_shoot_at_entity(entity.as_entity_script_id(),
+target.as_entity_script_id(),
 duration,
 firing_pattern)
 }
@@ -29147,7 +29147,7 @@ duration)
 }
 pub fn task_vehicle_heli_protect(pilot: u32,
 vehicle: &VehicleScriptId,
-entity_to_follow: u32,
+entity_to_follow: impl AsEntityScriptId,
 target_speed: f32,
 driving_flags: i32,
 radius: f32,
@@ -29155,7 +29155,7 @@ altitude: i32,
 heli_flags: i32) -> altv_wasm_shared::natives_result::ResultOfTaskVehicleHeliProtect {
     crate::__imports::native_task_vehicle_heli_protect(pilot,
 vehicle.0,
-entity_to_follow,
+entity_to_follow.as_entity_script_id(),
 target_speed,
 driving_flags,
 radius,
@@ -29204,7 +29204,7 @@ low_anim_name: Option<&String>,
 med_anim_name: Option<&String>,
 hi_anim_name: Option<&String>,
 runtime: i32,
-target_entity: u32,
+target_entity: impl AsEntityScriptId,
 turn_rate: f32,
 blend_in_duration: f32) -> altv_wasm_shared::natives_result::ResultOfTaskSweepAimEntity {
     crate::__imports::native_task_sweep_aim_entity(ped,
@@ -29213,16 +29213,16 @@ low_anim_name,
 med_anim_name,
 hi_anim_name,
 runtime,
-target_entity,
+target_entity.as_entity_script_id(),
 turn_rate,
 blend_in_duration)
 }
-pub fn set_anim_weight(entity: u32,
+pub fn set_anim_weight(entity: impl AsEntityScriptId,
 weight: f32,
 priority: i32,
 index: i32,
 secondary: bool) -> altv_wasm_shared::natives_result::ResultOfSetAnimWeight {
-    crate::__imports::native_set_anim_weight(entity,
+    crate::__imports::native_set_anim_weight(entity.as_entity_script_id(),
 weight,
 priority,
 index,
@@ -29364,12 +29364,12 @@ time,
 combat_flags)
 }
 pub fn task_plane_chase(pilot: u32,
-entity_to_follow: u32,
+entity_to_follow: impl AsEntityScriptId,
 x: f32,
 y: f32,
 z: f32) -> altv_wasm_shared::natives_result::ResultOfTaskPlaneChase {
     crate::__imports::native_task_plane_chase(pilot,
-entity_to_follow,
+entity_to_follow.as_entity_script_id(),
 x,
 y,
 z)
@@ -29416,7 +29416,7 @@ point,
 coord)
 }
 pub fn task_follow_to_offset_of_entity(ped: u32,
-entity: u32,
+entity: impl AsEntityScriptId,
 offset_x: f32,
 offset_y: f32,
 offset_z: f32,
@@ -29425,7 +29425,7 @@ timeout: i32,
 stopping_range: f32,
 persist_following: bool) -> altv_wasm_shared::natives_result::ResultOfTaskFollowToOffsetOfEntity {
     crate::__imports::native_task_follow_to_offset_of_entity(ped,
-entity,
+entity.as_entity_script_id(),
 offset_x,
 offset_y,
 offset_z,
@@ -29459,7 +29459,7 @@ p8,
 p9)
 }
 pub fn task_goto_entity_offset_xy(ped: u32,
-entity: u32,
+entity: impl AsEntityScriptId,
 duration: i32,
 target_radius: f32,
 offset_x: f32,
@@ -29467,7 +29467,7 @@ offset_y: f32,
 move_blend_ratio: f32,
 goto_entity_offset_flags: i32) -> altv_wasm_shared::natives_result::ResultOfTaskGotoEntityOffsetXy {
     crate::__imports::native_task_goto_entity_offset_xy(ped,
-entity,
+entity.as_entity_script_id(),
 duration,
 target_radius,
 offset_x,
@@ -29528,9 +29528,9 @@ pub fn get_clip_set_for_scripted_gun_task(gun_task_type: i32) -> altv_wasm_share
     crate::__imports::native_get_clip_set_for_scripted_gun_task(gun_task_type)
 }
 pub fn task_vehicle_chase(driver: u32,
-target_ent: u32) -> altv_wasm_shared::natives_result::ResultOfTaskVehicleChase {
+target_ent: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfTaskVehicleChase {
     crate::__imports::native_task_vehicle_chase(driver,
-target_ent)
+target_ent.as_entity_script_id())
 }
 pub fn task_move_network_by_name_with_init_params(ped: u32,
 network: Option<&String>,
@@ -29810,10 +29810,10 @@ task_sequence_id: i32) -> altv_wasm_shared::natives_result::ResultOfTaskPerformS
 task_sequence_id)
 }
 pub fn task_turn_ped_to_face_entity(ped: u32,
-entity: u32,
+entity: impl AsEntityScriptId,
 duration: i32) -> altv_wasm_shared::natives_result::ResultOfTaskTurnPedToFaceEntity {
     crate::__imports::native_task_turn_ped_to_face_entity(ped,
-entity,
+entity.as_entity_script_id(),
 duration)
 }
 pub fn task_go_to_coord_any_means(ped: u32,
@@ -29869,14 +29869,14 @@ pub fn clear_default_primary_task(ped: u32) -> altv_wasm_shared::natives_result:
     crate::__imports::native_clear_default_primary_task(ped)
 }
 pub fn task_go_straight_to_coord_relative_to_entity(ped: u32,
-entity: u32,
+entity: impl AsEntityScriptId,
 x: f32,
 y: f32,
 z: f32,
 move_blend_ratio: f32,
 time: i32) -> altv_wasm_shared::natives_result::ResultOfTaskGoStraightToCoordRelativeToEntity {
     crate::__imports::native_task_go_straight_to_coord_relative_to_entity(ped,
-entity,
+entity.as_entity_script_id(),
 x,
 y,
 z,
@@ -29949,12 +29949,12 @@ conditional_anim_str,
 heading)
 }
 pub fn task_look_at_entity(ped: u32,
-look_at: u32,
+look_at: impl AsEntityScriptId,
 duration: i32,
 flags: i32,
 priority: i32) -> altv_wasm_shared::natives_result::ResultOfTaskLookAtEntity {
     crate::__imports::native_task_look_at_entity(ped,
-look_at,
+look_at.as_entity_script_id(),
 duration,
 flags,
 priority)
@@ -29966,15 +29966,15 @@ animation_name: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfTa
 animation_set,
 animation_name)
 }
-pub fn task_go_to_entity(entity: u32,
-target: u32,
+pub fn task_go_to_entity(entity: impl AsEntityScriptId,
+target: impl AsEntityScriptId,
 duration: i32,
 distance: f32,
 move_blend_ratio: f32,
 slow_down_distance: f32,
 flags: i32) -> altv_wasm_shared::natives_result::ResultOfTaskGoToEntity {
-    crate::__imports::native_task_go_to_entity(entity,
-target,
+    crate::__imports::native_task_go_to_entity(entity.as_entity_script_id(),
+target.as_entity_script_id(),
 duration,
 distance,
 move_blend_ratio,
@@ -29997,14 +29997,14 @@ force_initial_facing_direction,
 force_face_left,
 identifier)
 }
-pub fn task_look_at_coord(entity: u32,
+pub fn task_look_at_coord(entity: impl AsEntityScriptId,
 x: f32,
 y: f32,
 z: f32,
 duration: i32,
 flags: i32,
 priority: i32) -> altv_wasm_shared::natives_result::ResultOfTaskLookAtCoord {
-    crate::__imports::native_task_look_at_coord(entity,
+    crate::__imports::native_task_look_at_coord(entity.as_entity_script_id(),
 x,
 y,
 z,
@@ -30012,11 +30012,11 @@ duration,
 flags,
 priority)
 }
-pub fn set_anim_looped(entity: u32,
+pub fn set_anim_looped(entity: impl AsEntityScriptId,
 looped: bool,
 priority: i32,
 secondary: bool) -> altv_wasm_shared::natives_result::ResultOfSetAnimLooped {
-    crate::__imports::native_set_anim_looped(entity,
+    crate::__imports::native_set_anim_looped(entity.as_entity_script_id(),
 looped,
 priority,
 secondary)
@@ -30071,13 +30071,13 @@ allow_peeking_and_firing)
 pub fn delete_patrol_route(patrol_route: Option<&String>) -> altv_wasm_shared::natives_result::ResultOfDeletePatrolRoute {
     crate::__imports::native_delete_patrol_route(patrol_route)
 }
-pub fn play_entity_scripted_anim(entity: u32,
+pub fn play_entity_scripted_anim(entity: impl AsEntityScriptId,
 priority_low_data: i32,
 priority_mid_data: i32,
 priority_high_data: i32,
 blend_in_delta: f32,
 blend_out_delta: f32) -> altv_wasm_shared::natives_result::ResultOfPlayEntityScriptedAnim {
-    crate::__imports::native_play_entity_scripted_anim(entity,
+    crate::__imports::native_play_entity_scripted_anim(entity.as_entity_script_id(),
 priority_low_data,
 priority_mid_data,
 priority_high_data,
@@ -30507,8 +30507,8 @@ z,
 disable_blocking_clip)
 }
 pub fn task_go_to_entity_while_aiming_at_entity(ped: u32,
-entity_to_walk_to: u32,
-entity_to_aim_at: u32,
+entity_to_walk_to: impl AsEntityScriptId,
+entity_to_aim_at: impl AsEntityScriptId,
 speed: f32,
 shootat_entity: bool,
 target_radius: f32,
@@ -30517,8 +30517,8 @@ use_nav_mesh: bool,
 instant_blend_to_aim: bool,
 firing_pattern: u32) -> altv_wasm_shared::natives_result::ResultOfTaskGoToEntityWhileAimingAtEntity {
     crate::__imports::native_task_go_to_entity_while_aiming_at_entity(ped,
-entity_to_walk_to,
-entity_to_aim_at,
+entity_to_walk_to.as_entity_script_id(),
+entity_to_aim_at.as_entity_script_id(),
 speed,
 shootat_entity,
 target_radius,
@@ -30540,11 +30540,11 @@ z,
 radius,
 time_to_leave)
 }
-pub fn stop_anim_task(entity: u32,
+pub fn stop_anim_task(entity: impl AsEntityScriptId,
 anim_dictionary: Option<&String>,
 animation_name: Option<&String>,
 blend_delta: f32) -> altv_wasm_shared::natives_result::ResultOfStopAnimTask {
-    crate::__imports::native_stop_anim_task(entity,
+    crate::__imports::native_stop_anim_task(entity.as_entity_script_id(),
 anim_dictionary,
 animation_name,
 blend_delta)
@@ -30560,11 +30560,11 @@ vehicle.0,
 seat)
 }
 pub fn task_aim_gun_at_entity(ped: u32,
-entity: u32,
+entity: impl AsEntityScriptId,
 duration: i32,
 instant_blend_to_aim: bool) -> altv_wasm_shared::natives_result::ResultOfTaskAimGunAtEntity {
     crate::__imports::native_task_aim_gun_at_entity(ped,
-entity,
+entity.as_entity_script_id(),
 duration,
 instant_blend_to_aim)
 }
@@ -30657,11 +30657,11 @@ duration: i32) -> altv_wasm_shared::natives_result::ResultOfUpdateTaskHandsUpDur
 duration)
 }
 pub fn task_goto_entity_aiming(ped: u32,
-target: u32,
+target: impl AsEntityScriptId,
 distance_to_stop_at: f32,
 start_aiming_dist: f32) -> altv_wasm_shared::natives_result::ResultOfTaskGotoEntityAiming {
     crate::__imports::native_task_goto_entity_aiming(ped,
-target,
+target.as_entity_script_id(),
 distance_to_stop_at,
 start_aiming_dist)
 }
@@ -30691,12 +30691,12 @@ pub fn is_ped_still(ped: u32) -> altv_wasm_shared::natives_result::ResultOfIsPed
     crate::__imports::native_is_ped_still(ped)
 }
 pub fn task_heli_chase(pilot: u32,
-entity_to_follow: u32,
+entity_to_follow: impl AsEntityScriptId,
 x: f32,
 y: f32,
 z: f32) -> altv_wasm_shared::natives_result::ResultOfTaskHeliChase {
     crate::__imports::native_task_heli_chase(pilot,
-entity_to_follow,
+entity_to_follow.as_entity_script_id(),
 x,
 y,
 z)
@@ -30744,7 +30744,7 @@ pub fn task_go_to_coord_while_aiming_at_entity(ped: u32,
 x: f32,
 y: f32,
 z: f32,
-aim_at_i_d: u32,
+aim_at_i_d: impl AsEntityScriptId,
 move_blend_ratio: f32,
 shoot: bool,
 target_radius: f32,
@@ -30758,7 +30758,7 @@ time: i32) -> altv_wasm_shared::natives_result::ResultOfTaskGoToCoordWhileAiming
 x,
 y,
 z,
-aim_at_i_d,
+aim_at_i_d.as_entity_script_id(),
 move_blend_ratio,
 shoot,
 target_radius,
@@ -31206,11 +31206,11 @@ pub fn control_mounted_weapon(ped: u32) -> altv_wasm_shared::natives_result::Res
 pub fn reset_scenario_groups_enabled() -> altv_wasm_shared::natives_result::ResultOfResetScenarioGroupsEnabled {
     crate::__imports::native_reset_scenario_groups_enabled()
 }
-pub fn set_anim_phase(entity: u32,
+pub fn set_anim_phase(entity: impl AsEntityScriptId,
 phase: f32,
 priority: i32,
 secondary: bool) -> altv_wasm_shared::natives_result::ResultOfSetAnimPhase {
-    crate::__imports::native_set_anim_phase(entity,
+    crate::__imports::native_set_anim_phase(entity.as_entity_script_id(),
 phase,
 priority,
 secondary)
@@ -31271,14 +31271,14 @@ toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetPedPathCanDropFrom
 toggle)
 }
 pub fn task_goto_entity_offset(ped: u32,
-entity: u32,
+entity: impl AsEntityScriptId,
 time: i32,
 seek_radius: f32,
 seek_angle_deg: f32,
 move_blend_ratio: f32,
 goto_entity_offset_flags: i32) -> altv_wasm_shared::natives_result::ResultOfTaskGotoEntityOffset {
     crate::__imports::native_task_goto_entity_offset(ped,
-entity,
+entity.as_entity_script_id(),
 time,
 seek_radius,
 seek_angle_deg,
@@ -31294,9 +31294,9 @@ pub fn is_ped_strafing(ped: u32) -> altv_wasm_shared::natives_result::ResultOfIs
     crate::__imports::native_is_ped_strafing(ped)
 }
 pub fn update_task_sweep_aim_entity(ped: u32,
-entity: u32) -> altv_wasm_shared::natives_result::ResultOfUpdateTaskSweepAimEntity {
+entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfUpdateTaskSweepAimEntity {
     crate::__imports::native_update_task_sweep_aim_entity(ped,
-entity)
+entity.as_entity_script_id())
 }
 pub fn set_driveby_task_target(shooting_ped: u32,
 target_ped: u32,
@@ -31399,10 +31399,10 @@ x,
 y,
 z)
 }
-pub fn stop_anim_playback(entity: u32,
+pub fn stop_anim_playback(entity: impl AsEntityScriptId,
 priority: i32,
 secondary: bool) -> altv_wasm_shared::natives_result::ResultOfStopAnimPlayback {
-    crate::__imports::native_stop_anim_playback(entity,
+    crate::__imports::native_stop_anim_playback(entity.as_entity_script_id(),
 priority,
 secondary)
 }
@@ -31541,13 +31541,13 @@ z)
 }
 pub fn task_vehicle_follow(driver: u32,
 vehicle: &VehicleScriptId,
-target_entity: u32,
+target_entity: impl AsEntityScriptId,
 speed: f32,
 driving_style: i32,
 min_distance: i32) -> altv_wasm_shared::natives_result::ResultOfTaskVehicleFollow {
     crate::__imports::native_task_vehicle_follow(driver,
 vehicle.0,
-target_entity,
+target_entity.as_entity_script_id(),
 speed,
 driving_style,
 min_distance)
@@ -32340,10 +32340,10 @@ pub fn set_vehicle_combat_mode(toggle: bool) -> altv_wasm_shared::natives_result
     crate::__imports::native_set_vehicle_combat_mode(toggle)
 }
 pub fn stabilise_entity_attached_to_heli(vehicle: &VehicleScriptId,
-entity: u32,
+entity: impl AsEntityScriptId,
 p2: f32) -> altv_wasm_shared::natives_result::ResultOfStabiliseEntityAttachedToHeli {
     crate::__imports::native_stabilise_entity_attached_to_heli(vehicle.0,
-entity,
+entity.as_entity_script_id(),
 p2)
 }
 pub fn set_vehicle_can_be_targetted(vehicle: &VehicleScriptId,
@@ -32351,8 +32351,8 @@ state: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleCanBeTargett
     crate::__imports::native_set_vehicle_can_be_targetted(vehicle.0,
 state)
 }
-pub fn find_handler_vehicle_container_is_attached_to(entity: u32) -> altv_wasm_shared::natives_result::ResultOfFindHandlerVehicleContainerIsAttachedTo {
-    crate::__imports::native_find_handler_vehicle_container_is_attached_to(entity)
+pub fn find_handler_vehicle_container_is_attached_to(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfFindHandlerVehicleContainerIsAttachedTo {
+    crate::__imports::native_find_handler_vehicle_container_is_attached_to(entity.as_entity_script_id())
 }
 pub fn set_disable_vehicle_petrol_tank_damage(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetDisableVehiclePetrolTankDamage {
@@ -32851,9 +32851,9 @@ pub fn get_time_position_in_recording(vehicle: &VehicleScriptId) -> altv_wasm_sh
     crate::__imports::native_get_time_position_in_recording(vehicle.0)
 }
 pub fn is_entity_attached_to_handler_frame(vehicle: &VehicleScriptId,
-entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsEntityAttachedToHandlerFrame {
+entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsEntityAttachedToHandlerFrame {
     crate::__imports::native_is_entity_attached_to_handler_frame(vehicle.0,
-entity)
+entity.as_entity_script_id())
 }
 pub fn set_vehicle_window_tint(vehicle: &VehicleScriptId,
 tint: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleWindowTint {
@@ -33108,9 +33108,9 @@ p1: i32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleImpatienceTimer 
 p1)
 }
 pub fn attach_container_to_handler_frame_when_lined_up(vehicle: &VehicleScriptId,
-entity: u32) -> altv_wasm_shared::natives_result::ResultOfAttachContainerToHandlerFrameWhenLinedUp {
+entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfAttachContainerToHandlerFrameWhenLinedUp {
     crate::__imports::native_attach_container_to_handler_frame_when_lined_up(vehicle.0,
-entity)
+entity.as_entity_script_id())
 }
 pub fn has_vehicle_phone_explosive_device() -> altv_wasm_shared::natives_result::ResultOfHasVehiclePhoneExplosiveDevice {
     crate::__imports::native_has_vehicle_phone_explosive_device()
@@ -33228,12 +33228,12 @@ wheel_index,
 health)
 }
 pub fn set_vehicle_shoot_at_target(driver: u32,
-entity: u32,
+entity: impl AsEntityScriptId,
 x_target: f32,
 y_target: f32,
 z_target: f32) -> altv_wasm_shared::natives_result::ResultOfSetVehicleShootAtTarget {
     crate::__imports::native_set_vehicle_shoot_at_target(driver,
-entity,
+entity.as_entity_script_id(),
 x_target,
 y_target,
 z_target)
@@ -33568,9 +33568,9 @@ mod_type,
 mod_value)
 }
 pub fn is_handler_frame_lined_up_with_container(vehicle: &VehicleScriptId,
-entity: u32) -> altv_wasm_shared::natives_result::ResultOfIsHandlerFrameLinedUpWithContainer {
+entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfIsHandlerFrameLinedUpWithContainer {
     crate::__imports::native_is_handler_frame_lined_up_with_container(vehicle.0,
-entity)
+entity.as_entity_script_id())
 }
 pub fn set_vehicle_gravity(vehicle: &VehicleScriptId,
 toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetVehicleGravity {
@@ -33637,9 +33637,9 @@ pub fn get_vehicle_dirt_level(vehicle: &VehicleScriptId) -> altv_wasm_shared::na
     crate::__imports::native_get_vehicle_dirt_level(vehicle.0)
 }
 pub fn get_vehicle_lock_on_target(vehicle: &VehicleScriptId,
-entity: u32) -> altv_wasm_shared::natives_result::ResultOfGetVehicleLockOnTarget {
+entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfGetVehicleLockOnTarget {
     crate::__imports::native_get_vehicle_lock_on_target(vehicle.0,
-entity)
+entity.as_entity_script_id())
 }
 pub fn raise_convertible_roof(vehicle: &VehicleScriptId,
 instantly_raise: bool) -> altv_wasm_shared::natives_result::ResultOfRaiseConvertibleRoof {
@@ -34181,9 +34181,9 @@ pub fn are_folding_wings_deployed(vehicle: &VehicleScriptId) -> altv_wasm_shared
     crate::__imports::native_are_folding_wings_deployed(vehicle.0)
 }
 pub fn detach_entity_from_cargobob(cargobob: &VehicleScriptId,
-entity: u32) -> altv_wasm_shared::natives_result::ResultOfDetachEntityFromCargobob {
+entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfDetachEntityFromCargobob {
     crate::__imports::native_detach_entity_from_cargobob(cargobob.0,
-entity)
+entity.as_entity_script_id())
 }
 pub fn create_vehicle(model_hash: u32,
 x: f32,
@@ -35422,10 +35422,10 @@ anim_style: u32) -> altv_wasm_shared::natives_result::ResultOfSetWeaponAnimation
     crate::__imports::native_set_weapon_animation_override(ped,
 anim_style)
 }
-pub fn has_entity_been_damaged_by_weapon(entity: u32,
+pub fn has_entity_been_damaged_by_weapon(entity: impl AsEntityScriptId,
 weapon_hash: u32,
 weapon_type: i32) -> altv_wasm_shared::natives_result::ResultOfHasEntityBeenDamagedByWeapon {
-    crate::__imports::native_has_entity_been_damaged_by_weapon(entity,
+    crate::__imports::native_has_entity_been_damaged_by_weapon(entity.as_entity_script_id(),
 weapon_hash,
 weapon_type)
 }
@@ -35567,8 +35567,8 @@ toggle: bool) -> altv_wasm_shared::natives_result::ResultOfSetPedDropsWeaponsWhe
     crate::__imports::native_set_ped_drops_weapons_when_dead(ped,
 toggle)
 }
-pub fn request_weapon_high_detail_model(weapon_object: u32) -> altv_wasm_shared::natives_result::ResultOfRequestWeaponHighDetailModel {
-    crate::__imports::native_request_weapon_high_detail_model(weapon_object)
+pub fn request_weapon_high_detail_model(weapon_object: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfRequestWeaponHighDetailModel {
+    crate::__imports::native_request_weapon_high_detail_model(weapon_object.as_entity_script_id())
 }
 pub fn remove_weapon_from_ped(ped: u32,
 weapon_hash: u32) -> altv_wasm_shared::natives_result::ResultOfRemoveWeaponFromPed {
@@ -35823,8 +35823,8 @@ p1)
 pub fn remove_weapon_asset(weapon_hash: u32) -> altv_wasm_shared::natives_result::ResultOfRemoveWeaponAsset {
     crate::__imports::native_remove_weapon_asset(weapon_hash)
 }
-pub fn clear_entity_last_weapon_damage(entity: u32) -> altv_wasm_shared::natives_result::ResultOfClearEntityLastWeaponDamage {
-    crate::__imports::native_clear_entity_last_weapon_damage(entity)
+pub fn clear_entity_last_weapon_damage(entity: impl AsEntityScriptId) -> altv_wasm_shared::natives_result::ResultOfClearEntityLastWeaponDamage {
+    crate::__imports::native_clear_entity_last_weapon_damage(entity.as_entity_script_id())
 }
 pub fn set_current_ped_weapon(ped: u32,
 weapon_hash: u32,

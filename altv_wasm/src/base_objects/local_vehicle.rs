@@ -3,12 +3,11 @@ use std::time::Duration;
 use altv_wasm_shared::BaseObjectPtr;
 use anyhow::{bail, anyhow};
 
-use crate::{__imports, state::State, wait_for, SomeResult, event};
+use crate::{__imports, state::State, wait_for, SomeResult, event, script_id::VehicleScriptId};
 use super::{
     objects::{local_vehicle::LocalVehicle, BaseObjectManager},
     shared_vehicle::SharedVehicle,
     world_object::{WorldObject, ClientWorldObject},
-    script_id::VehicleScriptId,
     kind::BaseObjectKind,
     base::private::Ptr,
     any_entity::AnyEntity,
@@ -227,6 +226,7 @@ impl LocalVehicleStreamed {
             event_controllers: Some([
                 event::add_handler(event::EventHandler::GameEntityCreate(Box::new(
                     move |ctx| {
+                        logger::debug!("GameEntityCreate");
                         let AnyEntity::LocalVehicle(ref veh) = ctx.entity else {
                             return;
                         };
@@ -241,6 +241,7 @@ impl LocalVehicleStreamed {
                 ))),
                 event::add_handler(event::EventHandler::GameEntityDestroy(Box::new(
                     move |ctx| {
+                        logger::debug!("GameEntityDestroy");
                         let AnyEntity::LocalVehicle(ref veh) = ctx.entity else {
                             return;
                         };

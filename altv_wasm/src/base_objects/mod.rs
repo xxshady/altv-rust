@@ -7,5 +7,4 @@ pub mod world_object;
 pub mod any_entity;
 pub mod any_vehicle;
 pub mod local_vehicle;
-pub mod script_id;
 pub(crate) mod kind;
