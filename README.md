@@ -15,9 +15,14 @@ altv::events::on_player_connect(|event| {
 });
 ```
 
-New server-side [Rust](https://www.rust-lang.org) module for [alt:V](https://altv.mp) platform (WIP)
+New server-side [Rust](https://www.rust-lang.org) module for [alt:V](https://altv.mp) platform
 
 **Big** thanks to the [creator](https://github.com/justdimaa) of the [first Rust module](https://github.com/justdimaa/altv-rs), as their work helped me understand how to start my own module
+
+## Client-side part
+
+Work is being done in [this branch](https://github.com/xxshady/altv-rust/tree/clientside-shit).<br>
+Will never be published or released because alt:V does not allow you to use custom client-side modules (.dll) in production
 
 ## Docs
 
