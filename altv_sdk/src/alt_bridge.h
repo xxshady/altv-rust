@@ -905,7 +905,7 @@ std::string read_bone_info_name(const alt::BoneInfo& bone) {
 }
 
 bool is_vehicle_model_info_valid(const alt::VehicleModelInfo* ptr) {
-    return ptr->modelType != alt::VehicleModelInfo::Type::INVALID;
+    return !ptr->invalid;
 }
 
 void read_vehicle_model_info(
@@ -994,7 +994,7 @@ void read_quaternion(const alt::Quaternion& quat, f32* out_x, f32* out_y, f32* o
 }
 
 bool is_weapon_model_info_valid(const alt::WeaponModelInfo* ptr) {
-    return ptr->hash != 0;
+    return !ptr->invalid;
 }
 
 void read_weapon_model_info(
@@ -1027,7 +1027,7 @@ std::string read_weapon_model_info_ammo_type(const alt::WeaponModelInfo* ptr) {
 }
 
 std::string read_weapon_model_info_model_name(const alt::WeaponModelInfo* ptr) {
-    return ptr->modelName;
+    return ptr->model;
 }
 
 std::string read_weapon_model_info_ammo_model_name(const alt::WeaponModelInfo* ptr) {
