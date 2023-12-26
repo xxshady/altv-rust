@@ -165,6 +165,11 @@ impl player::Player {
         Ok(())
     }
 
+    pub fn remove_head_blend_palette_color(&self) -> VoidResult {
+        unsafe { sdk::IPlayer::RemoveHeadBlendPaletteColor(self.raw_ptr()?) }
+        Ok(())
+    }
+
     pub fn health(&self) -> SomeResult<u16> {
         Ok(unsafe { sdk::IPlayer::GetHealth(self.raw_ptr()?) })
     }
