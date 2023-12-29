@@ -394,7 +394,8 @@ pub struct PlayerConnectDenied {
     pub password_hash: u64,
     pub is_debug: bool,
     pub branch: String,
-    pub major_version: u32,
+    pub major_version: u16,
+    pub minor_version: u16,
     pub cdn_url: String,
     pub discord_id: i64,
 }
@@ -415,6 +416,7 @@ impl PlayerConnectDenied {
             is_debug: IsDebug(event),
             branch: GetBranch(event).to_string(),
             major_version: GetMajorVersion(event),
+            minor_version: GetMinorVersion(event),
             cdn_url: GetCdnUrl(event).to_string(),
             discord_id: GetDiscordId(event),
         }

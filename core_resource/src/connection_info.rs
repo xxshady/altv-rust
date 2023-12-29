@@ -61,6 +61,14 @@ impl connection_info::ConnectionInfo {
         Ok(unsafe { sdk::IConnectionInfo::GetBuild(self.raw_ptr()?) })
     }
 
+    pub fn version_major(&self) -> SomeResult<u16> {
+        Ok(unsafe { sdk::IConnectionInfo::GetVersionMajor(self.raw_ptr()?) })
+    }
+
+    pub fn version_minor(&self) -> SomeResult<u16> {
+        Ok(unsafe { sdk::IConnectionInfo::GetVersionMinor(self.raw_ptr()?) })
+    }
+
     pub fn cdn_url(&self) -> SomeResult<String> {
         Ok(unsafe { sdk::IConnectionInfo::GetCdnUrl(self.raw_ptr()?) }.to_string())
     }
