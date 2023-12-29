@@ -415,8 +415,8 @@ impl PlayerConnectDenied {
             password_hash: GetPasswordHash(event),
             is_debug: IsDebug(event),
             branch: GetBranch(event).to_string(),
-            major_version: GetMajorVersion(event),
-            minor_version: GetMinorVersion(event),
+            major_version: GetVersionMajor(event),
+            minor_version: GetVersionMinor(event),
             cdn_url: GetCdnUrl(event).to_string(),
             discord_id: GetDiscordId(event),
         }

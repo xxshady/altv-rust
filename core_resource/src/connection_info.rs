@@ -57,10 +57,6 @@ impl connection_info::ConnectionInfo {
         Ok(unsafe { sdk::IConnectionInfo::GetBranch(self.raw_ptr()?) }.to_string())
     }
 
-    pub fn build(&self) -> SomeResult<u32> {
-        Ok(unsafe { sdk::IConnectionInfo::GetBuild(self.raw_ptr()?) })
-    }
-
     pub fn version_major(&self) -> SomeResult<u16> {
         Ok(unsafe { sdk::IConnectionInfo::GetVersionMajor(self.raw_ptr()?) })
     }
