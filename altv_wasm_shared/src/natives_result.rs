@@ -1355,6 +1355,12 @@ pub struct ResultOfSetSkipMinigunSpinUpAudio {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfEnableDragRaceStationaryWarningSounds {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfSetMobilePhoneRadioState {
     pub success: bool,
     pub ret: (),
@@ -1528,6 +1534,12 @@ pub struct ResultOfStopScriptedConversation {
 pub struct ResultOfSetPositionedPlayerVehicleRadioEmitterEnabled {
     pub success: bool,
     pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfGetCurrentTvShowPlayTime {
+    pub success: bool,
+    pub ret: i32,
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
@@ -2515,6 +2527,12 @@ pub struct ResultOfSetCamSplineNodeExtraFlags {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfSetCamDofShouldKeepLookAtTargetInFocus {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfGetCamRot {
     pub success: bool,
     pub ret: shared::Vector3,
@@ -2863,6 +2881,12 @@ pub struct ResultOfIsCinematicCamShaking {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfGetThirdPersonCamMinOrbitDistanceSpring {
+    pub success: bool,
+    pub ret: f32,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfSetFirstPersonAimCamRelativePitchLimitsThisUpdate {
     pub success: bool,
     pub ret: (),
@@ -3034,6 +3058,12 @@ pub struct ResultOfSetCamSplineSmoothingStyle {
 pub struct ResultOfSetGameplayHintBaseOrbitPitchOffset {
     pub success: bool,
     pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfGetThirdPersonCamMaxOrbitDistanceSpring {
+    pub success: bool,
+    pub ret: f32,
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
@@ -4295,6 +4325,12 @@ pub struct ResultOfSetEntityMaxHealth {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfAttachEntityToEntityPhysicallyOverrideInverseMass {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfSetEntityDynamic {
     pub success: bool,
     pub ret: (),
@@ -5319,6 +5355,12 @@ pub struct ResultOfAttachEntityBoneToEntityBoneYforward {
 pub struct ResultOfGetAnimDuration {
     pub success: bool,
     pub ret: f32,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfGetNearestParticipantToEntity {
+    pub success: bool,
+    pub ret: i32,
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
@@ -6495,6 +6537,12 @@ pub struct ResultOfGetLoadHighQualityPhotoStatus {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfSetParticleFxLoopedCameraBias {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfAddVehicleCrewEmblem {
     pub success: bool,
     pub ret: bool,
@@ -6773,6 +6821,12 @@ pub calculated_y_: f32
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfCascadeShadowsSetAircraftMode {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfForceGroundSnowPass {
     pub success: bool,
     pub ret: (),
     
@@ -7173,6 +7227,12 @@ pub struct ResultOfEnableAlienBloodVfx {
 pub struct ResultOfTriggerScreenblurFadeIn {
     pub success: bool,
     pub ret: bool,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfForceAllowSnowFootVfxOnIce {
+    pub success: bool,
+    pub ret: (),
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
@@ -7812,6 +7872,12 @@ pub struct ResultOfUpdateLightsOnEntity {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfStartVehicleParticleFxLooped {
+    pub success: bool,
+    pub ret: i32,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfHasScaleformScriptHudMovieLoaded {
     pub success: bool,
     pub ret: bool,
@@ -7975,6 +8041,12 @@ pub struct ResultOfLoadHighQualityPhoto {
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfRemoveDecal {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfSetTvChannelPlaylistDirty {
     pub success: bool,
     pub ret: (),
     
@@ -8520,6 +8592,12 @@ pub struct ResultOfCloseMpTextChat {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfUseVehicleTargetingReticuleOnVehicles {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfGetFirstBlipInfoId {
     pub success: bool,
     pub ret: i32,
@@ -8713,6 +8791,12 @@ pub struct ResultOfSetTextOutline {
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfSetRadiusBlipEdge {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfSetBlipGpsRouteDisplayDistance {
     pub success: bool,
     pub ret: (),
     
@@ -8917,6 +9001,12 @@ pub struct ResultOfPauseMenuGetMouseHoverIndex {
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfRemoveFakeConeData {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfSetPauseExteriorRenderingWhileInInterior {
     pub success: bool,
     pub ret: (),
     
@@ -10122,6 +10212,12 @@ pub struct ResultOfSetSocialClubTour {
 pub struct ResultOfIsRadarPreferenceSwitchedOn {
     pub success: bool,
     pub ret: bool,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfSetTextLineHeightMult {
+    pub success: bool,
+    pub ret: (),
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
@@ -12637,6 +12733,12 @@ pub struct ResultOfGetAllocatedStackSize {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfGetContentPropType {
+    pub success: bool,
+    pub ret: i32,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfGetGroundZandNormalFor3dCoord {
     pub success: bool,
     pub ret: bool,
@@ -13034,6 +13136,12 @@ pub struct ResultOfSetThisScriptCanRemoveBlipsCreatedByAnyScript {
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfWaterOverrideSetRippledisturb {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfSetContentPropType {
     pub success: bool,
     pub ret: (),
     
@@ -13806,12 +13914,6 @@ pub struct ResultOfNetworkEarnWagePaymentBonus {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
-pub struct ResultOfNetworkEarnFromRockstar {
-    pub success: bool,
-    pub ret: (),
-    
-}
-#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfNetworkSpendVehicleRequested {
     pub success: bool,
     pub ret: (),
@@ -14094,6 +14196,12 @@ pub struct ResultOfNetworkEarnGangopsElite {
     pub success: bool,
     pub ret: (),
     
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfNetworkSpentGeneric {
+    pub success: bool,
+    pub ret: (),
+    pub data_: shared::MemoryBufferId
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfNetworkSpentCashDrop {
@@ -14397,6 +14505,12 @@ pub struct ResultOfNetworkSpendUpgradeArcade {
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfNetworkEarnPurchaseClubHouse {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfNetworkEarnAvenger {
     pub success: bool,
     pub ret: (),
     
@@ -14871,6 +14985,12 @@ pub struct ResultOfNetworkEarnSellPrizeVehicle {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfNetworkSpentAirFreight {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfNetworkSpentUpgradeOfficeProperty {
     pub success: bool,
     pub ret: (),
@@ -14920,6 +15040,12 @@ pub struct ResultOfNetworkSpendInteractionMenuAbility {
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfNetworkSpentCargoSourcing {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfNetworkSpentStealthModule {
     pub success: bool,
     pub ret: (),
     
@@ -15267,6 +15393,12 @@ pub struct ResultOfNetworkEarnAwardRandomEvent {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfNetworkEarnGeneric {
+    pub success: bool,
+    pub ret: (),
+    pub data_: shared::MemoryBufferId
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfNetworkSpendHidden {
     pub success: bool,
     pub ret: (),
@@ -15435,6 +15567,12 @@ pub struct ResultOfNetworkSpentNoCops {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfNetworkSpentMissileJammer {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfNetworkSpentMcAbility {
     pub success: bool,
     pub ret: (),
@@ -15489,6 +15627,12 @@ pub struct ResultOfNetworkGetCanSpendFromBankAndWallet {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfNetworkEarnBonusObjective {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfNetworkSpendNightclubBarDrink {
     pub success: bool,
     pub ret: (),
@@ -15513,6 +15657,12 @@ pub struct ResultOfNetworkEarnYatchMission {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfNetworkEarnSmugglerOps {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfNetworkEarnFromJobx2 {
     pub success: bool,
     pub ret: (),
@@ -15532,6 +15682,12 @@ pub struct ResultOfNetworkEarnRcTimeTrial {
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfNetworkEarnJuggaloStoryMission {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfNetworkClearTransactionTelemetryNonce {
     pub success: bool,
     pub ret: (),
     
@@ -15687,6 +15843,12 @@ pub struct ResultOfNetworkEarnFromPickup {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfNetworkSpentSkipCargoSourceSetup {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfNetworkEarnGangopsPrepParticipation {
     pub success: bool,
     pub ret: (),
@@ -15780,6 +15942,12 @@ pub struct ResultOfNetworkSpentRehireDj {
 pub struct ResultOfWithdrawVc {
     pub success: bool,
     pub ret: i32,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfNetworkEarnProgressHub {
+    pub success: bool,
+    pub ret: (),
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
@@ -16145,6 +16313,12 @@ pub struct ResultOfNetworkCancelTransitionMatchmaking {
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfNetworkShouldShowPromotionAlertScreen {
+    pub success: bool,
+    pub ret: bool,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfNetworkIsAmericasVersion {
     pub success: bool,
     pub ret: bool,
     
@@ -17115,7 +17289,7 @@ pub struct ResultOfNetworkSessionDoFreeroamQuickmatch {
 pub struct ResultOfNetworkRegisterPlayerBroadcastVariables {
     pub success: bool,
     pub ret: (),
-    pub unk_vars_: i32
+    pub vars_: i32
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfNetworkGetLastVelReceivedOverNetwork {
@@ -17332,7 +17506,7 @@ pub struct ResultOfNetworkSetRichPresenceString {
 pub struct ResultOfNetworkRegisterHostBroadcastVariables {
     pub success: bool,
     pub ret: (),
-    pub unk_vars_: i32
+    pub vars_: i32
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfNetworkDoTransitionToGame {
@@ -17374,6 +17548,12 @@ pub struct ResultOfNetworkSetNoLongerNeeded {
 pub struct ResultOfNetworkDisableProximityMigration {
     pub success: bool,
     pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfNetworkGetCommunicationGroupFlags {
+    pub success: bool,
+    pub ret: i32,
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
@@ -17534,12 +17714,6 @@ pub struct ResultOfNetworkDoTransitionToNewGame {
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfHasNetworkTimeStarted {
-    pub success: bool,
-    pub ret: bool,
-    
-}
-#[derive(serde::Serialize, serde::Deserialize)]
-pub struct ResultOfTriggerPlayerCrcHackerCheck {
     pub success: bool,
     pub ret: bool,
     
@@ -17874,8 +18048,7 @@ pub struct ResultOfNetworkCanBail {
 pub struct ResultOfNetworkClanGetEmblemTxdName {
     pub success: bool,
     pub ret: bool,
-    pub net_handle_: shared::MemoryBufferId,
-pub txd_name_: Option<String>
+    pub net_handle_: shared::MemoryBufferId
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfUgcGetContentCreatorGamerHandle {
@@ -18973,6 +19146,12 @@ pub struct ResultOfNetworkTriggerDamageEventForZeroDamage {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfNetworkHasRosPrivilegeMpVoiceCommunication {
+    pub success: bool,
+    pub ret: bool,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfNetworkIsLocalPlayerInvincible {
     pub success: bool,
     pub ret: bool,
@@ -19425,6 +19604,12 @@ pub struct ResultOfNetworkHaveRosCreateTicketPriv {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfNetworkSetVehicleDrivenLocation {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfNetworkIsLoggedInToPsn {
     pub success: bool,
     pub ret: bool,
@@ -19440,12 +19625,6 @@ pub struct ResultOfNetworkHandleFromMemberId {
 pub struct ResultOfNetworkGetNetworkIdFromEntity {
     pub success: bool,
     pub ret: i32,
-    
-}
-#[derive(serde::Serialize, serde::Deserialize)]
-pub struct ResultOfTriggerTuningCrcHackerCheck {
-    pub success: bool,
-    pub ret: bool,
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
@@ -20060,6 +20239,12 @@ pub struct ResultOfNetworkClanHasCrewinfoMetadataBeenReceived {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfUgcHasPermissionToWrite {
+    pub success: bool,
+    pub ret: bool,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfNetworkTransitionAddStage {
     pub success: bool,
     pub ret: bool,
@@ -20283,6 +20468,12 @@ pub struct ResultOfNetworkUseLogarithmicBlendingThisFrame {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfNetworkSessionGetUniqueCrewLimit {
+    pub success: bool,
+    pub ret: i32,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfNetworkGetEntityFromNetworkId {
     pub success: bool,
     pub ret: u32,
@@ -20499,6 +20690,12 @@ pub struct ResultOfNetToObj {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfNetworkHasRosPrivilegeMpTextCommunication {
+    pub success: bool,
+    pub ret: bool,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfNetworkClearClockTimeOverride {
     pub success: bool,
     pub ret: (),
@@ -20520,6 +20717,12 @@ pub struct ResultOfNetworkGetPlayerAccountId {
 pub struct ResultOfNetworkApplyVoiceProximityOverride {
     pub success: bool,
     pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfNetworkDoesCommunicationGroupExist {
+    pub success: bool,
+    pub ret: bool,
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
@@ -20607,6 +20810,12 @@ pub struct ResultOfSetEntityVisibleInCutscene {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfNetworkSessionLeaveIncludingReason {
+    pub success: bool,
+    pub ret: bool,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfNetworkClearVoiceChannel {
     pub success: bool,
     pub ret: (),
@@ -20643,6 +20852,12 @@ pub struct ResultOfCanRegisterMissionDoors {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfNetworkHavePlatformCommunicationPrivileges {
+    pub success: bool,
+    pub ret: bool,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfRefreshPlayerListStats {
     pub success: bool,
     pub ret: bool,
@@ -20672,6 +20887,12 @@ pub struct ResultOfNetworkDoesTunableExistHash {
 pub struct ResultOfNetworkFindGamersInCrew {
     pub success: bool,
     pub ret: bool,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfNetworkSetCommunicationGroupFlags {
+    pub success: bool,
+    pub ret: (),
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
@@ -20916,12 +21137,6 @@ pub struct ResultOfNetworkAddEntityToSynchronisedScene {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
-pub struct ResultOfTriggerFileCrcHackerCheck {
-    pub success: bool,
-    pub ret: bool,
-    
-}
-#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfGetNumCommerceItems {
     pub success: bool,
     pub ret: i32,
@@ -20949,8 +21164,7 @@ pub struct ResultOfNetworkIsSessionBusy {
 pub struct ResultOfNetworkClanGetUiFormattedTag {
     pub success: bool,
     pub ret: (),
-    pub clan_desc_: shared::MemoryBufferId,
-pub formatted_tag_: Option<String>
+    pub clan_desc_: shared::MemoryBufferId
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfNetworkSetNoSpectatorChat {
@@ -22617,6 +22831,13 @@ pub struct ResultOfSetIgnoreNoGpsFlag {
     pub success: bool,
     pub ret: (),
     
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfGetSpawnCoordsForVehicleNode {
+    pub success: bool,
+    pub ret: shared::Vector3,
+    pub centre_point_: shared::Vector3,
+pub heading_: f32
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfGetNthClosestVehicleNodeWithHeading {
@@ -25105,6 +25326,12 @@ pub struct ResultOfDisableHeadBlendPaletteColor {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfHasPedClearLosToEntity {
+    pub success: bool,
+    pub ret: bool,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfSetPedShouldPlayNormalScenarioExit {
     pub success: bool,
     pub ret: (),
@@ -27495,6 +27722,12 @@ pub struct ResultOfClearPlayerParachuteModelOverride {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfGetPlayerTargetingMode {
+    pub success: bool,
+    pub ret: i32,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfIsPlayerScriptControlOn {
     pub success: bool,
     pub ret: bool,
@@ -28525,6 +28758,12 @@ pub struct ResultOfRequestScript {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfSendTuScriptEventNew {
+    pub success: bool,
+    pub ret: (),
+    pub event_data_: shared::MemoryBufferId
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfBgStartContextHash {
     pub success: bool,
     pub ret: (),
@@ -28565,12 +28804,6 @@ pub struct ResultOfBgStartContext {
     pub success: bool,
     pub ret: (),
     
-}
-#[derive(serde::Serialize, serde::Deserialize)]
-pub struct ResultOfSendTuScriptEvent {
-    pub success: bool,
-    pub ret: (),
-    pub event_data_: shared::MemoryBufferId
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfCommitToLoadingscreenSelction {
@@ -28648,13 +28881,13 @@ pub struct ResultOfDoesScriptExist {
 pub struct ResultOfUnregisterScriptVariable {
     pub success: bool,
     pub ret: (),
-    pub unk_variable_: shared::MemoryBufferId
+    pub variable_: shared::MemoryBufferId
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfRegisterScriptVariable {
     pub success: bool,
     pub ret: (),
-    pub unk_variable_: shared::MemoryBufferId
+    pub variable_: shared::MemoryBufferId
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfForceCheckScriptVariables {
@@ -28788,7 +29021,7 @@ pub struct ResultOfScProfanityGetCheckIsValid {
 pub struct ResultOfScCommunityEventGetDisplayNameById {
     pub success: bool,
     pub ret: bool,
-    pub p1_: Option<String>
+    
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfScLicenseplateAdd {
@@ -28807,7 +29040,7 @@ pub struct ResultOfScAccountInfoGetNickname {
 pub struct ResultOfScCommunityEventGetExtraDataStringForType {
     pub success: bool,
     pub ret: bool,
-    pub p1_: Option<String>
+    
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfScLicenseplateGetPlate {
@@ -28873,7 +29106,7 @@ pub struct ResultOfScTransitionNewsHasExtraDataTu {
 pub struct ResultOfScCommunityEventGetDisplayNameForType {
     pub success: bool,
     pub ret: bool,
-    pub p0_: Option<String>
+    
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfScHasAchievementBeenPassed {
@@ -28945,19 +29178,13 @@ pub struct ResultOfScTransitionNewsEnd {
 pub struct ResultOfScCommunityEventGetExtraDataStringById {
     pub success: bool,
     pub ret: bool,
-    pub p2_: Option<String>
+    
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfScInboxMessageGetUgcdata {
     pub success: bool,
     pub ret: bool,
     pub p1_: shared::MemoryBufferId
-}
-#[derive(serde::Serialize, serde::Deserialize)]
-pub struct ResultOfScInboxSendBountyToRecipList {
-    pub success: bool,
-    pub ret: bool,
-    pub data_: shared::MemoryBufferId
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfScTransitionNewsShow {
@@ -28987,7 +29214,7 @@ pub struct ResultOfScProfanityCheckString {
 pub struct ResultOfScInboxMessageGetDataString {
     pub success: bool,
     pub ret: bool,
-    pub out_: Option<String>
+    
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfScEmailGetNumRetrievedEmails {
@@ -28999,7 +29226,7 @@ pub struct ResultOfScEmailGetNumRetrievedEmails {
 pub struct ResultOfScGamerdataGetString {
     pub success: bool,
     pub ret: bool,
-    pub value_: Option<String>
+    
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfScLicenseplateGetAddStatus {
@@ -29077,7 +29304,7 @@ pub struct ResultOfScInboxMessageDoApply {
 pub struct ResultOfScCommunityEventGetExtraDataString {
     pub success: bool,
     pub ret: bool,
-    pub p1_: Option<String>
+    
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfScInboxMessageGetDataInt {
@@ -29125,7 +29352,7 @@ pub struct ResultOfScCacheNewRockstarMsgs {
 pub struct ResultOfScCommunityEventGetDisplayName {
     pub success: bool,
     pub ret: bool,
-    pub p0_: Option<String>
+    
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfScPresenceAttrSetFloat {
@@ -29239,7 +29466,7 @@ pub struct ResultOfScInboxMessageGetDataBool {
 pub struct ResultOfPlaystatsNpcPhone {
     pub success: bool,
     pub ret: (),
-    
+    pub p0_: shared::MemoryBufferId
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfSendMetricPunishBodyguard {
@@ -29362,6 +29589,12 @@ pub struct ResultOfPlaystatsFriendActivity {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfPlaystatsVehDel {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfLeaderboardsGetNumberOfColumns {
     pub success: bool,
     pub ret: i32,
@@ -29405,6 +29638,12 @@ pub struct ResultOfPlaystatsBcProtectionRacket {
     pub success: bool,
     pub ret: (),
     
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfPlaystatsShowroomOverview {
+    pub success: bool,
+    pub ret: (),
+    pub data_: shared::MemoryBufferId
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfSetPackedStatIntCode {
@@ -29829,6 +30068,12 @@ pub struct ResultOfStatGetCurrentSpeed {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfPlaystatsAlert {
+    pub success: bool,
+    pub ret: (),
+    pub data_: shared::MemoryBufferId
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfStatGetCancelSaveMigrationStatus {
     pub success: bool,
     pub ret: i32,
@@ -30155,6 +30400,12 @@ pub struct ResultOfStatCloudSlotSaveFailed {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfPlaystatsRandomEvent {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfLeaderboards2ReadByScoreInt {
     pub success: bool,
     pub ret: bool,
@@ -30342,6 +30593,12 @@ pub struct ResultOfPlaystatsPegasusAsPersonalAircraft {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfPlaystatsShowroomNav {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfStartBeingGoon {
     pub success: bool,
     pub ret: (),
@@ -30483,15 +30740,6 @@ pub struct ResultOfStatGetCurrentRearWheelDistance {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
-pub struct ResultOfLeaderboards2ReadByRow {
-    pub success: bool,
-    pub ret: bool,
-    pub p0_: shared::MemoryBufferId,
-pub p1_: shared::MemoryBufferId,
-pub p3_: shared::MemoryBufferId,
-pub p5_: shared::MemoryBufferId
-}
-#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfSendMetricVipPoach {
     pub success: bool,
     pub ret: (),
@@ -30618,6 +30866,12 @@ pub struct ResultOfPlaystatsMatchStarted {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfPlaystatsAttritionStageEnd {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfStatIsStatsTrackingEnabled {
     pub success: bool,
     pub ret: bool,
@@ -30715,6 +30969,12 @@ pub struct ResultOfLeaderboards2ReadRankPrediction {
     pub p0_: shared::MemoryBufferId,
 pub p1_: shared::MemoryBufferId,
 pub p2_: shared::MemoryBufferId
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfPlaystatsFlowMedium {
+    pub success: bool,
+    pub ret: (),
+    
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfLeaderboardsGetColumnId {
@@ -30868,6 +31128,12 @@ pub struct ResultOfPlaystatsBuyContrabandMission {
     pub data_: shared::MemoryBufferId
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfGetStatHashForCharacterStat {
+    pub success: bool,
+    pub ret: u32,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfPlaystatsDjMissionEnded {
     pub success: bool,
     pub ret: (),
@@ -30980,6 +31246,12 @@ pub struct ResultOfLeaderboards2ReadByScoreFloat {
     pub success: bool,
     pub ret: bool,
     pub p0_: shared::MemoryBufferId
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfPlaystatsFlowLow {
+    pub success: bool,
+    pub ret: (),
+    
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfStatGetCurrentNearMissNocrashPrecise {
@@ -32395,6 +32667,12 @@ pub struct ResultOfIsTaskMoveNetworkReadyForTransition {
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfTaskVehicleFollowWaypointRecording {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfSetScriptTaskEnableCollisionOnNetworkCloneWhenFixed {
     pub success: bool,
     pub ret: (),
     
@@ -34037,6 +34315,12 @@ pub struct ResultOfVehicleStartParachuting {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfSetDeployMissileBays {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfSetVehicleCanDeformWheels {
     pub success: bool,
     pub ret: (),
@@ -34187,6 +34471,12 @@ pub struct ResultOfAttachVehicleOnToTrailer {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfSetMinimumTimeBetweenGearShifts {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfDoesCargobobHavePickUpRope {
     pub success: bool,
     pub ret: bool,
@@ -34206,6 +34496,18 @@ pub struct ResultOfSetVehicleFrictionOverride {
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfSetVehicleCanLeakPetrol {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfSetVehicleUseHornButtonForNitrous {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfFullyChargeNitrous {
     pub success: bool,
     pub ret: (),
     
@@ -34415,6 +34717,18 @@ pub struct ResultOfSetVehicleDensityMultiplierThisFrame {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfGetVehicleMaxDriveGearCount {
+    pub success: bool,
+    pub ret: i32,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfApplyEmpEffect {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfSetVehicleEngineOn {
     pub success: bool,
     pub ret: (),
@@ -34490,6 +34804,12 @@ pub struct ResultOfSetVehicleGeneratesEngineShockingEvents {
 pub struct ResultOfIsVehicleBumperBouncing {
     pub success: bool,
     pub ret: bool,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfSetAllowCollisionWhenInVehicle {
+    pub success: bool,
+    pub ret: (),
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
@@ -34739,6 +35059,12 @@ pub struct ResultOfForceSubmarineSurfaceMode {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfSetTransmissionReducedGearRatio {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfSetVehicleColourCombination {
     pub success: bool,
     pub ret: (),
@@ -34944,6 +35270,12 @@ pub struct ResultOfSetHeliTailBoomCanBreakOff {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfGetVehicleMaxExhaustBoneCount {
+    pub success: bool,
+    pub ret: i32,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfStartPlaybackRecordedVehicle {
     pub success: bool,
     pub ret: (),
@@ -35100,6 +35432,12 @@ pub struct ResultOfSetDisableVehiclePetrolTankFires {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfSetNitrousIsActive {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfIsVehicleBumperBrokenOff {
     pub success: bool,
     pub ret: bool,
@@ -35130,7 +35468,19 @@ pub struct ResultOfInstantlyFillVehiclePopulation {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfSetAttachedVehicleToTowTruckArm {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfIsVehicleProducingSlipStream {
+    pub success: bool,
+    pub ret: bool,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfIsNitrousActive {
     pub success: bool,
     pub ret: bool,
     
@@ -35370,6 +35720,12 @@ pub struct ResultOfGetTyreHealth {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfGetVehicleCurrentDriveGear {
+    pub success: bool,
+    pub ret: i32,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfIsVehicleWeaponDisabled {
     pub success: bool,
     pub ret: bool,
@@ -35484,6 +35840,12 @@ pub struct ResultOfSetDriftTyres {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfSetVehicleMaxLaunchEngineRevs {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfSetVehicleProvidesCover {
     pub success: bool,
     pub ret: (),
@@ -35592,6 +35954,12 @@ pub struct ResultOfIsAnyVehicleNearPoint {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfGetVehicleModelNumDriveGears {
+    pub success: bool,
+    pub ret: i32,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfIsAnyEntityAttachedToHandlerFrame {
     pub success: bool,
     pub ret: bool,
@@ -35661,6 +36029,12 @@ pub struct ResultOfSetSlowDownEffectDisabled {
 pub struct ResultOfGetBoatBoomPositionRatio {
     pub success: bool,
     pub ret: f32,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfIsVehicleGen9ExclusiveModel {
+    pub success: bool,
+    pub ret: bool,
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
@@ -35739,6 +36113,12 @@ pub struct ResultOfHasVehiclePhoneExplosiveDevice {
 pub struct ResultOfSetVehicleMod {
     pub success: bool,
     pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfHaveVehicleRearDoorsBeenBlownOpenByStickybomb {
+    pub success: bool,
+    pub ret: bool,
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
@@ -36461,6 +36841,12 @@ pub struct ResultOfRemoveVehicleMod {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfGetVehicleThrottle {
+    pub success: bool,
+    pub ret: f32,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfSetVehicleHasStrongAxles {
     pub success: bool,
     pub ret: (),
@@ -37045,6 +37431,12 @@ pub struct ResultOfSetVehicleDisableCollisionUponCreation {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfSetOverrideTractionLossMultiplier {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfSetVehicleForceAfterburner {
     pub success: bool,
     pub ret: (),
@@ -37404,6 +37796,12 @@ pub struct ResultOfSetVehicleIndividualDoorsLocked {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfGetRemainingNitrousDuration {
+    pub success: bool,
+    pub ret: f32,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfIsThisModelAbicycle {
     pub success: bool,
     pub ret: bool,
@@ -37533,6 +37931,12 @@ pub struct ResultOfIsVehicleBeingBroughtToHalt {
 pub struct ResultOfGetFlyingVehicleModelAgility {
     pub success: bool,
     pub ret: f32,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfClearNitrous {
+    pub success: bool,
+    pub ret: (),
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
@@ -37719,6 +38123,12 @@ pub struct ResultOfSetRandomBoatsMp {
 pub struct ResultOfGetVehicleFlightNozzlePosition {
     pub success: bool,
     pub ret: f32,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfSetDriftSlipAngleLimits {
+    pub success: bool,
+    pub ret: (),
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
@@ -37927,6 +38337,13 @@ pub struct ResultOfSetHeliTurbulenceScalar {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfGetVehicleExhaustBone {
+    pub success: bool,
+    pub ret: bool,
+    pub bone_index_: i32,
+pub axis_x_: bool
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfIsVehicleAttachedToTrailer {
     pub success: bool,
     pub ret: bool,
@@ -37969,6 +38386,12 @@ pub struct ResultOfDeleteVehicle {
     pub success: bool,
     pub ret: (),
     pub vehicle_: u32
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfAreMissileBaysDeployed {
+    pub success: bool,
+    pub ret: bool,
+    
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfSetParkedVehicleDensityMultiplierThisFrame {
@@ -38261,6 +38684,12 @@ pub struct ResultOfSetVehicleBulldozerArmPosition {
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfGetVehicleCurrentRevRatio {
+    pub success: bool,
+    pub ret: f32,
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfSetGlobalPositionOffsetForRecordedVehiclePlayback {
     pub success: bool,
     pub ret: (),
@@ -38300,6 +38729,12 @@ pub struct ResultOfSetHeliBladesSpeed {
 pub struct ResultOfSwitchTrainTrack {
     pub success: bool,
     pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfGetVehicleDesiredDriveGear {
+    pub success: bool,
+    pub ret: i32,
     
 }
 #[derive(serde::Serialize, serde::Deserialize)]
@@ -38454,6 +38889,12 @@ pub struct ResultOfGetCurrentPedVehicleWeapon {
 }
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResultOfSetWeaponAnimationOverride {
+    pub success: bool,
+    pub ret: (),
+    
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ResultOfSetWeaponPedDamageModifier {
     pub success: bool,
     pub ret: (),
     

@@ -1395,13 +1395,13 @@ p2_,
     }
 }
 
-    fn native_set_variable_on_stream(&self, unk_variable_: Option<String>,
+    fn native_set_variable_on_stream(&self, variable_: Option<String>,
 p1_: f32) -> ResultOfSetVariableOnStream {
     unsafe {
-        let mut unk_variable_ = sdk_helpers::create_c_string_ptr(unk_variable_);
+        let mut variable_ = sdk_helpers::create_c_string_ptr(variable_);
 let mut p1_ = p1_;
         let success = sdk::natives::set_variable_on_stream(
-            unk_variable_.as_ref().unwrap(),
+            variable_.as_ref().unwrap(),
 p1_,
         );
         
@@ -2632,13 +2632,13 @@ ped_,
     }
 }
 
-    fn native_set_variable_on_under_water_stream(&self, unk_variable_name_: Option<String>,
+    fn native_set_variable_on_under_water_stream(&self, variable_name_: Option<String>,
 value_: f32) -> ResultOfSetVariableOnUnderWaterStream {
     unsafe {
-        let mut unk_variable_name_ = sdk_helpers::create_c_string_ptr(unk_variable_name_);
+        let mut variable_name_ = sdk_helpers::create_c_string_ptr(variable_name_);
 let mut value_ = value_;
         let success = sdk::natives::set_variable_on_under_water_stream(
-            unk_variable_name_.as_ref().unwrap(),
+            variable_name_.as_ref().unwrap(),
 value_,
         );
         
@@ -3793,15 +3793,15 @@ p2_,
 }
 
     fn native_set_variable_on_sound(&self, sound_id_: i32,
-unk_variable_: Option<String>,
+variable_: Option<String>,
 p2_: f32) -> ResultOfSetVariableOnSound {
     unsafe {
         let mut sound_id_ = sound_id_;
-let mut unk_variable_ = sdk_helpers::create_c_string_ptr(unk_variable_);
+let mut variable_ = sdk_helpers::create_c_string_ptr(variable_);
 let mut p2_ = p2_;
         let success = sdk::natives::set_variable_on_sound(
             sound_id_,
-unk_variable_.as_ref().unwrap(),
+variable_.as_ref().unwrap(),
 p2_,
         );
         
@@ -4151,13 +4151,13 @@ p3_,
     }
 }
 
-    fn native_set_variable_on_synch_scene_audio(&self, unk_variable_name_: Option<String>,
+    fn native_set_variable_on_synch_scene_audio(&self, variable_name_: Option<String>,
 value_: f32) -> ResultOfSetVariableOnSynchSceneAudio {
     unsafe {
-        let mut unk_variable_name_ = sdk_helpers::create_c_string_ptr(unk_variable_name_);
+        let mut variable_name_ = sdk_helpers::create_c_string_ptr(variable_name_);
 let mut value_ = value_;
         let success = sdk::natives::set_variable_on_synch_scene_audio(
-            unk_variable_name_.as_ref().unwrap(),
+            variable_name_.as_ref().unwrap(),
 value_,
         );
         
@@ -4201,6 +4201,25 @@ p2_,
         
         
         ResultOfSetSkipMinigunSpinUpAudio {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
+    fn native_enable_drag_race_stationary_warning_sounds(&self, vehicle_: u32,
+enable_: bool) -> ResultOfEnableDragRaceStationaryWarningSounds {
+    unsafe {
+        let mut vehicle_ = vehicle_;
+let mut enable_ = enable_;
+        let success = sdk::natives::enable_drag_race_stationary_warning_sounds(
+            vehicle_,
+enable_,
+        );
+        
+        
+        ResultOfEnableDragRaceStationaryWarningSounds {
             success,
             ret: (),
             
@@ -4770,6 +4789,22 @@ p0_,
     }
 }
 
+    fn native_get_current_tv_show_play_time(&self, ) -> ResultOfGetCurrentTvShowPlayTime {
+    unsafe {
+        let mut native_return = Default::default();
+        let success = sdk::natives::get_current_tv_show_play_time(
+            &mut native_return,
+        );
+        let native_return = native_return;
+        
+        ResultOfGetCurrentTvShowPlayTime {
+            success,
+            ret: native_return,
+            
+        }
+    }
+}
+
     fn native_set_radio_retune_down(&self, ) -> ResultOfSetRadioRetuneDown {
     unsafe {
         
@@ -5074,15 +5109,15 @@ speech_name_.as_ref().unwrap(),
 }
 
     fn native_set_audio_scene_variable(&self, scene_: Option<String>,
-unk_variable_: Option<String>,
+variable_: Option<String>,
 value_: f32) -> ResultOfSetAudioSceneVariable {
     unsafe {
         let mut scene_ = sdk_helpers::create_c_string_ptr(scene_);
-let mut unk_variable_ = sdk_helpers::create_c_string_ptr(unk_variable_);
+let mut variable_ = sdk_helpers::create_c_string_ptr(variable_);
 let mut value_ = value_;
         let success = sdk::natives::set_audio_scene_variable(
             scene_.as_ref().unwrap(),
-unk_variable_.as_ref().unwrap(),
+variable_.as_ref().unwrap(),
 value_,
         );
         
@@ -7924,6 +7959,25 @@ flags_,
     }
 }
 
+    fn native_set_cam_dof_should_keep_look_at_target_in_focus(&self, camera_: i32,
+state_: bool) -> ResultOfSetCamDofShouldKeepLookAtTargetInFocus {
+    unsafe {
+        let mut camera_ = camera_;
+let mut state_ = state_;
+        let success = sdk::natives::set_cam_dof_should_keep_look_at_target_in_focus(
+            camera_,
+state_,
+        );
+        
+        
+        ResultOfSetCamDofShouldKeepLookAtTargetInFocus {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_get_cam_rot(&self, cam_: i32,
 rotation_order_: i32) -> ResultOfGetCamRot {
     unsafe {
@@ -9147,6 +9201,22 @@ cam_,
     }
 }
 
+    fn native_get_third_person_cam_min_orbit_distance_spring(&self, ) -> ResultOfGetThirdPersonCamMinOrbitDistanceSpring {
+    unsafe {
+        let mut native_return = Default::default();
+        let success = sdk::natives::get_third_person_cam_min_orbit_distance_spring(
+            &mut native_return,
+        );
+        let native_return = native_return;
+        
+        ResultOfGetThirdPersonCamMinOrbitDistanceSpring {
+            success,
+            ret: native_return,
+            
+        }
+    }
+}
+
     fn native_set_first_person_aim_cam_relative_pitch_limits_this_update(&self, p0_: f32,
 p1_: f32) -> ResultOfSetFirstPersonAimCamRelativePitchLimitsThisUpdate {
     unsafe {
@@ -9708,6 +9778,22 @@ smoothing_style_,
         ResultOfSetGameplayHintBaseOrbitPitchOffset {
             success,
             ret: (),
+            
+        }
+    }
+}
+
+    fn native_get_third_person_cam_max_orbit_distance_spring(&self, ) -> ResultOfGetThirdPersonCamMaxOrbitDistanceSpring {
+    unsafe {
+        let mut native_return = Default::default();
+        let success = sdk::natives::get_third_person_cam_max_orbit_distance_spring(
+            &mut native_return,
+        );
+        let native_return = native_return;
+        
+        ResultOfGetThirdPersonCamMaxOrbitDistanceSpring {
+            success,
+            ret: native_return,
             
         }
     }
@@ -13918,6 +14004,82 @@ value_,
     }
 }
 
+    fn native_attach_entity_to_entity_physically_override_inverse_mass(&self, first_entity_index_: u32,
+second_entity_index_: u32,
+first_entity_bone_index_: i32,
+second_entity_bone_index_: i32,
+second_entity_offset_x_: f32,
+second_entity_offset_y_: f32,
+second_entity_offset_z_: f32,
+first_entity_offset_x_: f32,
+first_entity_offset_y_: f32,
+first_entity_offset_z_: f32,
+vec_rotation_x_: f32,
+vec_rotation_y_: f32,
+vec_rotation_z_: f32,
+physical_strength_: f32,
+constrain_rotation_: bool,
+do_initial_warp_: bool,
+collide_with_entity_: bool,
+add_initial_seperation_: bool,
+rot_order_: i32,
+inv_mass_scale_a_: f32,
+inv_mass_scale_b_: f32) -> ResultOfAttachEntityToEntityPhysicallyOverrideInverseMass {
+    unsafe {
+        let mut first_entity_index_ = first_entity_index_;
+let mut second_entity_index_ = second_entity_index_;
+let mut first_entity_bone_index_ = first_entity_bone_index_;
+let mut second_entity_bone_index_ = second_entity_bone_index_;
+let mut second_entity_offset_x_ = second_entity_offset_x_;
+let mut second_entity_offset_y_ = second_entity_offset_y_;
+let mut second_entity_offset_z_ = second_entity_offset_z_;
+let mut first_entity_offset_x_ = first_entity_offset_x_;
+let mut first_entity_offset_y_ = first_entity_offset_y_;
+let mut first_entity_offset_z_ = first_entity_offset_z_;
+let mut vec_rotation_x_ = vec_rotation_x_;
+let mut vec_rotation_y_ = vec_rotation_y_;
+let mut vec_rotation_z_ = vec_rotation_z_;
+let mut physical_strength_ = physical_strength_;
+let mut constrain_rotation_ = constrain_rotation_;
+let mut do_initial_warp_ = do_initial_warp_;
+let mut collide_with_entity_ = collide_with_entity_;
+let mut add_initial_seperation_ = add_initial_seperation_;
+let mut rot_order_ = rot_order_;
+let mut inv_mass_scale_a_ = inv_mass_scale_a_;
+let mut inv_mass_scale_b_ = inv_mass_scale_b_;
+        let success = sdk::natives::attach_entity_to_entity_physically_override_inverse_mass(
+            first_entity_index_,
+second_entity_index_,
+first_entity_bone_index_,
+second_entity_bone_index_,
+second_entity_offset_x_,
+second_entity_offset_y_,
+second_entity_offset_z_,
+first_entity_offset_x_,
+first_entity_offset_y_,
+first_entity_offset_z_,
+vec_rotation_x_,
+vec_rotation_y_,
+vec_rotation_z_,
+physical_strength_,
+constrain_rotation_,
+do_initial_warp_,
+collide_with_entity_,
+add_initial_seperation_,
+rot_order_,
+inv_mass_scale_a_,
+inv_mass_scale_b_,
+        );
+        
+        
+        ResultOfAttachEntityToEntityPhysicallyOverrideInverseMass {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_set_entity_dynamic(&self, entity_: u32,
 toggle_: bool) -> ResultOfSetEntityDynamic {
     unsafe {
@@ -15464,15 +15626,18 @@ entity_,
 
     fn native_set_entity_health(&self, entity_: u32,
 health_: i32,
-p2_: i32) -> ResultOfSetEntityHealth {
+instigator_: u32,
+weapon_type_: u32) -> ResultOfSetEntityHealth {
     unsafe {
         let mut entity_ = entity_;
 let mut health_ = health_;
-let mut p2_ = p2_;
+let mut instigator_ = instigator_;
+let mut weapon_type_ = weapon_type_;
         let success = sdk::natives::set_entity_health(
             entity_,
 health_,
-p2_,
+instigator_,
+weapon_type_,
         );
         
         
@@ -17786,6 +17951,24 @@ anim_name_.as_ref().unwrap(),
     }
 }
 
+    fn native_get_nearest_participant_to_entity(&self, entity_: u32) -> ResultOfGetNearestParticipantToEntity {
+    unsafe {
+        let mut native_return = Default::default();
+let mut entity_ = entity_;
+        let success = sdk::natives::get_nearest_participant_to_entity(
+            &mut native_return,
+entity_,
+        );
+        let native_return = native_return;
+        
+        ResultOfGetNearestParticipantToEntity {
+            success,
+            ret: native_return,
+            
+        }
+    }
+}
+
     fn native_is_shocking_event_in_sphere(&self, event_type_: i32,
 x_: f32,
 y_: f32,
@@ -18150,18 +18333,18 @@ character_,
 }
 
     fn native_get_shop_ped_outfit_component_variant(&self, outfit_hash_: u32,
-unk_variant_index_: i32,
+variant_index_: i32,
 out_component_variant_: shared::MemoryBufferId) -> ResultOfGetShopPedOutfitComponentVariant {
     unsafe {
         let mut native_return = Default::default();
 let mut outfit_hash_ = outfit_hash_;
-let mut unk_variant_index_ = unk_variant_index_;
+let mut variant_index_ = variant_index_;
 let mut out_component_variant_ = self.memory_buffers.borrow_mut().get_mut_ptr(out_component_variant_) as *mut c_void;
         let success = sdk::natives::get_shop_ped_outfit_component_variant(
             &mut native_return,
 out_component_variant_,
 outfit_hash_,
-unk_variant_index_,
+variant_index_,
         );
         let native_return = native_return;
 let out_component_variant_ = 0;
@@ -18572,13 +18755,13 @@ outfit_index_,
 }
 
     fn native_get_variant_component(&self, component_hash_: u32,
-unk_variant_component_index_: i32,
+variant_component_index_: i32,
 name_hash_: u32,
 enum_value_: i32,
 component_type_: i32) -> ResultOfGetVariantComponent {
     unsafe {
         let mut component_hash_ = component_hash_;
-let mut unk_variant_component_index_ = unk_variant_component_index_;
+let mut variant_component_index_ = variant_component_index_;
 let mut name_hash_ = name_hash_;
 let mut enum_value_ = enum_value_;
 let mut component_type_ = component_type_;
@@ -18587,7 +18770,7 @@ let mut component_type_ = component_type_;
 &mut enum_value_,
 &mut component_type_,
 component_hash_,
-unk_variant_component_index_,
+variant_component_index_,
         );
         let name_hash_ = name_hash_;
 let enum_value_ = enum_value_;
@@ -18736,18 +18919,18 @@ component_id_,
 }
 
     fn native_get_shop_ped_outfit_prop_variant(&self, outfit_hash_: u32,
-unk_variant_index_: i32,
+variant_index_: i32,
 out_prop_variant_: shared::MemoryBufferId) -> ResultOfGetShopPedOutfitPropVariant {
     unsafe {
         let mut native_return = Default::default();
 let mut outfit_hash_ = outfit_hash_;
-let mut unk_variant_index_ = unk_variant_index_;
+let mut variant_index_ = variant_index_;
 let mut out_prop_variant_ = self.memory_buffers.borrow_mut().get_mut_ptr(out_prop_variant_) as *mut c_void;
         let success = sdk::natives::get_shop_ped_outfit_prop_variant(
             &mut native_return,
 out_prop_variant_,
 outfit_hash_,
-unk_variant_index_,
+variant_index_,
         );
         let native_return = native_return;
 let out_prop_variant_ = 0;
@@ -18912,13 +19095,13 @@ restriction_tag_hash_,
 }
 
     fn native_get_variant_prop(&self, component_hash_: u32,
-unk_variant_prop_index_: i32,
+variant_prop_index_: i32,
 name_hash_: u32,
 enum_value_: i32,
 anchor_point_: i32) -> ResultOfGetVariantProp {
     unsafe {
         let mut component_hash_ = component_hash_;
-let mut unk_variant_prop_index_ = unk_variant_prop_index_;
+let mut variant_prop_index_ = variant_prop_index_;
 let mut name_hash_ = name_hash_;
 let mut enum_value_ = enum_value_;
 let mut anchor_point_ = anchor_point_;
@@ -18927,7 +19110,7 @@ let mut anchor_point_ = anchor_point_;
 &mut enum_value_,
 &mut anchor_point_,
 component_hash_,
-unk_variant_prop_index_,
+variant_prop_index_,
         );
         let name_hash_ = name_hash_;
 let enum_value_ = enum_value_;
@@ -22288,6 +22471,25 @@ p0_,
     }
 }
 
+    fn native_set_particle_fx_looped_camera_bias(&self, ptfx_handle_: i32,
+p1_: f32) -> ResultOfSetParticleFxLoopedCameraBias {
+    unsafe {
+        let mut ptfx_handle_ = ptfx_handle_;
+let mut p1_ = p1_;
+        let success = sdk::natives::set_particle_fx_looped_camera_bias(
+            ptfx_handle_,
+p1_,
+        );
+        
+        
+        ResultOfSetParticleFxLoopedCameraBias {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_add_vehicle_crew_emblem(&self, vehicle_: u32,
 ped_: u32,
 bone_index_: i32,
@@ -23319,6 +23521,22 @@ calculated_y_
         
         
         ResultOfCascadeShadowsSetAircraftMode {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
+    fn native_force_ground_snow_pass(&self, toggle_: bool) -> ResultOfForceGroundSnowPass {
+    unsafe {
+        let mut toggle_ = toggle_;
+        let success = sdk::natives::force_ground_snow_pass(
+            toggle_,
+        );
+        
+        
+        ResultOfForceGroundSnowPass {
             success,
             ret: (),
             
@@ -24837,6 +25055,22 @@ transition_time_,
         ResultOfTriggerScreenblurFadeIn {
             success,
             ret: native_return,
+            
+        }
+    }
+}
+
+    fn native_force_allow_snow_foot_vfx_on_ice(&self, toggle_: bool) -> ResultOfForceAllowSnowFootVfxOnIce {
+    unsafe {
+        let mut toggle_ = toggle_;
+        let success = sdk::natives::force_allow_snow_foot_vfx_on_ice(
+            toggle_,
+        );
+        
+        
+        ResultOfForceAllowSnowFootVfxOnIce {
+            success,
+            ret: (),
             
         }
     }
@@ -27181,6 +27415,36 @@ a_,
     }
 }
 
+    fn native_start_vehicle_particle_fx_looped(&self, vehicle_: u32,
+effect_name_: Option<String>,
+front_back_: bool,
+left_right_: bool,
+local_only_: bool) -> ResultOfStartVehicleParticleFxLooped {
+    unsafe {
+        let mut native_return = Default::default();
+let mut vehicle_ = vehicle_;
+let mut effect_name_ = sdk_helpers::create_c_string_ptr(effect_name_);
+let mut front_back_ = front_back_;
+let mut left_right_ = left_right_;
+let mut local_only_ = local_only_;
+        let success = sdk::natives::start_vehicle_particle_fx_looped(
+            &mut native_return,
+vehicle_,
+effect_name_.as_ref().unwrap(),
+front_back_,
+left_right_,
+local_only_,
+        );
+        let native_return = native_return;
+        
+        ResultOfStartVehicleParticleFxLooped {
+            success,
+            ret: native_return,
+            
+        }
+    }
+}
+
     fn native_has_scaleform_script_hud_movie_loaded(&self, hud_component_: i32) -> ResultOfHasScaleformScriptHudMovieLoaded {
     unsafe {
         let mut native_return = Default::default();
@@ -27790,6 +28054,25 @@ p0_,
         
         
         ResultOfRemoveDecal {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
+    fn native_set_tv_channel_playlist_dirty(&self, tv_channel_: i32,
+p1_: bool) -> ResultOfSetTvChannelPlaylistDirty {
+    unsafe {
+        let mut tv_channel_ = tv_channel_;
+let mut p1_ = p1_;
+        let success = sdk::natives::set_tv_channel_playlist_dirty(
+            tv_channel_,
+p1_,
+        );
+        
+        
+        ResultOfSetTvChannelPlaylistDirty {
             success,
             ret: (),
             
@@ -29681,6 +29964,22 @@ name_.as_ref().unwrap(),
     }
 }
 
+    fn native_use_vehicle_targeting_reticule_on_vehicles(&self, enable_: bool) -> ResultOfUseVehicleTargetingReticuleOnVehicles {
+    unsafe {
+        let mut enable_ = enable_;
+        let success = sdk::natives::use_vehicle_targeting_reticule_on_vehicles(
+            enable_,
+        );
+        
+        
+        ResultOfUseVehicleTargetingReticuleOnVehicles {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_get_first_blip_info_id(&self, blip_sprite_: i32) -> ResultOfGetFirstBlipInfoId {
     unsafe {
         let mut native_return = Default::default();
@@ -30300,6 +30599,28 @@ toggle_,
     }
 }
 
+    fn native_set_blip_gps_route_display_distance(&self, blip_: i32,
+blip_change_param46_: i32,
+blip_change_param47_: bool) -> ResultOfSetBlipGpsRouteDisplayDistance {
+    unsafe {
+        let mut blip_ = blip_;
+let mut blip_change_param46_ = blip_change_param46_;
+let mut blip_change_param47_ = blip_change_param47_;
+        let success = sdk::natives::set_blip_gps_route_display_distance(
+            blip_,
+blip_change_param46_,
+blip_change_param47_,
+        );
+        
+        
+        ResultOfSetBlipGpsRouteDisplayDistance {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_thefeed_hide_this_frame(&self, ) -> ResultOfThefeedHideThisFrame {
     unsafe {
         
@@ -30910,6 +31231,22 @@ gxt_label2_.as_ref().unwrap(),
         
         
         ResultOfRemoveFakeConeData {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
+    fn native_set_pause_exterior_rendering_while_in_interior(&self, ) -> ResultOfSetPauseExteriorRenderingWhileInInterior {
+    unsafe {
+        
+        let success = sdk::natives::set_pause_exterior_rendering_while_in_interior(
+            
+        );
+        
+        
+        ResultOfSetPauseExteriorRenderingWhileInInterior {
             success,
             ret: (),
             
@@ -33180,11 +33517,11 @@ override_color_,
     }
 }
 
-    fn native_open_social_club_menu(&self, ) -> ResultOfOpenSocialClubMenu {
+    fn native_open_social_club_menu(&self, menu_: u32) -> ResultOfOpenSocialClubMenu {
     unsafe {
-        
+        let mut menu_ = menu_;
         let success = sdk::natives::open_social_club_menu(
-            
+            menu_,
         );
         
         
@@ -34707,6 +35044,22 @@ draw_immediately_,
         ResultOfIsRadarPreferenceSwitchedOn {
             success,
             ret: native_return,
+            
+        }
+    }
+}
+
+    fn native_set_text_line_height_mult(&self, line_height_mult_: f32) -> ResultOfSetTextLineHeightMult {
+    unsafe {
+        let mut line_height_mult_ = line_height_mult_;
+        let success = sdk::natives::set_text_line_height_mult(
+            line_height_mult_,
+        );
+        
+        
+        ResultOfSetTextLineHeightMult {
+            success,
+            ret: (),
             
         }
     }
@@ -42895,6 +43248,24 @@ p1_,
     }
 }
 
+    fn native_get_content_prop_type(&self, model_: u32) -> ResultOfGetContentPropType {
+    unsafe {
+        let mut native_return = Default::default();
+let mut model_ = model_;
+        let success = sdk::natives::get_content_prop_type(
+            &mut native_return,
+model_,
+        );
+        let native_return = native_return;
+        
+        ResultOfGetContentPropType {
+            success,
+            ret: native_return,
+            
+        }
+    }
+}
+
     fn native_get_ground_z_and_normal_for3d_coord(&self, x_: f32,
 y_: f32,
 z_: f32,
@@ -44303,6 +44674,25 @@ z_,
         
         
         ResultOfWaterOverrideSetRippledisturb {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
+    fn native_set_content_prop_type(&self, model_: u32,
+type_: i32) -> ResultOfSetContentPropType {
+    unsafe {
+        let mut model_ = model_;
+let mut type_ = type_;
+        let success = sdk::natives::set_content_prop_type(
+            model_,
+type_,
+        );
+        
+        
+        ResultOfSetContentPropType {
             success,
             ret: (),
             
@@ -46960,22 +47350,6 @@ p3_,
     }
 }
 
-    fn native_network_earn_from_rockstar(&self, amount_: i32) -> ResultOfNetworkEarnFromRockstar {
-    unsafe {
-        let mut amount_ = amount_;
-        let success = sdk::natives::network_earn_from_rockstar(
-            amount_,
-        );
-        
-        
-        ResultOfNetworkEarnFromRockstar {
-            success,
-            ret: (),
-            
-        }
-    }
-}
-
     fn native_network_spend_vehicle_requested(&self, p0_: i32,
 p1_: i32,
 p2_: i32,
@@ -48032,6 +48406,43 @@ act_index_,
             success,
             ret: (),
             
+        }
+    }
+}
+
+    fn native_network_spent_generic(&self, price_: i32,
+p1_: bool,
+p2_: bool,
+stat_: u32,
+spent_: u32,
+p5_: Option<String>,
+p6_: Option<String>,
+data_: shared::MemoryBufferId) -> ResultOfNetworkSpentGeneric {
+    unsafe {
+        let mut price_ = price_;
+let mut p1_ = p1_;
+let mut p2_ = p2_;
+let mut stat_ = stat_;
+let mut spent_ = spent_;
+let mut p5_ = sdk_helpers::create_c_string_ptr(p5_);
+let mut p6_ = sdk_helpers::create_c_string_ptr(p6_);
+let mut data_ = self.memory_buffers.borrow_mut().get_mut_ptr(data_) as *mut c_void;
+        let success = sdk::natives::network_spent_generic(
+            data_,
+price_,
+p1_,
+p2_,
+stat_,
+spent_,
+p5_.as_ref().unwrap(),
+p6_.as_ref().unwrap(),
+        );
+        let data_ = 0;
+        
+        ResultOfNetworkSpentGeneric {
+            success,
+            ret: (),
+            data_
         }
     }
 }
@@ -49168,6 +49579,25 @@ p1_,
     }
 }
 
+    fn native_network_earn_avenger(&self, amount_: i32,
+p1_: i32) -> ResultOfNetworkEarnAvenger {
+    unsafe {
+        let mut amount_ = amount_;
+let mut p1_ = p1_;
+        let success = sdk::natives::network_earn_avenger(
+            amount_,
+p1_,
+        );
+        
+        
+        ResultOfNetworkEarnAvenger {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_network_earn_casino_mission_reward(&self, amount_: i32) -> ResultOfNetworkEarnCasinoMissionReward {
     unsafe {
         let mut amount_ = amount_;
@@ -49767,17 +50197,20 @@ p2_
     fn native_network_spent_purchase_office_property(&self, p0_: i32,
 p1_: i32,
 p2_: i32,
-p3_: i32) -> ResultOfNetworkSpentPurchaseOfficeProperty {
+p3_: i32,
+p4_: i32) -> ResultOfNetworkSpentPurchaseOfficeProperty {
     unsafe {
         let mut p0_ = p0_;
 let mut p1_ = p1_;
 let mut p2_ = p2_;
 let mut p3_ = p3_;
+let mut p4_ = p4_;
         let success = sdk::natives::network_spent_purchase_office_property(
             p0_,
 p1_,
 p2_,
 p3_,
+p4_,
         );
         
         
@@ -49840,19 +50273,22 @@ p3_,
 p1_: i32,
 p2_: i32,
 p3_: i32,
-p4_: i32) -> ResultOfNetworkEarnFromSmugglerWork {
+p4_: i32,
+p5_: i32) -> ResultOfNetworkEarnFromSmugglerWork {
     unsafe {
         let mut p0_ = p0_;
 let mut p1_ = p1_;
 let mut p2_ = p2_;
 let mut p3_ = p3_;
 let mut p4_ = p4_;
+let mut p5_ = p5_;
         let success = sdk::natives::network_earn_from_smuggler_work(
             p0_,
 p1_,
 p2_,
 p3_,
 p4_,
+p5_,
         );
         
         
@@ -50035,11 +50471,13 @@ p3_,
     }
 }
 
-    fn native_network_get_string_bank_wallet_balance(&self, ) -> ResultOfNetworkGetStringBankWalletBalance {
+    fn native_network_get_string_bank_wallet_balance(&self, character_: i32) -> ResultOfNetworkGetStringBankWalletBalance {
     unsafe {
         let mut native_return = sdk::natives::create_null_c_string_ptr().within_unique_ptr();
+let mut character_ = character_;
         let success = sdk::natives::network_get_string_bank_wallet_balance(
             native_return.pin_mut(),
+character_,
         );
         let native_return = sdk_helpers::read_c_string_ptr(native_return);
         
@@ -50647,11 +51085,17 @@ property_name_,
     }
 }
 
-    fn native_network_earn_from_destroying_contraband(&self, p0_: i32) -> ResultOfNetworkEarnFromDestroyingContraband {
+    fn native_network_earn_from_destroying_contraband(&self, p0_: i32,
+p1_: i32,
+p2_: i32) -> ResultOfNetworkEarnFromDestroyingContraband {
     unsafe {
         let mut p0_ = p0_;
+let mut p1_ = p1_;
+let mut p2_ = p2_;
         let success = sdk::natives::network_earn_from_destroying_contraband(
             p0_,
+p1_,
+p2_,
         );
         
         
@@ -50898,20 +51342,54 @@ p2_,
     }
 }
 
+    fn native_network_spent_air_freight(&self, hangar_cargo_sourcing_price_: i32,
+from_bank_: bool,
+from_bank_and_wallet_: bool,
+cost_: i32,
+warehouse_id_: i32,
+warehouse_slot_: i32) -> ResultOfNetworkSpentAirFreight {
+    unsafe {
+        let mut hangar_cargo_sourcing_price_ = hangar_cargo_sourcing_price_;
+let mut from_bank_ = from_bank_;
+let mut from_bank_and_wallet_ = from_bank_and_wallet_;
+let mut cost_ = cost_;
+let mut warehouse_id_ = warehouse_id_;
+let mut warehouse_slot_ = warehouse_slot_;
+        let success = sdk::natives::network_spent_air_freight(
+            hangar_cargo_sourcing_price_,
+from_bank_,
+from_bank_and_wallet_,
+cost_,
+warehouse_id_,
+warehouse_slot_,
+        );
+        
+        
+        ResultOfNetworkSpentAirFreight {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_network_spent_upgrade_office_property(&self, p0_: i32,
 p1_: i32,
 p2_: i32,
-p3_: i32) -> ResultOfNetworkSpentUpgradeOfficeProperty {
+p3_: i32,
+p4_: i32) -> ResultOfNetworkSpentUpgradeOfficeProperty {
     unsafe {
         let mut p0_ = p0_;
 let mut p1_ = p1_;
 let mut p2_ = p2_;
 let mut p3_ = p3_;
+let mut p4_ = p4_;
         let success = sdk::natives::network_spent_upgrade_office_property(
             p0_,
 p1_,
 p2_,
 p3_,
+p4_,
         );
         
         
@@ -51116,6 +51594,31 @@ p5_,
         
         
         ResultOfNetworkSpentCargoSourcing {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
+    fn native_network_spent_stealth_module(&self, amount_: i32,
+from_bank_: bool,
+from_bank_and_wallet_: bool,
+p3_: u32) -> ResultOfNetworkSpentStealthModule {
+    unsafe {
+        let mut amount_ = amount_;
+let mut from_bank_ = from_bank_;
+let mut from_bank_and_wallet_ = from_bank_and_wallet_;
+let mut p3_ = p3_;
+        let success = sdk::natives::network_spent_stealth_module(
+            amount_,
+from_bank_,
+from_bank_and_wallet_,
+p3_,
+        );
+        
+        
+        ResultOfNetworkSpentStealthModule {
             success,
             ret: (),
             
@@ -51488,17 +51991,20 @@ amount_,
     fn native_network_buy_backup_gang(&self, p0_: i32,
 p1_: i32,
 p2_: bool,
-p3_: bool) -> ResultOfNetworkBuyBackupGang {
+p3_: bool,
+npc_provider_: i32) -> ResultOfNetworkBuyBackupGang {
     unsafe {
         let mut p0_ = p0_;
 let mut p1_ = p1_;
 let mut p2_ = p2_;
 let mut p3_ = p3_;
+let mut npc_provider_ = npc_provider_;
         let success = sdk::natives::network_buy_backup_gang(
             p0_,
 p1_,
 p2_,
 p3_,
+npc_provider_,
         );
         
         
@@ -52421,6 +52927,34 @@ p1_,
     }
 }
 
+    fn native_network_earn_generic(&self, amount_: i32,
+earn_: u32,
+p2_: Option<String>,
+p3_: Option<String>,
+data_: shared::MemoryBufferId) -> ResultOfNetworkEarnGeneric {
+    unsafe {
+        let mut amount_ = amount_;
+let mut earn_ = earn_;
+let mut p2_ = sdk_helpers::create_c_string_ptr(p2_);
+let mut p3_ = sdk_helpers::create_c_string_ptr(p3_);
+let mut data_ = self.memory_buffers.borrow_mut().get_mut_ptr(data_) as *mut c_void;
+        let success = sdk::natives::network_earn_generic(
+            data_,
+amount_,
+earn_,
+p2_.as_ref().unwrap(),
+p3_.as_ref().unwrap(),
+        );
+        let data_ = 0;
+        
+        ResultOfNetworkEarnGeneric {
+            success,
+            ret: (),
+            data_
+        }
+    }
+}
+
     fn native_network_spend_hidden(&self, p0_: i32,
 p1_: i32,
 p2_: i32,
@@ -53073,6 +53607,31 @@ p3_,
     }
 }
 
+    fn native_network_spent_missile_jammer(&self, amount_: i32,
+from_bank_: bool,
+from_bank_and_wallet_: bool,
+p3_: u32) -> ResultOfNetworkSpentMissileJammer {
+    unsafe {
+        let mut amount_ = amount_;
+let mut from_bank_ = from_bank_;
+let mut from_bank_and_wallet_ = from_bank_and_wallet_;
+let mut p3_ = p3_;
+        let success = sdk::natives::network_spent_missile_jammer(
+            amount_,
+from_bank_,
+from_bank_and_wallet_,
+p3_,
+        );
+        
+        
+        ResultOfNetworkSpentMissileJammer {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_network_spent_mc_ability(&self, p0_: i32,
 p1_: i32,
 p2_: i32,
@@ -53285,6 +53844,28 @@ character_slot_,
     }
 }
 
+    fn native_network_earn_bonus_objective(&self, amount_: i32,
+p1_: i32,
+p2_: i32) -> ResultOfNetworkEarnBonusObjective {
+    unsafe {
+        let mut amount_ = amount_;
+let mut p1_ = p1_;
+let mut p2_ = p2_;
+        let success = sdk::natives::network_earn_bonus_objective(
+            amount_,
+p1_,
+p2_,
+        );
+        
+        
+        ResultOfNetworkEarnBonusObjective {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_network_spend_nightclub_bar_drink(&self, amount_: i32,
 p1_: i32,
 p2_: bool,
@@ -53373,6 +53954,28 @@ p1_,
     }
 }
 
+    fn native_network_earn_smuggler_ops(&self, p0_: i32,
+p1_: i32,
+p2_: i32) -> ResultOfNetworkEarnSmugglerOps {
+    unsafe {
+        let mut p0_ = p0_;
+let mut p1_ = p1_;
+let mut p2_ = p2_;
+        let success = sdk::natives::network_earn_smuggler_ops(
+            p0_,
+p1_,
+p2_,
+        );
+        
+        
+        ResultOfNetworkEarnSmugglerOps {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_network_earn_from_jobx2(&self, amount_: i32,
 p1_: Option<String>) -> ResultOfNetworkEarnFromJobx2 {
     unsafe {
@@ -53445,6 +54048,22 @@ p1_,
         
         
         ResultOfNetworkEarnJuggaloStoryMission {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
+    fn native_network_clear_transaction_telemetry_nonce(&self, ) -> ResultOfNetworkClearTransactionTelemetryNonce {
+    unsafe {
+        
+        let success = sdk::natives::network_clear_transaction_telemetry_nonce(
+            
+        );
+        
+        
+        ResultOfNetworkClearTransactionTelemetryNonce {
             success,
             ret: (),
             
@@ -54000,6 +54619,31 @@ p1_,
     }
 }
 
+    fn native_network_spent_skip_cargo_source_setup(&self, amount_: i32,
+from_bank_: bool,
+from_bank_and_wallet_: bool,
+cost_: i32) -> ResultOfNetworkSpentSkipCargoSourceSetup {
+    unsafe {
+        let mut amount_ = amount_;
+let mut from_bank_ = from_bank_;
+let mut from_bank_and_wallet_ = from_bank_and_wallet_;
+let mut cost_ = cost_;
+        let success = sdk::natives::network_spent_skip_cargo_source_setup(
+            amount_,
+from_bank_,
+from_bank_and_wallet_,
+cost_,
+        );
+        
+        
+        ResultOfNetworkSpentSkipCargoSourceSetup {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_network_earn_gangops_prep_participation(&self, amount_: i32) -> ResultOfNetworkEarnGangopsPrepParticipation {
     unsafe {
         let mut amount_ = amount_;
@@ -54360,6 +55004,25 @@ amount_,
     }
 }
 
+    fn native_network_earn_progress_hub(&self, p0_: i32,
+p1_: i32) -> ResultOfNetworkEarnProgressHub {
+    unsafe {
+        let mut p0_ = p0_;
+let mut p1_ = p1_;
+        let success = sdk::natives::network_earn_progress_hub(
+            p0_,
+p1_,
+        );
+        
+        
+        ResultOfNetworkEarnProgressHub {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_network_earn_from_import_export(&self, amount_: i32,
 model_hash_: u32) -> ResultOfNetworkEarnFromImportExport {
     unsafe {
@@ -54569,15 +55232,18 @@ p3_,
 
     fn native_network_spent_rename_organization(&self, p0_: i32,
 p1_: i32,
-p2_: i32) -> ResultOfNetworkSpentRenameOrganization {
+p2_: i32,
+p3_: i32) -> ResultOfNetworkSpentRenameOrganization {
     unsafe {
         let mut p0_ = p0_;
 let mut p1_ = p1_;
 let mut p2_ = p2_;
+let mut p3_ = p3_;
         let success = sdk::natives::network_spent_rename_organization(
             p0_,
 p1_,
 p2_,
+p3_,
         );
         
         
@@ -55511,6 +56177,22 @@ let gamer_handle_ = 0;
         let native_return = native_return;
         
         ResultOfNetworkShouldShowPromotionAlertScreen {
+            success,
+            ret: native_return,
+            
+        }
+    }
+}
+
+    fn native_network_is_americas_version(&self, ) -> ResultOfNetworkIsAmericasVersion {
+    unsafe {
+        let mut native_return = Default::default();
+        let success = sdk::natives::network_is_americas_version(
+            &mut native_return,
+        );
+        let native_return = native_return;
+        
+        ResultOfNetworkIsAmericasVersion {
             success,
             ret: native_return,
             
@@ -58087,17 +58769,17 @@ p1_.as_ref().unwrap(),
 
     fn native_network_session_do_friend_matchmaking(&self, p0_: i32,
 p1_: i32,
-max_players_: i32) -> ResultOfNetworkSessionDoFriendMatchmaking {
+p2_: i32) -> ResultOfNetworkSessionDoFriendMatchmaking {
     unsafe {
         let mut native_return = Default::default();
 let mut p0_ = p0_;
 let mut p1_ = p1_;
-let mut max_players_ = max_players_;
+let mut p2_ = p2_;
         let success = sdk::natives::network_session_do_friend_matchmaking(
             &mut native_return,
 p0_,
 p1_,
-max_players_,
+p2_,
         );
         let native_return = native_return;
         
@@ -58515,20 +59197,17 @@ p2_,
 
     fn native_network_session_do_freeroam_quickmatch(&self, p0_: i32,
 p1_: i32,
-p2_: i32,
-max_players_: i32) -> ResultOfNetworkSessionDoFreeroamQuickmatch {
+p2_: i32) -> ResultOfNetworkSessionDoFreeroamQuickmatch {
     unsafe {
         let mut native_return = Default::default();
 let mut p0_ = p0_;
 let mut p1_ = p1_;
 let mut p2_ = p2_;
-let mut max_players_ = max_players_;
         let success = sdk::natives::network_session_do_freeroam_quickmatch(
             &mut native_return,
 p0_,
 p1_,
 p2_,
-max_players_,
         );
         let native_return = native_return;
         
@@ -58540,24 +59219,24 @@ max_players_,
     }
 }
 
-    fn native_network_register_player_broadcast_variables(&self, unk_vars_: i32,
+    fn native_network_register_player_broadcast_variables(&self, vars_: i32,
 num_vars_: i32,
 debug_name_: Option<String>) -> ResultOfNetworkRegisterPlayerBroadcastVariables {
     unsafe {
-        let mut unk_vars_ = unk_vars_;
+        let mut vars_ = vars_;
 let mut num_vars_ = num_vars_;
 let mut debug_name_ = sdk_helpers::create_c_string_ptr(debug_name_);
         let success = sdk::natives::network_register_player_broadcast_variables(
-            &mut unk_vars_,
+            &mut vars_,
 num_vars_,
 debug_name_.as_ref().unwrap(),
         );
-        let unk_vars_ = unk_vars_;
+        let vars_ = vars_;
         
         ResultOfNetworkRegisterPlayerBroadcastVariables {
             success,
             ret: (),
-            unk_vars_
+            vars_
         }
     }
 }
@@ -59240,24 +59919,24 @@ text_label_.as_ref().unwrap(),
     }
 }
 
-    fn native_network_register_host_broadcast_variables(&self, unk_vars_: i32,
+    fn native_network_register_host_broadcast_variables(&self, vars_: i32,
 num_vars_: i32,
 debug_name_: Option<String>) -> ResultOfNetworkRegisterHostBroadcastVariables {
     unsafe {
-        let mut unk_vars_ = unk_vars_;
+        let mut vars_ = vars_;
 let mut num_vars_ = num_vars_;
 let mut debug_name_ = sdk_helpers::create_c_string_ptr(debug_name_);
         let success = sdk::natives::network_register_host_broadcast_variables(
-            &mut unk_vars_,
+            &mut vars_,
 num_vars_,
 debug_name_.as_ref().unwrap(),
         );
-        let unk_vars_ = unk_vars_;
+        let vars_ = vars_;
         
         ResultOfNetworkRegisterHostBroadcastVariables {
             success,
             ret: (),
-            unk_vars_
+            vars_
         }
     }
 }
@@ -59385,6 +60064,24 @@ toggle_,
         ResultOfNetworkDisableProximityMigration {
             success,
             ret: (),
+            
+        }
+    }
+}
+
+    fn native_network_get_communication_group_flags(&self, communication_type_: i32) -> ResultOfNetworkGetCommunicationGroupFlags {
+    unsafe {
+        let mut native_return = Default::default();
+let mut communication_type_ = communication_type_;
+        let success = sdk::natives::network_get_communication_group_flags(
+            &mut native_return,
+communication_type_,
+        );
+        let native_return = native_return;
+        
+        ResultOfNetworkGetCommunicationGroupFlags {
+            success,
+            ret: native_return,
             
         }
     }
@@ -59902,30 +60599,6 @@ p2_,
         let native_return = native_return;
         
         ResultOfHasNetworkTimeStarted {
-            success,
-            ret: native_return,
-            
-        }
-    }
-}
-
-    fn native_trigger_player_crc_hacker_check(&self, player_: u32,
-p1_: i32,
-script_hash_: u32) -> ResultOfTriggerPlayerCrcHackerCheck {
-    unsafe {
-        let mut native_return = Default::default();
-let mut player_ = player_;
-let mut p1_ = p1_;
-let mut script_hash_ = script_hash_;
-        let success = sdk::natives::trigger_player_crc_hacker_check(
-            &mut native_return,
-player_,
-p1_,
-script_hash_,
-        );
-        let native_return = native_return;
-        
-        ResultOfTriggerPlayerCrcHackerCheck {
             success,
             ret: native_return,
             
@@ -60981,17 +61654,15 @@ let mut txd_name_ = sdk_helpers::create_c_string_ptr(txd_name_);
         let success = sdk::natives::network_clan_get_emblem_txd_name(
             &mut native_return,
 net_handle_,
-txd_name_.pin_mut(),
+txd_name_.as_ref().unwrap(),
         );
         let native_return = native_return;
 let net_handle_ = 0;
-let txd_name_ = sdk_helpers::read_c_string_ptr(txd_name_);
         
         ResultOfNetworkClanGetEmblemTxdName {
             success,
             ret: native_return,
-            net_handle_,
-txd_name_
+            net_handle_
         }
     }
 }
@@ -63341,13 +64012,16 @@ p1_,
 }
 
     fn native_set_network_id_visible_in_cutscene_remain_hack(&self, p0_: i32,
-p1_: i32) -> ResultOfSetNetworkIdVisibleInCutsceneRemainHack {
+p1_: i32,
+p2_: i32) -> ResultOfSetNetworkIdVisibleInCutsceneRemainHack {
     unsafe {
         let mut p0_ = p0_;
 let mut p1_ = p1_;
+let mut p2_ = p2_;
         let success = sdk::natives::set_network_id_visible_in_cutscene_remain_hack(
             p0_,
 p1_,
+p2_,
         );
         
         
@@ -64351,6 +65025,22 @@ toggle_,
         ResultOfNetworkTriggerDamageEventForZeroDamage {
             success,
             ret: (),
+            
+        }
+    }
+}
+
+    fn native_network_has_ros_privilege_mp_voice_communication(&self, ) -> ResultOfNetworkHasRosPrivilegeMpVoiceCommunication {
+    unsafe {
+        let mut native_return = Default::default();
+        let success = sdk::natives::network_has_ros_privilege_mp_voice_communication(
+            &mut native_return,
+        );
+        let native_return = native_return;
+        
+        ResultOfNetworkHasRosPrivilegeMpVoiceCommunication {
+            success,
+            ret: native_return,
             
         }
     }
@@ -65831,6 +66521,22 @@ p5_,
     }
 }
 
+    fn native_network_set_vehicle_driven_location(&self, location_: u32) -> ResultOfNetworkSetVehicleDrivenLocation {
+    unsafe {
+        let mut location_ = location_;
+        let success = sdk::natives::network_set_vehicle_driven_location(
+            location_,
+        );
+        
+        
+        ResultOfNetworkSetVehicleDrivenLocation {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_network_is_logged_in_to_psn(&self, ) -> ResultOfNetworkIsLoggedInToPsn {
     unsafe {
         let mut native_return = Default::default();
@@ -65880,30 +66586,6 @@ entity_,
         let native_return = native_return;
         
         ResultOfNetworkGetNetworkIdFromEntity {
-            success,
-            ret: native_return,
-            
-        }
-    }
-}
-
-    fn native_trigger_tuning_crc_hacker_check(&self, player_: u32,
-p1_: Option<String>,
-p2_: Option<String>) -> ResultOfTriggerTuningCrcHackerCheck {
-    unsafe {
-        let mut native_return = Default::default();
-let mut player_ = player_;
-let mut p1_ = sdk_helpers::create_c_string_ptr(p1_);
-let mut p2_ = sdk_helpers::create_c_string_ptr(p2_);
-        let success = sdk::natives::trigger_tuning_crc_hacker_check(
-            &mut native_return,
-player_,
-p1_.as_ref().unwrap(),
-p2_.as_ref().unwrap(),
-        );
-        let native_return = native_return;
-        
-        ResultOfTriggerTuningCrcHackerCheck {
             success,
             ret: native_return,
             
@@ -66504,13 +67186,16 @@ let gamer_handle_ = 0;
     }
 }
 
-    fn native_network_get_predicted_velocity(&self, entity_: u32) -> ResultOfNetworkGetPredictedVelocity {
+    fn native_network_get_predicted_velocity(&self, entity_: u32,
+max_speed_to_predict_: f32) -> ResultOfNetworkGetPredictedVelocity {
     unsafe {
         let mut native_return = sdk::create_vector3().within_unique_ptr();
 let mut entity_ = entity_;
+let mut max_speed_to_predict_ = max_speed_to_predict_;
         let success = sdk::natives::network_get_predicted_velocity(
             native_return.pin_mut(),
 entity_,
+max_speed_to_predict_,
         );
         let native_return = sdk_helpers::read_cpp_vector3(native_return);
         
@@ -67829,6 +68514,22 @@ time_data_
     }
 }
 
+    fn native_ugc_has_permission_to_write(&self, ) -> ResultOfUgcHasPermissionToWrite {
+    unsafe {
+        let mut native_return = Default::default();
+        let success = sdk::natives::ugc_has_permission_to_write(
+            &mut native_return,
+        );
+        let native_return = native_return;
+        
+        ResultOfUgcHasPermissionToWrite {
+            success,
+            ret: native_return,
+            
+        }
+    }
+}
+
     fn native_network_transition_add_stage(&self, hash_: u32,
 p1_: i32,
 p2_: i32,
@@ -68516,6 +69217,22 @@ p0_,
     }
 }
 
+    fn native_network_session_get_unique_crew_limit(&self, ) -> ResultOfNetworkSessionGetUniqueCrewLimit {
+    unsafe {
+        let mut native_return = Default::default();
+        let success = sdk::natives::network_session_get_unique_crew_limit(
+            &mut native_return,
+        );
+        let native_return = native_return;
+        
+        ResultOfNetworkSessionGetUniqueCrewLimit {
+            success,
+            ret: native_return,
+            
+        }
+    }
+}
+
     fn native_network_get_entity_from_network_id(&self, net_id_: i32) -> ResultOfNetworkGetEntityFromNetworkId {
     unsafe {
         let mut native_return = Default::default();
@@ -69195,6 +69912,22 @@ net_handle_,
     }
 }
 
+    fn native_network_has_ros_privilege_mp_text_communication(&self, ) -> ResultOfNetworkHasRosPrivilegeMpTextCommunication {
+    unsafe {
+        let mut native_return = Default::default();
+        let success = sdk::natives::network_has_ros_privilege_mp_text_communication(
+            &mut native_return,
+        );
+        let native_return = native_return;
+        
+        ResultOfNetworkHasRosPrivilegeMpTextCommunication {
+            success,
+            ret: native_return,
+            
+        }
+    }
+}
+
     fn native_network_clear_clock_time_override(&self, ) -> ResultOfNetworkClearClockTimeOverride {
     unsafe {
         
@@ -69273,6 +70006,24 @@ z_,
         ResultOfNetworkApplyVoiceProximityOverride {
             success,
             ret: (),
+            
+        }
+    }
+}
+
+    fn native_network_does_communication_group_exist(&self, communication_type_: i32) -> ResultOfNetworkDoesCommunicationGroupExist {
+    unsafe {
+        let mut native_return = Default::default();
+let mut communication_type_ = communication_type_;
+        let success = sdk::natives::network_does_communication_group_exist(
+            &mut native_return,
+communication_type_,
+        );
+        let native_return = native_return;
+        
+        ResultOfNetworkDoesCommunicationGroupExist {
+            success,
+            ret: native_return,
             
         }
     }
@@ -69552,6 +70303,27 @@ p2_,
     }
 }
 
+    fn native_network_session_leave_including_reason(&self, leave_flags_: i32,
+leave_reason_: i32) -> ResultOfNetworkSessionLeaveIncludingReason {
+    unsafe {
+        let mut native_return = Default::default();
+let mut leave_flags_ = leave_flags_;
+let mut leave_reason_ = leave_reason_;
+        let success = sdk::natives::network_session_leave_including_reason(
+            &mut native_return,
+leave_flags_,
+leave_reason_,
+        );
+        let native_return = native_return;
+        
+        ResultOfNetworkSessionLeaveIncludingReason {
+            success,
+            ret: native_return,
+            
+        }
+    }
+}
+
     fn native_network_clear_voice_channel(&self, ) -> ResultOfNetworkClearVoiceChannel {
     unsafe {
         
@@ -69648,6 +70420,22 @@ p0_,
         let native_return = native_return;
         
         ResultOfCanRegisterMissionDoors {
+            success,
+            ret: native_return,
+            
+        }
+    }
+}
+
+    fn native_network_have_platform_communication_privileges(&self, ) -> ResultOfNetworkHavePlatformCommunicationPrivileges {
+    unsafe {
+        let mut native_return = Default::default();
+        let success = sdk::natives::network_have_platform_communication_privileges(
+            &mut native_return,
+        );
+        let native_return = native_return;
+        
+        ResultOfNetworkHavePlatformCommunicationPrivileges {
             success,
             ret: native_return,
             
@@ -69766,6 +70554,25 @@ crew_id_,
         ResultOfNetworkFindGamersInCrew {
             success,
             ret: native_return,
+            
+        }
+    }
+}
+
+    fn native_network_set_communication_group_flags(&self, communication_type_: i32,
+communication_group_flag_: i32) -> ResultOfNetworkSetCommunicationGroupFlags {
+    unsafe {
+        let mut communication_type_ = communication_type_;
+let mut communication_group_flag_ = communication_group_flag_;
+        let success = sdk::natives::network_set_communication_group_flags(
+            communication_type_,
+communication_group_flag_,
+        );
+        
+        
+        ResultOfNetworkSetCommunicationGroupFlags {
+            success,
+            ret: (),
             
         }
     }
@@ -70551,27 +71358,6 @@ flag_,
     }
 }
 
-    fn native_trigger_file_crc_hacker_check(&self, player_: u32,
-p1_: Option<String>) -> ResultOfTriggerFileCrcHackerCheck {
-    unsafe {
-        let mut native_return = Default::default();
-let mut player_ = player_;
-let mut p1_ = sdk_helpers::create_c_string_ptr(p1_);
-        let success = sdk::natives::trigger_file_crc_hacker_check(
-            &mut native_return,
-player_,
-p1_.as_ref().unwrap(),
-        );
-        let native_return = native_return;
-        
-        ResultOfTriggerFileCrcHackerCheck {
-            success,
-            ret: native_return,
-            
-        }
-    }
-}
-
     fn native_get_num_commerce_items(&self, ) -> ResultOfGetNumCommerceItems {
     unsafe {
         let mut native_return = Default::default();
@@ -70648,17 +71434,15 @@ let mut buffer_size_ = buffer_size_;
 let mut formatted_tag_ = sdk_helpers::create_c_string_ptr(formatted_tag_);
         let success = sdk::natives::network_clan_get_ui_formatted_tag(
             clan_desc_,
-formatted_tag_.pin_mut(),
 buffer_size_,
+formatted_tag_.as_ref().unwrap(),
         );
         let clan_desc_ = 0;
-let formatted_tag_ = sdk_helpers::read_c_string_ptr(formatted_tag_);
         
         ResultOfNetworkClanGetUiFormattedTag {
             success,
             ret: (),
-            clan_desc_,
-formatted_tag_
+            clan_desc_
         }
     }
 }
@@ -73249,13 +74033,16 @@ object_,
 }
 
     fn native_set_object_targettable(&self, object_: u32,
-targettable_: bool) -> ResultOfSetObjectTargettable {
+targettable_: bool,
+p2_: i32) -> ResultOfSetObjectTargettable {
     unsafe {
         let mut object_ = object_;
 let mut targettable_ = targettable_;
+let mut p2_ = p2_;
         let success = sdk::natives::set_object_targettable(
             object_,
 targettable_,
+p2_,
         );
         
         
@@ -76748,6 +77535,42 @@ node_id_,
     }
 }
 
+    fn native_get_spawn_coords_for_vehicle_node(&self, node_address_: i32,
+towards_coors_x_: f32,
+towards_coors_y_: f32,
+towards_coors_z_: f32,
+centre_point_: Option<shared::Vector3>,
+heading_: f32) -> ResultOfGetSpawnCoordsForVehicleNode {
+    unsafe {
+        let mut native_return = sdk::create_vector3().within_unique_ptr();
+let mut node_address_ = node_address_;
+let mut towards_coors_x_ = towards_coors_x_;
+let mut towards_coors_y_ = towards_coors_y_;
+let mut towards_coors_z_ = towards_coors_z_;
+let mut centre_point_ = sdk_helpers::create_vector3_ptr(centre_point_);
+let mut heading_ = heading_;
+        let success = sdk::natives::get_spawn_coords_for_vehicle_node(
+            native_return.pin_mut(),
+centre_point_.pin_mut(),
+&mut heading_,
+node_address_,
+towards_coors_x_,
+towards_coors_y_,
+towards_coors_z_,
+        );
+        let native_return = sdk_helpers::read_cpp_vector3(native_return);
+let centre_point_ = sdk_helpers::read_cpp_vector3(centre_point_);
+let heading_ = heading_;
+        
+        ResultOfGetSpawnCoordsForVehicleNode {
+            success,
+            ret: native_return,
+            centre_point_,
+heading_
+        }
+    }
+}
+
     fn native_get_nth_closest_vehicle_node_with_heading(&self, x_: f32,
 y_: f32,
 z_: f32,
@@ -78548,7 +79371,8 @@ z2_: f32,
 p6_: bool,
 p7_: bool,
 p8_: bool,
-p9_: bool) -> ResultOfAddScenarioBlockingArea {
+p9_: bool,
+p10_: i32) -> ResultOfAddScenarioBlockingArea {
     unsafe {
         let mut native_return = Default::default();
 let mut x1_ = x1_;
@@ -78561,6 +79385,7 @@ let mut p6_ = p6_;
 let mut p7_ = p7_;
 let mut p8_ = p8_;
 let mut p9_ = p9_;
+let mut p10_ = p10_;
         let success = sdk::natives::add_scenario_blocking_area(
             &mut native_return,
 x1_,
@@ -78573,6 +79398,7 @@ p6_,
 p7_,
 p8_,
 p9_,
+p10_,
         );
         let native_return = native_return;
         
@@ -79938,7 +80764,7 @@ y_offset_: f32,
 heading_: f32,
 scale_: f32,
 alpha_: f32,
-unk_variation_: i32,
+variation_: i32,
 fade_in_: bool,
 decal_name_: Option<String>) -> ResultOfApplyPedDamageDecal {
     unsafe {
@@ -79949,7 +80775,7 @@ let mut y_offset_ = y_offset_;
 let mut heading_ = heading_;
 let mut scale_ = scale_;
 let mut alpha_ = alpha_;
-let mut unk_variation_ = unk_variation_;
+let mut variation_ = variation_;
 let mut fade_in_ = fade_in_;
 let mut decal_name_ = sdk_helpers::create_c_string_ptr(decal_name_);
         let success = sdk::natives::apply_ped_damage_decal(
@@ -79960,7 +80786,7 @@ y_offset_,
 heading_,
 scale_,
 alpha_,
-unk_variation_,
+variation_,
 fade_in_,
 decal_name_.as_ref().unwrap(),
         );
@@ -82519,17 +83345,20 @@ type_,
     fn native_apply_damage_to_ped(&self, ped_: u32,
 damage_amount_: i32,
 p2_: bool,
-p3_: i32) -> ResultOfApplyDamageToPed {
+p3_: i32,
+weapon_type_: u32) -> ResultOfApplyDamageToPed {
     unsafe {
         let mut ped_ = ped_;
 let mut damage_amount_ = damage_amount_;
 let mut p2_ = p2_;
 let mut p3_ = p3_;
+let mut weapon_type_ = weapon_type_;
         let success = sdk::natives::apply_damage_to_ped(
             ped_,
 damage_amount_,
 p2_,
 p3_,
+weapon_type_,
         );
         
         
@@ -85418,6 +86247,45 @@ p7_,
         ResultOfDisableHeadBlendPaletteColor {
             success,
             ret: (),
+            
+        }
+    }
+}
+
+    fn native_has_ped_clear_los_to_entity(&self, ped_: u32,
+entity_: u32,
+x_: f32,
+y_: f32,
+z_: f32,
+p5_: i32,
+p6_: bool,
+p7_: bool) -> ResultOfHasPedClearLosToEntity {
+    unsafe {
+        let mut native_return = Default::default();
+let mut ped_ = ped_;
+let mut entity_ = entity_;
+let mut x_ = x_;
+let mut y_ = y_;
+let mut z_ = z_;
+let mut p5_ = p5_;
+let mut p6_ = p6_;
+let mut p7_ = p7_;
+        let success = sdk::natives::has_ped_clear_los_to_entity(
+            &mut native_return,
+ped_,
+entity_,
+x_,
+y_,
+z_,
+p5_,
+p6_,
+p7_,
+        );
+        let native_return = native_return;
+        
+        ResultOfHasPedClearLosToEntity {
+            success,
+            ret: native_return,
             
         }
     }
@@ -92325,7 +93193,8 @@ amount_: f32,
 gait_type_: i32,
 speed_: f32,
 p4_: bool,
-p5_: bool) -> ResultOfSimulatePlayerInputGait {
+p5_: bool,
+p6_: i32) -> ResultOfSimulatePlayerInputGait {
     unsafe {
         let mut player_ = player_;
 let mut amount_ = amount_;
@@ -92333,6 +93202,7 @@ let mut gait_type_ = gait_type_;
 let mut speed_ = speed_;
 let mut p4_ = p4_;
 let mut p5_ = p5_;
+let mut p6_ = p6_;
         let success = sdk::natives::simulate_player_input_gait(
             player_,
 amount_,
@@ -92340,6 +93210,7 @@ gait_type_,
 speed_,
 p4_,
 p5_,
+p6_,
         );
         
         
@@ -93416,6 +94287,22 @@ achievement_id_,
         ResultOfClearPlayerParachuteModelOverride {
             success,
             ret: (),
+            
+        }
+    }
+}
+
+    fn native_get_player_targeting_mode(&self, ) -> ResultOfGetPlayerTargetingMode {
+    unsafe {
+        let mut native_return = Default::default();
+        let success = sdk::natives::get_player_targeting_mode(
+            &mut native_return,
+        );
+        let native_return = native_return;
+        
+        ResultOfGetPlayerTargetingMode {
+            success,
+            ret: native_return,
             
         }
     }
@@ -96586,6 +97473,34 @@ event_group_,
     }
 }
 
+    fn native_send_tu_script_event_new(&self, event_group_: i32,
+event_data_: shared::MemoryBufferId,
+event_data_size_: i32,
+player_bits_: i32,
+event_type_: u32) -> ResultOfSendTuScriptEventNew {
+    unsafe {
+        let mut event_group_ = event_group_;
+let mut event_data_ = self.memory_buffers.borrow_mut().get_mut_ptr(event_data_) as *mut c_void;
+let mut event_data_size_ = event_data_size_;
+let mut player_bits_ = player_bits_;
+let mut event_type_ = event_type_;
+        let success = sdk::natives::send_tu_script_event_new(
+            event_data_,
+event_group_,
+event_data_size_,
+player_bits_,
+event_type_,
+        );
+        let event_data_ = 0;
+        
+        ResultOfSendTuScriptEventNew {
+            success,
+            ret: (),
+            event_data_
+        }
+    }
+}
+
     fn native_bg_start_context_hash(&self, context_hash_: u32) -> ResultOfBgStartContextHash {
     unsafe {
         let mut context_hash_ = context_hash_;
@@ -96701,31 +97616,6 @@ event_index_,
             success,
             ret: (),
             
-        }
-    }
-}
-
-    fn native_send_tu_script_event(&self, event_group_: i32,
-event_data_: shared::MemoryBufferId,
-event_data_size_: i32,
-player_bits_: i32) -> ResultOfSendTuScriptEvent {
-    unsafe {
-        let mut event_group_ = event_group_;
-let mut event_data_ = self.memory_buffers.borrow_mut().get_mut_ptr(event_data_) as *mut c_void;
-let mut event_data_size_ = event_data_size_;
-let mut player_bits_ = player_bits_;
-        let success = sdk::natives::send_tu_script_event(
-            event_data_,
-event_group_,
-event_data_size_,
-player_bits_,
-        );
-        let event_data_ = 0;
-        
-        ResultOfSendTuScriptEvent {
-            success,
-            ret: (),
-            event_data_
         }
     }
 }
@@ -96933,34 +97823,34 @@ script_name_.as_ref().unwrap(),
     }
 }
 
-    fn native_unregister_script_variable(&self, unk_variable_: shared::MemoryBufferId) -> ResultOfUnregisterScriptVariable {
+    fn native_unregister_script_variable(&self, variable_: shared::MemoryBufferId) -> ResultOfUnregisterScriptVariable {
     unsafe {
-        let mut unk_variable_ = self.memory_buffers.borrow_mut().get_mut_ptr(unk_variable_) as *mut c_void;
+        let mut variable_ = self.memory_buffers.borrow_mut().get_mut_ptr(variable_) as *mut c_void;
         let success = sdk::natives::unregister_script_variable(
-            unk_variable_,
+            variable_,
         );
-        let unk_variable_ = 0;
+        let variable_ = 0;
         
         ResultOfUnregisterScriptVariable {
             success,
             ret: (),
-            unk_variable_
+            variable_
         }
     }
 }
 
-    fn native_register_script_variable(&self, unk_variable_: shared::MemoryBufferId) -> ResultOfRegisterScriptVariable {
+    fn native_register_script_variable(&self, variable_: shared::MemoryBufferId) -> ResultOfRegisterScriptVariable {
     unsafe {
-        let mut unk_variable_ = self.memory_buffers.borrow_mut().get_mut_ptr(unk_variable_) as *mut c_void;
+        let mut variable_ = self.memory_buffers.borrow_mut().get_mut_ptr(variable_) as *mut c_void;
         let success = sdk::natives::register_script_variable(
-            unk_variable_,
+            variable_,
         );
-        let unk_variable_ = 0;
+        let variable_ = 0;
         
         ResultOfRegisterScriptVariable {
             success,
             ret: (),
-            unk_variable_
+            variable_
         }
     }
 }
@@ -97536,16 +98426,15 @@ let mut p0_ = p0_;
 let mut p1_ = sdk_helpers::create_c_string_ptr(p1_);
         let success = sdk::natives::sc_community_event_get_display_name_by_id(
             &mut native_return,
-p1_.pin_mut(),
 p0_,
+p1_.as_ref().unwrap(),
         );
         let native_return = native_return;
-let p1_ = sdk_helpers::read_c_string_ptr(p1_);
         
         ResultOfScCommunityEventGetDisplayNameById {
             success,
             ret: native_return,
-            p1_
+            
         }
     }
 }
@@ -97603,17 +98492,16 @@ let mut p1_ = sdk_helpers::create_c_string_ptr(p1_);
 let mut p2_ = sdk_helpers::create_c_string_ptr(p2_);
         let success = sdk::natives::sc_community_event_get_extra_data_string_for_type(
             &mut native_return,
-p1_.pin_mut(),
 p0_.as_ref().unwrap(),
+p1_.as_ref().unwrap(),
 p2_.as_ref().unwrap(),
         );
         let native_return = native_return;
-let p1_ = sdk_helpers::read_c_string_ptr(p1_);
         
         ResultOfScCommunityEventGetExtraDataStringForType {
             success,
             ret: native_return,
-            p1_
+            
         }
     }
 }
@@ -97823,16 +98711,15 @@ let mut p0_ = sdk_helpers::create_c_string_ptr(p0_);
 let mut p1_ = sdk_helpers::create_c_string_ptr(p1_);
         let success = sdk::natives::sc_community_event_get_display_name_for_type(
             &mut native_return,
-p0_.pin_mut(),
+p0_.as_ref().unwrap(),
 p1_.as_ref().unwrap(),
         );
         let native_return = native_return;
-let p0_ = sdk_helpers::read_c_string_ptr(p0_);
         
         ResultOfScCommunityEventGetDisplayNameForType {
             success,
             ret: native_return,
-            p0_
+            
         }
     }
 }
@@ -98051,17 +98938,16 @@ let mut p1_ = sdk_helpers::create_c_string_ptr(p1_);
 let mut p2_ = sdk_helpers::create_c_string_ptr(p2_);
         let success = sdk::natives::sc_community_event_get_extra_data_string_by_id(
             &mut native_return,
-p2_.pin_mut(),
 p0_,
 p1_.as_ref().unwrap(),
+p2_.as_ref().unwrap(),
         );
         let native_return = native_return;
-let p2_ = sdk_helpers::read_c_string_ptr(p2_);
         
         ResultOfScCommunityEventGetExtraDataStringById {
             success,
             ret: native_return,
-            p2_
+            
         }
     }
 }
@@ -98084,25 +98970,6 @@ let p1_ = 0;
             success,
             ret: native_return,
             p1_
-        }
-    }
-}
-
-    fn native_sc_inbox_send_bounty_to_recip_list(&self, data_: shared::MemoryBufferId) -> ResultOfScInboxSendBountyToRecipList {
-    unsafe {
-        let mut native_return = Default::default();
-let mut data_ = self.memory_buffers.borrow_mut().get_mut_ptr(data_) as *mut c_void;
-        let success = sdk::natives::sc_inbox_send_bounty_to_recip_list(
-            &mut native_return,
-data_,
-        );
-        let native_return = native_return;
-let data_ = 0;
-        
-        ResultOfScInboxSendBountyToRecipList {
-            success,
-            ret: native_return,
-            data_
         }
     }
 }
@@ -98197,17 +99064,16 @@ let mut context_ = sdk_helpers::create_c_string_ptr(context_);
 let mut out_ = sdk_helpers::create_c_string_ptr(out_);
         let success = sdk::natives::sc_inbox_message_get_data_string(
             &mut native_return,
-out_.pin_mut(),
 p0_,
 context_.as_ref().unwrap(),
+out_.as_ref().unwrap(),
         );
         let native_return = native_return;
-let out_ = sdk_helpers::read_c_string_ptr(out_);
         
         ResultOfScInboxMessageGetDataString {
             success,
             ret: native_return,
-            out_
+            
         }
     }
 }
@@ -98236,16 +99102,15 @@ let mut name_ = sdk_helpers::create_c_string_ptr(name_);
 let mut value_ = sdk_helpers::create_c_string_ptr(value_);
         let success = sdk::natives::sc_gamerdata_get_string(
             &mut native_return,
-value_.pin_mut(),
 name_.as_ref().unwrap(),
+value_.as_ref().unwrap(),
         );
         let native_return = native_return;
-let value_ = sdk_helpers::read_c_string_ptr(value_);
         
         ResultOfScGamerdataGetString {
             success,
             ret: native_return,
-            value_
+            
         }
     }
 }
@@ -98489,16 +99354,15 @@ let mut p0_ = sdk_helpers::create_c_string_ptr(p0_);
 let mut p1_ = sdk_helpers::create_c_string_ptr(p1_);
         let success = sdk::natives::sc_community_event_get_extra_data_string(
             &mut native_return,
-p1_.pin_mut(),
 p0_.as_ref().unwrap(),
+p1_.as_ref().unwrap(),
         );
         let native_return = native_return;
-let p1_ = sdk_helpers::read_c_string_ptr(p1_);
         
         ResultOfScCommunityEventGetExtraDataString {
             success,
             ret: native_return,
-            p1_
+            
         }
     }
 }
@@ -98640,15 +99504,14 @@ msg_index_,
 let mut p0_ = sdk_helpers::create_c_string_ptr(p0_);
         let success = sdk::natives::sc_community_event_get_display_name(
             &mut native_return,
-p0_.pin_mut(),
+p0_.as_ref().unwrap(),
         );
         let native_return = native_return;
-let p0_ = sdk_helpers::read_c_string_ptr(p0_);
         
         ResultOfScCommunityEventGetDisplayName {
             success,
             ret: native_return,
-            p0_
+            
         }
     }
 }
@@ -99009,54 +99872,18 @@ p1_.as_ref().unwrap(),
     }
 }
 
-    fn native_playstats_npc_phone(&self, p0_: i32,
-p1_: i32,
-p2_: i32,
-p3_: i32,
-p4_: i32,
-p5_: i32,
-p6_: i32,
-p7_: i32,
-p8_: i32,
-p9_: i32,
-p10_: i32,
-p11_: i32,
-p12_: i32) -> ResultOfPlaystatsNpcPhone {
+    fn native_playstats_npc_phone(&self, p0_: shared::MemoryBufferId) -> ResultOfPlaystatsNpcPhone {
     unsafe {
-        let mut p0_ = p0_;
-let mut p1_ = p1_;
-let mut p2_ = p2_;
-let mut p3_ = p3_;
-let mut p4_ = p4_;
-let mut p5_ = p5_;
-let mut p6_ = p6_;
-let mut p7_ = p7_;
-let mut p8_ = p8_;
-let mut p9_ = p9_;
-let mut p10_ = p10_;
-let mut p11_ = p11_;
-let mut p12_ = p12_;
+        let mut p0_ = self.memory_buffers.borrow_mut().get_mut_ptr(p0_) as *mut c_void;
         let success = sdk::natives::playstats_npc_phone(
             p0_,
-p1_,
-p2_,
-p3_,
-p4_,
-p5_,
-p6_,
-p7_,
-p8_,
-p9_,
-p10_,
-p11_,
-p12_,
         );
-        
+        let p0_ = 0;
         
         ResultOfPlaystatsNpcPhone {
             success,
             ret: (),
-            
+            p0_
         }
     }
 }
@@ -99448,6 +100275,34 @@ p1_,
     }
 }
 
+    fn native_playstats_veh_del(&self, boss_id1_: i32,
+boss_id2_: i32,
+boss_type_: i32,
+vehicle_i_d_: i32,
+reason_: i32) -> ResultOfPlaystatsVehDel {
+    unsafe {
+        let mut boss_id1_ = boss_id1_;
+let mut boss_id2_ = boss_id2_;
+let mut boss_type_ = boss_type_;
+let mut vehicle_i_d_ = vehicle_i_d_;
+let mut reason_ = reason_;
+        let success = sdk::natives::playstats_veh_del(
+            boss_id1_,
+boss_id2_,
+boss_type_,
+vehicle_i_d_,
+reason_,
+        );
+        
+        
+        ResultOfPlaystatsVehDel {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_leaderboards_get_number_of_columns(&self, p0_: i32,
 p1_: i32) -> ResultOfLeaderboardsGetNumberOfColumns {
     unsafe {
@@ -99609,6 +100464,22 @@ p3_
             success,
             ret: (),
             
+        }
+    }
+}
+
+    fn native_playstats_showroom_overview(&self, data_: shared::MemoryBufferId) -> ResultOfPlaystatsShowroomOverview {
+    unsafe {
+        let mut data_ = self.memory_buffers.borrow_mut().get_mut_ptr(data_) as *mut c_void;
+        let success = sdk::natives::playstats_showroom_overview(
+            data_,
+        );
+        let data_ = 0;
+        
+        ResultOfPlaystatsShowroomOverview {
+            success,
+            ret: (),
+            data_
         }
     }
 }
@@ -100550,11 +101421,17 @@ p1_,
     }
 }
 
-    fn native_start_being_boss(&self, p0_: i32) -> ResultOfStartBeingBoss {
+    fn native_start_being_boss(&self, p0_: i32,
+p1_: i32,
+p2_: i32) -> ResultOfStartBeingBoss {
     unsafe {
         let mut p0_ = p0_;
+let mut p1_ = p1_;
+let mut p2_ = p2_;
         let success = sdk::natives::start_being_boss(
             p0_,
+p1_,
+p2_,
         );
         
         
@@ -100635,15 +101512,18 @@ p1_,
 
     fn native_playstats_fm_mission_end(&self, p0_: i32,
 p1_: i32,
-p2_: i32) -> ResultOfPlaystatsFmMissionEnd {
+p2_: i32,
+p3_: i32) -> ResultOfPlaystatsFmMissionEnd {
     unsafe {
         let mut p0_ = p0_;
 let mut p1_ = p1_;
 let mut p2_ = p2_;
+let mut p3_ = p3_;
         let success = sdk::natives::playstats_fm_mission_end(
             p0_,
 p1_,
 p2_,
+p3_,
         );
         
         
@@ -101066,6 +101946,22 @@ stat_name_,
             success,
             ret: native_return,
             
+        }
+    }
+}
+
+    fn native_playstats_alert(&self, data_: shared::MemoryBufferId) -> ResultOfPlaystatsAlert {
+    unsafe {
+        let mut data_ = self.memory_buffers.borrow_mut().get_mut_ptr(data_) as *mut c_void;
+        let success = sdk::natives::playstats_alert(
+            data_,
+        );
+        let data_ = 0;
+        
+        ResultOfPlaystatsAlert {
+            success,
+            ret: (),
+            data_
         }
     }
 }
@@ -102143,6 +103039,22 @@ p0_,
     }
 }
 
+    fn native_playstats_random_event(&self, p0_: i32) -> ResultOfPlaystatsRandomEvent {
+    unsafe {
+        let mut p0_ = p0_;
+        let success = sdk::natives::playstats_random_event(
+            p0_,
+        );
+        
+        
+        ResultOfPlaystatsRandomEvent {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_leaderboards2_read_by_score_int(&self, p0_: shared::MemoryBufferId,
 p1_: i32,
 p2_: i32) -> ResultOfLeaderboards2ReadByScoreInt {
@@ -102757,6 +103669,28 @@ p0_,
     }
 }
 
+    fn native_playstats_showroom_nav(&self, p0_: i32,
+p1_: i32,
+entity_: u32) -> ResultOfPlaystatsShowroomNav {
+    unsafe {
+        let mut p0_ = p0_;
+let mut p1_ = p1_;
+let mut entity_ = entity_;
+        let success = sdk::natives::playstats_showroom_nav(
+            p0_,
+p1_,
+entity_,
+        );
+        
+        
+        ResultOfPlaystatsShowroomNav {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_start_being_goon(&self, p0_: i32,
 p1_: i32,
 p2_: i32) -> ResultOfStartBeingGoon {
@@ -102909,13 +103843,16 @@ p0_,
 }
 
     fn native_playstats_activity_done(&self, p0_: i32,
-activity_id_: i32) -> ResultOfPlaystatsActivityDone {
+activity_id_: i32,
+p2_: i32) -> ResultOfPlaystatsActivityDone {
     unsafe {
         let mut p0_ = p0_;
 let mut activity_id_ = activity_id_;
+let mut p2_ = p2_;
         let success = sdk::natives::playstats_activity_done(
             p0_,
 activity_id_,
+p2_,
         );
         
         
@@ -102997,13 +103934,16 @@ stat_slot_,
 }
 
     fn native_end_being_boss(&self, p0_: i32,
-p1_: i32) -> ResultOfEndBeingBoss {
+p1_: i32,
+p2_: i32) -> ResultOfEndBeingBoss {
     unsafe {
         let mut p0_ = p0_;
 let mut p1_ = p1_;
+let mut p2_ = p2_;
         let success = sdk::natives::end_being_boss(
             p0_,
 p1_,
+p2_,
         );
         
         
@@ -103182,49 +104122,6 @@ save_,
             success,
             ret: native_return,
             
-        }
-    }
-}
-
-    fn native_leaderboards2_read_by_row(&self, p0_: shared::MemoryBufferId,
-p1_: shared::MemoryBufferId,
-p2_: i32,
-p3_: shared::MemoryBufferId,
-p4_: i32,
-p5_: shared::MemoryBufferId,
-p6_: i32) -> ResultOfLeaderboards2ReadByRow {
-    unsafe {
-        let mut native_return = Default::default();
-let mut p0_ = self.memory_buffers.borrow_mut().get_mut_ptr(p0_) as *mut c_void;
-let mut p1_ = self.memory_buffers.borrow_mut().get_mut_ptr(p1_) as *mut c_void;
-let mut p2_ = p2_;
-let mut p3_ = self.memory_buffers.borrow_mut().get_mut_ptr(p3_) as *mut c_void;
-let mut p4_ = p4_;
-let mut p5_ = self.memory_buffers.borrow_mut().get_mut_ptr(p5_) as *mut c_void;
-let mut p6_ = p6_;
-        let success = sdk::natives::leaderboards2_read_by_row(
-            &mut native_return,
-p0_,
-p1_,
-p3_,
-p5_,
-p2_,
-p4_,
-p6_,
-        );
-        let native_return = native_return;
-let p0_ = 0;
-let p1_ = 0;
-let p3_ = 0;
-let p5_ = 0;
-        
-        ResultOfLeaderboards2ReadByRow {
-            success,
-            ret: native_return,
-            p0_,
-p1_,
-p3_,
-p5_
         }
     }
 }
@@ -103653,6 +104550,22 @@ p2_,
     }
 }
 
+    fn native_playstats_attrition_stage_end(&self, p0_: i32) -> ResultOfPlaystatsAttritionStageEnd {
+    unsafe {
+        let mut p0_ = p0_;
+        let success = sdk::natives::playstats_attrition_stage_end(
+            p0_,
+        );
+        
+        
+        ResultOfPlaystatsAttritionStageEnd {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_stat_is_stats_tracking_enabled(&self, ) -> ResultOfStatIsStatsTrackingEnabled {
     unsafe {
         let mut native_return = Default::default();
@@ -103963,6 +104876,37 @@ let p2_ = 0;
             p0_,
 p1_,
 p2_
+        }
+    }
+}
+
+    fn native_playstats_flow_medium(&self, x_: f32,
+y_: f32,
+z_: f32,
+interior_action_: Option<String>,
+p4_: i32,
+p5_: u32) -> ResultOfPlaystatsFlowMedium {
+    unsafe {
+        let mut x_ = x_;
+let mut y_ = y_;
+let mut z_ = z_;
+let mut interior_action_ = sdk_helpers::create_c_string_ptr(interior_action_);
+let mut p4_ = p4_;
+let mut p5_ = p5_;
+        let success = sdk::natives::playstats_flow_medium(
+            x_,
+y_,
+z_,
+interior_action_.as_ref().unwrap(),
+p4_,
+p5_,
+        );
+        
+        
+        ResultOfPlaystatsFlowMedium {
+            success,
+            ret: (),
+            
         }
     }
 }
@@ -104502,6 +105446,30 @@ p4_,
     }
 }
 
+    fn native_get_stat_hash_for_character_stat(&self, data_type_: i32,
+stat_index_: i32,
+char_slot_: i32) -> ResultOfGetStatHashForCharacterStat {
+    unsafe {
+        let mut native_return = Default::default();
+let mut data_type_ = data_type_;
+let mut stat_index_ = stat_index_;
+let mut char_slot_ = char_slot_;
+        let success = sdk::natives::get_stat_hash_for_character_stat(
+            &mut native_return,
+data_type_,
+stat_index_,
+char_slot_,
+        );
+        let native_return = native_return;
+        
+        ResultOfGetStatHashForCharacterStat {
+            success,
+            ret: native_return,
+            
+        }
+    }
+}
+
     fn native_playstats_dj_mission_ended(&self, p0_: i32) -> ResultOfPlaystatsDjMissionEnded {
     unsafe {
         let mut p0_ = p0_;
@@ -104874,6 +105842,37 @@ let p0_ = 0;
             success,
             ret: native_return,
             p0_
+        }
+    }
+}
+
+    fn native_playstats_flow_low(&self, pos_x_: f32,
+pos_y_: f32,
+pos_z_: f32,
+p3_: Option<String>,
+p4_: i32,
+amount_: i32) -> ResultOfPlaystatsFlowLow {
+    unsafe {
+        let mut pos_x_ = pos_x_;
+let mut pos_y_ = pos_y_;
+let mut pos_z_ = pos_z_;
+let mut p3_ = sdk_helpers::create_c_string_ptr(p3_);
+let mut p4_ = p4_;
+let mut amount_ = amount_;
+        let success = sdk::natives::playstats_flow_low(
+            pos_x_,
+pos_y_,
+pos_z_,
+p3_.as_ref().unwrap(),
+p4_,
+amount_,
+        );
+        
+        
+        ResultOfPlaystatsFlowLow {
+            success,
+            ret: (),
+            
         }
     }
 }
@@ -105291,15 +106290,18 @@ p3_
 
     fn native_playstats_shopmenu_nav(&self, p0_: i32,
 p1_: i32,
-p2_: i32) -> ResultOfPlaystatsShopmenuNav {
+p2_: i32,
+p3_: i32) -> ResultOfPlaystatsShopmenuNav {
     unsafe {
         let mut p0_ = p0_;
 let mut p1_ = p1_;
 let mut p2_ = p2_;
+let mut p3_ = p3_;
         let success = sdk::natives::playstats_shopmenu_nav(
             p0_,
 p1_,
 p2_,
+p3_,
         );
         
         
@@ -109934,6 +110936,25 @@ p9_,
     }
 }
 
+    fn native_set_script_task_enable_collision_on_network_clone_when_fixed(&self, ped_: u32,
+enable_: bool) -> ResultOfSetScriptTaskEnableCollisionOnNetworkCloneWhenFixed {
+    unsafe {
+        let mut ped_ = ped_;
+let mut enable_ = enable_;
+        let success = sdk::natives::set_script_task_enable_collision_on_network_clone_when_fixed(
+            ped_,
+enable_,
+        );
+        
+        
+        ResultOfSetScriptTaskEnableCollisionOnNetworkCloneWhenFixed {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_task_goto_entity_offset_xy(&self, ped_: u32,
 entity_: u32,
 duration_: i32,
@@ -112235,15 +113256,15 @@ ik_flags_,
 
     fn native_set_task_move_network_anim_set(&self, ped_: u32,
 clip_set_: u32,
-unk_variable_clip_set_: u32) -> ResultOfSetTaskMoveNetworkAnimSet {
+variable_clip_set_: u32) -> ResultOfSetTaskMoveNetworkAnimSet {
     unsafe {
         let mut ped_ = ped_;
 let mut clip_set_ = clip_set_;
-let mut unk_variable_clip_set_ = unk_variable_clip_set_;
+let mut variable_clip_set_ = variable_clip_set_;
         let success = sdk::natives::set_task_move_network_anim_set(
             ped_,
 clip_set_,
-unk_variable_clip_set_,
+variable_clip_set_,
         );
         
         
@@ -114197,7 +115218,8 @@ timeout_: i32,
 seat_: i32,
 speed_: f32,
 flag_: i32,
-override_entry_clipset_name_: Option<String>) -> ResultOfTaskEnterVehicle {
+override_entry_clipset_name_: Option<String>,
+p7_: i32) -> ResultOfTaskEnterVehicle {
     unsafe {
         let mut ped_ = ped_;
 let mut vehicle_ = vehicle_;
@@ -114206,6 +115228,7 @@ let mut seat_ = seat_;
 let mut speed_ = speed_;
 let mut flag_ = flag_;
 let mut override_entry_clipset_name_ = sdk_helpers::create_c_string_ptr(override_entry_clipset_name_);
+let mut p7_ = p7_;
         let success = sdk::natives::task_enter_vehicle(
             ped_,
 vehicle_,
@@ -114214,6 +115237,7 @@ seat_,
 speed_,
 flag_,
 override_entry_clipset_name_.as_ref().unwrap(),
+p7_,
         );
         
         
@@ -115496,7 +116520,8 @@ z2_: f32,
 min_z_: f32,
 rope_handle_: i32,
 clip_set_: Option<String>,
-p10_: i32) -> ResultOfTaskRappelDownWallUsingClipsetOverride {
+p10_: i32,
+p11_: i32) -> ResultOfTaskRappelDownWallUsingClipsetOverride {
     unsafe {
         let mut ped_ = ped_;
 let mut x1_ = x1_;
@@ -115509,6 +116534,7 @@ let mut min_z_ = min_z_;
 let mut rope_handle_ = rope_handle_;
 let mut clip_set_ = sdk_helpers::create_c_string_ptr(clip_set_);
 let mut p10_ = p10_;
+let mut p11_ = p11_;
         let success = sdk::natives::task_rappel_down_wall_using_clipset_override(
             ped_,
 x1_,
@@ -115521,6 +116547,7 @@ min_z_,
 rope_handle_,
 clip_set_.as_ref().unwrap(),
 p10_,
+p11_,
         );
         
         
@@ -116563,6 +117590,25 @@ active_,
     }
 }
 
+    fn native_set_deploy_missile_bays(&self, vehicle_: u32,
+deploy_: bool) -> ResultOfSetDeployMissileBays {
+    unsafe {
+        let mut vehicle_ = vehicle_;
+let mut deploy_ = deploy_;
+        let success = sdk::natives::set_deploy_missile_bays(
+            vehicle_,
+deploy_,
+        );
+        
+        
+        ResultOfSetDeployMissileBays {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_set_vehicle_can_deform_wheels(&self, vehicle_: u32,
 toggle_: bool) -> ResultOfSetVehicleCanDeformWheels {
     unsafe {
@@ -117060,6 +118106,25 @@ disable_collisions_,
     }
 }
 
+    fn native_set_minimum_time_between_gear_shifts(&self, vehicle_: u32,
+time_: i32) -> ResultOfSetMinimumTimeBetweenGearShifts {
+    unsafe {
+        let mut vehicle_ = vehicle_;
+let mut time_ = time_;
+        let success = sdk::natives::set_minimum_time_between_gear_shifts(
+            vehicle_,
+time_,
+        );
+        
+        
+        ResultOfSetMinimumTimeBetweenGearShifts {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_does_cargobob_have_pick_up_rope(&self, cargobob_: u32) -> ResultOfDoesCargobobHavePickUpRope {
     unsafe {
         let mut native_return = Default::default();
@@ -117128,6 +118193,38 @@ toggle_,
         
         
         ResultOfSetVehicleCanLeakPetrol {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
+    fn native_set_vehicle_use_horn_button_for_nitrous(&self, toggle_: bool) -> ResultOfSetVehicleUseHornButtonForNitrous {
+    unsafe {
+        let mut toggle_ = toggle_;
+        let success = sdk::natives::set_vehicle_use_horn_button_for_nitrous(
+            toggle_,
+        );
+        
+        
+        ResultOfSetVehicleUseHornButtonForNitrous {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
+    fn native_fully_charge_nitrous(&self, vehicle_: u32) -> ResultOfFullyChargeNitrous {
+    unsafe {
+        let mut vehicle_ = vehicle_;
+        let success = sdk::natives::fully_charge_nitrous(
+            vehicle_,
+        );
+        
+        
+        ResultOfFullyChargeNitrous {
             success,
             ret: (),
             
@@ -117791,6 +118888,40 @@ p2_,
     }
 }
 
+    fn native_get_vehicle_max_drive_gear_count(&self, vehicle_: u32) -> ResultOfGetVehicleMaxDriveGearCount {
+    unsafe {
+        let mut native_return = Default::default();
+let mut vehicle_ = vehicle_;
+        let success = sdk::natives::get_vehicle_max_drive_gear_count(
+            &mut native_return,
+vehicle_,
+        );
+        let native_return = native_return;
+        
+        ResultOfGetVehicleMaxDriveGearCount {
+            success,
+            ret: native_return,
+            
+        }
+    }
+}
+
+    fn native_apply_emp_effect(&self, vehicle_: u32) -> ResultOfApplyEmpEffect {
+    unsafe {
+        let mut vehicle_ = vehicle_;
+        let success = sdk::natives::apply_emp_effect(
+            vehicle_,
+        );
+        
+        
+        ResultOfApplyEmpEffect {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_set_vehicle_engine_on(&self, vehicle_: u32,
 value_: bool,
 instantly_: bool,
@@ -118042,6 +119173,25 @@ front_bumper_,
         ResultOfIsVehicleBumperBouncing {
             success,
             ret: native_return,
+            
+        }
+    }
+}
+
+    fn native_set_allow_collision_when_in_vehicle(&self, vehicle_: u32,
+toggle_: bool) -> ResultOfSetAllowCollisionWhenInVehicle {
+    unsafe {
+        let mut vehicle_ = vehicle_;
+let mut toggle_ = toggle_;
+        let success = sdk::natives::set_allow_collision_when_in_vehicle(
+            vehicle_,
+toggle_,
+        );
+        
+        
+        ResultOfSetAllowCollisionWhenInVehicle {
+            success,
+            ret: (),
             
         }
     }
@@ -118877,6 +120027,25 @@ toggle_,
     }
 }
 
+    fn native_set_transmission_reduced_gear_ratio(&self, vehicle_: u32,
+toggle_: bool) -> ResultOfSetTransmissionReducedGearRatio {
+    unsafe {
+        let mut vehicle_ = vehicle_;
+let mut toggle_ = toggle_;
+        let success = sdk::natives::set_transmission_reduced_gear_ratio(
+            vehicle_,
+toggle_,
+        );
+        
+        
+        ResultOfSetTransmissionReducedGearRatio {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_set_vehicle_colour_combination(&self, vehicle_: u32,
 color_combination_: i32) -> ResultOfSetVehicleColourCombination {
     unsafe {
@@ -119541,6 +120710,22 @@ toggle_,
     }
 }
 
+    fn native_get_vehicle_max_exhaust_bone_count(&self, ) -> ResultOfGetVehicleMaxExhaustBoneCount {
+    unsafe {
+        let mut native_return = Default::default();
+        let success = sdk::natives::get_vehicle_max_exhaust_bone_count(
+            &mut native_return,
+        );
+        let native_return = native_return;
+        
+        ResultOfGetVehicleMaxExhaustBoneCount {
+            success,
+            ret: native_return,
+            
+        }
+    }
+}
+
     fn native_start_playback_recorded_vehicle(&self, vehicle_: u32,
 recording_: i32,
 script_: Option<String>,
@@ -119623,22 +120808,22 @@ toggle_,
     }
 }
 
-    fn native_attach_vehicle_to_cargobob(&self, vehicle_: u32,
-cargobob_: u32,
+    fn native_attach_vehicle_to_cargobob(&self, cargobob_: u32,
+vehicle_: u32,
 p2_: i32,
 x_: f32,
 y_: f32,
 z_: f32) -> ResultOfAttachVehicleToCargobob {
     unsafe {
-        let mut vehicle_ = vehicle_;
-let mut cargobob_ = cargobob_;
+        let mut cargobob_ = cargobob_;
+let mut vehicle_ = vehicle_;
 let mut p2_ = p2_;
 let mut x_ = x_;
 let mut y_ = y_;
 let mut z_ = z_;
         let success = sdk::natives::attach_vehicle_to_cargobob(
-            vehicle_,
-cargobob_,
+            cargobob_,
+vehicle_,
 p2_,
 x_,
 y_,
@@ -120063,6 +121248,25 @@ toggle_,
     }
 }
 
+    fn native_set_nitrous_is_active(&self, vehicle_: u32,
+enabled_: bool) -> ResultOfSetNitrousIsActive {
+    unsafe {
+        let mut vehicle_ = vehicle_;
+let mut enabled_ = enabled_;
+        let success = sdk::natives::set_nitrous_is_active(
+            vehicle_,
+enabled_,
+        );
+        
+        
+        ResultOfSetNitrousIsActive {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_is_vehicle_bumper_broken_off(&self, vehicle_: u32,
 front_bumper_: bool) -> ResultOfIsVehicleBumperBrokenOff {
     unsafe {
@@ -120174,6 +121378,25 @@ wheel_type_,
     }
 }
 
+    fn native_set_attached_vehicle_to_tow_truck_arm(&self, tow_truck_: u32,
+vehicle_: u32) -> ResultOfSetAttachedVehicleToTowTruckArm {
+    unsafe {
+        let mut tow_truck_ = tow_truck_;
+let mut vehicle_ = vehicle_;
+        let success = sdk::natives::set_attached_vehicle_to_tow_truck_arm(
+            tow_truck_,
+vehicle_,
+        );
+        
+        
+        ResultOfSetAttachedVehicleToTowTruckArm {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_is_vehicle_producing_slip_stream(&self, vehicle_: u32) -> ResultOfIsVehicleProducingSlipStream {
     unsafe {
         let mut native_return = Default::default();
@@ -120185,6 +121408,24 @@ vehicle_,
         let native_return = native_return;
         
         ResultOfIsVehicleProducingSlipStream {
+            success,
+            ret: native_return,
+            
+        }
+    }
+}
+
+    fn native_is_nitrous_active(&self, vehicle_: u32) -> ResultOfIsNitrousActive {
+    unsafe {
+        let mut native_return = Default::default();
+let mut vehicle_ = vehicle_;
+        let success = sdk::natives::is_nitrous_active(
+            &mut native_return,
+vehicle_,
+        );
+        let native_return = native_return;
+        
+        ResultOfIsNitrousActive {
             success,
             ret: native_return,
             
@@ -120977,6 +122218,24 @@ wheel_index_,
     }
 }
 
+    fn native_get_vehicle_current_drive_gear(&self, vehicle_: u32) -> ResultOfGetVehicleCurrentDriveGear {
+    unsafe {
+        let mut native_return = Default::default();
+let mut vehicle_ = vehicle_;
+        let success = sdk::natives::get_vehicle_current_drive_gear(
+            &mut native_return,
+vehicle_,
+        );
+        let native_return = native_return;
+        
+        ResultOfGetVehicleCurrentDriveGear {
+            success,
+            ret: native_return,
+            
+        }
+    }
+}
+
     fn native_is_vehicle_weapon_disabled(&self, weapon_hash_: u32,
 vehicle_: u32,
 owner_: u32) -> ResultOfIsVehicleWeaponDisabled {
@@ -121360,6 +122619,25 @@ toggle_,
     }
 }
 
+    fn native_set_vehicle_max_launch_engine_revs(&self, vehicle_: u32,
+modifier_: f32) -> ResultOfSetVehicleMaxLaunchEngineRevs {
+    unsafe {
+        let mut vehicle_ = vehicle_;
+let mut modifier_ = modifier_;
+        let success = sdk::natives::set_vehicle_max_launch_engine_revs(
+            vehicle_,
+modifier_,
+        );
+        
+        
+        ResultOfSetVehicleMaxLaunchEngineRevs {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_set_vehicle_provides_cover(&self, vehicle_: u32,
 toggle_: bool) -> ResultOfSetVehicleProvidesCover {
     unsafe {
@@ -121696,6 +122974,24 @@ radius_,
     }
 }
 
+    fn native_get_vehicle_model_num_drive_gears(&self, vehicle_model_: u32) -> ResultOfGetVehicleModelNumDriveGears {
+    unsafe {
+        let mut native_return = Default::default();
+let mut vehicle_model_ = vehicle_model_;
+        let success = sdk::natives::get_vehicle_model_num_drive_gears(
+            &mut native_return,
+vehicle_model_,
+        );
+        let native_return = native_return;
+        
+        ResultOfGetVehicleModelNumDriveGears {
+            success,
+            ret: native_return,
+            
+        }
+    }
+}
+
     fn native_is_any_entity_attached_to_handler_frame(&self, vehicle_: u32) -> ResultOfIsAnyEntityAttachedToHandlerFrame {
     unsafe {
         let mut native_return = Default::default();
@@ -121814,7 +123110,7 @@ on_enter_,
     }
 }
 
-    fn native_create_mission_train(&self, unk_variation_: i32,
+    fn native_create_mission_train(&self, variation_: i32,
 x_: f32,
 y_: f32,
 z_: f32,
@@ -121823,7 +123119,7 @@ p5_: i32,
 p6_: i32) -> ResultOfCreateMissionTrain {
     unsafe {
         let mut native_return = Default::default();
-let mut unk_variation_ = unk_variation_;
+let mut variation_ = variation_;
 let mut x_ = x_;
 let mut y_ = y_;
 let mut z_ = z_;
@@ -121832,7 +123128,7 @@ let mut p5_ = p5_;
 let mut p6_ = p6_;
         let success = sdk::natives::create_mission_train(
             &mut native_return,
-unk_variation_,
+variation_,
 x_,
 y_,
 z_,
@@ -121933,6 +123229,24 @@ vehicle_,
         let native_return = native_return;
         
         ResultOfGetBoatBoomPositionRatio {
+            success,
+            ret: native_return,
+            
+        }
+    }
+}
+
+    fn native_is_vehicle_gen9_exclusive_model(&self, vehicle_model_: u32) -> ResultOfIsVehicleGen9ExclusiveModel {
+    unsafe {
+        let mut native_return = Default::default();
+let mut vehicle_model_ = vehicle_model_;
+        let success = sdk::natives::is_vehicle_gen9_exclusive_model(
+            &mut native_return,
+vehicle_model_,
+        );
+        let native_return = native_return;
+        
+        ResultOfIsVehicleGen9ExclusiveModel {
             success,
             ret: native_return,
             
@@ -122191,6 +123505,24 @@ custom_tires_,
         ResultOfSetVehicleMod {
             success,
             ret: (),
+            
+        }
+    }
+}
+
+    fn native_have_vehicle_rear_doors_been_blown_open_by_stickybomb(&self, vehicle_: u32) -> ResultOfHaveVehicleRearDoorsBeenBlownOpenByStickybomb {
+    unsafe {
+        let mut native_return = Default::default();
+let mut vehicle_ = vehicle_;
+        let success = sdk::natives::have_vehicle_rear_doors_been_blown_open_by_stickybomb(
+            &mut native_return,
+vehicle_,
+        );
+        let native_return = native_return;
+        
+        ResultOfHaveVehicleRearDoorsBeenBlownOpenByStickybomb {
+            success,
+            ret: native_return,
             
         }
     }
@@ -124519,6 +125851,24 @@ mod_type_,
     }
 }
 
+    fn native_get_vehicle_throttle(&self, vehicle_: u32) -> ResultOfGetVehicleThrottle {
+    unsafe {
+        let mut native_return = Default::default();
+let mut vehicle_ = vehicle_;
+        let success = sdk::natives::get_vehicle_throttle(
+            &mut native_return,
+vehicle_,
+        );
+        let native_return = native_return;
+        
+        ResultOfGetVehicleThrottle {
+            success,
+            ret: native_return,
+            
+        }
+    }
+}
+
     fn native_set_vehicle_has_strong_axles(&self, vehicle_: u32,
 toggle_: bool) -> ResultOfSetVehicleHasStrongAxles {
     unsafe {
@@ -126463,6 +127813,25 @@ disable_,
     }
 }
 
+    fn native_set_override_traction_loss_multiplier(&self, vehicle_: u32,
+modifier_: f32) -> ResultOfSetOverrideTractionLossMultiplier {
+    unsafe {
+        let mut vehicle_ = vehicle_;
+let mut modifier_ = modifier_;
+        let success = sdk::natives::set_override_traction_loss_multiplier(
+            vehicle_,
+modifier_,
+        );
+        
+        
+        ResultOfSetOverrideTractionLossMultiplier {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
     fn native_set_vehicle_force_afterburner(&self, vehicle_: u32,
 toggle_: bool) -> ResultOfSetVehicleForceAfterburner {
     unsafe {
@@ -127670,6 +129039,24 @@ door_lock_status_,
     }
 }
 
+    fn native_get_remaining_nitrous_duration(&self, vehicle_: u32) -> ResultOfGetRemainingNitrousDuration {
+    unsafe {
+        let mut native_return = Default::default();
+let mut vehicle_ = vehicle_;
+        let success = sdk::natives::get_remaining_nitrous_duration(
+            &mut native_return,
+vehicle_,
+        );
+        let native_return = native_return;
+        
+        ResultOfGetRemainingNitrousDuration {
+            success,
+            ret: native_return,
+            
+        }
+    }
+}
+
     fn native_is_this_model_a_bicycle(&self, model_: u32) -> ResultOfIsThisModelAbicycle {
     unsafe {
         let mut native_return = Default::default();
@@ -128132,6 +129519,22 @@ model_hash_,
         ResultOfGetFlyingVehicleModelAgility {
             success,
             ret: native_return,
+            
+        }
+    }
+}
+
+    fn native_clear_nitrous(&self, vehicle_: u32) -> ResultOfClearNitrous {
+    unsafe {
+        let mut vehicle_ = vehicle_;
+        let success = sdk::natives::clear_nitrous(
+            vehicle_,
+        );
+        
+        
+        ResultOfClearNitrous {
+            success,
+            ret: (),
             
         }
     }
@@ -128733,6 +130136,31 @@ plane_,
         ResultOfGetVehicleFlightNozzlePosition {
             success,
             ret: native_return,
+            
+        }
+    }
+}
+
+    fn native_set_drift_slip_angle_limits(&self, vehicle_: u32,
+duration_scalar_: f32,
+amplitude_scalar_: f32,
+slip_angle_limit_: f32) -> ResultOfSetDriftSlipAngleLimits {
+    unsafe {
+        let mut vehicle_ = vehicle_;
+let mut duration_scalar_ = duration_scalar_;
+let mut amplitude_scalar_ = amplitude_scalar_;
+let mut slip_angle_limit_ = slip_angle_limit_;
+        let success = sdk::natives::set_drift_slip_angle_limits(
+            vehicle_,
+duration_scalar_,
+amplitude_scalar_,
+slip_angle_limit_,
+        );
+        
+        
+        ResultOfSetDriftSlipAngleLimits {
+            success,
+            ret: (),
             
         }
     }
@@ -129383,6 +130811,36 @@ p1_,
     }
 }
 
+    fn native_get_vehicle_exhaust_bone(&self, vehicle_: u32,
+index_: i32,
+bone_index_: i32,
+axis_x_: bool) -> ResultOfGetVehicleExhaustBone {
+    unsafe {
+        let mut native_return = Default::default();
+let mut vehicle_ = vehicle_;
+let mut index_ = index_;
+let mut bone_index_ = bone_index_;
+let mut axis_x_ = axis_x_;
+        let success = sdk::natives::get_vehicle_exhaust_bone(
+            &mut native_return,
+&mut bone_index_,
+&mut axis_x_,
+vehicle_,
+index_,
+        );
+        let native_return = native_return;
+let bone_index_ = bone_index_;
+let axis_x_ = axis_x_;
+        
+        ResultOfGetVehicleExhaustBone {
+            success,
+            ret: native_return,
+            bone_index_,
+axis_x_
+        }
+    }
+}
+
     fn native_is_vehicle_attached_to_trailer(&self, vehicle_: u32) -> ResultOfIsVehicleAttachedToTrailer {
     unsafe {
         let mut native_return = Default::default();
@@ -129516,6 +130974,24 @@ vehicle_,
             success,
             ret: (),
             vehicle_
+        }
+    }
+}
+
+    fn native_are_missile_bays_deployed(&self, vehicle_: u32) -> ResultOfAreMissileBaysDeployed {
+    unsafe {
+        let mut native_return = Default::default();
+let mut vehicle_ = vehicle_;
+        let success = sdk::natives::are_missile_bays_deployed(
+            &mut native_return,
+vehicle_,
+        );
+        let native_return = native_return;
+        
+        ResultOfAreMissileBaysDeployed {
+            success,
+            ret: native_return,
+            
         }
     }
 }
@@ -130461,6 +131937,24 @@ p2_,
     }
 }
 
+    fn native_get_vehicle_current_rev_ratio(&self, vehicle_: u32) -> ResultOfGetVehicleCurrentRevRatio {
+    unsafe {
+        let mut native_return = Default::default();
+let mut vehicle_ = vehicle_;
+        let success = sdk::natives::get_vehicle_current_rev_ratio(
+            &mut native_return,
+vehicle_,
+        );
+        let native_return = native_return;
+        
+        ResultOfGetVehicleCurrentRevRatio {
+            success,
+            ret: native_return,
+            
+        }
+    }
+}
+
     fn native_set_global_position_offset_for_recorded_vehicle_playback(&self, vehicle_: u32,
 x_: f32,
 y_: f32,
@@ -130591,6 +132085,24 @@ state_,
         ResultOfSwitchTrainTrack {
             success,
             ret: (),
+            
+        }
+    }
+}
+
+    fn native_get_vehicle_desired_drive_gear(&self, vehicle_: u32) -> ResultOfGetVehicleDesiredDriveGear {
+    unsafe {
+        let mut native_return = Default::default();
+let mut vehicle_ = vehicle_;
+        let success = sdk::natives::get_vehicle_desired_drive_gear(
+            &mut native_return,
+vehicle_,
+        );
+        let native_return = native_return;
+        
+        ResultOfGetVehicleDesiredDriveGear {
+            success,
+            ret: native_return,
             
         }
     }
@@ -131168,6 +132680,25 @@ anim_style_,
         
         
         ResultOfSetWeaponAnimationOverride {
+            success,
+            ret: (),
+            
+        }
+    }
+}
+
+    fn native_set_weapon_ped_damage_modifier(&self, weapon_: u32,
+damage_modifier_: f32) -> ResultOfSetWeaponPedDamageModifier {
+    unsafe {
+        let mut weapon_ = weapon_;
+let mut damage_modifier_ = damage_modifier_;
+        let success = sdk::natives::set_weapon_ped_damage_modifier(
+            weapon_,
+damage_modifier_,
+        );
+        
+        
+        ResultOfSetWeaponPedDamageModifier {
             success,
             ret: (),
             
