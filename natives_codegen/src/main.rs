@@ -11,7 +11,7 @@ mod pub_api_generator;
 mod result_struct_generator;
 
 fn main() {
-    let natives = parse("natives.json", "https://natives.altv.mp/natives");
+    let natives = parse("natives.json", "https://natives.altv.mp/natives.json");
     dbg!(natives.len());
 
     let mut cpp_file = cpp_generator::prepare();

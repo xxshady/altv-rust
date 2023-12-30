@@ -191,7 +191,11 @@ impl CppValue {
     fn primitive(param_name: &str) -> CppValue {
         CppValue {
             ser: param_name.to_string(),
-            ser_ref: if param_name == NATIVE_RETURN_IDENT { "Default::default()".to_string() } else { param_name.to_string() },
+            ser_ref: if param_name == NATIVE_RETURN_IDENT {
+                "Default::default()".to_string()
+            } else {
+                param_name.to_string()
+            },
             des: param_name.to_string(),
             call: param_name.to_string(),
             call_ref: format!("&mut {param_name}"),
@@ -258,24 +262,20 @@ fn cpp_value_of(native_type: NativeType, param_name: &str, r#ref: bool) -> CppVa
         NativeType::MemoryBuffer => unreachable!(),
         NativeType::Any => {
             match (r#ref, param_name) {
-                (true, NATIVE_RETURN_IDENT) => {
-                    CppValue::primitive(param_name)
-                },
+                (true, NATIVE_RETURN_IDENT) => CppValue::primitive(param_name),
                 (true, _) => {
                     CppValue {
                         ser_ref: format!(
                             "self.memory_buffers.borrow_mut().get_mut_ptr({param_name}) as *mut c_void"
                         ),
                         call_ref: param_name.to_string(),
-    
+
                         des: format!("0"), // does not matter anyway
                         ser: format!("MEMORY BUFFER IS ALWAYS REF"),
                         call: format!("MEMORY BUFFER IS ALWAYS REF"),
                     }
-                },
-                (false, _) => {
-                    CppValue::primitive(param_name)
-                },
+                }
+                (false, _) => CppValue::primitive(param_name),
             }
         }
     }

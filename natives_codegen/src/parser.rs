@@ -90,19 +90,22 @@ pub(crate) fn parse(local_file_path: &str, remote_file_path: &str) -> Vec<Native
     let namespaces = {
         let local_file = fs::read(local_file_path);
 
-        let data = if let Ok(data) = local_file {
-            String::from_utf8(data).unwrap()
+        let data: Value = if let Ok(data) = local_file {
+            serde_json::from_str(std::str::from_utf8(&data).unwrap()).unwrap()
         } else {
             println!(
-                "Failed to read local file at: {local_file_path:?}, downloading from {remote_file_path}..."
+                "Cannot read local file at: {local_file_path:?}, downloading from {remote_file_path}..."
             );
-            reqwest::blocking::get(remote_file_path)
+            let data: Value = reqwest::blocking::get(remote_file_path)
                 .unwrap()
-                .text()
-                .unwrap()
-        };
+                .json()
+                .unwrap_or_else(|e| {
+                    panic!("Failed to parse json error: {e}");
+                });
 
-        let data: Value = serde_json::from_str(&data).unwrap();
+            fs::write(local_file_path, data.to_string()).unwrap();
+            data
+        };
 
         let Value::Object(namespaces) = data else {
             panic!("Expected object");
