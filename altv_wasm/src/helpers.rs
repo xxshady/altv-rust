@@ -5,24 +5,6 @@ use crate::{
 };
 use altv_wasm_shared::BaseObjectPtr;
 
-#[macro_export]
-macro_rules! __assert_its_called_once {
-    () => {{
-        use std::cell::Cell;
-
-        thread_local! {
-            static CALLED: Cell<bool> = Cell::new(false);
-        }
-
-        CALLED.with(|v| {
-            assert!(!v.get(), "Cannot be called multiple times");
-            v.set(true);
-        });
-    }};
-}
-
-pub use __assert_its_called_once as assert_its_called_once;
-
 pub(crate) fn get_vehicle_by_ptr(ptr: BaseObjectPtr) -> Vehicle {
     match Vehicle::new(ptr) {
         Some(v) => v,
