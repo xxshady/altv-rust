@@ -406,5 +406,26 @@ u32 GetPoolCount(const StdStringClone pool) {
 std::vector<u32> GetPoolEntities(const StdStringClone pool) {
     return alt::ICore::Instance().GetPoolEntities(pool);
 }
+std::vector<u32> GetVoicePlayers() {
+    return alt::ICore::Instance().GetVoicePlayers();
+}
+void RemoveVoicePlayer(u32 player) {
+    return alt::ICore::Instance().RemoveVoicePlayer(player);
+}
+f32 GetVoiceSpatialVolume(u32 player) {
+    return alt::ICore::Instance().GetVoiceSpatialVolume(player);
+}
+void SetVoiceSpatialVolume(u32 player, f32 volume) {
+    return alt::ICore::Instance().SetVoiceSpatialVolume(player, volume);
+}
+f32 GetVoiceNonSpatialVolume(u32 player) {
+    return alt::ICore::Instance().GetVoiceNonSpatialVolume(player);
+}
+void SetVoiceNonSpatialVolume(u32 player, f32 volume) {
+    return alt::ICore::Instance().SetVoiceNonSpatialVolume(player, volume);
+}
+void RemoveVoiceFilter(u32 player) {
+    return alt::ICore::Instance().RemoveVoiceFilter(player);
+}
 
 } // namespace
