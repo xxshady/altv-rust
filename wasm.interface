@@ -68,6 +68,6 @@ imports {
 exports {
     on_tick()
     on_base_object_create(ptr: altv_wasm_shared::BaseObjectPtr, ty: altv_wasm_shared::BaseObjectTypeRaw)
-    on_base_object_destroy(ptr: altv_wasm_shared::BaseObjectPtr, ty: altv_wasm_shared::BaseObjectTypeRaw)
+    on_base_object_destroy(ptr: altv_wasm_shared::BaseObjectPtr)
     on_event(event: altv_wasm_shared::RawEvent)
 }

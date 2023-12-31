@@ -33,7 +33,7 @@ pub fn handle_base_object_creation_or_deletion(
             if creation {
                 e.call_on_base_object_create(base_object as u64, ty)
             } else {
-                e.call_on_base_object_destroy(base_object as u64, ty)
+                e.call_on_base_object_destroy(base_object as u64)
             }
         });
     });

@@ -1,5 +1,5 @@
 use std::{
-    cell::{RefCell, Cell},
+    cell::{RefCell, Cell, RefMut},
     collections::{HashMap, HashSet},
 };
 use altv_sdk::ffi as sdk;
@@ -88,6 +88,7 @@ impl ResourceController {
         match res {
             Ok(v) => {
                 self.ensure_error_message_is_empty();
+                self.destroy_base_objects(exports);
                 Ok(v)
             }
             Err(err) => {
@@ -130,6 +131,33 @@ impl ResourceController {
         }
 
         logger::error!("Resource: {} tried to output something to stderr without panic (probably called `dbg!` or something like this? use `altv::dbg!` instead)", self.name);
+    }
+
+    fn destroy_base_objects(&self, mut exports: RefMut<Exports>) {
+        let mut objects_ref_mut = exports
+            .store_mut()
+            .data()
+            .scheduled_base_objects_destroy
+            .borrow_mut();
+        if objects_ref_mut.is_empty() {
+            return;
+        }
+
+        let objects = std::mem::take(&mut *objects_ref_mut);
+
+        drop(objects_ref_mut);
+        drop(exports);
+
+        for ptr in objects {
+            set_pending_base_object(true);
+            unsafe { sdk::ICore::DestroyBaseObject(ptr) }
+
+            // theoretically error must never happen here
+            self.call_export(|e| e.call_on_base_object_destroy(ptr as u64))
+                .unwrap();
+
+            set_pending_base_object(false);
+        }
     }
 }
 

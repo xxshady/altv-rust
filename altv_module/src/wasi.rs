@@ -1,3 +1,5 @@
+use std::{cell::RefCell, collections::VecDeque};
+
 use autocxx::prelude::*;
 use wasmtime_wasi::WasiCtx;
 use altv_sdk::ffi as sdk;
@@ -11,10 +13,10 @@ pub type Exports = wasm_host::gen::exports::Exports<State>;
 
 pub struct State {
     pub wasi: WasiCtx,
-
     // TODO: some safe wrapper over this unsafe shit
     pub resource_ptr: *mut sdk::shared::AltResource,
     pub big_call_ptr: wasm_host::gen::Ptr,
+    pub scheduled_base_objects_destroy: RefCell<VecDeque<altv_sdk::BaseObjectRawMutPtr>>,
 
     memory: Option<wasmtime::Memory>,
     free: Option<wasm_host::gen::FreeFunc>,
@@ -27,10 +29,12 @@ impl State {
         Self {
             wasi,
             resource_ptr,
+            big_call_ptr: 0,
+            scheduled_base_objects_destroy: Default::default(),
+
             memory: None,
             free: None,
             alloc: None,
-            big_call_ptr: 0,
             natives: wasm_host_natives::WasmNatives::new(),
         }
     }
@@ -94,9 +98,9 @@ impl wasm_host::gen::imports::Imports for State {
     }
 
     fn destroy_base_object(&self, ptr: altv_wasm_shared::BaseObjectPtr) {
-        set_pending_base_object(true);
-        unsafe { sdk::ICore::DestroyBaseObject(ptr as _) }
-        set_pending_base_object(false);
+        self.scheduled_base_objects_destroy
+            .borrow_mut()
+            .push_back(ptr as _);
     }
 
     fn base_object_get_id(&self, ptr: altv_wasm_shared::BaseObjectPtr) -> u32 {

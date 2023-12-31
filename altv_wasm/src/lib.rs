@@ -94,7 +94,7 @@ impl __exports::Exports for __exports::ExportsImpl {
         State::with_base_objects_mut(|mut v, _| v.on_create(ptr, ty, kind));
     }
 
-    fn on_base_object_destroy(ptr: altv_wasm_shared::BaseObjectPtr, ty: BaseObjectTypeRaw) {
+    fn on_base_object_destroy(ptr: altv_wasm_shared::BaseObjectPtr) {
         State::with_base_objects_mut(|mut v, _| v.on_destroy(ptr));
     }
 

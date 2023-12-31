@@ -20,18 +20,19 @@ extern "C" fn main() {
         move |s| {
             log!("spawn {s:?}");
             natives::set_vehicle_colours(s, 10, 10);
-            natives::set_entity_alpha(s, 100, false);
+            // natives::set_entity_alpha(s, 100, false);
 
-            let veh_ = veh_.clone();
-            altv::set_timeout(
-                move || {
-                    drop(veh_.borrow_mut().take().unwrap());
-                },
-                Duration::from_secs(2),
-            );
+            // let veh_ = veh_.clone();
+            // altv::set_timeout(
+            //     move || {
+            //         drop(veh_.borrow_mut().take().unwrap());
+            //     },
+            //     Duration::from_secs(2),
+            // );
         },
-        || {
+        move || {
             log!("despawn");
+            drop(veh_.borrow_mut().take().unwrap());
         },
     )
     .unwrap();

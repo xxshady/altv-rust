@@ -69,7 +69,6 @@ macro_rules! objects {
                 let data = self.all.get(&ptr).unwrap();
 
                 if data.ref_count == 1 {
-                    self.on_destroy(ptr);
                     __imports::destroy_base_object(ptr);
                 } else {
                     self.all.entry(ptr).and_modify(|data| data.ref_count -= 1);

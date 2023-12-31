@@ -6,7 +6,6 @@ edition = { workspace = true }
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-stats_alloc = "0.1.10"
 altv = { path = "../altv_wasm", package = "altv_wasm" }
 bincode = { workspace = true }
 
