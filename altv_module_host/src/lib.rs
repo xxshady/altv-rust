@@ -2,6 +2,7 @@ use std::{
     ffi::CString,
     cell::{Cell, RefCell},
     fs,
+    time::Duration,
 };
 
 use cxx::let_cxx_string;
@@ -54,6 +55,7 @@ pub unsafe extern "C" fn CreateScriptRuntime(
 
     let_cxx_string!(res_command = "res");
 
+    #[allow(improper_ctypes_definitions)]
     extern "C" fn handle_restart_command(args: &str) {
         // let args = args.into_iter().map(|v| v.to_string()).collect::<Vec<_>>();
         logger::debug!(
@@ -62,7 +64,18 @@ pub unsafe extern "C" fn CreateScriptRuntime(
         );
 
         unsafe {
+            sdk::trigger_server_event("restart_rust_client", mvalue::serialize_args(&[]).unwrap());
+        }
+
+        unsafe {
             load_module();
+        }
+
+        unsafe {
+            sdk::trigger_server_event(
+                "restarted_rust_client",
+                mvalue::serialize_args(&[]).unwrap(),
+            );
         }
     }
 

@@ -231,6 +231,10 @@ pub mod ffi {
         generate!("create_mvalue_rgba")
 
         // events
+        generate!("trigger_server_event")
+        generate!("trigger_server_event_unreliable")
+
+        // events
         // generate!("trigger_local_event")
         // generate!("trigger_client_event")
         // generate!("trigger_client_event_for_some")

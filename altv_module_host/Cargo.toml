@@ -16,5 +16,6 @@ crate-type = ["cdylib"]
 libloading = "0.7.4"
 altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "=15.0.0-dev.72" }
 logger = { path = "../logger", package = "altv_internal_logger", version = "=15.0.0-dev.72" }
+mvalue = { path = "../mvalue", package = "altv_internal_mvalue", version = "=15.0.0-dev.72" }
 cxx = { workspace = true }
 process_path = "0.1.4"

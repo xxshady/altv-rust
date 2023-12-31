@@ -24,7 +24,13 @@ fn main() {
     //     .collect::<Vec<_>>();
     // let natives = natives
     //     .into_iter()
-    //     .filter(|n| n.name == "datafile_get_file_dict_for_additional_data_file")
+    //     .filter(|n| {
+    //         if let "set_vehicle_colours" | "set_entity_alpha" = n.name.as_str() {
+    //             true
+    //         } else {
+    //             false
+    //         }
+    //     })
     //     .collect::<Vec<_>>();
     // dbg!(natives.len());
 

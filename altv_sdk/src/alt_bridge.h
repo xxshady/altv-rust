@@ -652,6 +652,14 @@ std::vector<alt::IPlayer*> player_wrapper_vec_to_alt(PlayerVector player_vec) {
     return players;
 }
 
+void trigger_server_event(std::string event_name, MValueMutWrapper mvalue_list) {
+    alt::ICore::Instance().TriggerServerEvent(event_name, mvalue_wrapper_list_to_args(mvalue_list));
+}
+
+void trigger_server_event_unreliable(std::string event_name, MValueMutWrapper mvalue_list) {
+    alt::ICore::Instance().TriggerServerEventUnreliable(event_name, mvalue_wrapper_list_to_args(mvalue_list));
+}
+
 // void trigger_client_event(alt::IPlayer* player, std::string event_name, MValueMutWrapper mvalue_list) {
 //     alt::ICore::Instance().TriggerClientEvent(player, event_name, mvalue_wrapper_list_to_args(mvalue_list));
 // }
