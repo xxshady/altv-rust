@@ -11,10 +11,10 @@ mod base_objects;
 pub use base_objects::{
     objects::{vehicle::Vehicle, local_vehicle::LocalVehicle},
     remote::RemoteBaseObject,
-    shared_vehicle::SharedVehicle,
+    spawned_vehicle::SpawnedVehicle,
     world_object::{WorldObject, ClientWorldObject},
     any_vehicle::AnyVehicle,
-    local_vehicle::{LocalVehicleStatic, LocalVehicleStreamed},
+    local_vehicle::{LocalVehicleStatic, LocalVehicleStreamed, SpawnedLocalVehicleStreamed},
 };
 
 mod hash;
@@ -52,7 +52,6 @@ pub use futures;
 pub mod event;
 
 mod script_id;
-pub use script_id::VehicleScriptId;
 
 #[no_mangle]
 extern "C" fn __pre_main() {

@@ -2,7 +2,7 @@ pub mod base;
 pub mod objects;
 pub mod vehicle;
 pub mod remote;
-pub mod shared_vehicle;
+pub mod spawned_vehicle;
 pub mod world_object;
 pub mod any_entity;
 pub mod any_vehicle;

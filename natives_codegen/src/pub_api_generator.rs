@@ -15,7 +15,7 @@ pub(crate) fn prepare() -> fs::File {
 
     file.write_all(
         formatdoc! {"
-            use crate::script_id::{{VehicleScriptId, AsEntityScriptId}};
+            use crate::script_id::{{AsVehicleScriptId, AsEntityScriptId}};
         "}
         .as_bytes(),
     )
@@ -86,7 +86,7 @@ mod pub_api_types {
         }
 
         fn usage(&self, param_name: &str) -> String {
-            format!("{param_name}.0")
+            format!("{param_name}.as_vehicle_script_id()")
         }
     }
 
@@ -125,7 +125,7 @@ mod pub_api_types {
     ) -> Box<dyn PubApiType> {
         match native_type {
             NativeType::Vehicle => Box::new(Vehicle {
-                r#type: "&VehicleScriptId",
+                r#type: "impl AsVehicleScriptId",
             }),
             NativeType::Entity => Box::new(Entity {
                 r#type: "impl AsEntityScriptId",

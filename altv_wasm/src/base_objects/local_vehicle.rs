@@ -3,10 +3,10 @@ use std::time::Duration;
 use altv_wasm_shared::BaseObjectPtr;
 use anyhow::{bail, anyhow};
 
-use crate::{__imports, state::State, wait_for, SomeResult, event, script_id::VehicleScriptId};
+use crate::{__imports, state::State, wait_for, SomeResult, event};
 use super::{
     objects::{local_vehicle::LocalVehicle, BaseObjectManager},
-    shared_vehicle::SharedVehicle,
+    spawned_vehicle::SpawnedVehicle,
     world_object::{WorldObject, ClientWorldObject},
     kind::BaseObjectKind,
     base::private::Ptr,
@@ -28,6 +28,15 @@ impl LocalVehicle {
             model, dimension, pos_x, pos_y, pos_z, rot_x, rot_y, rot_z, false, 0,
         )?;
 
+        let instance = State::with_base_objects_mut(|mut base_objects, _| {
+            base_objects.on_create(
+                ptr,
+                altv_wasm_shared::BaseObjectType::LocalVehicle,
+                BaseObjectKind::LocalVehicleStatic,
+            );
+            LocalVehicle::internal_new_owned(ptr, &mut base_objects.all, ())
+        });
+
         // TODO: use game entity create event
         let spawn_res = wait_for(
             || __imports::entity_get_script_id(ptr) != 0,
@@ -36,18 +45,9 @@ impl LocalVehicle {
         .await;
 
         match spawn_res {
-            Ok(_) => {
-                let instance = State::with_base_objects_mut(|mut base_objects, _| {
-                    base_objects.on_create(
-                        ptr,
-                        altv_wasm_shared::BaseObjectType::LocalVehicle,
-                        BaseObjectKind::LocalVehicleStatic,
-                    );
-                    LocalVehicle::internal_new_owned(ptr, &mut base_objects.all, ())
-                });
-                Ok(LocalVehicleStatic::new(instance, ptr))
-            }
+            Ok(_) => Ok(LocalVehicleStatic::new(instance, ptr)),
             Err(_) => {
+                // TODO: destroy base object?
                 bail!("Failed to wait for spawn of vehicle")
             }
         }
@@ -63,7 +63,7 @@ impl LocalVehicle {
         rot_y: f32,
         rot_z: f32,
         streaming_distance: u32,
-        on_spawn: impl FnMut(&VehicleScriptId) + 'static,
+        on_spawn: impl FnMut(&SpawnedLocalVehicleStreamed) + 'static,
         on_despawn: impl FnMut() + 'static,
     ) -> SomeResult<LocalVehicleStreamed> {
         let ptr = Self::create(
@@ -143,7 +143,6 @@ impl LocalVehicle {
     }
 }
 
-impl SharedVehicle for LocalVehicle {}
 impl WorldObject for LocalVehicle {}
 impl ClientWorldObject for LocalVehicle {}
 
@@ -171,23 +170,11 @@ impl PartialEq<LocalVehicleStatic> for LocalVehicle {
 #[derive(Debug)]
 pub struct LocalVehicleStatic {
     instance: LocalVehicle,
-    script_id: VehicleScriptId,
 }
 
 impl LocalVehicleStatic {
     pub(crate) fn new(instance: LocalVehicle, ptr: BaseObjectPtr) -> Self {
-        Self {
-            instance,
-            script_id: {
-                let raw = __imports::entity_get_script_id(ptr);
-                assert!(raw != 0);
-                VehicleScriptId(raw)
-            },
-        }
-    }
-
-    pub fn script_id(&self) -> &VehicleScriptId {
-        &self.script_id
+        Self { instance }
     }
 }
 
@@ -204,6 +191,14 @@ impl std::ops::DerefMut for LocalVehicleStatic {
     }
 }
 
+impl Ptr for &LocalVehicleStatic {
+    fn ptr(&self) -> BaseObjectPtr {
+        self.instance.ptr()
+    }
+}
+
+impl SpawnedVehicle for &LocalVehicleStatic {}
+
 #[must_use = "Instance is immediately destroyed if ignored"]
 #[derive(Debug)]
 pub struct LocalVehicleStreamed {
@@ -217,7 +212,7 @@ impl LocalVehicleStreamed {
     pub(crate) fn new(
         instance: LocalVehicle,
         ptr: BaseObjectPtr,
-        mut on_spawn: impl FnMut(&VehicleScriptId) + 'static,
+        mut on_spawn: impl FnMut(&SpawnedLocalVehicleStreamed) + 'static,
         mut on_despawn: impl FnMut() + 'static,
     ) -> Self {
         // TODO: static event handlers for these
@@ -236,7 +231,7 @@ impl LocalVehicleStreamed {
 
                         let script_id = __imports::entity_get_script_id(ptr);
                         assert!(script_id != 0);
-                        on_spawn(&VehicleScriptId(script_id));
+                        on_spawn(&SpawnedLocalVehicleStreamed(ptr));
                     },
                 ))),
                 event::add_handler(event::EventHandler::GameEntityDestroy(Box::new(
@@ -276,3 +271,14 @@ impl std::ops::DerefMut for LocalVehicleStreamed {
         &mut self.instance
     }
 }
+
+#[derive(Debug)]
+pub struct SpawnedLocalVehicleStreamed(BaseObjectPtr);
+
+impl Ptr for &SpawnedLocalVehicleStreamed {
+    fn ptr(&self) -> BaseObjectPtr {
+        self.0
+    }
+}
+
+impl SpawnedVehicle for &SpawnedLocalVehicleStreamed {}

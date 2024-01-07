@@ -1,12 +1,16 @@
-#[derive(Debug)]
-pub struct VehicleScriptId(pub u32);
-
 pub trait AsEntityScriptId {
-    fn as_entity_script_id(self) -> u32;
+    fn as_entity_script_id(&self) -> u32;
 }
 
-impl AsEntityScriptId for &VehicleScriptId {
-    fn as_entity_script_id(self) -> u32 {
-        self.0
+impl<T> AsEntityScriptId for T
+where
+    T: AsVehicleScriptId,
+{
+    fn as_entity_script_id(&self) -> u32 {
+        self.as_vehicle_script_id()
     }
+}
+
+pub trait AsVehicleScriptId {
+    fn as_vehicle_script_id(&self) -> u32;
 }

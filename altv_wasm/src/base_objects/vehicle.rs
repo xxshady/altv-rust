@@ -1,8 +1,8 @@
 use altv_wasm_shared::BaseObjectPtr;
 
-use crate::{State, __imports, script_id::VehicleScriptId};
+use crate::{State, __imports};
 use super::{
-    objects::vehicle::Vehicle, remote::RemoteBaseObject, shared_vehicle::SharedVehicle,
+    objects::vehicle::Vehicle, remote::RemoteBaseObject, spawned_vehicle::SpawnedVehicle,
     world_object::WorldObject,
 };
 
@@ -63,29 +63,19 @@ impl Vehicle {
 
     pub(crate) fn new(ptr: BaseObjectPtr) -> Option<Self> {
         let script_id = __imports::entity_get_script_id(ptr);
+        assert!(script_id != 0);
+
         if script_id != 0 {
-            Some(Vehicle::internal_new_borrowed(
-                ptr,
-                VehicleData {
-                    script_id: VehicleScriptId(script_id),
-                },
-            ))
+            Some(Vehicle::internal_new_borrowed(ptr, VehicleData {}))
         } else {
             None
         }
     }
-
-    /// Vehicle instances are guaranteed to be spawned
-    pub fn script_id(&self) -> &VehicleScriptId {
-        &self.data.script_id
-    }
 }
 
 impl RemoteBaseObject for Vehicle {}
-impl SharedVehicle for Vehicle {}
+impl SpawnedVehicle for Vehicle {}
 impl WorldObject for Vehicle {}
 
 #[derive(Debug)]
-pub struct VehicleData {
-    pub(crate) script_id: VehicleScriptId,
-}
+pub struct VehicleData {}
