@@ -47,8 +47,8 @@ impl LocalVehicle {
         match spawn_res {
             Ok(_) => Ok(LocalVehicleStatic::new(instance, ptr)),
             Err(_) => {
-                // TODO: destroy base object?
                 bail!("Failed to wait for spawn of vehicle")
+                // base object is destroyed here automatically in drop
             }
         }
     }
