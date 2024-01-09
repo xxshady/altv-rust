@@ -57,6 +57,7 @@ imports {
     
     vehicle_set_fuel_level(ptr: altv_wasm_shared::BaseObjectPtr, value: f32)
     vehicle_get_fuel_level(ptr: altv_wasm_shared::BaseObjectPtr) -> f32
+    vehicle_get_seat_count(ptr: altv_wasm_shared::BaseObjectPtr) -> u8
 
     entity_get_script_id(ptr: altv_wasm_shared::BaseObjectPtr) -> u32
 

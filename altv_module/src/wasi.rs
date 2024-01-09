@@ -189,6 +189,12 @@ impl wasm_host::gen::imports::Imports for State {
         unsafe { sdk::IVehicle::SetFuelLevel(vehicle, value) }
     }
 
+    fn vehicle_get_seat_count(&self, ptr: altv_wasm_shared::BaseObjectPtr) -> u8 {
+        let vehicle = unsafe { sdk::base_object::to_vehicle(ptr as _) };
+        assert!(!vehicle.is_null());
+        unsafe { sdk::IVehicle::GetSeatCount(vehicle) }
+    }
+
     fn entity_get_script_id(&self, ptr: altv_wasm_shared::BaseObjectPtr) -> u32 {
         let entity = unsafe { sdk::base_object::to_entity(ptr as _) };
         assert!(!entity.is_null());

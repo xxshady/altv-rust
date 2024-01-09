@@ -11,6 +11,10 @@ pub trait SpawnedVehicle: Ptr {
     fn set_fuel_level(&self, value: f32) {
         __imports::vehicle_set_fuel_level(self.ptr(), value);
     }
+
+    fn seat_count(&self) -> u8 {
+        __imports::vehicle_get_seat_count(self.ptr())
+    }
 }
 
 impl<T> AsVehicleScriptId for T
