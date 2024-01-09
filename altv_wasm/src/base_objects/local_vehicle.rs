@@ -163,6 +163,9 @@ impl PartialEq<LocalVehicleStatic> for LocalVehicle {
     }
 }
 
+impl WorldObject for LocalVehicle {}
+impl ClientWorldObject for LocalVehicle {}
+
 #[must_use = "Instance is immediately destroyed if ignored"]
 #[derive(Debug)]
 pub struct LocalVehicleStatic {
@@ -283,12 +286,12 @@ impl ClientWorldObject for LocalVehicleStreamed {}
 #[derive(Debug)]
 pub struct SpawnedLocalVehicleStreamed(BaseObjectPtr);
 
-impl Ptr for &SpawnedLocalVehicleStreamed {
+impl Ptr for SpawnedLocalVehicleStreamed {
     fn ptr(&self) -> BaseObjectPtr {
         self.0
     }
 }
 
-impl SpawnedVehicle for &SpawnedLocalVehicleStreamed {}
-impl WorldObject for &SpawnedLocalVehicleStreamed {}
-impl ClientWorldObject for &SpawnedLocalVehicleStreamed {}
+impl SpawnedVehicle for SpawnedLocalVehicleStreamed {}
+impl WorldObject for SpawnedLocalVehicleStreamed {}
+impl ClientWorldObject for SpawnedLocalVehicleStreamed {}
