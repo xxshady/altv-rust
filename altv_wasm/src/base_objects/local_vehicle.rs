@@ -143,9 +143,6 @@ impl LocalVehicle {
     }
 }
 
-impl WorldObject for LocalVehicle {}
-impl ClientWorldObject for LocalVehicle {}
-
 impl PartialEq for LocalVehicle {
     fn eq(&self, other: &Self) -> bool {
         self.ptr() == other.ptr()
@@ -191,13 +188,15 @@ impl std::ops::DerefMut for LocalVehicleStatic {
     }
 }
 
-impl Ptr for &LocalVehicleStatic {
+impl Ptr for LocalVehicleStatic {
     fn ptr(&self) -> BaseObjectPtr {
         self.instance.ptr()
     }
 }
 
-impl SpawnedVehicle for &LocalVehicleStatic {}
+impl WorldObject for LocalVehicleStatic {}
+impl ClientWorldObject for LocalVehicleStatic {}
+impl SpawnedVehicle for LocalVehicleStatic {}
 
 #[must_use = "Instance is immediately destroyed if ignored"]
 #[derive(Debug)]
@@ -272,6 +271,15 @@ impl std::ops::DerefMut for LocalVehicleStreamed {
     }
 }
 
+impl Ptr for LocalVehicleStreamed {
+    fn ptr(&self) -> BaseObjectPtr {
+        self.instance.ptr()
+    }
+}
+
+impl WorldObject for LocalVehicleStreamed {}
+impl ClientWorldObject for LocalVehicleStreamed {}
+
 #[derive(Debug)]
 pub struct SpawnedLocalVehicleStreamed(BaseObjectPtr);
 
@@ -282,3 +290,5 @@ impl Ptr for &SpawnedLocalVehicleStreamed {
 }
 
 impl SpawnedVehicle for &SpawnedLocalVehicleStreamed {}
+impl WorldObject for &SpawnedLocalVehicleStreamed {}
+impl ClientWorldObject for &SpawnedLocalVehicleStreamed {}

@@ -17,7 +17,7 @@ pub trait SpawnedVehicle: Ptr {
     }
 }
 
-impl<T> AsVehicleScriptId for T
+impl<T> AsVehicleScriptId for &T
 where
     T: SpawnedVehicle,
 {
