@@ -16,17 +16,11 @@ use super::{
 impl LocalVehicle {
     pub async fn new_static(
         model: u32,
+        pos: shared::Vector3,
+        rot: shared::Vector3,
         dimension: i32,
-        pos_x: f32,
-        pos_y: f32,
-        pos_z: f32,
-        rot_x: f32,
-        rot_y: f32,
-        rot_z: f32,
     ) -> SomeResult<LocalVehicleStatic> {
-        let ptr = Self::create(
-            model, dimension, pos_x, pos_y, pos_z, rot_x, rot_y, rot_z, false, 0,
-        )?;
+        let ptr = Self::create(model, pos, rot, dimension, false, 0)?;
 
         let instance = State::with_base_objects_mut(|mut base_objects, _| {
             base_objects.on_create(
@@ -55,29 +49,14 @@ impl LocalVehicle {
 
     pub fn new_streamed(
         model: u32,
+        pos: shared::Vector3,
+        rot: shared::Vector3,
         dimension: i32,
-        pos_x: f32,
-        pos_y: f32,
-        pos_z: f32,
-        rot_x: f32,
-        rot_y: f32,
-        rot_z: f32,
         streaming_distance: u32,
         on_spawn: impl FnMut(&SpawnedLocalVehicleStreamed) + 'static,
         on_despawn: impl FnMut() + 'static,
     ) -> SomeResult<LocalVehicleStreamed> {
-        let ptr = Self::create(
-            model,
-            dimension,
-            pos_x,
-            pos_y,
-            pos_z,
-            rot_x,
-            rot_y,
-            rot_z,
-            true,
-            streaming_distance,
-        )?;
+        let ptr = Self::create(model, pos, rot, dimension, true, streaming_distance)?;
 
         let instance = State::with_base_objects_mut(|mut base_objects, _| {
             base_objects.on_create(
@@ -94,25 +73,21 @@ impl LocalVehicle {
 
     fn create(
         model: u32,
+        pos: shared::Vector3,
+        rot: shared::Vector3,
         dimension: i32,
-        pos_x: f32,
-        pos_y: f32,
-        pos_z: f32,
-        rot_x: f32,
-        rot_y: f32,
-        rot_z: f32,
         use_streaming: bool,
         streaming_distance: u32,
     ) -> SomeResult<BaseObjectPtr> {
         let ptr = __imports::create_local_vehicle(
             model,
             dimension,
-            pos_x,
-            pos_y,
-            pos_z,
-            rot_x,
-            rot_y,
-            rot_z,
+            pos.x,
+            pos.y,
+            pos.z,
+            rot.x,
+            rot.y,
+            rot.z,
             use_streaming,
             streaming_distance,
         );
@@ -140,6 +115,16 @@ impl LocalVehicle {
         });
 
         reader(&vehicles)
+    }
+
+    pub fn read_by_id<R>(id: u32, reader: impl FnOnce(&LocalVehicle) -> R) -> Option<R> {
+        Self::read_all(|all| {
+            let object = all.iter().find(|v| v.id() == id);
+            let Some(object) = object else {
+                return None;
+            };
+            Some(reader(object))
+        })
     }
 }
 

@@ -174,3 +174,9 @@ pub fn add_handler(handler: EventHandler) -> EventController {
         EventController { removal }
     })
 }
+
+pub fn on_game_entity_create(
+    handler: impl FnMut(&contexts::GameEntityCreate) + 'static,
+) -> EventController {
+    add_handler(EventHandler::GameEntityCreate(Box::new(handler)))
+}

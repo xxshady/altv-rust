@@ -14,6 +14,7 @@ pub use base_objects::{
     spawned_vehicle::SpawnedVehicle,
     world_object::{WorldObject, ClientWorldObject},
     any_vehicle::AnyVehicle,
+    any_entity::AnyEntity,
     local_vehicle::{LocalVehicleStatic, LocalVehicleStreamed, SpawnedLocalVehicleStreamed},
 };
 
