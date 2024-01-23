@@ -8,6 +8,6 @@ publish = false
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-duct = "0.13.6"
-reqwest = "0.11.18"
-tokio = { version = "1.28.1", features = ["full"] }
+duct = "0.13.7"
+reqwest = "0.11.23"
+tokio = { version = "1.35.1", features = ["full"] }

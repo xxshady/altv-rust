@@ -11,9 +11,9 @@ readme = { workspace = true }
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-proc-macro2 = "1.0.51"
-quote = "1.0.21"
-syn = { version = "1.0.105", features = ["extra-traits", "full"] }
+proc-macro2 = "1.0.78"
+quote = "1.0.35"
+syn = { version = "1.0.109", features = ["extra-traits", "full"] }
 
 [lib]
 proc_macro = true
