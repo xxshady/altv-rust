@@ -1083,12 +1083,13 @@ impl player::Player {
         })
     }
 
-    pub fn add_decoration(&self, collection: impl IntoHash, overlay: impl IntoHash) -> VoidResult {
+    pub fn add_decoration(&self, collection: impl IntoHash, overlay: impl IntoHash, count: u8) -> VoidResult {
         unsafe {
             sdk::IPlayer::AddDecoration(
                 self.raw_ptr()?,
                 collection.into_hash(),
                 overlay.into_hash(),
+                count,
             )
         }
         Ok(())
