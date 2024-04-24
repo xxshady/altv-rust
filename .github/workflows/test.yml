@@ -35,6 +35,11 @@ jobs:
         run: |
           clang --version
 
+      - name: Install WinGet CLI
+        shell: powershell
+        run: |
+          try { winget --help } catch { Add-AppxPackage -Path https://aka.ms/getwinget }
+
       - name: Update
         shell: cmd
         run: |
