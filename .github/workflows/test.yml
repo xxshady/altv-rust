@@ -34,6 +34,13 @@ jobs:
       - name: Clang version
         run: |
           clang --version
+      - name: Update
+        run: |
+          winget install LLVM.LLVM --silent --accept-source-agreements
+
+      - name: Clang version again
+        run: |
+          clang --version
           
       - name: build
         shell: cmd
