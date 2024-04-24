@@ -2,6 +2,5 @@
 
 modules = ["rust-module"]
 resources = ["rust"]
-logStreams = ["stdconsole", "file"]
 streamingDistance = 300
 debug = true
