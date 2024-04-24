@@ -37,8 +37,10 @@ jobs:
 
       - name: Install WinGet CLI
         shell: powershell
-        run: |
-          try { winget --help } catch { Add-AppxPackage -Path https://aka.ms/getwinget }
+        run:
+          Add-AppxPackage -Path 'https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx'
+          $wingetAlreadyInstalled = Get-AppPackage -name 'Microsoft.DesktopAppInstaller'
+          if (!$wingetAlreadyInstalled) Add-AppxPackage -Path https://aka.ms/getwinget
 
       - name: Update
         shell: cmd
