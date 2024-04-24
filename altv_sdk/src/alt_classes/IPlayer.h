@@ -217,6 +217,9 @@ alt::DlcCloth GetDlcClothes(const alt::IPlayer* ptr, u8 component) {
 bool SetDlcClothes(alt::IPlayer* ptr, u8 component, u16 drawable, u8 texture, u8 palette, u32 dlc) {
     return ptr->SetDlcClothes(component, drawable, texture, palette, dlc);
 }
+bool ClearClothes(alt::IPlayer* ptr, u8 component) {
+    return ptr->ClearClothes(component);
+}
 alt::Prop GetProps(const alt::IPlayer* ptr, u8 component) {
     return ptr->GetProps(component);
 }
@@ -270,6 +273,9 @@ bool RemoveFaceFeature(alt::IPlayer* ptr, u8 index) {
 }
 bool SetHeadBlendPaletteColor(alt::IPlayer* ptr, u8 id, u8 red, u8 green, u8 blue) {
     return ptr->SetHeadBlendPaletteColor(id, red, green, blue);
+}
+void RemoveHeadBlendPaletteColor(alt::IPlayer* ptr) {
+    return ptr->RemoveHeadBlendPaletteColor();
 }
 RGBAWrapper GetHeadBlendPaletteColor(const alt::IPlayer* ptr, u8 id) {
     auto rgba = ptr->GetHeadBlendPaletteColor(id);
@@ -411,8 +417,8 @@ void SetAmmoMax100(alt::IPlayer* ptr, u32 ammoHash, i32 ammoMax100) {
 i32 GetAmmoMax100(const alt::IPlayer* ptr, u32 ammoHash) {
     return ptr->GetAmmoMax100(ammoHash);
 }
-void AddDecoration(alt::IPlayer* ptr, u32 collection, u32 overlay) {
-    return ptr->AddDecoration(collection, overlay);
+void AddDecoration(alt::IPlayer* ptr, u32 collection, u32 overlay, u8 count) {
+    return ptr->AddDecoration(collection, overlay, count);
 }
 void RemoveDecoration(alt::IPlayer* ptr, u32 collection, u32 overlay) {
     return ptr->RemoveDecoration(collection, overlay);

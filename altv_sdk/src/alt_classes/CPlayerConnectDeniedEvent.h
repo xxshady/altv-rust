@@ -22,8 +22,11 @@ bool IsDebug(const alt::CPlayerConnectDeniedEvent* ptr) {
 const StdStringClone GetBranch(const alt::CPlayerConnectDeniedEvent* ptr) {
     return std::string { ptr->GetBranch() };
 }
-u32 GetMajorVersion(const alt::CPlayerConnectDeniedEvent* ptr) {
-    return ptr->GetMajorVersion();
+u16 GetVersionMajor(const alt::CPlayerConnectDeniedEvent* ptr) {
+    return ptr->GetVersionMajor();
+}
+u16 GetVersionMinor(const alt::CPlayerConnectDeniedEvent* ptr) {
+    return ptr->GetVersionMinor();
 }
 const StdStringClone GetCdnUrl(const alt::CPlayerConnectDeniedEvent* ptr) {
     return std::string { ptr->GetCdnUrl() };

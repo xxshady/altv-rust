@@ -28,8 +28,11 @@ bool GetIsDebug(const alt::IConnectionInfo* ptr) {
 std::string GetBranch(const alt::IConnectionInfo* ptr) {
     return ptr->GetBranch();
 }
-u32 GetBuild(const alt::IConnectionInfo* ptr) {
-    return ptr->GetBuild();
+u16 GetVersionMajor(const alt::IConnectionInfo* ptr) {
+    return ptr->GetVersionMajor();
+}
+u16 GetVersionMinor(const alt::IConnectionInfo* ptr) {
+    return ptr->GetVersionMinor();
 }
 std::string GetCdnUrl(const alt::IConnectionInfo* ptr) {
     return ptr->GetCdnUrl();

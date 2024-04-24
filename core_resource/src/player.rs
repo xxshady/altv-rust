@@ -165,6 +165,11 @@ impl player::Player {
         Ok(())
     }
 
+    pub fn remove_head_blend_palette_color(&self) -> VoidResult {
+        unsafe { sdk::IPlayer::RemoveHeadBlendPaletteColor(self.raw_ptr()?) }
+        Ok(())
+    }
+
     pub fn health(&self) -> SomeResult<u16> {
         Ok(unsafe { sdk::IPlayer::GetHealth(self.raw_ptr()?) })
     }
@@ -1078,12 +1083,13 @@ impl player::Player {
         })
     }
 
-    pub fn add_decoration(&self, collection: impl IntoHash, overlay: impl IntoHash) -> VoidResult {
+    pub fn add_decoration(&self, collection: impl IntoHash, overlay: impl IntoHash, count: u8) -> VoidResult {
         unsafe {
             sdk::IPlayer::AddDecoration(
                 self.raw_ptr()?,
                 collection.into_hash(),
                 overlay.into_hash(),
+                count,
             )
         }
         Ok(())

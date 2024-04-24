@@ -15,9 +15,14 @@ altv::events::on_player_connect(|event| {
 });
 ```
 
-New server-side [Rust](https://www.rust-lang.org) module for [alt:V](https://altv.mp) platform (WIP)
+New server-side [Rust](https://www.rust-lang.org) module for [alt:V](https://altv.mp) platform
 
 **Big** thanks to the [creator](https://github.com/justdimaa) of the [first Rust module](https://github.com/justdimaa/altv-rs), as their work helped me understand how to start my own module
+
+## Client-side part
+
+Work is being done in [this branch](https://github.com/xxshady/altv-rust/tree/clientside-shit).<br>
+Will never be published or released because alt:V does not allow you to use custom client-side modules (.dll) in production
 
 ## Docs
 
@@ -26,10 +31,14 @@ API documentation can be found [here](https://docs.rs/altv)
 ## How to use
 
 Before all this, you need to [install LLVM](https://rust-lang.github.io/rust-bindgen/requirements.html#installing-clang)<br>
-> On Windows set LIBCLANG_PATH as an environment variable pointing to the bin directory of your LLVM install. For example, if you installed LLVM to D:\programs\LLVM, then you'd set the value to be D:\programs\LLVM\bin
 
-If you are on **Windows** you also need to set have installed Visual Studio with MSVC compiler (usually installed with Rust using Rustup)
+> [!WARNING]
+> Currently on Windows latest version of LLVM [doesn't work](https://github.com/google/autocxx/issues/1327#issuecomment-2075460893) with Rust module, you need to install 16.0.6, for example with winget you can do it using this command `winget install LLVM.LLVM --version 16.0.6`
 
+> [!IMPORTANT]
+> On Windows set LIBCLANG_PATH as an environment variable pointing to the bin directory of your LLVM install. For example, if you installed LLVM to D:\programs\LLVM, then you'd set the value to be D:\programs\LLVM\bin. You also need to have installed Visual Studio with MSVC compiler (usually installed with Rust using Rustup)
+
+> [!INFO]
 > If you have similar error: `src/alt_bridge.h:5:10: fatal error: 'memory' file not found` when installing or building altv_internal_sdk, try [this](https://stackoverflow.com/questions/26333823/clang-doesnt-see-basic-headers/75546125#75546125)
 
 [Video format of this tutorial](https://youtu.be/PRIJsRdjiGg) if you are more into video tutorials
