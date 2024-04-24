@@ -82,7 +82,7 @@ pub(crate) fn test_mvalue() {
         altv::Vector2: altv::Vector2::new(f32::MAX, f32::MIN);
         altv::Vector2: altv::Vector2::new(f32::MAX, 123);
 
-        altv::VoiceChannelContainer: altv::VoiceChannel::new_spatial(0.0).unwrap();
+        altv::ColShapeContainer: altv::ColShape::new_circle(0, 10.0);
 
         // TODO:
         // altv::AnyBaseObject: altv::VoiceChannel::new_spatial(0.0).unwrap();
