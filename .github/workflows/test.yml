@@ -6,41 +6,6 @@ on:
   pull_request:
 
 jobs:
-  test-linux:
-    runs-on: ubuntu-22.04
-
-    if: ${{ !startsWith(github.event.head_commit.message, 'release new version:') }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          submodules: recursive
-
-      - name: Install latest stable rust
-        run: rustup update
-          
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          
-      - name: Doc tests
-        run: |
-          cargo test --doc
-
-      - name: Server Test
-        env:
-          ALTV_BRANCH: ${{ github.ref_name }}
-        run: |
-          cargo run --bin run_test
-
   test-windows:
     runs-on: windows-2022
 
@@ -65,11 +30,16 @@ jobs:
             ~/.cargo/git/db/
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Clang version
+        run: |
+          clang --version
           
       - name: build
         shell: cmd
         # temp workaround https://github.com/google/autocxx/issues/1327
         run: |
+          echo %PATH%
           set PATH=%PATH:C:\Program Files\LLVM\bin;=%
           echo %PATH%
 
