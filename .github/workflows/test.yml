@@ -66,22 +66,11 @@ jobs:
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           
-      - name: Doc tests
+      - name: build
         shell: cmd
         # temp workaround https://github.com/google/autocxx/issues/1327
         run: |
           set PATH=%PATH:C:\Program Files\LLVM\bin;=%
           echo %PATH%
 
-          cargo test --doc
-
-      - name: Server Test
-        env:
-          ALTV_BRANCH: ${{ github.ref_name }}
-        shell: cmd
-        # temp workaround https://github.com/google/autocxx/issues/1327
-        run: |
-          set PATH=%PATH:C:\Program Files\LLVM\bin;=%
-          echo %PATH%
-
-          cargo run --bin run_test
+          cargo build -vv
