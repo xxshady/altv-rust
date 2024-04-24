@@ -2,13 +2,13 @@
 //!
 //! Detailed explanation of what it is for can be found in the [alt:V docs](https://docs.altv.mp/articles/meta_data.html).
 //!
-//! # Global meta
+//! # Global unsynced meta
 //! [Documentation is here](fn.entry.html).
 //!
 //! # Global synced meta
 //! [Documentation is here](fn.synced_entry.html).
 //!
-//! # Normal meta bound to BaseObject (every alt:V object).
+//! # Unsynced meta bound to BaseObject (every alt:V object).
 //! [Documentation is here](trait.NormalBaseObjectMeta.html).
 //!
 //! # Synced meta bound to BaseObject (every alt:V object).
