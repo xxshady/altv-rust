@@ -38,7 +38,7 @@ Before all this, you need to [install LLVM](https://rust-lang.github.io/rust-bin
 > [!IMPORTANT]
 > On Windows set LIBCLANG_PATH as an environment variable pointing to the bin directory of your LLVM install. For example, if you installed LLVM to D:\programs\LLVM, then you'd set the value to be D:\programs\LLVM\bin. You also need to have installed Visual Studio with MSVC compiler (usually installed with Rust using Rustup)
 
-> [!INFO]
+> [!NOTE]
 > If you have similar error: `src/alt_bridge.h:5:10: fatal error: 'memory' file not found` when installing or building altv_internal_sdk, try [this](https://stackoverflow.com/questions/26333823/clang-doesnt-see-basic-headers/75546125#75546125)
 
 [Video format of this tutorial](https://youtu.be/PRIJsRdjiGg) if you are more into video tutorials
