@@ -9,8 +9,8 @@ pub(crate) fn test_script_events() {
     let controller_ = controller.clone();
     controller
         .borrow_mut()
-        .replace(events::on("test", move |c| {
-            dbg!(c);
+        .replace(events::on("test", move |context| {
+            dbg!(context);
             let borrow_mut = &mut controller_.borrow_mut();
             let controller = borrow_mut.as_mut().unwrap();
             dbg!(&controller);
@@ -19,7 +19,7 @@ pub(crate) fn test_script_events() {
             assert!(controller.destroy().is_err());
         }));
 
-    let args: DynMValueArgs = &[&true, &false];
+    let args: DynMValueArgs = &[&true, &false, &123_i32, &123.5_f32];
     events::emit("test", args).unwrap();
     events::emit("test", args).unwrap();
 }
