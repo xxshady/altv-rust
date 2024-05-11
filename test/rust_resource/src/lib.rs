@@ -36,6 +36,9 @@ use events::test_events;
 mod ped;
 use ped::test_ped;
 
+mod error_backtrace;
+use error_backtrace::test_error_backtrace;
+
 #[altv::main]
 fn main() -> impl altv::IntoVoidResult {
     std::env::set_var("RUST_BACKTRACE", "full");
@@ -66,6 +69,8 @@ fn main() -> impl altv::IntoVoidResult {
     test_resource();
     altv::log!("#################### events");
     test_events();
+    altv::log!("#################### error_backtrace");
+    test_error_backtrace();
 
     altv::set_timeout(
         || {

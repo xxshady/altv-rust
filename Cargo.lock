@@ -43,9 +43,9 @@ dependencies = [
  "altv_internal_logger",
  "altv_internal_mvalue",
  "altv_internal_sdk",
+ "anyhow",
  "autocxx",
  "erased-serde",
- "lmnkjgkj-std-backtrace-anyhow",
  "paste",
  "serde",
  "serde_bytes",
@@ -56,7 +56,7 @@ name = "altv_internal_core_shared"
 version = "16.0.1"
 dependencies = [
  "altv_internal_sdk",
- "lmnkjgkj-std-backtrace-anyhow",
+ "anyhow",
 ]
 
 [[package]]
@@ -109,6 +109,12 @@ dependencies = [
  "libloading 0.7.4",
  "paste",
 ]
+
+[[package]]
+name = "anyhow"
+version = "1.0.83"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "25bdb32cbbdce2b519a9cd7df3a678443100e265d5e25ca763b7572a5104f5f3"
 
 [[package]]
 name = "aquamarine"
@@ -394,8 +400,8 @@ dependencies = [
 name = "cpp_codegen"
 version = "16.0.1"
 dependencies = [
+ "anyhow",
  "lazy_static",
- "lmnkjgkj-std-backtrace-anyhow",
 ]
 
 [[package]]
@@ -882,12 +888,6 @@ name = "linux-raw-sys"
 version = "0.4.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "01cda141df6706de531b6c46c3a33ecca755538219bd484262fa09410c13539c"
-
-[[package]]
-name = "lmnkjgkj-std-backtrace-anyhow"
-version = "0.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "77c82e39f592ba28a66fdc90c994db478bd5bb19bd92ed1273d7eab9caa091de"
 
 [[package]]
 name = "lock_api"
