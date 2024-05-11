@@ -28,7 +28,7 @@ dependencies = [
 
 [[package]]
 name = "altv"
-version = "16.0.0-dev.3"
+version = "16.0.1"
 dependencies = [
  "altv_internal_core_resource",
  "altv_internal_resource_main_macro",
@@ -37,7 +37,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_core_resource"
-version = "16.0.0-dev.3"
+version = "16.0.1"
 dependencies = [
  "altv_internal_core_shared",
  "altv_internal_logger",
@@ -53,7 +53,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_core_shared"
-version = "16.0.0-dev.3"
+version = "16.0.1"
 dependencies = [
  "altv_internal_sdk",
  "lmnkjgkj-std-backtrace-anyhow",
@@ -61,7 +61,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_logger"
-version = "16.0.0-dev.3"
+version = "16.0.1"
 dependencies = [
  "colored",
  "log",
@@ -69,7 +69,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_mvalue"
-version = "16.0.0-dev.3"
+version = "16.0.1"
 dependencies = [
  "altv_internal_logger",
  "altv_internal_sdk",
@@ -81,7 +81,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_resource_main_macro"
-version = "16.0.0-dev.3"
+version = "16.0.1"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -90,7 +90,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_sdk"
-version = "16.0.0-dev.3"
+version = "16.0.1"
 dependencies = [
  "autocxx",
  "autocxx-build",
@@ -99,7 +99,7 @@ dependencies = [
 
 [[package]]
 name = "altv_module"
-version = "16.0.0-dev.3"
+version = "16.0.1"
 dependencies = [
  "altv_internal_logger",
  "altv_internal_sdk",
@@ -384,7 +384,7 @@ checksum = "06ea2b9bc92be3c2baa9334a323ebca2d6f074ff852cd1d7b11064035cd3868f"
 
 [[package]]
 name = "core_module"
-version = "16.0.0-dev.3"
+version = "16.0.1"
 dependencies = [
  "altv_internal_core_shared",
  "altv_internal_sdk",
@@ -392,7 +392,7 @@ dependencies = [
 
 [[package]]
 name = "cpp_codegen"
-version = "16.0.0-dev.3"
+version = "16.0.1"
 dependencies = [
  "lazy_static",
  "lmnkjgkj-std-backtrace-anyhow",
@@ -1295,7 +1295,7 @@ dependencies = [
 
 [[package]]
 name = "run_test"
-version = "16.0.0-dev.3"
+version = "16.0.1"
 dependencies = [
  "duct",
  "reqwest",
@@ -1304,7 +1304,7 @@ dependencies = [
 
 [[package]]
 name = "rust_resource"
-version = "16.0.0-dev.3"
+version = "16.0.1"
 dependencies = [
  "altv",
  "paste",
