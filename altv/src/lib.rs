@@ -1,4 +1,4 @@
-//! Server-side Rust API for alt:V
+//! Server-side alt:V API for Rust
 //!
 //! [How to use?](https://github.com/xxshady/altv-rust#how-to-use)
 

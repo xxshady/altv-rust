@@ -23,8 +23,7 @@ impl Deserializer {
     }
 
     fn mvalue_type(&self) -> Result<MValueType> {
-        let raw = unsafe { sdk::read_mvalue_type(self.input.get()) };
-        MValueType::try_from(raw).map_err(|_| Error::InvalidMValueType)
+        self.input.sdk_mvalue_type()
     }
 
     fn assert_mvalue_type(&self, received: MValueType, expected: MValueType) -> Result<()> {

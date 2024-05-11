@@ -19,7 +19,9 @@ where
     BaseObjectWrapperRc<T, InheritPtrs>: From<Rc<Self>>,
     InheritPtrs: Clone,
 {
-    /// Provides access to read or modify normal meta of BaseObject (Vehicle, ColShape, Player, etc.).
+    /// Provides access to read or modify unsynced meta of BaseObject (Vehicle, ColShape, Player, etc.).
+    /// It can be used to set data in one alt:V resource and
+    /// then read it later in another one.
     ///
     /// # Examples
     /// ```rust
@@ -30,10 +32,10 @@ where
     ///
     /// let example_entry = vehicle.meta_entry("example")?;
     ///
-    /// // Set "example" key of normal meta to `123`
+    /// // Set "example" key of unsynced meta to `123`
     /// example_entry.set(&123)?;
     ///
-    /// // Read "example" key of normal meta
+    /// // Read "example" key of unsynced meta
     /// let value: Option<i32> = example_entry.get()?; // Some(123)
     /// # Ok(()) }
     /// ```

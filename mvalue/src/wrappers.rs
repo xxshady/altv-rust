@@ -3,10 +3,11 @@ use std::fmt::Debug;
 use crate::{
     from_mvalue,
     types::{RawConstMValue, RawMutMValue},
-    Result,
+    Error, Result,
+    helpers::sdk_type_to_rust,
 };
 
-use altv_sdk::ffi as sdk;
+use altv_sdk::{ffi as sdk, MValueType};
 use autocxx::prelude::*;
 use serde::de::DeserializeOwned;
 
@@ -62,11 +63,22 @@ impl ConstMValue {
     pub fn deserialize<V: DeserializeOwned>(&self) -> Result<V> {
         from_mvalue(self)
     }
+
+    pub fn sdk_mvalue_type(&self) -> Result<MValueType> {
+        let raw = unsafe { sdk::read_mvalue_type(self.get()) };
+        MValueType::try_from(raw).map_err(|_| Error::InvalidMValueType)
+    }
 }
 
 impl Debug for ConstMValue {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "ConstMValue {{ ... }}")
+        let debug_type = if let Ok(sdk_type) = self.sdk_mvalue_type() {
+            sdk_type_to_rust(sdk_type)
+        } else {
+            "unknown"
+        };
+
+        write!(f, "ConstMValue {{ {debug_type} }}")
     }
 }
 

@@ -9,7 +9,9 @@ pub struct GlobalMetaEntry<V: Serialize + DeserializeOwned> {
     __type: PhantomData<V>,
 }
 
-/// Provides access to read or modify global normal meta of alt:V resource.
+/// Provides access to read or modify global unsynced meta.
+/// It can be used to set data in one alt:V resource and
+/// then read it later in another one.
 ///
 /// # Examples
 /// ```rust
@@ -18,10 +20,10 @@ pub struct GlobalMetaEntry<V: Serialize + DeserializeOwned> {
 /// # fn test() -> altv::VoidResult {
 /// let example_entry = altv::meta::entry("example");
 ///
-/// // Set "example" key of global normal meta to `123`
+/// // Set "example" key of global unsynced meta to `123`
 /// example_entry.set(&123)?;
 ///
-/// // Read "example" key of global normal meta
+/// // Read "example" key of global unsynced meta
 /// let value: Option<i32> = example_entry.get()?; // Some(123)
 /// # Ok(()) }
 /// ```
