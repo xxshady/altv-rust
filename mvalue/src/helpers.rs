@@ -101,7 +101,7 @@ pub(crate) fn sdk_type_to_rust(sdk_type: MValueType) -> &'static str {
         MValueType::Int => "Int (i64..i8)",
         MValueType::Uint => "UInt (u64..u8)",
         MValueType::List => "List (tuple or static array or Vec or slice)",
-        MValueType::Nil | MValueType::None => "None",
+        MValueType::Nil | MValueType::None => "None (Option::None or ())",
         MValueType::Rgba => "Rgba", // altv::Rgba
         MValueType::String => "String",
         MValueType::Vector2 => "Vector2", // altv::Vector2
