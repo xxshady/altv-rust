@@ -34,6 +34,23 @@ macro_rules! __deserialize_simple {
 pub use __deserialize_simple as deserialize_simple;
 
 #[macro_export]
+macro_rules! __deserialize_simple_unchecked {
+    (
+        $self:ident,
+        $visitor:expr,
+        @sdk $sdk_type:ident: @rust $rust_type:ident
+        $(, $convert_method:ident )?
+    ) => {{
+        paste::paste! {
+            let raw = unsafe { altv_sdk::ffi::[<read_mvalue_ $sdk_type:snake>]($self.input.get()) };
+            $visitor.[<visit_ $rust_type:snake>](raw $( . $convert_method () )?)
+        }
+    }};
+}
+
+pub use __deserialize_simple_unchecked as deserialize_simple_unchecked;
+
+#[macro_export]
 macro_rules! __generate_serde_via_bytes_for {
     (
         $value_type:ty,
@@ -92,20 +109,22 @@ pub use __generate_serde_via_bytes_for as generate_serde_via_bytes_for;
 
 pub(crate) fn sdk_type_to_rust(sdk_type: MValueType) -> &'static str {
     match sdk_type {
-        MValueType::BaseObject => "BaseObject (Player, Vehicle, ColShape, etc.)", // for example altv::VehicleContainer
         MValueType::Bool => "bool",
-        MValueType::ByteArray => "ByteArray (ByteBuf)", // altv::ByteBuf
-        MValueType::Dict => "Dict (HashMap or struct)",
+        MValueType::Nil | MValueType::None => "None (Option::None or ())",
         MValueType::Double => "Double (f64 or f32)",
-        MValueType::Function => "Function", // not implemented (yet?)
         MValueType::Int => "Int (i64..i8)",
         MValueType::Uint => "UInt (u64..u8)",
-        MValueType::List => "List (tuple or static array or Vec or slice)",
-        MValueType::Nil | MValueType::None => "None (Option::None or ())",
-        MValueType::Rgba => "Rgba", // altv::Rgba
         MValueType::String => "String",
-        MValueType::Vector2 => "Vector2", // altv::Vector2
-        MValueType::Vector3 => "Vector3", // altv::Vector3
+        MValueType::ByteArray => "ByteArray (ByteBuf)", // altv::ByteBuf
+        MValueType::List => "List (tuple or static array or Vec or slice)",
+        MValueType::Dict => "Dict (HashMap or struct)",
+
+        // custom types
+        MValueType::BaseObject => "BaseObject (Player, Vehicle, ColShape, etc.)", // for example altv::VehicleContainer
+        MValueType::Rgba => "Rgba",                                               // altv::Rgba
+        MValueType::Vector2 => "Vector2",                                         // altv::Vector2
+        MValueType::Vector3 => "Vector3",                                         // altv::Vector3
+        MValueType::Function => "Function", // not implemented (yet?)
     }
 }
 

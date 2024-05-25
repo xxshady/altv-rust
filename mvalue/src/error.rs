@@ -27,7 +27,6 @@ pub enum Error {
     BytesDeserializationIsNotImplementedYet,
     EnumDeserializationIsNotImplementedYet,
     ConstMValueSliceCanOnlyBeDeserializedAsTuple,
-    DeserializeAny,
 }
 
 impl ser::Error for Error {
@@ -56,7 +55,8 @@ impl Display for Error {
                 "Bytes deserialization is not implemented yet"
             }
             Error::EnumDeserializationIsNotImplementedYet => {
-                "Enum deserialization is not implemented yet"
+                "Enum deserialization is not implemented yet, \
+                but you can use untagged enum representation: https://serde.rs/enum-representations.html#untagged"
             }
             Error::ConstMValueSliceCanOnlyBeDeserializedAsTuple => {
                 "ConstMValue slice can only be deserialized as tuple"
@@ -78,7 +78,6 @@ impl Display for Error {
             }
             Error::Vector3SerializationFailed => "Vector3 serialization failed for unknown reason",
             Error::Vector3ImpossibleSerialization => "Vector3ImpossibleSerialization",
-            Error::DeserializeAny => "DeserializeAny",
         };
 
         f.write_str(info)

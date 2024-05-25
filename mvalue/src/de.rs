@@ -5,7 +5,7 @@ use serde::de::{self, DeserializeOwned, DeserializeSeed, MapAccess, SeqAccess, V
 use crate::{
     bytes_num,
     de_dict_key::DictKeyDeserializer,
-    helpers::{self, deserialize_simple},
+    helpers::{self, deserialize_simple, deserialize_simple_unchecked, sdk_type_to_rust},
     ser_rgba::RGBA_MVALUE,
     ser_vector2::VECTOR2_MVALUE,
     ser_vector3::VECTOR3_MVALUE,
@@ -37,6 +37,35 @@ impl Deserializer {
         }
         Ok(())
     }
+
+    fn deserialize_byte_buf_unchecked<'de, V>(&self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        let mvalue = self.input.get();
+
+        let size = unsafe { sdk::read_mvalue_byte_array_size(mvalue) };
+        let mut buffer = Vec::<u8>::with_capacity(size);
+        unsafe {
+            sdk::read_mvalue_byte_array(mvalue, buffer.as_mut_ptr());
+            buffer.set_len(size);
+        }
+        visitor.visit_byte_buf(buffer)
+    }
+
+    fn deserialize_seq_unchecked<'de, V>(&self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        visitor.visit_seq(Seq::new(unsafe { sdk::read_mvalue_list(self.input.get()) }))
+    }
+
+    fn deserialize_map_unchecked<'de, V>(&self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        visitor.visit_map(Map::new(unsafe { sdk::read_mvalue_dict(self.input.get()) }))
+    }
 }
 
 pub fn from_mvalue<T>(m: &ConstMValue) -> Result<T>
@@ -51,11 +80,36 @@ where
 impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
     type Error = Error;
 
-    fn deserialize_any<V>(self, _visitor: V) -> Result<V::Value>
+    fn deserialize_any<V>(self, visitor: V) -> Result<V::Value>
     where
         V: Visitor<'de>,
     {
-        Err(Error::DeserializeAny)
+        match self.mvalue_type()? {
+            MValueType::Double => {
+                deserialize_simple_unchecked!(self, visitor, @sdk Double: @rust f64)
+            }
+            MValueType::Int => deserialize_simple_unchecked!(self, visitor, @sdk Int: @rust i64),
+            MValueType::Uint => deserialize_simple_unchecked!(self, visitor, @sdk Uint: @rust u64),
+            MValueType::Bool => deserialize_simple_unchecked!(self, visitor, @sdk Bool: @rust bool),
+            MValueType::Nil | MValueType::None => visitor.visit_none(),
+            MValueType::ByteArray => self.deserialize_byte_buf_unchecked(visitor),
+            MValueType::String => {
+                deserialize_simple_unchecked!(self, visitor, @sdk String: @rust String, to_string)
+            }
+            MValueType::List => self.deserialize_seq_unchecked(visitor),
+            MValueType::Dict => self.deserialize_map_unchecked(visitor),
+
+            // custom types
+            MValueType::BaseObject => self.deserialize_newtype_struct(BASE_OBJECT_MVALUE, visitor),
+            MValueType::Rgba => self.deserialize_newtype_struct(RGBA_MVALUE, visitor),
+            MValueType::Vector2 => self.deserialize_newtype_struct(VECTOR2_MVALUE, visitor),
+            MValueType::Vector3 => self.deserialize_newtype_struct(VECTOR3_MVALUE, visitor),
+
+            MValueType::Function => panic!(
+                "Cannot deserialize {}",
+                sdk_type_to_rust(MValueType::Function)
+            ),
+        }
     }
 
     // TODO: IgnoredAny
@@ -78,7 +132,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
         V: Visitor<'de>,
     {
         self.assert_mvalue_type(self.mvalue_type()?, MValueType::Dict)?;
-        visitor.visit_map(Map::new(unsafe { sdk::read_mvalue_dict(self.input.get()) }))
+        self.deserialize_map_unchecked(visitor)
     }
 
     fn deserialize_struct<V>(
@@ -98,7 +152,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
         V: Visitor<'de>,
     {
         self.assert_mvalue_type(self.mvalue_type()?, MValueType::List)?;
-        visitor.visit_seq(Seq::new(unsafe { sdk::read_mvalue_list(self.input.get()) }))
+        self.deserialize_seq_unchecked(visitor)
     }
 
     fn deserialize_tuple<V>(self, _len: usize, visitor: V) -> Result<V::Value>
@@ -324,15 +378,7 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
         V: Visitor<'de>,
     {
         self.assert_mvalue_type(self.mvalue_type()?, MValueType::ByteArray)?;
-        let mvalue = self.input.get();
-
-        let size = unsafe { sdk::read_mvalue_byte_array_size(mvalue) };
-        let mut buffer = Vec::<u8>::with_capacity(size);
-        unsafe {
-            sdk::read_mvalue_byte_array(mvalue, buffer.as_mut_ptr());
-            buffer.set_len(size);
-        }
-        visitor.visit_byte_buf(buffer)
+        self.deserialize_byte_buf_unchecked(visitor)
     }
 
     // TODO: implement bytes deserialization
