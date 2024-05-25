@@ -307,6 +307,8 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
                 visitor.visit_byte_buf(buf)
             }
             BASE_OBJECT_MVALUE => {
+                self.assert_mvalue_type(mvalue_type, MValueType::BaseObject)?;
+
                 let raw_ptr = unsafe { sdk::read_mvalue_base_object(mvalue) };
                 visitor.visit_u64(raw_ptr as u64)
             }
