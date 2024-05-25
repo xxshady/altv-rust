@@ -1,6 +1,5 @@
 pub use anyhow;
 pub use erased_serde;
-pub use mvalue;
 pub use serde;
 pub use serde_bytes;
 
@@ -105,4 +104,9 @@ pub mod meta {
 
 pub mod base_object {
     pub use crate::base_object_funcs::*;
+}
+
+pub mod mvalue {
+    pub use mvalue;
+    pub use crate::any_mvalue::AnyMValue;
 }

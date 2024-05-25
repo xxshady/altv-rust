@@ -14,7 +14,8 @@
 //! ([see](#how-to-implement-serialize-and-deserialize-for-your-struct)).
 //!
 //! # Supported MValue <-> Rust types
-//! [Full list of types](https://github.com/xxshady/altv-rust/blob/e2d87bad1da739dd453ede9bbc3195ed593238f2/mvalue/src/helpers.rs#L95-L108)
+//! [Full list of types](https://github.com/xxshady/altv-rust/blob/02c7db9ea4f8d20a1bf18960129e5ec48d7636ab/mvalue/src/helpers.rs#L112-L127)<br>
+//! See also [`AnyMValue`](enum.AnyMValue.html).
 //!
 //! # Examples
 //! > *Examples will use [`to_mvalue`](fn.to_mvalue.html) and [`from_mvalue`](fn.from_mvalue.html),
@@ -108,6 +109,9 @@
 //! # Ok(()) }
 //! ```
 //!
+//! ### Enums
+//! Great example of it is [`AnyMValue`](enum.AnyMValue.html).
+//!
 //! # How to implement Serialize and Deserialize for your struct
 //! ```rust
 //! # fn test() -> altv::VoidResult {
@@ -125,6 +129,9 @@
 //! # Ok(()) }
 //! ```
 pub use core_resource::exports::mvalue::{
-    from_mvalue, from_mvalue_slice, to_mvalue, ConstMValue, DeserializeMValueArgs, DynMValue,
-    DynMValueArgs, Error,
+    AnyMValue,
+    mvalue::{
+        from_mvalue, from_mvalue_slice, to_mvalue, ConstMValue, DeserializeMValueArgs, DynMValue,
+        DynMValueArgs, Error,
+    },
 };
