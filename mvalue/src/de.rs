@@ -408,6 +408,8 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
         } else {
             let mvalue_type = self.mvalue_type()?;
 
+            // TODO: unit variant deserialization
+
             let error = || Error::EnumDeserializationExpectsList {
                 but_received: mvalue_type,
             };

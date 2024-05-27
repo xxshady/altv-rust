@@ -132,8 +132,8 @@
 //! // how it's represented under the hood
 //! // dbg!(from_mvalue::<AnyMValue>(&mvalue.clone().into_const())?);
 //!
-//! let my_struct: TestEnum = from_mvalue(&mvalue.into_const())?;
-//! dbg!(my_struct); // Newtype(123)
+//! let my_enum: TestEnum = from_mvalue(&mvalue.into_const())?;
+//! dbg!(my_enum); // Newtype(123)
 //! # Ok(()) }
 //! ```
 //!

@@ -118,15 +118,6 @@ impl<'a> ser::Serializer for &'a mut Serializer {
         self.serialize_unit()
     }
 
-    fn serialize_unit_variant(
-        self,
-        _name: &'static str,
-        variant_index: u32,
-        _variant: &'static str,
-    ) -> Result<Self::Ok> {
-        self.serialize_u32(variant_index)
-    }
-
     fn serialize_newtype_struct<T>(self, name: &'static str, value: &T) -> Result<Self::Ok>
     where
         T: Serialize + ?Sized,
@@ -141,6 +132,19 @@ impl<'a> ser::Serializer for &'a mut Serializer {
         Ok(())
     }
 
+    // enum variants:
+
+    fn serialize_unit_variant(
+        self,
+        _name: &'static str,
+        variant_index: u32,
+        _variant: &'static str,
+    ) -> Result<Self::Ok> {
+        // casting to signed integer so we can deserialize it as i32 and then cast it back to u32
+        // (thanks to JS)
+        self.serialize_i32(variant_index as i32)
+    }
+
     fn serialize_newtype_variant<T>(
         self,
         _name: &'static str,
@@ -153,6 +157,7 @@ impl<'a> ser::Serializer for &'a mut Serializer {
     {
         self.output = Some(to_mvalue(&[
             // casting to signed integer so we can deserialize it as i32 and then cast it back to u32
+            // (thanks to JS)
             &(variant_index as i32) as DynMValue,
             &value as DynMValue,
         ])?);
