@@ -110,12 +110,45 @@
 //! ```
 //!
 //! ### Enums
-//! Great example of it is [`AnyMValue`](enum.AnyMValue.html).
+//! Default representation ([externally tagged](https://serde.rs/enum-representations.html#externally-tagged)).<br>
+//! Under the hood variant is serialized as List with two elements: `[variant_index (u32), variant_value (any)]`.
+//! ```rust
+//! # fn test() -> altv::VoidResult {
+//! use altv::{
+//!     serde::{Deserialize, Serialize},
+//!     mvalue::{from_mvalue, to_mvalue, AnyMValue},
+//! };
+//!
+//! #[derive(Serialize, Deserialize, Debug)]
+//! #[serde(crate = "altv::serde")]
+//! enum TestEnum {
+//!     Newtype(i32),
+//!     Tuple(i32, bool),
+//!     Struct { a: i32, b: bool },
+//! }
+//!
+//! let mvalue = to_mvalue(&TestEnum::Newtype(123))?;
+//!
+//! // how it's represented under the hood
+//! // dbg!(from_mvalue::<AnyMValue>(&mvalue.clone().into_const())?);
+//!
+//! let my_struct: TestEnum = from_mvalue(&mvalue.into_const())?;
+//! dbg!(my_struct); // Newtype(123)
+//! # Ok(()) }
+//! ```
+//!
+//! [Untagged](https://serde.rs/enum-representations.html#untagged) representation is also supported.
+//! ```rust
+//! // TODO:
+//! ```
 //!
 //! # How to implement Serialize and Deserialize for your struct
 //! ```rust
 //! # fn test() -> altv::VoidResult {
-//! use altv::serde::{Deserialize, Serialize};
+//! use altv::{
+//!     serde::{Deserialize, Serialize},
+//!     mvalue::{from_mvalue, to_mvalue},
+//! };
 //!
 //! #[derive(Serialize, Deserialize, Debug)]
 //! #[serde(crate = "altv::serde")]
@@ -123,8 +156,8 @@
 //!     a: i32,
 //! }
 //!
-//! let mvalue = altv::mvalue::to_mvalue(&MyStruct { a: 123 })?;
-//! let my_struct: MyStruct = altv::mvalue::from_mvalue(&mvalue.into_const())?;
+//! let mvalue = to_mvalue(&MyStruct { a: 123 })?;
+//! let my_struct: MyStruct = from_mvalue(&mvalue.into_const())?;
 //! dbg!(my_struct); // MyStruct { a: 123 }
 //! # Ok(()) }
 //! ```

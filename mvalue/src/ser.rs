@@ -1,6 +1,9 @@
 use altv_sdk::ffi as sdk;
 use autocxx::prelude::*;
-use serde::{ser, Serialize};
+use serde::{
+    ser::{self, SerializeSeq},
+    Serialize,
+};
 
 use crate::{
     error::{Error, Result},
@@ -11,6 +14,7 @@ use crate::{
     ser_vector2::{to_vector2_mvalue, VECTOR2_MVALUE},
     ser_vector3::{to_vector3_mvalue, VECTOR3_MVALUE},
     wrappers::MutMValue,
+    DynMValue,
 };
 
 pub struct Serializer {
@@ -98,9 +102,9 @@ impl<'a> ser::Serializer for &'a mut Serializer {
         serialize_simple!(self, sdk::create_mvalue_nil())
     }
 
-    fn serialize_some<T: ?Sized>(self, value: &T) -> Result<Self::Ok>
+    fn serialize_some<T>(self, value: &T) -> Result<Self::Ok>
     where
-        T: Serialize,
+        T: Serialize + ?Sized,
     {
         self.output = Some(to_mvalue(value)?);
         Ok(())
@@ -123,9 +127,9 @@ impl<'a> ser::Serializer for &'a mut Serializer {
         self.serialize_u32(variant_index)
     }
 
-    fn serialize_newtype_struct<T: ?Sized>(self, name: &'static str, value: &T) -> Result<Self::Ok>
+    fn serialize_newtype_struct<T>(self, name: &'static str, value: &T) -> Result<Self::Ok>
     where
-        T: Serialize,
+        T: Serialize + ?Sized,
     {
         self.output = Some(match name {
             BASE_OBJECT_MVALUE => to_base_object_mvalue(value)?,
@@ -137,18 +141,54 @@ impl<'a> ser::Serializer for &'a mut Serializer {
         Ok(())
     }
 
-    fn serialize_newtype_variant<T: ?Sized>(
+    fn serialize_newtype_variant<T>(
         self,
         _name: &'static str,
-        _variant_index: u32,
+        variant_index: u32,
         _variant: &'static str,
         value: &T,
     ) -> Result<Self::Ok>
     where
-        T: Serialize,
+        T: Serialize + ?Sized,
     {
-        self.output = Some(to_mvalue(value)?);
+        self.output = Some(to_mvalue(&[
+            // casting to signed integer so we can deserialize it as i32 and then cast it back to u32
+            &(variant_index as i32) as DynMValue,
+            &value as DynMValue,
+        ])?);
         Ok(())
+    }
+
+    fn serialize_tuple_variant(
+        self,
+        _name: &'static str,
+        variant_index: u32,
+        _variant: &'static str,
+        len: usize,
+    ) -> Result<Self::SerializeTupleVariant> {
+        // // enums represented as MValue::List: [variant_index (u32), variant_value (any)]
+        // let variant = MValueList::new();
+        // // TODO: add `push` method to MValueList struct
+        // variant.push(&variant_index);
+
+        // let variant_value = MValueList::new();
+        // // TODO: add `push_raw` method to MValueList struct
+        // // TODO: is it safe to push list reference to another one and then add something to this list?
+        // // variant.push_raw(variant_value.mvalue.into_const().get());
+
+        // self.output = Some(variant.mvalue);
+        // Ok(variant_value)
+        todo!()
+    }
+
+    fn serialize_struct_variant(
+        self,
+        _name: &'static str,
+        _variant_index: u32,
+        _variant: &'static str,
+        len: usize,
+    ) -> Result<Self::SerializeStructVariant> {
+        self.serialize_map(Some(len))
     }
 
     fn serialize_seq(self, _len: Option<usize>) -> Result<Self::SerializeSeq> {
@@ -169,16 +209,6 @@ impl<'a> ser::Serializer for &'a mut Serializer {
         self.serialize_tuple(len)
     }
 
-    fn serialize_tuple_variant(
-        self,
-        _name: &'static str,
-        _variant_index: u32,
-        _variant: &'static str,
-        len: usize,
-    ) -> Result<Self::SerializeTupleVariant> {
-        self.serialize_tuple(len)
-    }
-
     fn serialize_map(self, _len: Option<usize>) -> Result<Self::SerializeMap> {
         let dict = MValueDict::new();
         self.output = Some(dict.mvalue.clone());
@@ -186,16 +216,6 @@ impl<'a> ser::Serializer for &'a mut Serializer {
     }
 
     fn serialize_struct(self, _name: &'static str, len: usize) -> Result<Self::SerializeStruct> {
-        self.serialize_map(Some(len))
-    }
-
-    fn serialize_struct_variant(
-        self,
-        _name: &'static str,
-        _variant_index: u32,
-        _variant: &'static str,
-        len: usize,
-    ) -> Result<Self::SerializeStructVariant> {
         self.serialize_map(Some(len))
     }
 }
@@ -296,13 +316,13 @@ impl ser::SerializeSeq for MValueList {
     type Ok = ();
     type Error = Error;
 
-    fn serialize_element<T: ?Sized>(&mut self, value: &T) -> Result<()>
+    fn serialize_element<T>(&mut self, value: &T) -> Result<()>
     where
-        T: Serialize,
+        T: Serialize + ?Sized,
     {
         unsafe {
             sdk::push_to_mvalue_list(self.mvalue.as_mut(), to_mvalue(value)?.into_const().get())
-        };
+        }
 
         Ok(())
     }
@@ -316,9 +336,9 @@ impl ser::SerializeTuple for MValueList {
     type Ok = ();
     type Error = Error;
 
-    fn serialize_element<T: ?Sized>(&mut self, value: &T) -> Result<()>
+    fn serialize_element<T>(&mut self, value: &T) -> Result<()>
     where
-        T: Serialize,
+        T: Serialize + ?Sized,
     {
         <Self as ser::SerializeSeq>::serialize_element(self, value)
     }

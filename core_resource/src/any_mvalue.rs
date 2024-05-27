@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use anyhow::bail;
+use core_shared::result::SomeResult;
 use serde::Deserialize;
 use serde_bytes::ByteBuf;
 
@@ -12,39 +14,57 @@ use crate::{
 /// An enum that maps alt:V [SDK MValue](https://docs.altv.mp/sdk/mvalues.html) to Rust types as closely as possible.
 ///
 /// # Examples
+///
+/// Log content of any mvalue.
 /// ```rust
 /// # mod altv { pub use altv_internal_core_resource::exports::*; }
 /// # fn test() -> altv::VoidResult {
-/// altv::events::on("any_mvalue", || {
-/// })
+/// altv::events::on("any_mvalue", |event| {
+///     // will only fail
+///     let (any,): (altv::mvalue::AnyMValue,) = event.args.deserialize()?;
+///     dbg!(any);
+/// });
 /// # Ok(()) }
 /// ```
-#[derive(Deserialize, Debug)]
+///
+/// Receive number (double or integer) from JS
+/// (it won't work for bigint though, bigint is serialized as `AnyMValue::UInt`).
+/// ```rust
+/// # mod altv { pub use altv_internal_core_resource::exports::*; }
+/// # fn test() -> altv::VoidResult {
+/// altv::events::on("any_mvalue", |event| {
+///     let (js_number,): (altv::mvalue::AnyMValue,) = event.args.deserialize()?;
+///     let num: f64 = js_number.as_f64()?;
+/// });
+/// # Ok(()) }
+/// ```
+#[derive(Debug, Deserialize)]
+#[serde(rename = "___altv_any_enum_mvalue")]
 pub enum AnyMValue {
-    Bool(bool),
-    /// Nil or None, see [SDK docs](https://docs.altv.mp/sdk/mvalues.html).
     None,
-    Double(f64),
+    Nil,
+    Bool(bool),
     Int(i64),
-    Uint(u64),
+    UInt(u64),
+    Double(f64),
     String(String),
-    ByteArray(ByteBuf),
+    List(Vec<AnyMValue>),
     Dict(HashMap<String, AnyMValue>),
-
-    // custom types:
     BaseObject(AnyBaseObject),
-    Rgba(Rgba),
-    Vector2(Vector2),
+    /// Not supported (yet?)
+    Function,
     Vector3(Vector3),
+    Rgba(Rgba),
+    ByteArray(ByteBuf),
+    Vector2(Vector2),
 }
 
 impl AnyMValue {
-    pub fn as_f64(&self) -> Option<f64> {
+    pub fn as_f64(&self) -> SomeResult<f64> {
         match self {
-            AnyMValue::Double(v) => Some(*v),
-            AnyMValue::Int(v) => Some(*v as _),
-            AnyMValue::Uint(v) => Some(*v as _),
-            _ => None,
+            AnyMValue::Double(v) => Ok(*v),
+            AnyMValue::Int(v) => Ok(*v as _),
+            _ => bail!("Expected AnyMValue::Double or AnyMValue::Int, received: {self:?}"),
         }
     }
 }
