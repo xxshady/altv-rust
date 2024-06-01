@@ -20,7 +20,6 @@ use crate::{
 /// # mod altv { pub use altv_internal_core_resource::exports::*; }
 /// # fn test() -> altv::VoidResult {
 /// altv::events::on("any_mvalue", |event| {
-///     // will only fail
 ///     let (any,): (altv::mvalue::AnyMValue,) = event.args.deserialize()?;
 ///     dbg!(any);
 /// });

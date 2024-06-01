@@ -14,7 +14,7 @@ use crate::{
     ser_vector2::{to_vector2_mvalue, VECTOR2_MVALUE},
     ser_vector3::{to_vector3_mvalue, VECTOR3_MVALUE},
     wrappers::MutMValue,
-    DynMValue,
+    ConstMValue, DynMValue,
 };
 
 pub struct Serializer {
@@ -134,6 +134,9 @@ impl<'a> ser::Serializer for &'a mut Serializer {
 
     // enum variants:
 
+    // enum unit variant can be represented in two ways:
+    // variant_index (u32)
+    // or List: [variant_index (u32), variant_value (any)]
     fn serialize_unit_variant(
         self,
         _name: &'static str,
@@ -142,8 +145,10 @@ impl<'a> ser::Serializer for &'a mut Serializer {
     ) -> Result<Self::Ok> {
         // casting to signed integer so we can deserialize it as i32 and then cast it back to u32
         // (thanks to JS)
-        self.serialize_i32(variant_index as i32)
+        self.serialize_i32(variant_index.try_into().unwrap())
     }
+
+    // tuples, newtype, structs enum variants represented as MValue::List: [variant_index (u32), variant_value (any)]
 
     fn serialize_newtype_variant<T>(
         self,
@@ -156,9 +161,9 @@ impl<'a> ser::Serializer for &'a mut Serializer {
         T: Serialize + ?Sized,
     {
         self.output = Some(to_mvalue(&[
-            // casting to signed integer so we can deserialize it as i32 and then cast it back to u32
+            // converting to signed integer so we can deserialize it as i32 and then convert it back to u32
             // (thanks to JS)
-            &(variant_index as i32) as DynMValue,
+            &(i32::try_from(variant_index).unwrap()) as DynMValue,
             &value as DynMValue,
         ])?);
         Ok(())
@@ -169,35 +174,37 @@ impl<'a> ser::Serializer for &'a mut Serializer {
         _name: &'static str,
         variant_index: u32,
         _variant: &'static str,
-        len: usize,
+        _len: usize,
     ) -> Result<Self::SerializeTupleVariant> {
-        // // enums represented as MValue::List: [variant_index (u32), variant_value (any)]
-        // let variant = MValueList::new();
-        // // TODO: add `push` method to MValueList struct
-        // variant.push(&variant_index);
+        let mut variant = MValueList::new(None);
+        // converting to signed integer so we can deserialize it as i32 and then convert it back to u32
+        // (thanks to JS)
+        SerializeSeq::serialize_element(&mut variant, &i32::try_from(variant_index).unwrap())?;
 
-        // let variant_value = MValueList::new();
-        // // TODO: add `push_raw` method to MValueList struct
-        // // TODO: is it safe to push list reference to another one and then add something to this list?
-        // // variant.push_raw(variant_value.mvalue.into_const().get());
-
-        // self.output = Some(variant.mvalue);
-        // Ok(variant_value)
-        todo!()
+        let variant_value = MValueList::new(Some(variant.mvalue.clone()));
+        self.output = Some(variant.mvalue);
+        Ok(variant_value)
     }
 
     fn serialize_struct_variant(
         self,
         _name: &'static str,
-        _variant_index: u32,
+        variant_index: u32,
         _variant: &'static str,
-        len: usize,
+        _len: usize,
     ) -> Result<Self::SerializeStructVariant> {
-        self.serialize_map(Some(len))
+        let mut variant = MValueList::new(None);
+        // converting to signed integer so we can deserialize it as i32 and then convert it back to u32
+        // (thanks to JS)
+        SerializeSeq::serialize_element(&mut variant, &i32::try_from(variant_index).unwrap())?;
+
+        let variant_value = MValueDict::new(Some(variant.mvalue.clone()));
+        self.output = Some(variant.mvalue);
+        Ok(variant_value)
     }
 
     fn serialize_seq(self, _len: Option<usize>) -> Result<Self::SerializeSeq> {
-        let list = MValueList::new();
+        let list = MValueList::new(None);
         self.output = Some(list.mvalue.clone());
         Ok(list)
     }
@@ -215,7 +222,7 @@ impl<'a> ser::Serializer for &'a mut Serializer {
     }
 
     fn serialize_map(self, _len: Option<usize>) -> Result<Self::SerializeMap> {
-        let dict = MValueDict::new();
+        let dict = MValueDict::new(None);
         self.output = Some(dict.mvalue.clone());
         Ok(dict)
     }
@@ -227,12 +234,15 @@ impl<'a> ser::Serializer for &'a mut Serializer {
 
 pub struct MValueDict {
     mvalue: MutMValue,
+
+    push_to: Option<MutMValue>,
 }
 
 impl MValueDict {
-    fn new() -> Self {
+    fn new(push_to: Option<MutMValue>) -> Self {
         Self {
             mvalue: MutMValue::new(unsafe { sdk::create_mvalue_dict().within_unique_ptr() }),
+            push_to,
         }
     }
 }
@@ -255,6 +265,11 @@ impl ser::SerializeMap for MValueDict {
     }
 
     fn end(self) -> Result<()> {
+        if let Some(mut push_to) = self.push_to {
+            unsafe {
+                sdk::push_to_mvalue_list(push_to.as_mut(), self.mvalue.into_const().get());
+            }
+        }
         Ok(())
     }
 
@@ -307,13 +322,21 @@ impl ser::SerializeStructVariant for MValueDict {
 
 pub struct MValueList {
     mvalue: MutMValue,
+
+    // needed for enum variant serialization
+    push_to: Option<MutMValue>,
 }
 
 impl MValueList {
-    fn new() -> Self {
+    fn new(push_to: Option<MutMValue>) -> Self {
         Self {
             mvalue: MutMValue::new(unsafe { sdk::create_mvalue_list().within_unique_ptr() }),
+            push_to,
         }
+    }
+
+    unsafe fn push_raw(&mut self, raw_mvalue: ConstMValue) {
+        sdk::push_to_mvalue_list(self.mvalue.as_mut(), raw_mvalue.get());
     }
 }
 
@@ -326,13 +349,18 @@ impl ser::SerializeSeq for MValueList {
         T: Serialize + ?Sized,
     {
         unsafe {
-            sdk::push_to_mvalue_list(self.mvalue.as_mut(), to_mvalue(value)?.into_const().get())
+            self.push_raw(to_mvalue(value)?.into_const());
         }
 
         Ok(())
     }
 
     fn end(self) -> Result<Self::Ok> {
+        if let Some(mut push_to) = self.push_to {
+            unsafe {
+                sdk::push_to_mvalue_list(push_to.as_mut(), self.mvalue.into_const().get());
+            }
+        }
         Ok(())
     }
 }

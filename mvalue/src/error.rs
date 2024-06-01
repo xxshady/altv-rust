@@ -28,6 +28,8 @@ pub enum Error {
     BytesDeserializationIsNotImplementedYet,
     ConstMValueSliceCanOnlyBeDeserializedAsTuple,
     EnumDeserializationExpectsList { but_received: MValueType },
+    EnumDeserializationExpectsListWithTwoElements,
+    EnumDeserializationExpectsListOrInt { but_received: MValueType },
 }
 
 const ENUM_DESERIALIZATION_INTERNAL_TYPE: &str =
@@ -57,7 +59,7 @@ impl Display for Error {
                 "Base object serialization failed for unknown reason"
             }
             Error::BytesDeserializationIsNotImplementedYet => {
-                "Bytes deserialization is not implemented yet"
+                "Bytes deserialization is not implemented yet, use `altv::ByteBuf`"
             }
             Error::ConstMValueSliceCanOnlyBeDeserializedAsTuple => {
                 "ConstMValue slice can only be deserialized as tuple"
@@ -80,8 +82,28 @@ impl Display for Error {
             Error::Vector3SerializationFailed => "Vector3 serialization failed for unknown reason",
             Error::Vector3ImpossibleSerialization => "Vector3ImpossibleSerialization",
             Error::EnumDeserializationExpectsList { but_received } => {
-                let message = format!("Enum deserialization expected {ENUM_DESERIALIZATION_INTERNAL_TYPE}, received: {but_received:?}");
+                let message = format!(
+                    "Enum deserialization expected {ENUM_DESERIALIZATION_INTERNAL_TYPE}\
+                    , received: {but_received:?}"
+                );
 
+                // i'm sorry for this
+                dynamic_error.replace(message);
+                dynamic_error.as_ref().unwrap()
+            }
+            Error::EnumDeserializationExpectsListOrInt { but_received } => {
+                let message = format!(
+                    "Enum deserialization expected {ENUM_DESERIALIZATION_INTERNAL_TYPE} \
+                    or i32 (variant_index), received: {but_received:?}"
+                );
+
+                // i'm sorry for this
+                dynamic_error.replace(message);
+                dynamic_error.as_ref().unwrap()
+            }
+            Error::EnumDeserializationExpectsListWithTwoElements => {
+                let message =
+                    format!("Enum deserialization expected {ENUM_DESERIALIZATION_INTERNAL_TYPE}");
                 // i'm sorry for this
                 dynamic_error.replace(message);
                 dynamic_error.as_ref().unwrap()

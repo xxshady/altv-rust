@@ -111,7 +111,8 @@
 //!
 //! ### Enums
 //! Default representation ([externally tagged](https://serde.rs/enum-representations.html#externally-tagged)).<br>
-//! Under the hood variant is serialized as List with two elements: `[variant_index (u32), variant_value (any)]`.
+//! Under the hood each variant is serialized as List with two elements: `[variant_index (u32), variant_value (any)]`,
+//! except if variant is unit variant its serialized as one u32, but can also be deserialized as List with two elements (second element is ignored in that case).
 //! ```rust
 //! # fn test() -> altv::VoidResult {
 //! use altv::{
@@ -122,6 +123,7 @@
 //! #[derive(Serialize, Deserialize, Debug)]
 //! #[serde(crate = "altv::serde")]
 //! enum TestEnum {
+//!     Unit,
 //!     Newtype(i32),
 //!     Tuple(i32, bool),
 //!     Struct { a: i32, b: bool },
@@ -129,7 +131,7 @@
 //!
 //! let mvalue = to_mvalue(&TestEnum::Newtype(123))?;
 //!
-//! // how it's represented under the hood
+//! // how it's serialized:
 //! // dbg!(from_mvalue::<AnyMValue>(&mvalue.clone().into_const())?);
 //!
 //! let my_enum: TestEnum = from_mvalue(&mvalue.into_const())?;
@@ -139,7 +141,30 @@
 //!
 //! [Untagged](https://serde.rs/enum-representations.html#untagged) representation is also supported.
 //! ```rust
-//! // TODO:
+//! # fn test() -> altv::VoidResult {
+//! use altv::{
+//!     serde::{Deserialize, Serialize},
+//!     mvalue::{from_mvalue, to_mvalue, AnyMValue},
+//! };
+//!
+//! #[derive(Serialize, Deserialize, Debug)]
+//! #[serde(crate = "altv::serde")]
+//! #[serde(untagged)]
+//! enum TestEnum {
+//!     Unit,
+//!     Newtype(i32),
+//!     Tuple(i32, bool),
+//!     Struct { a: i32, b: bool },
+//! }
+//!
+//! let mvalue = to_mvalue(&TestEnum::Newtype(123))?;
+//!
+//! // how it's serialized:
+//! // dbg!(from_mvalue::<AnyMValue>(&mvalue.clone().into_const())?);
+//!
+//! let my_enum: TestEnum = from_mvalue(&mvalue.into_const())?;
+//! dbg!(my_enum); // Newtype(123)
+//! # Ok(()) }
 //! ```
 //!
 //! # How to implement Serialize and Deserialize for your struct
