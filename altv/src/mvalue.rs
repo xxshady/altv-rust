@@ -112,7 +112,8 @@
 //! ### Enums
 //! Default representation ([externally tagged](https://serde.rs/enum-representations.html#externally-tagged)).<br>
 //! Under the hood each variant is serialized as List with two elements: `[variant_index (u32), variant_value (any)]`,
-//! except if variant is unit variant its serialized as one u32, but can also be deserialized as List with two elements (second element is ignored in that case).
+//! except if variant is unit variant its serialized as one u32,
+//! but can also be deserialized as List with two elements (second element is ignored in that case but must still present).
 //! ```rust
 //! # fn test() -> altv::VoidResult {
 //! use altv::{
