@@ -42,7 +42,7 @@ use crate::{
 /// # Ok(()) }
 /// ```
 #[derive(Debug, Deserialize)]
-#[serde(rename = "___altv_any_enum_mvalue")]
+#[serde(rename = "___altv_any_enum_mvalue")] // see ANY_MVALUE_ENUM in mvalue crate
 pub enum AnyMValue {
     None,
     Nil,

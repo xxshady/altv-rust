@@ -427,7 +427,6 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
                 MValueType::List => {
                     let error = || Error::EnumDeserializationExpectsListWithTwoElements;
 
-                    // enums represented as MValue::List: [variant_index (u32), variant_value (any)]
                     let mut entry = Seq::new(unsafe { sdk::read_mvalue_list(self.input.get()) });
                     let variant_index = entry.next().ok_or_else(error)?;
                     let variant_index: i32 = from_mvalue(&variant_index).map_err(|_| error())?;

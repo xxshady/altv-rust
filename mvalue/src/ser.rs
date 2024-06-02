@@ -235,6 +235,7 @@ impl<'a> ser::Serializer for &'a mut Serializer {
 pub struct MValueDict {
     mvalue: MutMValue,
 
+    // needed for enum variant serialization
     push_to: Option<MutMValue>,
 }
 
