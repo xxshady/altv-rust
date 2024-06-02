@@ -110,8 +110,8 @@
 //! ```
 //!
 //! ### Enums
-//! Default representation ([externally tagged](https://serde.rs/enum-representations.html#externally-tagged)).<br>
-//! Under the hood each variant is serialized as List with two elements: `[variant_index (u32), variant_value (any)]`,
+//! Default representation ([externally tagged](https://serde.rs/enum-representations.html#externally-tagged))
+//! under the hood is serialized as List with two elements: `[variant_index (u32), variant_value (any)]`,
 //! except if variant is unit variant its serialized as one u32,
 //! but can also be deserialized as List with two elements (second element is ignored in that case but must still present).
 //! ```rust
@@ -133,6 +133,7 @@
 //! let mvalue = to_mvalue(&TestEnum::Newtype(123))?;
 //!
 //! // how it's serialized:
+//! // "AnyMValue::List([AnyMValue::Int(1), AnyMValue::Int(123)])"
 //! // dbg!(from_mvalue::<AnyMValue>(&mvalue.clone().into_const())?);
 //!
 //! let my_enum: TestEnum = from_mvalue(&mvalue.into_const())?;
@@ -141,6 +142,7 @@
 //! ```
 //!
 //! [Untagged](https://serde.rs/enum-representations.html#untagged) representation is also supported.
+//! Serialized as if we didn't use enums.
 //! ```rust
 //! # fn test() -> altv::VoidResult {
 //! use altv::{
@@ -161,6 +163,7 @@
 //! let mvalue = to_mvalue(&TestEnum::Newtype(123))?;
 //!
 //! // how it's serialized:
+//! // "AnyMValue::Int(123)"
 //! // dbg!(from_mvalue::<AnyMValue>(&mvalue.clone().into_const())?);
 //!
 //! let my_enum: TestEnum = from_mvalue(&mvalue.into_const())?;
