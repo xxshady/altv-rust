@@ -1,13 +1,11 @@
 use std::{collections::HashMap, ptr::NonNull, rc::Rc, cell::Cell};
 
 use anyhow::bail;
-use core_shared::ResourceName;
+use core_shared::StringResourceName;
 
 use crate::{
-    config_node::ResourceConfig,
-    helpers::read_cpp_str_vec,
-    resource::Resource,
-    sdk, SomeResult, VoidResult,
+    config_node::ResourceConfig, helpers::read_cpp_str_vec, resource::Resource, sdk, SomeResult,
+    VoidResult,
 };
 
 #[derive(Debug)]
@@ -80,7 +78,7 @@ pub struct AltResourceManager {
 }
 
 impl AltResourceManager {
-    pub fn init(&mut self, this_name: &ResourceName) {
+    pub fn init(&mut self, this_name: &StringResourceName) {
         let resources = unsafe { sdk::ICore::GetAllResources() };
         for v in resources.into_iter() {
             let raw_ptr = unsafe { sdk::read_resource_ptr_wrapper(v) };
@@ -124,7 +122,7 @@ impl AltResourceManager {
         resource
     }
 
-    pub fn add_resource(&mut self, name: ResourceName, ptr: ResourcePtr) -> Rc<AltResource> {
+    pub fn add_resource(&mut self, name: StringResourceName, ptr: ResourcePtr) -> Rc<AltResource> {
         use sdk::IResource::*;
 
         let raw_ptr = ptr.as_ptr();
@@ -155,6 +153,6 @@ impl AltResourceManager {
     }
 }
 
-fn get_resource_name(resource_ptr: ResourcePtr) -> ResourceName {
+fn get_resource_name(resource_ptr: ResourcePtr) -> StringResourceName {
     unsafe { sdk::IResource::GetName(resource_ptr.as_ptr()) }.to_string()
 }
