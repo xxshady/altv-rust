@@ -113,7 +113,7 @@ pub mod prelude {
             StreamSyncedVirtualEntityMeta,
             LocalPlayerMeta, 
         },
-        mvalue::mvalue::DeserializeMValueArgs,
+        mvalue::DeserializeMValueArgs,
 
         BaseObjectPoolFuncs,
         ColShapy,

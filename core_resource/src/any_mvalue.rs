@@ -18,10 +18,12 @@ use crate::{
 /// Log content of any mvalue.
 /// ```rust
 /// # mod altv { pub use altv_internal_core_resource::exports::*; }
+/// # use altv::mvalue::DeserializeMValueArgs;
 /// # fn test() -> altv::VoidResult {
 /// altv::events::on("any_mvalue", |event| {
 ///     let (any,): (altv::mvalue::AnyMValue,) = event.args.deserialize()?;
 ///     dbg!(any);
+///     Ok(())
 /// });
 /// # Ok(()) }
 /// ```
@@ -30,10 +32,12 @@ use crate::{
 /// (it won't work for bigint though, bigint is serialized as `AnyMValue::UInt`).
 /// ```rust
 /// # mod altv { pub use altv_internal_core_resource::exports::*; }
+/// # use altv::mvalue::DeserializeMValueArgs;
 /// # fn test() -> altv::VoidResult {
 /// altv::events::on("any_mvalue", |event| {
 ///     let (js_number,): (altv::mvalue::AnyMValue,) = event.args.deserialize()?;
 ///     let num: f64 = js_number.as_f64()?;
+///     Ok(())
 /// });
 /// # Ok(()) }
 /// ```

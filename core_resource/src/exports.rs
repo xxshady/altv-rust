@@ -107,6 +107,6 @@ pub mod base_object {
 }
 
 pub mod mvalue {
-    pub use mvalue;
+    pub use mvalue::*;
     pub use crate::any_mvalue::AnyMValue;
 }
