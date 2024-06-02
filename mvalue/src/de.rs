@@ -1,10 +1,15 @@
 use altv_sdk::{ffi as sdk, MValueType};
 use autocxx::{cxx::CxxVector, prelude::*};
-use serde::de::{self, DeserializeOwned, DeserializeSeed, MapAccess, SeqAccess, Visitor};
+use serde::de::{
+    self, DeserializeOwned, DeserializeSeed, EnumAccess, MapAccess, SeqAccess, VariantAccess,
+    Visitor, Deserializer as _,
+};
 
 use crate::{
     bytes_num,
+    de_any_mvalue_variant::{AnyMValueVariantDeserializer, ANY_MVALUE_ENUM},
     de_dict_key::DictKeyDeserializer,
+    de_enum_variant::EnumVariantDeserializer,
     helpers::{self, deserialize_simple, deserialize_simple_unchecked, sdk_type_to_rust},
     ser_rgba::RGBA_MVALUE,
     ser_vector2::VECTOR2_MVALUE,
@@ -389,17 +394,57 @@ impl<'de, 'a> de::Deserializer<'de> for &'a mut Deserializer {
         Err(Error::BytesDeserializationIsNotImplementedYet)
     }
 
-    // TODO: implement enum deserialization
     fn deserialize_enum<V>(
         self,
-        _name: &'static str,
+        name: &'static str,
         _variants: &'static [&'static str],
-        _visitor: V,
+        visitor: V,
     ) -> Result<V::Value>
     where
         V: Visitor<'de>,
     {
-        Err(Error::EnumDeserializationIsNotImplementedYet)
+        if name == ANY_MVALUE_ENUM {
+            visitor.visit_enum(Enum::new(self.input.clone(), AnyMValueEnum))
+        } else {
+            match self.mvalue_type()? {
+                // enum unit variant can be represented in two ways:
+                // variant_index (u32)
+                // or List: [variant_index (u32), variant_value (any)]
+                MValueType::Int => {
+                    let variant_index: i32 =
+                        from_mvalue(&self.input).expect("already checked to be i32");
+
+                    visitor.visit_enum(Enum::new(
+                        self.input.clone(),
+                        NotAnyMValueEnum {
+                            variant_index: variant_index.try_into().unwrap(),
+                            variant_value: None,
+                        },
+                    ))
+                }
+                // anything other
+                // [variant_index (u32), variant_value (any)]
+                MValueType::List => {
+                    let error = || Error::EnumDeserializationExpectsListWithTwoElements;
+
+                    let mut entry = Seq::new(unsafe { sdk::read_mvalue_list(self.input.get()) });
+                    let variant_index = entry.next().ok_or_else(error)?;
+                    let variant_index: i32 = from_mvalue(&variant_index).map_err(|_| error())?;
+                    let variant_value = entry.next().ok_or_else(error)?;
+
+                    visitor.visit_enum(Enum::new(
+                        self.input.clone(),
+                        NotAnyMValueEnum {
+                            variant_index: variant_index.try_into().unwrap(),
+                            variant_value: Some(variant_value),
+                        },
+                    ))
+                }
+                mvalue_type => Err(Error::EnumDeserializationExpectsListOrInt {
+                    but_received: mvalue_type,
+                }),
+            }
+        }
     }
 }
 
@@ -507,15 +552,128 @@ impl<'de> MapAccess<'de> for Map {
     }
 }
 
-// TODO: implement enum deserialization
-// struct Enum {
+struct Enum<Data> {
+    mvalue: ConstMValue,
+    data: Data,
+}
 
-// }
+impl<Data> Enum<Data> {
+    fn new(mvalue: ConstMValue, data: Data) -> Self {
+        Self { mvalue, data }
+    }
+}
 
-// impl EnumAccess for Enum {
-//     fn variant_seed<V>(self, seed: V) -> std::result::Result<(V::Value, Self::Variant), Self::Error>
-//         where
-//             V: DeserializeSeed<'de> {
+struct AnyMValueEnum;
 
-//     }
-// }
+impl<'de> EnumAccess<'de> for Enum<AnyMValueEnum> {
+    type Error = Error;
+    type Variant = Self;
+
+    fn variant_seed<V>(self, seed: V) -> Result<(V::Value, Self::Variant)>
+    where
+        V: DeserializeSeed<'de>,
+    {
+        let deserializer = AnyMValueVariantDeserializer::from_cpp(self.mvalue.clone());
+        let value = seed.deserialize(deserializer)?;
+        Ok((value, self))
+    }
+}
+
+struct NotAnyMValueEnum {
+    variant_index: u32,
+    variant_value: Option<ConstMValue>,
+}
+
+impl Enum<NotAnyMValueEnum> {
+    fn get_variant_value(self) -> Result<ConstMValue> {
+        match self.data.variant_value {
+            Some(mvalue) => Ok(mvalue),
+            None => {
+                // unit variant is serialized as i32 (variant_index), not list
+                Err(Error::EnumDeserializationExpectsList {
+                    but_received: MValueType::Int,
+                })
+            }
+        }
+    }
+}
+
+impl<'de> EnumAccess<'de> for Enum<NotAnyMValueEnum> {
+    type Error = Error;
+    type Variant = Self;
+
+    fn variant_seed<V>(self, seed: V) -> Result<(V::Value, Self::Variant)>
+    where
+        V: DeserializeSeed<'de>,
+    {
+        let deserializer = EnumVariantDeserializer::from_cpp(self.data.variant_index);
+        let value = seed.deserialize(deserializer)?;
+        Ok((value, self))
+    }
+}
+
+impl<'de> VariantAccess<'de> for Enum<AnyMValueEnum> {
+    type Error = Error;
+
+    fn unit_variant(self) -> Result<()> {
+        Ok(())
+    }
+
+    fn newtype_variant_seed<T>(self, seed: T) -> Result<T::Value>
+    where
+        T: de::DeserializeSeed<'de>,
+    {
+        let mut deserializer = Deserializer::from_mvalue(self.mvalue);
+        let value = seed.deserialize(&mut deserializer)?;
+        Ok(value)
+    }
+
+    fn tuple_variant<V>(self, _len: usize, visitor: V) -> Result<V::Value>
+    where
+        V: de::Visitor<'de>,
+    {
+        let mut deserializer = Deserializer::from_mvalue(self.mvalue);
+        deserializer.deserialize_seq(visitor)
+    }
+
+    fn struct_variant<V>(self, fields: &'static [&'static str], visitor: V) -> Result<V::Value>
+    where
+        V: de::Visitor<'de>,
+    {
+        let mut deserializer = Deserializer::from_mvalue(self.mvalue);
+        deserializer.deserialize_struct("", fields, visitor)
+    }
+}
+
+impl<'de> VariantAccess<'de> for Enum<NotAnyMValueEnum> {
+    type Error = Error;
+
+    fn unit_variant(self) -> Result<()> {
+        Ok(())
+    }
+
+    fn newtype_variant_seed<T>(self, seed: T) -> Result<T::Value>
+    where
+        T: de::DeserializeSeed<'de>,
+    {
+        let mut deserializer = Deserializer::from_mvalue(self.get_variant_value()?);
+        let value = seed.deserialize(&mut deserializer)?;
+        Ok(value)
+    }
+
+    fn tuple_variant<V>(self, _len: usize, visitor: V) -> Result<V::Value>
+    where
+        V: de::Visitor<'de>,
+    {
+        let mut deserializer = Deserializer::from_mvalue(self.get_variant_value()?);
+        deserializer.deserialize_seq(visitor)
+    }
+
+    fn struct_variant<V>(self, fields: &'static [&'static str], visitor: V) -> Result<V::Value>
+    where
+        V: de::Visitor<'de>,
+    {
+        let mut deserializer = Deserializer::from_mvalue(self.get_variant_value()?);
+        deserializer.deserialize_struct("", fields, visitor)
+    }
+}

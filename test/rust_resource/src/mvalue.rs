@@ -50,6 +50,27 @@ macro_rules! to_and_from {
 }
 
 pub(crate) fn test_mvalue() {
+    #[derive(altv::serde::Serialize, altv::serde::Deserialize, Debug, PartialEq)]
+    #[serde(crate = "altv::serde")]
+    #[repr(u32)]
+    enum TestEnum {
+        Unit,
+        Newtype(i32),
+        Tuple(i32, bool, String),
+        Struct { a: i32, b: bool },
+    }
+
+    #[derive(altv::serde::Serialize, altv::serde::Deserialize, Debug, PartialEq)]
+    #[serde(crate = "altv::serde")]
+    #[serde(untagged)]
+    #[repr(u32)]
+    enum TestEnumUntagged {
+        Unit,
+        Newtype(i32),
+        Tuple(i32, bool, String),
+        Struct { a: i32, b: bool },
+    }
+
     to_and_from!(@assert_eq
         bool: true, false;
 
@@ -84,9 +105,97 @@ pub(crate) fn test_mvalue() {
 
         altv::ColShapeContainer: altv::ColShape::new_circle(0, 10.0);
 
+        TestEnum: TestEnum::Unit;
+        TestEnum: TestEnum::Newtype(123);
+        TestEnum: TestEnum::Tuple(
+            i32::MAX,
+            true,
+            String::from("wdwdwddwdwdwddwdwdwddwdwdwddwdwdwddwdwdwddwdwdwdd"),
+        );
+        TestEnum: TestEnum::Struct { a: 123, b: true };
+
+        TestEnumUntagged: TestEnumUntagged::Unit;
+        TestEnumUntagged: TestEnumUntagged::Newtype(123);
+        TestEnumUntagged: TestEnumUntagged::Tuple(
+            i32::MAX,
+            true,
+            String::from("wdwdwddwdwdwddwdwdwddwdwdwddwdwdwddwdwdwddwdwdwdd"),
+        );
+        TestEnumUntagged: TestEnumUntagged::Struct { a: 123, b: true };
+
         // TODO:
         // altv::AnyBaseObject: altv::VoiceChannel::new_spatial(0.0).unwrap();
     );
+
+    // unit variant
+    {
+        let s = to_mvalue(&(
+            0, // TestEnum::Unit
+            (),
+        ))
+        .unwrap();
+        let d: TestEnum = from_mvalue(&s.into_const()).unwrap();
+        assert_eq!(d, TestEnum::Unit);
+    }
+    {
+        let s = to_mvalue(
+            &0, // TestEnum::Unit
+        )
+        .unwrap();
+        let d: TestEnum = from_mvalue(&s.into_const()).unwrap();
+        assert_eq!(d, TestEnum::Unit);
+    }
+
+    // newtype variant
+    {
+        let s = to_mvalue(&(
+            1, // TestEnum::Newtype
+            123,
+        ))
+        .unwrap();
+        let d: TestEnum = from_mvalue(&s.into_const()).unwrap();
+        assert_eq!(d, TestEnum::Newtype(123));
+    }
+
+    // tuple variant
+    {
+        let s = to_mvalue(&(
+            2, // TestEnum::Tuple
+            (
+                i32::MAX,
+                true,
+                String::from("wdwdwddwdwdwddwdwdwddwdwdwddwdwdwddwdwdwddwdwdwdd"),
+            ),
+        ))
+        .unwrap();
+        let d: TestEnum = from_mvalue(&s.into_const()).unwrap();
+        assert_eq!(
+            d,
+            TestEnum::Tuple(
+                i32::MAX,
+                true,
+                String::from("wdwdwddwdwdwddwdwdwddwdwdwddwdwdwddwdwdwddwdwdwdd"),
+            )
+        );
+    }
+
+    // struct variant
+    {
+        #[derive(altv::serde::Serialize)]
+        #[serde(crate = "altv::serde")]
+        struct TestStruct {
+            a: i32,
+            b: bool,
+        }
+
+        let s = to_mvalue(&(
+            3, // TestEnum::Struct
+            TestStruct { a: 123, b: true },
+        ))
+        .unwrap();
+        let d: TestEnum = from_mvalue(&s.into_const()).unwrap();
+        assert_eq!(d, TestEnum::Struct { a: 123, b: true });
+    }
 
     // to_and_from!(@custom_eq
     //     @eq |a: altv::Vector3, b: altv::Vector3| a.x() == b.x(), altv::Vector3: altv::Vector3::new(f32::MAX, f32::MIN, 123);
