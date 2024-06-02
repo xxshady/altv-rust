@@ -37,6 +37,7 @@ mod vehicle_model_info;
 mod ped_model_info;
 mod weapon_model_info;
 mod mvalue_hash_map;
+mod any_mvalue;
 
 pub use result::{IntoVoidResult, SomeResult, VoidResult};
 

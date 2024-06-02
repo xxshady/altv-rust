@@ -48,8 +48,7 @@ impl virtual_entity::VirtualEntity {
     /// # Examples
     /// ```rust
     /// # mod altv {
-    /// #     pub use altv_internal_core_resource::exports::*;
-    /// #     pub use mvalue::DynMValue;
+    /// #     pub use altv_internal_core_resource::exports::{*, mvalue::DynMValue};
     /// # }
     /// # fn test() -> altv::VoidResult {
     /// # use std::collections::HashMap;

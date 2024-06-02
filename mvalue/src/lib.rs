@@ -13,6 +13,8 @@ pub mod ser_vector2;
 pub mod ser_vector3;
 mod types;
 mod wrappers;
+mod de_any_mvalue_variant;
+mod de_enum_variant;
 
 pub use de::{from_mvalue, Deserializer};
 pub use error::{Error, Result};

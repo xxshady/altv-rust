@@ -1,5 +1,6 @@
 use std::fmt::Display;
 
+use altv_sdk::MValueType;
 use serde::{de, ser};
 
 pub type Result<T> = std::result::Result<T, Error>;
@@ -25,9 +26,14 @@ pub enum Error {
     F32ImpossibleSerialization,
     RgbaImpossibleSerialization,
     BytesDeserializationIsNotImplementedYet,
-    EnumDeserializationIsNotImplementedYet,
     ConstMValueSliceCanOnlyBeDeserializedAsTuple,
+    EnumDeserializationExpectsList { but_received: MValueType },
+    EnumDeserializationExpectsListWithTwoElements,
+    EnumDeserializationExpectsListOrInt { but_received: MValueType },
 }
+
+const ENUM_DESERIALIZATION_INTERNAL_TYPE: &str =
+    "MValue List: [variant_index (u32), variant_value (any)]";
 
 impl ser::Error for Error {
     fn custom<T: Display>(msg: T) -> Self {
@@ -43,6 +49,7 @@ impl de::Error for Error {
 
 impl Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut dynamic_error = None;
         let info = match self {
             Error::Message(msg) => msg,
             Error::InvalidBaseObject => "Base object is destroyed and cannot be used anymore",
@@ -52,11 +59,7 @@ impl Display for Error {
                 "Base object serialization failed for unknown reason"
             }
             Error::BytesDeserializationIsNotImplementedYet => {
-                "Bytes deserialization is not implemented yet"
-            }
-            Error::EnumDeserializationIsNotImplementedYet => {
-                "Enum deserialization is not implemented yet, \
-                but you can use untagged enum representation: https://serde.rs/enum-representations.html#untagged"
+                "Bytes deserialization is not implemented yet, use `altv::ByteBuf`"
             }
             Error::ConstMValueSliceCanOnlyBeDeserializedAsTuple => {
                 "ConstMValue slice can only be deserialized as tuple"
@@ -78,6 +81,33 @@ impl Display for Error {
             }
             Error::Vector3SerializationFailed => "Vector3 serialization failed for unknown reason",
             Error::Vector3ImpossibleSerialization => "Vector3ImpossibleSerialization",
+            Error::EnumDeserializationExpectsList { but_received } => {
+                let message = format!(
+                    "Enum deserialization expected {ENUM_DESERIALIZATION_INTERNAL_TYPE}\
+                    , received: {but_received:?}"
+                );
+
+                // i'm sorry for this
+                dynamic_error.replace(message);
+                dynamic_error.as_ref().unwrap()
+            }
+            Error::EnumDeserializationExpectsListOrInt { but_received } => {
+                let message = format!(
+                    "Enum deserialization expected {ENUM_DESERIALIZATION_INTERNAL_TYPE} \
+                    or i32 (variant_index), received: {but_received:?}"
+                );
+
+                // i'm sorry for this
+                dynamic_error.replace(message);
+                dynamic_error.as_ref().unwrap()
+            }
+            Error::EnumDeserializationExpectsListWithTwoElements => {
+                let message =
+                    format!("Enum deserialization expected {ENUM_DESERIALIZATION_INTERNAL_TYPE}");
+                // i'm sorry for this
+                dynamic_error.replace(message);
+                dynamic_error.as_ref().unwrap()
+            }
         };
 
         f.write_str(info)
