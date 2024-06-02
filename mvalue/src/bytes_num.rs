@@ -39,11 +39,7 @@ where
     let num_size = std::mem::size_of::<T>();
 
     for (idx, e) in array.iter_mut().enumerate() {
-        let slice = buf.get((idx * num_size)..((1 + idx) * num_size));
-        let Some(slice) = slice else {
-            return None;
-        };
-
+        let slice = buf.get((idx * num_size)..((1 + idx) * num_size))?;
         let result = slice.try_into();
 
         match result {
