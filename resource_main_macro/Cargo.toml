@@ -16,4 +16,4 @@ quote = "1.0.35"
 syn = { version = "1.0.109", features = ["extra-traits", "full"] }
 
 [lib]
-proc_macro = true
+proc-macro = true
