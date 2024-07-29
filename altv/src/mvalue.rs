@@ -14,7 +14,7 @@
 //! ([see](#how-to-implement-serialize-and-deserialize-for-your-struct)).
 //!
 //! # Supported MValue <-> Rust types
-//! [Full list of types](https://github.com/xxshady/altv-rust/blob/02c7db9ea4f8d20a1bf18960129e5ec48d7636ab/mvalue/src/helpers.rs#L112-L127)<br>
+//! [Full list of types](https://github.com/xxshady/altv-rust/blob/19b7454df79b077bcc7e8ffaff21324f23a37276/mvalue/src/helpers.rs#L111-L128)<br>
 //! See also [`AnyMValue`](enum.AnyMValue.html).
 //!
 //! # Examples
@@ -191,7 +191,6 @@
 //! # Ok(()) }
 //! ```
 pub use core_resource::exports::mvalue::{
-    AnyMValue,
-    from_mvalue, from_mvalue_slice, to_mvalue, ConstMValue, DeserializeMValueArgs, DynMValue,
-    DynMValueArgs, Error,
+    AnyMValue, from_mvalue, from_mvalue_slice, to_mvalue, ConstMValue, DeserializeMValueArgs,
+    DynMValue, DynMValueArgs, Error,
 };

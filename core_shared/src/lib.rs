@@ -1,8 +1,9 @@
-use std::fmt::Debug;
+use std::{ffi::CString, fmt::Debug};
 
 pub mod result;
 
 #[derive(Default)]
+#[repr(C)]
 pub struct ResourceHandlers {
     pub on_tick: Option<Box<dyn Fn() + 'static>>,
     pub on_sdk_event: Option<Box<dyn Fn(altv_sdk::EventType, altv_sdk::CEventPtr) + 'static>>,
@@ -18,8 +19,9 @@ impl Debug for ResourceHandlers {
     }
 }
 
-pub type ResourceName = String;
-type ToggleEventTypeFn = fn(ResourceName, altv_sdk::EventType, bool);
+pub type CStringResourceName = CString;
+pub type StringResourceName = String;
+type ToggleEventTypeFn = fn(CStringResourceName, altv_sdk::EventType, bool);
 
 pub struct ModuleHandlers {
     pub toggle_event_type: ToggleEventTypeFn,
@@ -28,7 +30,7 @@ pub struct ModuleHandlers {
 // this shit is here for derive(Default) of core_resource Resource
 impl Default for ModuleHandlers {
     fn default() -> Self {
-        fn placeholder(_: ResourceName, _: altv_sdk::EventType, _: bool) {}
+        fn placeholder(_: CStringResourceName, _: altv_sdk::EventType, _: bool) {}
         Self {
             toggle_event_type: placeholder,
         }
@@ -45,4 +47,9 @@ impl Debug for ModuleHandlers {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "ResourceHandlers {{todo}}")
     }
+}
+
+#[repr(C)]
+pub struct CBool {
+    pub value: bool,
 }

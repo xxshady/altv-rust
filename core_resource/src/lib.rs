@@ -44,14 +44,14 @@ pub use result::{IntoVoidResult, SomeResult, VoidResult};
 pub mod exports;
 
 pub fn init(
-    resource_name: ResourceName,
+    resource_name: CStringResourceName,
     resource_handlers: &mut ResourceHandlers,
     module_handlers: ModuleHandlers,
 ) {
     logger::init().unwrap();
     logger::debug!("init");
 
-    Resource::init(resource_name, module_handlers);
+    Resource::init(resource_name.into_string().unwrap(), module_handlers);
 
     macro_rules! set_callback {
         ($name:ident, $closure:expr) => {

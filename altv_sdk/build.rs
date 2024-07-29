@@ -207,7 +207,6 @@ fn generate_rust_enum_from_cpp(
 
     let mut try_from_variants = vec![];
     let mut result_string = String::from_utf8_lossy(&chars[start_idx..=end_idx])
-        .to_string()
         .split('\n')
         .filter_map(|val| {
             val.get(2..)
@@ -242,6 +241,7 @@ fn generate_rust_enum_from_cpp(
         format!("{out_dir}/{write_to}"),
         format!(
             "// auto-generated from build.rs\n\n\
+            #[repr(C)]
             #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
             pub enum {enum_name} {{\n\
                 {result_string},\n\

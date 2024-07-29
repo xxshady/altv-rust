@@ -1,8 +1,8 @@
 use altv_sdk::ffi as sdk;
-use core_module::{result::VoidResult, ResourceName};
+use core_module::{CStringResourceName, CBool};
 use libloading::Library;
 use resource_manager::ResourceController;
-use std::{path::PathBuf, ptr::NonNull};
+use std::{ffi::CString, path::PathBuf, ptr::NonNull};
 
 use crate::{event_manager::EVENT_MANAGER_INSTANCE, resource_manager::RESOURCE_MANAGER_INSTANCE};
 
@@ -13,12 +13,12 @@ mod resource_manager;
 
 #[allow(improper_ctypes_definitions)]
 type ResourceMainFn = unsafe extern "C" fn(
-    altv_module_version: String, // should always be FIRST arg for backward compatibility!!!
+    altv_module_version: CString, // should always be FIRST arg for backward compatibility!!!
     core: *mut sdk::alt::ICore,
-    resource_name: ResourceName,
+    resource_name: CStringResourceName,
     resource_handlers: &mut core_module::ResourceHandlers,
     module_handlers: core_module::ModuleHandlers,
-) -> VoidResult;
+) -> CBool;
 
 const ALTV_MODULE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -44,16 +44,16 @@ extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
 
         let result = unsafe {
             main_fn(
-                ALTV_MODULE_VERSION.to_string(),
+                CString::new(ALTV_MODULE_VERSION).unwrap(),
                 core_ptr,
-                resource_name.clone(),
+                CString::new(resource_name.clone()).unwrap(),
                 &mut resource_for_module.handlers,
                 module_handlers,
             )
         };
 
-        if let Err(err) = result {
-            logger::error!("Resource: {resource_name:?} main function returned error: {err:?}");
+        if !result.value {
+            logger::error!("Resource: {resource_name:?} main function returned error");
         }
 
         manager.borrow_mut().remove_pending_status(&resource_name);
@@ -78,17 +78,18 @@ extern "C" fn resource_stop(resource_name: &str) {
 }
 
 fn toggle_resource_event_type(
-    resource_name: ResourceName,
+    resource_name: CStringResourceName,
     event_type: altv_sdk::EventType,
     state: bool,
 ) {
     logger::debug!(
-        "toggle_resource_event_type {event_type:?} {state:?} (resource: {resource_name})"
+        "toggle_resource_event_type {event_type:?} {state:?} (resource: {})",
+        resource_name.to_str().unwrap()
     );
 
     EVENT_MANAGER_INSTANCE.with(|v| {
         v.borrow_mut()
-            .toggle_event(resource_name, event_type, state);
+            .toggle_event(resource_name.into_string().unwrap(), event_type, state);
     })
 }
 

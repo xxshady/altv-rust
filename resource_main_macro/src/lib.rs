@@ -85,12 +85,13 @@ pub fn resource_main_func(args: TokenStream, input: TokenStream) -> TokenStream 
     quote! {
         #[no_mangle]
         #(#attrs)* extern "C" fn main(
-            altv_module_version: String, // should always be FIRST arg for backward compatibility!!!
+            altv_module_version: std::ffi::CString, // should always be FIRST arg for backward compatibility!!!
             core: usize, // workaround for the clippy unsafety error
-            resource_name: String,
+            resource_name: std::ffi::CString,
             resource_handlers: &mut #crate_name_ident::__internal::ResourceHandlers,
             module_handlers: #crate_name_ident::__internal::ModuleHandlers,
-        ) -> #crate_name_ident::VoidResult {
+        ) -> #crate_name_ident::__internal::CBool {
+            let altv_module_version = altv_module_version.into_string().unwrap();
             if altv_module_version != #resource_version {
                 panic!(
                     "\n\n\
@@ -103,13 +104,25 @@ pub fn resource_main_func(args: TokenStream, input: TokenStream) -> TokenStream 
             }
 
             unsafe { #crate_name_ident::__internal::set_alt_core(core as *mut #crate_name_ident::__internal::ICore) };
-            #crate_name_ident::__internal::init(resource_name, resource_handlers, module_handlers);
+            #crate_name_ident::__internal::init(resource_name.clone(), resource_handlers, module_handlers);
 
             use #crate_name_ident::IntoVoidResult;
             fn user_code() -> impl IntoVoidResult {
                 #(#statements)*
             }
-            user_code().into_void_result()
+
+            let result = match user_code().into_void_result() {
+                Ok(()) => {
+                    true    
+                }
+                Err(err) => {
+                    #crate_name_ident::log_error!("Rust resource: {resource_name:?} main function returned error: {err:?}");    
+                    false
+                }
+            };
+            #crate_name_ident::__internal::CBool {
+                value: result
+            }            
         }
     }
     .into()
