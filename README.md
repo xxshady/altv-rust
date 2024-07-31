@@ -21,8 +21,10 @@ New server-side [Rust](https://www.rust-lang.org) module for [alt:V](https://alt
 
 ## Client-side part
 
-Work is being done in [this branch](https://github.com/xxshady/altv-rust/tree/clientside-shit).<br>
-Will never be published or released because alt:V does not allow you to use custom client-side modules (.dll) in production
+At first it was [native implementation](https://github.com/xxshady/altv-rust/tree/clientside-shit) using [wasmtime](https://wasmtime.dev/) without JavaScript.
+[It worked](https://youtu.be/6HoV71wxJ8I), but because alt:V does not allow you to use custom client-side modules (.dll)
+in production without approval, integration into the client core, constant maintenance and more than 0 people using this module,
+I switched to a more realistic approach, [JavaScript WASM](https://github.com/xxshady/altv-esbuild-rust-wasm/tree/clientside-api-prototype)
 
 ## Docs
 
