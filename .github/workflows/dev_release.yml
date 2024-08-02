@@ -43,9 +43,6 @@ jobs:
 
       # TODO: cache
 
-      - name: Install LLVM 16.0.6
-        run: winget install LLVM.LLVM --version 16.0.6 --disable-interactivity
-
       - name: Build
         shell: cmd
         # temp workaround https://github.com/google/autocxx/issues/1327
