@@ -56,7 +56,8 @@ jobs:
         run: rustup update
 
       - name: Install LLVM 16.0.6
-        run: winget install LLVM.LLVM --version 16.0.6 --disable-interactivity
+        shell: powershell
+        run: winget install LLVM.LLVM --version 16.0.6 --disable-interactivity --accept-source-agreements
           
       - name: Cache
         uses: actions/cache@v3
