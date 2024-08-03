@@ -35,7 +35,7 @@ API documentation can be found [here](https://docs.rs/altv)
 Before all this, you need to [install LLVM](https://rust-lang.github.io/rust-bindgen/requirements.html#installing-clang)<br>
 
 > [!WARNING]
-> Currently on Windows latest version of LLVM [doesn't work](https://github.com/google/autocxx/issues/1327#issuecomment-2075460893) with Rust module, you need to install 16.0.6, for example with winget you can do it using this command `winget install LLVM.LLVM --version 16.0.6`
+> Currently on Windows latest version of LLVM [doesn't work](https://github.com/google/autocxx/issues/1327#issuecomment-2075460893) with Rust module, you need to install 17.0.1, for example with winget you can do it using this command `winget install LLVM.LLVM --version 17.0.1` (add `--force` if it fails)
 
 > [!IMPORTANT]
 > On Windows set LIBCLANG_PATH as an environment variable pointing to the bin directory of your LLVM install. For example, if you installed LLVM to D:\programs\LLVM, then you'd set the value to be D:\programs\LLVM\bin. You also need to have installed Visual Studio with MSVC compiler (usually installed with Rust using Rustup)
