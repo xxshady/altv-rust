@@ -41,6 +41,13 @@ jobs:
       - name: Install latest stable rust
         run: rustup update
 
+      - name: Install winget
+        uses: Cyberboss/install-winget@v1
+
+      - name: Install LLVM 17.0.1
+        shell: powershell
+        run: winget install LLVM.LLVM --version 17.0.1 --disable-interactivity --accept-source-agreements --force
+
       # TODO: cache
 
       - name: Build
