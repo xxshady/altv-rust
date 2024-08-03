@@ -21,8 +21,10 @@ New server-side [Rust](https://www.rust-lang.org) module for [alt:V](https://alt
 
 ## Client-side part
 
-Work is being done in [this branch](https://github.com/xxshady/altv-rust/tree/clientside-shit).<br>
-Will never be published or released because alt:V does not allow you to use custom client-side modules (.dll) in production
+At first it was [native implementation](https://github.com/xxshady/altv-rust/tree/clientside-shit) using [wasmtime](https://wasmtime.dev/) without JavaScript.
+[It worked](https://youtu.be/6HoV71wxJ8I), but because alt:V does not allow you to use custom client-side modules (.dll)
+in production without approval, integration into the client core, constant maintenance and more than 0 people using this module,
+I switched to a more realistic approach, [JavaScript WASM](https://github.com/xxshady/altv-esbuild-rust-wasm/tree/clientside-api-prototype)
 
 ## Docs
 
@@ -33,7 +35,7 @@ API documentation can be found [here](https://docs.rs/altv)
 Before all this, you need to [install LLVM](https://rust-lang.github.io/rust-bindgen/requirements.html#installing-clang)<br>
 
 > [!WARNING]
-> Currently on Windows latest version of LLVM [doesn't work](https://github.com/google/autocxx/issues/1327#issuecomment-2075460893) with Rust module, you need to install 16.0.6, for example with winget you can do it using this command `winget install LLVM.LLVM --version 16.0.6`
+> Currently on Windows latest version of LLVM [doesn't work](https://github.com/google/autocxx/issues/1327#issuecomment-2075460893) with Rust module, you need to install 17.0.1, for example with winget you can do it using this command `winget install LLVM.LLVM --version 17.0.1` (add `--force` if it fails)
 
 > [!IMPORTANT]
 > On Windows set LIBCLANG_PATH as an environment variable pointing to the bin directory of your LLVM install. For example, if you installed LLVM to D:\programs\LLVM, then you'd set the value to be D:\programs\LLVM\bin. You also need to have installed Visual Studio with MSVC compiler (usually installed with Rust using Rustup)
