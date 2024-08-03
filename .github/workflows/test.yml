@@ -60,7 +60,7 @@ jobs:
 
       - name: Install LLVM 16.0.6
         shell: powershell
-        run: winget install LLVM.LLVM --version 16.0.6 --disable-interactivity --accept-source-agreements --force
+        run: winget install LLVM.LLVM --version 17.0.1 --disable-interactivity --accept-source-agreements --force
           
       - name: Cache
         uses: actions/cache@v3
