@@ -11,8 +11,12 @@ use crate::{
 /// # Examples
 /// Get entity of any type
 /// ```rust
-/// # mod altv { pub use altv_internal_core_resource::exports::*; }
+/// # mod altv {
+/// #    pub use altv_internal_core_resource::exports::{*, core_funcs::*};
+/// # }
 /// # fn test() -> altv::VoidResult {
+/// use altv::enumflags2::BitFlag;
+///
 /// let any_entities = altv::get_closest_entities(
 ///     0,
 ///     100,
@@ -26,8 +30,12 @@ use crate::{
 ///
 /// Get only vehicles and peds
 /// ```rust
-/// # mod altv { pub use altv_internal_core_resource::exports::*; }
+/// # mod altv {
+/// #    pub use altv_internal_core_resource::exports::{*, core_funcs::*};
+/// # }
 /// # fn test() -> altv::VoidResult {
+/// use altv::enumflags2::BitFlag;
+///
 /// let vehicles_and_peds = altv::get_closest_entities(
 ///     0,
 ///     100,
@@ -63,6 +71,7 @@ pub fn get_closest_entities(
     helpers::read_cpp_base_object_vec(raw)
 }
 
+/// For examples see [`get_closest_entities`]
 pub fn get_entities_in_dimension(
     dimension: i32,
     allowed_types: impl Into<BitFlags<BaseObjectFilter>>,
@@ -72,6 +81,7 @@ pub fn get_entities_in_dimension(
     helpers::read_cpp_base_object_vec(raw)
 }
 
+/// For examples see [`get_closest_entities`]
 pub fn get_entities_in_range(
     pos: impl Into<Vector3>,
     range: i32,
