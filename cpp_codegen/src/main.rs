@@ -183,7 +183,7 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
 
         // println!("line: {line:#?}");
 
-        if line.ends_with(',') && line.contains('(') {
+        if (line.ends_with(',') && line.contains('(')) || line.ends_with('(') {
             multiline_method = line.to_string();
             // println!("multiline start!");
             continue;
