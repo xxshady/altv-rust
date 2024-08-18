@@ -835,7 +835,13 @@ impl player::Player {
                 blend_in_speed,
                 blend_out_speed,
                 duration.into(),
-                flags.into(),
+                {
+                    let int: i32 = flags.bits().try_into().unwrap_or_else(|_| {
+                        // unreachable because max flag 'UseFullBlending' is 1073741824_u32 which doesn't take sign bit
+                        unreachable!();
+                    });
+                    int.into()
+                },
                 playback_rate,
                 lock_x,
                 lock_y,
@@ -1083,7 +1089,12 @@ impl player::Player {
         })
     }
 
-    pub fn add_decoration(&self, collection: impl IntoHash, overlay: impl IntoHash, count: u8) -> VoidResult {
+    pub fn add_decoration(
+        &self,
+        collection: impl IntoHash,
+        overlay: impl IntoHash,
+        count: u8,
+    ) -> VoidResult {
         unsafe {
             sdk::IPlayer::AddDecoration(
                 self.raw_ptr()?,
