@@ -229,8 +229,8 @@ BaseObjectVector GetEntitiesInRange(f32 position_x, f32 position_y, f32 position
     }
     return vec;
 }
-BaseObjectVector GetClosestEntities(f32 position_x, f32 position_y, f32 position_z, i32 range, i32 dimension, i32 limit, u64 allowedTypes) {
-    auto alt_vec = alt::ICore::Instance().GetClosestEntities({ position_x, position_y, position_z }, range, dimension, limit, allowedTypes);
+BaseObjectVector GetClosestEntities(f32 position_x, f32 position_y, f32 position_z, i32 range, i32 dimension, i32 limit, u64 allowedTypes, ClosestEntitiesOrder_t sortOrder) {
+    auto alt_vec = alt::ICore::Instance().GetClosestEntities({ position_x, position_y, position_z }, range, dimension, limit, allowedTypes, static_cast<alt::common::Order>(sortOrder));
     BaseObjectVector vec {};
     vec.reserve(alt_vec.size());
     for (const auto& e : alt_vec) {

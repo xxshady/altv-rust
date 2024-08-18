@@ -1,5 +1,6 @@
 use altv_sdk::ffi as sdk;
 use autocxx::prelude::UniquePtr;
+use enumflags2::bitflags;
 
 use crate::{helpers::Hash, vector::Vector3};
 
@@ -296,4 +297,23 @@ impl AmmoFlags {
 pub struct Decoration {
     pub collection: Hash,
     pub overlay: Hash,
+}
+
+#[derive(Debug, Default)]
+#[repr(u8)]
+pub enum ClosestEntitiesOrder {
+    #[default]
+    Default = 0,
+    Asc = 1,
+    Desc = 2,
+}
+
+#[derive(Debug, Clone, Copy)]
+#[repr(u64)]
+#[bitflags]
+pub enum BaseObjectFilter {
+    Player,
+    Vehicle,
+    Ped,
+    Object,
 }

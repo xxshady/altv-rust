@@ -616,6 +616,7 @@ fn cpp_method_to_rust_compatible_func(
                 ),
                 "CloudAuthResult_t" => format!("static_cast<alt::CloudAuthResult>({name})"),
                 "Benefit_t" => format!("static_cast<alt::Benefit>({name})"),
+                "ClosestEntitiesOrder_t" => format!("static_cast<alt::common::Order>({name})"),
                 _ => name.to_string(),
             }
         })
