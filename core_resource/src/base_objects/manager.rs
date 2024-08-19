@@ -1,6 +1,5 @@
-use crate::{sdk, VoidResult};
 use std::{collections::HashMap, fmt::Debug, ptr::NonNull};
-
+use crate::{sdk, VoidResult};
 use super::{base_impl::BaseObjectContainer, BaseObjectId};
 
 pub(crate) struct BaseObjectManager<T, InheritPtrs: Clone = ()> {
@@ -17,18 +16,26 @@ impl<T, InheritPtrs: Clone> BaseObjectManager<T, InheritPtrs> {
     ) {
         self.objects.insert(ptr, base_object.clone());
 
-        let id = unsafe { sdk::IBaseObject::GetID(base_ptr.as_ptr()) };
+        let raw_ptr = base_ptr.as_ptr();
+
+        let id = unsafe { sdk::IBaseObject::GetID(raw_ptr) };
         self.objects_by_id.insert(id, base_object);
+
+        #[cfg(feature = "clientside")]
+        crate::clientside::handle_base_object_creation(raw_ptr);
     }
 
     pub fn remove(&mut self, base_ptr: altv_sdk::BaseObjectMutPtr, ptr: NonNull<T>) -> VoidResult {
-        logger::debug!("remove ptr: {ptr:?}");
-        if self.objects.remove(&ptr).is_some() {
-            self.remove_id(base_ptr);
-            Ok(())
-        } else {
-            anyhow::bail!("unknown base object")
+        if self.objects.remove(&ptr).is_none() {
+            anyhow::bail!("unknown base object");
         }
+        logger::debug!("remove ptr: {ptr:?}");
+        self.remove_id(base_ptr);
+
+        #[cfg(feature = "clientside")]
+        crate::clientside::handle_base_object_destruction();
+
+        Ok(())
     }
 
     pub fn remove_externally(

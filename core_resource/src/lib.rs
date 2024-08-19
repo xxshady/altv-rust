@@ -39,6 +39,9 @@ mod weapon_model_info;
 mod mvalue_hash_map;
 mod any_mvalue;
 
+#[cfg(feature = "clientside")]
+mod clientside;
+
 pub use result::{IntoVoidResult, SomeResult, VoidResult};
 
 pub mod exports;
