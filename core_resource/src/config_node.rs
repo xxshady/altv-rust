@@ -240,11 +240,7 @@ fn get_string_list_required(node: ConfigNode) -> Vec<String> {
 }
 
 fn get_string_list(node: Option<ConfigNode>) -> Option<Vec<String>> {
-    let Some(list) = node else {
-        return None;
-    };
-
-    let list = list.as_list().unwrap();
+    let list = node?.as_list().unwrap();
     Some(list.into_iter().map(|v| v.as_string().unwrap()).collect())
 }
 

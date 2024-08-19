@@ -70,7 +70,11 @@ pub use exports::{
         ByteBuf,
         // Bytes TODO: implement bytes deserialization
     },
+    enumflags2,
+
     MValueHashMap,
+    BaseObjectFilter,
+    ClosestEntitiesOrder,
 };
 
 pub use altv_sdk::{

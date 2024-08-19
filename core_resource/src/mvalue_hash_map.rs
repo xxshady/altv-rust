@@ -12,7 +12,7 @@ impl<'a> MValueHashMap<'a> {
         Self(hash_map)
     }
 
-    pub(crate) fn to_cpp(self) -> SomeResult<UniquePtr<sdk::MValueUnorderedMapWrapper>> {
+    pub(crate) fn into_cpp(self) -> SomeResult<UniquePtr<sdk::MValueUnorderedMapWrapper>> {
         let mut mvalue_map = unsafe { sdk::create_mvalue_unordered_map() }.within_unique_ptr();
         for (key, value) in self.0 {
             unsafe {

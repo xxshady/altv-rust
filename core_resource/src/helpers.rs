@@ -196,9 +196,7 @@ pub fn get_player(
     ptr: *mut sdk::alt::IPlayer,
     resource: &Resource,
 ) -> Option<player::PlayerContainer> {
-    let Some(ptr) = NonNull::new(ptr) else {
-        return None;
-    };
+    let ptr = NonNull::new(ptr)?;
 
     let player = resource
         .base_objects
@@ -214,9 +212,7 @@ pub fn get_non_null_ped(ptr: *mut sdk::alt::IPed, resource: &Resource) -> ped::P
 }
 
 pub fn get_ped(ptr: *mut sdk::alt::IPed, resource: &Resource) -> Option<ped::PedContainer> {
-    let Some(ptr) = NonNull::new(ptr) else {
-        return None;
-    };
+    let ptr = NonNull::new(ptr)?;
 
     let ped = resource.base_objects.borrow().ped.get_by_ptr(ptr).unwrap();
     Some(ped)
@@ -237,6 +233,7 @@ pub use __if_not as if_not;
 macro_rules! __base_ptr_to {
     ($base_ptr:expr, $target_type:ident) => {
         paste::paste! {
+            // TODO: remove unsafe block from here, its not useful at all
             unsafe {
                 std::ptr::NonNull::new($crate::sdk::base_object::[<to_ $target_type>]($base_ptr)).unwrap()
             }

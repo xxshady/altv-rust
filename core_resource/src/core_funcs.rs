@@ -1,3 +1,6 @@
+use crate::structs::{BaseObjectFilter, ClosestEntitiesOrder};
+use enumflags2::BitFlags;
+
 use crate::{
     base_objects::AnyBaseObject,
     helpers::{self, IntoHash, Hash},
@@ -5,14 +8,54 @@ use crate::{
     vector::Vector3,
 };
 
+/// # Examples
+/// Get entity of any type
+/// ```rust
+/// # mod altv {
+/// #    pub use altv_internal_core_resource::exports::{*, core_funcs::*};
+/// # }
+/// # fn test() -> altv::VoidResult {
+/// use altv::enumflags2::BitFlag;
+///
+/// let any_entities = altv::get_closest_entities(
+///     0,
+///     100,
+///     0,
+///     10,
+///     altv::BaseObjectFilter::all(),
+///     Default::default(),
+/// );
+/// # Ok(()) }
+/// ```
+///
+/// Get only vehicles and peds
+/// ```rust
+/// # mod altv {
+/// #    pub use altv_internal_core_resource::exports::{*, core_funcs::*};
+/// # }
+/// # fn test() -> altv::VoidResult {
+/// use altv::enumflags2::BitFlag;
+///
+/// let vehicles_and_peds = altv::get_closest_entities(
+///     0,
+///     100,
+///     0,
+///     10,
+///     altv::BaseObjectFilter::Vehicle | altv::BaseObjectFilter::Ped,
+///     Default::default(),
+/// );
+/// # Ok(()) }
+/// ```
 pub fn get_closest_entities(
     pos: impl Into<Vector3>,
     range: i32,
     dimension: i32,
     limit: i32,
-    allowed_types: u64,
+    allowed_types: impl Into<BitFlags<BaseObjectFilter>>,
+    order: ClosestEntitiesOrder,
 ) -> Vec<AnyBaseObject> {
     let pos = pos.into();
+    let allowed_types = allowed_types.into();
     let raw = unsafe {
         sdk::ICore::GetClosestEntities(
             pos.x(),
@@ -21,26 +64,41 @@ pub fn get_closest_entities(
             range,
             dimension,
             limit,
-            allowed_types,
+            allowed_types.bits(),
+            order as u8,
         )
     };
     helpers::read_cpp_base_object_vec(raw)
 }
 
-pub fn get_entities_in_dimension(dimension: i32, allowed_types: u64) -> Vec<AnyBaseObject> {
-    let raw = unsafe { sdk::ICore::GetEntitiesInDimension(dimension, allowed_types) };
+/// For examples see [`get_closest_entities`]
+pub fn get_entities_in_dimension(
+    dimension: i32,
+    allowed_types: impl Into<BitFlags<BaseObjectFilter>>,
+) -> Vec<AnyBaseObject> {
+    let allowed_types = allowed_types.into();
+    let raw = unsafe { sdk::ICore::GetEntitiesInDimension(dimension, allowed_types.bits()) };
     helpers::read_cpp_base_object_vec(raw)
 }
 
+/// For examples see [`get_closest_entities`]
 pub fn get_entities_in_range(
     pos: impl Into<Vector3>,
     range: i32,
     dimension: i32,
-    allowed_types: u64,
+    allowed_types: impl Into<BitFlags<BaseObjectFilter>>,
 ) -> Vec<AnyBaseObject> {
     let pos = pos.into();
+    let allowed_types = allowed_types.into();
     let raw = unsafe {
-        sdk::ICore::GetEntitiesInRange(pos.x(), pos.y(), pos.z(), range, dimension, allowed_types)
+        sdk::ICore::GetEntitiesInRange(
+            pos.x(),
+            pos.y(),
+            pos.z(),
+            range,
+            dimension,
+            allowed_types.bits(),
+        )
     };
     helpers::read_cpp_base_object_vec(raw)
 }

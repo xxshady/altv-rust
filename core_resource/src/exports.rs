@@ -2,6 +2,7 @@ pub use anyhow;
 pub use erased_serde;
 pub use serde;
 pub use serde_bytes;
+pub use enumflags2;
 
 pub use core_shared::*;
 
@@ -31,7 +32,8 @@ pub use crate::{
     rgba::Rgba,
     structs::{
         AmmoType, AnimationFlags, AttachToEntityBoneIndex, AttachToEntityBoneName, PlayAnimation,
-        PlayerDateTime, PlayerHeadBlendData, AmmoFlags, Decoration,
+        PlayerDateTime, PlayerHeadBlendData, AmmoFlags, Decoration, BaseObjectFilter,
+        ClosestEntitiesOrder,
     },
     timers::{create_timer, remove_timer, Timer},
     vector::{Vector2, Vector3},

@@ -39,6 +39,12 @@ use ped::test_ped;
 mod error_backtrace;
 use error_backtrace::test_error_backtrace;
 
+mod closest_entities;
+use closest_entities::{test_closest_entities, CLOSEST_ENTITIES_TEST_TIMER};
+
+mod metadata_events;
+use metadata_events::test_metadata_events;
+
 #[altv::main]
 fn main() -> impl altv::IntoVoidResult {
     std::env::set_var("RUST_BACKTRACE", "full");
@@ -72,11 +78,22 @@ fn main() -> impl altv::IntoVoidResult {
     altv::log!("#################### error_backtrace");
     test_error_backtrace();
 
+    altv::log!("#################### closest_entities");
+    test_closest_entities();
+
     altv::set_timeout(
         || {
-            altv::log!("stopping resource...");
-            altv::Resource::current().stop().unwrap();
+            altv::log!("#################### metadata_events");
+            test_metadata_events();
+
+            altv::set_timeout(
+                || {
+                    altv::log!("stopping resource...");
+                    altv::Resource::current().stop().unwrap();
+                },
+                1000,
+            );
         },
-        1000,
+        CLOSEST_ENTITIES_TEST_TIMER,
     );
 }

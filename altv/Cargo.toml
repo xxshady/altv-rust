@@ -17,3 +17,7 @@ core_resource = { path = "../core_resource", package = "altv_internal_core_resou
 
 [package.metadata.docs.rs]
 rustdoc-args = ["--generate-link-to-definition"]
+
+[features]
+# Enable support for clientside JS WASM API
+clientside = ["core_resource/clientside"]

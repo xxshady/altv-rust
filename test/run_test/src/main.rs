@@ -21,8 +21,11 @@ struct Files {
 
 #[tokio::main]
 async fn main() {
-    println!("building");
+    println!("building without features");
     cmd!("cargo", "build").run().unwrap();
+
+    println!("building with all features");
+    cmd!("cargo", "build", "--all-features").run().unwrap();
 
     let start = if cfg!(windows) { "" } else { "lib" };
     let ext = if cfg!(windows) { ".dll" } else { ".so" };

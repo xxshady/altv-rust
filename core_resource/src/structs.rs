@@ -1,5 +1,6 @@
 use altv_sdk::ffi as sdk;
 use autocxx::prelude::UniquePtr;
+use enumflags2::{bitflags, BitFlags};
 
 use crate::{helpers::Hash, vector::Vector3};
 
@@ -102,7 +103,7 @@ pub struct PlayAnimation {
     pub blend_in_speed: f32,
     pub blend_out_speed: f32,
     pub duration: i32,
-    pub flags: i32,
+    pub flags: BitFlags<AnimationFlags>,
     pub playback_rate: f32,
     pub lock_x: bool,
     pub lock_y: bool,
@@ -115,7 +116,7 @@ impl Default for PlayAnimation {
             blend_in_speed: 8.0,
             blend_out_speed: 8.0,
             duration: -1,
-            flags: AnimationFlags::Looping as i32,
+            flags: AnimationFlags::Looping.into(),
             playback_rate: 1.0,
             lock_x: false,
             lock_y: false,
@@ -124,9 +125,11 @@ impl Default for PlayAnimation {
     }
 }
 
+#[bitflags]
+/// See https://vhub.wiki/enums/ANIMATION_FLAGS
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(u32)]
 pub enum AnimationFlags {
-    Default = 0,
     Looping = 1,
     HoldLastFrame = 2,
     RepositionWhenFinished = 4,
@@ -158,27 +161,6 @@ pub enum AnimationFlags {
     UseAlternativeFpAnim = 268435456,
     BlendoutWrtLastFrame = 536870912,
     UseFullBlending = 1073741824,
-}
-
-impl std::ops::BitOr for AnimationFlags {
-    type Output = i32;
-    fn bitor(self, rhs: Self) -> Self::Output {
-        (self as i32) | (rhs as i32)
-    }
-}
-
-impl std::ops::BitAnd for AnimationFlags {
-    type Output = i32;
-    fn bitand(self, rhs: Self) -> Self::Output {
-        (self as i32) & (rhs as i32)
-    }
-}
-
-impl std::ops::BitXor for AnimationFlags {
-    type Output = i32;
-    fn bitxor(self, rhs: Self) -> Self::Output {
-        (self as i32) ^ (rhs as i32)
-    }
 }
 
 #[derive(Debug)]
@@ -296,4 +278,23 @@ impl AmmoFlags {
 pub struct Decoration {
     pub collection: Hash,
     pub overlay: Hash,
+}
+
+#[derive(Debug, Default)]
+#[repr(u8)]
+pub enum ClosestEntitiesOrder {
+    #[default]
+    Default = 0,
+    Asc = 1,
+    Desc = 2,
+}
+
+#[derive(Debug, Clone, Copy)]
+#[repr(u64)]
+#[bitflags]
+pub enum BaseObjectFilter {
+    Player,
+    Vehicle,
+    Ped,
+    Object,
 }

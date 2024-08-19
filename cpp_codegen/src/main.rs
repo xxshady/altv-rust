@@ -183,7 +183,7 @@ fn gen(class_name: &str, in_file: &str, custom_method_caller: Option<fn(String) 
 
         // println!("line: {line:#?}");
 
-        if line.ends_with(',') && line.contains('(') {
+        if (line.ends_with(',') && line.contains('(')) || line.ends_with('(') {
             multiline_method = line.to_string();
             // println!("multiline start!");
             continue;
@@ -616,6 +616,7 @@ fn cpp_method_to_rust_compatible_func(
                 ),
                 "CloudAuthResult_t" => format!("static_cast<alt::CloudAuthResult>({name})"),
                 "Benefit_t" => format!("static_cast<alt::Benefit>({name})"),
+                "ClosestEntitiesOrder_t" => format!("static_cast<alt::common::Order>({name})"),
                 _ => name.to_string(),
             }
         })

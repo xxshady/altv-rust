@@ -111,5 +111,6 @@
     "LOG_LEVEL": "debug"
   },
   "rust-analyzer.check.command": "clippy",
-  "rust-analyzer.showUnlinkedFileNotification": false
+  "rust-analyzer.showUnlinkedFileNotification": false,
+  "rust-analyzer.cargo.features": "all"
 }

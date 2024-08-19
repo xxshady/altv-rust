@@ -43,9 +43,7 @@ pub fn get_base_object_from_event(
     ptr: altv_sdk::BaseObjectRawMutPtr,
     resource: &Resource,
 ) -> Option<AnyBaseObject> {
-    let Some(ptr) = NonNull::new(ptr) else {
-        return None;
-    };
+    let ptr = NonNull::new(ptr)?;
     let base_object = resource.base_objects.borrow().get_by_ptr(ptr).unwrap();
     Some(base_object)
 }
