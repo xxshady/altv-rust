@@ -62,7 +62,7 @@ where
         unsafe {
             sdk::ICheckpoint::SetMultipleStreamSyncedMetaData(
                 checkpoint.raw_ptr()?,
-                meta.to_cpp()?.as_ref().unwrap(),
+                meta.into_cpp()?.as_ref().unwrap(),
             )
         }
         Ok(())

@@ -64,7 +64,7 @@ where
         unsafe {
             sdk::IBaseObject::SetMultipleMetaData(
                 base_object.raw_base_ptr()?,
-                meta.to_cpp()?.as_ref().unwrap(),
+                meta.into_cpp()?.as_ref().unwrap(),
             )
         }
         Ok(())

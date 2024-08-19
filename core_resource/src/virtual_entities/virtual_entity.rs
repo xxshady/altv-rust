@@ -71,7 +71,7 @@ impl virtual_entity::VirtualEntity {
     ) -> SomeResult<virtual_entity::VirtualEntityContainer> {
         let group = group.raw_ptr()?;
         let pos = pos.into();
-        let meta = stream_synced_meta.to_cpp()?;
+        let meta = stream_synced_meta.into_cpp()?;
 
         Ok(helpers::create_base_object!(
             virtual_entity,
