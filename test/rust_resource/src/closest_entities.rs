@@ -2,6 +2,8 @@ use altv::enumflags2::BitFlag;
 
 use crate::helpers::destroy_all_base_objects;
 
+pub const CLOSEST_ENTITIES_TEST_TIMER: u64 = 1000;
+
 pub fn test_closest_entities() {
     destroy_all_base_objects();
 
@@ -46,6 +48,6 @@ pub fn test_closest_entities() {
             );
             dbg!(&objects);
         },
-        1000,
+        CLOSEST_ENTITIES_TEST_TIMER,
     );
 }
