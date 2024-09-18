@@ -24,7 +24,7 @@ jobs:
           cd altv_module
           cargo build --release
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         name: Upload module-linux
         with:
           name: module-linux
@@ -60,7 +60,7 @@ jobs:
           cd altv_module
           cargo build --release
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         name: Upload module-windows
         with:
           name: module-windows
