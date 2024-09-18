@@ -10,20 +10,20 @@ std::string GetVersion() {
 std::string GetBranch() {
     return alt::ICore::Instance().GetBranch();
 }
-void LogInfo(const StdStringClone str, alt::IResource* resource) {
-    return alt::ICore::Instance().LogInfo(str, resource);
+void LogInfo(const StdStringClone prefix, const StdStringClone str, alt::IResource* resource) {
+    return alt::ICore::Instance().LogInfo(prefix, str, resource);
 }
-void LogDebug(const StdStringClone str, alt::IResource* resource) {
-    return alt::ICore::Instance().LogDebug(str, resource);
+void LogDebug(const StdStringClone prefix, const StdStringClone str, alt::IResource* resource) {
+    return alt::ICore::Instance().LogDebug(prefix, str, resource);
 }
-void LogWarning(const StdStringClone str, alt::IResource* resource) {
-    return alt::ICore::Instance().LogWarning(str, resource);
+void LogWarning(const StdStringClone prefix, const StdStringClone str, alt::IResource* resource) {
+    return alt::ICore::Instance().LogWarning(prefix, str, resource);
 }
-void LogError(const StdStringClone str, alt::IResource* resource) {
-    return alt::ICore::Instance().LogError(str, resource);
+void LogError(const StdStringClone prefix, const StdStringClone str, alt::IResource* resource) {
+    return alt::ICore::Instance().LogError(prefix, str, resource);
 }
-void LogColored(const StdStringClone str, alt::IResource* resource) {
-    return alt::ICore::Instance().LogColored(str, resource);
+void LogColored(const StdStringClone prefix, const StdStringClone str, alt::IResource* resource) {
+    return alt::ICore::Instance().LogColored(prefix, str, resource);
 }
 alt::IVirtualEntity* CreateVirtualEntity(alt::IVirtualEntityGroup* group, f32 pos_x, f32 pos_y, f32 pos_z, u32 streamingDistance, MValueUnorderedMapWrapper data) {
     return alt::ICore::Instance().CreateVirtualEntity(group, { pos_x, pos_y, pos_z }, streamingDistance, data.value);
