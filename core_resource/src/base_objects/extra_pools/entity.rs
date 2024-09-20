@@ -113,6 +113,13 @@ pub trait Entity<InheritPtrs: inherit_ptrs::traits::Entity>:
         Ok(())
     }
 
+    fn reset_net_owner(&self, disable_migration: bool) -> VoidResult {
+        unsafe {
+            sdk::IEntity::SetNetworkOwner(self.raw_ptr()?, std::ptr::null_mut(), disable_migration);
+        }
+        Ok(())
+    }
+
     fn rot(&self) -> SomeResult<Vector3> {
         let raw = unsafe { sdk::IEntity::GetRotation(self.raw_ptr()?) }.within_unique_ptr();
         Ok(read_cpp_vector3(raw))
