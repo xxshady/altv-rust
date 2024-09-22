@@ -47,53 +47,53 @@ use metadata_events::test_metadata_events;
 
 #[altv::main]
 fn main() -> impl altv::IntoVoidResult {
-    std::env::set_var("RUST_BACKTRACE", "full");
+  std::env::set_var("RUST_BACKTRACE", "full");
 
-    altv::log!("#################### ped");
-    // should be before core funcs because of changes in stream distance
-    test_ped();
+  altv::log!("#################### ped");
+  // should be before core funcs because of changes in stream distance
+  test_ped();
 
-    altv::log!("#################### core_funcs");
-    test_core_funcs();
-    altv::log!("#################### test_base_object_funcs");
-    test_base_object_funcs();
-    altv::log!("#################### test_base_object_pool_funcs");
-    test_base_object_pool_funcs();
-    altv::log!("#################### mvalue");
-    test_mvalue();
-    altv::log!("#################### weapon_model_info");
-    test_weapon_model_info();
-    altv::log!("#################### timers");
-    test_timers();
-    altv::log!("#################### script_events");
-    test_script_events();
-    altv::log!("#################### blip");
-    test_blip();
-    altv::log!("#################### vehicle_model_info");
-    test_vehicle_model_info();
-    altv::log!("#################### resource");
-    test_resource();
-    altv::log!("#################### events");
-    test_events();
-    altv::log!("#################### error_backtrace");
-    test_error_backtrace();
+  altv::log!("#################### core_funcs");
+  test_core_funcs();
+  altv::log!("#################### test_base_object_funcs");
+  test_base_object_funcs();
+  altv::log!("#################### test_base_object_pool_funcs");
+  test_base_object_pool_funcs();
+  altv::log!("#################### mvalue");
+  test_mvalue();
+  altv::log!("#################### weapon_model_info");
+  test_weapon_model_info();
+  altv::log!("#################### timers");
+  test_timers();
+  altv::log!("#################### script_events");
+  test_script_events();
+  altv::log!("#################### blip");
+  test_blip();
+  altv::log!("#################### vehicle_model_info");
+  test_vehicle_model_info();
+  altv::log!("#################### resource");
+  test_resource();
+  altv::log!("#################### events");
+  test_events();
+  altv::log!("#################### error_backtrace");
+  test_error_backtrace();
 
-    altv::log!("#################### closest_entities");
-    test_closest_entities();
+  altv::log!("#################### closest_entities");
+  test_closest_entities();
 
-    altv::set_timeout(
+  altv::set_timeout(
+    || {
+      altv::log!("#################### metadata_events");
+      test_metadata_events();
+
+      altv::set_timeout(
         || {
-            altv::log!("#################### metadata_events");
-            test_metadata_events();
-
-            altv::set_timeout(
-                || {
-                    altv::log!("stopping resource...");
-                    altv::Resource::current().stop().unwrap();
-                },
-                1000,
-            );
+          altv::log!("stopping resource...");
+          altv::Resource::current().stop().unwrap();
         },
-        CLOSEST_ENTITIES_TEST_TIMER,
-    );
+        1000,
+      );
+    },
+    CLOSEST_ENTITIES_TEST_TIMER,
+  );
 }

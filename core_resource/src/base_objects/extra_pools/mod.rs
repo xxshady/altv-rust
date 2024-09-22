@@ -1,8 +1,8 @@
 use std::rc::Rc;
 
 use super::{
-    base_impl::inherit_ptrs::BaseObjectInheritPtrs, object, objects::AnyBaseObject, ped, player,
-    vehicle, BaseObjectContainer,
+  base_impl::inherit_ptrs::BaseObjectInheritPtrs, object, objects::AnyBaseObject, ped, player,
+  vehicle, BaseObjectContainer,
 };
 use crate::SomeResult;
 

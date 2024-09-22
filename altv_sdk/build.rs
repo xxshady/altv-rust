@@ -1,246 +1,247 @@
 use std::fs;
 
 fn main() {
-    let out_dir = std::env::var("OUT_DIR").unwrap();
-    generate_cpp_to_rust_bindings(&out_dir);
-    build_rust();
+  let out_dir = std::env::var("OUT_DIR").unwrap();
+  generate_cpp_to_rust_bindings(&out_dir);
+  build_rust();
 }
 
 fn generate_cpp_to_rust_bindings(out_dir: &str) {
-    let hash = get_sdk_hash();
-    write_sdk_hash(hash, out_dir);
+  let hash = get_sdk_hash();
+  write_sdk_hash(hash, out_dir);
 
-    generate_rust_enum_from_cpp(
-        "BaseObjectType",
-        "u8",
-        "cpp-sdk/objects/IBaseObject.h",
-        "enum class Type : uint8_t",
-        "base_object_type.rs",
-        out_dir,
-    );
+  generate_rust_enum_from_cpp(
+    "BaseObjectType",
+    "u8",
+    "cpp-sdk/objects/IBaseObject.h",
+    "enum class Type : uint8_t",
+    "base_object_type.rs",
+    out_dir,
+  );
 
-    generate_rust_enum_from_cpp(
-        "EventType",
-        "u16",
-        "cpp-sdk/events/CEvent.h",
-        "enum class Type : uint16_t",
-        "event_type.rs",
-        out_dir,
-    );
+  generate_rust_enum_from_cpp(
+    "EventType",
+    "u16",
+    "cpp-sdk/events/CEvent.h",
+    "enum class Type : uint16_t",
+    "event_type.rs",
+    out_dir,
+  );
 
-    generate_rust_enum_from_cpp(
-        "MValueType",
-        "u8",
-        "cpp-sdk/types/MValue.h",
-        "enum class Type : uint8_t",
-        "mvalue_type.rs",
-        out_dir,
-    );
+  generate_rust_enum_from_cpp(
+    "MValueType",
+    "u8",
+    "cpp-sdk/types/MValue.h",
+    "enum class Type : uint8_t",
+    "mvalue_type.rs",
+    out_dir,
+  );
 
-    generate_rust_enum_from_cpp(
-        "ColShapeType",
-        "u8",
-        "cpp-sdk/script-objects/IColShape.h",
-        "enum class ColShapeType : uint8_t",
-        "col_shape_type.rs",
-        out_dir,
-    );
+  generate_rust_enum_from_cpp(
+    "ColShapeType",
+    "u8",
+    "cpp-sdk/script-objects/IColShape.h",
+    "enum class ColShapeType : uint8_t",
+    "col_shape_type.rs",
+    out_dir,
+  );
 
-    generate_rust_enum_from_cpp(
-        "BlipType",
-        "u8",
-        "cpp-sdk/script-objects/IBlip.h",
-        "enum class BlipType",
-        "blip_type.rs",
-        out_dir,
-    );
+  generate_rust_enum_from_cpp(
+    "BlipType",
+    "u8",
+    "cpp-sdk/script-objects/IBlip.h",
+    "enum class BlipType",
+    "blip_type.rs",
+    out_dir,
+  );
 
-    generate_rust_enum_from_cpp(
-        "MarkerType",
-        "u32",
-        "cpp-sdk/script-objects/IMarker.h",
-        "enum class MarkerType",
-        "marker_type.rs",
-        out_dir,
-    );
+  generate_rust_enum_from_cpp(
+    "MarkerType",
+    "u32",
+    "cpp-sdk/script-objects/IMarker.h",
+    "enum class MarkerType",
+    "marker_type.rs",
+    out_dir,
+  );
 
-    generate_rust_enum_from_cpp(
-        "PlayerBodyPart",
-        "i8",
-        "cpp-sdk/events/CWeaponDamageEvent.h",
-        "enum class BodyPart : int8_t",
-        "player_body_part.rs",
-        out_dir,
-    );
+  generate_rust_enum_from_cpp(
+    "PlayerBodyPart",
+    "i8",
+    "cpp-sdk/events/CWeaponDamageEvent.h",
+    "enum class BodyPart : int8_t",
+    "player_body_part.rs",
+    out_dir,
+  );
 
-    generate_rust_enum_from_cpp(
-        "PlayerConnectDeniedReason",
-        "u8",
-        "cpp-sdk/events/CPlayerConnectDeniedEvent.h",
-        "enum Reason: uint8_t",
-        "player_connect_denied_reason.rs",
-        out_dir,
-    );
+  generate_rust_enum_from_cpp(
+    "PlayerConnectDeniedReason",
+    "u8",
+    "cpp-sdk/events/CPlayerConnectDeniedEvent.h",
+    "enum Reason: uint8_t",
+    "player_connect_denied_reason.rs",
+    out_dir,
+  );
 
-    generate_rust_enum_from_cpp(
-        "ExplosionType",
-        "i8",
-        "cpp-sdk/events/CExplosionEvent.h",
-        "enum class ExplosionType : int8_t",
-        "explosion_type.rs",
-        out_dir,
-    );
+  generate_rust_enum_from_cpp(
+    "ExplosionType",
+    "i8",
+    "cpp-sdk/events/CExplosionEvent.h",
+    "enum class ExplosionType : int8_t",
+    "explosion_type.rs",
+    out_dir,
+  );
 
-    generate_rust_enum_from_cpp(
-        "VehicleModelType",
-        "u8",
-        "cpp-sdk/types/VehicleModelInfo.h",
-        "enum class Type : uint8_t",
-        "vehicle_model_type.rs",
-        out_dir,
-    );
+  generate_rust_enum_from_cpp(
+    "VehicleModelType",
+    "u8",
+    "cpp-sdk/types/VehicleModelInfo.h",
+    "enum class Type : uint8_t",
+    "vehicle_model_type.rs",
+    out_dir,
+  );
 
-    generate_rust_enum_from_cpp(
-        "ConfigValueType",
-        "u8",
-        "cpp-sdk/deps/ConfigBase.h",
-        "enum class Type : uint8_t",
-        "config_value_type.rs",
-        out_dir,
-    );
+  generate_rust_enum_from_cpp(
+    "ConfigValueType",
+    "u8",
+    "cpp-sdk/deps/ConfigBase.h",
+    "enum class Type : uint8_t",
+    "config_value_type.rs",
+    out_dir,
+  );
 
-    generate_rust_enum_from_cpp(
-        "AmmoSpecialType",
-        "u32",
-        "cpp-sdk/types/AmmoSpecialType.h",
-        "enum class AmmoSpecialType : uint32_t",
-        "ammo_special_type.rs",
-        out_dir,
-    );
+  generate_rust_enum_from_cpp(
+    "AmmoSpecialType",
+    "u32",
+    "cpp-sdk/types/AmmoSpecialType.h",
+    "enum class AmmoSpecialType : uint32_t",
+    "ammo_special_type.rs",
+    out_dir,
+  );
 
-    generate_rust_enum_from_cpp(
-        "VoiceConnectionState",
-        "u8",
-        "cpp-sdk/events/CVoiceConnectionEvent.h",
-        "enum class State: uint8_t",
-        "voice_connection_state.rs",
-        out_dir,
-    );
+  generate_rust_enum_from_cpp(
+    "VoiceConnectionState",
+    "u8",
+    "cpp-sdk/events/CVoiceConnectionEvent.h",
+    "enum class State: uint8_t",
+    "voice_connection_state.rs",
+    out_dir,
+  );
 
-    generate_rust_enum_from_cpp(
-        "CloudAuthResult",
-        "u8",
-        "cpp-sdk/types/CloudAuthResult.h",
-        "enum class CloudAuthResult : uint8_t",
-        "cloud_auth_result.rs",
-        out_dir,
-    );
+  generate_rust_enum_from_cpp(
+    "CloudAuthResult",
+    "u8",
+    "cpp-sdk/types/CloudAuthResult.h",
+    "enum class CloudAuthResult : uint8_t",
+    "cloud_auth_result.rs",
+    out_dir,
+  );
 
-    generate_rust_enum_from_cpp(
-        "Benefit",
-        "u8",
-        "cpp-sdk/types/Benefit.h",
-        "enum class Benefit : uint8_t",
-        "benefit.rs",
-        out_dir,
-    );
+  generate_rust_enum_from_cpp(
+    "Benefit",
+    "u8",
+    "cpp-sdk/types/Benefit.h",
+    "enum class Benefit : uint8_t",
+    "benefit.rs",
+    out_dir,
+  );
 }
 
 fn build_rust() {
-    let path = std::path::PathBuf::from("src");
+  let path = std::path::PathBuf::from("src");
 
-    let mut build = autocxx_build::Builder::new("src/lib.rs", [&path])
-        .extra_clang_args(&["-std=c++20"])
-        .build()
-        .unwrap();
+  let mut build = autocxx_build::Builder::new("src/lib.rs", [&path])
+    .extra_clang_args(&["-std=c++20"])
+    .build()
+    .unwrap();
 
-    let flags = if cfg!(target_os = "windows") {
-        ["/std:c++20"]
-    } else if cfg!(target_os = "linux") {
-        ["-std=c++2a"]
-    } else {
-        panic!("unsupported target_os");
-    };
+  let flags = if cfg!(target_os = "windows") {
+    ["/std:c++20"]
+  } else if cfg!(target_os = "linux") {
+    ["-std=c++2a"]
+  } else {
+    panic!("unsupported target_os");
+  };
 
-    for flag in flags {
-        build.flag(flag);
-    }
+  for flag in flags {
+    build.flag(flag);
+  }
 
-    build.compile("altv_sdk");
+  build.compile("altv_sdk");
 }
 
 fn generate_rust_enum_from_cpp(
-    enum_name: &str,
-    enum_type: &str,
-    path: &str,
-    str_to_find: &str,
-    write_to: &str,
-    out_dir: &str,
+  enum_name: &str,
+  enum_type: &str,
+  path: &str,
+  str_to_find: &str,
+  write_to: &str,
+  out_dir: &str,
 ) {
-    let content = String::from_utf8(fs::read(path).unwrap()).unwrap();
-    let idx = content.find(str_to_find).unwrap();
+  let content = String::from_utf8(fs::read(path).unwrap()).unwrap();
+  let idx = content.find(str_to_find).unwrap();
 
-    let mut open_brace = false;
-    let mut start_idx = 0;
-    let mut end_idx = 0;
-    let chars = content.get(idx..).unwrap().as_bytes();
+  let mut open_brace = false;
+  let mut start_idx = 0;
+  let mut end_idx = 0;
+  let chars = content.get(idx..).unwrap().as_bytes();
 
-    for (idx, char) in chars.iter().enumerate() {
-        if open_brace {
-            if *char == b'}' {
-                end_idx = idx - 1;
-                break;
-            }
+  for (idx, char) in chars.iter().enumerate() {
+    if open_brace {
+      if *char == b'}' {
+        end_idx = idx - 1;
+        break;
+      }
 
-            continue;
-        }
-
-        if *char == b'{' {
-            open_brace = true;
-            start_idx = idx + 1;
-        }
+      continue;
     }
 
-    if !open_brace {
-        panic!("cannot find open brace of {str_to_find:?}")
+    if *char == b'{' {
+      open_brace = true;
+      start_idx = idx + 1;
     }
+  }
 
-    let mut try_from_variants = vec![];
-    let mut result_string = String::from_utf8_lossy(&chars[start_idx..=end_idx])
-        .split('\n')
-        .filter_map(|val| {
-            val.get(2..)
-                .map(|v| v.trim())
-                .and_then(|v| if v.is_empty() { None } else { Some(v) })
-        })
-        .map(|v| {
-            let pascal_case_variant = upper_to_pascal_case(v);
+  if !open_brace {
+    panic!("cannot find open brace of {str_to_find:?}")
+  }
 
-            if !pascal_case_variant.starts_with("//") {
-                let v = pascal_case_variant.split(',').next().unwrap().to_string();
-                let v = v.split(' ').next().unwrap().to_string();
-                try_from_variants.push(v);
-            }
+  let mut try_from_variants = vec![];
+  let mut result_string = String::from_utf8_lossy(&chars[start_idx..=end_idx])
+    .split('\n')
+    .filter_map(|val| {
+      val
+        .get(2..)
+        .map(|v| v.trim())
+        .and_then(|v| if v.is_empty() { None } else { Some(v) })
+    })
+    .map(|v| {
+      let pascal_case_variant = upper_to_pascal_case(v);
 
-            format!("    {}", pascal_case_variant)
-        })
-        .collect::<Vec<String>>()
-        .join("\n");
+      if !pascal_case_variant.starts_with("//") {
+        let v = pascal_case_variant.split(',').next().unwrap().to_string();
+        let v = v.split(' ').next().unwrap().to_string();
+        try_from_variants.push(v);
+      }
 
-    if result_string.ends_with(',') {
-        result_string.remove(result_string.len() - 1);
-    }
+      format!("    {}", pascal_case_variant)
+    })
+    .collect::<Vec<String>>()
+    .join("\n");
 
-    let try_from_variants = try_from_variants
-        .into_iter()
-        .map(|v| format!("    v if v == Self::{v} as {enum_type} => Self::{v},"))
-        .collect::<Vec<String>>()
-        .join("\n");
+  if result_string.ends_with(',') {
+    result_string.remove(result_string.len() - 1);
+  }
 
-    fs::write(
-        format!("{out_dir}/{write_to}"),
-        format!(
-            "// auto-generated from build.rs\n\n\
+  let try_from_variants = try_from_variants
+    .into_iter()
+    .map(|v| format!("    v if v == Self::{v} as {enum_type} => Self::{v},"))
+    .collect::<Vec<String>>()
+    .join("\n");
+
+  fs::write(
+    format!("{out_dir}/{write_to}"),
+    format!(
+      "// auto-generated from build.rs\n\n\
             #[repr(C)]
             #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
             pub enum {enum_name} {{\n\
@@ -257,51 +258,51 @@ fn generate_rust_enum_from_cpp(
                 }}\n\
             }}\n\
             ",
-        ),
-    )
-    .unwrap();
+    ),
+  )
+  .unwrap();
 }
 
 fn upper_to_pascal_case(s: &str) -> String {
-    let mut result = String::new();
-    let mut chars = s.chars();
-    result.push(chars.next().unwrap().to_ascii_uppercase());
+  let mut result = String::new();
+  let mut chars = s.chars();
+  result.push(chars.next().unwrap().to_ascii_uppercase());
 
-    let mut next_char_upper = false;
-    for c in chars {
-        if next_char_upper {
-            next_char_upper = false;
-            result.push(c.to_ascii_uppercase());
-            continue;
-        }
-
-        if c == '_' {
-            next_char_upper = true;
-            continue;
-        }
-
-        result.push(c.to_ascii_lowercase());
+  let mut next_char_upper = false;
+  for c in chars {
+    if next_char_upper {
+      next_char_upper = false;
+      result.push(c.to_ascii_uppercase());
+      continue;
     }
-    result
+
+    if c == '_' {
+      next_char_upper = true;
+      continue;
+    }
+
+    result.push(c.to_ascii_lowercase());
+  }
+  result
 }
 
 fn get_sdk_hash() -> String {
-    const SDH_HASH_STRING_START: &str = "ALT_SDK_VERSION \"";
+  const SDH_HASH_STRING_START: &str = "ALT_SDK_VERSION \"";
 
-    let content = fs::read("cpp-sdk-version.h").unwrap();
-    let content = String::from_utf8_lossy(&content[..]).to_string();
+  let content = fs::read("cpp-sdk-version.h").unwrap();
+  let content = String::from_utf8_lossy(&content[..]).to_string();
 
-    let idx = content.find(SDH_HASH_STRING_START).unwrap();
-    let start_of_hash = idx + SDH_HASH_STRING_START.len();
-    let end_of_hash = start_of_hash + 7;
+  let idx = content.find(SDH_HASH_STRING_START).unwrap();
+  let start_of_hash = idx + SDH_HASH_STRING_START.len();
+  let end_of_hash = start_of_hash + 7;
 
-    content[start_of_hash..end_of_hash].to_string()
+  content[start_of_hash..end_of_hash].to_string()
 }
 
 fn write_sdk_hash(hash: String, out_dir: &str) {
-    fs::write(
-        format!("{out_dir}/cpp_sdk_version.rs"),
-        format!("pub const ALT_SDK_VERSION: &[u8; 8usize] = b\"{hash}\\0\";"),
-    )
-    .unwrap();
+  fs::write(
+    format!("{out_dir}/cpp_sdk_version.rs"),
+    format!("pub const ALT_SDK_VERSION: &[u8; 8usize] = b\"{hash}\\0\";"),
+  )
+  .unwrap();
 }

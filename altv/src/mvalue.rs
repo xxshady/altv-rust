@@ -191,6 +191,6 @@
 //! # Ok(()) }
 //! ```
 pub use core_resource::exports::mvalue::{
-    AnyMValue, from_mvalue, from_mvalue_slice, to_mvalue, ConstMValue, DeserializeMValueArgs,
-    DynMValue, DynMValueArgs, Error,
+  AnyMValue, from_mvalue, from_mvalue_slice, to_mvalue, ConstMValue, DeserializeMValueArgs,
+  DynMValue, DynMValueArgs, Error,
 };

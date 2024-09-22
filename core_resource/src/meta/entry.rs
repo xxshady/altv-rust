@@ -5,16 +5,16 @@ use super::global::{GlobalMetaEntry, GlobalSyncedMetaEntry};
 use crate::{sdk, SomeResult, VoidResult};
 
 pub trait MetaEntry<V: Serialize + DeserializeOwned> {
-    fn has(&self) -> bool;
-    fn get(&self) -> SomeResult<Option<V>>;
+  fn has(&self) -> bool;
+  fn get(&self) -> SomeResult<Option<V>>;
 
-    /// Ensures a value is in the entry by setting provided `value` if empty,
-    /// and returns the value in the entry.<br>
-    /// Similar to [`or_insert`](https://doc.rust-lang.org/std/collections/hash_map/enum.Entry.html#method.or_insert) of HashMap.
-    fn get_or_set(&self, value: V) -> SomeResult<V>;
+  /// Ensures a value is in the entry by setting provided `value` if empty,
+  /// and returns the value in the entry.<br>
+  /// Similar to [`or_insert`](https://doc.rust-lang.org/std/collections/hash_map/enum.Entry.html#method.or_insert) of HashMap.
+  fn get_or_set(&self, value: V) -> SomeResult<V>;
 
-    fn set(&self, value: &V) -> VoidResult;
-    fn delete(&self);
+  fn set(&self, value: &V) -> VoidResult;
+  fn delete(&self);
 }
 
 macro_rules! impl_global_meta_entry {

@@ -1,9 +1,9 @@
 use std::ptr::NonNull;
 
 use crate::{
-    base_objects::{connection_info, vehicle, AnyBaseObject},
-    resource::Resource,
-    sdk,
+  base_objects::{connection_info, vehicle, AnyBaseObject},
+  resource::Resource,
+  sdk,
 };
 
 #[macro_export]
@@ -19,45 +19,45 @@ macro_rules! __base_event_to_specific {
 pub use __base_event_to_specific as base_event_to_specific;
 
 pub fn get_vehicle_from_event(
-    ptr: *mut sdk::alt::IVehicle,
-    resource: &Resource,
+  ptr: *mut sdk::alt::IVehicle,
+  resource: &Resource,
 ) -> vehicle::VehicleContainer {
-    let ptr = NonNull::new(ptr).unwrap();
+  let ptr = NonNull::new(ptr).unwrap();
 
-    resource
-        .base_objects
-        .borrow()
-        .vehicle
-        .get_by_ptr(ptr)
-        .unwrap()
+  resource
+    .base_objects
+    .borrow()
+    .vehicle
+    .get_by_ptr(ptr)
+    .unwrap()
 }
 
 pub fn get_non_null_base_object_from_event(
-    ptr: altv_sdk::BaseObjectRawMutPtr,
-    resource: &Resource,
+  ptr: altv_sdk::BaseObjectRawMutPtr,
+  resource: &Resource,
 ) -> AnyBaseObject {
-    get_base_object_from_event(ptr, resource).unwrap()
+  get_base_object_from_event(ptr, resource).unwrap()
 }
 
 pub fn get_base_object_from_event(
-    ptr: altv_sdk::BaseObjectRawMutPtr,
-    resource: &Resource,
+  ptr: altv_sdk::BaseObjectRawMutPtr,
+  resource: &Resource,
 ) -> Option<AnyBaseObject> {
-    let ptr = NonNull::new(ptr)?;
-    let base_object = resource.base_objects.borrow().get_by_ptr(ptr).unwrap();
-    Some(base_object)
+  let ptr = NonNull::new(ptr)?;
+  let base_object = resource.base_objects.borrow().get_by_ptr(ptr).unwrap();
+  Some(base_object)
 }
 
 pub fn get_connection_info_from_event(
-    ptr: *mut sdk::alt::IConnectionInfo,
-    resource: &Resource,
+  ptr: *mut sdk::alt::IConnectionInfo,
+  resource: &Resource,
 ) -> connection_info::ConnectionInfoContainer {
-    let ptr = NonNull::new(ptr).unwrap();
+  let ptr = NonNull::new(ptr).unwrap();
 
-    resource
-        .base_objects
-        .borrow()
-        .connection_info
-        .get_by_ptr(ptr)
-        .unwrap()
+  resource
+    .base_objects
+    .borrow()
+    .connection_info
+    .get_by_ptr(ptr)
+    .unwrap()
 }

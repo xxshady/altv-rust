@@ -6,9 +6,9 @@ use serde::Deserialize;
 use serde_bytes::ByteBuf;
 
 use crate::{
-    base_objects::AnyBaseObject,
-    rgba::Rgba,
-    vector::{Vector2, Vector3},
+  base_objects::AnyBaseObject,
+  rgba::Rgba,
+  vector::{Vector2, Vector3},
 };
 
 /// An enum that maps alt:V [SDK MValue](https://docs.altv.mp/sdk/mvalues.html) to Rust types as closely as possible.
@@ -44,30 +44,30 @@ use crate::{
 #[derive(Debug, Deserialize)]
 #[serde(rename = "___altv_any_enum_mvalue")] // see ANY_MVALUE_ENUM in mvalue crate
 pub enum AnyMValue {
-    None,
-    Nil,
-    Bool(bool),
-    Int(i64),
-    UInt(u64),
-    Double(f64),
-    String(String),
-    List(Vec<AnyMValue>),
-    Dict(HashMap<String, AnyMValue>),
-    BaseObject(AnyBaseObject),
-    /// Not supported (yet?)
-    Function,
-    Vector3(Vector3),
-    Rgba(Rgba),
-    ByteArray(ByteBuf),
-    Vector2(Vector2),
+  None,
+  Nil,
+  Bool(bool),
+  Int(i64),
+  UInt(u64),
+  Double(f64),
+  String(String),
+  List(Vec<AnyMValue>),
+  Dict(HashMap<String, AnyMValue>),
+  BaseObject(AnyBaseObject),
+  /// Not supported (yet?)
+  Function,
+  Vector3(Vector3),
+  Rgba(Rgba),
+  ByteArray(ByteBuf),
+  Vector2(Vector2),
 }
 
 impl AnyMValue {
-    pub fn as_f64(&self) -> SomeResult<f64> {
-        match self {
-            AnyMValue::Double(v) => Ok(*v),
-            AnyMValue::Int(v) => Ok(*v as _),
-            _ => bail!("Expected AnyMValue::Double or AnyMValue::Int, received: {self:?}"),
-        }
+  pub fn as_f64(&self) -> SomeResult<f64> {
+    match self {
+      AnyMValue::Double(v) => Ok(*v),
+      AnyMValue::Int(v) => Ok(*v as _),
+      _ => bail!("Expected AnyMValue::Double or AnyMValue::Int, received: {self:?}"),
     }
+  }
 }

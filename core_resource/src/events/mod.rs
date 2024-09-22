@@ -10,15 +10,15 @@ mod cancellable;
 pub mod structs;
 
 macro_rules! log_user_handler_error {
-    ($event_name:expr, $result:expr) => {
-        if let Err(err) = $result {
-            logger::error!(
-                "handler of event {:?} failed with error: {:?}",
-                stringify!($event_name),
-                err
-            );
-        }
-    };
+  ($event_name:expr, $result:expr) => {
+    if let Err(err) = $result {
+      logger::error!(
+        "handler of event {:?} failed with error: {:?}",
+        stringify!($event_name),
+        err
+      );
+    }
+  };
 }
 
 macro_rules! supported_sdk_events {
@@ -224,57 +224,57 @@ macro_rules! custom_events {
 }
 
 supported_sdk_events!(
-    ServerStarted,
-    ResourceStart,
-    ResourceStop,
-    ColshapeEvent,
-    ServerScriptEvent,
-    ClientScriptEvent,
-    ConsoleCommandEvent,
-    NetownerChange,
-    PlayerConnect,
-    PlayerDisconnect,
-    WeaponDamageEvent,
-    PlayerDeath,
-    PlayerDamage,
-    PlayerEnteringVehicle,
-    PlayerEnterVehicle,
-    PlayerLeaveVehicle,
-    PlayerChangeVehicleSeat,
-    PlayerWeaponChange,
-    PlayerConnectDenied,
-    PlayerSpawn,
-    PlayerRequestControl,
-    PlayerDimensionChange,
-    PlayerChangeInteriorEvent,
-    PlayerHeal,
-    VehicleAttach,
-    VehicleDetach,
-    VehicleDestroy,
-    VehicleDamage,
-    VehicleHorn,
-    VehicleSiren,
-    StartProjectileEvent,
-    FireEvent,
-    ExplosionEvent,
-    ConnectionQueueAdd,
-    ConnectionQueueRemove,
-    GlobalMetaChange,
-    GlobalSyncedMetaChange,
-    SyncedMetaChange,
-    StreamSyncedMetaChange,
-    LocalSyncedMetaChange,
-    VoiceConnectionEvent,
-    RequestSyncedScene,
-    StartSyncedScene,
-    StopSyncedScene,
-    UpdateSyncedScene,
-    ClientDeleteObjectEvent,
-    ClientRequestObjectEvent,
-    PedDeath,
-    GivePedScriptedTask,
-    PedDamage,
-    PedHeal,
+  ServerStarted,
+  ResourceStart,
+  ResourceStop,
+  ColshapeEvent,
+  ServerScriptEvent,
+  ClientScriptEvent,
+  ConsoleCommandEvent,
+  NetownerChange,
+  PlayerConnect,
+  PlayerDisconnect,
+  WeaponDamageEvent,
+  PlayerDeath,
+  PlayerDamage,
+  PlayerEnteringVehicle,
+  PlayerEnterVehicle,
+  PlayerLeaveVehicle,
+  PlayerChangeVehicleSeat,
+  PlayerWeaponChange,
+  PlayerConnectDenied,
+  PlayerSpawn,
+  PlayerRequestControl,
+  PlayerDimensionChange,
+  PlayerChangeInteriorEvent,
+  PlayerHeal,
+  VehicleAttach,
+  VehicleDetach,
+  VehicleDestroy,
+  VehicleDamage,
+  VehicleHorn,
+  VehicleSiren,
+  StartProjectileEvent,
+  FireEvent,
+  ExplosionEvent,
+  ConnectionQueueAdd,
+  ConnectionQueueRemove,
+  GlobalMetaChange,
+  GlobalSyncedMetaChange,
+  SyncedMetaChange,
+  StreamSyncedMetaChange,
+  LocalSyncedMetaChange,
+  VoiceConnectionEvent,
+  RequestSyncedScene,
+  StartSyncedScene,
+  StopSyncedScene,
+  UpdateSyncedScene,
+  ClientDeleteObjectEvent,
+  ClientRequestObjectEvent,
+  PedDeath,
+  GivePedScriptedTask,
+  PedDamage,
+  PedHeal,
 );
 
 custom_events!(
@@ -299,107 +299,111 @@ custom_events!(
 
 #[derive(Default, Debug)]
 pub struct EventManager {
-    user_sdk_handlers: HashMap<SupportedEventType, Vec<SDKHandler>>,
-    user_custom_handlers: HashMap<CustomEventType, Vec<CustomHandler>>,
+  user_sdk_handlers: HashMap<SupportedEventType, Vec<SDKHandler>>,
+  user_custom_handlers: HashMap<CustomEventType, Vec<CustomHandler>>,
 }
 
 impl EventManager {
-    pub fn on_sdk_event(
-        &mut self,
-        sdk_event_type: SDKEventType,
-        event: altv_sdk::CEventPtr,
-        resource: &Resource,
-    ) {
-        match SupportedEventType::try_from(sdk_event_type) {
-            Err(err) => logger::error!("{:?}", err),
-            Ok(event_type) => self.on_supported_sdk_event(event_type, event, resource),
-        };
+  pub fn on_sdk_event(
+    &mut self,
+    sdk_event_type: SDKEventType,
+    event: altv_sdk::CEventPtr,
+    resource: &Resource,
+  ) {
+    match SupportedEventType::try_from(sdk_event_type) {
+      Err(err) => logger::error!("{:?}", err),
+      Ok(event_type) => self.on_supported_sdk_event(event_type, event, resource),
+    };
+  }
+
+  pub fn on_supported_sdk_event(
+    &mut self,
+    event_type: SupportedEventType,
+    event_ptr: altv_sdk::CEventPtr,
+    resource: &Resource,
+  ) {
+    let context = sdk_context_from_supported_event_type(event_type, event_ptr, resource);
+
+    if let Some(handlers) = self.user_sdk_handlers.get_mut(&event_type) {
+      call_user_sdk_handlers(&context, handlers);
+    } else {
+      logger::debug!("no user sdk handlers for event: {event_type:?}");
     }
 
-    pub fn on_supported_sdk_event(
-        &mut self,
-        event_type: SupportedEventType,
-        event_ptr: altv_sdk::CEventPtr,
-        resource: &Resource,
-    ) {
-        let context = sdk_context_from_supported_event_type(event_type, event_ptr, resource);
+    self.handle_custom_event_type(event_type, context, resource);
+  }
 
-        if let Some(handlers) = self.user_sdk_handlers.get_mut(&event_type) {
-            call_user_sdk_handlers(&context, handlers);
-        } else {
-            logger::debug!("no user sdk handlers for event: {event_type:?}");
-        }
+  fn handle_custom_event_type(
+    &mut self,
+    event_type: SupportedEventType,
+    context: SDKContext,
+    resource: &Resource,
+  ) {
+    let Some(custom_types) = get_custom_event_types_from_sdk_type(event_type) else {
+      logger::debug!("no custom sdk handlers for event: {event_type:?}");
+      return;
+    };
 
-        self.handle_custom_event_type(event_type, context, resource);
+    for custom_type in custom_types {
+      let Some(handlers) = self.user_custom_handlers.get_mut(custom_type) else {
+        logger::debug!("user sdk event: {event_type:?} is unhandled");
+        continue;
+      };
+
+      let context = custom_context_from_event_type(*custom_type, &context, resource);
+      let Some(context) = context else {
+        logger::debug!(
+          "custom event: {custom_type:?} context does not exist or event should not be called now"
+        );
+        continue;
+      };
+
+      call_user_custom_handlers(&context, handlers);
     }
+  }
 
-    fn handle_custom_event_type(
-        &mut self,
-        event_type: SupportedEventType,
-        context: SDKContext,
-        resource: &Resource,
-    ) {
-        let Some(custom_types) = get_custom_event_types_from_sdk_type(event_type) else {
-            logger::debug!("no custom sdk handlers for event: {event_type:?}");
-            return;
-        };
+  pub fn add_sdk_handler(&mut self, handler: SDKHandler) {
+    let event_type = handler.to_event_type();
+    self
+      .user_sdk_handlers
+      .entry(event_type)
+      .or_default()
+      .push(handler);
 
-        for custom_type in custom_types {
-            let Some(handlers) = self.user_custom_handlers.get_mut(custom_type) else {
-                logger::debug!("user sdk event: {event_type:?} is unhandled");
-                continue;
-            };
+    self.toggle_sdk_event(event_type, true);
+  }
 
-            let context = custom_context_from_event_type(*custom_type, &context, resource);
-            let Some(context) = context else {
-                logger::debug!("custom event: {custom_type:?} context does not exist or event should not be called now");
-                continue;
-            };
+  pub fn add_custom_handler(&mut self, handler: CustomHandler) {
+    let custom_event_type = handler.to_event_type();
 
-            call_user_custom_handlers(&context, handlers);
-        }
-    }
+    self
+      .user_custom_handlers
+      .entry(custom_event_type)
+      .or_default()
+      .push(handler);
 
-    pub fn add_sdk_handler(&mut self, handler: SDKHandler) {
-        let event_type = handler.to_event_type();
-        self.user_sdk_handlers
-            .entry(event_type)
-            .or_default()
-            .push(handler);
+    self.toggle_sdk_event(custom_event_type.into(), true);
+  }
 
-        self.toggle_sdk_event(event_type, true);
-    }
-
-    pub fn add_custom_handler(&mut self, handler: CustomHandler) {
-        let custom_event_type = handler.to_event_type();
-
-        self.user_custom_handlers
-            .entry(custom_event_type)
-            .or_default()
-            .push(handler);
-
-        self.toggle_sdk_event(custom_event_type.into(), true);
-    }
-
-    fn toggle_sdk_event(&self, event_type: SupportedEventType, state: bool) {
-        Resource::with(|r| {
-            (r.module_handlers.toggle_event_type)(
-                CString::new(r.name.clone()).unwrap(),
-                event_type.into(),
-                state,
-            );
-        });
-    }
+  fn toggle_sdk_event(&self, event_type: SupportedEventType, state: bool) {
+    Resource::with(|r| {
+      (r.module_handlers.toggle_event_type)(
+        CString::new(r.name.clone()).unwrap(),
+        event_type.into(),
+        state,
+      );
+    });
+  }
 }
 
 pub fn add_sdk_handler(handler: SDKHandler) {
-    Resource::with_events_mut(|mut events, _| {
-        events.add_sdk_handler(handler);
-    });
+  Resource::with_events_mut(|mut events, _| {
+    events.add_sdk_handler(handler);
+  });
 }
 
 pub fn add_custom_handler(handler: CustomHandler) {
-    Resource::with_events_mut(|mut events, _| {
-        events.add_custom_handler(handler);
-    });
+  Resource::with_events_mut(|mut events, _| {
+    events.add_custom_handler(handler);
+  });
 }

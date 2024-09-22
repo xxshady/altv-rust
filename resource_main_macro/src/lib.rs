@@ -37,52 +37,52 @@ type AttributeArgs = syn::punctuated::Punctuated<syn::NestedMeta, syn::Token![,]
 /// ```
 #[proc_macro_attribute]
 pub fn resource_main_func(args: TokenStream, input: TokenStream) -> TokenStream {
-    let input = syn::parse_macro_input!(input as ItemFn);
-    let ItemFn {
-        attrs,
-        vis: _,
-        sig: _sig,
-        block,
-    } = input;
-    let statements = &block.stmts;
+  let input = syn::parse_macro_input!(input as ItemFn);
+  let ItemFn {
+    attrs,
+    vis: _,
+    sig: _sig,
+    block,
+  } = input;
+  let statements = &block.stmts;
 
-    let args = AttributeArgs::parse_terminated.parse(args).unwrap();
+  let args = AttributeArgs::parse_terminated.parse(args).unwrap();
 
-    let mut crate_name = String::from("altv");
+  let mut crate_name = String::from("altv");
 
-    for arg in args {
-        match arg {
-            syn::NestedMeta::Meta(syn::Meta::NameValue(name_value)) => {
-                let ident = name_value
-                    .path
-                    .get_ident()
-                    .expect(".path.get_ident()")
-                    .to_string()
-                    .to_lowercase();
-                match ident.as_str() {
-                    "crate_name" => {
-                        if let syn::Lit::Str(s) = name_value.lit {
-                            let path = s.parse::<syn::Path>().expect("s.parse::<syn::Path>()");
-                            let ident = path
-                                .get_ident()
-                                .cloned()
-                                .expect("path.get_ident().cloned()");
-                            crate_name = ident.to_string();
-                        } else {
-                            panic!("crate attr is not syn::Lit::Str");
-                        }
-                    }
-                    ident => panic!("unknown arg: {ident}"),
-                }
+  for arg in args {
+    match arg {
+      syn::NestedMeta::Meta(syn::Meta::NameValue(name_value)) => {
+        let ident = name_value
+          .path
+          .get_ident()
+          .expect(".path.get_ident()")
+          .to_string()
+          .to_lowercase();
+        match ident.as_str() {
+          "crate_name" => {
+            if let syn::Lit::Str(s) = name_value.lit {
+              let path = s.parse::<syn::Path>().expect("s.parse::<syn::Path>()");
+              let ident = path
+                .get_ident()
+                .cloned()
+                .expect("path.get_ident().cloned()");
+              crate_name = ident.to_string();
+            } else {
+              panic!("crate attr is not syn::Lit::Str");
             }
-            _ => panic!("invalid arg"),
+          }
+          ident => panic!("unknown arg: {ident}"),
         }
+      }
+      _ => panic!("invalid arg"),
     }
+  }
 
-    let crate_name_ident = syn::Ident::new(&crate_name, Span::call_site());
-    let resource_version = env!("CARGO_PKG_VERSION");
+  let crate_name_ident = syn::Ident::new(&crate_name, Span::call_site());
+  let resource_version = env!("CARGO_PKG_VERSION");
 
-    quote! {
+  quote! {
         #[no_mangle]
         #(#attrs)* extern "C" fn main(
             altv_module_version: std::ffi::CString, // should always be FIRST arg for backward compatibility!!!
@@ -113,7 +113,7 @@ pub fn resource_main_func(args: TokenStream, input: TokenStream) -> TokenStream 
 
             let result = match user_code().into_void_result() {
                 Ok(()) => {
-                    true    
+                    true
                 }
                 Err(err) => {
                     #crate_name_ident::log_error!("Rust resource: {resource_name:?} main function returned error: {err:?}");    
@@ -122,7 +122,7 @@ pub fn resource_main_func(args: TokenStream, input: TokenStream) -> TokenStream 
             };
             #crate_name_ident::__internal::CBool {
                 value: result
-            }            
+            }
         }
     }
     .into()

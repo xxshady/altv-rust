@@ -58,24 +58,24 @@
 
 use core_resource::exports::{events, IntoVoidResult};
 pub use events::{
-    emit, emit_all_players, emit_all_players_unreliable, emit_some_players,
-    emit_some_players_unreliable, on, on_player, PlayerEventContext, FireInfo, LocalEventContext,
-    ScriptEventController, LocalEventController, PlayerEventController,
+  emit, emit_all_players, emit_all_players_unreliable, emit_some_players,
+  emit_some_players_unreliable, on, on_player, PlayerEventContext, FireInfo, LocalEventContext,
+  ScriptEventController, LocalEventController, PlayerEventController,
 };
 
 pub use events::custom_contexts::*;
 pub use events::sdk_contexts::*;
 
 macro_rules! on_sdk_event {
-    ($func_name:ident, $event_name:ident) => {
-        pub fn $func_name<V: IntoVoidResult>(
-            mut handler: impl FnMut(&events::sdk_contexts::$event_name) -> V + 'static,
-        ) {
-            events::add_sdk_handler(events::SDKHandler::$event_name(Box::new(move |c| {
-                handler(c).into_void_result()
-            })));
-        }
-    };
+  ($func_name:ident, $event_name:ident) => {
+    pub fn $func_name<V: IntoVoidResult>(
+      mut handler: impl FnMut(&events::sdk_contexts::$event_name) -> V + 'static,
+    ) {
+      events::add_sdk_handler(events::SDKHandler::$event_name(Box::new(move |c| {
+        handler(c).into_void_result()
+      })));
+    }
+  };
 }
 
 on_sdk_event!(on_server_started, ServerStarted);
@@ -136,15 +136,15 @@ on_sdk_event!(on_ped_damage, PedDamage);
 on_sdk_event!(on_ped_heal, PedHeal);
 
 macro_rules! on_custom_event {
-    ($func_name:ident, $event_name:ident) => {
-        pub fn $func_name<V: IntoVoidResult>(
-            mut handler: impl FnMut(&events::custom_contexts::$event_name) -> V + 'static,
-        ) {
-            events::add_custom_handler(events::CustomHandler::$event_name(Box::new(move |c| {
-                handler(c).into_void_result()
-            })));
-        }
-    };
+  ($func_name:ident, $event_name:ident) => {
+    pub fn $func_name<V: IntoVoidResult>(
+      mut handler: impl FnMut(&events::custom_contexts::$event_name) -> V + 'static,
+    ) {
+      events::add_custom_handler(events::CustomHandler::$event_name(Box::new(move |c| {
+        handler(c).into_void_result()
+      })));
+    }
+  };
 }
 
 on_custom_event!(on_vehicle_enter_col_shape, VehicleEnterColShape);

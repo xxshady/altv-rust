@@ -78,9 +78,9 @@ pub use exports::{
 };
 
 pub use altv_sdk::{
-    BaseObjectType, BlipType, ColShapeType, ExplosionType, MarkerType, PlayerBodyPart,
-    PlayerConnectDeniedReason, VehicleModelType, AmmoSpecialType, VoiceConnectionState, Benefit,
-    CloudAuthResult,
+  BaseObjectType, BlipType, ColShapeType, ExplosionType, MarkerType, PlayerBodyPart,
+  PlayerConnectDeniedReason, VehicleModelType, AmmoSpecialType, VoiceConnectionState, Benefit,
+  CloudAuthResult,
 };
 
 pub const DEFAULT_DIMENSION: i32 = 0;
@@ -173,14 +173,14 @@ pub mod prelude {
 /// # Ok(()) }
 /// ```
 pub fn set_timeout<V: IntoVoidResult>(
-    mut callback: impl FnMut() -> V + 'static,
-    millis: u64,
+  mut callback: impl FnMut() -> V + 'static,
+  millis: u64,
 ) -> Timer {
-    exports::create_timer(
-        Box::new(move || callback().into_void_result()),
-        millis,
-        true,
-    )
+  exports::create_timer(
+    Box::new(move || callback().into_void_result()),
+    millis,
+    true,
+  )
 }
 
 /// # Examples
@@ -230,30 +230,30 @@ pub fn set_timeout<V: IntoVoidResult>(
 /// # Ok(()) }
 /// ```
 pub fn set_interval<V: IntoVoidResult>(
-    mut callback: impl FnMut() -> V + 'static,
-    millis: u64,
+  mut callback: impl FnMut() -> V + 'static,
+  millis: u64,
 ) -> Timer {
-    exports::create_timer(
-        Box::new(move || callback().into_void_result()),
-        millis,
-        false,
-    )
+  exports::create_timer(
+    Box::new(move || callback().into_void_result()),
+    millis,
+    false,
+  )
 }
 
 pub use resource_main_macro::resource_main_func as main;
 // __internal is intended for resource_main_func proc macro ^
 #[doc(hidden)]
 pub mod __internal {
-    pub use super::exports::{
-        init as core_init, ModuleHandlers, ResourceHandlers, CStringResourceName, CBool,
-    };
-    pub use altv_sdk::ffi::{alt::ICore, set_alt_core};
+  pub use super::exports::{
+    init as core_init, ModuleHandlers, ResourceHandlers, CStringResourceName, CBool,
+  };
+  pub use altv_sdk::ffi::{alt::ICore, set_alt_core};
 
-    pub fn init(
-        name: CStringResourceName,
-        resource_state: &mut ResourceHandlers,
-        module_handlers: ModuleHandlers,
-    ) {
-        core_init(name, resource_state, module_handlers);
-    }
+  pub fn init(
+    name: CStringResourceName,
+    resource_state: &mut ResourceHandlers,
+    module_handlers: ModuleHandlers,
+  ) {
+    core_init(name, resource_state, module_handlers);
+  }
 }

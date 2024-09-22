@@ -5,8 +5,8 @@ use serde::{de::DeserializeOwned, Serialize};
 use crate::{helpers, sdk};
 
 pub struct GlobalMetaEntry<V: Serialize + DeserializeOwned> {
-    pub(super) key: String,
-    __type: PhantomData<V>,
+  pub(super) key: String,
+  __type: PhantomData<V>,
 }
 
 /// Provides access to read or modify global unsynced meta.
@@ -28,19 +28,19 @@ pub struct GlobalMetaEntry<V: Serialize + DeserializeOwned> {
 /// # Ok(()) }
 /// ```
 pub fn entry<V: Serialize + DeserializeOwned>(key: impl ToString) -> GlobalMetaEntry<V> {
-    GlobalMetaEntry {
-        key: key.to_string(),
-        __type: PhantomData,
-    }
+  GlobalMetaEntry {
+    key: key.to_string(),
+    __type: PhantomData,
+  }
 }
 
 pub fn keys() -> Vec<String> {
-    helpers::read_cpp_str_vec(unsafe { sdk::ICore::GetMetaDataKeys() })
+  helpers::read_cpp_str_vec(unsafe { sdk::ICore::GetMetaDataKeys() })
 }
 
 pub struct GlobalSyncedMetaEntry<V: Serialize + DeserializeOwned> {
-    pub(super) key: String,
-    __type: PhantomData<V>,
+  pub(super) key: String,
+  __type: PhantomData<V>,
 }
 
 /// Provides access to read or modify global **synced** meta of alt:V resource.
@@ -60,14 +60,14 @@ pub struct GlobalSyncedMetaEntry<V: Serialize + DeserializeOwned> {
 /// # Ok(()) }
 /// ```
 pub fn synced_entry<V: Serialize + DeserializeOwned>(
-    key: impl ToString,
+  key: impl ToString,
 ) -> GlobalSyncedMetaEntry<V> {
-    GlobalSyncedMetaEntry {
-        key: key.to_string(),
-        __type: PhantomData,
-    }
+  GlobalSyncedMetaEntry {
+    key: key.to_string(),
+    __type: PhantomData,
+  }
 }
 
 pub fn synced_keys() -> Vec<String> {
-    helpers::read_cpp_str_vec(unsafe { sdk::ICore::GetSyncedMetaDataKeys() })
+  helpers::read_cpp_str_vec(unsafe { sdk::ICore::GetSyncedMetaDataKeys() })
 }

@@ -12,11 +12,11 @@ lazy_static::lazy_static! {
 }
 
 pub unsafe fn enable() {
-    for event in REQUIRED_SDK_EVENTS.iter() {
-        ToggleEvent(*event as u16, true);
-    }
+  for event in REQUIRED_SDK_EVENTS.iter() {
+    ToggleEvent(*event as u16, true);
+  }
 }
 
 pub fn is_required(event_type: EventType) -> bool {
-    REQUIRED_SDK_EVENTS.contains(&event_type)
+  REQUIRED_SDK_EVENTS.contains(&event_type)
 }
