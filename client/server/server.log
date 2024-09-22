@@ -1,0 +1,29 @@
+[23:06:02] alt:V Server 16.2.9-rc.1 (rc)
+[23:06:02] Starting rust on [::]:7788
+[23:06:02][JSv2] Loaded JS module v2
+[23:06:02] Loading resource rust
+[23:06:02][JSv2] [JS] Compatibility mode is enabled for resource rust
+[23:06:02] Loaded resource rust
+[23:06:02] Loading resource rust-server
+[23:06:02] Loaded resource rust-server
+[23:06:02] Required server permissions:
+[23:06:02] Optional server permissions:
+[23:06:02] Starting HTTP server on [::]:7788
+[23:06:02] Main thread started (ThreadId: 8156)
+[23:06:02] EntityStreamer thread started (ThreadId: 19860)
+[23:06:02] SyncSend thread started (ThreadId: 20988)
+[23:06:02] SyncSend thread started (ThreadId: 25884)
+[23:06:02] SyncSend thread started (ThreadId: 5684)
+[23:06:02] SyncSend thread started (ThreadId: 22652)
+[23:06:02] SyncSend thread started (ThreadId: 27680)
+[23:06:02] SyncSend thread started (ThreadId: 26848)
+[23:06:02] SyncSend thread started (ThreadId: 16940)
+[23:06:02] SyncReceive thread started (ThreadId: 29764)
+[23:06:02] SyncSend thread started (ThreadId: 8144)
+[23:06:02] NetworkWorker #1 thread started (ThreadId: 24292)
+[23:06:02] SyncReceive thread started (ThreadId: 13620)
+[23:06:02] SyncReceive thread started (ThreadId: 23832)
+[23:06:02] SyncReceive thread started (ThreadId: 26752)
+[23:06:02] Console thread started (ThreadId: 22544)
+[23:06:02][Warning] Server started in debug mode
+[23:15:39] Stopping resource rust

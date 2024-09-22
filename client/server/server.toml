@@ -1,0 +1,7 @@
+name = 'rust'
+modules = ['js-module-v2', 'rust-module']
+resources = [
+  'rust',
+  'rust-server'
+]
+debug = true

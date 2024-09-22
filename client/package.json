@@ -1,0 +1,22 @@
+{
+  "name": "rust_wasm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build-wasm": "cd rust_wasm && wasm-pack build --dev --target no-modules",
+    "generate-sourcemap": "cargo wasm2map rust_wasm/pkg/rust_wasm_bg.wasm",
+    "build-js": "node build.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "altv-esbuild": "^0.7.2",
+    "altv-esbuild-rust-wasm": "^0.1.0",
+    "dprint": "^0.47.2",
+    "esbuild": "=0.15.3",
+    "source-map": "file:./source-map"
+  },
+  "type": "module"
+}

@@ -1,0 +1,2 @@
+type = 'rs'
+main = 'server.dll'

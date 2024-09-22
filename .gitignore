@@ -1,3 +1,4 @@
 /target
 test/altv_server/*
 !test/altv_server/server.toml
+node_modules

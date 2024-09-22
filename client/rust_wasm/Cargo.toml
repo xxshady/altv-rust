@@ -1,0 +1,23 @@
+[package]
+name = "rust_wasm"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wasm-bindgen = "0.2.63"
+js-sys = "0.3.69"
+futures = "0.3.30"
+serde = { workspace = true }
+serde-wasm-bindgen = "0.6.5"
+serde_repr = "=0.1.19"
+erased-serde = { workspace = true }
+serde_bytes = { workspace = true }
+custom-print = "1.0.0"
+thiserror = "1.0.63"
+bincode = { workspace = true }
+
+[package.metadata.wasm-pack.profile.dev.wasm-bindgen]
+dwarf-debug-info = true
