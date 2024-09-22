@@ -111,13 +111,13 @@ impl IntoHash for structs::AmmoType {
 macro_rules! __get_any_option_base_object {
   ($get_ptr:expr, $base_obj_manager:ident) => {
     paste::paste! { {
-        let ptr = unsafe { $get_ptr };
-        let Some(ptr) = std::ptr::NonNull::new(ptr) else {
-            return Ok(None);
-        };
-        Ok($crate::resource::Resource::with_base_objects_ref(|v, _| {
-            v.[<$base_obj_manager>].get_by_ptr(ptr)
-        }))
+      let ptr = unsafe { $get_ptr };
+      let Some(ptr) = std::ptr::NonNull::new(ptr) else {
+        return Ok(None);
+      };
+      Ok($crate::resource::Resource::with_base_objects_ref(|v, _| {
+        v.[<$base_obj_manager>].get_by_ptr(ptr)
+      }))
     } }
   };
 }
@@ -220,25 +220,25 @@ pub fn get_ped(ptr: *mut sdk::alt::IPed, resource: &Resource) -> Option<ped::Ped
 
 #[macro_export]
 macro_rules! __if_not {
-    (() $code:block) => {
-        $code
-    };
-    (($( $target:tt )+) $code:block) => {
-        $( $target )+
-    };
+  (() $code:block) => {
+    $code
+  };
+  (($( $target:tt )+) $code:block) => {
+    $( $target )+
+  };
 }
 pub use __if_not as if_not;
 
 #[macro_export]
 macro_rules! __base_ptr_to {
-    ($base_ptr:expr, $target_type:ident) => {
-        paste::paste! {
-            // TODO: remove unsafe block from here, its not useful at all
-            unsafe {
-                std::ptr::NonNull::new($crate::sdk::base_object::[<to_ $target_type>]($base_ptr)).unwrap()
-            }
-        }
-    };
+  ($base_ptr:expr, $target_type:ident) => {
+    paste::paste! {
+      // TODO: remove unsafe block from here, its not useful at all
+      unsafe {
+        std::ptr::NonNull::new($crate::sdk::base_object::[<to_ $target_type>]($base_ptr)).unwrap()
+      }
+    }
+  };
 }
 
 pub use __base_ptr_to as base_ptr_to;
@@ -268,15 +268,15 @@ pub fn read_cpp_base_object_vec(
 macro_rules! __create_base_object {
   ($namespace:path, $creation:expr, $else:expr) => {{
     paste::paste! {
-        let ptr = $crate::resource::Resource::with_pending_base_object_destroy_or_creation_mut(
-            |_, _| unsafe { $creation },
-        );
+      let ptr = $crate::resource::Resource::with_pending_base_object_destroy_or_creation_mut(
+        |_, _| unsafe { $creation },
+      );
 
-        let Some(ptr) = std::ptr::NonNull::new(ptr) else {
-            $else
-        };
+      let Some(ptr) = std::ptr::NonNull::new(ptr) else {
+        $else
+      };
 
-        $namespace::add_to_pool!(ptr)
+      $namespace::add_to_pool!(ptr)
     }
   }};
 }

@@ -17,35 +17,35 @@ pub use __serialize_simple as serialize_simple;
 
 #[macro_export]
 macro_rules! __deserialize_simple {
-    (
-        $self:ident,
-        $visitor:expr,
-        @sdk $sdk_type:ident: @rust $rust_type:ident
-        $(, $convert_method:ident )?
-    ) => {{
-        paste::paste! {
-            $self.assert_mvalue_type($self.mvalue_type()?, altv_sdk::MValueType::$sdk_type)?;
-            let raw = unsafe { altv_sdk::ffi::[<read_mvalue_ $sdk_type:snake>]($self.input.get()) };
-            $visitor.[<visit_ $rust_type:snake>](raw $( . $convert_method () )?)
-        }
-    }};
+  (
+    $self:ident,
+    $visitor:expr,
+    @sdk $sdk_type:ident: @rust $rust_type:ident
+    $(, $convert_method:ident )?
+  ) => {{
+    paste::paste! {
+      $self.assert_mvalue_type($self.mvalue_type()?, altv_sdk::MValueType::$sdk_type)?;
+      let raw = unsafe { altv_sdk::ffi::[<read_mvalue_ $sdk_type:snake>]($self.input.get()) };
+      $visitor.[<visit_ $rust_type:snake>](raw $( . $convert_method () )?)
+    }
+  }};
 }
 
 pub use __deserialize_simple as deserialize_simple;
 
 #[macro_export]
 macro_rules! __deserialize_simple_unchecked {
-    (
-        $self:ident,
-        $visitor:expr,
-        @sdk $sdk_type:ident: @rust $rust_type:ident
-        $(, $convert_method:ident )?
-    ) => {{
-        paste::paste! {
-            let raw = unsafe { altv_sdk::ffi::[<read_mvalue_ $sdk_type:snake>]($self.input.get()) };
-            $visitor.[<visit_ $rust_type:snake>](raw $( . $convert_method () )?)
-        }
-    }};
+  (
+    $self:ident,
+    $visitor:expr,
+    @sdk $sdk_type:ident: @rust $rust_type:ident
+    $(, $convert_method:ident )?
+  ) => {{
+    paste::paste! {
+      let raw = unsafe { altv_sdk::ffi::[<read_mvalue_ $sdk_type:snake>]($self.input.get()) };
+      $visitor.[<visit_ $rust_type:snake>](raw $( . $convert_method () )?)
+    }
+  }};
 }
 
 pub use __deserialize_simple_unchecked as deserialize_simple_unchecked;
@@ -53,13 +53,13 @@ pub use __deserialize_simple_unchecked as deserialize_simple_unchecked;
 #[macro_export]
 macro_rules! __generate_serde_via_bytes_for {
   (
-        $value_type:ty,
-        $expecting_value:literal,
-        $serialization_key:path,
-        $module_name:ident,
-        $serialize_fields:expr,
-        $deserialize_byte_buf:expr
-    ) => {
+    $value_type:ty,
+    $expecting_value:literal,
+    $serialization_key:path,
+    $module_name:ident,
+    $serialize_fields:expr,
+    $deserialize_byte_buf:expr
+  ) => {
     mod $module_name {
       use super::*;
 

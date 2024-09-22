@@ -59,7 +59,7 @@ pub fn init(
   macro_rules! set_callback {
     ($name:ident, $closure:expr) => {
       paste::paste! {
-          resource_handlers.[<$name>].replace(Box::new($closure));
+        resource_handlers.[<$name>].replace(Box::new($closure));
       }
     };
   }

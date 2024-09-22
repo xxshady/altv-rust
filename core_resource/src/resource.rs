@@ -8,8 +8,8 @@ use core_shared::{ModuleHandlers, StringResourceName};
 use crate::{alt_resource, base_objects, events, script_events, timers};
 
 thread_local! {
-    pub static RESOURCE: Rc<RefCell<Option<Resource>>> =
-        Rc::new(RefCell::new(None));
+  pub static RESOURCE: Rc<RefCell<Option<Resource>>> =
+    Rc::new(RefCell::new(None));
 }
 
 #[derive(Debug, Default)]
@@ -32,14 +32,14 @@ pub struct Resource {
 macro_rules! with_resource {
   ($func:expr, $property_name:ident, $borrow_func:ident) => {
     paste::paste! {
-        RESOURCE.with(|resource| {
-            let resource = resource.borrow();
-            let resource = resource.as_ref().unwrap();
-            let manager = resource.[<$property_name>].[<$borrow_func>]().unwrap_or_else(|_| {
-                panic!("Failed to {} `{}`", stringify!($borrow_func), stringify!($property_name));
-            });
-            $func(manager, resource)
-        })
+      RESOURCE.with(|resource| {
+        let resource = resource.borrow();
+        let resource = resource.as_ref().unwrap();
+        let manager = resource.[<$property_name>].[<$borrow_func>]().unwrap_or_else(|_| {
+          panic!("Failed to {} `{}`", stringify!($borrow_func), stringify!($property_name));
+        });
+        $func(manager, resource)
+      })
     }
   };
 }
@@ -47,12 +47,12 @@ macro_rules! with_resource {
 macro_rules! impl_borrow_fn {
   ($property_name:ident, $full_path:path) => {
     paste::paste! {
-        pub fn [<with_  $property_name _ref>]<F, R>(f: F) -> R
-        where
-            F: FnOnce(Ref<$full_path>, &Resource) -> R,
-        {
-            with_resource!(f, $property_name, try_borrow)
-        }
+      pub fn [<with_  $property_name _ref>]<F, R>(f: F) -> R
+      where
+        F: FnOnce(Ref<$full_path>, &Resource) -> R,
+      {
+        with_resource!(f, $property_name, try_borrow)
+      }
     }
   };
 }
@@ -60,12 +60,12 @@ macro_rules! impl_borrow_fn {
 macro_rules! impl_borrow_mut_fn {
   ($property_name:ident, $full_path:path) => {
     paste::paste! {
-        pub fn [<with_  $property_name _mut>]<F, R>(f: F) -> R
-        where
-            F: FnOnce(RefMut<$full_path>, &Resource) -> R,
-        {
-            with_resource!(f, $property_name, try_borrow_mut)
-        }
+      pub fn [<with_  $property_name _mut>]<F, R>(f: F) -> R
+      where
+        F: FnOnce(RefMut<$full_path>, &Resource) -> R,
+      {
+        with_resource!(f, $property_name, try_borrow_mut)
+      }
     }
   };
 }

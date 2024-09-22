@@ -4,46 +4,46 @@ use std::collections::HashMap;
 use crate::sdk;
 
 macro_rules! config_nodes {
-    (
-        $enum_name:ident [ $(
-            $type_name:ident $( : $rust_type:ty )?,
-        )+ ],
-        $type_mod_name:ident
-    ) => {
-    paste::paste! {
-        #[derive(Debug)]
-        pub enum $enum_name { $(
-            $type_name $( ($rust_type) )?,
-        )+ }
+  (
+    $enum_name:ident [ $(
+      $type_name:ident $( : $rust_type:ty )?,
+    )+ ],
+    $type_mod_name:ident
+  ) => {
+  paste::paste! {
+    #[derive(Debug)]
+    pub enum $enum_name { $(
+      $type_name $( ($rust_type) )?,
+    )+ }
 
-        impl $enum_name { $( $(
-            pub fn [<as_ $type_name:snake>](self) -> Option<$rust_type> {
-                match self {
-                    $enum_name::$type_name(v) => Some(v),
-                    $enum_name::None => None,
-                    _ => panic!("Expected {}", stringify!($type_name))
-                }
-            }
-        )? )+ }
-
-        mod $type_mod_name {
-            use super::*;
-        $( $(
-            #[allow(dead_code)]
-            pub(super) type $type_name = $rust_type;
-        )? )+
+    impl $enum_name { $( $(
+      pub fn [<as_ $type_name:snake>](self) -> Option<$rust_type> {
+        match self {
+          $enum_name::$type_name(v) => Some(v),
+          $enum_name::None => None,
+          _ => panic!("Expected {}", stringify!($type_name))
         }
+      }
+    )? )+ }
+
+    mod $type_mod_name {
+      use super::*;
+    $( $(
+      #[allow(dead_code)]
+      pub(super) type $type_name = $rust_type;
+    )? )+
     }
-    };
+  }
+  };
 }
 
 config_nodes!(ConfigNode [
-    Bool: bool,
-    String: std::string::String,
-    F64: f64,
-    List: Vec<ConfigNode>,
-    Dict: HashMap<String, ConfigNode>,
-    None,
+  Bool: bool,
+  String: std::string::String,
+  F64: f64,
+  List: Vec<ConfigNode>,
+  Dict: HashMap<String, ConfigNode>,
+  None,
 ], config_type);
 
 type ConfigNodePtr = UniquePtr<sdk::Config::Value_ValuePtr>;

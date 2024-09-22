@@ -58,90 +58,90 @@ pub trait BaseObjectMetaEntry<V: Serialize + DeserializeOwned> {
 }
 
 macro_rules! impl_base_object_meta_entry {
-    (
-        $meta_type:ident,
-        $entry_struct:path,
-        $sdk_namespace:path,
-        $raw_ptr:expr,
-        $(
-            @generics: [ $(
-                $generic_param:ident $(: $generic_param_trait:ty )?,
-            )+ ]
-        )?
-    ) => {
-        paste::paste! {
-            impl <
-                V: Serialize + DeserializeOwned,
-                $( $( $generic_param $( : $generic_param_trait )?, )+ )?
-            > BaseObjectMetaEntry<V> for $entry_struct<
-                V,
-                $( $( $generic_param, )+ )?
-            > {
-                fn has(&self) -> SomeResult<bool> {
-                    Ok(unsafe { $sdk_namespace::[<Has $meta_type Data>]($raw_ptr(&self.base_object)?, &self.key) })
-                }
-
-                fn get(&self) -> SomeResult<Option<V>> {
-                    let raw_ptr = $raw_ptr(&self.base_object)?;
-
-                    let mvalue = unsafe {
-                        $sdk_namespace::[<Get $meta_type Data>](raw_ptr, &self.key)
-                    }.within_unique_ptr();
-                    let mvalue = mvalue::ConstMValue::new(mvalue);
-
-                    let deserialized: Option<V> = mvalue::from_mvalue(&mvalue)?;
-                    Ok(deserialized)
-                }
-
-                fn get_or_set(&self, value: V) -> SomeResult<V> {
-                    let current_value: Option<V> = self.get()?;
-                    if let Some(v) = current_value {
-                        Ok(v)
-                    } else {
-                        self.set(&value)?;
-                        return Ok(value);
-                    }
-                }
-
-                fn set(&self, value: &V) -> VoidResult {
-                    unsafe {
-                        $sdk_namespace::[<Set $meta_type Data>](
-                            $raw_ptr(&self.base_object)?,
-                            &self.key,
-                            mvalue::to_mvalue(value)?.get(),
-                        )
-                    }
-                    Ok(())
-                }
-
-                fn delete(&self) -> VoidResult {
-                    unsafe {
-                        $sdk_namespace::[<Delete $meta_type Data>](
-                            $raw_ptr(&self.base_object)?,
-                            &self.key
-                        )
-                    }
-                    Ok(())
-                }
-            }
+  (
+    $meta_type:ident,
+    $entry_struct:path,
+    $sdk_namespace:path,
+    $raw_ptr:expr,
+    $(
+      @generics: [ $(
+        $generic_param:ident $(: $generic_param_trait:ty )?,
+      )+ ]
+    )?
+  ) => {
+    paste::paste! {
+      impl <
+        V: Serialize + DeserializeOwned,
+        $( $( $generic_param $( : $generic_param_trait )?, )+ )?
+      > BaseObjectMetaEntry<V> for $entry_struct<
+        V,
+        $( $( $generic_param, )+ )?
+      > {
+        fn has(&self) -> SomeResult<bool> {
+          Ok(unsafe { $sdk_namespace::[<Has $meta_type Data>]($raw_ptr(&self.base_object)?, &self.key) })
         }
-    };
+
+        fn get(&self) -> SomeResult<Option<V>> {
+          let raw_ptr = $raw_ptr(&self.base_object)?;
+
+          let mvalue = unsafe {
+            $sdk_namespace::[<Get $meta_type Data>](raw_ptr, &self.key)
+          }.within_unique_ptr();
+          let mvalue = mvalue::ConstMValue::new(mvalue);
+
+          let deserialized: Option<V> = mvalue::from_mvalue(&mvalue)?;
+          Ok(deserialized)
+        }
+
+        fn get_or_set(&self, value: V) -> SomeResult<V> {
+          let current_value: Option<V> = self.get()?;
+          if let Some(v) = current_value {
+            Ok(v)
+          } else {
+            self.set(&value)?;
+            return Ok(value);
+          }
+        }
+
+        fn set(&self, value: &V) -> VoidResult {
+          unsafe {
+            $sdk_namespace::[<Set $meta_type Data>](
+              $raw_ptr(&self.base_object)?,
+              &self.key,
+              mvalue::to_mvalue(value)?.get(),
+            )
+          }
+          Ok(())
+        }
+
+        fn delete(&self) -> VoidResult {
+          unsafe {
+            $sdk_namespace::[<Delete $meta_type Data>](
+              $raw_ptr(&self.base_object)?,
+              &self.key
+            )
+          }
+          Ok(())
+        }
+      }
+    }
+  };
 }
 
 impl_base_object_meta_entry!(
-    Meta,
-    NormalBaseObjectMetaEntry,
-    sdk::IBaseObject,
-    BaseObjectWrapper::raw_base_ptr,
-    @generics: [T, InheritPtrs: Clone,]
+  Meta,
+  NormalBaseObjectMetaEntry,
+  sdk::IBaseObject,
+  BaseObjectWrapper::raw_base_ptr,
+  @generics: [T, InheritPtrs: Clone,]
 );
 
 impl_base_object_meta_entry!(
-    SyncedMeta,
-    SyncedBaseObjectMetaEntry,
-    sdk::IBaseObject,
-    BaseObjectWrapper::raw_base_ptr,
-    @generics: [T, InheritPtrs: Clone,]
+  SyncedMeta,
+  SyncedBaseObjectMetaEntry,
+  sdk::IBaseObject,
+  BaseObjectWrapper::raw_base_ptr,
+  @generics: [T, InheritPtrs: Clone,]
 );
 
 impl_base_object_meta_entry!(

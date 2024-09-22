@@ -47,26 +47,26 @@ pub mod logging {
 
   #[macro_export]
   macro_rules! __log {
-        ($($arg:tt)*) => {{
-            $crate::exports::logging::log(&format!($($arg)*))
-        }}
-    }
+    ($($arg:tt)*) => {{
+      $crate::exports::logging::log(&format!($($arg)*))
+    }}
+  }
   pub use __log as log_macro;
 
   #[macro_export]
   macro_rules! __log_warn {
-        ($($arg:tt)*) => {{
-            $crate::exports::logging::log_warn(&format!($($arg)*))
-        }}
-    }
+    ($($arg:tt)*) => {{
+      $crate::exports::logging::log_warn(&format!($($arg)*))
+    }}
+  }
   pub use __log_warn as log_warn_macro;
 
   #[macro_export]
   macro_rules! __log_error {
-        ($($arg:tt)*) => {{
-            $crate::exports::logging::log_error(&format!($($arg)*))
-        }}
-    }
+    ($($arg:tt)*) => {{
+      $crate::exports::logging::log_error(&format!($($arg)*))
+    }}
+  }
   pub use __log_error as log_error_macro;
 }
 

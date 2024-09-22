@@ -3,9 +3,9 @@ use altv::{AmmoType, VoiceConnectionState};
 macro_rules! test_property {
   ($name:path, $value:expr) => {
     paste::paste! {
-        dbg!(altv::[<$name>]());
-        altv::[<set_$name>]($value);
-        assert_eq!(dbg!(altv::[<$name>]()), $value);
+      dbg!(altv::[<$name>]());
+      altv::[<set_$name>]($value);
+      assert_eq!(dbg!(altv::[<$name>]()), $value);
     }
   };
 }
