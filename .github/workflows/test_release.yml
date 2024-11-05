@@ -108,6 +108,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./altv_module.dll
-          asset_name: rust-module.dll
+          asset_path: ./source.tar.gz
+          asset_name: source.tar.gz
           asset_content_type: application/octet-stream
