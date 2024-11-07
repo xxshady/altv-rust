@@ -15,9 +15,10 @@ jobs:
           submodules: recursive
 
       - name: Create archive
+        # seems like --exclude-from doesnt support all syntax of gitignore but it doesnt really matter
         run: |
           cd ..
-          tar --exclude-caches --exclude-vcs --exclude-from=./altv-rust/.gitignore -czvf source.tar.gz ./altv-rust
+          tar --exclude-caches --exclude-vcs --exclude-from=./altv-rust/.gitignore --exclude=*.bat --exclude *.sh --directory ./altv-rust -czvf source.tar.gz .
           cp source.tar.gz ./altv-rust/source.tar.gz
 
       - uses: actions/upload-artifact@v4
