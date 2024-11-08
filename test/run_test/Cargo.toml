@@ -9,5 +9,5 @@ publish = false
 
 [dependencies]
 duct = "0.13.7"
-reqwest = "0.12.4"
+reqwest.workspace = true
 tokio = { version = "1.35.1", features = ["full"] }

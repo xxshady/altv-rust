@@ -1,0 +1,21 @@
+[package]
+name = "cargo-altvup"
+version = "0.2.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+readme = "README.md"
+description = "alt:V Rust Module Updater"
+
+[[bin]]
+name = "cargo-altvup"
+
+[dependencies]
+colored = "2.0.0"
+flate2 = "1.0.34"
+reqwest.workspace = true
+serde.workspace = true
+tar = "0.4.43"
+anyhow.workspace = true
+futures-lite = "2.5.0"
