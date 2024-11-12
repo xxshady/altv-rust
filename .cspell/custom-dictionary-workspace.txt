@@ -1,6 +1,7 @@
 -DALT_SERVER_API
 # Custom Dictionary Words
 altv
+altvup
 ColShapy
 cxxbridge
 dlopen

@@ -14,8 +14,13 @@ name = "cargo-altvup"
 [dependencies]
 colored = "2.0.0"
 flate2 = "1.0.34"
-reqwest.workspace = true
 serde.workspace = true
 tar = "0.4.43"
 anyhow.workspace = true
-futures-lite = "2.5.0"
+
+[dependencies.ureq]
+version = "2.10.1"
+features = ["json"]
+
+[lints.clippy]
+unwrap_used = "forbid"
