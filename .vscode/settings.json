@@ -106,7 +106,7 @@
   "files.exclude": {
     "target/**/*": true
   },
-  "editor.tabSize": 4,
+  "editor.tabSize": 2,
   "rust-analyzer.check.extraEnv": {
     "LOG_LEVEL": "debug"
   },
