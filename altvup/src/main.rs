@@ -1,9 +1,11 @@
 use colored::*;
 use anyhow::bail;
+use shared::find_cli_param;
 
 mod shared;
 mod rust_module;
 mod altv_server_files;
+mod extra;
 
 fn main() -> anyhow::Result<()> {
   #[cfg(windows)]
@@ -35,8 +37,11 @@ fn altvup() -> anyhow::Result<()> {
     branch.bright_purple()
   );
 
+  let load_jsv2 = find_cli_param(other_args, "jsv2").is_some();
+
   rust_module::compile(&agent, branch, other_args)?;
-  altv_server_files::download(&agent, branch)?;
+  altv_server_files::download(&agent, branch, load_jsv2)?;
+  extra::create_server_config(load_jsv2)?;
 
   Ok(())
 }

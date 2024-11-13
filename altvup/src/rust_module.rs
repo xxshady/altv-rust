@@ -118,7 +118,10 @@ fn download_source_code_from_release(
     .iter()
     .find(|v| v.name == SOURCE_ASSET)
     .with_context(|| {
-      format!("Cannot find {SOURCE_ASSET} in release: {release:?} of altv-rust repo")
+      format!(
+        "Cannot find {SOURCE_ASSET} in release: {} of altv-rust repo",
+        release.name
+      )
     })?;
 
   let mut bytes = vec![];

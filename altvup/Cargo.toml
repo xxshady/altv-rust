@@ -17,6 +17,7 @@ flate2 = "1.0.34"
 serde.workspace = true
 tar = "0.4.43"
 anyhow.workspace = true
+sha1_smol = "1.0.1"
 
 [dependencies.ureq]
 version = "2.10.1"
