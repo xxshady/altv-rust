@@ -17,7 +17,7 @@ jobs:
             binary: cargo-altvup
           - target: x86_64-pc-windows-msvc
             os: windows-latest
-            binary: cargo-altvup
+            binary: cargo-altvup.exe
 
     steps:
       - name: checkout
