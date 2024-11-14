@@ -7,15 +7,17 @@ mod rust_module;
 mod altv_server_files;
 mod extra;
 
-fn main() -> anyhow::Result<()> {
+fn main() {
   #[cfg(windows)]
   control::set_virtual_terminal(true).expect("must never happen");
 
   print_altvup();
-  altvup()?;
-  print_altvup();
 
-  Ok(())
+  if let Err(e) = altvup() {
+    println!("{} {e:#}", "Error:".bright_red());
+  }
+
+  print_altvup();
 }
 
 fn altvup() -> anyhow::Result<()> {
