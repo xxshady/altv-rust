@@ -25,3 +25,7 @@ features = ["json"]
 
 [lints.clippy]
 unwrap_used = "forbid"
+
+[package.metadata.binstall]
+pkg-url = "{ repo }/releases/download/altvup-release-v{ version }/{ target }.tgz"
+bin-dir = "{ bin }{ format }"
