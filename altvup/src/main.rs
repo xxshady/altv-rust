@@ -2,6 +2,8 @@ use colored::*;
 use anyhow::bail;
 use shared::find_cli_param;
 
+const VALID_BRANCHES: &[&str] = &["release", "rc"];
+
 mod shared;
 mod rust_module;
 mod altv_server_files;
@@ -28,8 +30,18 @@ fn altvup() -> anyhow::Result<()> {
   let args = &args[..];
 
   let [branch, other_args @ ..] = args else {
-    bail!("Expected branch, example usage: cargo altvup release");
+    bail!(
+      "Expected branch, for example: `cargo altvup {}`",
+      VALID_BRANCHES[0]
+    );
   };
+
+  if !VALID_BRANCHES.contains(&branch.as_str()) {
+    bail!(
+      "Invalid branch: {branch}, use one of these: {}",
+      VALID_BRANCHES.join(", ")
+    );
+  }
 
   let agent = ureq::AgentBuilder::new().user_agent("cargo-altvup").build();
 
