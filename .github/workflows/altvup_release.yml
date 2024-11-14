@@ -15,17 +15,19 @@ jobs:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-22.04
             binary: cargo-altvup
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+            binary: cargo-altvup
 
     steps:
       - name: checkout
         uses: actions/checkout@v3
-      # - name: Install latest stable rust
-      #   run: rustup update
 
       - name: build
         run: |
           cd altvup
           cargo build --release
+
       - name: archive
         run: |
           cd target/release
@@ -33,33 +35,18 @@ jobs:
           cp ${{ matrix.target }}.tgz ../../
 
       - name: upload archive
-        uses: actions/upload-artifact@v4
+        uses: svenstaro/upload-release-action@v2
         with:
-          name: ${{ matrix.binary }}-${{ matrix.target }}
-          path: ${{ matrix.target }}.tgz
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          asset_name: ${{ matrix.binary }}-${{ matrix.target }}
+          file: ${{ matrix.target }}.tgz
+          tag: ${{ github.ref }}
+          overwrite: true
 
   release:
-      runs-on: ubuntu-22.04
-      needs: [
-        build,
-      ]
-      steps:
-        - uses: ncipollo/release-action@v1
-          id: create_release
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-        - uses: actions/download-artifact@v4
-          name: Download archive artifact
-          with:
-            name: cargo-altvup-x86_64-unknown-linux-gnu
-
-        - uses: shogo82148/actions-upload-release-asset@v1
-          name: Upload archive
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: ./x86_64-unknown-linux-gnu.tgz
-            asset_name: x86_64-unknown-linux-gnu.tgz
-            asset_content_type: application/octet-stream
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: ncipollo/release-action@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
