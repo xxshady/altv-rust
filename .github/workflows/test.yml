@@ -9,7 +9,7 @@ jobs:
   test-linux:
     runs-on: ubuntu-22.04
 
-    if: ${{ !startsWith(github.event.head_commit.message, 'release new version:') }}
+    if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
 
     steps:
       - name: Checkout
@@ -44,7 +44,7 @@ jobs:
   test-windows:
     runs-on: windows-2022
 
-    if: ${{ !startsWith(github.event.head_commit.message, 'release new version:') }}
+    if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
 
     steps:
       - name: Checkout
