@@ -16,23 +16,27 @@ jobs:
         with:
           submodules: recursive
 
-      - name: create archive
-        # seems like --exclude-from doesnt support all syntax of gitignore but it doesnt really matter
+      - name: test
         run: |
-          cd ..
-          tar --exclude-caches --exclude-vcs --exclude-from=./altv-rust/.gitignore --exclude=*.bat --exclude *.sh --directory ./altv-rust -czvf source.tar.gz .
-          cp source.tar.gz ./altv-rust/source.tar.gz
+          echo "${{ github.ref_name }}"
 
-      - uses: ncipollo/release-action@v1
-        id: create_release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: create archive
+      #   # seems like --exclude-from doesnt support all syntax of gitignore but it doesnt really matter
+      #   run: |
+      #     cd ..
+      #     tar --exclude-caches --exclude-vcs --exclude-from=./altv-rust/.gitignore --exclude=*.bat --exclude *.sh --directory ./altv-rust -czvf source.tar.gz .
+      #     cp source.tar.gz ./altv-rust/source.tar.gz
+
+      # - uses: ncipollo/release-action@v1
+      #   id: create_release
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
-      - name: upload archive
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          asset_name: source.tar.gz
-          file: source.tar.gz
-          tag: ${{ github.ref }}
-          overwrite: true
+      # - name: upload archive
+      #   uses: svenstaro/upload-release-action@v2
+      #   with:
+      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+      #     asset_name: source.tar.gz
+      #     file: source.tar.gz
+      #     tag: ${{ github.ref }}
+      #     overwrite: true
