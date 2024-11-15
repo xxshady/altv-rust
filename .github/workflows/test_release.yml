@@ -1,3 +1,5 @@
+# TODO: remove this file
+
 name: test-release
 
 on:
@@ -6,109 +8,32 @@ on:
       - 'test-release-v*'
 
 jobs:
-  build-linux:
+  release:
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout
+      - name: checkout
         uses: actions/checkout@v3
         with:
           submodules: recursive
 
-      - name: Create archive
+      - name: create archive
         # seems like --exclude-from doesnt support all syntax of gitignore but it doesnt really matter
         run: |
           cd ..
           tar --exclude-caches --exclude-vcs --exclude-from=./altv-rust/.gitignore --exclude=*.bat --exclude *.sh --directory ./altv-rust -czvf source.tar.gz .
           cp source.tar.gz ./altv-rust/source.tar.gz
 
-      - uses: actions/upload-artifact@v4
-        name: Upload
+      - name: upload archive
+        uses: svenstaro/upload-release-action@v2
         with:
-          name: source-archive
-          path: source.tar.gz
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          asset_name: source.tar.gz
+          file: source.tar.gz
+          tag: ${{ github.ref }}
+          overwrite: true
 
-  # build-linux:
-  #   runs-on: ubuntu-22.04
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
-  #       with:
-  #         submodules: recursive
-
-  #     - name: Install latest stable rust
-  #       run: rustup update
-
-  #     # TODO: cache
-
-  #     - name: Build
-  #       run: |
-  #         cd altv_module
-  #         cargo build --release
-
-  #     - uses: actions/upload-artifact@v4
-  #       name: Upload module-linux
-  #       with:
-  #         name: module-linux
-  #         path: target/release/libaltv_module.so
-
-  # build-windows:
-  #   runs-on: windows-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
-  #       with:
-  #         submodules: recursive
-
-  #     - name: Install latest stable rust
-  #       run: rustup update
-
-  #     - name: Install winget
-  #       uses: Cyberboss/install-winget@v1
-
-  #     - name: Install LLVM 17.0.1
-  #       shell: powershell
-  #       run: winget install LLVM.LLVM --version 17.0.1 --disable-interactivity --accept-source-agreements --force
-
-  #     # TODO: cache
-
-  #     - name: Build
-  #       shell: cmd
-  #       # temp workaround https://github.com/google/autocxx/issues/1327
-  #       run: |
-  #         set PATH=%PATH:C:\Program Files\LLVM\bin;=%
-  #         echo %PATH%
-
-  #         cd altv_module
-  #         cargo build --release
-
-  #     - uses: actions/upload-artifact@v4
-  #       name: Upload module-windows
-  #       with:
-  #         name: module-windows
-  #         path: target/release/altv_module.dll
-
-  release:
-    runs-on: ubuntu-22.04
-    needs: [
-      build-linux,
-    ]
-    steps:
       - uses: ncipollo/release-action@v1
         id: create_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: actions/download-artifact@v4
-        name: Download source-archive artifact
-        with:
-          name: source-archive
-
-      - uses: shogo82148/actions-upload-release-asset@v1
-        name: Upload source-archive
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./source.tar.gz
-          asset_name: source.tar.gz
-          asset_content_type: application/octet-stream
+  
