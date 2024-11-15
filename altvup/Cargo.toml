@@ -29,3 +29,7 @@ unwrap_used = "forbid"
 [package.metadata.binstall]
 pkg-url = "{ repo }/releases/download/altvup-release-v{ version }/{ target }{ archive-suffix }"
 bin-dir = "{ bin }{ format }"
+
+[package.metadata.release]
+pre-release-commit-message = "release altvup {{version}}"
+tag = false
