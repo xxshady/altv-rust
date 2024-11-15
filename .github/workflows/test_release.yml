@@ -16,10 +16,13 @@ jobs:
         with:
           submodules: recursive
 
-      - name: test
+      - name: extract version from tag
         run: |
-          echo "${{ github.ref_name }}"
-
+          VERSION=$( echo ${{ github.ref_name }} | grep -oP 'test-release-v\K.*' )
+          echo $VERSION
+      - name: print again
+        run: echo $VERSION
+      
       # - name: create archive
       #   # seems like --exclude-from doesnt support all syntax of gitignore but it doesnt really matter
       #   run: |
