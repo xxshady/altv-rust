@@ -23,6 +23,11 @@ jobs:
           tar --exclude-caches --exclude-vcs --exclude-from=./altv-rust/.gitignore --exclude=*.bat --exclude *.sh --directory ./altv-rust -czvf source.tar.gz .
           cp source.tar.gz ./altv-rust/source.tar.gz
 
+      - uses: ncipollo/release-action@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
       - name: upload archive
         uses: svenstaro/upload-release-action@v2
         with:
@@ -31,4 +36,3 @@ jobs:
           file: source.tar.gz
           tag: ${{ github.ref }}
           overwrite: true
-          release_name: ${{ github.ref }}
