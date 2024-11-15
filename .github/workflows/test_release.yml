@@ -17,11 +17,12 @@ jobs:
           submodules: recursive
 
       - name: extract version from tag
+        id: extract_version
         run: |
           VERSION=$( echo ${{ github.ref_name }} | grep -oP 'test-release-v\K.*' )
-          echo $VERSION
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
       - name: print again
-        run: echo $VERSION
+        run: echo ${{ steps.extract_version.outputs.VERSION }}
       
       # - name: create archive
       #   # seems like --exclude-from doesnt support all syntax of gitignore but it doesnt really matter
