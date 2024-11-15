@@ -2,7 +2,12 @@ use colored::*;
 use anyhow::bail;
 use shared::find_cli_param;
 
-const VALID_BRANCHES: &[&str] = &["release", "rc"];
+const VALID_BRANCHES: &[&str] = &[
+  "release",
+  "rc",
+  #[cfg(debug_assertions)]
+  "test-release",
+];
 
 mod shared;
 mod rust_module;
