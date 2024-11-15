@@ -84,7 +84,7 @@ jobs:
 
       - name: install cargo-release
         run: |
-          cargo binstall cargo-release --no-confirm
+          cargo binstall cargo-release@=0.25.13 --no-confirm
           
       - name: extract version from tag
         id: extract_version
