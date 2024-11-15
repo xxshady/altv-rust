@@ -31,9 +31,3 @@ jobs:
           file: source.tar.gz
           tag: ${{ github.ref }}
           overwrite: true
-
-      - uses: ncipollo/release-action@v1
-        id: create_release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
