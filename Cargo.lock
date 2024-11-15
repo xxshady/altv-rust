@@ -326,7 +326,7 @@ checksum = "a2bd12c1caf447e69cd4528f47f94d203fd2582878ecb9e9465484c4148a8223"
 
 [[package]]
 name = "cargo-altvup"
-version = "0.3.3"
+version = "0.3.4-test.0"
 dependencies = [
  "anyhow",
  "colored",
