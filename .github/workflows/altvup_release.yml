@@ -96,7 +96,7 @@ jobs:
 
       - name: cargo release
         run: |
-          cargo release ${{ steps.extract_version.outputs.VERSION }} --no-push --no-tag --no-confirm --execute
+          cargo release ${{ steps.extract_version.outputs.VERSION }} --package cargo-altvup --no-push --no-tag --no-confirm --execute
 
       - name: commit message workaround
         run: |
