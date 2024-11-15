@@ -6,7 +6,7 @@ rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 readme = "README.md"
-description = "alt:V Rust Module Updater"
+description = "Rust module + alt:V server installer"
 
 [[bin]]
 name = "cargo-altvup"
