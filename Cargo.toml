@@ -41,3 +41,4 @@ reqwest = "0.12.9"
 [workspace.metadata.release]
 pre-release-commit-message = "release new version: {{version}}"
 tag = false
+allow-branch = ["*"]
