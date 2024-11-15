@@ -96,5 +96,11 @@ jobs:
 
       - name: cargo release
         run: |
-          cargo release ${{ steps.extract_version.outputs.VERSION }} -p cargo-altvup --no-confirm --execute
+          cargo release ${{ steps.extract_version.outputs.VERSION }} --no-push --no-tag --no-confirm --execute
 
+      - name: commit message workaround
+        run: |
+          git reset HEAD~1
+          git add .
+          git commit -m "release altvup ${{ steps.extract_version.outputs.VERSION }}"
+          git push
