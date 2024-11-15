@@ -31,3 +31,4 @@ jobs:
           file: source.tar.gz
           tag: ${{ github.ref }}
           overwrite: true
+          release_name: ${{ github.ref }}
