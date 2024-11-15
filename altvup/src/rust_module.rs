@@ -1,5 +1,6 @@
 use std::{
   fs,
+  num::NonZeroU8,
   path::{Path, PathBuf},
   process::Command,
 };
@@ -29,14 +30,40 @@ struct GithubRelease {
   assets: Vec<GithubAsset>,
 }
 
-fn get_releases(agent: &ureq::Agent) -> anyhow::Result<Vec<GithubRelease>> {
+fn get_releases(agent: &ureq::Agent, cli_args: &[String]) -> anyhow::Result<Vec<GithubRelease>> {
   println!(
     "Loading releases data from {} repo",
     "altv-rust".bright_green()
   );
 
+  let mut pages = vec![];
+  let pages_count = how_many_pages_to_fetch(cli_args)?.unwrap_or(2);
+  for page in 1..=pages_count {
+    pages.extend(get_releases_by_page(agent, page)?);
+  }
+  Ok(pages)
+}
+
+fn how_many_pages_to_fetch(cli_args: &[String]) -> anyhow::Result<Option<u8>> {
+  let pages_count = find_cli_param(cli_args, "rust-module-releases-pages");
+  let Some(pages_count) = pages_count else {
+    return Ok(None);
+  };
+
+  let count = pages_count
+    .parse::<NonZeroU8>()
+    .context(
+      "Expected an integer in range from 1 to 255 for --rust-module-releases-pages parameter",
+    )?
+    .into();
+  Ok(Some(count))
+}
+
+fn get_releases_by_page(agent: &ureq::Agent, page: u8) -> anyhow::Result<Vec<GithubRelease>> {
+  println!("Fetching page: {page}");
+
   agent
-    .get(RELEASES_URL)
+    .get(&format!("{RELEASES_URL}?page={page}"))
     .call()
     .with_context(|| format!("Failed to get github releases data from: {RELEASES_URL}"))?
     .into_json()
@@ -187,7 +214,7 @@ fn download_and_compile_rust_module_from_github_releases(
   branch: &str,
   cli_args: &[String],
 ) -> anyhow::Result<()> {
-  let releases = get_releases(agent)?;
+  let releases = get_releases(agent, cli_args)?;
   let release = releases
     .into_iter()
     .find(|v| v.name.starts_with(&format!("{branch}-v")))
