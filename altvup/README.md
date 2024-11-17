@@ -8,7 +8,7 @@ It can also download alt:V server binaries & data files.
 ## How to install
 
 Recommended: (if you don't have it: [cargo-binstall](https://github.com/cargo-bins/cargo-binstall?tab=readme-ov-file#cargo-binaryinstall))<br>
-`cargo binstall altvup` 
+`cargo binstall altvup`
 
 Or you can compile from source code: (but it's gonna take longer)<br>
 `cargo install cargo-altvup`
@@ -40,6 +40,19 @@ For example: `cargo altvup release --src-dir=my_dir`
 Download serverside part of [jsv2](https://github.com/altmp/altv-js-module-v2) module (disabled by default).
 
 For example: `cargo altvup release --jsv2`
+
+### `--voice-server`
+
+Download [external voice](https://docs.altv.mp/articles/external_voice_server.html) server binary (disabled by default).
+
+For example: `cargo altvup release --voice-server`
+
+### `--rust-module-releases-pages`
+
+How many pages to fetch from github releases API to search for `rust-module` source code (2 by default).
+Increase it if you have "Cannot find altv-rust release of branch..." error
+
+For example: `cargo altvup release --rust-module-releases-pages=5`
 
 ## How `rust-module` is installed
 

@@ -11,6 +11,8 @@ use colored::Colorize;
 use serde::Deserialize;
 use sha1_smol::Sha1;
 
+use crate::shared::find_cli_param;
+
 const CDN_ADDRESS: &str = "cdn.alt-mp.com";
 
 type LocalPath = String;
@@ -30,8 +32,13 @@ struct UpdateJson {
   hash_list: HashMap<LocalPath, Sha1String>,
 }
 
-pub fn download(agent: &ureq::Agent, branch: &str, load_jsv2: bool) -> anyhow::Result<()> {
-  let files = fetch_downloadable_files(agent, branch, load_jsv2)?;
+pub fn download(
+  agent: &ureq::Agent,
+  branch: &str,
+  load_jsv2: bool,
+  args: &[String],
+) -> anyhow::Result<()> {
+  let files = fetch_downloadable_files(agent, branch, load_jsv2, args)?;
   let outdated_files = check_file_hashes(files)?;
 
   if outdated_files.is_empty() {
@@ -77,6 +84,7 @@ fn fetch_downloadable_files(
   agent: &ureq::Agent,
   branch: &str,
   load_jsv2: bool,
+  args: &[String],
 ) -> anyhow::Result<Vec<CdnFileMetadata>> {
   println!("Requesting list of files from alt:V CDN");
 
@@ -99,6 +107,12 @@ fn fetch_downloadable_files(
   if load_jsv2 {
     let js_module_v2_url = format!("https://{CDN_ADDRESS}/js-module-v2/{branch}/{platform}");
     fetch_file_metadata_from(&js_module_v2_url, agent, &mut files)?;
+  }
+
+  let load_voice_server = find_cli_param(args, "voice-server").is_some();
+  if load_voice_server {
+    let voice_server_url = format!("https://{CDN_ADDRESS}/voice-server/release/{platform}");
+    fetch_file_metadata_from(&voice_server_url, agent, &mut files)?;
   }
 
   Ok(files)
