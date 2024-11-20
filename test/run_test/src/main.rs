@@ -49,7 +49,7 @@ async fn main() {
     format!(
       "\
         type = \"rs\"\n\
-        main = \"main{ext}\""
+        main = \"main\""
     ),
   )
   .unwrap();

@@ -82,7 +82,7 @@ fn main() -> impl altv::IntoVoidResult {
 
 ```toml
 type = 'rs'
-main = 'example.dll' # your compiled .dll or .so
+main = 'example' # extension not needed
 ```
 
 11. Don't forget to add resource to [`server.toml`](https://docs.altv.mp/articles/configs/server.html)
