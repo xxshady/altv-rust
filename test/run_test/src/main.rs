@@ -63,6 +63,7 @@ async fn main() {
   };
 
   let branch = env::var("ALTV_BRANCH").unwrap();
+  // TODO: remove dev branch?
   let branch = match branch.as_str() {
     "release" | "rc" | "dev" => branch,
     _ => {
@@ -110,8 +111,16 @@ async fn main() {
     ),
   };
 
-  println!("downloading server files...");
-  download_server_files(&files).await;
+  // println!("downloading server files...");
+  // download_server_files(&files).await;
+
+  cmd!("cargo", "install", "--path", "altvup").run().unwrap();
+
+  // TODO: add param for local directory (to not download source code from github)
+  cmd!("cargo", "altvup", branch, "--dont-compile")
+    .dir("test/altv_server")
+    .run()
+    .unwrap();
 
   println!("running altv server");
   let (_, server_bin) = files.altv_server;
@@ -165,48 +174,5 @@ async fn main() {
         panic!("altv server process CRASHED, error: {e:?}");
       }
     }
-  }
-}
-
-async fn download_server_files(files: &Files) {
-  let (from, to) = &files.altv_server;
-  let altv_server = download_file(from, to);
-  let (from, to) = &files.crash_handler;
-  let crash_handler = download_file(from, to);
-  let (from, to) = &files.vehmodels;
-  let veh_models = download_file(from, to);
-  let (from, to) = &files.vehmods;
-  let veh_mods = download_file(from, to);
-  let (from, to) = &files.clothes;
-  let clothes = download_file(from, to);
-  let (from, to) = &files.pedmodels;
-  let ped_models = download_file(from, to);
-  let (from, to) = &files.rpfdata;
-  let rpf_data = download_file(from, to);
-  let (from, to) = &files.weaponmodels;
-  let weapon_models = download_file(from, to);
-
-  tokio::join!(
-    altv_server,
-    crash_handler,
-    veh_models,
-    veh_mods,
-    clothes,
-    ped_models,
-    rpf_data,
-    weapon_models,
-  );
-
-  async fn download_file(from: &str, to: &str) {
-    println!("starting: {from}");
-
-    let res = reqwest::get(from).await.unwrap();
-    let bytes = res.bytes().await.unwrap();
-
-    let parent = Path::new(to).parent().unwrap();
-    fs::create_dir_all(parent).unwrap();
-    fs::write(to, bytes).unwrap();
-
-    println!("downloaded: {to}");
   }
 }

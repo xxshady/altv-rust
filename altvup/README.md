@@ -29,6 +29,12 @@ Compile latest `rust-module` again (if `rust-module` binary already exists it wo
 
 For example: `cargo altvup release --force-recompile`
 
+### `--dont-compile`
+
+Don't download `altv-rust` source code and compile `rust-module` binary.
+
+For example: `cargo altvup release --dont-compile`
+
 ### `--src-dir`
 
 The directory to which `altv-rust` source code will be downloaded (`.altvup-src` by default).
