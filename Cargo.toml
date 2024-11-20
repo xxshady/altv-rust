@@ -37,9 +37,6 @@ serde = { version = "1.0.195", features = ["derive", "rc"] }
 serde_bytes = "0.11.14"
 erased-serde = "0.3.31"
 
-# TODO: remove it, use altvup in run_test
-reqwest = "0.12.9"
-
 [workspace.metadata.release]
 pre-release-commit-message = "release new version: {{version}}"
 tag = false
