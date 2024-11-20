@@ -3,7 +3,7 @@
 </div>
 <br>
 
-# Server-side alt:V API for Rust
+# alt:V API for Rust
 
 [![crates.io](https://img.shields.io/crates/v/altv.svg)](https://crates.io/crates/altv)
 
@@ -32,7 +32,7 @@ API documentation can be found [here](https://docs.rs/altv)
 
 ## How to use
 
-Before all this, you need to [install LLVM](https://rust-lang.github.io/rust-bindgen/requirements.html#installing-clang)<br>
+First you need to [install](https://rust-lang.github.io/rust-bindgen/requirements.html#installing-clang) LLVM because it's required by autocxx crate
 
 > [!WARNING]
 > Currently on Windows latest version of LLVM [doesn't work](https://github.com/google/autocxx/issues/1327#issuecomment-2075460893) with Rust module, you need to install 17.0.1, for example with winget you can do it using this command `winget install LLVM.LLVM --version 17.0.1` (add `--force` if it fails)
@@ -43,23 +43,26 @@ Before all this, you need to [install LLVM](https://rust-lang.github.io/rust-bin
 > [!NOTE]
 > If you have similar error: `src/alt_bridge.h:5:10: fatal error: 'memory' file not found` when installing or building altv_internal_sdk, try [this](https://stackoverflow.com/questions/26333823/clang-doesnt-see-basic-headers/75546125#75546125)
 
-[Video format of this tutorial](https://youtu.be/PRIJsRdjiGg) if you are more into video tutorials
+<!-- // TODO: update it -->
+<!-- [Video format of this tutorial](https://youtu.be/PRIJsRdjiGg) if you are more into video tutorials -->
 
-1. Create new cargo package with `cargo new altv-resource --lib`
+1. Use [`altvup`](./altvup/README.md) to install `rust-module` binary and alt:V server files
 
-2. Configure cargo to compile your crate as `cdylib` in your `Cargo.toml`
+2. Create new cargo package with `cargo new altv-resource --lib`
+
+3. Configure cargo to compile your crate as `cdylib` in your `Cargo.toml`
 
 ```toml
 [lib]
 crate-type = ['cdylib']
 ```
 
-3. After that you can install [`altv`](https://crates.io/crates/altv) crate with: `cargo add altv`
+4. After that you can install [`altv`](https://crates.io/crates/altv) crate with: `cargo add altv`
 
-4. Next step will be to add main function to your resource (`src/lib.rs`)
+5. Next step will be to add main function to your resource (`src/lib.rs`)
 
 ```rust
-use altv::prelude::*; // Entity, WorldObject traits
+use altv::prelude::*;
 
 #[altv::main] // This is required
 fn main() -> impl altv::IntoVoidResult {
@@ -67,31 +70,37 @@ fn main() -> impl altv::IntoVoidResult {
 }
 ```
 
-5. Now you can build your resource with `cargo build`
+6. Now you can build your resource with `cargo build`
 
-6. In `target/debug/` you should see the `.dll` or `.so` you just compiled (if you don't see it, make sure you set `lib.crate-type` to `["cdylib"]`, see step 2)
+7. In `target/debug/` you should see the `.dll` or `.so` you just compiled (if you don't see it, make sure you set `lib.crate-type` to `["cdylib"]`, see step 3)
 
-7. Create new alt:V resource, in `resources` directory of your server
+8. Create new alt:V resource, in `resources` directory of your server
 
-8. Copy compiled `.dll` or `.so` to resource directory
+9. Copy compiled `.dll` or `.so` to resource directory
 
-9. Create [`resource.toml`](https://docs.altv.mp/articles/configs/resource.html) with this content:
+10. Create [`resource.toml`](https://docs.altv.mp/articles/configs/resource.html) with this content:
 
 ```toml
 type = 'rs'
 main = 'example.dll' # your compiled .dll or .so
 ```
 
-10. Don't forget to add resource to [`server.toml`](https://docs.altv.mp/articles/configs/server.html)
-
-11. Now you can download rust-module `.dll` or `.so` from [latest release](https://github.com/xxshady/altv-rust/releases) or with [`cargo-altvup`](https://github.com/xxshady/cargo-altvup)
-
-12. Copy it to `modules` directory of your server (if you do not use [`cargo-altvup`](https://github.com/xxshady/cargo-altvup))
-
-13. Add `rust-module` to [`server.toml`](https://docs.altv.mp/articles/configs/server.html) like that:
+11. Don't forget to add resource to [`server.toml`](https://docs.altv.mp/articles/configs/server.html)
 
 ```toml
-modules = ['rust-module']
+# ...
+resources = ['your-rust-resource']
+# ...
 ```
 
-14. Now if you have done everything correctly, you should see green "hello world" message in server console
+12. Now you can start `altv-server`
+
+> [!NOTE]
+> If you are on Linux don't forget to run `chmod +x` for `altv-server` and `altv-crash-handler`:
+
+```shell
+chmod +x altv-server
+chmod +x altv-crash-handler
+```
+
+13. If you have done everything correctly, you should see green "hello world" message in the console
