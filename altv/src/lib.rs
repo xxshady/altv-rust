@@ -1,3 +1,5 @@
+#![doc(html_logo_url = "https://github.com/user-attachments/assets/77117f7b-1bbf-45de-8065-c5a27d44a586")]
+
 //! Server-side alt:V API for Rust
 //!
 //! [How to use?](https://github.com/xxshady/altv-rust#how-to-use)
