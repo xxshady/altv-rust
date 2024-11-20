@@ -19,11 +19,13 @@ members = [
 
 [workspace.package]
 version = "16.2.3-test.15"
-rust-version = "1.82.0"
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/xxshady/altv-rust"
 readme = "README.md"
+
+# keep in sync with rust-toolchain.toml
+rust-version = "1.82.0"
 
 [workspace.dependencies]
 cxx = "1.0.115"

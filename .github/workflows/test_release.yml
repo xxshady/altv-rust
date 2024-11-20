@@ -17,6 +17,9 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
+      - name: rust version
+        run: rustc -V
+
       - name: auth
         run: |
           git config --global user.name "release"
