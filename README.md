@@ -1,9 +1,8 @@
-<div align="center">
-  <img width="100px" src="https://github.com/user-attachments/assets/77117f7b-1bbf-45de-8065-c5a27d44a586"/>
-</div>
-<br>
-
 # alt:V API for Rust
+
+<div align="center">
+  <img height="150px" src="https://github.com/user-attachments/assets/f6ef83ce-9833-4c80-a740-bbed4fcdd4c3"/>
+</div>
 
 [![crates.io](https://img.shields.io/crates/v/altv.svg)](https://crates.io/crates/altv)
 

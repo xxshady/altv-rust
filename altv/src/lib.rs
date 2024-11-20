@@ -1,4 +1,6 @@
-#![doc(html_logo_url = "https://github.com/user-attachments/assets/77117f7b-1bbf-45de-8065-c5a27d44a586")]
+#![doc(
+  html_logo_url = "https://github.com/user-attachments/assets/f6ef83ce-9833-4c80-a740-bbed4fcdd4c3"
+)]
 
 //! Server-side alt:V API for Rust
 //!
@@ -14,7 +16,6 @@ pub use exports::{
         log_error_macro as log_error,
         log,
         log_warn,
-        log_error,
     },
     BaseObjectWrapper,
     SyncId,
