@@ -17,6 +17,7 @@ pub struct WeaponModelInfo {
   pub skill_above_50_max_ammo_mp: i32,
   pub max_skill_max_ammo_mp: i32,
   pub bonus_max_ammo_mp: i32,
+  pub damage_type: String,
 }
 
 impl WeaponModelInfo {
@@ -65,6 +66,7 @@ impl WeaponModelInfo {
       skill_above_50_max_ammo_mp,
       max_skill_max_ammo_mp,
       bonus_max_ammo_mp,
+      damage_type: unsafe { sdk::read_weapon_model_info_damage_type(ptr) }.to_string(),
     })
   }
 }

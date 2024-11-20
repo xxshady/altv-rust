@@ -1035,6 +1035,10 @@ std::string read_weapon_model_info_ammo_model_name(const alt::WeaponModelInfo* p
     return ptr->ammoModelName;
 }
 
+std::string read_weapon_model_info_damage_type(const alt::WeaponModelInfo* ptr) {
+    return ptr->damageType;
+}
+
 void read_ammo_flags(
     const alt::AmmoFlags& flags,
     bool* infinite_ammo,

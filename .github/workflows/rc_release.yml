@@ -1,4 +1,4 @@
-name: Rc release
+name: Rc release (alt:V rc branch)
 
 on:
   push:
@@ -6,94 +6,73 @@ on:
       - 'rc-v*'
 
 jobs:
-  build-linux:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          submodules: recursive
-
-      - name: Install latest stable rust
-        run: rustup update
-
-      # TODO: cache
-
-      - name: Build
-        run: |
-          cd altv_module
-          cargo build --release
-
-      - uses: actions/upload-artifact@v3
-        name: Upload module-linux
-        with:
-          name: module-linux
-          path: target/release/libaltv_module.so
-
-  build-windows:
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          submodules: recursive
-
-      - name: Install latest stable rust
-        run: rustup update
-
-      # TODO: cache
-
-      - name: Build
-        run: |
-          cd altv_module
-          cargo build --release
-
-      - uses: actions/upload-artifact@v3
-        name: Upload module-windows
-        with:
-          name: module-windows
-          path: target/release/altv_module.dll
-
   release:
     runs-on: ubuntu-22.04
-    needs: [
-      build-linux,
-      build-windows
-    ]
     steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: rust version
+        run: rustc -V
+
+      - name: auth
+        run: |
+          git config --global user.name "release"
+          git config --global user.email "release@release.release"
+
+      - name: extract branch from tag
+        id: extract_branch
+        run: |
+          BRANCH=$( git log -1 --format='%D' ${{ github.ref_name }} | grep -oP 'origin/\K.*' )
+          echo "BRANCH=$BRANCH" >> $GITHUB_OUTPUT
+      - name: print branch
+        run: echo ${{ steps.extract_branch.outputs.BRANCH }}
+      
+      - name: switch to branch
+        run: git switch ${{ steps.extract_branch.outputs.BRANCH }}
+
+      - name: cargo login
+        run: cargo login ${{ secrets.CRATES_IO_TOKEN }}
+
+      - name: install cargo-binstall
+        uses: cargo-bins/cargo-binstall@v1.10.12
+
+      - name: install cargo-release
+        run: |
+          cargo binstall cargo-release@=0.25.13 --no-confirm
+          
+      - name: extract version from tag
+        id: extract_version
+        run: |
+          VERSION=$( echo ${{ github.ref_name }} | grep -oP 'rc-v\K.*' )
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+      - name: print version
+        run: echo ${{ steps.extract_version.outputs.VERSION }}
+
+      - name: cargo release
+        run: |
+          cargo release ${{ steps.extract_version.outputs.VERSION }} --exclude cargo-altvup --no-confirm --execute
+
+      - name: create archive
+        # seems like --exclude-from doesnt support all syntax of gitignore but it doesnt really matter
+        run: |
+          cd ..
+          tar --exclude-caches --exclude-vcs --exclude-from=./altv-rust/.gitignore --exclude=*.bat --exclude *.sh --directory ./altv-rust -czvf source.tar.gz .
+          cp source.tar.gz ./altv-rust/source.tar.gz
+
       - uses: ncipollo/release-action@v1
         id: create_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+      - name: upload archive
+        uses: svenstaro/upload-release-action@v2
         with:
-          prerelease: true
-
-      - uses: actions/download-artifact@v4
-        name: Download module-linux artifact
-        with:
-          name: module-linux
-
-      - uses: shogo82148/actions-upload-release-asset@v1
-        name: Upload module-linux
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./libaltv_module.so
-          asset_name: librust-module.so
-          asset_content_type: application/octet-stream
-
-      - uses: actions/download-artifact@v4
-        name: Download module-windows artifact
-        with:
-          name: module-windows
-
-      - uses: shogo82148/actions-upload-release-asset@v1
-        name: Upload module-windows
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./altv_module.dll
-          asset_name: rust-module.dll
-          asset_content_type: application/octet-stream
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          asset_name: source.tar.gz
+          file: source.tar.gz
+          tag: ${{ github.ref }}
+          overwrite: true

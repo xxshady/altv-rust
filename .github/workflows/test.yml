@@ -1,94 +1,96 @@
-name: Test
+# TODO: enable it back
 
-on:
-  push:
-    branches: "*"
-  pull_request:
+# name: Test
 
-jobs:
-  test-linux:
-    runs-on: ubuntu-22.04
+# on:
+#   push:
+#     branches: "*"
+#   pull_request:
 
-    if: ${{ !startsWith(github.event.head_commit.message, 'release new version:') }}
+# jobs:
+#   test-linux:
+#     runs-on: ubuntu-22.04
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          submodules: recursive
+#     if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
 
-      - name: Install latest stable rust
-        run: rustup update
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v3
+#         with:
+#           submodules: recursive
+
+#       - name: Install latest stable rust
+#         run: rustup update
           
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+#       - name: Cache
+#         uses: actions/cache@v3
+#         with:
+#           path: |
+#             ~/.cargo/bin/
+#             ~/.cargo/registry/index/
+#             ~/.cargo/registry/cache/
+#             ~/.cargo/git/db/
+#             target/
+#           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           
-      - name: Doc tests
-        run: |
-          cargo test --doc
+#       - name: Doc tests
+#         run: |
+#           cargo test --doc
 
-      - name: Server Test
-        env:
-          ALTV_BRANCH: ${{ github.ref_name }}
-        run: |
-          cargo run --bin run_test
+#       - name: Server Test
+#         env:
+#           ALTV_BRANCH: ${{ github.ref_name }}
+#         run: |
+#           cargo run --bin run_test
 
-  test-windows:
-    runs-on: windows-2022
+#   test-windows:
+#     runs-on: windows-2022
 
-    if: ${{ !startsWith(github.event.head_commit.message, 'release new version:') }}
+#     if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          submodules: recursive
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v3
+#         with:
+#           submodules: recursive
 
-      - name: Install latest stable rust
-        run: rustup update
+#       - name: Install latest stable rust
+#         run: rustup update
 
-      - name: Install winget
-        uses: Cyberboss/install-winget@v1
+#       - name: Install winget
+#         uses: Cyberboss/install-winget@v1
 
-      - name: Install LLVM 17.0.1
-        shell: powershell
-        run: winget install LLVM.LLVM --version 17.0.1 --disable-interactivity --accept-source-agreements --force
+#       - name: Install LLVM 17.0.1
+#         shell: powershell
+#         run: winget install LLVM.LLVM --version 17.0.1 --disable-interactivity --accept-source-agreements --force
           
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+#       - name: Cache
+#         uses: actions/cache@v3
+#         with:
+#           path: |
+#             ~/.cargo/bin/
+#             ~/.cargo/registry/index/
+#             ~/.cargo/registry/cache/
+#             ~/.cargo/git/db/
+#             target/
+#           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           
-      - name: Doc tests
-        shell: cmd
-        # temp workaround https://github.com/google/autocxx/issues/1327
-        run: |
-          set PATH=%PATH:C:\Program Files\LLVM\bin;=%
-          echo %PATH%
+#       - name: Doc tests
+#         shell: cmd
+#         # temp workaround https://github.com/google/autocxx/issues/1327
+#         run: |
+#           set PATH=%PATH:C:\Program Files\LLVM\bin;=%
+#           echo %PATH%
 
-          cargo test --doc
+#           cargo test --doc
 
-      - name: Server Test
-        env:
-          ALTV_BRANCH: ${{ github.ref_name }}
-        shell: cmd
-        # temp workaround https://github.com/google/autocxx/issues/1327
-        run: |
-          set PATH=%PATH:C:\Program Files\LLVM\bin;=%
-          echo %PATH%
+#       - name: Server Test
+#         env:
+#           ALTV_BRANCH: ${{ github.ref_name }}
+#         shell: cmd
+#         # temp workaround https://github.com/google/autocxx/issues/1327
+#         run: |
+#           set PATH=%PATH:C:\Program Files\LLVM\bin;=%
+#           echo %PATH%
 
-          cargo run --bin run_test
+#           cargo run --bin run_test

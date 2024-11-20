@@ -1,0 +1,106 @@
+name: altvup-release
+
+on:
+  push:
+    tags:
+      - 'altvup-release-v*'
+
+jobs: 
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-22.04
+            binary: cargo-altvup
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+            binary: cargo-altvup.exe
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: build
+        run: |
+          cd altvup
+          cargo build --release
+
+      - name: archive
+        run: |
+          cd target/release
+          tar -czvf ${{ matrix.target }}.tgz ${{ matrix.binary }}
+          cp ${{ matrix.target }}.tgz ../../
+
+      - name: upload archive
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          asset_name: ${{ matrix.target }}.tgz
+          file: ${{ matrix.target }}.tgz
+          tag: ${{ github.ref }}
+          overwrite: true
+
+  github-release:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: ncipollo/release-action@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+  cargo-release:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: auth
+        run: |
+          git config --global user.name "release"
+          git config --global user.email "release@release.release"
+
+      - name: extract branch from tag
+        id: extract_branch
+        run: |
+          BRANCH=$( git log -1 --format='%D' ${{ github.ref_name }} | grep -oP 'origin/\K.*' )
+          echo "BRANCH=$BRANCH" >> $GITHUB_OUTPUT
+      - name: print branch
+        run: echo ${{ steps.extract_branch.outputs.BRANCH }}
+      
+      - name: switch to branch
+        run: git switch ${{ steps.extract_branch.outputs.BRANCH }}
+
+      - name: cargo login
+        run: cargo login ${{ secrets.CRATES_IO_TOKEN }}
+
+      - name: install cargo-binstall
+        uses: cargo-bins/cargo-binstall@v1.10.12
+
+      - name: install cargo-release
+        run: |
+          cargo binstall cargo-release@=0.25.13 --no-confirm
+          
+      - name: extract version from tag
+        id: extract_version
+        run: |
+          VERSION=$( echo ${{ github.ref_name }} | grep -oP 'altvup-release-v\K.*' )
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+      - name: print version
+        run: echo ${{ steps.extract_version.outputs.VERSION }}
+
+      - name: cargo release
+        run: |
+          cargo release ${{ steps.extract_version.outputs.VERSION }} --package cargo-altvup --no-push --no-tag --no-confirm --execute
+
+      - name: commit message workaround
+        run: |
+          git reset HEAD~1
+          git add .
+          git commit -m "release altvup ${{ steps.extract_version.outputs.VERSION }}"
+          git push
