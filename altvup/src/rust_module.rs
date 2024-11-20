@@ -224,6 +224,11 @@ fn download_and_compile_rust_module_from_github_releases(
 }
 
 pub fn compile(agent: &ureq::Agent, branch: &str, cli_args: &[String]) -> anyhow::Result<()> {
+  let dont_compile = find_cli_param(cli_args, "dont-compile");
+  if dont_compile.is_some() {
+    return Ok(());
+  }
+
   let force_recompile = find_cli_param(cli_args, "force-recompile");
   if force_recompile.is_none() {
     let target_path = rust_module_target_path();
