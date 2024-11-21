@@ -5,13 +5,13 @@
 namespace CPlayerConnectEvent {
 
 alt::IPlayer* GetTarget(const alt::CPlayerConnectEvent* ptr) {
-    return ptr->GetTarget();
+  return ptr->GetTarget();
 }
 const StdStringClone GetReason(const alt::CPlayerConnectEvent* ptr) {
-    return std::string { ptr->GetReason() };
+  return std::string { ptr->GetReason() };
 }
 void Cancel(alt::CPlayerConnectEvent* ptr, const StdStringClone _reason) {
-    return ptr->Cancel(_reason);
+  return ptr->Cancel(_reason);
 }
 
 } // namespace

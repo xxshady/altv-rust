@@ -5,7 +5,7 @@
 namespace CPlayerSpawnEvent {
 
 alt::IPlayer* GetPlayer(const alt::CPlayerSpawnEvent* ptr) {
-    return ptr->GetPlayer();
+  return ptr->GetPlayer();
 }
 
 } // namespace

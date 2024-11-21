@@ -117,17 +117,17 @@
 //! ```rust
 //! # fn test() -> altv::VoidResult {
 //! use altv::{
-//!     serde::{Deserialize, Serialize},
-//!     mvalue::{from_mvalue, to_mvalue, AnyMValue},
+//!   serde::{Deserialize, Serialize},
+//!   mvalue::{from_mvalue, to_mvalue, AnyMValue},
 //! };
 //!
 //! #[derive(Serialize, Deserialize, Debug)]
 //! #[serde(crate = "altv::serde")]
 //! enum TestEnum {
-//!     Unit,
-//!     Newtype(i32),
-//!     Tuple(i32, bool),
-//!     Struct { a: i32, b: bool },
+//!   Unit,
+//!   Newtype(i32),
+//!   Tuple(i32, bool),
+//!   Struct { a: i32, b: bool },
 //! }
 //!
 //! let mvalue = to_mvalue(&TestEnum::Newtype(123))?;
@@ -146,18 +146,18 @@
 //! ```rust
 //! # fn test() -> altv::VoidResult {
 //! use altv::{
-//!     serde::{Deserialize, Serialize},
-//!     mvalue::{from_mvalue, to_mvalue, AnyMValue},
+//!   serde::{Deserialize, Serialize},
+//!   mvalue::{from_mvalue, to_mvalue, AnyMValue},
 //! };
 //!
 //! #[derive(Serialize, Deserialize, Debug)]
 //! #[serde(crate = "altv::serde")]
 //! #[serde(untagged)]
 //! enum TestEnum {
-//!     Unit,
-//!     Newtype(i32),
-//!     Tuple(i32, bool),
-//!     Struct { a: i32, b: bool },
+//!   Unit,
+//!   Newtype(i32),
+//!   Tuple(i32, bool),
+//!   Struct { a: i32, b: bool },
 //! }
 //!
 //! let mvalue = to_mvalue(&TestEnum::Newtype(123))?;
@@ -175,14 +175,14 @@
 //! ```rust
 //! # fn test() -> altv::VoidResult {
 //! use altv::{
-//!     serde::{Deserialize, Serialize},
-//!     mvalue::{from_mvalue, to_mvalue},
+//!   serde::{Deserialize, Serialize},
+//!   mvalue::{from_mvalue, to_mvalue},
 //! };
 //!
 //! #[derive(Serialize, Deserialize, Debug)]
 //! #[serde(crate = "altv::serde")]
 //! struct MyStruct {
-//!     a: i32,
+//!   a: i32,
 //! }
 //!
 //! let mvalue = to_mvalue(&MyStruct { a: 123 })?;

@@ -5,7 +5,7 @@
 namespace CResourceStopEvent {
 
 alt::IResource* GetResource(const alt::CResourceStopEvent* ptr) {
-    return ptr->GetResource();
+  return ptr->GetResource();
 }
 
 } // namespace

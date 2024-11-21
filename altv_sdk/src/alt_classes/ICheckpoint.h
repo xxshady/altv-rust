@@ -5,72 +5,72 @@
 namespace ICheckpoint {
 
 u8 GetCheckpointType(const alt::ICheckpoint* ptr) {
-    return ptr->GetCheckpointType();
+  return ptr->GetCheckpointType();
 }
 f32 GetHeight(const alt::ICheckpoint* ptr) {
-    return ptr->GetHeight();
+  return ptr->GetHeight();
 }
 f32 GetRadius(const alt::ICheckpoint* ptr) {
-    return ptr->GetRadius();
+  return ptr->GetRadius();
 }
 RGBAWrapper GetColor(const alt::ICheckpoint* ptr) {
-    auto rgba = ptr->GetColor();
-    return { rgba.r, rgba.g, rgba.b, rgba.a };
+  auto rgba = ptr->GetColor();
+  return { rgba.r, rgba.g, rgba.b, rgba.a };
 }
 RGBAWrapper GetIconColor(const alt::ICheckpoint* ptr) {
-    auto rgba = ptr->GetIconColor();
-    return { rgba.r, rgba.g, rgba.b, rgba.a };
+  auto rgba = ptr->GetIconColor();
+  return { rgba.r, rgba.g, rgba.b, rgba.a };
 }
 Vector3Wrapper GetNextPosition(const alt::ICheckpoint* ptr) {
-    auto vector3 = ptr->GetNextPosition();
-    return { vector3[0], vector3[1], vector3[2] };
+  auto vector3 = ptr->GetNextPosition();
+  return { vector3[0], vector3[1], vector3[2] };
 }
 void SetCheckpointType(alt::ICheckpoint* ptr, u8 type) {
-    return ptr->SetCheckpointType(type);
+  return ptr->SetCheckpointType(type);
 }
 void SetHeight(alt::ICheckpoint* ptr, f32 height) {
-    return ptr->SetHeight(height);
+  return ptr->SetHeight(height);
 }
 void SetRadius(alt::ICheckpoint* ptr, f32 radius) {
-    return ptr->SetRadius(radius);
+  return ptr->SetRadius(radius);
 }
 void SetColor(alt::ICheckpoint* ptr, u8 color_r, u8 color_g, u8 color_b, u8 color_a) {
-    return ptr->SetColor({ color_r, color_g, color_b, color_a });
+  return ptr->SetColor({ color_r, color_g, color_b, color_a });
 }
 void SetIconColor(alt::ICheckpoint* ptr, u8 color_r, u8 color_g, u8 color_b, u8 color_a) {
-    return ptr->SetIconColor({ color_r, color_g, color_b, color_a });
+  return ptr->SetIconColor({ color_r, color_g, color_b, color_a });
 }
 void SetNextPosition(alt::ICheckpoint* ptr, f32 pos_x, f32 pos_y, f32 pos_z) {
-    return ptr->SetNextPosition({ pos_x, pos_y, pos_z });
+  return ptr->SetNextPosition({ pos_x, pos_y, pos_z });
 }
 u32 GetStreamingDistance(const alt::ICheckpoint* ptr) {
-    return ptr->GetStreamingDistance();
+  return ptr->GetStreamingDistance();
 }
 void SetVisible(alt::ICheckpoint* ptr, bool toggle) {
-    return ptr->SetVisible(toggle);
+  return ptr->SetVisible(toggle);
 }
 bool IsVisible(const alt::ICheckpoint* ptr) {
-    return ptr->IsVisible();
+  return ptr->IsVisible();
 }
 bool HasStreamSyncedMetaData(const alt::ICheckpoint* ptr, const StdStringClone key) {
-    return ptr->HasStreamSyncedMetaData(key);
+  return ptr->HasStreamSyncedMetaData(key);
 }
 ConstMValueWrapper GetStreamSyncedMetaData(const alt::ICheckpoint* ptr, const StdStringClone key) {
-    ConstMValueWrapper wrapper;
-    wrapper.ptr = ptr->GetStreamSyncedMetaData(key);
-    return wrapper;
+  ConstMValueWrapper wrapper;
+  wrapper.ptr = ptr->GetStreamSyncedMetaData(key);
+  return wrapper;
 }
 std::vector<std::string> GetStreamSyncedMetaDataKeys(const alt::ICheckpoint* ptr) {
-    return ptr->GetStreamSyncedMetaDataKeys();
+  return ptr->GetStreamSyncedMetaDataKeys();
 }
 void SetStreamSyncedMetaData(alt::ICheckpoint* ptr, const StdStringClone key, MValueMutWrapper val) {
-    return ptr->SetStreamSyncedMetaData(key, val.ptr);
+  return ptr->SetStreamSyncedMetaData(key, val.ptr);
 }
 void SetMultipleStreamSyncedMetaData(alt::ICheckpoint* ptr, const MValueUnorderedMapWrapper& values) {
-    return ptr->SetMultipleStreamSyncedMetaData(values.value);
+  return ptr->SetMultipleStreamSyncedMetaData(values.value);
 }
 void DeleteStreamSyncedMetaData(alt::ICheckpoint* ptr, const StdStringClone key) {
-    return ptr->DeleteStreamSyncedMetaData(key);
+  return ptr->DeleteStreamSyncedMetaData(key);
 }
 
 } // namespace

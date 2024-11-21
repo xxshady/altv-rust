@@ -6,9 +6,9 @@
 //! ```rust
 //! # fn test() -> altv::VoidResult {
 //! altv::events::on_player_connect(|event| {
-//!     let name = event.player.name()?;
-//!     altv::log!("player with name: {name} connected!");
-//!     Ok(())
+//!   let name = event.player.name()?;
+//!   altv::log!("player with name: {name} connected!");
+//!   Ok(())
 //! });
 //! # Ok(()) }
 //! ```
@@ -23,9 +23,9 @@
 //! # fn test() -> altv::VoidResult {
 //! # use altv::prelude::*;
 //! altv::events::on("example", |event| {
-//!     let args: (bool, i32) = event.args.deserialize()?;
-//!     altv::log!("args: {args:?}"); // args: (true, 123)
-//!     Ok(())
+//!   let args: (bool, i32) = event.args.deserialize()?;
+//!   altv::log!("args: {args:?}"); // args: (true, 123)
+//!   Ok(())
 //! });
 //!
 //! altv::events::emit("example", &[&true, &123])?;
@@ -43,10 +43,10 @@
 //! # fn test() -> altv::VoidResult {
 //! # use altv::prelude::*;
 //! altv::events::on_player("example", |event| {
-//!     let args: (bool, i32) = event.args.deserialize()?;
-//!     altv::log!("event from player: {}", event.player.name()?);
-//!     altv::log!("args: {args:?}"); // args: (true, 123)
-//!     Ok(())
+//!   let args: (bool, i32) = event.args.deserialize()?;
+//!   altv::log!("event from player: {}", event.player.name()?);
+//!   altv::log!("args: {args:?}"); // args: (true, 123)
+//!   Ok(())
 //! });
 //!
 //! // Event handler can also be removed later

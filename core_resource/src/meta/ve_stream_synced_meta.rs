@@ -27,9 +27,9 @@ where
   /// # fn test() -> altv::VoidResult {
   /// let group = altv::VirtualEntityGroup::new(10);
   /// let virtual_entity = altv::VirtualEntity::new(
-  ///     group.clone(),
-  ///     altv::Vector3::new(0, 0, 72),
-  ///     10,
+  ///   group.clone(),
+  ///   altv::Vector3::new(0, 0, 72),
+  ///   10,
   /// )?;
   ///
   /// let example_entry = virtual_entity.stream_synced_meta_entry("example")?;

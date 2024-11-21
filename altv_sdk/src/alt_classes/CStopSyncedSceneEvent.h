@@ -5,10 +5,10 @@
 namespace CStopSyncedSceneEvent {
 
 alt::IPlayer* GetSource(const alt::CStopSyncedSceneEvent* ptr) {
-    return ptr->GetSource();
+  return ptr->GetSource();
 }
 i32 GetSceneID(const alt::CStopSyncedSceneEvent* ptr) {
-    return ptr->GetSceneID();
+  return ptr->GetSceneID();
 }
 
 } // namespace

@@ -21,9 +21,9 @@ use crate::{
 /// # use altv::mvalue::DeserializeMValueArgs;
 /// # fn test() -> altv::VoidResult {
 /// altv::events::on("any_mvalue", |event| {
-///     let (any,): (altv::mvalue::AnyMValue,) = event.args.deserialize()?;
-///     dbg!(any);
-///     Ok(())
+///   let (any,): (altv::mvalue::AnyMValue,) = event.args.deserialize()?;
+///   dbg!(any);
+///   Ok(())
 /// });
 /// # Ok(()) }
 /// ```
@@ -35,9 +35,9 @@ use crate::{
 /// # use altv::mvalue::DeserializeMValueArgs;
 /// # fn test() -> altv::VoidResult {
 /// altv::events::on("any_mvalue", |event| {
-///     let (js_number,): (altv::mvalue::AnyMValue,) = event.args.deserialize()?;
-///     let num: f64 = js_number.as_f64()?;
-///     Ok(())
+///   let (js_number,): (altv::mvalue::AnyMValue,) = event.args.deserialize()?;
+///   let num: f64 = js_number.as_f64()?;
+///   Ok(())
 /// });
 /// # Ok(()) }
 /// ```

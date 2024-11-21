@@ -5,13 +5,13 @@
 namespace CGivePedScriptedTaskEvent {
 
 alt::IPlayer* GetSource(const alt::CGivePedScriptedTaskEvent* ptr) {
-    return ptr->GetSource();
+  return ptr->GetSource();
 }
 alt::IPed* GetTarget(const alt::CGivePedScriptedTaskEvent* ptr) {
-    return ptr->GetTarget();
+  return ptr->GetTarget();
 }
 u32 GetTaskType(const alt::CGivePedScriptedTaskEvent* ptr) {
-    return ptr->GetTaskType();
+  return ptr->GetTaskType();
 }
 
 } // namespace

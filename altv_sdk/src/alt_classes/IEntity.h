@@ -5,85 +5,85 @@
 namespace IEntity {
 
 u16 GetSyncID(const alt::IEntity* ptr) {
-    return ptr->GetSyncID();
+  return ptr->GetSyncID();
 }
 alt::IPlayer* GetNetworkOwner(const alt::IEntity* ptr) {
-    return ptr->GetNetworkOwner();
+  return ptr->GetNetworkOwner();
 }
 u32 GetModel(const alt::IEntity* ptr) {
-    return ptr->GetModel();
+  return ptr->GetModel();
 }
 Vector3Wrapper GetRotation(const alt::IEntity* ptr) {
-    auto vector3 = ptr->GetRotation();
-    return { vector3[0], vector3[1], vector3[2] };
+  auto vector3 = ptr->GetRotation();
+  return { vector3[0], vector3[1], vector3[2] };
 }
 void SetRotation(alt::IEntity* ptr, f32 rot_x, f32 rot_y, f32 rot_z) {
-    return ptr->SetRotation({ rot_x, rot_y, rot_z });
+  return ptr->SetRotation({ rot_x, rot_y, rot_z });
 }
 bool HasStreamSyncedMetaData(const alt::IEntity* ptr, const StdStringClone key) {
-    return ptr->HasStreamSyncedMetaData(key);
+  return ptr->HasStreamSyncedMetaData(key);
 }
 ConstMValueWrapper GetStreamSyncedMetaData(const alt::IEntity* ptr, const StdStringClone key) {
-    ConstMValueWrapper wrapper;
-    wrapper.ptr = ptr->GetStreamSyncedMetaData(key);
-    return wrapper;
+  ConstMValueWrapper wrapper;
+  wrapper.ptr = ptr->GetStreamSyncedMetaData(key);
+  return wrapper;
 }
 std::vector<std::string> GetStreamSyncedMetaDataKeys(const alt::IEntity* ptr) {
-    return ptr->GetStreamSyncedMetaDataKeys();
+  return ptr->GetStreamSyncedMetaDataKeys();
 }
 bool GetVisible(const alt::IEntity* ptr) {
-    return ptr->GetVisible();
+  return ptr->GetVisible();
 }
 bool IsFrozen(const alt::IEntity* ptr) {
-    return ptr->IsFrozen();
+  return ptr->IsFrozen();
 }
 void SetFrozen(alt::IEntity* ptr, bool state) {
-    return ptr->SetFrozen(state);
+  return ptr->SetFrozen(state);
 }
 u32 GetTimestamp(const alt::IEntity* ptr) {
-    return ptr->GetTimestamp();
+  return ptr->GetTimestamp();
 }
 void SetNetworkOwner(alt::IEntity* ptr, alt::IPlayer* player, bool disableMigration) {
-    return ptr->SetNetworkOwner(player, disableMigration);
+  return ptr->SetNetworkOwner(player, disableMigration);
 }
 void SetStreamSyncedMetaData(alt::IEntity* ptr, const StdStringClone key, MValueMutWrapper val) {
-    return ptr->SetStreamSyncedMetaData(key, val.ptr);
+  return ptr->SetStreamSyncedMetaData(key, val.ptr);
 }
 void SetMultipleStreamSyncedMetaData(alt::IEntity* ptr, const MValueUnorderedMapWrapper& values) {
-    return ptr->SetMultipleStreamSyncedMetaData(values.value);
+  return ptr->SetMultipleStreamSyncedMetaData(values.value);
 }
 void DeleteStreamSyncedMetaData(alt::IEntity* ptr, const StdStringClone key) {
-    return ptr->DeleteStreamSyncedMetaData(key);
+  return ptr->DeleteStreamSyncedMetaData(key);
 }
 void SetVisible(alt::IEntity* ptr, bool toggle) {
-    return ptr->SetVisible(toggle);
+  return ptr->SetVisible(toggle);
 }
 void AttachToEntity(alt::IEntity* ptr, alt::IEntity* entity, u16 otherBoneId, u16 myBoneId, f32 position_x, f32 position_y, f32 position_z, f32 rotation_x, f32 rotation_y, f32 rotation_z, bool collision, bool noFixedRotation) {
-    return ptr->AttachToEntity(entity, otherBoneId, myBoneId, { position_x, position_y, position_z }, { rotation_x, rotation_y, rotation_z }, collision, noFixedRotation);
+  return ptr->AttachToEntity(entity, otherBoneId, myBoneId, { position_x, position_y, position_z }, { rotation_x, rotation_y, rotation_z }, collision, noFixedRotation);
 }
 void AttachToEntity(alt::IEntity* ptr, alt::IEntity* entity, const StdStringClone otherBoneName, const StdStringClone myBoneName, f32 position_x, f32 position_y, f32 position_z, f32 rotation_x, f32 rotation_y, f32 rotation_z, bool collision, bool noFixedRotation) {
-    return ptr->AttachToEntity(entity, otherBoneName, myBoneName, { position_x, position_y, position_z }, { rotation_x, rotation_y, rotation_z }, collision, noFixedRotation);
+  return ptr->AttachToEntity(entity, otherBoneName, myBoneName, { position_x, position_y, position_z }, { rotation_x, rotation_y, rotation_z }, collision, noFixedRotation);
 }
 void Detach(alt::IEntity* ptr) {
-    return ptr->Detach();
+  return ptr->Detach();
 }
 void SetStreamed(alt::IEntity* ptr, bool toggle) {
-    return ptr->SetStreamed(toggle);
+  return ptr->SetStreamed(toggle);
 }
 bool GetStreamed(const alt::IEntity* ptr) {
-    return ptr->GetStreamed();
+  return ptr->GetStreamed();
 }
 bool HasCollision(const alt::IEntity* ptr) {
-    return ptr->HasCollision();
+  return ptr->HasCollision();
 }
 void SetCollision(alt::IEntity* ptr, bool state) {
-    return ptr->SetCollision(state);
+  return ptr->SetCollision(state);
 }
 u32 GetStreamingDistance(const alt::IEntity* ptr) {
-    return ptr->GetStreamingDistance();
+  return ptr->GetStreamingDistance();
 }
 void SetStreamingDistance(alt::IEntity* ptr, u32 streamingDistance) {
-    return ptr->SetStreamingDistance(streamingDistance);
+  return ptr->SetStreamingDistance(streamingDistance);
 }
 
 } // namespace

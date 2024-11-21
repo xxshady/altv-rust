@@ -5,19 +5,19 @@
 namespace CPlayerChangeAnimationEvent {
 
 alt::IPlayer* GetTarget(const alt::CPlayerChangeAnimationEvent* ptr) {
-    return ptr->GetTarget();
+  return ptr->GetTarget();
 }
 u32 GetOldAnimationDict(const alt::CPlayerChangeAnimationEvent* ptr) {
-    return ptr->GetOldAnimationDict();
+  return ptr->GetOldAnimationDict();
 }
 u32 GetOldAnimationName(const alt::CPlayerChangeAnimationEvent* ptr) {
-    return ptr->GetOldAnimationName();
+  return ptr->GetOldAnimationName();
 }
 u32 GetNewAnimationDict(const alt::CPlayerChangeAnimationEvent* ptr) {
-    return ptr->GetNewAnimationDict();
+  return ptr->GetNewAnimationDict();
 }
 u32 GetNewAnimationName(const alt::CPlayerChangeAnimationEvent* ptr) {
-    return ptr->GetNewAnimationName();
+  return ptr->GetNewAnimationName();
 }
 
 } // namespace

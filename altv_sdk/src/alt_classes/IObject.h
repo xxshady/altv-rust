@@ -5,28 +5,28 @@
 namespace IObject {
 
 u8 GetAlpha(const alt::IObject* ptr) {
-    return ptr->GetAlpha();
+  return ptr->GetAlpha();
 }
 u8 GetTextureVariation(const alt::IObject* ptr) {
-    return ptr->GetTextureVariation();
+  return ptr->GetTextureVariation();
 }
 u16 GetLodDistance(const alt::IObject* ptr) {
-    return ptr->GetLodDistance();
+  return ptr->GetLodDistance();
 }
 void ActivatePhysics(alt::IObject* ptr) {
-    return ptr->ActivatePhysics();
+  return ptr->ActivatePhysics();
 }
 void PlaceOnGroundProperly(alt::IObject* ptr) {
-    return ptr->PlaceOnGroundProperly();
+  return ptr->PlaceOnGroundProperly();
 }
 void SetAlpha(alt::IObject* ptr, u8 alpha) {
-    return ptr->SetAlpha(alpha);
+  return ptr->SetAlpha(alpha);
 }
 void SetTextureVariation(alt::IObject* ptr, u8 textureVariation) {
-    return ptr->SetTextureVariation(textureVariation);
+  return ptr->SetTextureVariation(textureVariation);
 }
 void SetLodDistance(alt::IObject* ptr, u16 lodDistance) {
-    return ptr->SetLodDistance(lodDistance);
+  return ptr->SetLodDistance(lodDistance);
 }
 
 } // namespace

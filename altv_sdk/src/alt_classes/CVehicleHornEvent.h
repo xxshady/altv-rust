@@ -5,13 +5,13 @@
 namespace CVehicleHornEvent {
 
 alt::IVehicle* GetTarget(const alt::CVehicleHornEvent* ptr) {
-    return ptr->GetTarget();
+  return ptr->GetTarget();
 }
 alt::IPlayer* GetReporter(const alt::CVehicleHornEvent* ptr) {
-    return ptr->GetReporter();
+  return ptr->GetReporter();
 }
 bool GetToggle(const alt::CVehicleHornEvent* ptr) {
-    return ptr->GetToggle();
+  return ptr->GetToggle();
 }
 
 } // namespace

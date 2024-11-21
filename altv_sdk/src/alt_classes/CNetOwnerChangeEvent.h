@@ -5,13 +5,13 @@
 namespace CNetOwnerChangeEvent {
 
 alt::IEntity* GetTarget(const alt::CNetOwnerChangeEvent* ptr) {
-    return ptr->GetTarget();
+  return ptr->GetTarget();
 }
 alt::IPlayer* GetNewOwner(const alt::CNetOwnerChangeEvent* ptr) {
-    return ptr->GetNewOwner();
+  return ptr->GetNewOwner();
 }
 alt::IPlayer* GetOldOwner(const alt::CNetOwnerChangeEvent* ptr) {
-    return ptr->GetOldOwner();
+  return ptr->GetOldOwner();
 }
 
 } // namespace

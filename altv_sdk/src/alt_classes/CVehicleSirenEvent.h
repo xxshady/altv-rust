@@ -5,10 +5,10 @@
 namespace CVehicleSirenEvent {
 
 alt::IVehicle* GetTarget(const alt::CVehicleSirenEvent* ptr) {
-    return ptr->GetTarget();
+  return ptr->GetTarget();
 }
 bool GetToggle(const alt::CVehicleSirenEvent* ptr) {
-    return ptr->GetToggle();
+  return ptr->GetToggle();
 }
 
 } // namespace

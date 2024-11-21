@@ -5,7 +5,7 @@
 namespace CResourceStartEvent {
 
 alt::IResource* GetResource(const alt::CResourceStartEvent* ptr) {
-    return ptr->GetResource();
+  return ptr->GetResource();
 }
 
 } // namespace

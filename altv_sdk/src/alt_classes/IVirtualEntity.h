@@ -5,36 +5,36 @@
 namespace IVirtualEntity {
 
 alt::IVirtualEntityGroup* GetGroup(const alt::IVirtualEntity* ptr) {
-    return ptr->GetGroup();
+  return ptr->GetGroup();
 }
 bool HasStreamSyncedMetaData(const alt::IVirtualEntity* ptr, const StdStringClone key) {
-    return ptr->HasStreamSyncedMetaData(key);
+  return ptr->HasStreamSyncedMetaData(key);
 }
 ConstMValueWrapper GetStreamSyncedMetaData(const alt::IVirtualEntity* ptr, const StdStringClone key) {
-    ConstMValueWrapper wrapper;
-    wrapper.ptr = ptr->GetStreamSyncedMetaData(key);
-    return wrapper;
+  ConstMValueWrapper wrapper;
+  wrapper.ptr = ptr->GetStreamSyncedMetaData(key);
+  return wrapper;
 }
 std::vector<std::string> GetStreamSyncedMetaDataKeys(const alt::IVirtualEntity* ptr) {
-    return ptr->GetStreamSyncedMetaDataKeys();
+  return ptr->GetStreamSyncedMetaDataKeys();
 }
 u32 GetStreamingDistance(const alt::IVirtualEntity* ptr) {
-    return ptr->GetStreamingDistance();
+  return ptr->GetStreamingDistance();
 }
 void SetVisible(alt::IVirtualEntity* ptr, bool toggle) {
-    return ptr->SetVisible(toggle);
+  return ptr->SetVisible(toggle);
 }
 bool IsVisible(const alt::IVirtualEntity* ptr) {
-    return ptr->IsVisible();
+  return ptr->IsVisible();
 }
 void SetStreamSyncedMetaData(alt::IVirtualEntity* ptr, const StdStringClone key, MValueMutWrapper val) {
-    return ptr->SetStreamSyncedMetaData(key, val.ptr);
+  return ptr->SetStreamSyncedMetaData(key, val.ptr);
 }
 void SetMultipleStreamSyncedMetaData(alt::IVirtualEntity* ptr, const MValueUnorderedMapWrapper& values) {
-    return ptr->SetMultipleStreamSyncedMetaData(values.value);
+  return ptr->SetMultipleStreamSyncedMetaData(values.value);
 }
 void DeleteStreamSyncedMetaData(alt::IVirtualEntity* ptr, const StdStringClone key) {
-    return ptr->DeleteStreamSyncedMetaData(key);
+  return ptr->DeleteStreamSyncedMetaData(key);
 }
 
 } // namespace

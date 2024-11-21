@@ -5,10 +5,10 @@
 namespace CPlayerDisconnectEvent {
 
 alt::IPlayer* GetTarget(const alt::CPlayerDisconnectEvent* ptr) {
-    return ptr->GetTarget();
+  return ptr->GetTarget();
 }
 const StdStringClone GetReason(const alt::CPlayerDisconnectEvent* ptr) {
-    return std::string { ptr->GetReason() };
+  return std::string { ptr->GetReason() };
 }
 
 } // namespace

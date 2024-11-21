@@ -5,19 +5,19 @@
 namespace CPlayerHealEvent {
 
 alt::IPlayer* GetTarget(const alt::CPlayerHealEvent* ptr) {
-    return ptr->GetTarget();
+  return ptr->GetTarget();
 }
 u16 GetOldHealth(const alt::CPlayerHealEvent* ptr) {
-    return ptr->GetOldHealth();
+  return ptr->GetOldHealth();
 }
 u16 GetNewHealth(const alt::CPlayerHealEvent* ptr) {
-    return ptr->GetNewHealth();
+  return ptr->GetNewHealth();
 }
 u16 GetOldArmour(const alt::CPlayerHealEvent* ptr) {
-    return ptr->GetOldArmour();
+  return ptr->GetOldArmour();
 }
 u16 GetNewArmour(const alt::CPlayerHealEvent* ptr) {
-    return ptr->GetNewArmour();
+  return ptr->GetNewArmour();
 }
 
 } // namespace

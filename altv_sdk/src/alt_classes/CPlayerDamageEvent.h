@@ -5,19 +5,19 @@
 namespace CPlayerDamageEvent {
 
 alt::IPlayer* GetTarget(const alt::CPlayerDamageEvent* ptr) {
-    return ptr->GetTarget();
+  return ptr->GetTarget();
 }
 alt::IEntity* GetAttacker(const alt::CPlayerDamageEvent* ptr) {
-    return ptr->GetAttacker();
+  return ptr->GetAttacker();
 }
 u16 GetHealthDamage(const alt::CPlayerDamageEvent* ptr) {
-    return ptr->GetHealthDamage();
+  return ptr->GetHealthDamage();
 }
 u16 GetArmourDamage(const alt::CPlayerDamageEvent* ptr) {
-    return ptr->GetArmourDamage();
+  return ptr->GetArmourDamage();
 }
 u32 GetWeapon(const alt::CPlayerDamageEvent* ptr) {
-    return ptr->GetWeapon();
+  return ptr->GetWeapon();
 }
 
 } // namespace

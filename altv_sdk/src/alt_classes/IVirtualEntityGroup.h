@@ -5,7 +5,7 @@
 namespace IVirtualEntityGroup {
 
 u32 GetMaxEntitiesInStream(const alt::IVirtualEntityGroup* ptr) {
-    return ptr->GetMaxEntitiesInStream();
+  return ptr->GetMaxEntitiesInStream();
 }
 
 } // namespace

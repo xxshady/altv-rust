@@ -5,67 +5,67 @@
 namespace IConnectionInfo {
 
 std::string GetName(const alt::IConnectionInfo* ptr) {
-    return ptr->GetName();
+  return ptr->GetName();
 }
 u64 GetSocialId(const alt::IConnectionInfo* ptr) {
-    return ptr->GetSocialId();
+  return ptr->GetSocialId();
 }
 std::string GetSocialName(const alt::IConnectionInfo* ptr) {
-    return ptr->GetSocialName();
+  return ptr->GetSocialName();
 }
 u64 GetHwIdHash(const alt::IConnectionInfo* ptr) {
-    return ptr->GetHwIdHash();
+  return ptr->GetHwIdHash();
 }
 u64 GetHwIdExHash(const alt::IConnectionInfo* ptr) {
-    return ptr->GetHwIdExHash();
+  return ptr->GetHwIdExHash();
 }
 std::string GetAuthToken(const alt::IConnectionInfo* ptr) {
-    return ptr->GetAuthToken();
+  return ptr->GetAuthToken();
 }
 bool GetIsDebug(const alt::IConnectionInfo* ptr) {
-    return ptr->GetIsDebug();
+  return ptr->GetIsDebug();
 }
 std::string GetBranch(const alt::IConnectionInfo* ptr) {
-    return ptr->GetBranch();
+  return ptr->GetBranch();
 }
 u16 GetVersionMajor(const alt::IConnectionInfo* ptr) {
-    return ptr->GetVersionMajor();
+  return ptr->GetVersionMajor();
 }
 u16 GetVersionMinor(const alt::IConnectionInfo* ptr) {
-    return ptr->GetVersionMinor();
+  return ptr->GetVersionMinor();
 }
 std::string GetCdnUrl(const alt::IConnectionInfo* ptr) {
-    return ptr->GetCdnUrl();
+  return ptr->GetCdnUrl();
 }
 u64 GetPasswordHash(const alt::IConnectionInfo* ptr) {
-    return ptr->GetPasswordHash();
+  return ptr->GetPasswordHash();
 }
 std::string GetIp(const alt::IConnectionInfo* ptr) {
-    return ptr->GetIp();
+  return ptr->GetIp();
 }
 i64 GetDiscordUserID(const alt::IConnectionInfo* ptr) {
-    return ptr->GetDiscordUserID();
+  return ptr->GetDiscordUserID();
 }
 std::string GetText(const alt::IConnectionInfo* ptr) {
-    return ptr->GetText();
+  return ptr->GetText();
 }
 std::string GetCloudID(const alt::IConnectionInfo* ptr) {
-    return ptr->GetCloudID();
+  return ptr->GetCloudID();
 }
 CloudAuthResult_t GetCloudAuthResult(const alt::IConnectionInfo* ptr) {
-    return static_cast<uint8_t>(ptr->GetCloudAuthResult());
+  return static_cast<uint8_t>(ptr->GetCloudAuthResult());
 }
 void Accept(alt::IConnectionInfo* ptr, bool sendNames) {
-    return ptr->Accept(sendNames);
+  return ptr->Accept(sendNames);
 }
 void Decline(alt::IConnectionInfo* ptr, const StdStringClone reason) {
-    return ptr->Decline(reason);
+  return ptr->Decline(reason);
 }
 bool IsAccepted(const alt::IConnectionInfo* ptr) {
-    return ptr->IsAccepted();
+  return ptr->IsAccepted();
 }
 void SetText(alt::IConnectionInfo* ptr, const StdStringClone text) {
-    return ptr->SetText(text);
+  return ptr->SetText(text);
 }
 
 } // namespace

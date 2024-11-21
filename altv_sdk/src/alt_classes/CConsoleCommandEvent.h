@@ -5,10 +5,10 @@
 namespace CConsoleCommandEvent {
 
 std::string GetName(const alt::CConsoleCommandEvent* ptr) {
-    return ptr->GetName();
+  return ptr->GetName();
 }
 const std::vector<std::string> GetArgs(const alt::CConsoleCommandEvent* ptr) {
-    return ptr->GetArgs();
+  return ptr->GetArgs();
 }
 
 } // namespace

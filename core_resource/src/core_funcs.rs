@@ -18,12 +18,12 @@ use crate::{
 /// use altv::enumflags2::BitFlag;
 ///
 /// let any_entities = altv::get_closest_entities(
-///     0,
-///     100,
-///     0,
-///     10,
-///     altv::BaseObjectFilter::all(),
-///     Default::default(),
+///   0,
+///   100,
+///   0,
+///   10,
+///   altv::BaseObjectFilter::all(),
+///   Default::default(),
 /// );
 /// # Ok(()) }
 /// ```
@@ -37,12 +37,12 @@ use crate::{
 /// use altv::enumflags2::BitFlag;
 ///
 /// let vehicles_and_peds = altv::get_closest_entities(
-///     0,
-///     100,
-///     0,
-///     10,
-///     altv::BaseObjectFilter::Vehicle | altv::BaseObjectFilter::Ped,
-///     Default::default(),
+///   0,
+///   100,
+///   0,
+///   10,
+///   altv::BaseObjectFilter::Vehicle | altv::BaseObjectFilter::Ped,
+///   Default::default(),
 /// );
 /// # Ok(()) }
 /// ```

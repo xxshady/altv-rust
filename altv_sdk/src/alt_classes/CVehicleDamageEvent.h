@@ -5,25 +5,25 @@
 namespace CVehicleDamageEvent {
 
 alt::IVehicle* GetTarget(const alt::CVehicleDamageEvent* ptr) {
-    return ptr->GetTarget();
+  return ptr->GetTarget();
 }
 alt::IEntity* GetDamager(const alt::CVehicleDamageEvent* ptr) {
-    return ptr->GetDamager();
+  return ptr->GetDamager();
 }
 u32 GetBodyHealthDamage(const alt::CVehicleDamageEvent* ptr) {
-    return ptr->GetBodyHealthDamage();
+  return ptr->GetBodyHealthDamage();
 }
 u32 GetBodyAdditionalHealthDamage(const alt::CVehicleDamageEvent* ptr) {
-    return ptr->GetBodyAdditionalHealthDamage();
+  return ptr->GetBodyAdditionalHealthDamage();
 }
 u32 GetEngineHealthDamage(const alt::CVehicleDamageEvent* ptr) {
-    return ptr->GetEngineHealthDamage();
+  return ptr->GetEngineHealthDamage();
 }
 u32 GetPetrolTankHealthDamage(const alt::CVehicleDamageEvent* ptr) {
-    return ptr->GetPetrolTankHealthDamage();
+  return ptr->GetPetrolTankHealthDamage();
 }
 u32 GetDamagedWith(const alt::CVehicleDamageEvent* ptr) {
-    return ptr->GetDamagedWith();
+  return ptr->GetDamagedWith();
 }
 
 } // namespace

@@ -5,13 +5,13 @@
 namespace CPlayerDimensionChangeEvent {
 
 alt::IPlayer* GetTarget(const alt::CPlayerDimensionChangeEvent* ptr) {
-    return ptr->GetTarget();
+  return ptr->GetTarget();
 }
 i32 GetOldDimension(const alt::CPlayerDimensionChangeEvent* ptr) {
-    return ptr->GetOldDimension();
+  return ptr->GetOldDimension();
 }
 i32 GetNewDimension(const alt::CPlayerDimensionChangeEvent* ptr) {
-    return ptr->GetNewDimension();
+  return ptr->GetNewDimension();
 }
 
 } // namespace

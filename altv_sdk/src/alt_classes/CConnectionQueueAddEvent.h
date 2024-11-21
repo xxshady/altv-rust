@@ -5,7 +5,7 @@
 namespace CConnectionQueueAddEvent {
 
 alt::IConnectionInfo* GetConnectionInfo(const alt::CConnectionQueueAddEvent* ptr) {
-    return ptr->GetConnectionInfo();
+  return ptr->GetConnectionInfo();
 }
 
 } // namespace

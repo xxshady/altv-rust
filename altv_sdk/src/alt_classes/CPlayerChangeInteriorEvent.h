@@ -5,13 +5,13 @@
 namespace CPlayerChangeInteriorEvent {
 
 alt::IPlayer* GetTarget(const alt::CPlayerChangeInteriorEvent* ptr) {
-    return ptr->GetTarget();
+  return ptr->GetTarget();
 }
 u32 GetOldInteriorLocation(const alt::CPlayerChangeInteriorEvent* ptr) {
-    return ptr->GetOldInteriorLocation();
+  return ptr->GetOldInteriorLocation();
 }
 u32 GetNewInteriorLocation(const alt::CPlayerChangeInteriorEvent* ptr) {
-    return ptr->GetNewInteriorLocation();
+  return ptr->GetNewInteriorLocation();
 }
 
 } // namespace

@@ -5,7 +5,7 @@
 namespace CConnectionQueueRemoveEvent {
 
 alt::IConnectionInfo* GetConnectionInfo(const alt::CConnectionQueueRemoveEvent* ptr) {
-    return ptr->GetConnectionInfo();
+  return ptr->GetConnectionInfo();
 }
 
 } // namespace

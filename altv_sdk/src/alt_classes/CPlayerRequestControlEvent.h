@@ -5,10 +5,10 @@
 namespace CPlayerRequestControlEvent {
 
 alt::IEntity* GetTarget(const alt::CPlayerRequestControlEvent* ptr) {
-    return ptr->GetTarget();
+  return ptr->GetTarget();
 }
 alt::IPlayer* GetPlayer(const alt::CPlayerRequestControlEvent* ptr) {
-    return ptr->GetPlayer();
+  return ptr->GetPlayer();
 }
 
 } // namespace

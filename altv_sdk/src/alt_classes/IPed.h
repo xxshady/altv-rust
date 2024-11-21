@@ -5,28 +5,28 @@
 namespace IPed {
 
 u16 GetHealth(const alt::IPed* ptr) {
-    return ptr->GetHealth();
+  return ptr->GetHealth();
 }
 u16 GetMaxHealth(const alt::IPed* ptr) {
-    return ptr->GetMaxHealth();
+  return ptr->GetMaxHealth();
 }
 u16 GetArmour(const alt::IPed* ptr) {
-    return ptr->GetArmour();
+  return ptr->GetArmour();
 }
 u32 GetCurrentWeapon(const alt::IPed* ptr) {
-    return ptr->GetCurrentWeapon();
+  return ptr->GetCurrentWeapon();
 }
 void SetHealth(alt::IPed* ptr, u16 health) {
-    return ptr->SetHealth(health);
+  return ptr->SetHealth(health);
 }
 void SetMaxHealth(alt::IPed* ptr, u16 health) {
-    return ptr->SetMaxHealth(health);
+  return ptr->SetMaxHealth(health);
 }
 void SetArmour(alt::IPed* ptr, u16 armor) {
-    return ptr->SetArmour(armor);
+  return ptr->SetArmour(armor);
 }
 void SetCurrentWeapon(alt::IPed* ptr, u32 weapon) {
-    return ptr->SetCurrentWeapon(weapon);
+  return ptr->SetCurrentWeapon(weapon);
 }
 
 } // namespace

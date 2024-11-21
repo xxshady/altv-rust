@@ -5,37 +5,37 @@
 namespace IResource {
 
 bool IsStarted(const alt::IResource* ptr) {
-    return ptr->IsStarted();
+  return ptr->IsStarted();
 }
 const StdStringClone GetType(const alt::IResource* ptr) {
-    return std::string { ptr->GetType() };
+  return std::string { ptr->GetType() };
 }
 const StdStringClone GetName(const alt::IResource* ptr) {
-    return std::string { ptr->GetName() };
+  return std::string { ptr->GetName() };
 }
 const StdStringClone GetPath(const alt::IResource* ptr) {
-    return std::string { ptr->GetPath() };
+  return std::string { ptr->GetPath() };
 }
 const StdStringClone GetMain(const alt::IResource* ptr) {
-    return std::string { ptr->GetMain() };
+  return std::string { ptr->GetMain() };
 }
 const std::vector<std::string> GetDependencies(const alt::IResource* ptr) {
-    return ptr->GetDependencies();
+  return ptr->GetDependencies();
 }
 const std::vector<std::string> GetDependants(const alt::IResource* ptr) {
-    return ptr->GetDependants();
+  return ptr->GetDependants();
 }
 std::string GetClientType(const alt::IResource* ptr) {
-    return ptr->GetClientType();
+  return ptr->GetClientType();
 }
 std::string GetClientMain(const alt::IResource* ptr) {
-    return ptr->GetClientMain();
+  return ptr->GetClientMain();
 }
 const std::vector<std::string> GetClientFiles(const alt::IResource* ptr) {
-    return ptr->GetClientFiles();
+  return ptr->GetClientFiles();
 }
 Config::Value::ValuePtr GetConfig(const alt::IResource* ptr) {
-    return ptr->GetConfig();
+  return ptr->GetConfig();
 }
 
 } // namespace

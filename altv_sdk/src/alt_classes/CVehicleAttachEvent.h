@@ -5,10 +5,10 @@
 namespace CVehicleAttachEvent {
 
 alt::IVehicle* GetTarget(const alt::CVehicleAttachEvent* ptr) {
-    return ptr->GetTarget();
+  return ptr->GetTarget();
 }
 alt::IVehicle* GetAttached(const alt::CVehicleAttachEvent* ptr) {
-    return ptr->GetAttached();
+  return ptr->GetAttached();
 }
 
 } // namespace

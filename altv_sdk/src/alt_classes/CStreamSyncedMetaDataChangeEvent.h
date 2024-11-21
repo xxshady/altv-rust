@@ -5,20 +5,20 @@
 namespace CStreamSyncedMetaDataChangeEvent {
 
 alt::IBaseObject* GetTarget(const alt::CStreamSyncedMetaDataChangeEvent* ptr) {
-    return ptr->GetTarget();
+  return ptr->GetTarget();
 }
 std::string GetKey(const alt::CStreamSyncedMetaDataChangeEvent* ptr) {
-    return ptr->GetKey();
+  return ptr->GetKey();
 }
 ConstMValueWrapper GetVal(const alt::CStreamSyncedMetaDataChangeEvent* ptr) {
-    ConstMValueWrapper wrapper;
-    wrapper.ptr = ptr->GetVal();
-    return wrapper;
+  ConstMValueWrapper wrapper;
+  wrapper.ptr = ptr->GetVal();
+  return wrapper;
 }
 ConstMValueWrapper GetOldVal(const alt::CStreamSyncedMetaDataChangeEvent* ptr) {
-    ConstMValueWrapper wrapper;
-    wrapper.ptr = ptr->GetOldVal();
-    return wrapper;
+  ConstMValueWrapper wrapper;
+  wrapper.ptr = ptr->GetOldVal();
+  return wrapper;
 }
 
 } // namespace

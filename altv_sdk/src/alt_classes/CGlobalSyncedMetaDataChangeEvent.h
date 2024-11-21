@@ -5,17 +5,17 @@
 namespace CGlobalSyncedMetaDataChangeEvent {
 
 std::string GetKey(const alt::CGlobalSyncedMetaDataChangeEvent* ptr) {
-    return ptr->GetKey();
+  return ptr->GetKey();
 }
 ConstMValueWrapper GetVal(const alt::CGlobalSyncedMetaDataChangeEvent* ptr) {
-    ConstMValueWrapper wrapper;
-    wrapper.ptr = ptr->GetVal();
-    return wrapper;
+  ConstMValueWrapper wrapper;
+  wrapper.ptr = ptr->GetVal();
+  return wrapper;
 }
 ConstMValueWrapper GetOldVal(const alt::CGlobalSyncedMetaDataChangeEvent* ptr) {
-    ConstMValueWrapper wrapper;
-    wrapper.ptr = ptr->GetOldVal();
-    return wrapper;
+  ConstMValueWrapper wrapper;
+  wrapper.ptr = ptr->GetOldVal();
+  return wrapper;
 }
 
 } // namespace

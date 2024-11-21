@@ -5,13 +5,13 @@
 namespace CColShapeEvent {
 
 alt::IColShape* GetTarget(const alt::CColShapeEvent* ptr) {
-    return ptr->GetTarget();
+  return ptr->GetTarget();
 }
 alt::IWorldObject* GetEntity(const alt::CColShapeEvent* ptr) {
-    return ptr->GetEntity();
+  return ptr->GetEntity();
 }
 bool GetState(const alt::CColShapeEvent* ptr) {
-    return ptr->GetState();
+  return ptr->GetState();
 }
 
 } // namespace

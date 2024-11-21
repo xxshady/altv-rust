@@ -65,7 +65,7 @@ use altv::prelude::*;
 
 #[altv::main] // This is required
 fn main() -> impl altv::IntoVoidResult {
-    altv::log!("~gl~hello world");
+  altv::log!("~gl~hello world");
 }
 ```
 

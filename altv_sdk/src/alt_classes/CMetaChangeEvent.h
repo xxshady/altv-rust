@@ -5,20 +5,20 @@
 namespace CMetaChangeEvent {
 
 alt::IBaseObject* GetTarget(const alt::CMetaChangeEvent* ptr) {
-    return ptr->GetTarget();
+  return ptr->GetTarget();
 }
 std::string GetKey(const alt::CMetaChangeEvent* ptr) {
-    return ptr->GetKey();
+  return ptr->GetKey();
 }
 ConstMValueWrapper GetVal(const alt::CMetaChangeEvent* ptr) {
-    ConstMValueWrapper wrapper;
-    wrapper.ptr = ptr->GetVal();
-    return wrapper;
+  ConstMValueWrapper wrapper;
+  wrapper.ptr = ptr->GetVal();
+  return wrapper;
 }
 ConstMValueWrapper GetOldVal(const alt::CMetaChangeEvent* ptr) {
-    ConstMValueWrapper wrapper;
-    wrapper.ptr = ptr->GetOldVal();
-    return wrapper;
+  ConstMValueWrapper wrapper;
+  wrapper.ptr = ptr->GetOldVal();
+  return wrapper;
 }
 
 } // namespace

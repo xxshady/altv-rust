@@ -10,74 +10,85 @@ use core_resource::exports;
 
 #[rustfmt::skip]
 pub use exports::{
-    logging::{
-        log_macro as log,
-        log_warn_macro as log_warn,
-        log_error_macro as log_error,
-        log,
-        log_warn,
-    },
-    BaseObjectWrapper,
-    SyncId,
-    Vector2,
-    Vector3,
+  logging::{
+    log_macro as log,
+    log_warn_macro as log_warn,
+    log_error_macro as log_error,
+    log,
+    log_warn,
+  },
+  BaseObjectWrapper,
+  SyncId,
+  Vector2,
+  Vector3,
 
-    // base objects
-    ColShape, ColShapeContainer,
-    Player, PlayerContainer,
-    Vehicle, VehicleContainer,
-    Ped, PedContainer,
-    Object, ObjectContainer,
-    VirtualEntity, VirtualEntityContainer,
-    VirtualEntityGroup, VirtualEntityGroupContainer,
-    Blip, BlipContainer,
-    VoiceChannel, VoiceChannelContainer,
-    Marker, MarkerContainer,
-    Checkpoint, CheckpointContainer,
+  // base objects
+  ColShape,
+  ColShapeContainer,
+  Player,
+  PlayerContainer,
+  Vehicle,
+  VehicleContainer,
+  Ped,
+  PedContainer,
+  Object,
+  ObjectContainer,
+  VirtualEntity,
+  VirtualEntityContainer,
+  VirtualEntityGroup,
+  VirtualEntityGroupContainer,
+  Blip,
+  BlipContainer,
+  VoiceChannel,
+  VoiceChannelContainer,
+  Marker,
+  MarkerContainer,
+  Checkpoint,
+  CheckpointContainer,
 
-    WorldObject,
-    Entity,
-    AnyEntity,
-    AttachToEntityBoneIndex,
-    AttachToEntityBoneName,
-    PlayerDateTime,
-    PlayerHeadBlendData,
-    PlayAnimation,
-    hash,
-    Hash,
-    VehicleModelInfo,
-    PedModelInfo,
-    WeaponModelInfo,
-    Rgba,
-    Quaternion,
-    core_funcs::*,
-    config_node::*,
-    Resource,
-    ColShapy,
-    result::{VoidResult, IntoVoidResult, SomeResult},
-    AnyBaseObject,
-    BaseObjectPoolFuncs,
-    base_object,
-    BaseObjectId,
-    Timer,
-    AnimationFlags,
-    AmmoType,
-    AmmoFlags,
-    Decoration,
+  WorldObject,
+  Entity,
+  AnyEntity,
+  AttachToEntityBoneIndex,
+  AttachToEntityBoneName,
+  PlayerDateTime,
+  PlayerHeadBlendData,
+  PlayAnimation,
+  hash,
+  Hash,
+  VehicleModelInfo,
+  PedModelInfo,
+  WeaponModelInfo,
+  Rgba,
+  Quaternion,
+  core_funcs::*,
+  config_node::*,
+  Resource,
+  ColShapy,
+  result::{VoidResult, IntoVoidResult, SomeResult},
+  AnyBaseObject,
+  BaseObjectPoolFuncs,
+  base_object,
+  BaseObjectId,
+  Timer,
+  AnimationFlags,
+  AmmoType,
+  AmmoFlags,
+  Decoration,
 
-    anyhow,
-    serde,
-    erased_serde,
-    serde_bytes::{
-        self,
-        ByteBuf,
-        // Bytes TODO: implement bytes deserialization
-    },
-    enumflags2,
+  anyhow,
+  serde,
+  erased_serde,
+  serde_bytes::{
+    self,
+    ByteBuf,
+    // Bytes TODO: implement bytes deserialization
+  },
+  enumflags2,
 
-    MValueHashMap,
-    BaseObjectFilter,
-    ClosestEntitiesOrder,
+  MValueHashMap,
+  BaseObjectFilter,
+  ClosestEntitiesOrder,
 };
 
 pub use altv_sdk::{
@@ -88,15 +99,16 @@ pub use altv_sdk::{
 
 pub const DEFAULT_DIMENSION: i32 = 0;
 pub const GLOBAL_DIMENSION: i32 = i32::MIN;
+
 /// # Examples
 ///
 /// ```rust
 /// # fn test() -> altv::VoidResult {
 /// altv::events::on_player_enter_vehicle(|event| {
-///     if event.seat == altv::DRIVER_SEAT {
-///         altv::log!("Player: {} entered vehicle as driver", event.player.name()?);
-///     }
-///     Ok(())
+///   if event.seat == altv::DRIVER_SEAT {
+///     altv::log!("Player: {} entered vehicle as driver", event.player.name()?);
+///   }
+///   Ok(())
 /// });
 /// # Ok(()) }
 /// ```
@@ -108,26 +120,26 @@ pub mod mvalue;
 
 #[rustfmt::skip]
 pub mod prelude {
-    pub use super::exports::{
-        config_node::Config,
-        meta::{
-            MetaEntry,
-            BaseObjectMetaEntry,
-            NormalBaseObjectMeta,
-            SyncedBaseObjectMeta,
-            StreamSyncedEntityMeta,
-            StreamSyncedCheckpointMeta, 
-            StreamSyncedVirtualEntityMeta,
-            LocalPlayerMeta, 
-        },
-        mvalue::DeserializeMValueArgs,
+  pub use super::exports::{
+    config_node::Config,
+    meta::{
+      MetaEntry,
+      BaseObjectMetaEntry,
+      NormalBaseObjectMeta,
+      SyncedBaseObjectMeta,
+      StreamSyncedEntityMeta,
+      StreamSyncedCheckpointMeta, 
+      StreamSyncedVirtualEntityMeta,
+      LocalPlayerMeta, 
+    },
+    mvalue::DeserializeMValueArgs,
 
-        BaseObjectPoolFuncs,
-        ColShapy,
-        Entity,
-        ValidBaseObject,
-        WorldObject,
-    };
+    BaseObjectPoolFuncs,
+    ColShapy,
+    Entity,
+    ValidBaseObject,
+    WorldObject,
+  };
 }
 
 /// # Examples
@@ -135,10 +147,10 @@ pub mod prelude {
 /// ```rust
 /// # fn test() -> altv::VoidResult {
 /// altv::set_timeout(
-///     move || {
-///         altv::log!("this message will be printed once, after 1.5s");
-///     },
-///     1500,
+///   move || {
+///     altv::log!("this message will be printed once, after 1.5s");
+///   },
+///   1500,
 /// );
 /// # Ok(()) }
 /// ```
@@ -147,16 +159,16 @@ pub mod prelude {
 /// ```rust
 /// # fn test() -> altv::VoidResult {
 /// fn something_that_can_fail() -> altv::VoidResult {
-///     Ok(())
+///   Ok(())
 /// }
 ///
 /// altv::set_timeout(
-///     move || {
-///         altv::log!("this message will be printed once, after 1.5s");
-///         something_that_can_fail()?;
-///         Ok(())
-///     },
-///     1500,
+///   move || {
+///     altv::log!("this message will be printed once, after 1.5s");
+///     something_that_can_fail()?;
+///     Ok(())
+///   },
+///   1500,
 /// );
 /// # Ok(()) }
 /// ```
@@ -165,10 +177,10 @@ pub mod prelude {
 /// ```rust
 /// # fn test() -> altv::VoidResult {
 /// let mut timer = altv::set_timeout(
-///     move || {
-///         altv::log!("this message will never be printed");
-///     },
-///     1500,
+///   move || {
+///     altv::log!("this message will never be printed");
+///   },
+///   1500,
 /// );
 ///
 /// // Returns error if timer was already destroyed
@@ -192,10 +204,10 @@ pub fn set_timeout<V: IntoVoidResult>(
 /// ```rust
 /// # fn test() -> altv::VoidResult {
 /// altv::set_interval(
-///     move || {
-///         altv::log!("this message will be printed every 1.5s");
-///     },
-///     1500,
+///   move || {
+///     altv::log!("this message will be printed every 1.5s");
+///   },
+///   1500,
 /// );
 /// # Ok(()) }
 /// ```
@@ -204,16 +216,16 @@ pub fn set_timeout<V: IntoVoidResult>(
 /// ```rust
 /// # fn test() -> altv::VoidResult {
 /// fn something_that_can_fail() -> altv::VoidResult {
-///     Ok(())
+///   Ok(())
 /// }
 ///
 /// altv::set_interval(
-///     move || {
-///         altv::log!("this message will be printed every 1.5s");
-///         something_that_can_fail()?;
-///         Ok(())
-///     },
-///     1500,
+///   move || {
+///     altv::log!("this message will be printed every 1.5s");
+///     something_that_can_fail()?;
+///     Ok(())
+///   },
+///   1500,
 /// );
 /// # Ok(()) }
 /// ```
@@ -222,10 +234,10 @@ pub fn set_timeout<V: IntoVoidResult>(
 /// ```rust
 /// # fn test() -> altv::VoidResult {
 /// let mut timer = altv::set_interval(
-///     move || {
-///         altv::log!("this message will never be printed");
-///     },
-///     1500,
+///   move || {
+///     altv::log!("this message will never be printed");
+///   },
+///   1500,
 /// );
 ///
 /// // Returns error if timer was already destroyed

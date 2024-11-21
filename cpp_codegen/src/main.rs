@@ -330,7 +330,7 @@ fn parse_cpp_method(class_name: &str, method: String) -> anyhow::Result<CppMetho
         pointer_param = true;
         continue;
       } else if return_type.type_name.is_none() // return type parsing
-                && char == b' ' && method_parser.is_next_char('*')
+        && char == b' ' && method_parser.is_next_char('*')
       {
         // println!("return type parsing pointer type: {current_word:?}");
         pointer_return_type = true;
@@ -526,44 +526,43 @@ fn cpp_method_to_rust_compatible_func(
   let method_name = parsed_method.name;
   let mut params = vec![];
   for p in parsed_method.parameters.iter() {
-    params.push({
-            let CompletedParam {
-                name,
-                type_name,
-                is_const,
-            } = p;
-            match type_name.as_str() {
-                "Vector3Wrapper" => format!("f32 {name}_x, f32 {name}_y, f32 {name}_z"),
-                "Vector2Wrapper" => format!("f32 {name}_x, f32 {name}_y"),
-                "alt::Quaternion" => {
-                    format!("f32 {name}_x, f32 {name}_y, f32 {name}_z, f32 {name}_w")
-                }
-                "RGBAWrapper" => format!("u8 {name}_r, u8 {name}_g, u8 {name}_b, u8 {name}_a"),
-                "std::vector<WeaponWrapper>" => {
-                    "---std::vector<WeaponWrapper> is not implemented as param".to_string()
-                }
-                "BaseObjectType" => "---BaseObjectType is not implemented as param".to_string(),
-                "ColShapeType" => "---ColShapeType is not implemented as param".to_string(),
-                "WeaponDamageEventBodyPart" => {
-                    "---WeaponDamageEventBodyPart is not implemented as param".to_string()
-                }
-                "EventType" => format!("u16 {name}"),
-                "Vector2Vec" => format!("Vector2Vec {name}"),
-                "PlayerConnectDeniedReason" => {
-                    "---PlayerConnectDeniedReason is not implemented as param".to_string()
-                }
-                "ExplosionType" => "---ExplosionType is not implemented as param".to_string(),
-                "VoiceConnectionState" => "---VoiceConnectionState is not implemented as param".to_string(),
-                "MValueUnorderedMapWrapper" => format!("MValueUnorderedMapWrapper {name}"),
-                "alt::AmmoFlags" => {
-                    format!("bool {name}_infiniteAmmo, bool {name}_addSmokeOnExplosion, bool {name}_fuse, bool {name}_fixedAfterExplosion")
-                }
-                _ => format!(
-                    "{}{type_name} {name}",
-                    (if *is_const { "const " } else { "" }),
-                ),
-            }
-        })
+    let CompletedParam {
+      name,
+      type_name,
+      is_const,
+    } = p;
+    let cpp_code = match type_name.as_str() {
+      "Vector3Wrapper" => format!("f32 {name}_x, f32 {name}_y, f32 {name}_z"),
+      "Vector2Wrapper" => format!("f32 {name}_x, f32 {name}_y"),
+      "alt::Quaternion" => {
+        format!("f32 {name}_x, f32 {name}_y, f32 {name}_z, f32 {name}_w")
+      }
+      "RGBAWrapper" => format!("u8 {name}_r, u8 {name}_g, u8 {name}_b, u8 {name}_a"),
+      "std::vector<WeaponWrapper>" => {
+        "---std::vector<WeaponWrapper> is not implemented as param".to_string()
+      }
+      "BaseObjectType" => "---BaseObjectType is not implemented as param".to_string(),
+      "ColShapeType" => "---ColShapeType is not implemented as param".to_string(),
+      "WeaponDamageEventBodyPart" => {
+        "---WeaponDamageEventBodyPart is not implemented as param".to_string()
+      }
+      "EventType" => format!("u16 {name}"),
+      "Vector2Vec" => format!("Vector2Vec {name}"),
+      "PlayerConnectDeniedReason" => {
+        "---PlayerConnectDeniedReason is not implemented as param".to_string()
+      }
+      "ExplosionType" => "---ExplosionType is not implemented as param".to_string(),
+      "VoiceConnectionState" => "---VoiceConnectionState is not implemented as param".to_string(),
+      "MValueUnorderedMapWrapper" => format!("MValueUnorderedMapWrapper {name}"),
+      "alt::AmmoFlags" => {
+        format!("bool {name}_infiniteAmmo, bool {name}_addSmokeOnExplosion, bool {name}_fuse, bool {name}_fixedAfterExplosion")
+      }
+      _ => format!(
+        "{}{type_name} {name}",
+        (if *is_const { "const " } else { "" }),
+      ),
+    };
+    params.push(cpp_code);
   }
   let params = params.join(", ");
 
@@ -605,12 +604,12 @@ fn cpp_method_to_rust_compatible_func(
         "MValueUnorderedMapWrapper&" => format!("{name}.value"),
         "PlayerVector" => format!("player_wrapper_vec_to_alt({name})"),
         "alt::AmmoFlags" => format!(
-          "create_ammo_flags_from_params(\n        \
-                        {name}_infiniteAmmo,\n        \
-                        {name}_addSmokeOnExplosion,\n        \
-                        {name}_fuse,\n        \
-                        {name}_fixedAfterExplosion\n        \
-                    )"
+          "create_ammo_flags_from_params(\n  \
+            {name}_infiniteAmmo,\n  \
+            {name}_addSmokeOnExplosion,\n  \
+            {name}_fuse,\n  \
+            {name}_fixedAfterExplosion\n  \
+          )"
         ),
         "CloudAuthResult_t" => format!("static_cast<alt::CloudAuthResult>({name})"),
         "Benefit_t" => format!("static_cast<alt::Benefit>({name})"),
@@ -630,45 +629,45 @@ fn cpp_method_to_rust_compatible_func(
   let extra_wrapper_for_return = match return_type.as_str() {
     "MValueMutWrapper" => |v: &str| {
       format!(
-        "MValueMutWrapper wrapper;\n    \
-                wrapper.ptr = {v};\n    \
-                return wrapper"
+        "MValueMutWrapper wrapper;\n  \
+        wrapper.ptr = {v};\n  \
+        return wrapper"
       )
     },
     "ConstMValueWrapper" => |v: &str| {
       format!(
-        "ConstMValueWrapper wrapper;\n    \
-                wrapper.ptr = {v};\n    \
-                return wrapper"
+        "ConstMValueWrapper wrapper;\n  \
+        wrapper.ptr = {v};\n  \
+        return wrapper"
       )
     },
     "Vector3Wrapper" => |v: &str| {
       format!(
-        "auto vector3 = {v};\n    \
-                return {{ vector3[0], vector3[1], vector3[2] }}"
+        "auto vector3 = {v};\n  \
+        return {{ vector3[0], vector3[1], vector3[2] }}"
       )
     },
     "Vector2Wrapper" => |v: &str| {
       format!(
-        "auto vector2 = {v};\n    \
-                return {{ vector2[0], vector2[1] }}"
+        "auto vector2 = {v};\n  \
+        return {{ vector2[0], vector2[1] }}"
       )
     },
     "RGBAWrapper" => |v: &str| {
       format!(
-        "auto rgba = {v};\n    \
-                return {{ rgba.r, rgba.g, rgba.b, rgba.a }}"
+        "auto rgba = {v};\n  \
+        return {{ rgba.r, rgba.g, rgba.b, rgba.a }}"
       )
     },
     "std::vector<WeaponWrapper>" => |v: &str| {
       format!(
-        "auto alt_weapons = {v};\n    \
-                std::vector<WeaponWrapper> weapons {{}};\n    \
-                weapons.reserve(alt_weapons.size());\n    \
-                for (const auto& w : alt_weapons) {{\n        \
-                    weapons.push_back({{ w.hash, w.tintIndex, w.components }});\n    \
-                }}\n    \
-                return weapons"
+        "auto alt_weapons = {v};\n  \
+        std::vector<WeaponWrapper> weapons {{}};\n  \
+        weapons.reserve(alt_weapons.size());\n  \
+        for (const auto& w : alt_weapons) {{\n  \
+            weapons.push_back({{ w.hash, w.tintIndex, w.components }});\n  \
+        }}\n  \
+        return weapons"
       )
     },
     "BaseObjectType" => |v: &str| format!("return static_cast<uint8_t>({v})"),
@@ -681,14 +680,14 @@ fn cpp_method_to_rust_compatible_func(
     "StdStringClone" => |v: &str| format!("return std::string {{ {v} }}"),
     "MValueWrapperVec" => |v: &str| {
       format!(
-        "auto args = {v};\n    \
-                auto mvalue_vec = create_mvalue_vec();\n    \
-                for (const auto& e : args) {{\n    \
-                    ConstMValueWrapper wrapper;\n    \
-                    wrapper.ptr = e;\n    \
-                    mvalue_vec.push_back(wrapper.clone());\n    \
-                }}\n    \
-                return mvalue_vec"
+        "auto args = {v};\n  \
+        auto mvalue_vec = create_mvalue_vec();\n  \
+        for (const auto& e : args) {{\n  \
+            ConstMValueWrapper wrapper;\n  \
+            wrapper.ptr = e;\n  \
+            mvalue_vec.push_back(wrapper.clone());\n  \
+        }}\n  \
+        return mvalue_vec"
       )
     },
     "PlayerConnectDeniedReason" => |v: &str| format!("return static_cast<uint8_t>({v})"),
@@ -696,73 +695,73 @@ fn cpp_method_to_rust_compatible_func(
     "VoiceConnectionState" => |v: &str| format!("return static_cast<uint8_t>({v})"),
     "std::vector<FireInfoWrapper>" => |v: &str| {
       format!(
-                "auto alt_vec = {v};\n    \
-                std::vector<FireInfoWrapper> vec {{}};\n    \
-                vec.reserve(alt_vec.size());\n    \
-                for (const auto& e : alt_vec) {{\n        \
-                    vec.push_back({{ {{ e.position[0], e.position[1], e.position[2] }}, e.weaponHash }});\n    \
-                }}\n    \
-                return vec"
-            )
+        "auto alt_vec = {v};\n  \
+        std::vector<FireInfoWrapper> vec {{}};\n  \
+        vec.reserve(alt_vec.size());\n  \
+        for (const auto& e : alt_vec) {{\n  \
+            vec.push_back({{ {{ e.position[0], e.position[1], e.position[2] }}, e.weaponHash }});\n  \
+        }}\n  \
+        return vec"
+      )
     },
     "alt::VehicleModelInfo*" => |v: &str| format!("return &{v}"),
     "alt::PedModelInfo*" => |v: &str| format!("return &{v}"),
     "alt::WeaponModelInfo*" => |v: &str| format!("return &{v}"),
     "BaseObjectVector" => |v: &str| {
       format!(
-        "auto alt_vec = {v};\n    \
-                BaseObjectVector vec {{}};\n    \
-                vec.reserve(alt_vec.size());\n    \
-                for (const auto& e : alt_vec) {{\n        \
-                    BaseObjectPtrWrapper wrapper;\n        \
-                    wrapper.ptr = std::make_shared<alt::IBaseObject*>(e);\n        \
-                    vec.push_back(wrapper.clone());\n    \
-                }}\n    \
-                return vec"
+        "auto alt_vec = {v};\n  \
+        BaseObjectVector vec {{}};\n  \
+        vec.reserve(alt_vec.size());\n  \
+        for (const auto& e : alt_vec) {{\n  \
+          BaseObjectPtrWrapper wrapper;\n  \
+          wrapper.ptr = std::make_shared<alt::IBaseObject*>(e);\n  \
+          vec.push_back(wrapper.clone());\n  \
+        }}\n  \
+        return vec"
       )
     },
     "ResourceVector" => |v: &str| {
       format!(
-        "auto alt_vec = {v};\n    \
-                ResourceVector vec {{}};\n    \
-                vec.reserve(alt_vec.size());\n    \
-                for (const auto& e : alt_vec) {{\n        \
-                    ResourcePtrWrapper wrapper;\n        \
-                    wrapper.ptr = std::make_shared<alt::IResource*>(e);\n        \
-                    vec.push_back(wrapper.clone());\n    \
-                }}\n    \
-                return vec"
+        "auto alt_vec = {v};\n  \
+        ResourceVector vec {{}};\n  \
+        vec.reserve(alt_vec.size());\n  \
+        for (const auto& e : alt_vec) {{\n  \
+            ResourcePtrWrapper wrapper;\n  \
+            wrapper.ptr = std::make_shared<alt::IResource*>(e);\n  \
+            vec.push_back(wrapper.clone());\n  \
+        }}\n  \
+        return vec"
       )
     },
     "PlayerVector" => |v: &str| {
       format!(
-        "auto alt_vec = {v};\n    \
-                PlayerVector vec {{}};\n    \
-                vec.reserve(alt_vec.size());\n    \
-                for (const auto& e : alt_vec) {{\n        \
-                    PlayerPtrWrapper wrapper;\n        \
-                    wrapper.ptr = std::make_shared<alt::IPlayer*>(e);\n        \
-                    vec.push_back(wrapper.clone());\n    \
-                }}\n    \
-                return vec"
+        "auto alt_vec = {v};\n  \
+        PlayerVector vec {{}};\n  \
+        vec.reserve(alt_vec.size());\n  \
+        for (const auto& e : alt_vec) {{\n  \
+            PlayerPtrWrapper wrapper;\n  \
+            wrapper.ptr = std::make_shared<alt::IPlayer*>(e);\n  \
+            vec.push_back(wrapper.clone());\n  \
+        }}\n  \
+        return vec"
       )
     },
     "std::vector<StreamedEntityWrapper>" => |v: &str| {
       format!(
-        "auto alt_vec = {v};\n    \
-                std::vector<StreamedEntityWrapper> vec {{}};\n    \
-                vec.reserve(alt_vec.size());\n    \
-                for (const auto& pair : alt_vec) {{\n        \
-                    vec.push_back({{ pair.first, pair.second }});\n    \
-                }}\n    \
-                return vec"
+        "auto alt_vec = {v};\n  \
+        std::vector<StreamedEntityWrapper> vec {{}};\n  \
+        vec.reserve(alt_vec.size());\n  \
+        for (const auto& pair : alt_vec) {{\n  \
+            vec.push_back({{ pair.first, pair.second }});\n  \
+        }}\n  \
+        return vec"
       )
     },
     "EntityAnimHashPairsWrapper" => |v: &str| {
       format!(
-        "EntityAnimHashPairsWrapper wrapper;\n    \
-                wrapper.value = {v};\n    \
-                return wrapper"
+        "EntityAnimHashPairsWrapper wrapper;\n  \
+        wrapper.value = {v};\n  \
+        return wrapper"
       )
     },
     "Benefit_t" => |v: &str| format!("return static_cast<uint8_t>({v})"),
@@ -801,7 +800,7 @@ fn cpp_method_to_rust_compatible_func(
                 {ptr_content}\
                 {comma_between_ptr_and_params}\
                 {params_content}\
-            ) {{\n    {return_value};\n\
+            ) {{\n  {return_value};\n\
             }}"
   ))
 }

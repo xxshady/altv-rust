@@ -5,10 +5,10 @@
 namespace VehicleModelInfo {
 
 bool DoesExtraExist(const alt::VehicleModelInfo* ptr, u8 extraId) {
-    return ptr->DoesExtraExist(extraId);
+  return ptr->DoesExtraExist(extraId);
 }
 bool DoesExtraDefault(const alt::VehicleModelInfo* ptr, u8 extraId) {
-    return ptr->DoesExtraDefault(extraId);
+  return ptr->DoesExtraDefault(extraId);
 }
 
 } // namespace

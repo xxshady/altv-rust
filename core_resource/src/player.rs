@@ -782,12 +782,12 @@ impl player::Player {
   /// let player = altv::Player::all()[0].clone();
   ///
   /// player.play_animation(
-  ///     "cellphone@",
-  ///     "cellphone_text_in",
-  ///     altv::PlayAnimation {
-  ///         flags: altv::AnimationFlags::HoldLastFrame | altv::AnimationFlags::AbortOnWeaponDamage,
-  ///         ..Default::default()
-  ///     },
+  ///   "cellphone@",
+  ///   "cellphone_text_in",
+  ///   altv::PlayAnimation {
+  ///     flags: altv::AnimationFlags::HoldLastFrame | altv::AnimationFlags::AbortOnWeaponDamage,
+  ///     ..Default::default()
+  ///   },
   /// )?;
   /// # Ok(()) }
   /// ```

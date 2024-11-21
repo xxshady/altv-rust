@@ -5,13 +5,13 @@
 namespace CPlayerWeaponChangeEvent {
 
 alt::IPlayer* GetTarget(const alt::CPlayerWeaponChangeEvent* ptr) {
-    return ptr->GetTarget();
+  return ptr->GetTarget();
 }
 u32 GetOldWeapon(const alt::CPlayerWeaponChangeEvent* ptr) {
-    return ptr->GetOldWeapon();
+  return ptr->GetOldWeapon();
 }
 u32 GetNewWeapon(const alt::CPlayerWeaponChangeEvent* ptr) {
-    return ptr->GetNewWeapon();
+  return ptr->GetNewWeapon();
 }
 
 } // namespace

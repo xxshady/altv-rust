@@ -5,447 +5,447 @@
 namespace IPlayer {
 
 std::string GetName(const alt::IPlayer* ptr) {
-    return ptr->GetName();
+  return ptr->GetName();
 }
 u16 GetHealth(const alt::IPlayer* ptr) {
-    return ptr->GetHealth();
+  return ptr->GetHealth();
 }
 u16 GetMaxHealth(const alt::IPlayer* ptr) {
-    return ptr->GetMaxHealth();
+  return ptr->GetMaxHealth();
 }
 bool HasWeaponComponent(const alt::IPlayer* ptr, u32 weapon, u32 component) {
-    return ptr->HasWeaponComponent(weapon, component);
+  return ptr->HasWeaponComponent(weapon, component);
 }
 std::vector<u32> GetCurrentWeaponComponents(const alt::IPlayer* ptr) {
-    return ptr->GetCurrentWeaponComponents();
+  return ptr->GetCurrentWeaponComponents();
 }
 u8 GetWeaponTintIndex(const alt::IPlayer* ptr, u32 weapon) {
-    return ptr->GetWeaponTintIndex(weapon);
+  return ptr->GetWeaponTintIndex(weapon);
 }
 u8 GetCurrentWeaponTintIndex(const alt::IPlayer* ptr) {
-    return ptr->GetCurrentWeaponTintIndex();
+  return ptr->GetCurrentWeaponTintIndex();
 }
 u32 GetCurrentWeapon(const alt::IPlayer* ptr) {
-    return ptr->GetCurrentWeapon();
+  return ptr->GetCurrentWeapon();
 }
 bool IsDead(const alt::IPlayer* ptr) {
-    return ptr->IsDead();
+  return ptr->IsDead();
 }
 bool IsJumping(const alt::IPlayer* ptr) {
-    return ptr->IsJumping();
+  return ptr->IsJumping();
 }
 bool IsInRagdoll(const alt::IPlayer* ptr) {
-    return ptr->IsInRagdoll();
+  return ptr->IsInRagdoll();
 }
 bool IsAiming(const alt::IPlayer* ptr) {
-    return ptr->IsAiming();
+  return ptr->IsAiming();
 }
 bool IsShooting(const alt::IPlayer* ptr) {
-    return ptr->IsShooting();
+  return ptr->IsShooting();
 }
 bool IsReloading(const alt::IPlayer* ptr) {
-    return ptr->IsReloading();
+  return ptr->IsReloading();
 }
 bool IsEnteringVehicle(const alt::IPlayer* ptr) {
-    return ptr->IsEnteringVehicle();
+  return ptr->IsEnteringVehicle();
 }
 bool IsLeavingVehicle(const alt::IPlayer* ptr) {
-    return ptr->IsLeavingVehicle();
+  return ptr->IsLeavingVehicle();
 }
 bool IsOnLadder(const alt::IPlayer* ptr) {
-    return ptr->IsOnLadder();
+  return ptr->IsOnLadder();
 }
 bool IsInMelee(const alt::IPlayer* ptr) {
-    return ptr->IsInMelee();
+  return ptr->IsInMelee();
 }
 bool IsInCover(const alt::IPlayer* ptr) {
-    return ptr->IsInCover();
+  return ptr->IsInCover();
 }
 bool IsParachuting(const alt::IPlayer* ptr) {
-    return ptr->IsParachuting();
+  return ptr->IsParachuting();
 }
 u16 GetArmour(const alt::IPlayer* ptr) {
-    return ptr->GetArmour();
+  return ptr->GetArmour();
 }
 u16 GetMaxArmour(const alt::IPlayer* ptr) {
-    return ptr->GetMaxArmour();
+  return ptr->GetMaxArmour();
 }
 f32 GetMoveSpeed(const alt::IPlayer* ptr) {
-    return ptr->GetMoveSpeed();
+  return ptr->GetMoveSpeed();
 }
 Vector3Wrapper GetAimPos(const alt::IPlayer* ptr) {
-    auto vector3 = ptr->GetAimPos();
-    return { vector3[0], vector3[1], vector3[2] };
+  auto vector3 = ptr->GetAimPos();
+  return { vector3[0], vector3[1], vector3[2] };
 }
 Vector3Wrapper GetHeadRotation(const alt::IPlayer* ptr) {
-    auto vector3 = ptr->GetHeadRotation();
-    return { vector3[0], vector3[1], vector3[2] };
+  auto vector3 = ptr->GetHeadRotation();
+  return { vector3[0], vector3[1], vector3[2] };
 }
 bool IsInVehicle(const alt::IPlayer* ptr) {
-    return ptr->IsInVehicle();
+  return ptr->IsInVehicle();
 }
 alt::IVehicle* GetVehicle(const alt::IPlayer* ptr) {
-    return ptr->GetVehicle();
+  return ptr->GetVehicle();
 }
 u8 GetSeat(const alt::IPlayer* ptr) {
-    return ptr->GetSeat();
+  return ptr->GetSeat();
 }
 alt::IEntity* GetEntityAimingAt(const alt::IPlayer* ptr) {
-    return ptr->GetEntityAimingAt();
+  return ptr->GetEntityAimingAt();
 }
 Vector3Wrapper GetEntityAimOffset(const alt::IPlayer* ptr) {
-    auto vector3 = ptr->GetEntityAimOffset();
-    return { vector3[0], vector3[1], vector3[2] };
+  auto vector3 = ptr->GetEntityAimOffset();
+  return { vector3[0], vector3[1], vector3[2] };
 }
 bool IsFlashlightActive(const alt::IPlayer* ptr) {
-    return ptr->IsFlashlightActive();
+  return ptr->IsFlashlightActive();
 }
 bool IsSuperJumpEnabled(const alt::IPlayer* ptr) {
-    return ptr->IsSuperJumpEnabled();
+  return ptr->IsSuperJumpEnabled();
 }
 bool IsCrouching(const alt::IPlayer* ptr) {
-    return ptr->IsCrouching();
+  return ptr->IsCrouching();
 }
 bool IsStealthy(const alt::IPlayer* ptr) {
-    return ptr->IsStealthy();
+  return ptr->IsStealthy();
 }
 u32 GetCurrentAnimationDict(const alt::IPlayer* ptr) {
-    return ptr->GetCurrentAnimationDict();
+  return ptr->GetCurrentAnimationDict();
 }
 u32 GetCurrentAnimationName(const alt::IPlayer* ptr) {
-    return ptr->GetCurrentAnimationName();
+  return ptr->GetCurrentAnimationName();
 }
 bool IsSpawned(const alt::IPlayer* ptr) {
-    return ptr->IsSpawned();
+  return ptr->IsSpawned();
 }
 f32 GetForwardSpeed(const alt::IPlayer* ptr) {
-    return ptr->GetForwardSpeed();
+  return ptr->GetForwardSpeed();
 }
 f32 GetStrafeSpeed(const alt::IPlayer* ptr) {
-    return ptr->GetStrafeSpeed();
+  return ptr->GetStrafeSpeed();
 }
 bool IsConnected(const alt::IPlayer* ptr) {
-    return ptr->IsConnected();
+  return ptr->IsConnected();
 }
 u32 GetPing(const alt::IPlayer* ptr) {
-    return ptr->GetPing();
+  return ptr->GetPing();
 }
 std::string GetIP(const alt::IPlayer* ptr) {
-    return ptr->GetIP();
+  return ptr->GetIP();
 }
 u64 GetSocialID(const alt::IPlayer* ptr) {
-    return ptr->GetSocialID();
+  return ptr->GetSocialID();
 }
 std::string GetSocialClubName(const alt::IPlayer* ptr) {
-    return ptr->GetSocialClubName();
+  return ptr->GetSocialClubName();
 }
 u64 GetHwidHash(const alt::IPlayer* ptr) {
-    return ptr->GetHwidHash();
+  return ptr->GetHwidHash();
 }
 u64 GetHwidExHash(const alt::IPlayer* ptr) {
-    return ptr->GetHwidExHash();
+  return ptr->GetHwidExHash();
 }
 std::string GetAuthToken(const alt::IPlayer* ptr) {
-    return ptr->GetAuthToken();
+  return ptr->GetAuthToken();
 }
 i64 GetDiscordId(const alt::IPlayer* ptr) {
-    return ptr->GetDiscordId();
+  return ptr->GetDiscordId();
 }
 void Spawn(alt::IPlayer* ptr, f32 pos_x, f32 pos_y, f32 pos_z, u32 delayMs) {
-    return ptr->Spawn({ pos_x, pos_y, pos_z }, delayMs);
+  return ptr->Spawn({ pos_x, pos_y, pos_z }, delayMs);
 }
 void Despawn(alt::IPlayer* ptr) {
-    return ptr->Despawn();
+  return ptr->Despawn();
 }
 void SetModel(alt::IPlayer* ptr, u32 model) {
-    return ptr->SetModel(model);
+  return ptr->SetModel(model);
 }
 void SetArmour(alt::IPlayer* ptr, u16 armor) {
-    return ptr->SetArmour(armor);
+  return ptr->SetArmour(armor);
 }
 void SetMaxArmour(alt::IPlayer* ptr, u16 armor) {
-    return ptr->SetMaxArmour(armor);
+  return ptr->SetMaxArmour(armor);
 }
 void SetCurrentWeapon(alt::IPlayer* ptr, u32 weapon) {
-    return ptr->SetCurrentWeapon(weapon);
+  return ptr->SetCurrentWeapon(weapon);
 }
 void SetWeaponTintIndex(alt::IPlayer* ptr, u32 weapon, u8 tintIndex) {
-    return ptr->SetWeaponTintIndex(weapon, tintIndex);
+  return ptr->SetWeaponTintIndex(weapon, tintIndex);
 }
 void AddWeaponComponent(alt::IPlayer* ptr, u32 weapon, u32 component) {
-    return ptr->AddWeaponComponent(weapon, component);
+  return ptr->AddWeaponComponent(weapon, component);
 }
 void RemoveWeaponComponent(alt::IPlayer* ptr, u32 weapon, u32 component) {
-    return ptr->RemoveWeaponComponent(weapon, component);
+  return ptr->RemoveWeaponComponent(weapon, component);
 }
 void ClearBloodDamage(alt::IPlayer* ptr) {
-    return ptr->ClearBloodDamage();
+  return ptr->ClearBloodDamage();
 }
 void SetHealth(alt::IPlayer* ptr, u16 health) {
-    return ptr->SetHealth(health);
+  return ptr->SetHealth(health);
 }
 void SetMaxHealth(alt::IPlayer* ptr, u16 health) {
-    return ptr->SetMaxHealth(health);
+  return ptr->SetMaxHealth(health);
 }
 void GiveWeapon(alt::IPlayer* ptr, u32 weapon, i32 ammo, bool selectWeapon) {
-    return ptr->GiveWeapon(weapon, ammo, selectWeapon);
+  return ptr->GiveWeapon(weapon, ammo, selectWeapon);
 }
 bool RemoveWeapon(alt::IPlayer* ptr, u32 weapon) {
-    return ptr->RemoveWeapon(weapon);
+  return ptr->RemoveWeapon(weapon);
 }
 void RemoveAllWeapons(alt::IPlayer* ptr, bool removeAllAmmo) {
-    return ptr->RemoveAllWeapons(removeAllAmmo);
+  return ptr->RemoveAllWeapons(removeAllAmmo);
 }
 void SetDateTime(alt::IPlayer* ptr, cpp_int day, cpp_int month, cpp_int year, cpp_int hour, cpp_int minute, cpp_int second) {
-    return ptr->SetDateTime(day, month, year, hour, minute, second);
+  return ptr->SetDateTime(day, month, year, hour, minute, second);
 }
 void SetWeather(alt::IPlayer* ptr, u32 weather) {
-    return ptr->SetWeather(weather);
+  return ptr->SetWeather(weather);
 }
 void Kick(alt::IPlayer* ptr, const StdStringClone reason) {
-    return ptr->Kick(reason);
+  return ptr->Kick(reason);
 }
 alt::Cloth GetClothes(const alt::IPlayer* ptr, u8 component) {
-    return ptr->GetClothes(component);
+  return ptr->GetClothes(component);
 }
 bool SetClothes(alt::IPlayer* ptr, u8 component, u16 drawable, u8 texture, u8 palette) {
-    return ptr->SetClothes(component, drawable, texture, palette);
+  return ptr->SetClothes(component, drawable, texture, palette);
 }
 alt::DlcCloth GetDlcClothes(const alt::IPlayer* ptr, u8 component) {
-    return ptr->GetDlcClothes(component);
+  return ptr->GetDlcClothes(component);
 }
 bool SetDlcClothes(alt::IPlayer* ptr, u8 component, u16 drawable, u8 texture, u8 palette, u32 dlc) {
-    return ptr->SetDlcClothes(component, drawable, texture, palette, dlc);
+  return ptr->SetDlcClothes(component, drawable, texture, palette, dlc);
 }
 bool ClearClothes(alt::IPlayer* ptr, u8 component) {
-    return ptr->ClearClothes(component);
+  return ptr->ClearClothes(component);
 }
 alt::Prop GetProps(const alt::IPlayer* ptr, u8 component) {
-    return ptr->GetProps(component);
+  return ptr->GetProps(component);
 }
 bool SetProps(alt::IPlayer* ptr, u8 component, u16 drawable, u8 texture) {
-    return ptr->SetProps(component, drawable, texture);
+  return ptr->SetProps(component, drawable, texture);
 }
 alt::DlcProp GetDlcProps(const alt::IPlayer* ptr, u8 component) {
-    return ptr->GetDlcProps(component);
+  return ptr->GetDlcProps(component);
 }
 bool SetDlcProps(alt::IPlayer* ptr, u8 component, u8 drawable, u8 texture, u32 dlc) {
-    return ptr->SetDlcProps(component, drawable, texture, dlc);
+  return ptr->SetDlcProps(component, drawable, texture, dlc);
 }
 void ClearProps(alt::IPlayer* ptr, u8 component) {
-    return ptr->ClearProps(component);
+  return ptr->ClearProps(component);
 }
 bool IsEntityInStreamingRange(alt::IPlayer* ptr, u16 entityId) {
-    return ptr->IsEntityInStreamingRange(entityId);
+  return ptr->IsEntityInStreamingRange(entityId);
 }
 void SetInvincible(alt::IPlayer* ptr, bool toggle) {
-    return ptr->SetInvincible(toggle);
+  return ptr->SetInvincible(toggle);
 }
 bool GetInvincible(const alt::IPlayer* ptr) {
-    return ptr->GetInvincible();
+  return ptr->GetInvincible();
 }
 void SetIntoVehicle(alt::IPlayer* ptr, alt::IVehicle* vehicle, u8 seat) {
-    return ptr->SetIntoVehicle(vehicle, seat);
+  return ptr->SetIntoVehicle(vehicle, seat);
 }
 void PlayAmbientSpeech(alt::IPlayer* ptr, const StdStringClone speechName, const StdStringClone speechParam, u32 speechDictHash) {
-    return ptr->PlayAmbientSpeech(speechName, speechParam, speechDictHash);
+  return ptr->PlayAmbientSpeech(speechName, speechParam, speechDictHash);
 }
 bool SetHeadOverlay(alt::IPlayer* ptr, u8 overlayID, u8 index, f32 opacity) {
-    return ptr->SetHeadOverlay(overlayID, index, opacity);
+  return ptr->SetHeadOverlay(overlayID, index, opacity);
 }
 bool RemoveHeadOverlay(alt::IPlayer* ptr, u8 overlayID) {
-    return ptr->RemoveHeadOverlay(overlayID);
+  return ptr->RemoveHeadOverlay(overlayID);
 }
 bool SetHeadOverlayColor(alt::IPlayer* ptr, u8 overlayID, u8 colorType, u8 colorIndex, u8 secondColorIndex) {
-    return ptr->SetHeadOverlayColor(overlayID, colorType, colorIndex, secondColorIndex);
+  return ptr->SetHeadOverlayColor(overlayID, colorType, colorIndex, secondColorIndex);
 }
 alt::HeadOverlay GetHeadOverlay(const alt::IPlayer* ptr, u8 overlayID) {
-    return ptr->GetHeadOverlay(overlayID);
+  return ptr->GetHeadOverlay(overlayID);
 }
 bool SetFaceFeature(alt::IPlayer* ptr, u8 index, f32 scale) {
-    return ptr->SetFaceFeature(index, scale);
+  return ptr->SetFaceFeature(index, scale);
 }
 f32 GetFaceFeatureScale(const alt::IPlayer* ptr, u8 index) {
-    return ptr->GetFaceFeatureScale(index);
+  return ptr->GetFaceFeatureScale(index);
 }
 bool RemoveFaceFeature(alt::IPlayer* ptr, u8 index) {
-    return ptr->RemoveFaceFeature(index);
+  return ptr->RemoveFaceFeature(index);
 }
 bool SetHeadBlendPaletteColor(alt::IPlayer* ptr, u8 id, u8 red, u8 green, u8 blue) {
-    return ptr->SetHeadBlendPaletteColor(id, red, green, blue);
+  return ptr->SetHeadBlendPaletteColor(id, red, green, blue);
 }
 void RemoveHeadBlendPaletteColor(alt::IPlayer* ptr) {
-    return ptr->RemoveHeadBlendPaletteColor();
+  return ptr->RemoveHeadBlendPaletteColor();
 }
 RGBAWrapper GetHeadBlendPaletteColor(const alt::IPlayer* ptr, u8 id) {
-    auto rgba = ptr->GetHeadBlendPaletteColor(id);
-    return { rgba.r, rgba.g, rgba.b, rgba.a };
+  auto rgba = ptr->GetHeadBlendPaletteColor(id);
+  return { rgba.r, rgba.g, rgba.b, rgba.a };
 }
 void SetHeadBlendData(alt::IPlayer* ptr, u32 shapeFirstID, u32 shapeSecondID, u32 shapeThirdID, u32 skinFirstID, u32 skinSecondID, u32 skinThirdID, f32 shapeMix, f32 skinMix, f32 thirdMix) {
-    return ptr->SetHeadBlendData(shapeFirstID, shapeSecondID, shapeThirdID, skinFirstID, skinSecondID, skinThirdID, shapeMix, skinMix, thirdMix);
+  return ptr->SetHeadBlendData(shapeFirstID, shapeSecondID, shapeThirdID, skinFirstID, skinSecondID, skinThirdID, shapeMix, skinMix, thirdMix);
 }
 void RemoveHeadBlendData(alt::IPlayer* ptr) {
-    return ptr->RemoveHeadBlendData();
+  return ptr->RemoveHeadBlendData();
 }
 alt::HeadBlendData GetHeadBlendData(const alt::IPlayer* ptr) {
-    return ptr->GetHeadBlendData();
+  return ptr->GetHeadBlendData();
 }
 bool SetEyeColor(alt::IPlayer* ptr, i16 eyeColor) {
-    return ptr->SetEyeColor(eyeColor);
+  return ptr->SetEyeColor(eyeColor);
 }
 i16 GetEyeColor(const alt::IPlayer* ptr) {
-    return ptr->GetEyeColor();
+  return ptr->GetEyeColor();
 }
 void SetHairColor(alt::IPlayer* ptr, u8 hairColor) {
-    return ptr->SetHairColor(hairColor);
+  return ptr->SetHairColor(hairColor);
 }
 u8 GetHairColor(const alt::IPlayer* ptr) {
-    return ptr->GetHairColor();
+  return ptr->GetHairColor();
 }
 void SetHairHighlightColor(alt::IPlayer* ptr, u8 hairHighlightColor) {
-    return ptr->SetHairHighlightColor(hairHighlightColor);
+  return ptr->SetHairHighlightColor(hairHighlightColor);
 }
 u8 GetHairHighlightColor(const alt::IPlayer* ptr) {
-    return ptr->GetHairHighlightColor();
+  return ptr->GetHairHighlightColor();
 }
 std::vector<WeaponWrapper> GetWeapons(const alt::IPlayer* ptr) {
-    auto alt_weapons = ptr->GetWeapons();
-    std::vector<WeaponWrapper> weapons {};
-    weapons.reserve(alt_weapons.size());
-    for (const auto& w : alt_weapons) {
-        weapons.push_back({ w.hash, w.tintIndex, w.components });
-    }
-    return weapons;
+  auto alt_weapons = ptr->GetWeapons();
+  std::vector<WeaponWrapper> weapons {};
+  weapons.reserve(alt_weapons.size());
+  for (const auto& w : alt_weapons) {
+  weapons.push_back({ w.hash, w.tintIndex, w.components });
+  }
+  return weapons;
 }
 bool HasWeapon(const alt::IPlayer* ptr, u32 weapon) {
-    return ptr->HasWeapon(weapon);
+  return ptr->HasWeapon(weapon);
 }
 bool HasLocalMetaData(const alt::IPlayer* ptr, const StdStringClone key) {
-    return ptr->HasLocalMetaData(key);
+  return ptr->HasLocalMetaData(key);
 }
 void SetLocalMetaData(alt::IPlayer* ptr, const StdStringClone key, MValueMutWrapper val) {
-    return ptr->SetLocalMetaData(key, val.ptr);
+  return ptr->SetLocalMetaData(key, val.ptr);
 }
 ConstMValueWrapper GetLocalMetaData(const alt::IPlayer* ptr, const StdStringClone key) {
-    ConstMValueWrapper wrapper;
-    wrapper.ptr = ptr->GetLocalMetaData(key);
-    return wrapper;
+  ConstMValueWrapper wrapper;
+  wrapper.ptr = ptr->GetLocalMetaData(key);
+  return wrapper;
 }
 void DeleteLocalMetaData(alt::IPlayer* ptr, const StdStringClone key) {
-    return ptr->DeleteLocalMetaData(key);
+  return ptr->DeleteLocalMetaData(key);
 }
 std::vector<std::string> GetLocalMetaDataKeys(const alt::IPlayer* ptr) {
-    return ptr->GetLocalMetaDataKeys();
+  return ptr->GetLocalMetaDataKeys();
 }
 u32 GetInteriorLocation(const alt::IPlayer* ptr) {
-    return ptr->GetInteriorLocation();
+  return ptr->GetInteriorLocation();
 }
 u32 GetLastDamagedBodyPart(const alt::IPlayer* ptr) {
-    return ptr->GetLastDamagedBodyPart();
+  return ptr->GetLastDamagedBodyPart();
 }
 void SetLastDamagedBodyPart(alt::IPlayer* ptr, u32 bodyPart) {
-    return ptr->SetLastDamagedBodyPart(bodyPart);
+  return ptr->SetLastDamagedBodyPart(bodyPart);
 }
 void SetSendNames(alt::IPlayer* ptr, bool state) {
-    return ptr->SetSendNames(state);
+  return ptr->SetSendNames(state);
 }
 bool GetSendNames(const alt::IPlayer* ptr) {
-    return ptr->GetSendNames();
+  return ptr->GetSendNames();
 }
 void PlayAnimation(alt::IPlayer* ptr, const StdStringClone animDict, const StdStringClone animName, f32 blendInSpeed, f32 blendOutSpeed, cpp_int duration, cpp_int flags, f32 playbackRate, bool lockX, bool lockY, bool lockZ) {
-    return ptr->PlayAnimation(animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, playbackRate, lockX, lockY, lockZ);
+  return ptr->PlayAnimation(animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, playbackRate, lockX, lockY, lockZ);
 }
 void ClearTasks(alt::IPlayer* ptr) {
-    return ptr->ClearTasks();
+  return ptr->ClearTasks();
 }
 void PlayScenario(alt::IPlayer* ptr, const StdStringClone name) {
-    return ptr->PlayScenario(name);
+  return ptr->PlayScenario(name);
 }
 std::vector<StreamedEntityWrapper> GetStreamedEntities(const alt::IPlayer* ptr) {
-    auto alt_vec = ptr->GetStreamedEntities();
-    std::vector<StreamedEntityWrapper> vec {};
-    vec.reserve(alt_vec.size());
-    for (const auto& pair : alt_vec) {
-        vec.push_back({ pair.first, pair.second });
-    }
-    return vec;
+  auto alt_vec = ptr->GetStreamedEntities();
+  std::vector<StreamedEntityWrapper> vec {};
+  vec.reserve(alt_vec.size());
+  for (const auto& pair : alt_vec) {
+  vec.push_back({ pair.first, pair.second });
+  }
+  return vec;
 }
 void SetAmmo(alt::IPlayer* ptr, u32 ammoHash, u16 ammo) {
-    return ptr->SetAmmo(ammoHash, ammo);
+  return ptr->SetAmmo(ammoHash, ammo);
 }
 u16 GetAmmo(const alt::IPlayer* ptr, u32 ammoHash) {
-    return ptr->GetAmmo(ammoHash);
+  return ptr->GetAmmo(ammoHash);
 }
 void SetWeaponAmmo(alt::IPlayer* ptr, u32 weaponHash, u16 ammo) {
-    return ptr->SetWeaponAmmo(weaponHash, ammo);
+  return ptr->SetWeaponAmmo(weaponHash, ammo);
 }
 u16 GetWeaponAmmo(const alt::IPlayer* ptr, u32 weaponHash) {
-    return ptr->GetWeaponAmmo(weaponHash);
+  return ptr->GetWeaponAmmo(weaponHash);
 }
 void SetAmmoSpecialType(alt::IPlayer* ptr, u32 ammoHash, AmmoSpecialType_t ammoSpecialType) {
-    return ptr->SetAmmoSpecialType(ammoHash, static_cast<alt::AmmoSpecialType>(ammoSpecialType));
+  return ptr->SetAmmoSpecialType(ammoHash, static_cast<alt::AmmoSpecialType>(ammoSpecialType));
 }
 AmmoSpecialType_t GetAmmoSpecialType(const alt::IPlayer* ptr, u32 ammoHash) {
-    return static_cast<uint32_t>(ptr->GetAmmoSpecialType(ammoHash));
+  return static_cast<uint32_t>(ptr->GetAmmoSpecialType(ammoHash));
 }
 void SetAmmoFlags(alt::IPlayer* ptr, u32 ammoHash, bool ammoFlags_infiniteAmmo, bool ammoFlags_addSmokeOnExplosion, bool ammoFlags_fuse, bool ammoFlags_fixedAfterExplosion) {
-    return ptr->SetAmmoFlags(ammoHash, create_ammo_flags_from_params(
-        ammoFlags_infiniteAmmo,
-        ammoFlags_addSmokeOnExplosion,
-        ammoFlags_fuse,
-        ammoFlags_fixedAfterExplosion
-        ));
+  return ptr->SetAmmoFlags(ammoHash, create_ammo_flags_from_params(
+  ammoFlags_infiniteAmmo,
+  ammoFlags_addSmokeOnExplosion,
+  ammoFlags_fuse,
+  ammoFlags_fixedAfterExplosion
+  ));
 }
 alt::AmmoFlags GetAmmoFlags(const alt::IPlayer* ptr, u32 ammoHash) {
-    return ptr->GetAmmoFlags(ammoHash);
+  return ptr->GetAmmoFlags(ammoHash);
 }
 void SetAmmoMax(alt::IPlayer* ptr, u32 ammoHash, i32 ammoMax) {
-    return ptr->SetAmmoMax(ammoHash, ammoMax);
+  return ptr->SetAmmoMax(ammoHash, ammoMax);
 }
 i32 GetAmmoMax(const alt::IPlayer* ptr, u32 ammoHash) {
-    return ptr->GetAmmoMax(ammoHash);
+  return ptr->GetAmmoMax(ammoHash);
 }
 void SetAmmoMax50(alt::IPlayer* ptr, u32 ammoHash, i32 ammoMax50) {
-    return ptr->SetAmmoMax50(ammoHash, ammoMax50);
+  return ptr->SetAmmoMax50(ammoHash, ammoMax50);
 }
 i32 GetAmmoMax50(const alt::IPlayer* ptr, u32 ammoHash) {
-    return ptr->GetAmmoMax50(ammoHash);
+  return ptr->GetAmmoMax50(ammoHash);
 }
 void SetAmmoMax100(alt::IPlayer* ptr, u32 ammoHash, i32 ammoMax100) {
-    return ptr->SetAmmoMax100(ammoHash, ammoMax100);
+  return ptr->SetAmmoMax100(ammoHash, ammoMax100);
 }
 i32 GetAmmoMax100(const alt::IPlayer* ptr, u32 ammoHash) {
-    return ptr->GetAmmoMax100(ammoHash);
+  return ptr->GetAmmoMax100(ammoHash);
 }
 void AddDecoration(alt::IPlayer* ptr, u32 collection, u32 overlay, u8 count) {
-    return ptr->AddDecoration(collection, overlay, count);
+  return ptr->AddDecoration(collection, overlay, count);
 }
 void RemoveDecoration(alt::IPlayer* ptr, u32 collection, u32 overlay) {
-    return ptr->RemoveDecoration(collection, overlay);
+  return ptr->RemoveDecoration(collection, overlay);
 }
 void ClearDecorations(alt::IPlayer* ptr) {
-    return ptr->ClearDecorations();
+  return ptr->ClearDecorations();
 }
 std::vector<alt::CDecoration> GetDecorations(const alt::IPlayer* ptr) {
-    return ptr->GetDecorations();
+  return ptr->GetDecorations();
 }
 bool IsNetworkOwnershipDisabled(const alt::IPlayer* ptr) {
-    return ptr->IsNetworkOwnershipDisabled();
+  return ptr->IsNetworkOwnershipDisabled();
 }
 void SetNetworkOwnershipDisabled(alt::IPlayer* ptr, bool disabled) {
-    return ptr->SetNetworkOwnershipDisabled(disabled);
+  return ptr->SetNetworkOwnershipDisabled(disabled);
 }
 std::string GetCloudID(const alt::IPlayer* ptr) {
-    return ptr->GetCloudID();
+  return ptr->GetCloudID();
 }
 CloudAuthResult_t GetCloudAuthResult(const alt::IPlayer* ptr) {
-    return static_cast<uint8_t>(ptr->GetCloudAuthResult());
+  return static_cast<uint8_t>(ptr->GetCloudAuthResult());
 }
 std::string GetBloodDamageBase64(const alt::IPlayer* ptr) {
-    return ptr->GetBloodDamageBase64();
+  return ptr->GetBloodDamageBase64();
 }
 void SetBloodDamageBase64(alt::IPlayer* ptr, const StdStringClone _base64) {
-    return ptr->SetBloodDamageBase64(_base64);
+  return ptr->SetBloodDamageBase64(_base64);
 }
 
 } // namespace

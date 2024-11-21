@@ -5,7 +5,7 @@
 namespace CVehicleDestroyEvent {
 
 alt::IVehicle* GetTarget(const alt::CVehicleDestroyEvent* ptr) {
-    return ptr->GetTarget();
+  return ptr->GetTarget();
 }
 
 } // namespace

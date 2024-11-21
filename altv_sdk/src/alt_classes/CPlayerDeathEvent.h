@@ -5,13 +5,13 @@
 namespace CPlayerDeathEvent {
 
 alt::IPlayer* GetTarget(const alt::CPlayerDeathEvent* ptr) {
-    return ptr->GetTarget();
+  return ptr->GetTarget();
 }
 alt::IEntity* GetKiller(const alt::CPlayerDeathEvent* ptr) {
-    return ptr->GetKiller();
+  return ptr->GetKiller();
 }
 u32 GetWeapon(const alt::CPlayerDeathEvent* ptr) {
-    return ptr->GetWeapon();
+  return ptr->GetWeapon();
 }
 
 } // namespace

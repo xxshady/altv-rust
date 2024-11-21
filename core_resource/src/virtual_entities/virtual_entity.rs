@@ -26,9 +26,9 @@ impl virtual_entity::VirtualEntity {
   /// # fn test() -> altv::VoidResult {
   /// let group = altv::VirtualEntityGroup::new(10);
   /// let entity = altv::VirtualEntity::new(
-  ///     group.clone(),
-  ///     altv::Vector3::new(0, 0, 72),
-  ///     10,
+  ///   group.clone(),
+  ///   altv::Vector3::new(0, 0, 72),
+  ///   10,
   /// )?;
   /// # Ok(()) }
   /// ```
@@ -54,12 +54,12 @@ impl virtual_entity::VirtualEntity {
   /// # use std::collections::HashMap;
   /// let group = altv::VirtualEntityGroup::new(10);
   /// let entity = altv::VirtualEntity::new_with_stream_meta(
-  ///     group.clone(),
-  ///     altv::Vector3::new(0, 0, 72),
-  ///     10,
-  ///     altv::MValueHashMap::new(
-  ///         HashMap::from([("example".to_string(), &123 as altv::DynMValue)])
-  ///     ),
+  ///   group.clone(),
+  ///   altv::Vector3::new(0, 0, 72),
+  ///   10,
+  ///   altv::MValueHashMap::new(
+  ///     HashMap::from([("example".to_string(), &123 as altv::DynMValue)])
+  ///   ),
   /// )?;
   /// # Ok(()) }
   /// ```

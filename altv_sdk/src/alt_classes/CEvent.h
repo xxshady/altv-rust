@@ -5,10 +5,10 @@
 namespace CEvent {
 
 bool IsCancellable(const alt::CEvent* ptr) {
-    return ptr->IsCancellable();
+  return ptr->IsCancellable();
 }
 EventType GetType(const alt::CEvent* ptr) {
-    return static_cast<uint16_t>(ptr->GetType());
+  return static_cast<uint16_t>(ptr->GetType());
 }
 
 } // namespace

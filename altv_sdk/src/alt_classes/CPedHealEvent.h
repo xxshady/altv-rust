@@ -5,19 +5,19 @@
 namespace CPedHealEvent {
 
 alt::IPed* GetTarget(const alt::CPedHealEvent* ptr) {
-    return ptr->GetTarget();
+  return ptr->GetTarget();
 }
 u16 GetOldHealth(const alt::CPedHealEvent* ptr) {
-    return ptr->GetOldHealth();
+  return ptr->GetOldHealth();
 }
 u16 GetNewHealth(const alt::CPedHealEvent* ptr) {
-    return ptr->GetNewHealth();
+  return ptr->GetNewHealth();
 }
 u16 GetOldArmour(const alt::CPedHealEvent* ptr) {
-    return ptr->GetOldArmour();
+  return ptr->GetOldArmour();
 }
 u16 GetNewArmour(const alt::CPedHealEvent* ptr) {
-    return ptr->GetNewArmour();
+  return ptr->GetNewArmour();
 }
 
 } // namespace
