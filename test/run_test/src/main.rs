@@ -28,17 +28,21 @@ fn main() {
   fs::remove_dir_all(&resource_dir).unwrap();
   fs::create_dir_all(&resource_dir).unwrap();
 
+  let dylib_file = "main.module";
+
   fs::copy(
     format!("target/debug/{start}rust_resource{ext}"),
-    resource_dir.join("main"),
+    resource_dir.join(dylib_file),
   )
   .unwrap();
 
   fs::write(
     resource_dir.join("resource.toml"),
-    "\
+    format!(
+      "\
         type = \"rs\"\n\
-        main = \"main\"\n",
+        main = \"{dylib_file}\"\n"
+    ),
   )
   .unwrap();
 
@@ -75,7 +79,10 @@ fn main() {
   let server_log_path = server_dir.join("server.log");
 
   println!("removing server.log");
-  fs::remove_file(&server_log_path).unwrap();
+  {
+    let res = fs::remove_file(&server_log_path);
+    println!("res: {res:?}");
+  }
 
   let program = if cfg!(unix) {
     format!("./{altv_server_bin}")
@@ -84,10 +91,17 @@ fn main() {
   };
 
   println!("running altv server");
-  let mut altv_server = Command::new(program)
-    .current_dir(server_dir)
-    .spawn()
-    .unwrap();
+
+  let mut command: Command;
+  let altv_server = if cfg!(unix) {
+    command = Command::new(program);
+    &mut command
+  } else {
+    command = Command::new("cmd");
+    command.args(["/C", &program])
+  };
+
+  let mut altv_server = altv_server.current_dir(server_dir).spawn().unwrap();
 
   let start = Instant::now();
   loop {
@@ -108,31 +122,45 @@ fn main() {
         };
         if String::from_utf8_lossy(&log).contains("Stopped resource rust") {
           println!("rust resource stopped, killing altv server");
-          altv_server.kill().unwrap();
+
+          if cfg!(unix) {
+            altv_server.kill().unwrap();
+          } else {
+            cmd!("taskkill", "/F", "/IM", "altv-server.exe");
+          }
+
           break;
         }
       }
       Ok(Some(_)) => {
         println!("altv server process stopped successfully");
-        std::process::exit(0);
+        break;
       }
       Err(e) => {
         panic!("altv server process CRASHED, error: {e:?}");
       }
     }
   }
+
+  // TODO: fix exit, terminal is messed up after exit for some reason
+  println!("exit");
 }
 
 macro_rules! cmd_impl {
   ( $program:expr $(, $arg:expr )* $(; current_dir: $current_dir:expr )? ) => ({
+    let args: &[String] = &[ $( $arg.clone().into(), )* ];
+
     let status = Command::new($program)
-      $( .arg($arg) )*
+      .args(args)
       $( .current_dir($current_dir) )?
       .status()
-      .unwrap();
+      .unwrap_or_else(|e| {
+        let args = args.join(" ");
+        panic!("Failed to execute: `{} {}`, reason: {e:#?}", $program, args);
+      });
 
     if !status.success() {
-      panic!("Failed to execute {}", $program);
+      panic!("Program: {} did not exit successfully", $program);
     }
   });
 }
