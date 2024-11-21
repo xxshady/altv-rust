@@ -25,7 +25,7 @@ fn main() {
 
   let resource_dir = PathBuf::from("test/altv_server/resources/rust");
 
-  fs::remove_dir_all(&resource_dir).unwrap();
+  let _ = fs::remove_dir_all(&resource_dir);
   fs::create_dir_all(&resource_dir).unwrap();
 
   let dylib_file = "main.module";
