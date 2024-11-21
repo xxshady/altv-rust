@@ -84,7 +84,9 @@ type = 'rs'
 
 # your compiled crate as .dll or .so
 main = 'example.so'
-# note: if you are developing on windows and your production server is running on linux you can use .module extension for your file (so here it will be example.module)  and then there will be no need to change resource.toml between linux and windows
+# note: if you are developing on windows and your production server is running
+#       on linux you can use .module extension for your file (so here it will be example.module) 
+#       and then there will be no need to change resource.toml between linux and windows
 ```
 
 11. Don't forget to add resource to [`server.toml`](https://docs.altv.mp/articles/configs/server.html)
