@@ -1,6 +1,6 @@
 use std::{
   env, fs,
-  path::Path,
+  path::{Path, PathBuf},
   process::Command,
   thread,
   time::{Duration, Instant},
@@ -22,16 +22,20 @@ fn main() {
     format!("test/altv_server/modules/rust-module{ext}"),
   )
   .unwrap();
-  fs::create_dir_all("test/altv_server/resources/rust").unwrap();
+
+  let resource_dir = PathBuf::from("test/altv_server/resources/rust");
+
+  fs::remove_dir_all(&resource_dir).unwrap();
+  fs::create_dir_all(&resource_dir).unwrap();
+
   fs::copy(
     format!("target/debug/{start}rust_resource{ext}"),
-    format!("test/altv_server/resources/rust/main{ext}"),
+    resource_dir.join("main"),
   )
   .unwrap();
 
-  fs::create_dir_all("test/altv_server/resources/rust").unwrap();
   fs::write(
-    "test/altv_server/resources/rust/resource.toml",
+    resource_dir.join("resource.toml"),
     "\
         type = \"rs\"\n\
         main = \"main\"\n",
@@ -62,17 +66,16 @@ fn main() {
   // TODO: add param for local directory (to not download source code from github)
   cmd!("cargo", "altvup", branch, "--dont-compile"; current_dir: "test/altv_server");
 
-  println!("running altv server");
   if cfg!(unix) {
     cmd!("chmod", "+x", &altv_server_path);
     cmd!("chmod", "+x", crash_handler_path);
   }
 
-  let server_dir = Path::new(&altv_server_path)
-    .parent()
-    .unwrap()
-    .to_string_lossy()
-    .to_string();
+  let server_dir = Path::new(&altv_server_path).parent().unwrap();
+  let server_log_path = server_dir.join("server.log");
+
+  println!("removing server.log");
+  fs::remove_file(&server_log_path).unwrap();
 
   let program = if cfg!(unix) {
     format!("./{altv_server_bin}")
@@ -80,8 +83,9 @@ fn main() {
     altv_server_bin
   };
 
+  println!("running altv server");
   let mut altv_server = Command::new(program)
-    .current_dir(dbg!(&server_dir))
+    .current_dir(server_dir)
     .spawn()
     .unwrap();
 
@@ -97,7 +101,7 @@ fn main() {
         }
 
         // https://youtu.be/pLJTfLumkGw
-        let log = fs::read(format!("{server_dir}/server.log"));
+        let log = fs::read(&server_log_path);
         let Ok(log) = log else {
           println!("server.log is not available yet...");
           continue;
