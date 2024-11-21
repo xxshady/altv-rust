@@ -34,7 +34,11 @@ extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
 
   let resource_handlers = core_module::ResourceHandlers::default();
   let mut resource_for_module = core_module::ResourceForModule::new(resource_handlers);
-  let lib = unsafe { Library::new(PathBuf::from(&full_main_path)) }.unwrap();
+
+  let lib = unsafe { Library::new(PathBuf::from(&full_main_path)) }.unwrap_or_else(|e| {
+    panic!("Failed to load resource: {resource_name} from: {full_main_path}, reason: {e:#?}");
+  });
+
   let main_fn: ResourceMainFn = unsafe { *lib.get(b"main\0").unwrap() };
 
   RESOURCE_MANAGER_INSTANCE.with(|manager| {
