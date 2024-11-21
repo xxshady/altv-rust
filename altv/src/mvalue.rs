@@ -19,7 +19,7 @@
 //!
 //! # Examples
 //! > *Examples will use [`to_mvalue`](fn.to_mvalue.html) and [`from_mvalue`](fn.from_mvalue.html),
-//! these are used internally by events and meta in Rust module.*
+//! > these are used internally by events and meta in Rust module.*
 //!
 //! ### Numbers
 //! ```rust
