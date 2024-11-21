@@ -73,10 +73,7 @@ fn main() {
     .to_string_lossy()
     .to_string();
 
-  let mut altv_server = Command::new(&altv_server_bin)
-    .current_dir(&server_dir)
-    .spawn()
-    .unwrap();
+  let mut altv_server = Command::new(&altv_server_bin).spawn().unwrap();
 
   let start = Instant::now();
   loop {
