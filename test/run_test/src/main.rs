@@ -40,22 +40,23 @@ fn main() {
 
   let altv_server_ext = if cfg!(windows) { ".exe" } else { "" };
 
-  let branch = env::var("ALTV_BRANCH").unwrap();
+  let branch = env::var("ALTV_BRANCH").unwrap_or("release".to_string());
   // TODO: remove dev branch?
   let branch = match branch.as_str() {
-    "release" | "rc" | "dev" => branch,
+    branch @ ("release" | "rc" | "dev") => branch,
     _ => {
-      println!("fallback to altv dev branch");
-      "dev".to_string()
+      println!("fallback to altv release branch");
+      "release"
     }
   };
   println!("using altv branch: {branch}");
 
-  let altv_server_bin = format!("test/altv_server/altv-server{altv_server_ext}");
-  let crash_handler_bin = format!("test/altv_server/altv-crash-handler{altv_server_ext}");
+  let altv_server_bin = format!("altv-server{altv_server_ext}");
+  let altv_server_path = format!("test/altv_server/{altv_server_bin}");
+  let crash_handler_path = format!("test/altv_server/altv-crash-handler{altv_server_ext}");
 
   println!("installing altvup");
-  cmd!("cargo", "install", "--path", "altvup");
+  cmd!("cargo", "install", "--path", "altvup", "--force");
 
   println!("running altvup");
   // TODO: add param for local directory (to not download source code from github)
@@ -63,17 +64,26 @@ fn main() {
 
   println!("running altv server");
   if cfg!(unix) {
-    cmd!("chmod", "+x", &altv_server_bin);
-    cmd!("chmod", "+x", crash_handler_bin);
+    cmd!("chmod", "+x", &altv_server_path);
+    cmd!("chmod", "+x", crash_handler_path);
   }
 
-  let server_dir = Path::new(&altv_server_bin)
+  let server_dir = Path::new(&altv_server_path)
     .parent()
     .unwrap()
     .to_string_lossy()
     .to_string();
 
-  let mut altv_server = Command::new(&altv_server_bin).spawn().unwrap();
+  let program = if cfg!(unix) {
+    format!("./{altv_server_bin}")
+  } else {
+    altv_server_bin
+  };
+
+  let mut altv_server = Command::new(program)
+    .current_dir(dbg!(&server_dir))
+    .spawn()
+    .unwrap();
 
   let start = Instant::now();
   loop {
