@@ -49,7 +49,7 @@ First you need to [install](https://rust-lang.github.io/rust-bindgen/requirement
 
 2. Create new cargo package with `cargo new altv-resource --lib`
 
-3. Configure cargo to compile your crate as `cdylib` in your `Cargo.toml`
+3. Configure cargo to compile your crate as dynamic library in your `Cargo.toml`
 
 ```toml
 [lib]
@@ -71,17 +71,20 @@ fn main() -> impl altv::IntoVoidResult {
 
 6. Now you can build your resource with `cargo build`
 
-7. In `target/debug/` you should see the `.dll` or `.so` you just compiled (if you don't see it, make sure you set `lib.crate-type` to `["cdylib"]`, see step 3)
+7. In `target/debug/` you should see the dynamic library (`.dll` or `.so`) you just compiled (if you don't see it, make sure you set `lib.crate-type` to `['cdylib']`, see step 3)
 
 8. Create new alt:V resource, in `resources` directory of your server
 
-9. Copy compiled `.dll` or `.so` to resource directory
+9. Copy compiled dynamic library (`.dll` or `.so`) to resource directory
 
 10. Create [`resource.toml`](https://docs.altv.mp/articles/configs/resource.html) with this content:
 
 ```toml
 type = 'rs'
-main = 'example' # extension not needed
+
+# your compiled crate as .dll or .so
+main = 'example.so'
+# note: if you are developing on windows and your production server is running on linux you can use .module extension for your file (so here it will be example.module)  and then there will be no need to change resource.toml between linux and windows
 ```
 
 11. Don't forget to add resource to [`server.toml`](https://docs.altv.mp/articles/configs/server.html)
