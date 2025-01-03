@@ -28,6 +28,8 @@ extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
   let resource_name = resource_name.to_string();
   logger::debug!("resource_start: {resource_name} ({full_main_path})");
 
+  dbg!(thread_id::get());
+
   let core_ptr = unsafe { sdk::get_alt_core() };
 
   let module_handlers = core_module::ModuleHandlers::new(toggle_resource_event_type);
@@ -114,6 +116,8 @@ extern "C" fn runtime_on_tick() {
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_on_event(resource_name: &str, event: altv_sdk::CEventPtr) {
   let resource_name = resource_name.to_string();
+
+  dbg!(thread_id::get());
 
   if event.is_null() {
     panic!("resource_on_event event is null");

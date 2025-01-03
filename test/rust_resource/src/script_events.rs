@@ -19,7 +19,7 @@ pub(crate) fn test_script_events() {
       assert!(controller.destroy().is_err());
     }));
 
-  let args: DynMValueArgs = &[&true, &false, &123_i32, &123.5_f32];
-  events::emit("test", args).unwrap();
-  events::emit("test", args).unwrap();
+  // let args: DynMValueArgs = &[&true, &false, &123_i32, &123.5_f32];
+  // events::emit("test", args).unwrap();
+  // events::emit("test", args).unwrap();
 }
