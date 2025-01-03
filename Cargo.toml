@@ -18,7 +18,7 @@ members = [
 ]
 
 [workspace.package]
-version = "16.2.4"
+version = "16.2.5"
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/xxshady/altv-rust"
