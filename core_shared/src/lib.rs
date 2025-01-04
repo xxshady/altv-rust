@@ -5,12 +5,15 @@ pub mod result;
 #[derive(Default)]
 #[repr(C)]
 pub struct ResourceHandlers {
-  pub on_tick: Option<Box<dyn Fn() + 'static>>,
-  pub on_sdk_event: Option<Box<dyn Fn(altv_sdk::EventType, altv_sdk::CEventPtr) + 'static>>,
-  pub on_base_object_create:
-    Option<Box<dyn Fn(altv_sdk::BaseObjectMutPtr, altv_sdk::BaseObjectType) + 'static>>,
-  pub on_base_object_destroy:
-    Option<Box<dyn Fn(altv_sdk::BaseObjectMutPtr, altv_sdk::BaseObjectType) + 'static>>,
+  pub on_tick: Option<Box<dyn Fn() + 'static + Send + Sync>>,
+  pub on_sdk_event:
+    Option<Box<dyn Fn(altv_sdk::EventType, altv_sdk::CEventPtr) + 'static + Send + Sync>>,
+  pub on_base_object_create: Option<
+    Box<dyn Fn(altv_sdk::BaseObjectMutPtr, altv_sdk::BaseObjectType) + 'static + Send + Sync>,
+  >,
+  pub on_base_object_destroy: Option<
+    Box<dyn Fn(altv_sdk::BaseObjectMutPtr, altv_sdk::BaseObjectType) + 'static + Send + Sync>,
+  >,
 }
 
 impl Debug for ResourceHandlers {

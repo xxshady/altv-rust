@@ -2,10 +2,9 @@
 macro_rules! on_base_object_event {
   ($method_name:ident, $resource_name:expr, $base_object:expr) => {
     paste::paste! {
-      RESOURCE_MANAGER_INSTANCE.with(|manager| {
         let stringified_method_name = stringify!([$method_name]);
 
-        let manager = manager.borrow();
+        let manager = RESOURCE_MANAGER_INSTANCE.read().unwrap();
         if manager.is_pending(&$resource_name) {
           logger::debug!(
             "{} resource start is pending: {}",
@@ -29,7 +28,6 @@ macro_rules! on_base_object_event {
             panic!("{} resource: {:?} get_resource_for_module_by_path failed", stringified_method_name, $resource_name);
           })
           .[<$method_name>]($base_object, base_object_type);
-      });
     }
   };
 }

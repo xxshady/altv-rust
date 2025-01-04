@@ -1,4 +1,7 @@
-use std::cell::Cell;
+use std::{
+  cell::Cell,
+  sync::atomic::{AtomicU64, Ordering::Relaxed},
+};
 use altv_sdk::{helpers::get_base_object_type, BaseObjectRawMutPtr, BaseObjectType};
 use mvalue::to_mvalue;
 use crate::{sdk, helpers::base_ptr_to_raw};
@@ -6,9 +9,7 @@ use crate::{sdk, helpers::base_ptr_to_raw};
 // special key to avoid collisions with user's code
 pub const GENERATION_ID_KEY: &str = "&^#altv-rust";
 
-thread_local! {
-    pub static CURRENT_GENERATION_ID: Cell<u64> = const { Cell::new(1) };
-}
+pub static CURRENT_GENERATION_ID: AtomicU64 = AtomicU64::new(1);
 
 pub fn handle_base_object_creation(raw_ptr: BaseObjectRawMutPtr) {
   let btype = unsafe { get_base_object_type(raw_ptr) };
@@ -18,7 +19,7 @@ pub fn handle_base_object_creation(raw_ptr: BaseObjectRawMutPtr) {
 }
 
 pub fn handle_base_object_destruction() {
-  let current = CURRENT_GENERATION_ID.get();
+  let current = CURRENT_GENERATION_ID.load(Relaxed);
   let next = current.checked_add(1).unwrap_or_else(|| {
     logger::error!(
       "Base object generation reached u64::MAX.\n\
@@ -27,11 +28,11 @@ pub fn handle_base_object_destruction() {
     );
     1
   });
-  CURRENT_GENERATION_ID.set(next);
+  CURRENT_GENERATION_ID.store(next, Relaxed);
 }
 
 fn init_generation_of_created_base_object(raw_ptr: BaseObjectRawMutPtr, btype: BaseObjectType) {
-  let generation_id = CURRENT_GENERATION_ID.get();
+  let generation_id = CURRENT_GENERATION_ID.load(Relaxed);
 
   use BaseObjectType as B;
   match btype {

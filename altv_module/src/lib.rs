@@ -43,31 +43,36 @@ extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
 
   let main_fn: ResourceMainFn = unsafe { *lib.get(b"main\0").unwrap() };
 
-  RESOURCE_MANAGER_INSTANCE.with(|manager| {
-    manager
-      .borrow_mut()
-      .add_pending_status(resource_name.clone());
+  RESOURCE_MANAGER_INSTANCE
+    .write()
+    .unwrap()
+    .add_pending_status(resource_name.clone());
 
-    let result = unsafe {
-      main_fn(
-        CString::new(ALTV_MODULE_VERSION).unwrap(),
-        core_ptr,
-        CString::new(resource_name.clone()).unwrap(),
-        &mut resource_for_module.handlers,
-        module_handlers,
-      )
-    };
+  let result = unsafe {
+    main_fn(
+      CString::new(ALTV_MODULE_VERSION).unwrap(),
+      core_ptr,
+      CString::new(resource_name.clone()).unwrap(),
+      &mut resource_for_module.handlers,
+      module_handlers,
+    )
+  };
 
-    if !result.value {
-      logger::error!("Resource: {resource_name:?} main function returned error");
-    }
+  if !result.value {
+    logger::error!("Resource: {resource_name:?} main function returned error");
+  }
 
-    manager.borrow_mut().remove_pending_status(&resource_name);
+  RESOURCE_MANAGER_INSTANCE
+    .write()
+    .unwrap()
+    .remove_pending_status(&resource_name);
 
-    let resource_controller = ResourceController::new(lib, resource_for_module);
+  let resource_controller = ResourceController::new(lib, resource_for_module);
 
-    manager.borrow_mut().add(resource_name, resource_controller);
-  });
+  RESOURCE_MANAGER_INSTANCE
+    .write()
+    .unwrap()
+    .add(resource_name, resource_controller);
 }
 
 #[allow(improper_ctypes_definitions)]
@@ -75,12 +80,15 @@ extern "C" fn resource_stop(resource_name: &str) {
   let resource_name = resource_name.to_string();
   logger::debug!("resource_stop: {resource_name}");
 
-  RESOURCE_MANAGER_INSTANCE.with(|manager| {
-    manager.borrow_mut().remove(&resource_name);
-  });
-  EVENT_MANAGER_INSTANCE.with(|manager| {
-    manager.borrow_mut().resource_stopped(&resource_name);
-  });
+  RESOURCE_MANAGER_INSTANCE
+    .write()
+    .unwrap()
+    .remove(&resource_name);
+
+  EVENT_MANAGER_INSTANCE
+    .write()
+    .unwrap()
+    .resource_stopped(&resource_name);
 }
 
 fn toggle_resource_event_type(
@@ -93,10 +101,11 @@ fn toggle_resource_event_type(
     resource_name.to_str().unwrap()
   );
 
-  EVENT_MANAGER_INSTANCE.with(|v| {
-    v.borrow_mut()
-      .toggle_event(resource_name.into_string().unwrap(), event_type, state);
-  })
+  EVENT_MANAGER_INSTANCE.write().unwrap().toggle_event(
+    resource_name.into_string().unwrap(),
+    event_type,
+    state,
+  );
 }
 
 #[allow(improper_ctypes_definitions)]
@@ -106,11 +115,11 @@ extern "C" fn runtime_resource_destroy_impl() {
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn runtime_on_tick() {
-  RESOURCE_MANAGER_INSTANCE.with(|v| {
-    for (_, controller) in v.borrow().resources_iter() {
-      controller.resource_for_module.on_tick();
-    }
-  });
+  dbg!(thread_id::get());
+
+  for (_, controller) in RESOURCE_MANAGER_INSTANCE.read().unwrap().resources_iter() {
+    controller.resource_for_module.on_tick();
+  }
 }
 
 #[allow(improper_ctypes_definitions)]
@@ -139,15 +148,13 @@ extern "C" fn resource_on_event(resource_name: &str, event: altv_sdk::CEventPtr)
     event_type
   );
 
-  RESOURCE_MANAGER_INSTANCE.with(|manager| {
-    let manager = manager.borrow();
-    manager
-      .get_resource_for_module_by_name(&resource_name)
-      .unwrap_or_else(|| {
-        panic!("[resource_on_event] failed to get resource: {resource_name}");
-      })
-      .on_sdk_event(event_type, event);
-  });
+  let resource_manager = RESOURCE_MANAGER_INSTANCE.read().unwrap();
+
+  let Some(resource) = resource_manager.get_resource_for_module_by_name(&resource_name) else {
+    panic!("[resource_on_event] failed to get resource: {resource_name}");
+  };
+
+  resource.on_sdk_event(event_type, event);
 }
 
 #[allow(improper_ctypes_definitions)]
@@ -215,6 +222,7 @@ pub unsafe extern "C" fn altMain(core: *mut sdk::alt::ICore) -> bool {
 #[no_mangle]
 #[allow(clippy::missing_safety_doc)]
 pub unsafe extern "C" fn GetSDKHash() -> *const std::ffi::c_char {
+  // TODO: wtf? how does it work? isnt it dropped here?
   std::ffi::CStr::from_bytes_with_nul(altv_sdk::ALT_SDK_VERSION)
     .unwrap()
     .as_ptr()

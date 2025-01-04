@@ -1,32 +1,30 @@
 use std::{
   cell::{Ref, RefCell, RefMut},
   rc::Rc,
+  sync::{Arc, RwLock},
 };
 
 use core_shared::{ModuleHandlers, StringResourceName};
 
 use crate::{alt_resource, base_objects, events, script_events, timers};
 
-thread_local! {
-  pub static RESOURCE: Rc<RefCell<Option<Resource>>> =
-    Rc::new(RefCell::new(None));
-}
+pub static RESOURCE: Arc<RwLock<Option<Resource>>> = Arc::new(RwLock::new(None));
 
 #[derive(Debug, Default)]
 pub struct Resource {
   pub name: StringResourceName,
   pub module_handlers: ModuleHandlers,
 
-  pub timers: RefCell<timers::TimerManager>,
-  pub timer_schedule: RefCell<timers::ScheduleState>,
-  pub events: RefCell<events::EventManager>,
-  pub local_script_events: RefCell<script_events::LocalEventManager>,
-  pub local_script_events_schedule: RefCell<script_events::LocalEventSchedule>,
-  pub client_script_events: RefCell<script_events::ClientEventManager>,
-  pub client_script_events_schedule: RefCell<script_events::ClientEventSchedule>,
-  pub base_objects: RefCell<base_objects::Store>,
-  pub pending_base_object_destroy_or_creation: RefCell<base_objects::PendingDestroyOrCreation>,
-  pub alt_resources: RefCell<alt_resource::AltResourceManager>,
+  pub timers: RwLock<timers::TimerManager>,
+  pub timer_schedule: RwLock<timers::ScheduleState>,
+  pub events: RwLock<events::EventManager>,
+  pub local_script_events: RwLock<script_events::LocalEventManager>,
+  pub local_script_events_schedule: RwLock<script_events::LocalEventSchedule>,
+  pub client_script_events: RwLock<script_events::ClientEventManager>,
+  pub client_script_events_schedule: RwLock<script_events::ClientEventSchedule>,
+  pub base_objects: RwLock<base_objects::Store>,
+  pub pending_base_object_destroy_or_creation: RwLock<base_objects::PendingDestroyOrCreation>,
+  pub alt_resources: RwLock<alt_resource::AltResourceManager>,
 }
 
 macro_rules! with_resource {

@@ -1,13 +1,13 @@
 use std::{
   cell::RefCell,
   collections::{hash_map, HashMap, HashSet},
+  sync::{LazyLock, RwLock},
 };
 
 use core_module::{ResourceForModule, StringResourceName};
 
-thread_local! {
-    pub static RESOURCE_MANAGER_INSTANCE: RefCell<ResourceManager> = RefCell::new(ResourceManager::default());
-}
+pub static RESOURCE_MANAGER_INSTANCE: LazyLock<RwLock<ResourceManager>> =
+  LazyLock::new(|| Default::default());
 
 #[derive(Debug)]
 pub struct ResourceController {

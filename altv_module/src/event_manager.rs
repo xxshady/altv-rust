@@ -1,15 +1,14 @@
 use altv_sdk::ffi as sdk;
 use core_module::StringResourceName;
 use std::{
-  cell::RefCell,
   collections::{HashMap, HashSet},
+  sync::{LazyLock, RwLock},
 };
 
 use crate::required_sdk_events;
 
-thread_local! {
-    pub static EVENT_MANAGER_INSTANCE: RefCell<EventManager> = RefCell::new(EventManager::default());
-}
+pub static EVENT_MANAGER_INSTANCE: LazyLock<RwLock<EventManager>> =
+  LazyLock::new(|| Default::default());
 
 type NumberOfListeners = u32;
 

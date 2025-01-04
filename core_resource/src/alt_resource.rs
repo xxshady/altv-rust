@@ -1,4 +1,10 @@
-use std::{collections::HashMap, ptr::NonNull, rc::Rc, cell::Cell};
+use std::{
+  cell::Cell,
+  collections::HashMap,
+  ptr::NonNull,
+  rc::Rc,
+  sync::{atomic::AtomicBool, Arc},
+};
 
 use anyhow::bail;
 use core_shared::StringResourceName;
@@ -21,7 +27,7 @@ pub struct AltResource {
   pub dependencies: Vec<String>,
   pub config: ResourceConfig,
 
-  valid: Cell<bool>,
+  valid: AtomicBool,
 }
 
 impl AltResource {
@@ -73,8 +79,8 @@ type ResourcePtr = NonNull<sdk::alt::IResource>;
 
 #[derive(Debug, Default)]
 pub struct AltResourceManager {
-  resources: HashMap<String, Rc<AltResource>>,
-  this_resource: Option<Rc<AltResource>>,
+  resources: HashMap<String, Arc<AltResource>>,
+  this_resource: Option<Arc<AltResource>>,
 }
 
 impl AltResourceManager {
