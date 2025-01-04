@@ -1,4 +1,9 @@
-use std::{cell::RefCell, ptr::NonNull, rc::Rc};
+use std::{
+  cell::RefCell,
+  ptr::NonNull,
+  rc::Rc,
+  sync::{Arc, RwLock},
+};
 
 use super::{base_object::BaseObject, BaseObjectContainer};
 use crate::{
@@ -7,10 +12,10 @@ use crate::{
   SomeResult, VoidResult,
 };
 
-pub(crate) type BaseObjectWrapperRc<T, InheritPtrs = ()> = Rc<BaseObjectWrapper<T, InheritPtrs>>;
+pub(crate) type BaseObjectWrapperRc<T, InheritPtrs = ()> = Arc<BaseObjectWrapper<T, InheritPtrs>>;
 
 pub struct BaseObjectWrapper<T, InheritPtrs: Clone = ()> {
-  pub(crate) value: RefCell<BaseObject<T, InheritPtrs>>,
+  pub(crate) value: RwLock<BaseObject<T, InheritPtrs>>,
 }
 
 impl<T, InheritPtrs: Clone> BaseObjectWrapper<T, InheritPtrs> {
@@ -19,8 +24,8 @@ impl<T, InheritPtrs: Clone> BaseObjectWrapper<T, InheritPtrs> {
     base_ptr: altv_sdk::BaseObjectMutPtr,
     inherit_ptrs: InheritPtrs,
   ) -> BaseObjectContainer<T, InheritPtrs> {
-    BaseObjectContainer(Rc::new(Self {
-      value: RefCell::new(BaseObject {
+    BaseObjectContainer(Arc::new(Self {
+      value: RwLock::new(BaseObject {
         ptr: Some(ptr),
         base_ptr: Some(base_ptr),
         inherit_ptrs: Some(inherit_ptrs),
@@ -29,22 +34,22 @@ impl<T, InheritPtrs: Clone> BaseObjectWrapper<T, InheritPtrs> {
   }
 
   pub(crate) fn ptr(&self) -> SomeResult<NonNull<T>> {
-    self.value.try_borrow()?.ptr()
+    Ok(self.value.read().unwrap().ptr()?)
   }
 
   pub(crate) fn raw_ptr(&self) -> SomeResult<*mut T> {
-    self.value.try_borrow()?.raw_ptr()
+    self.value.read().unwrap().raw_ptr()
   }
 
   pub(crate) fn internal_destroy(&self) -> VoidResult {
     Resource::with_pending_base_object_destroy_or_creation_mut(|_, _| {
-      self.value.try_borrow_mut()?.internal_destroy()
+      self.value.write().unwrap().internal_destroy()
     })?;
     Ok(())
   }
 
   pub fn id(&self) -> SomeResult<u32> {
-    self.value.try_borrow()?.id()
+    self.value.read().unwrap().id()
   }
 }
 

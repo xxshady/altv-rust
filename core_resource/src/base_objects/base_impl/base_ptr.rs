@@ -21,10 +21,10 @@ impl<T, InheritPtrs: Clone> BasePtr for BaseObject<T, InheritPtrs> {
 
 impl<T, InheritPtrs: Clone> BasePtr for BaseObjectWrapper<T, InheritPtrs> {
   fn base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectMutPtr> {
-    self.value.try_borrow()?.base_ptr()
+    self.value.try_read().unwrap().base_ptr()
   }
 
   fn raw_base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectRawMutPtr> {
-    self.value.try_borrow()?.raw_base_ptr()
+    self.value.try_read().unwrap().raw_base_ptr()
   }
 }

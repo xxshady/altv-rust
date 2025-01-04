@@ -17,6 +17,6 @@ impl<T, InheritPtrs: Clone> BaseObjectInheritPtrs<InheritPtrs>
   for BaseObjectWrapper<T, InheritPtrs>
 {
   fn inherit_ptrs(&self) -> SomeResult<InheritPtrs> {
-    self.value.try_borrow()?.inherit_ptrs()
+    Ok(self.value.read().unwrap().inherit_ptrs()?)
   }
 }

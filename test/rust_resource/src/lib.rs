@@ -81,19 +81,44 @@ fn main() -> impl altv::IntoVoidResult {
   // altv::log!("#################### closest_entities");
   // test_closest_entities();
 
-  altv::set_timeout(
-    || {
-      // altv::log!("#################### metadata_events");
-      // test_metadata_events();
+  // altv::set_timeout(
+  //   || {
+  //     altv::log!("#################### metadata_events");
+  //     test_metadata_events();
 
-      altv::set_timeout(
-        || {
-          altv::log!("stopping resource...");
-          altv::Resource::current().stop().unwrap();
-        },
-        1000,
-      );
-    },
-    CLOSEST_ENTITIES_TEST_TIMER,
-  );
+  //     altv::set_timeout(
+  //       || {
+  //         altv::log!("stopping resource...");
+  //         altv::Resource::current().stop().unwrap();
+  //       },
+  //       1000,
+  //     );
+  //   },
+  //   CLOSEST_ENTITIES_TEST_TIMER,
+  // );
+
+  // std::thread::spawn(|| {
+  //   let mut created_vehs = vec![];
+  //   for i in 0..100 {
+  //     std::thread::sleep(std::time::Duration::from_millis(5));
+  //     let veh = altv::Vehicle::new("sultan", 0, 0).unwrap();
+  //     let id = veh.id().unwrap();
+  //     dbg!(id);
+
+  //     if i % 2 == 0 {
+  //       std::thread::spawn(move || {
+  //         veh.destroy().unwrap();
+  //       });
+  //     } else {
+  //       created_vehs.push(id);
+  //     }
+  //   }
+
+  //   std::thread::sleep(std::time::Duration::from_millis(1000));
+  //   dbg!(created_vehs);
+  // });
+
+  // altv::events::on("ev", |ev| {
+  //   dbg!();
+  // });
 }

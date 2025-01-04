@@ -1,4 +1,4 @@
-use std::{marker::PhantomData, rc::Rc};
+use std::{marker::PhantomData, sync::Arc};
 
 use serde::{de::DeserializeOwned, Serialize};
 
@@ -16,7 +16,7 @@ pub struct NormalBaseObjectMetaEntry<V, T, InheritPtrs: Clone> {
 
 pub trait NormalBaseObjectMeta<T, InheritPtrs: Clone>: ValidBaseObject
 where
-  BaseObjectWrapperRc<T, InheritPtrs>: From<Rc<Self>>,
+  BaseObjectWrapperRc<T, InheritPtrs>: From<Arc<Self>>,
   InheritPtrs: Clone,
 {
   /// Provides access to read or modify unsynced meta of BaseObject (Vehicle, ColShape, Player, etc.).
@@ -40,7 +40,7 @@ where
   /// # Ok(()) }
   /// ```
   fn meta_entry<V: Serialize + DeserializeOwned>(
-    self: &Rc<Self>,
+    self: &Arc<Self>,
     key: impl ToString,
   ) -> SomeResult<NormalBaseObjectMetaEntry<V, T, InheritPtrs>> {
     self.assert_valid()?;
@@ -52,14 +52,14 @@ where
     })
   }
 
-  fn meta_keys(self: &Rc<Self>) -> SomeResult<Vec<String>> {
+  fn meta_keys(self: &Arc<Self>) -> SomeResult<Vec<String>> {
     let base_object: BaseObjectWrapperRc<T, InheritPtrs> = self.clone().into();
     Ok(helpers::read_cpp_str_vec(unsafe {
       sdk::IBaseObject::GetMetaDataKeys(base_object.raw_base_ptr()?)
     }))
   }
 
-  fn set_multiple_meta(self: &Rc<Self>, meta: MValueHashMap) -> VoidResult {
+  fn set_multiple_meta(self: &Arc<Self>, meta: MValueHashMap) -> VoidResult {
     let base_object: BaseObjectWrapperRc<T, InheritPtrs> = self.clone().into();
     unsafe {
       sdk::IBaseObject::SetMultipleMetaData(

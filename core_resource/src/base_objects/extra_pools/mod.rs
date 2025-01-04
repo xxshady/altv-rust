@@ -1,4 +1,4 @@
-use std::rc::Rc;
+use std::sync::Arc;
 
 use super::{
   base_impl::inherit_ptrs::BaseObjectInheritPtrs, object, objects::AnyBaseObject, ped, player,
@@ -58,8 +58,8 @@ macro_rules! extra_pool_enum {
       }
 
       // TODO: refactor this shit, this only needed for meta
-      impl From<Rc<$wrapper>> for $any_name {
-        fn from(value: Rc<$wrapper>) -> Self {
+      impl From<Arc<$wrapper>> for $any_name {
+        fn from(value: Arc<$wrapper>) -> Self {
           $any_name::$variant(BaseObjectContainer(value))
         }
       }

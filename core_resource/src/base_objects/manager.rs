@@ -48,7 +48,7 @@ impl<T, InheritPtrs: Clone> BaseObjectManager<T, InheritPtrs> {
     ptr: NonNull<T>,
   ) -> VoidResult {
     if let Some(obj) = self.objects.remove(&ptr) {
-      obj.value.try_borrow_mut()?.clear_pointers();
+      obj.value.write().unwrap().clear_pointers();
       self.remove_id(base_ptr);
       Ok(())
     } else {

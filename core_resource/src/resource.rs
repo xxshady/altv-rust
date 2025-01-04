@@ -48,7 +48,7 @@ macro_rules! impl_borrow_fn {
       where
         F: FnOnce(RwLockReadGuard<$full_path>, &Resource) -> R,
       {
-        with_resource!(f, $property_name, try_read)
+        with_resource!(f, $property_name, read)
       }
     }
   };
@@ -61,7 +61,7 @@ macro_rules! impl_borrow_mut_fn {
       where
         F: FnOnce(RwLockWriteGuard<$full_path>, &Resource) -> R,
       {
-        with_resource!(f, $property_name, try_write)
+        with_resource!(f, $property_name, write)
       }
     }
   };

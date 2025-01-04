@@ -11,6 +11,10 @@ pub struct BaseObject<T, InheritPtrs: Clone> {
   pub(super) inherit_ptrs: Option<InheritPtrs>,
 }
 
+// TEST
+unsafe impl<T, InheritPtrs: Clone> Send for BaseObject<T, InheritPtrs> {}
+unsafe impl<T, InheritPtrs: Clone> Sync for BaseObject<T, InheritPtrs> {}
+
 impl<T, InheritPtrs: Clone> BaseObject<T, InheritPtrs> {
   pub(crate) fn ptr(&self) -> SomeResult<NonNull<T>> {
     self.ptr.ok_or(anyhow::anyhow!(

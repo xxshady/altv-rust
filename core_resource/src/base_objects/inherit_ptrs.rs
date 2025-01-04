@@ -22,6 +22,10 @@ pub struct WorldObject {
   world_object: WorldObjectRawPtr,
 }
 
+// TEST
+unsafe impl Send for WorldObject {}
+unsafe impl Sync for WorldObject {}
+
 impl WorldObject {
   pub(crate) unsafe fn new(base_raw_ptr: altv_sdk::BaseObjectRawMutPtr) -> Self {
     Self {
@@ -41,6 +45,10 @@ pub struct WorldEntity {
   world_object: WorldObjectRawPtr,
   entity: EntityRawPtr,
 }
+
+// TEST
+unsafe impl Send for WorldEntity {}
+unsafe impl Sync for WorldEntity {}
 
 impl WorldEntity {
   pub(crate) unsafe fn new(base_raw_ptr: altv_sdk::BaseObjectRawMutPtr) -> Self {
