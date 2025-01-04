@@ -1,14 +1,15 @@
 use std::{
   cell::{Ref, RefCell, RefMut},
   rc::Rc,
-  sync::{Arc, RwLock},
+  sync::{Arc, LazyLock, RwLock, RwLockReadGuard, RwLockWriteGuard},
 };
 
 use core_shared::{ModuleHandlers, StringResourceName};
 
 use crate::{alt_resource, base_objects, events, script_events, timers};
 
-pub static RESOURCE: Arc<RwLock<Option<Resource>>> = Arc::new(RwLock::new(None));
+pub static RESOURCE: LazyLock<Arc<RwLock<Option<Resource>>>> =
+  LazyLock::new(|| Arc::new(RwLock::new(None)));
 
 #[derive(Debug, Default)]
 pub struct Resource {
@@ -29,16 +30,14 @@ pub struct Resource {
 
 macro_rules! with_resource {
   ($func:expr, $property_name:ident, $borrow_func:ident) => {
-    paste::paste! {
-      RESOURCE.with(|resource| {
-        let resource = resource.borrow();
-        let resource = resource.as_ref().unwrap();
-        let manager = resource.[<$property_name>].[<$borrow_func>]().unwrap_or_else(|_| {
-          panic!("Failed to {} `{}`", stringify!($borrow_func), stringify!($property_name));
-        });
-        $func(manager, resource)
-      })
-    }
+    paste::paste! {{
+      let resource = RESOURCE.read().unwrap();
+      let resource = resource.as_ref().unwrap();
+      let manager = resource.[<$property_name>].[<$borrow_func>]().unwrap_or_else(|_| {
+        panic!("Failed to {} `{}`", stringify!($borrow_func), stringify!($property_name));
+      });
+      $func(manager, resource)
+    }}
   };
 }
 
@@ -47,9 +46,9 @@ macro_rules! impl_borrow_fn {
     paste::paste! {
       pub fn [<with_  $property_name _ref>]<F, R>(f: F) -> R
       where
-        F: FnOnce(Ref<$full_path>, &Resource) -> R,
+        F: FnOnce(RwLockReadGuard<$full_path>, &Resource) -> R,
       {
-        with_resource!(f, $property_name, try_borrow)
+        with_resource!(f, $property_name, try_read)
       }
     }
   };
@@ -60,9 +59,9 @@ macro_rules! impl_borrow_mut_fn {
     paste::paste! {
       pub fn [<with_  $property_name _mut>]<F, R>(f: F) -> R
       where
-        F: FnOnce(RefMut<$full_path>, &Resource) -> R,
+        F: FnOnce(RwLockWriteGuard<$full_path>, &Resource) -> R,
       {
-        with_resource!(f, $property_name, try_borrow_mut)
+        with_resource!(f, $property_name, try_write)
       }
     }
   };
@@ -70,30 +69,28 @@ macro_rules! impl_borrow_mut_fn {
 
 impl Resource {
   pub fn init(resource_name: StringResourceName, module_handlers: ModuleHandlers) {
-    RESOURCE.with(|container| {
-      let resource = Resource {
-        name: resource_name,
-        module_handlers,
-        ..Default::default()
-      };
+    let resource = Resource {
+      name: resource_name,
+      module_handlers,
+      ..Default::default()
+    };
 
-      resource.alt_resources.borrow_mut().init(&resource.name);
-
-      container.replace(Some(resource));
-    });
+    resource.alt_resources.write().unwrap().init(&resource.name);
+    RESOURCE.write().unwrap().replace(resource);
   }
 
   pub fn with<F, R>(f: F) -> R
   where
     F: FnOnce(&Resource) -> R,
   {
-    RESOURCE.with(|v| f(v.borrow().as_ref().unwrap()))
+    let resource = RESOURCE.read().unwrap();
+    f(resource.as_ref().unwrap())
   }
 
   fn pending_base_object_destroy_or_creation(&self) -> bool {
     self
       .pending_base_object_destroy_or_creation
-      .try_borrow_mut()
+      .try_write()
       .is_err()
   }
 
@@ -112,7 +109,8 @@ impl Resource {
 
     self
       .base_objects
-      .borrow_mut()
+      .write()
+      .unwrap()
       .on_create(ptr, base_object_type);
   }
 
@@ -130,7 +128,8 @@ impl Resource {
 
     self
       .base_objects
-      .borrow_mut()
+      .write()
+      .unwrap()
       .on_remove(ptr, base_object_type);
   }
 

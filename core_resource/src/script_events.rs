@@ -1,8 +1,9 @@
 use std::{
-  collections::{HashMap, hash_map},
+  cell::RefMut,
+  collections::{hash_map, HashMap},
   fmt::Debug,
   marker::PhantomData,
-  cell::RefMut,
+  sync::RwLockWriteGuard,
 };
 
 use crate::{base_objects::player, resource::Resource, IntoVoidResult, VoidResult, SomeResult};
@@ -29,8 +30,8 @@ pub struct PlayerEventContext<'a> {
   pub args: EventArgs<'a>,
 }
 
-pub type LocalEventHandler = Box<dyn FnMut(&LocalEventContext) -> VoidResult>;
-pub type ClientEventHandler = Box<dyn FnMut(&PlayerEventContext) -> VoidResult>;
+pub type LocalEventHandler = Box<dyn FnMut(&LocalEventContext) -> VoidResult + Send + Sync>;
+pub type ClientEventHandler = Box<dyn FnMut(&PlayerEventContext) -> VoidResult + Send + Sync>;
 
 pub trait ScriptEventManager {
   type Handler;
@@ -87,7 +88,7 @@ pub trait ScriptEventManager {
       .map(|v| v.values_mut())
   }
 
-  fn remove_scheduled_handlers<T>(&mut self, mut schedule: RefMut<EventSchedule<T>>) {
+  fn remove_scheduled_handlers<T>(&mut self, mut schedule: RwLockWriteGuard<EventSchedule<T>>) {
     for (event_name, id) in schedule.to_be_destroyed.iter() {
       let result = self.remove_handler(event_name, *id);
 
@@ -123,7 +124,7 @@ impl LocalEventManager {
           return;
         }
         events.handle_event(
-          resource.local_script_events_schedule.borrow_mut(),
+          resource.local_script_events_schedule.write().unwrap(),
           name,
           args,
         );
@@ -135,7 +136,7 @@ impl LocalEventManager {
 
   fn handle_event(
     &mut self,
-    schedule: RefMut<LocalEventSchedule>,
+    schedule: RwLockWriteGuard<LocalEventSchedule>,
     event_name: &str,
     args: EventArgs,
   ) {
@@ -198,7 +199,7 @@ impl ClientEventManager {
           return;
         }
         events.handle_event(
-          resource.client_script_events_schedule.borrow_mut(),
+          resource.client_script_events_schedule.write().unwrap(),
           name,
           player.clone(),
           args,
@@ -211,7 +212,7 @@ impl ClientEventManager {
 
   pub fn handle_event(
     &mut self,
-    schedule: RefMut<ClientEventSchedule>,
+    schedule: RwLockWriteGuard<ClientEventSchedule>,
     event_name: &str,
     player: player::PlayerContainer,
     args: EventArgs,
@@ -258,7 +259,7 @@ impl Debug for ClientEventManager {
 
 pub fn on<V: IntoVoidResult>(
   event_name: impl ToString,
-  mut handler: impl FnMut(&LocalEventContext) -> V + 'static,
+  mut handler: impl FnMut(&LocalEventContext) -> V + 'static + Send + Sync,
 ) -> LocalEventController {
   let event_name = event_name.to_string();
 
@@ -274,7 +275,7 @@ pub fn on<V: IntoVoidResult>(
 
 pub fn on_player<V: IntoVoidResult>(
   event_name: impl ToString,
-  mut handler: impl FnMut(&PlayerEventContext) -> V + 'static,
+  mut handler: impl FnMut(&PlayerEventContext) -> V + 'static + Send + Sync,
 ) -> PlayerEventController {
   let event_name = event_name.to_string();
 

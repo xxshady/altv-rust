@@ -83,8 +83,8 @@ fn main() -> impl altv::IntoVoidResult {
 
   altv::set_timeout(
     || {
-      altv::log!("#################### metadata_events");
-      test_metadata_events();
+      // altv::log!("#################### metadata_events");
+      // test_metadata_events();
 
       altv::set_timeout(
         || {

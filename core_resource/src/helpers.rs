@@ -134,7 +134,12 @@ pub(crate) fn get_entity_by_ptr(entity: EntityRawPtr, resource: &Resource) -> Op
   }
   let entity = unsafe { sdk::entity::to_base_object(entity) };
   let entity = NonNull::new(entity).unwrap();
-  let base_object = resource.base_objects.borrow().get_by_ptr(entity).unwrap();
+  let base_object = resource
+    .base_objects
+    .read()
+    .unwrap()
+    .get_by_ptr(entity)
+    .unwrap();
   let entity = base_object.try_into().unwrap();
   Some(entity)
 }
@@ -158,7 +163,8 @@ pub(crate) fn get_world_object_by_ptr(
   let world_object = NonNull::new(world_object).unwrap();
   let base_object = resource
     .base_objects
-    .borrow()
+    .read()
+    .unwrap()
     .get_by_ptr(world_object)
     .unwrap();
   let world_object = base_object.try_into().unwrap();
@@ -200,7 +206,8 @@ pub fn get_player(
 
   let player = resource
     .base_objects
-    .borrow()
+    .read()
+    .unwrap()
     .player
     .get_by_ptr(ptr)
     .unwrap();
@@ -214,7 +221,13 @@ pub fn get_non_null_ped(ptr: *mut sdk::alt::IPed, resource: &Resource) -> ped::P
 pub fn get_ped(ptr: *mut sdk::alt::IPed, resource: &Resource) -> Option<ped::PedContainer> {
   let ptr = NonNull::new(ptr)?;
 
-  let ped = resource.base_objects.borrow().ped.get_by_ptr(ptr).unwrap();
+  let ped = resource
+    .base_objects
+    .read()
+    .unwrap()
+    .ped
+    .get_by_ptr(ptr)
+    .unwrap();
   Some(ped)
 }
 

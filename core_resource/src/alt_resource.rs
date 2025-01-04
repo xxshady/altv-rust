@@ -2,8 +2,10 @@ use std::{
   cell::Cell,
   collections::HashMap,
   ptr::NonNull,
-  rc::Rc,
-  sync::{atomic::AtomicBool, Arc},
+  sync::{
+    atomic::{AtomicBool, Ordering::Relaxed},
+    Arc,
+  },
 };
 
 use anyhow::bail;
@@ -31,15 +33,15 @@ pub struct AltResource {
 }
 
 impl AltResource {
-  pub fn all() -> Vec<Rc<AltResource>> {
+  pub fn all() -> Vec<Arc<AltResource>> {
     Resource::with_alt_resources_ref(|v, _| v.resources.values().cloned().collect())
   }
 
-  pub fn current() -> Rc<AltResource> {
+  pub fn current() -> Arc<AltResource> {
     Resource::with_alt_resources_ref(|v, _| v.this_resource.as_ref().unwrap().clone())
   }
 
-  pub fn get_by_name(name: &str) -> SomeResult<Rc<AltResource>> {
+  pub fn get_by_name(name: &str) -> SomeResult<Arc<AltResource>> {
     Resource::with_alt_resources_ref(|v, _| v.get_by_name(name))
   }
 
@@ -61,7 +63,7 @@ impl AltResource {
   }
 
   pub fn valid(&self) -> bool {
-    self.valid.get()
+    self.valid.load(Relaxed)
   }
 
   fn assert_valid(&self) -> VoidResult {
@@ -102,14 +104,14 @@ impl AltResourceManager {
   pub fn add_resource_from_raw_ptr(
     &mut self,
     raw_ptr: *mut sdk::alt::IResource,
-  ) -> Rc<AltResource> {
+  ) -> Arc<AltResource> {
     let ptr = NonNull::new(raw_ptr).unwrap();
     let name = get_resource_name(ptr);
     logger::debug!("adding resource: {name}");
     self.add_resource(name, ptr)
   }
 
-  pub fn on_start(&mut self, resource_ptr: ResourcePtr) -> Rc<AltResource> {
+  pub fn on_start(&mut self, resource_ptr: ResourcePtr) -> Arc<AltResource> {
     let name = get_resource_name(resource_ptr);
     logger::debug!("on start name: {name}");
     if let Some(resource) = self.resources.get(&name) {
@@ -119,20 +121,20 @@ impl AltResourceManager {
     self.add_resource(name, resource_ptr)
   }
 
-  pub fn on_stop(&mut self, resource_ptr: ResourcePtr) -> Rc<AltResource> {
+  pub fn on_stop(&mut self, resource_ptr: ResourcePtr) -> Arc<AltResource> {
     let name = get_resource_name(resource_ptr);
     logger::debug!("on stop name: {name}");
 
     let resource = self.resources.remove(&name).unwrap();
-    resource.valid.set(false);
+    resource.valid.store(false, Relaxed);
     resource
   }
 
-  pub fn add_resource(&mut self, name: StringResourceName, ptr: ResourcePtr) -> Rc<AltResource> {
+  pub fn add_resource(&mut self, name: StringResourceName, ptr: ResourcePtr) -> Arc<AltResource> {
     use sdk::IResource::*;
 
     let raw_ptr = ptr.as_ptr();
-    let instance = Rc::new(AltResource {
+    let instance = Arc::new(AltResource {
       name: name.clone(),
       resource_type: unsafe { GetType(raw_ptr) }.to_string(),
       path: unsafe { GetPath(raw_ptr) }.to_string(),
@@ -144,14 +146,14 @@ impl AltResourceManager {
       dependencies: read_cpp_str_vec(unsafe { GetDependencies(raw_ptr) }),
       config: ResourceConfig::new(unsafe { GetConfig(raw_ptr) }),
 
-      valid: Cell::new(true),
+      valid: AtomicBool::new(true),
     });
 
     self.resources.insert(name, instance.clone());
     instance
   }
 
-  pub fn get_by_name(&self, name: &str) -> SomeResult<Rc<AltResource>> {
+  pub fn get_by_name(&self, name: &str) -> SomeResult<Arc<AltResource>> {
     self
       .resources
       .get(name)

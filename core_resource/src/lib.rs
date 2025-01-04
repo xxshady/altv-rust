@@ -66,7 +66,7 @@ pub fn init(
 
   set_callback!(on_tick, || {
     Resource::with_timers_mut(|mut timers, resource| {
-      timers.process_timers(resource.timer_schedule.borrow_mut());
+      timers.process_timers(resource.timer_schedule.write().unwrap());
     });
   });
 

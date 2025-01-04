@@ -69,7 +69,7 @@ pub use events::sdk_contexts::*;
 macro_rules! on_sdk_event {
   ($func_name:ident, $event_name:ident) => {
     pub fn $func_name<V: IntoVoidResult>(
-      mut handler: impl FnMut(&events::sdk_contexts::$event_name) -> V + 'static,
+      mut handler: impl FnMut(&events::sdk_contexts::$event_name) -> V + 'static + Send + Sync,
     ) {
       events::add_sdk_handler(events::SDKHandler::$event_name(Box::new(move |c| {
         handler(c).into_void_result()
@@ -138,7 +138,7 @@ on_sdk_event!(on_ped_heal, PedHeal);
 macro_rules! on_custom_event {
   ($func_name:ident, $event_name:ident) => {
     pub fn $func_name<V: IntoVoidResult>(
-      mut handler: impl FnMut(&events::custom_contexts::$event_name) -> V + 'static,
+      mut handler: impl FnMut(&events::custom_contexts::$event_name) -> V + 'static + Send + Sync,
     ) {
       events::add_custom_handler(events::CustomHandler::$event_name(Box::new(move |c| {
         handler(c).into_void_result()

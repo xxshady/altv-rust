@@ -1,4 +1,4 @@
-use std::{cell::Cell, ptr::NonNull, rc::Rc};
+use std::{cell::Cell, ptr::NonNull, rc::Rc, sync::Arc};
 
 use altv_sdk::ffi as sdk;
 use autocxx::prelude::*;
@@ -72,7 +72,7 @@ impl ServerStarted {
 
 #[derive(Debug)]
 pub struct ResourceStart {
-  pub resource: Rc<AltResource>,
+  pub resource: Arc<AltResource>,
 }
 
 impl ResourceStart {
@@ -81,7 +81,11 @@ impl ResourceStart {
 
     let resource_ptr = unsafe { sdk::CResourceStartEvent::GetResource(event) };
     let resource_ptr = NonNull::new(resource_ptr).unwrap();
-    let resource = resource.alt_resources.borrow_mut().on_start(resource_ptr);
+    let resource = resource
+      .alt_resources
+      .write()
+      .unwrap()
+      .on_start(resource_ptr);
 
     Self { resource }
   }
@@ -89,7 +93,7 @@ impl ResourceStart {
 
 #[derive(Debug)]
 pub struct ResourceStop {
-  pub resource: Rc<AltResource>,
+  pub resource: Arc<AltResource>,
 }
 
 impl ResourceStop {
@@ -98,7 +102,11 @@ impl ResourceStop {
 
     let resource_ptr = unsafe { sdk::CResourceStopEvent::GetResource(event) };
     let resource_ptr = NonNull::new(resource_ptr).unwrap();
-    let resource = resource.alt_resources.borrow_mut().on_stop(resource_ptr);
+    let resource = resource
+      .alt_resources
+      .write()
+      .unwrap()
+      .on_stop(resource_ptr);
 
     Self { resource }
   }

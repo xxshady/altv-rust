@@ -1,11 +1,11 @@
-use std::{cell::RefMut, fmt::Debug, time};
+use std::{fmt::Debug, sync::RwLockWriteGuard, time};
 
 use anyhow::bail;
 
 use crate::{resource::Resource, VoidResult};
 
 pub type TimerId = u64;
-pub type TimerCallback = dyn FnMut() -> VoidResult + 'static;
+pub type TimerCallback = dyn FnMut() -> VoidResult + 'static + Send + Sync;
 
 struct TimerData {
   callback: Box<TimerCallback>,
@@ -62,7 +62,7 @@ pub struct TimerManager {
 }
 
 impl TimerManager {
-  pub fn process_timers(&mut self, mut schedule: RefMut<ScheduleState>) {
+  pub fn process_timers(&mut self, mut schedule: RwLockWriteGuard<ScheduleState>) {
     self.timers.append(&mut schedule.timers);
 
     if !schedule.to_be_destroyed.is_empty() {
@@ -97,7 +97,7 @@ impl TimerManager {
     }
   }
 
-  fn get_to_be_destroyed(&self, schedule: &RefMut<ScheduleState>) -> Vec<usize> {
+  fn get_to_be_destroyed(&self, schedule: &RwLockWriteGuard<ScheduleState>) -> Vec<usize> {
     let mut indexes: Vec<usize> = schedule
       .to_be_destroyed
       .iter()
@@ -123,7 +123,7 @@ impl TimerManager {
 }
 
 pub fn create_timer(
-  callback: Box<dyn FnMut() -> VoidResult + 'static>,
+  callback: Box<dyn FnMut() -> VoidResult + 'static + Send + Sync>,
   millis: u64,
   once: bool,
 ) -> Timer {
@@ -133,7 +133,7 @@ pub fn create_timer(
 
 pub fn remove_timer(id: TimerId) -> VoidResult {
   Resource::with(|v| {
-    let schedule = v.timer_schedule.try_borrow_mut();
+    let schedule = v.timer_schedule.try_write();
     let Ok(mut schedule) = schedule else {
       bail!("Failed to mutably borrow timer schedule");
     };

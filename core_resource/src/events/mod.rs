@@ -66,7 +66,7 @@ macro_rules! supported_sdk_events {
     }
 
     pub enum SDKHandler { $(
-      $event_name(Box<dyn FnMut(&sdk_contexts::$event_name) -> VoidResult + 'static>),
+      $event_name(Box<dyn FnMut(&sdk_contexts::$event_name) -> VoidResult + 'static + Send + Sync>),
     )+ }
 
     impl SDKHandler {
@@ -152,7 +152,7 @@ macro_rules! custom_events {
     }
 
     pub enum CustomHandler { $($(
-      $custom_event_name(Box<dyn FnMut(&custom_contexts::$custom_event_name) -> VoidResult + 'static>),
+      $custom_event_name(Box<dyn FnMut(&custom_contexts::$custom_event_name) -> VoidResult + 'static + Send + Sync>),
     )+)+ }
 
     impl CustomHandler {

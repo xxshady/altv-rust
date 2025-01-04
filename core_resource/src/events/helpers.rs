@@ -26,7 +26,8 @@ pub fn get_vehicle_from_event(
 
   resource
     .base_objects
-    .borrow()
+    .read()
+    .unwrap()
     .vehicle
     .get_by_ptr(ptr)
     .unwrap()
@@ -44,7 +45,12 @@ pub fn get_base_object_from_event(
   resource: &Resource,
 ) -> Option<AnyBaseObject> {
   let ptr = NonNull::new(ptr)?;
-  let base_object = resource.base_objects.borrow().get_by_ptr(ptr).unwrap();
+  let base_object = resource
+    .base_objects
+    .read()
+    .unwrap()
+    .get_by_ptr(ptr)
+    .unwrap();
   Some(base_object)
 }
 
@@ -56,7 +62,8 @@ pub fn get_connection_info_from_event(
 
   resource
     .base_objects
-    .borrow()
+    .read()
+    .unwrap()
     .connection_info
     .get_by_ptr(ptr)
     .unwrap()

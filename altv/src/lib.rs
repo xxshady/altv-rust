@@ -188,7 +188,7 @@ pub mod prelude {
 /// # Ok(()) }
 /// ```
 pub fn set_timeout<V: IntoVoidResult>(
-  mut callback: impl FnMut() -> V + 'static,
+  mut callback: impl FnMut() -> V + 'static + Send + Sync,
   millis: u64,
 ) -> Timer {
   exports::create_timer(
@@ -245,7 +245,7 @@ pub fn set_timeout<V: IntoVoidResult>(
 /// # Ok(()) }
 /// ```
 pub fn set_interval<V: IntoVoidResult>(
-  mut callback: impl FnMut() -> V + 'static,
+  mut callback: impl FnMut() -> V + 'static + Send + Sync,
   millis: u64,
 ) -> Timer {
   exports::create_timer(

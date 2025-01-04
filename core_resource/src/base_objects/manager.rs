@@ -7,6 +7,10 @@ pub(crate) struct BaseObjectManager<T, InheritPtrs: Clone = ()> {
   objects_by_id: HashMap<BaseObjectId, BaseObjectContainer<T, InheritPtrs>>,
 }
 
+// TEST
+unsafe impl<T, InheritPtrs: Clone> Send for BaseObjectManager<T, InheritPtrs> {}
+unsafe impl<T, InheritPtrs: Clone> Sync for BaseObjectManager<T, InheritPtrs> {}
+
 impl<T, InheritPtrs: Clone> BaseObjectManager<T, InheritPtrs> {
   pub fn add(
     &mut self,

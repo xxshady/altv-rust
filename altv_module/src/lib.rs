@@ -115,7 +115,7 @@ extern "C" fn runtime_resource_destroy_impl() {
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn runtime_on_tick() {
-  dbg!(thread_id::get());
+  // dbg!(thread_id::get());
 
   for (_, controller) in RESOURCE_MANAGER_INSTANCE.read().unwrap().resources_iter() {
     controller.resource_for_module.on_tick();
