@@ -1,8 +1,12 @@
-use altv_sdk::ffi as sdk;
+use altv_sdk::{ffi as sdk, ALT_SDK_VERSION};
 use core_module::{CStringResourceName, CBool};
 use libloading::Library;
 use resource_manager::ResourceController;
-use std::{ffi::CString, path::PathBuf, ptr::NonNull};
+use std::{
+  ffi::{c_char, CString},
+  path::PathBuf,
+  ptr::NonNull,
+};
 
 use crate::{event_manager::EVENT_MANAGER_INSTANCE, resource_manager::RESOURCE_MANAGER_INSTANCE};
 
@@ -210,8 +214,6 @@ pub unsafe extern "C" fn altMain(core: *mut sdk::alt::ICore) -> bool {
 
 #[no_mangle]
 #[allow(clippy::missing_safety_doc)]
-pub unsafe extern "C" fn GetSDKHash() -> *const std::ffi::c_char {
-  std::ffi::CStr::from_bytes_with_nul(altv_sdk::ALT_SDK_VERSION)
-    .unwrap()
-    .as_ptr()
+pub unsafe extern "C" fn GetSDKHash() -> *const c_char {
+  ALT_SDK_VERSION.as_ptr().cast()
 }
