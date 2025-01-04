@@ -1,3 +1,5 @@
+use std::thread::{self, ThreadId};
+
 #[macro_export]
 macro_rules! on_base_object_event {
   ($method_name:ident, $resource_name:expr, $base_object:expr) => {
@@ -32,4 +34,8 @@ macro_rules! on_base_object_event {
       });
     }
   };
+}
+
+pub fn current_thread_id() -> ThreadId {
+  thread::current().id()
 }

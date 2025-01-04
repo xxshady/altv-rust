@@ -1,9 +1,13 @@
 use std::{
   cell::RefCell,
   collections::{hash_map, HashMap, HashSet},
+  ffi::CString,
 };
 
-use core_module::{ResourceForModule, StringResourceName};
+use altv_sdk::ffi as sdk;
+use core_module::{ModuleHandlers, ResourceForModule, ResourceHandlers, StringResourceName};
+use libloading::Library;
+use crate::{toggle_resource_event_type, ResourceMainFn, ALTV_MODULE_VERSION};
 
 thread_local! {
     pub static RESOURCE_MANAGER_INSTANCE: RefCell<ResourceManager> = RefCell::new(ResourceManager::default());
@@ -66,5 +70,39 @@ impl ResourceManager {
       .resources
       .get(name)
       .map(|resource| &resource.resource_for_module)
+  }
+
+  pub fn start_resource(resource_name: String, lib: Library, main_fn: ResourceMainFn) {
+    RESOURCE_MANAGER_INSTANCE.with(|manager| {
+      manager
+        .borrow_mut()
+        .add_pending_status(resource_name.clone());
+
+      let core_ptr = unsafe { sdk::get_alt_core() };
+      let module_handlers = ModuleHandlers::new(toggle_resource_event_type);
+      let resource_handlers = ResourceHandlers::default();
+      let mut resource_for_module = ResourceForModule::new(resource_handlers);
+
+      let result = unsafe {
+        main_fn(
+          CString::new(ALTV_MODULE_VERSION).unwrap(),
+          core_ptr,
+          CString::new(resource_name.clone()).unwrap(),
+          &mut resource_for_module.handlers,
+          module_handlers,
+        )
+      };
+
+      if !result.value {
+        // TODO: stop resource?
+        logger::error!("Resource: {resource_name:?} main function returned error");
+      }
+
+      manager.borrow_mut().remove_pending_status(&resource_name);
+
+      let resource_controller = ResourceController::new(lib, resource_for_module);
+
+      manager.borrow_mut().add(resource_name, resource_controller);
+    });
   }
 }

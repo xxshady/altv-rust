@@ -1,7 +1,9 @@
 use altv_sdk::{ffi as sdk, ALT_SDK_VERSION};
 use core_module::{CStringResourceName, CBool};
+use helpers::current_thread_id;
 use libloading::Library;
 use resource_manager::ResourceController;
+use schedule_start::{avoid_self_resource_start, AvoidEvent, ResourceSchedule, ScheduleStart};
 use std::{
   ffi::{c_char, CString},
   path::PathBuf,
@@ -14,6 +16,10 @@ mod event_manager;
 mod helpers;
 mod required_sdk_events;
 mod resource_manager;
+
+// temp workaround for weird behavior added recently in alt:V core:
+// resources are starting in different threads and after that are called from main thread
+mod schedule_start;
 
 #[allow(improper_ctypes_definitions)]
 type ResourceMainFn = unsafe extern "C" fn(
@@ -32,44 +38,20 @@ extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
   let resource_name = resource_name.to_string();
   logger::debug!("resource_start: {resource_name} ({full_main_path})");
 
-  let core_ptr = unsafe { sdk::get_alt_core() };
-
-  let module_handlers = core_module::ModuleHandlers::new(toggle_resource_event_type);
-
-  let resource_handlers = core_module::ResourceHandlers::default();
-  let mut resource_for_module = core_module::ResourceForModule::new(resource_handlers);
-
   let lib = unsafe { Library::new(PathBuf::from(&full_main_path)) }.unwrap_or_else(|e| {
     panic!("Failed to load resource: {resource_name} from: {full_main_path}, reason: {e:#?}");
   });
 
   let main_fn: ResourceMainFn = unsafe { *lib.get(b"main\0").unwrap() };
 
-  RESOURCE_MANAGER_INSTANCE.with(|manager| {
-    manager
-      .borrow_mut()
-      .add_pending_status(resource_name.clone());
-
-    let result = unsafe {
-      main_fn(
-        CString::new(ALTV_MODULE_VERSION).unwrap(),
-        core_ptr,
-        CString::new(resource_name.clone()).unwrap(),
-        &mut resource_for_module.handlers,
-        module_handlers,
-      )
-    };
-
-    if !result.value {
-      logger::error!("Resource: {resource_name:?} main function returned error");
-    }
-
-    manager.borrow_mut().remove_pending_status(&resource_name);
-
-    let resource_controller = ResourceController::new(lib, resource_for_module);
-
-    manager.borrow_mut().add(resource_name, resource_controller);
-  });
+  ScheduleStart::add(
+    resource_name,
+    ResourceSchedule {
+      lib,
+      main_fn,
+      thread_id: current_thread_id(),
+    },
+  );
 }
 
 #[allow(improper_ctypes_definitions)]
@@ -108,6 +90,8 @@ extern "C" fn runtime_resource_destroy_impl() {
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn runtime_on_tick() {
+  ScheduleStart::start_all();
+
   RESOURCE_MANAGER_INSTANCE.with(|v| {
     for (_, controller) in v.borrow().resources_iter() {
       controller.resource_for_module.on_tick();
@@ -118,6 +102,8 @@ extern "C" fn runtime_on_tick() {
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_on_event(resource_name: &str, event: altv_sdk::CEventPtr) {
   let resource_name = resource_name.to_string();
+
+  ScheduleStart::start_if_not_already(resource_name.clone());
 
   if event.is_null() {
     panic!("resource_on_event event is null");
@@ -130,6 +116,11 @@ extern "C" fn resource_on_event(resource_name: &str, event: altv_sdk::CEventPtr)
     event_type
   {
     logger::debug!("ignoring create/remove baseobject event");
+    return;
+  }
+
+  if let AvoidEvent::Yes = avoid_self_resource_start(&resource_name, event_type) {
+    logger::debug!("avoiding self resource start");
     return;
   }
 
@@ -156,6 +147,9 @@ extern "C" fn resource_on_create_base_object(
   base_object: altv_sdk::BaseObjectRawMutPtr,
 ) {
   let resource_name = resource_name.to_string();
+
+  ScheduleStart::start_if_not_already(resource_name.clone());
+
   on_base_object_event!(
     on_base_object_create,
     &resource_name,
@@ -169,6 +163,9 @@ extern "C" fn resource_on_remove_base_object(
   base_object: altv_sdk::BaseObjectRawMutPtr,
 ) {
   let resource_name = resource_name.to_string();
+
+  ScheduleStart::start_if_not_already(resource_name.clone());
+
   on_base_object_event!(
     on_base_object_destroy,
     &resource_name,
