@@ -2,7 +2,6 @@ use altv_sdk::{ffi as sdk, ALT_SDK_VERSION};
 use core_module::{CStringResourceName, CBool};
 use helpers::current_thread_id;
 use libloading::Library;
-use resource_manager::ResourceController;
 use schedule_start::{avoid_self_resource_start, AvoidEvent, ResourceSchedule, ScheduleStart};
 use std::{
   ffi::{c_char, CString},
