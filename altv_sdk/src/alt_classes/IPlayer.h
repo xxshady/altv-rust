@@ -145,6 +145,9 @@ u64 GetHwidHash(const alt::IPlayer* ptr) {
 u64 GetHwidExHash(const alt::IPlayer* ptr) {
   return ptr->GetHwidExHash();
 }
+std::string GetHwid3(const alt::IPlayer* ptr) {
+  return ptr->GetHwid3();
+}
 std::string GetAuthToken(const alt::IPlayer* ptr) {
   return ptr->GetAuthToken();
 }

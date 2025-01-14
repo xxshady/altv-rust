@@ -19,6 +19,9 @@ u64 GetHwIdHash(const alt::IConnectionInfo* ptr) {
 u64 GetHwIdExHash(const alt::IConnectionInfo* ptr) {
   return ptr->GetHwIdExHash();
 }
+std::string GetHwid3(const alt::IConnectionInfo* ptr) {
+  return ptr->GetHwid3();
+}
 std::string GetAuthToken(const alt::IConnectionInfo* ptr) {
   return ptr->GetAuthToken();
 }

@@ -452,6 +452,10 @@ impl player::Player {
     Ok(unsafe { sdk::IPlayer::GetHwidExHash(self.raw_ptr()?) })
   }
 
+  pub fn hwid3(&self) -> SomeResult<String> {
+    Ok(unsafe { sdk::IPlayer::GetHwid3(self.raw_ptr()?) }.to_string())
+  }
+
   pub fn auth_token(&self) -> SomeResult<String> {
     Ok(unsafe { sdk::IPlayer::GetAuthToken(self.raw_ptr()?) }.to_string())
   }

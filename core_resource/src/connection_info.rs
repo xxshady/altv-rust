@@ -41,6 +41,10 @@ impl connection_info::ConnectionInfo {
     Ok(unsafe { sdk::IConnectionInfo::GetHwIdHash(self.raw_ptr()?) })
   }
 
+  pub fn hwid3(&self) -> SomeResult<String> {
+    Ok(unsafe { sdk::IConnectionInfo::GetHwid3(self.raw_ptr()?) }.to_string())
+  }
+
   pub fn hw_id_ex_hash(&self) -> SomeResult<u64> {
     Ok(unsafe { sdk::IConnectionInfo::GetHwIdExHash(self.raw_ptr()?) })
   }
