@@ -8,7 +8,7 @@ It can also download alt:V server binaries & data files.
 ## How to install
 
 Recommended: (if you don't have it: [cargo-binstall](https://github.com/cargo-bins/cargo-binstall?tab=readme-ov-file#cargo-binaryinstall))<br>
-`cargo binstall altvup`
+`cargo binstall cargo-altvup`
 
 Or you can compile from source code: (but it's gonna take longer)<br>
 `cargo install cargo-altvup`
