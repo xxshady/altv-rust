@@ -12,12 +12,17 @@ publish = false
 
 [dependencies]
 altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "=16.2.7" }
-core_module = { path = "../core_module", version = "=16.2.7" }
+core_shared = { path = "../core_shared", package = "altv_internal_core_shared", version = "=16.2.7" }
 logger = { path = "../logger", package = "altv_internal_logger", version = "=16.2.7" }
 paste = { workspace = true }
 autocxx = { workspace = true }
 lazy_static = { workspace = true }
-libloading = "0.7.4"
+relib_host = "0.3.1"
+relib_interface = { version = "0.3.1", features = ["include"] }
 
 [lib]
 crate-type = ["cdylib"]
+
+[build-dependencies]
+relib_interface = { version = "0.3.1", features = ["build"] }
+core_shared = { path = "../core_shared", package = "altv_internal_core_shared", version = "=16.2.7" }

@@ -5,9 +5,8 @@ use std::{
 };
 
 use altv_sdk::ffi as sdk;
-use core_module::{ModuleHandlers, ResourceForModule, ResourceHandlers, StringResourceName};
-use libloading::Library;
-use crate::{toggle_resource_event_type, ResourceMainFn, ALTV_MODULE_VERSION};
+use core_shared::{ResourceName, ResourceNameRef};
+use crate::{gen_exports::ModuleExports, toggle_resource_event_type, Module, ALTV_MODULE_VERSION};
 
 thread_local! {
     pub static RESOURCE_MANAGER_INSTANCE: RefCell<ResourceManager> = RefCell::new(ResourceManager::default());
@@ -15,23 +14,23 @@ thread_local! {
 
 #[derive(Debug)]
 pub struct ResourceController {
-  _lib: libloading::Library,
-  pub resource_for_module: ResourceForModule,
+  module: Module,
 }
 
 impl ResourceController {
-  pub fn new(lib: libloading::Library, resource_for_module: ResourceForModule) -> Self {
-    Self {
-      _lib: lib,
-      resource_for_module,
-    }
+  pub fn new(module: Module) -> Self {
+    Self { module }
+  }
+
+  pub fn exports(&self) -> &ModuleExports {
+    self.module.exports()
   }
 }
 
 #[derive(Debug, Default)]
 pub struct ResourceManager {
-  resources: HashMap<StringResourceName, ResourceController>,
-  pending_start_resources: HashSet<StringResourceName>,
+  resources: HashMap<ResourceName, ResourceController>,
+  pending_start_resources: HashSet<ResourceName>,
 }
 
 impl ResourceManager {
@@ -39,69 +38,77 @@ impl ResourceManager {
     self.resources.iter()
   }
 
-  pub fn add_pending_status(&mut self, name: StringResourceName) {
+  pub fn add_pending_status(&mut self, name: ResourceName) {
     self.pending_start_resources.insert(name);
   }
 
-  pub fn remove_pending_status(&mut self, name: &str) {
+  pub fn remove_pending_status(&mut self, name: ResourceNameRef) {
     self.pending_start_resources.remove(name);
   }
 
-  pub fn is_pending(&self, name: &str) -> bool {
+  pub fn is_pending(&self, name: ResourceNameRef) -> bool {
     self.pending_start_resources.contains(name)
   }
 
-  pub fn add(&mut self, name: StringResourceName, resource: ResourceController) {
+  pub fn add(&mut self, name: ResourceName, resource: ResourceController) {
     self.resources.insert(name, resource);
   }
 
-  pub fn remove(&mut self, resource: &str) {
-    if let Some(controller) = self.resources.remove(resource) {
-      // workaround to fix crash due to drop_in_place of boxed closures
-      // core::ptr::drop_in_place<alloc::boxed::Box<dyn$<core::ops::function::Fn<...
-      drop(controller.resource_for_module);
-    } else {
+  pub fn remove(&mut self, resource: ResourceNameRef) {
+    if self.resources.remove(resource).is_none() {
       logger::error!("ResourceManager remove unknown resource: {resource}");
     }
   }
 
-  pub fn get_resource_for_module_by_name(&self, name: &str) -> Option<&ResourceForModule> {
+  pub fn get_resource_exports_by_name(&self, name: ResourceNameRef) -> Option<&ModuleExports> {
     self
       .resources
       .get(name)
-      .map(|resource| &resource.resource_for_module)
+      .map(|resource| &*resource.module.exports())
   }
 
-  pub fn start_resource(resource_name: String, lib: Library, main_fn: ResourceMainFn) {
+  pub fn start_resource(resource_name: String, module: Module) {
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
       manager
         .borrow_mut()
         .add_pending_status(resource_name.clone());
 
       let core_ptr = unsafe { sdk::get_alt_core() };
-      let module_handlers = ModuleHandlers::new(toggle_resource_event_type);
-      let resource_handlers = ResourceHandlers::default();
-      let mut resource_for_module = ResourceForModule::new(resource_handlers);
 
-      let result = unsafe {
-        main_fn(
-          CString::new(ALTV_MODULE_VERSION).unwrap(),
-          core_ptr,
-          CString::new(resource_name.clone()).unwrap(),
-          &mut resource_for_module.handlers,
-          module_handlers,
-        )
+      // CString::new(ALTV_MODULE_VERSION).unwrap(),
+      // core_ptr,
+      // CString::new(resource_name.clone()).unwrap(),
+
+      let resource_version: String = unsafe {
+        module.exports().altv_crate_version()
+      }.into();
+
+      if resource_version != ALTV_MODULE_VERSION {
+        panic!(
+          "\n\n\
+          \x1b[31mRust module version ({}) does not match the version of the altv crate ({}) that you have installed!\n\
+          Update rust-module (.dll/.so) or altv crate\
+          \n\n\x1b[0m",
+          ALTV_MODULE_VERSION,
+          resource_version
+        );
+      }
+
+      // TODO: don't panic here and stop resource?
+      let ok: bool = unsafe {
+        module.call_main().unwrap_or_else(|| {
+          panic!("Resource: {resource_name:?} main function panicked");
+        })
       };
 
-      if !result.value {
+      if !ok {
         // TODO: stop resource?
         logger::error!("Resource: {resource_name:?} main function returned error");
       }
 
       manager.borrow_mut().remove_pending_status(&resource_name);
 
-      let resource_controller = ResourceController::new(lib, resource_for_module);
-
+      let resource_controller = ResourceController::new(module);
       manager.borrow_mut().add(resource_name, resource_controller);
     });
   }

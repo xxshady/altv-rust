@@ -25,12 +25,14 @@ macro_rules! on_base_object_event {
           base_object_type
         );
 
-        manager
-          .get_resource_for_module_by_name($resource_name)
+        unsafe {
+          manager
+          .get_resource_exports_by_name($resource_name)
           .unwrap_or_else(|| {
             panic!("{} resource: {:?} get_resource_for_module_by_path failed", stringified_method_name, $resource_name);
           })
           .[<$method_name>]($base_object, base_object_type);
+        }
       });
     }
   };

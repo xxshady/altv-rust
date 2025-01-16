@@ -4,20 +4,19 @@ use std::{
   thread::ThreadId,
 };
 
-use libloading::Library;
+use core_shared::ResourceName;
 
-use core_module::StringResourceName;
-use crate::{helpers::current_thread_id, resource_manager::ResourceManager, ResourceMainFn};
+use crate::{helpers::current_thread_id, resource_manager::ResourceManager, Module};
 
 static SCHEDULE_START_INSTANCE: LazyLock<RwLock<ScheduleStart>> = LazyLock::new(Default::default);
 
 #[derive(Default)]
 pub struct ScheduleStart {
-  pub resources: HashMap<StringResourceName, ResourceSchedule>,
+  pub resources: HashMap<ResourceName, ResourceSchedule>,
 }
 
 impl ScheduleStart {
-  pub fn add(resource_name: StringResourceName, schedule: ResourceSchedule) {
+  pub fn add(resource_name: ResourceName, schedule: ResourceSchedule) {
     SCHEDULE_START_INSTANCE
       .write()
       .unwrap()
@@ -53,7 +52,7 @@ impl ScheduleStart {
     //   "Resources must be started from main thread"
     // );
 
-    ResourceManager::start_resource(resource_name, resource.lib, resource.main_fn);
+    ResourceManager::start_resource(resource_name, resource.module.0);
     ResourceStarted::Yes
   }
 
@@ -74,8 +73,7 @@ impl ScheduleStart {
 }
 
 pub struct ResourceSchedule {
-  pub lib: Library,
-  pub main_fn: ResourceMainFn,
+  pub module: ModuleWrapper,
   pub thread_id: ThreadId,
 }
 
@@ -102,3 +100,9 @@ pub enum AvoidEvent {
   Yes,
   No,
 }
+
+pub struct ModuleWrapper(pub Module);
+
+// SAFETY: see thread id check in start_if_not_already
+unsafe impl Send for ModuleWrapper {}
+unsafe impl Sync for ModuleWrapper {}

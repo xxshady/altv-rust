@@ -1,8 +1,13 @@
+#![allow(clippy::missing_safety_doc)]
+
+use core_shared::ResourceName;
+use relib_host::Module as RelibModule;
+
 use altv_sdk::{ffi as sdk, ALT_SDK_VERSION};
-use core_module::{CStringResourceName, CBool};
 use helpers::current_thread_id;
-use libloading::Library;
-use schedule_start::{avoid_self_resource_start, AvoidEvent, ResourceSchedule, ScheduleStart};
+use schedule_start::{
+  avoid_self_resource_start, AvoidEvent, ModuleWrapper, ResourceSchedule, ScheduleStart,
+};
 use std::{
   ffi::{c_char, CString},
   path::PathBuf,
@@ -20,16 +25,12 @@ mod resource_manager;
 // resources are starting in different threads and after that are called from main thread
 mod schedule_start;
 
-#[allow(improper_ctypes_definitions)]
-type ResourceMainFn = unsafe extern "C" fn(
-  altv_module_version: CString, // should always be FIRST arg for backward compatibility!!!
-  core: *mut sdk::alt::ICore,
-  resource_name: CStringResourceName,
-  resource_handlers: &mut core_module::ResourceHandlers,
-  module_handlers: core_module::ModuleHandlers,
-) -> CBool;
-
 const ALTV_MODULE_VERSION: &str = env!("CARGO_PKG_VERSION");
+
+relib_interface::include_exports!();
+relib_interface::include_imports!();
+
+pub type Module = RelibModule<gen_exports::ModuleExports>;
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
@@ -37,17 +38,19 @@ extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
   let resource_name = resource_name.to_string();
   logger::debug!("resource_start: {resource_name} ({full_main_path})");
 
-  let lib = unsafe { Library::new(PathBuf::from(&full_main_path)) }.unwrap_or_else(|e| {
-    panic!("Failed to load resource: {resource_name} from: {full_main_path}, reason: {e:#?}");
+  // TODO: don't panic here?
+  let module = relib_host::load_module::<gen_exports::ModuleExports>(
+    full_main_path,
+    gen_imports::init_imports,
+  )
+  .unwrap_or_else(|e| {
+    panic!("Failed to load resource: {resource_name} from: {full_main_path}, reason: {e:#}");
   });
-
-  let main_fn: ResourceMainFn = unsafe { *lib.get(b"main\0").unwrap() };
 
   ScheduleStart::add(
     resource_name,
     ResourceSchedule {
-      lib,
-      main_fn,
+      module: ModuleWrapper(module),
       thread_id: current_thread_id(),
     },
   );
@@ -66,19 +69,15 @@ extern "C" fn resource_stop(resource_name: &str) {
   });
 }
 
-fn toggle_resource_event_type(
-  resource_name: CStringResourceName,
-  event_type: altv_sdk::EventType,
-  state: bool,
-) {
+fn toggle_resource_event_type(resource_name: String, event_type: altv_sdk::EventType, state: bool) {
   logger::debug!(
     "toggle_resource_event_type {event_type:?} {state:?} (resource: {})",
-    resource_name.to_str().unwrap()
+    resource_name,
   );
 
   EVENT_MANAGER_INSTANCE.with(|v| {
     v.borrow_mut()
-      .toggle_event(resource_name.into_string().unwrap(), event_type, state);
+      .toggle_event(resource_name, event_type, state);
   })
 }
 
@@ -93,7 +92,9 @@ extern "C" fn runtime_on_tick() {
 
   RESOURCE_MANAGER_INSTANCE.with(|v| {
     for (_, controller) in v.borrow().resources_iter() {
-      controller.resource_for_module.on_tick();
+      unsafe {
+        controller.exports().on_tick();
+      }
     }
   });
 }
@@ -131,12 +132,14 @@ extern "C" fn resource_on_event(resource_name: &str, event: altv_sdk::CEventPtr)
 
   RESOURCE_MANAGER_INSTANCE.with(|manager| {
     let manager = manager.borrow();
-    manager
-      .get_resource_for_module_by_name(&resource_name)
-      .unwrap_or_else(|| {
-        panic!("[resource_on_event] failed to get resource: {resource_name}");
-      })
-      .on_sdk_event(event_type, event);
+    unsafe {
+      manager
+        .get_resource_exports_by_name(&resource_name)
+        .unwrap_or_else(|| {
+          panic!("[resource_on_event] failed to get resource: {resource_name}");
+        })
+        .on_sdk_event(event_type, event);
+    }
   });
 }
 
@@ -173,7 +176,6 @@ extern "C" fn resource_on_remove_base_object(
 }
 
 #[no_mangle]
-#[allow(clippy::missing_safety_doc)]
 pub unsafe extern "C" fn altMain(core: *mut sdk::alt::ICore) -> bool {
   if core.is_null() {
     panic!("altMain core is null");
@@ -209,7 +211,6 @@ pub unsafe extern "C" fn altMain(core: *mut sdk::alt::ICore) -> bool {
 }
 
 #[no_mangle]
-#[allow(clippy::missing_safety_doc)]
 pub unsafe extern "C" fn GetSDKHash() -> *const c_char {
   ALT_SDK_VERSION.as_ptr().cast()
 }

@@ -1,5 +1,5 @@
 use altv_sdk::ffi as sdk;
-use core_module::StringResourceName;
+use core_shared::ResourceName;
 use std::{
   cell::RefCell,
   collections::{HashMap, HashSet},
@@ -8,21 +8,21 @@ use std::{
 use crate::required_sdk_events;
 
 thread_local! {
-    pub static EVENT_MANAGER_INSTANCE: RefCell<EventManager> = RefCell::new(EventManager::default());
+  pub static EVENT_MANAGER_INSTANCE: RefCell<EventManager> = RefCell::new(EventManager::default());
 }
 
 type NumberOfListeners = u32;
 
 #[derive(Debug, Default)]
 pub struct EventManager {
-  enabled_events: HashMap<StringResourceName, HashSet<altv_sdk::EventType>>,
+  enabled_events: HashMap<ResourceName, HashSet<altv_sdk::EventType>>,
   event_listeners: HashMap<altv_sdk::EventType, NumberOfListeners>,
 }
 
 impl EventManager {
   pub fn toggle_event(
     &mut self,
-    resource: StringResourceName,
+    resource: ResourceName,
     event_type: altv_sdk::EventType,
     state: bool,
   ) {
@@ -44,7 +44,7 @@ impl EventManager {
     }
   }
 
-  pub fn resource_stopped(&mut self, resource: &StringResourceName) {
+  pub fn resource_stopped(&mut self, resource: &ResourceName) {
     logger::debug!("resource_stopped {resource}");
 
     let events = self.enabled_events.remove(resource).unwrap_or_default();
