@@ -21,12 +21,16 @@ fn build() {
   build_resource();
 
   // TODO:
+  // cmd!("cargo", "altvup", "release", "--reloading"; current_dir: "altv_server");
+  cmd!("cargo", "altvup", "release", "--reloading", "--dont-compile"; current_dir: "altv_server");
+
+  // TODO: remove this:
+  fs::create_dir_all("altv_server/modules").unwrap();
   fs::copy(
-    "../../target/debug/altv_module.dll",
-    "altv_server/modules/rust-module.dll",
+    "../../target/debug/libaltv_module.so",
+    "altv_server/modules/librust-module.so",
   )
   .unwrap();
-  // cmd!("cargo", "altvup", "release", "--reloading"; current_dir: "altv_server");
 }
 
 fn rebuild() {

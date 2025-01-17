@@ -93,11 +93,12 @@ impl ResourceManager {
           .unwrap();
       }
 
-      let resource_version: String = unsafe {
+      let resource_version = unsafe {
         module.exports().altv_crate_version()
       }.unwrap_or_else(|| {
         unreachable!();
-      }).into();
+      });
+      let resource_version: String = resource_version.into();
 
       if resource_version != ALTV_MODULE_VERSION {
         panic!(
