@@ -282,6 +282,10 @@ impl player::Player {
     Ok(unsafe { sdk::IPlayer::IsParachuting(self.raw_ptr()?) })
   }
 
+  pub fn is_in_water(&self) -> SomeResult<bool> {
+    Ok(unsafe { sdk::IPlayer::IsInWater(self.raw_ptr()?) })
+  }
+
   pub fn has_weapon_component(
     &self,
     weapon: impl IntoHash,
