@@ -1,5 +1,5 @@
 fn main() {
-  relib_interface::host::generate(
+  relib_interface::module::generate(
     core_shared::EXPORTS,
     "core_shared::exports::Exports",
     core_shared::IMPORTS,

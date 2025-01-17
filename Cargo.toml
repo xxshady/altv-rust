@@ -13,7 +13,7 @@ members = [
   "cpp_codegen",
   "test/rust_resource",
   "test/run_test",
-  "altvup",
+  "altvup", 
 ]
 
 [workspace.package]
@@ -24,6 +24,7 @@ repository = "https://github.com/xxshady/altv-rust"
 readme = "README.md"
 
 # keep in sync with rust-toolchain.toml
+# examples as well
 rust-version = "1.83.0"
 
 [workspace.dependencies]

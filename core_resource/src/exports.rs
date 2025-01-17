@@ -25,7 +25,6 @@ pub use crate::{
   },
   col_shape::ColShapy,
   helpers::{hash, Hash},
-  init,
   ped_model_info::PedModelInfo,
   quaternion::Quaternion,
   result::{IntoVoidResult, SomeResult, VoidResult},

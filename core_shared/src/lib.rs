@@ -1,4 +1,6 @@
 pub mod abi_stable;
+pub mod result;
+
 pub mod exports;
 pub mod imports;
 

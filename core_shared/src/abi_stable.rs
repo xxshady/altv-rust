@@ -2,6 +2,7 @@ use std::mem::ManuallyDrop;
 
 /// FFI-safe `&[T]`
 #[repr(C)]
+#[derive(Clone, Copy)]
 pub struct RawSlice<T> {
   pub ptr: *const T,
   pub len: usize,
@@ -35,6 +36,7 @@ impl<T> From<&[T]> for RawSlice<T> {
 
 /// FFI-safe `&str`
 #[repr(C)]
+#[derive(Clone, Copy)]
 pub struct Str(RawSlice<u8>);
 
 impl Str {

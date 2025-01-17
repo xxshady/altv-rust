@@ -34,6 +34,12 @@ jobs:
       - name: doc tests
         run: |
           cargo test --doc
+        
+      - name: check examples
+        run: |
+          cd examples/reloading
+          cargo build --workspace
+          cargo build --workspace --features reloading
 
       - name: server test
         env:
@@ -81,6 +87,12 @@ jobs:
           echo %PATH%
 
           cargo test --doc
+
+      - name: check examples
+        run: |
+          cd examples/reloading
+          cargo build --workspace
+          cargo build --workspace --features reloading
 
       - name: server test
         env:

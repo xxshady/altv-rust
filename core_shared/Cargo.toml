@@ -10,3 +10,4 @@ rust-version.workspace = true
 
 [dependencies]
 altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "=16.2.7" }
+anyhow.workspace = true

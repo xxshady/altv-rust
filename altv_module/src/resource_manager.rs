@@ -1,15 +1,14 @@
 use std::{
   cell::RefCell,
   collections::{hash_map, HashMap, HashSet},
-  ffi::CString,
 };
 
 use altv_sdk::ffi as sdk;
 use core_shared::{ResourceName, ResourceNameRef};
-use crate::{gen_exports::ModuleExports, toggle_resource_event_type, Module, ALTV_MODULE_VERSION};
+use crate::{gen_exports::ModuleExports, Module, ALTV_MODULE_VERSION};
 
 thread_local! {
-    pub static RESOURCE_MANAGER_INSTANCE: RefCell<ResourceManager> = RefCell::new(ResourceManager::default());
+  pub static RESOURCE_MANAGER_INSTANCE: RefCell<ResourceManager> = RefCell::new(ResourceManager::default());
 }
 
 #[derive(Debug)]
@@ -54,9 +53,21 @@ impl ResourceManager {
     self.resources.insert(name, resource);
   }
 
-  pub fn remove(&mut self, resource: ResourceNameRef) {
-    if self.resources.remove(resource).is_none() {
-      logger::error!("ResourceManager remove unknown resource: {resource}");
+  pub fn remove(&mut self, resource_name: ResourceNameRef) {
+    let Some(resource) = self.resources.remove(resource_name) else {
+      logger::error!("Failed to remove unknown resource: {resource_name}");
+      return;
+    };
+
+    #[cfg(feature = "reloading")]
+    resource.module.unload().unwrap_or_else(|e| {
+      panic!("Failed to unload resource: {resource_name}, cause:\n{e:#}");
+    });
+
+    #[cfg(not(feature = "reloading"))]
+    {
+      drop(resource);
+      logger::warn!("Resource: {resource_name} is leaked since reloading is disabled");
     }
   }
 
@@ -64,7 +75,7 @@ impl ResourceManager {
     self
       .resources
       .get(name)
-      .map(|resource| &*resource.module.exports())
+      .map(|resource| resource.module.exports())
   }
 
   pub fn start_resource(resource_name: String, module: Module) {
@@ -75,13 +86,18 @@ impl ResourceManager {
 
       let core_ptr = unsafe { sdk::get_alt_core() };
 
-      // CString::new(ALTV_MODULE_VERSION).unwrap(),
-      // core_ptr,
-      // CString::new(resource_name.clone()).unwrap(),
+      unsafe {
+        module.exports()
+          .init(core_ptr, resource_name.as_str().into())
+          // TODO: stop resource on panic if reloading is enabled
+          .unwrap();
+      }
 
       let resource_version: String = unsafe {
         module.exports().altv_crate_version()
-      }.into();
+      }.unwrap_or_else(|| {
+        unreachable!();
+      }).into();
 
       if resource_version != ALTV_MODULE_VERSION {
         panic!(

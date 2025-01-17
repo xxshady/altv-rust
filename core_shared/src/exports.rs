@@ -2,10 +2,10 @@ use altv_sdk::{
   ffi::alt::ICore, BaseObjectMutPtr, BaseObjectType, CEventPtr, EventType as SDKEventType,
 };
 
-use crate::{abi_stable::OwnedStr, ResourceName};
+use crate::abi_stable::{OwnedStr, Str};
 
 pub trait Exports {
-  fn init(core_ptr: *mut ICore, resource_name: ResourceName);
+  fn init(core_ptr: *mut ICore, resource_name: Str);
 
   fn altv_crate_version() -> OwnedStr;
 

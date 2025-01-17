@@ -1,6 +1,6 @@
 #![allow(clippy::missing_safety_doc)]
 
-use core_shared::ResourceName;
+use core_shared::{abi_stable::Str, imports::Imports};
 use relib_host::Module as RelibModule;
 
 use altv_sdk::{ffi as sdk, ALT_SDK_VERSION};
@@ -8,11 +8,7 @@ use helpers::current_thread_id;
 use schedule_start::{
   avoid_self_resource_start, AvoidEvent, ModuleWrapper, ResourceSchedule, ScheduleStart,
 };
-use std::{
-  ffi::{c_char, CString},
-  path::PathBuf,
-  ptr::NonNull,
-};
+use std::{ffi::c_char, ptr::NonNull};
 
 use crate::{event_manager::EVENT_MANAGER_INSTANCE, resource_manager::RESOURCE_MANAGER_INSTANCE};
 
@@ -29,6 +25,18 @@ const ALTV_MODULE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 relib_interface::include_exports!();
 relib_interface::include_imports!();
+use gen_imports::ModuleImportsImpl;
+
+impl Imports for ModuleImportsImpl {
+  fn toggle_event_type(resource: Str, ty: altv_sdk::EventType, enable: bool) {
+    let resource = unsafe { resource.to_string() };
+    logger::debug!("toggle_event_type {ty:?} {enable:?} (resource: {resource})");
+
+    EVENT_MANAGER_INSTANCE.with(|v| {
+      v.borrow_mut().toggle_event(resource, ty, enable);
+    })
+  }
+}
 
 pub type Module = RelibModule<gen_exports::ModuleExports>;
 
@@ -40,11 +48,22 @@ extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
 
   // TODO: don't panic here?
   let module = relib_host::load_module::<gen_exports::ModuleExports>(
-    full_main_path,
+    full_main_path.clone(),
     gen_imports::init_imports,
   )
   .unwrap_or_else(|e| {
-    panic!("Failed to load resource: {resource_name} from: {full_main_path}, reason: {e:#}");
+    let mut error_message = format!("reason: {e:#}");
+    if let relib_host::LoadError::ModuleCompilationMismatch { .. } = e {
+      error_message = format!(
+        "note: if you are using reloading feature, \
+        check if \"realoading\" feature is enabled or disabled \
+        both in rust-module and altv crate\n\
+        to enable it in rust-module compile it using: `cargo altvup release --force-recompile --reloading`
+        {error_message}"
+      );
+    }
+
+    panic!("Failed to load resource: {resource_name} from: {full_main_path}\n{error_message}");
   });
 
   ScheduleStart::add(
@@ -69,18 +88,6 @@ extern "C" fn resource_stop(resource_name: &str) {
   });
 }
 
-fn toggle_resource_event_type(resource_name: String, event_type: altv_sdk::EventType, state: bool) {
-  logger::debug!(
-    "toggle_resource_event_type {event_type:?} {state:?} (resource: {})",
-    resource_name,
-  );
-
-  EVENT_MANAGER_INSTANCE.with(|v| {
-    v.borrow_mut()
-      .toggle_event(resource_name, event_type, state);
-  })
-}
-
 #[allow(improper_ctypes_definitions)]
 extern "C" fn runtime_resource_destroy_impl() {
   // logger::debug!("runtime_resource_destroy_impl");
@@ -93,7 +100,8 @@ extern "C" fn runtime_on_tick() {
   RESOURCE_MANAGER_INSTANCE.with(|v| {
     for (_, controller) in v.borrow().resources_iter() {
       unsafe {
-        controller.exports().on_tick();
+        // TODO: stop resource on panic if reloading is enabled
+        controller.exports().on_tick().unwrap();
       }
     }
   });
@@ -138,7 +146,9 @@ extern "C" fn resource_on_event(resource_name: &str, event: altv_sdk::CEventPtr)
         .unwrap_or_else(|| {
           panic!("[resource_on_event] failed to get resource: {resource_name}");
         })
-        .on_sdk_event(event_type, event);
+        .on_sdk_event(event_type, event)
+        // TODO: stop resource on panic if reloading is enabled
+        .unwrap();
     }
   });
 }
@@ -152,11 +162,13 @@ extern "C" fn resource_on_create_base_object(
 
   ScheduleStart::start_if_not_already(resource_name.clone());
 
-  on_base_object_event!(
-    on_base_object_create,
-    &resource_name,
-    NonNull::new(base_object).unwrap()
-  );
+  unsafe {
+    on_base_object_event!(
+      on_base_object_create,
+      &resource_name,
+      NonNull::new(base_object).unwrap()
+    );
+  }
 }
 
 #[allow(improper_ctypes_definitions)]
@@ -168,11 +180,13 @@ extern "C" fn resource_on_remove_base_object(
 
   ScheduleStart::start_if_not_already(resource_name.clone());
 
-  on_base_object_event!(
-    on_base_object_destroy,
-    &resource_name,
-    NonNull::new(base_object).unwrap()
-  );
+  unsafe {
+    on_base_object_event!(
+      on_base_object_destroy,
+      &resource_name,
+      NonNull::new(base_object).unwrap()
+    );
+  }
 }
 
 #[no_mangle]

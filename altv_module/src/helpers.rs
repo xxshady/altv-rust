@@ -17,7 +17,7 @@ macro_rules! on_base_object_event {
           return;
         }
 
-        let base_object_type = unsafe { altv_sdk::helpers::get_base_object_type($base_object.as_ptr()) };
+        let base_object_type = altv_sdk::helpers::get_base_object_type($base_object.as_ptr());
 
         logger::debug!(
           "{} type: {:?}",
@@ -25,14 +25,14 @@ macro_rules! on_base_object_event {
           base_object_type
         );
 
-        unsafe {
           manager
           .get_resource_exports_by_name($resource_name)
           .unwrap_or_else(|| {
             panic!("{} resource: {:?} get_resource_for_module_by_path failed", stringified_method_name, $resource_name);
           })
-          .[<$method_name>]($base_object, base_object_type);
-        }
+          .[<$method_name>]($base_object, base_object_type)
+          // TODO: stop resource on panic if reloading is enabled
+          .unwrap();
       });
     }
   };
