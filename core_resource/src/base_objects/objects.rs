@@ -100,9 +100,10 @@ macro_rules! base_objects {
               }).unwrap();
 
               let inherit_ptrs = $crate::helpers::if_not!(
-                ($(
+                if: ($(
                   unsafe { $crate::base_objects::inherit_ptrs::$inherit_ptrs_struct::new(base_ptr.as_ptr()) }
-                )?) {}
+                )?)
+                else: ()
               );
 
               let container = Self::_new($ptr, base_ptr, inherit_ptrs);
@@ -150,9 +151,10 @@ macro_rules! base_objects {
               }
 
               let inherit_ptrs = $crate::helpers::if_not!(
-                ($(unsafe {
+                if: ($(unsafe {
                   $crate::base_objects::inherit_ptrs::$inherit_ptrs_struct::new(base_ptr.as_ptr())
-                })?) {}
+                })?)
+                else: ()
               );
 
               let container = $manager_name_snake::$manager_name::_new(
