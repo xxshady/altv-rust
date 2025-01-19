@@ -83,6 +83,7 @@ impl ResourceManager {
       let resource_handlers = ResourceHandlers::default();
       let mut resource_for_module = ResourceForModule::new(resource_handlers);
 
+      println!("before main");
       let result = unsafe {
         main_fn(
           CString::new(ALTV_MODULE_VERSION).unwrap(),
@@ -92,6 +93,7 @@ impl ResourceManager {
           module_handlers,
         )
       };
+      println!("after main");
 
       if !result.value {
         // TODO: stop resource?

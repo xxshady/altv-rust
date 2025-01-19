@@ -9,7 +9,12 @@ publish = false
 
 [dependencies]
 altv = { path = "../../altv" }
+futures = "0.3.31"
 paste = { workspace = true }
+
+# [dependencies.tokio]
+# version = "1.43.0"
+# features = ["rt", "time"]
 
 [lib]
 crate-type = ["cdylib"]

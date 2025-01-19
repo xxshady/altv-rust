@@ -112,3 +112,9 @@ pub mod mvalue {
   pub use mvalue::*;
   pub use crate::any_mvalue::AnyMValue;
 }
+
+pub fn process_timers() {
+  crate::Resource::with_timers_mut(|mut timers, resource| {
+    timers.process_timers(resource.timer_schedule.borrow_mut());
+  });
+}

@@ -89,6 +89,8 @@ pub use exports::{
   MValueHashMap,
   BaseObjectFilter,
   ClosestEntitiesOrder,
+
+  process_timers,
 };
 
 pub use altv_sdk::{

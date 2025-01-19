@@ -63,8 +63,8 @@ fn main() {
   let altv_server_path = format!("test/altv_server/{altv_server_bin}");
   let crash_handler_path = format!("test/altv_server/altv-crash-handler{altv_server_ext}");
 
-  println!("installing altvup");
-  cmd!("cargo", "install", "--path", "altvup", "--force");
+  // println!("installing altvup");
+  // cmd!("cargo", "install", "--path", "altvup", "--force");
 
   println!("running altvup");
   // TODO: add param for local directory (to not download source code from github)
