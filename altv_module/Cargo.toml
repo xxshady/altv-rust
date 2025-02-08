@@ -20,13 +20,13 @@ logger = { path = "../logger", package = "altv_internal_logger", version = "=16.
 paste = { workspace = true }
 autocxx = { workspace = true }
 lazy_static = { workspace = true }
-relib_host = "0.3.1"
-relib_interface = { version = "0.3.1", features = ["include"] }
+relib_host = "0.4.1"
+relib_interface = { version = "0.4.1", features = ["include"] }
 libloading = "0.8.6"
 
 [lib]
 crate-type = ["cdylib"]
 
 [build-dependencies]
-relib_interface = { version = "0.3.1", features = ["build"] }
-core_shared = { path = "../core_shared", package = "altv_internal_core_shared", version = "=16.2.7" }
+relib_interface = { version = "0.4.1", features = ["build"] }
+core_shared = { path = "../core_shared", package = "altv_internal_core_shared", version = "=16.2.10" }

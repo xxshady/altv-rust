@@ -47,10 +47,13 @@ extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
   logger::debug!("resource_start: {resource_name} ({full_main_path})");
 
   // TODO: don't panic here?
-  let module = relib_host::load_module::<gen_exports::ModuleExports>(
-    full_main_path.clone(),
-    gen_imports::init_imports,
-  )
+  let module = unsafe {
+    relib_host::load_module::<gen_exports::ModuleExports>(
+      full_main_path.clone(),
+      gen_imports::init_imports,
+    )
+  };
+  let module = module
   .unwrap_or_else(|e| {
     let mut error_message = format!("reason: {e:#}");
     if let relib_host::LoadError::ModuleCompilationMismatch { .. } = e {

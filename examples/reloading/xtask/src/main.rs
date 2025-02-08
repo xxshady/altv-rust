@@ -27,8 +27,8 @@ fn build() {
   // TODO: remove this:
   fs::create_dir_all("altv_server/modules").unwrap();
   fs::copy(
-    "../../target/debug/libaltv_module.so",
-    "altv_server/modules/librust-module.so",
+    "../../target/debug/altv_module.dll",
+    "altv_server/modules/rust-module.dll",
   )
   .unwrap();
 }
