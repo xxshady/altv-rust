@@ -220,11 +220,18 @@ pub fn get_ped(ptr: *mut sdk::alt::IPed, resource: &Resource) -> Option<ped::Ped
 
 #[macro_export]
 macro_rules! __if_not {
-  (() $code:block) => {
-    $code
+  (if: () else: $else:path) => {
+    $else
   };
-  (($( $target:tt )+) $code:block) => {
-    $( $target )+
+  (if: ($( $if:tt )+) else: $else:path) => {
+    $( $if )+
+  };
+
+  (if: () else: $else:expr) => {
+    $else
+  };
+  (if: ($( $if:tt )+) else: $else:expr) => {
+    $( $if )+
   };
 }
 pub use __if_not as if_not;

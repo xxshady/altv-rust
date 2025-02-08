@@ -105,28 +105,29 @@ impl ResourceStop {
 }
 
 #[derive(Debug)]
-pub struct ColshapeEvent {
-  pub col_shape: col_shape::ColShapeMutPtr,
+pub struct ColShapeEvent {
+  pub col_shape: col_shape::ColShapeContainer,
   pub world_object: AnyWorldObject,
-  pub state: bool,
+  /// True if the world object entered the colshape, false if it left.
+  pub entered: bool,
 }
 
-impl ColshapeEvent {
+impl ColShapeEvent {
   pub(crate) unsafe fn new(event: altv_sdk::CEventPtr, resource: &Resource) -> Self {
     let event = base_event_to_specific!(event, CColShapeEvent);
 
-    let state = sdk::CColShapeEvent::GetState(event);
+    let entered = sdk::CColShapeEvent::GetState(event);
 
     let col_shape = sdk::CColShapeEvent::GetTarget(event);
     let col_shape = NonNull::new(col_shape).unwrap();
 
     Self {
-      col_shape,
+      col_shape: Resource::with_base_objects_mut(|v, _| v.col_shape.get_by_ptr(col_shape)).unwrap(),
       world_object: get_non_null_world_object_by_ptr(
         sdk::CColShapeEvent::GetEntity(event),
         resource,
       ),
-      state,
+      entered,
     }
   }
 }

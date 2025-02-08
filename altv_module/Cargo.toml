@@ -14,9 +14,9 @@ publish = false
 reloading = ["relib_host/unloading"]
 
 [dependencies]
-altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "=16.2.7" }
-core_shared = { path = "../core_shared", package = "altv_internal_core_shared", version = "=16.2.7" }
-logger = { path = "../logger", package = "altv_internal_logger", version = "=16.2.7" }
+altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "=16.2.10" }
+core_shared = { path = "../core_shared", package = "altv_internal_core_shared", version = "=16.2.10" }
+logger = { path = "../logger", package = "altv_internal_logger", version = "=16.2.10" }
 paste = { workspace = true }
 autocxx = { workspace = true }
 lazy_static = { workspace = true }

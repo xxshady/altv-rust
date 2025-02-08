@@ -3,12 +3,12 @@ use crate::{
   resource::Resource,
 };
 
-use super::sdk_contexts::{ColshapeEvent, ResourceStart, ResourceStop, VoiceConnectionEvent};
+use super::sdk_contexts::{ColShapeEvent, ResourceStart, ResourceStop, VoiceConnectionEvent};
 
 macro_rules! entity_enter_or_leave_col_shape {
   ($bool_state:literal, $key_name:ident, $any_entity:path) => {
-    pub fn new(context: &ColshapeEvent, _: &Resource) -> Option<Self> {
-      if context.state != $bool_state {
+    pub fn new(context: &ColShapeEvent, _: &Resource) -> Option<Self> {
+      if context.entered != $bool_state {
         return None;
       };
 
@@ -23,10 +23,7 @@ macro_rules! entity_enter_or_leave_col_shape {
       let $key_name = $key_name.clone();
 
       Some(Self {
-        col_shape: Resource::with_base_objects_mut(|v, _| {
-          v.col_shape.get_by_ptr(context.col_shape)
-        })
-        .unwrap(),
+        col_shape: context.col_shape.clone(),
         $key_name,
       })
     }

@@ -28,7 +28,7 @@ dependencies = [
 
 [[package]]
 name = "altv"
-version = "16.2.7"
+version = "16.2.10"
 dependencies = [
  "altv_internal_core_resource",
  "altv_internal_resource_main_macro",
@@ -38,7 +38,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_core_resource"
-version = "16.2.7"
+version = "16.2.10"
 dependencies = [
  "altv_internal_core_shared",
  "altv_internal_logger",
@@ -56,7 +56,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_core_shared"
-version = "16.2.7"
+version = "16.2.10"
 dependencies = [
  "altv_internal_sdk",
  "anyhow",
@@ -64,7 +64,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_logger"
-version = "16.2.7"
+version = "16.2.10"
 dependencies = [
  "colored",
  "log",
@@ -72,7 +72,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_mvalue"
-version = "16.2.7"
+version = "16.2.10"
 dependencies = [
  "altv_internal_logger",
  "altv_internal_sdk",
@@ -84,7 +84,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_resource_main_macro"
-version = "16.2.7"
+version = "16.2.10"
 dependencies = [
  "quote",
  "relib_exportify",
@@ -93,7 +93,7 @@ dependencies = [
 
 [[package]]
 name = "altv_internal_sdk"
-version = "16.2.7"
+version = "16.2.10"
 dependencies = [
  "autocxx",
  "autocxx-build",
@@ -102,7 +102,7 @@ dependencies = [
 
 [[package]]
 name = "altv_module"
-version = "16.2.7"
+version = "16.2.10"
 dependencies = [
  "altv_internal_core_shared",
  "altv_internal_logger",
@@ -379,8 +379,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "core_module"
+version = "16.2.10"
+dependencies = [
+ "altv_internal_core_shared",
+ "altv_internal_sdk",
+]
+
+[[package]]
 name = "cpp_codegen"
-version = "16.2.7"
+version = "16.2.10"
 dependencies = [
  "anyhow",
  "lazy_static",
@@ -999,11 +1007,11 @@ dependencies = [
 
 [[package]]
 name = "run_test"
-version = "16.2.7"
+version = "16.2.10"
 
 [[package]]
 name = "rust_resource"
-version = "16.2.7"
+version = "16.2.10"
 dependencies = [
  "altv",
  "paste",

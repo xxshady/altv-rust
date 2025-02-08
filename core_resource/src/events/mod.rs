@@ -22,7 +22,7 @@ macro_rules! log_user_handler_error {
 }
 
 macro_rules! supported_sdk_events {
-  ( $( $event_name:ident, )+ ) => {
+  ( $( $event_name:ident $( sdk_correction: $sdk_event_name:ident )? , )+ ) => {
     #[derive(Debug, Eq, PartialEq, Hash, Clone, Copy)]
     pub enum SupportedEventType {
       $( $event_name, )+
@@ -33,7 +33,10 @@ macro_rules! supported_sdk_events {
       fn try_from(value: SDKEventType) -> SomeResult<Self> {
         match value {
           $(
-            SDKEventType::$event_name => Ok(Self::$event_name),
+            $crate::helpers::if_not!(
+              if: ($( SDKEventType::$sdk_event_name )?)
+              else: SDKEventType::$event_name
+            ) => Ok(Self::$event_name),
           )+
           event => {
             anyhow::bail!("unsupported cpp sdk event type: {event:?}")
@@ -42,11 +45,15 @@ macro_rules! supported_sdk_events {
       }
     }
 
+    // TODO: why?
     #[allow(clippy::from_over_into)]
     impl Into<SDKEventType> for SupportedEventType {
       fn into(self) -> SDKEventType {
         match self { $(
-          Self::$event_name => SDKEventType::$event_name,
+          Self::$event_name => $crate::helpers::if_not!(
+            if: ($( SDKEventType::$sdk_event_name )?)
+            else: SDKEventType::$event_name
+          ),
         )+ }
       }
     }
@@ -128,6 +135,7 @@ macro_rules! custom_events {
       $custom_event_name,
     )+)+ }
 
+    // TODO: why?
     #[allow(clippy::from_over_into)]
     impl Into<SupportedEventType> for CustomEventType {
       fn into(self) -> SupportedEventType {
@@ -227,7 +235,9 @@ supported_sdk_events!(
   ServerStarted,
   ResourceStart,
   ResourceStop,
-  ColshapeEvent,
+
+  // "sdk_correction" is only needed for this case:
+  ColShapeEvent sdk_correction: ColshapeEvent,
   ServerScriptEvent,
   ClientScriptEvent,
   ConsoleCommandEvent,
@@ -278,7 +288,7 @@ supported_sdk_events!(
 );
 
 custom_events!(
-  ColshapeEvent: [
+  ColShapeEvent: [
     VehicleEnterColShape,
     VehicleLeaveColShape,
     PlayerEnterColShape,

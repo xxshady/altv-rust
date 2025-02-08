@@ -47,6 +47,7 @@ pub use exports::{
   CheckpointContainer,
 
   WorldObject,
+  AnyWorldObject,
   Entity,
   AnyEntity,
   AttachToEntityBoneIndex,

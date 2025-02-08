@@ -135,6 +135,8 @@ on_sdk_event!(on_give_ped_scripted_task, GivePedScriptedTask);
 on_sdk_event!(on_ped_damage, PedDamage);
 on_sdk_event!(on_ped_heal, PedHeal);
 
+on_sdk_event!(on_col_shape_event, ColShapeEvent);
+
 macro_rules! on_custom_event {
   ($func_name:ident, $event_name:ident) => {
     pub fn $func_name<V: IntoVoidResult>(
