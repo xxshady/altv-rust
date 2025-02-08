@@ -234,6 +234,42 @@ Vector3Wrapper GetVelocity(const alt::IVehicle* ptr) {
 f32 GetSteeringAngle(const alt::IVehicle* ptr) {
   return ptr->GetSteeringAngle();
 }
+f32 GetWheelCamber(const alt::IVehicle* ptr, u8 wheel) {
+  return ptr->GetWheelCamber(wheel);
+}
+void SetWheelCamber(alt::IVehicle* ptr, u8 wheel, f32 value) {
+  return ptr->SetWheelCamber(wheel, value);
+}
+f32 GetWheelTrackWidth(const alt::IVehicle* ptr, u8 wheel) {
+  return ptr->GetWheelTrackWidth(wheel);
+}
+void SetWheelTrackWidth(alt::IVehicle* ptr, u8 wheel, f32 value) {
+  return ptr->SetWheelTrackWidth(wheel, value);
+}
+f32 GetWheelHeight(const alt::IVehicle* ptr, u8 wheel) {
+  return ptr->GetWheelHeight(wheel);
+}
+void SetWheelHeight(alt::IVehicle* ptr, u8 wheel, f32 value) {
+  return ptr->SetWheelHeight(wheel, value);
+}
+f32 GetWheelTyreRadius(const alt::IVehicle* ptr, u8 wheel) {
+  return ptr->GetWheelTyreRadius(wheel);
+}
+void SetWheelTyreRadius(alt::IVehicle* ptr, u8 wheel, f32 value) {
+  return ptr->SetWheelTyreRadius(wheel, value);
+}
+f32 GetWheelRimRadius(const alt::IVehicle* ptr, u8 wheel) {
+  return ptr->GetWheelRimRadius(wheel);
+}
+void SetWheelRimRadius(alt::IVehicle* ptr, u8 wheel, f32 value) {
+  return ptr->SetWheelRimRadius(wheel, value);
+}
+f32 GetWheelTyreWidth(const alt::IVehicle* ptr, u8 wheel) {
+  return ptr->GetWheelTyreWidth(wheel);
+}
+void SetWheelTyreWidth(alt::IVehicle* ptr, u8 wheel, f32 value) {
+  return ptr->SetWheelTyreWidth(wheel, value);
+}
 void SetFixed(alt::IVehicle* ptr) {
   return ptr->SetFixed();
 }

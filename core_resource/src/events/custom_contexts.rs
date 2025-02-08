@@ -133,3 +133,39 @@ impl VoiceConnecting {
     None
   }
 }
+
+#[derive(Debug)]
+pub struct VoiceRequestingConnect {}
+
+impl VoiceRequestingConnect {
+  pub fn new(context: &VoiceConnectionEvent, _: &Resource) -> Option<Self> {
+    if context.state == altv_sdk::VoiceConnectionState::RequestingConnect {
+      return Some(Self {});
+    }
+    None
+  }
+}
+
+#[derive(Debug)]
+pub struct VoiceRequestingRedirectConnect {}
+
+impl VoiceRequestingRedirectConnect {
+  pub fn new(context: &VoiceConnectionEvent, _: &Resource) -> Option<Self> {
+    if context.state == altv_sdk::VoiceConnectionState::RequestingRedirectConnect {
+      return Some(Self {});
+    }
+    None
+  }
+}
+
+#[derive(Debug)]
+pub struct VoiceRedirecting {}
+
+impl VoiceRedirecting {
+  pub fn new(context: &VoiceConnectionEvent, _: &Resource) -> Option<Self> {
+    if context.state == altv_sdk::VoiceConnectionState::Redirecting {
+      return Some(Self {});
+    }
+    None
+  }
+}

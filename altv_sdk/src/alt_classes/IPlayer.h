@@ -453,5 +453,8 @@ std::string GetBloodDamageBase64(const alt::IPlayer* ptr) {
 void SetBloodDamageBase64(alt::IPlayer* ptr, const StdStringClone _base64) {
   return ptr->SetBloodDamageBase64(_base64);
 }
+bool IsOnVehicle(const alt::IPlayer* ptr) {
+  return ptr->IsOnVehicle();
+}
 
 } // namespace
