@@ -29,4 +29,4 @@ crate-type = ["cdylib"]
 
 [build-dependencies]
 relib_interface = { version = "0.4.1", features = ["build"] }
-core_shared = { path = "../core_shared", package = "altv_internal_core_shared", version = "=16.2.10" }
+core_shared = { path = "../core_shared", package = "altv_internal_core_shared", version = "=16.3.0" }

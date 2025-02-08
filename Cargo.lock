@@ -355,14 +355,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "core_module"
-version = "16.3.0"
-dependencies = [
- "altv_internal_core_shared",
- "altv_internal_sdk",
-]
-
-[[package]]
 name = "cpp_codegen"
 version = "16.3.0"
 dependencies = [
