@@ -78,7 +78,7 @@ name = "altv_internal_resource_main_macro"
 version = "16.3.0"
 dependencies = [
  "quote",
- "relib_exportify",
+ "relib_exportify 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "syn 2.0.96",
 ]
 
@@ -886,10 +886,18 @@ checksum = "c08c74e62047bb2de4ff487b251e4a92e24f48745648451635cec7d591162d9f"
 [[package]]
 name = "relib_export"
 version = "0.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "628d79ae0204b7b941075eb478c42ddea159471a79a28481b8b5f7bb6468cbc6"
 dependencies = [
- "relib_exportify",
+ "relib_exportify 0.4.1",
+]
+
+[[package]]
+name = "relib_exportify"
+version = "0.4.1"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "relib_internal_shared 0.4.1",
+ "syn 2.0.96",
 ]
 
 [[package]]
@@ -912,7 +920,7 @@ dependencies = [
  "libloading",
  "minhook",
  "relib_interface 0.4.1",
- "relib_internal_crate_compilation_info 0.4.1",
+ "relib_internal_crate_compilation_info",
  "relib_internal_shared 0.4.1",
  "thiserror 2.0.11",
  "thread-id",
@@ -948,12 +956,6 @@ name = "relib_internal_crate_compilation_info"
 version = "0.4.1"
 
 [[package]]
-name = "relib_internal_crate_compilation_info"
-version = "0.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "efd5bc97b8642df6e4f6445e04740499b468f7ef363487c5cead4bfc1f628cec"
-
-[[package]]
 name = "relib_internal_shared"
 version = "0.4.1"
 
@@ -966,14 +968,12 @@ checksum = "46ca4579714da6daf42a364e84171fad0ad1a671e15ad1f13e38dd2e6f7352d5"
 [[package]]
 name = "relib_module"
 version = "0.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0a24b794ec339c16b9c56ebb189c83511fae0f26fa146c6506a4caa28aac7db2"
 dependencies = [
  "libc",
  "relib_export",
- "relib_interface 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "relib_internal_crate_compilation_info 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "relib_internal_shared 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "relib_interface 0.4.1",
+ "relib_internal_crate_compilation_info",
+ "relib_internal_shared 0.4.1",
  "thread-id",
 ]
 

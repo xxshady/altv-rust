@@ -46,39 +46,7 @@ extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
   let resource_name = resource_name.to_string();
   logger::debug!("resource_start: {resource_name} ({full_main_path})");
 
-  // TODO: dont start module here, it's unsafe!!!!!!!!!!!!!!!!!!!!!!!!
-  // TODO: don't panic here?
-  let module = unsafe {
-    relib_host::load_module::<gen_exports::ModuleExports>(
-      full_main_path.clone(),
-      gen_imports::init_imports,
-    )
-  };
-  let module = module
-  .unwrap_or_else(|e| {
-    let mut error_message = format!("reason: {e:#}");
-    if let relib_host::LoadError::ModuleCompilationMismatch { .. } = e {
-      error_message = format!(
-        "note: if you are using reloading feature, \
-        check if \"realoading\" feature is enabled or disabled \
-        both in rust-module and altv crate\n\
-        to enable it in rust-module compile it using: `cargo altvup release --force-recompile --reloading`
-        {error_message}"
-      );
-    }
-
-    panic!("Failed to load resource: {resource_name} from: {full_main_path}\n{error_message}");
-  });
-
-  dbg!();
-
-  ScheduleStart::add(
-    resource_name,
-    ResourceSchedule {
-      module: ModuleWrapper(module),
-      thread_id: current_thread_id(),
-    },
-  );
+  ScheduleStart::add(resource_name, ResourceSchedule { full_main_path });
 }
 
 #[allow(improper_ctypes_definitions)]
@@ -202,6 +170,8 @@ pub unsafe extern "C" fn altMain(core: *mut sdk::alt::ICore) -> bool {
   }
 
   logger::init().unwrap();
+
+  schedule_start::init_main_thread();
 
   relib_host::super_special_reinit_of_dbghelp();
   // relib_host::init();

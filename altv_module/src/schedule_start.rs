@@ -1,6 +1,6 @@
 use std::{
   collections::HashMap,
-  sync::{LazyLock, RwLock},
+  sync::{LazyLock, Mutex, RwLock},
   thread::ThreadId,
 };
 
@@ -9,6 +9,13 @@ use core_shared::ResourceName;
 use crate::{helpers::current_thread_id, resource_manager::ResourceManager, Module};
 
 static SCHEDULE_START_INSTANCE: LazyLock<RwLock<ScheduleStart>> = LazyLock::new(Default::default);
+
+static MAIN_THREAD_ID: Mutex<Option<ThreadId>> = Mutex::new(None);
+
+pub fn init_main_thread() {
+  let mut main_thread_id = MAIN_THREAD_ID.lock().unwrap();
+  *main_thread_id = Some(current_thread_id());
+}
 
 #[derive(Default)]
 pub struct ScheduleStart {
@@ -25,24 +32,13 @@ impl ScheduleStart {
   }
 
   pub fn start_if_not_already(resource_name: String) -> ResourceStarted {
-    let instance = SCHEDULE_START_INSTANCE.read().unwrap();
-
-    let Some(resource) = instance.resources.get(&resource_name) else {
-      return ResourceStarted::No;
-    };
-
-    if resource.thread_id == current_thread_id() {
+    if current_thread_id() != *MAIN_THREAD_ID.lock().unwrap().as_ref().unwrap() {
       return ResourceStarted::No;
     }
 
-    drop(instance);
+    let mut instance = SCHEDULE_START_INSTANCE.write().unwrap();
 
-    let Some(resource) = SCHEDULE_START_INSTANCE
-      .write()
-      .unwrap()
-      .resources
-      .remove(&resource_name)
-    else {
+    let Some(resource) = instance.resources.remove(&resource_name) else {
       return ResourceStarted::No;
     };
 
@@ -52,7 +48,8 @@ impl ScheduleStart {
     //   "Resources must be started from main thread"
     // );
 
-    ResourceManager::start_resource(resource_name, resource.module.0);
+    dbg!(&resource_name);
+    ResourceManager::start_resource(resource_name, resource.full_main_path);
     ResourceStarted::Yes
   }
 
@@ -73,8 +70,7 @@ impl ScheduleStart {
 }
 
 pub struct ResourceSchedule {
-  pub module: ModuleWrapper,
-  pub thread_id: ThreadId,
+  pub full_main_path: String,
 }
 
 pub fn avoid_self_resource_start(
