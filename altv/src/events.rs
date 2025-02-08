@@ -160,3 +160,9 @@ on_custom_event!(on_resource_stop, ThisResourceStop);
 on_custom_event!(on_voice_connect, VoiceConnect);
 on_custom_event!(on_voice_disconnect, VoiceDisconnect);
 on_custom_event!(on_voice_connecting, VoiceConnecting);
+on_custom_event!(on_voice_requesting_connect, VoiceRequestingConnect);
+on_custom_event!(
+  on_voice_requesting_redirect_connect,
+  VoiceRequestingRedirectConnect
+);
+on_custom_event!(on_voice_redirecting, VoiceRedirecting);

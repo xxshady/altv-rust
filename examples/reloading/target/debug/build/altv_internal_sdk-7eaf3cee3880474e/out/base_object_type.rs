@@ -1,0 +1,76 @@
+// auto-generated from build.rs
+
+#[repr(C)]
+            #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
+            pub enum BaseObjectType {
+    Player,
+    Vehicle,
+    Ped,
+    Object,
+    Blip,
+    Webview,
+    VoiceChannel,
+    Colshape,
+    Checkpoint,
+    WebsocketClient,
+    HttpClient,
+    Audio,
+    AudioOutput,
+    AudioOutputWorld,
+    AudioOutputAttached,
+    AudioOutputFrontend,
+    RmlElement,
+    RmlDocument,
+    LocalPlayer,
+    LocalObject,
+    VirtualEntity,
+    VirtualEntityGroup,
+    Marker,
+    TextLabel,
+    LocalPed,
+    LocalVehicle,
+    AudioFilter,
+    ConnectionInfo,
+    CustomTexture,
+    Font,
+    Size,
+}
+
+impl TryFrom<u8> for BaseObjectType {
+type Error = ();
+fn try_from(v: u8) -> Result<Self, Self::Error> {
+Ok(match v {
+    v if v == Self::Player as u8 => Self::Player,
+    v if v == Self::Vehicle as u8 => Self::Vehicle,
+    v if v == Self::Ped as u8 => Self::Ped,
+    v if v == Self::Object as u8 => Self::Object,
+    v if v == Self::Blip as u8 => Self::Blip,
+    v if v == Self::Webview as u8 => Self::Webview,
+    v if v == Self::VoiceChannel as u8 => Self::VoiceChannel,
+    v if v == Self::Colshape as u8 => Self::Colshape,
+    v if v == Self::Checkpoint as u8 => Self::Checkpoint,
+    v if v == Self::WebsocketClient as u8 => Self::WebsocketClient,
+    v if v == Self::HttpClient as u8 => Self::HttpClient,
+    v if v == Self::Audio as u8 => Self::Audio,
+    v if v == Self::AudioOutput as u8 => Self::AudioOutput,
+    v if v == Self::AudioOutputWorld as u8 => Self::AudioOutputWorld,
+    v if v == Self::AudioOutputAttached as u8 => Self::AudioOutputAttached,
+    v if v == Self::AudioOutputFrontend as u8 => Self::AudioOutputFrontend,
+    v if v == Self::RmlElement as u8 => Self::RmlElement,
+    v if v == Self::RmlDocument as u8 => Self::RmlDocument,
+    v if v == Self::LocalPlayer as u8 => Self::LocalPlayer,
+    v if v == Self::LocalObject as u8 => Self::LocalObject,
+    v if v == Self::VirtualEntity as u8 => Self::VirtualEntity,
+    v if v == Self::VirtualEntityGroup as u8 => Self::VirtualEntityGroup,
+    v if v == Self::Marker as u8 => Self::Marker,
+    v if v == Self::TextLabel as u8 => Self::TextLabel,
+    v if v == Self::LocalPed as u8 => Self::LocalPed,
+    v if v == Self::LocalVehicle as u8 => Self::LocalVehicle,
+    v if v == Self::AudioFilter as u8 => Self::AudioFilter,
+    v if v == Self::ConnectionInfo as u8 => Self::ConnectionInfo,
+    v if v == Self::CustomTexture as u8 => Self::CustomTexture,
+    v if v == Self::Font as u8 => Self::Font,
+    v if v == Self::Size as u8 => Self::Size,_ => return Err(()),
+})
+}
+}

@@ -831,6 +831,60 @@ impl vehicle::Vehicle {
   pub fn brake_level(&self) -> SomeResult<f32> {
     Ok(unsafe { sdk::IVehicle::GetBrakeLevel(self.raw_ptr()?) })
   }
+
+  pub fn get_wheel_camber(&self, wheel: u8) -> SomeResult<f32> {
+    Ok(unsafe { sdk::IVehicle::GetWheelCamber(self.raw_ptr()?, wheel) })
+  }
+
+  pub fn set_wheel_camber(&self, wheel: u8, value: f32) -> VoidResult {
+    unsafe { sdk::IVehicle::SetWheelCamber(self.raw_ptr()?, wheel, value) }
+    Ok(())
+  }
+
+  pub fn get_wheel_track_width(&self, wheel: u8) -> SomeResult<f32> {
+    Ok(unsafe { sdk::IVehicle::GetWheelTrackWidth(self.raw_ptr()?, wheel) })
+  }
+
+  pub fn set_wheel_track_width(&self, wheel: u8, value: f32) -> VoidResult {
+    unsafe { sdk::IVehicle::SetWheelTrackWidth(self.raw_ptr()?, wheel, value) }
+    Ok(())
+  }
+
+  pub fn get_wheel_height(&self, wheel: u8) -> SomeResult<f32> {
+    Ok(unsafe { sdk::IVehicle::GetWheelHeight(self.raw_ptr()?, wheel) })
+  }
+
+  pub fn set_wheel_height(&self, wheel: u8, value: f32) -> VoidResult {
+    unsafe { sdk::IVehicle::SetWheelHeight(self.raw_ptr()?, wheel, value) }
+    Ok(())
+  }
+
+  pub fn get_wheel_tyre_radius(&self, wheel: u8) -> SomeResult<f32> {
+    Ok(unsafe { sdk::IVehicle::GetWheelTyreRadius(self.raw_ptr()?, wheel) })
+  }
+
+  pub fn set_wheel_tyre_radius(&self, wheel: u8, value: f32) -> VoidResult {
+    unsafe { sdk::IVehicle::SetWheelTyreRadius(self.raw_ptr()?, wheel, value) }
+    Ok(())
+  }
+
+  pub fn get_wheel_rim_radius(&self, wheel: u8) -> SomeResult<f32> {
+    Ok(unsafe { sdk::IVehicle::GetWheelRimRadius(self.raw_ptr()?, wheel) })
+  }
+
+  pub fn set_wheel_rim_radius(&self, wheel: u8, value: f32) -> VoidResult {
+    unsafe { sdk::IVehicle::SetWheelRimRadius(self.raw_ptr()?, wheel, value) }
+    Ok(())
+  }
+
+  pub fn get_wheel_tyre_width(&self, wheel: u8) -> SomeResult<f32> {
+    Ok(unsafe { sdk::IVehicle::GetWheelTyreWidth(self.raw_ptr()?, wheel) })
+  }
+
+  pub fn set_wheel_tyre_width(&self, wheel: u8, value: f32) -> VoidResult {
+    unsafe { sdk::IVehicle::SetWheelTyreWidth(self.raw_ptr()?, wheel, value) }
+    Ok(())
+  }
 }
 
 impl StreamSyncedEntityMeta for vehicle::Vehicle {}

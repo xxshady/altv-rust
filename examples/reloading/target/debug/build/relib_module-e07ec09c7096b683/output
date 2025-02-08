@@ -1,0 +1,1 @@
+cargo:rustc-env=__RELIB__CRATE_COMPILATION_INFO__=1.83.0 (90b35a623 2024-11-26)|x86_64-pc-windows-msvc|19.1.1|0.4.1|1

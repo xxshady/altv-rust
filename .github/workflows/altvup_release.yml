@@ -68,7 +68,7 @@ jobs:
       - name: extract branch from tag
         id: extract_branch
         run: |
-          BRANCH=$( git log -1 --format='%D' ${{ github.ref_name }} | grep -oP 'origin/\K.*' )
+          BRANCH=$( git log -1 --format='%D' ${{ github.ref_name }} | grep -oP 'origin/\K\w+' | head -n 1 )
           echo "BRANCH=$BRANCH" >> $GITHUB_OUTPUT
       - name: print branch
         run: echo ${{ steps.extract_branch.outputs.BRANCH }}

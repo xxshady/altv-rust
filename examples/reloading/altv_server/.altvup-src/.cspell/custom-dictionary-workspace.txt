@@ -1,0 +1,15 @@
+-DALT_SERVER_API
+# Custom Dictionary Words
+altv
+altvup
+ColShapy
+cxxbridge
+dlopen
+improper_ctypes_definitions
+inherit_ptrs
+InheritPtrs
+lazycell
+libloading
+newtype_struct
+newtype_variant
+repr

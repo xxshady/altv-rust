@@ -304,6 +304,9 @@ custom_events!(
     VoiceConnect,
     VoiceDisconnect,
     VoiceConnecting,
+    VoiceRequestingConnect,
+    VoiceRequestingRedirectConnect,
+    VoiceRedirecting,
   ],
 );
 

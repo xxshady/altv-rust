@@ -1,0 +1,514 @@
+cargo:rerun-if-changed=src\alt_bridge.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\memory
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\yvals_core.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\vcruntime.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\sal.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\concurrencysal.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\vadefs.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xkeycheck.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\exception
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\yvals.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\crtdbg.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\corecrt.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\vcruntime_new_debug.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\vcruntime_new.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\crtdefs.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\use_ansi.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\cstdlib
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\math.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\corecrt_math.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\stdlib.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\corecrt_malloc.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\corecrt_search.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\stddef.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\corecrt_wstdlib.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\limits.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\type_traits
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\cstddef
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xtr1common
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\cstdint
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\stdint.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\malloc.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\vcruntime_exception.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\eh.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\corecrt_terminate.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\iosfwd
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\cstdio
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\stdio.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\corecrt_wstdio.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\corecrt_stdio_config.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\cstring
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\string.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\corecrt_memory.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\corecrt_memcpy_s.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\errno.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\vcruntime_string.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\corecrt_wstring.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\cwchar
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\wchar.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\corecrt_wconio.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\corecrt_wctype.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\corecrt_wdirect.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\corecrt_wio.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\corecrt_share.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\corecrt_wprocess.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\corecrt_wtime.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\sys/stat.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\sys/types.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\typeinfo
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\vcruntime_typeinfo.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xmemory
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\limits
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\cfloat
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\float.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\climits
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\intrin.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\intrin0.inl.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\setjmp.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\immintrin.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\wmmintrin.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\nmmintrin.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\smmintrin.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\tmmintrin.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\pmmintrin.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\emmintrin.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xmmintrin.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\mmintrin.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\zmmintrin.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\ammintrin.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\new
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xatomic.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xutility
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\__msvc_iter_core.hpp
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\utility
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\initializer_list
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\concepts
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\compare
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\tuple
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\atomic
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xatomic_wait.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xthreads.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xtimec.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\ctime
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\time.h
+cargo:rerun-if-changed=src/shared.h
+cargo:rerun-if-changed=src/../cpp-sdk/SDK.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/../deps/alt-math/alt-math.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\corecrt_math_defines.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\ostream
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\ios
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xlocnum
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\cmath
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\iterator
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\streambuf
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xiosbase
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\share.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\system_error
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\__msvc_system_error_abi.hpp
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\cerrno
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\stdexcept
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xstring
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\__msvc_sanitizer_annotate_container.hpp
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xpolymorphic_allocator.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xcall_once.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xerrc.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xlocale
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xfacet
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xlocinfo
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\__msvc_xlocinfo_types.hpp
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\cctype
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\ctype.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\clocale
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\locale.h
+cargo:rerun-if-changed=src/../cpp-sdk/deps/alt-config/alt-config.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\string
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\sstream
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\istream
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\vector
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\__msvc_bit_utils.hpp
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\map
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xtree
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xnode_handle.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\deque
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\iostream
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\algorithm
+cargo:rerun-if-changed=src/../cpp-sdk/types/../types/Types.h
+cargo:rerun-if-changed=src/../cpp-sdk/objects/../script-objects/../types/RGBA.h
+cargo:rerun-if-changed=src/../cpp-sdk/objects/../script-objects/../types/MValue.h
+cargo:rerun-if-changed=src/../cpp-sdk/types/../Ref.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\unordered_map
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xhash
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\list
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xbit_ops.h
+cargo:rerun-if-changed=src/../cpp-sdk/CRefCountable.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\mutex
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\__msvc_chrono.hpp
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\ratio
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\thread
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\process.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\corecrt_startup.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\vcruntime_startup.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\stop_token
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\unordered_set
+cargo:rerun-if-changed=src/../cpp-sdk/types/VehicleModelInfo.h
+cargo:rerun-if-changed=src/../cpp-sdk/types/BoneInfo.h
+cargo:rerun-if-changed=src/../cpp-sdk/types/WeaponModelInfo.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/../objects/IBaseObject.h
+cargo:rerun-if-changed=src/../cpp-sdk/objects/../script-objects/../objects/IWorldObject.h
+cargo:rerun-if-changed=src/../cpp-sdk/objects/../script-objects/../objects/IEntity.h
+cargo:rerun-if-changed=src/../cpp-sdk/objects/../types/SyncInfo.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/../objects/IPlayer.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\functional
+cargo:rerun-if-changed=src/../cpp-sdk/events/../objects/IVehicle.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IHandlingData.h
+cargo:rerun-if-changed=src/../cpp-sdk/objects/../types/VehicleBadgePosition.h
+cargo:rerun-if-changed=src/../cpp-sdk/objects/../types/Cloth.h
+cargo:rerun-if-changed=src/../cpp-sdk/objects/../types/DlcCloth.h
+cargo:rerun-if-changed=src/../cpp-sdk/objects/../types/Prop.h
+cargo:rerun-if-changed=src/../cpp-sdk/objects/../types/DlcProp.h
+cargo:rerun-if-changed=src/../cpp-sdk/objects/../types/HeadBlendData.h
+cargo:rerun-if-changed=src/../cpp-sdk/objects/../types/HeadOverlay.h
+cargo:rerun-if-changed=src/../cpp-sdk/objects/../types/Weapon.h
+cargo:rerun-if-changed=src/../cpp-sdk/objects/../types/AmmoSpecialType.h
+cargo:rerun-if-changed=src/../cpp-sdk/objects/../types/AmmoFlags.h
+cargo:rerun-if-changed=src/../cpp-sdk/objects/../types/Decoration.h
+cargo:rerun-if-changed=src/../cpp-sdk/objects/../script-objects/../types/CloudAuthResult.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/ICheckpoint.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IColShape.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IBlip.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IVoiceChannel.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IHttpClient.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/ILocalVehicle.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/ILocalPed.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/ICustomTexture.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CServerScriptEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CClientScriptEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerConnectEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerDisconnectEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerDamageEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerDeathEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerHealEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerStartTalkingEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerStopTalkingEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CColShapeEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerEnterVehicleEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerLeaveVehicleEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerChangeVehicleSeatEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CConsoleCommandEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CWeaponDamageEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CExplosionEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CResourceStartEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/IResource.h
+cargo:rerun-if-changed=src/../cpp-sdk/types/Permissions.h
+cargo:rerun-if-changed=src/../cpp-sdk/ILocalStorage.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IWebView.h
+cargo:rerun-if-changed=src/../cpp-sdk/types/WebView.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\optional
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xsmf_control.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IWebSocketClient.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/INative.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\set
+cargo:rerun-if-changed=src/../cpp-sdk/deps/ConfigBase.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\variant
+cargo:rerun-if-changed=src/../cpp-sdk/events/CResourceStopEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CResourceErrorEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CMetaDataChangeEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CSyncedMetaDataChangeEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CStreamSyncedMetaDataChangeEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CGlobalMetaDataChangeEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CGlobalSyncedMetaDataChangeEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CLocalMetaDataChangeEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CVehicleDestroyEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CCreateBaseObjectEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CRemoveBaseObjectEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CFireEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CStartProjectileEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerWeaponChangeEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CVehicleAttachEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CVehicleDetachEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CNetOwnerChangeEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerEnteringVehicleEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CVehicleDamageEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CConnectionQueueAddEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/../script-objects/IConnectionInfo.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CConnectionQueueRemoveEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerRequestControlEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerChangeAnimationEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerChangeInteriorEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerConnectDeniedEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerDimensionChangeEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CVehicleHornEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CVehicleSirenEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerSpawnEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CWorldObjectPositonChangeEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CWorldObjectStreamInEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CWorldObjectStreamOutEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerWeaponShootEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CEntityHitEntityEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerStartEnterVehicleEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerStartLeaveVehicleEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPlayerBulletHitEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CVoiceConnectionEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CRequestSyncedSceneEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CStartSyncedSceneEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CStopSyncedSceneEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CUpdateSyncedSceneEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPedDeathEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPedDamageEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CPedHealEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CScriptRPCEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CScriptRPCAnswerEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CClientRequestObjectEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CClientDeleteObjectEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/events/CGivePedScriptedTaskEvent.h
+cargo:rerun-if-changed=src/../cpp-sdk/IPackage.h
+cargo:rerun-if-changed=src/../cpp-sdk/IScriptRuntime.h
+cargo:rerun-if-changed=src/../cpp-sdk/ICore.h
+cargo:rerun-if-changed=src/../cpp-sdk/types/Metric.h
+cargo:rerun-if-changed=src/../cpp-sdk/IDiscordManager.h
+cargo:rerun-if-changed=src/../cpp-sdk/objects/ILocalPlayer.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IWeaponData.h
+cargo:rerun-if-changed=src/../cpp-sdk/objects/IPed.h
+cargo:rerun-if-changed=src/../cpp-sdk/objects/../script-objects/../objects/IObject.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IStatData.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IInterior.h
+cargo:rerun-if-changed=src/../cpp-sdk/objects/../script-objects/../types/AABB.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IAudioCategory.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IMapData.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IAudio.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IAudioOutput.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IAudioFrontendOutput.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IAudioWorldOutput.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IAudioAttachedOutput.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/ILocalObject.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IRml.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IVirtualEntity.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IVirtualEntityGroup.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IMarker.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/ITextLabel.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IAudioFilter.h
+cargo:rerun-if-changed=src/../cpp-sdk/script-objects/IFont.h
+cargo:rerun-if-changed=src/../cpp-sdk/types/KeyState.h
+cargo:rerun-if-changed=src/../cpp-sdk/types/PedModelInfo.h
+cargo:rerun-if-changed=src/../cpp-sdk/types/VoiceChat.h
+cargo:rerun-if-changed=src/../cpp-sdk/types/Benefit.h
+cargo:rerun-if-changed=src/../cpp-sdk/common/Order.h
+cargo:rerun-if-changed=C:\dev\altv\altv-rust\examples\reloading\target\debug\build\altv_internal_sdk-7eaf3cee3880474e\out\autocxx-build-dir\include\cxx.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\array
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\cassert
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\basetsd.h
+cargo:rerun-if-changed=src/runtime.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\filesystem
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\chrono
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xfilesystem_abi.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\__msvc_tzdb.hpp
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\forward_list
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xloctime
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\format
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\__msvc_format_ucd_tables.hpp
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\__msvc_print.hpp
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\bit
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\charconv
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xcharconv.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xcharconv_ryu.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xcharconv_ryu_tables.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xcharconv_tables.h
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\locale
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xlocbuf
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xlocmes
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\xlocmon
+cargo:rerun-if-changed=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\iomanip
+cargo:rerun-if-changed=src\alt_classes/ICore.h
+cargo:rerun-if-changed=src\alt_classes/IBaseObject.h
+cargo:rerun-if-changed=src\alt_classes/IWorldObject.h
+cargo:rerun-if-changed=src\alt_classes/IEntity.h
+cargo:rerun-if-changed=src\alt_classes/IPlayer.h
+cargo:rerun-if-changed=src\alt_classes/IVehicle.h
+cargo:rerun-if-changed=src\alt_classes/IPed.h
+cargo:rerun-if-changed=src\alt_classes/IObject.h
+cargo:rerun-if-changed=src\alt_classes/IColShape.h
+cargo:rerun-if-changed=src\alt_classes/IBlip.h
+cargo:rerun-if-changed=src\alt_classes/IMarker.h
+cargo:rerun-if-changed=src\alt_classes/ICheckpoint.h
+cargo:rerun-if-changed=src\alt_classes/CEvent.h
+cargo:rerun-if-changed=src\alt_classes/CCancellableEvent.h
+cargo:rerun-if-changed=src\alt_classes/IResource.h
+cargo:rerun-if-changed=src\alt_classes/IVoiceChannel.h
+cargo:rerun-if-changed=src\alt_classes/CConsoleCommandEvent.h
+cargo:rerun-if-changed=src\alt_classes/CServerScriptEvent.h
+cargo:rerun-if-changed=src\alt_classes/CClientScriptEvent.h
+cargo:rerun-if-changed=src\alt_classes/CPlayerConnectEvent.h
+cargo:rerun-if-changed=src\alt_classes/CPlayerDisconnectEvent.h
+cargo:rerun-if-changed=src\alt_classes/CColShapeEvent.h
+cargo:rerun-if-changed=src\alt_classes/IVirtualEntity.h
+cargo:rerun-if-changed=src\alt_classes/IVirtualEntityGroup.h
+cargo:rerun-if-changed=src\alt_classes/CWeaponDamageEvent.h
+cargo:rerun-if-changed=src\alt_classes/CNetOwnerChangeEvent.h
+cargo:rerun-if-changed=src\alt_classes/CPlayerDeathEvent.h
+cargo:rerun-if-changed=src\alt_classes/CPlayerDamageEvent.h
+cargo:rerun-if-changed=src\alt_classes/CPlayerEnteringVehicleEvent.h
+cargo:rerun-if-changed=src\alt_classes/CPlayerEnterVehicleEvent.h
+cargo:rerun-if-changed=src\alt_classes/CPlayerLeaveVehicleEvent.h
+cargo:rerun-if-changed=src\alt_classes/CPlayerChangeAnimationEvent.h
+cargo:rerun-if-changed=src\alt_classes/CPlayerChangeVehicleSeatEvent.h
+cargo:rerun-if-changed=src\alt_classes/CPlayerWeaponChangeEvent.h
+cargo:rerun-if-changed=src\alt_classes/CPlayerConnectDeniedEvent.h
+cargo:rerun-if-changed=src\alt_classes/CPlayerSpawnEvent.h
+cargo:rerun-if-changed=src\alt_classes/CPlayerRequestControlEvent.h
+cargo:rerun-if-changed=src\alt_classes/CPlayerDimensionChangeEvent.h
+cargo:rerun-if-changed=src\alt_classes/CPlayerChangeInteriorEvent.h
+cargo:rerun-if-changed=src\alt_classes/CConnectionQueueAddEvent.h
+cargo:rerun-if-changed=src\alt_classes/CConnectionQueueRemoveEvent.h
+cargo:rerun-if-changed=src\alt_classes/CPlayerHealEvent.h
+cargo:rerun-if-changed=src\alt_classes/CVehicleAttachEvent.h
+cargo:rerun-if-changed=src\alt_classes/CVehicleDetachEvent.h
+cargo:rerun-if-changed=src\alt_classes/CVehicleDestroyEvent.h
+cargo:rerun-if-changed=src\alt_classes/CVehicleDamageEvent.h
+cargo:rerun-if-changed=src\alt_classes/CVehicleHornEvent.h
+cargo:rerun-if-changed=src\alt_classes/CVehicleSirenEvent.h
+cargo:rerun-if-changed=src\alt_classes/CStartProjectileEvent.h
+cargo:rerun-if-changed=src\alt_classes/CFireEvent.h
+cargo:rerun-if-changed=src\alt_classes/CExplosionEvent.h
+cargo:rerun-if-changed=src\alt_classes/IConnectionInfo.h
+cargo:rerun-if-changed=src\alt_classes/VehicleModelInfo.h
+cargo:rerun-if-changed=src\alt_classes/PedModelInfo.h
+cargo:rerun-if-changed=src\alt_classes/CMetaChangeEvent.h
+cargo:rerun-if-changed=src\alt_classes/CGlobalMetaDataChangeEvent.h
+cargo:rerun-if-changed=src\alt_classes/CGlobalSyncedMetaDataChangeEvent.h
+cargo:rerun-if-changed=src\alt_classes/CSyncedMetaDataChangeEvent.h
+cargo:rerun-if-changed=src\alt_classes/CStreamSyncedMetaDataChangeEvent.h
+cargo:rerun-if-changed=src\alt_classes/CLocalMetaDataChangeEvent.h
+cargo:rerun-if-changed=src\alt_classes/CResourceStopEvent.h
+cargo:rerun-if-changed=src\alt_classes/CResourceStartEvent.h
+cargo:rerun-if-changed=src\alt_classes/CVoiceConnectionEvent.h
+cargo:rerun-if-changed=src\alt_classes/CRequestSyncedSceneEvent.h
+cargo:rerun-if-changed=src\alt_classes/CStartSyncedSceneEvent.h
+cargo:rerun-if-changed=src\alt_classes/CStopSyncedSceneEvent.h
+cargo:rerun-if-changed=src\alt_classes/CUpdateSyncedSceneEvent.h
+cargo:rerun-if-changed=src\alt_classes/CClientDeleteObjectEvent.h
+cargo:rerun-if-changed=src\alt_classes/CClientRequestObjectEvent.h
+cargo:rerun-if-changed=src\alt_classes/CGivePedScriptedTaskEvent.h
+cargo:rerun-if-changed=src\alt_classes/CPedDeathEvent.h
+cargo:rerun-if-changed=src\alt_classes/CPedDamageEvent.h
+cargo:rerun-if-changed=src\alt_classes/CPedHealEvent.h
+OUT_DIR = Some(C:\dev\altv\altv-rust\examples\reloading\target\debug\build\altv_internal_sdk-7eaf3cee3880474e\out)
+OPT_LEVEL = Some(0)
+TARGET = Some(x86_64-pc-windows-msvc)
+cargo:rerun-if-env-changed=VCINSTALLDIR
+VCINSTALLDIR = None
+cargo:rerun-if-env-changed=VSTEL_MSBuildProjectFullPath
+VSTEL_MSBuildProjectFullPath = None
+cargo:rerun-if-env-changed=VSCMD_ARG_VCVARS_SPECTRE
+VSCMD_ARG_VCVARS_SPECTRE = None
+cargo:rerun-if-env-changed=WindowsSdkDir
+WindowsSdkDir = None
+cargo:rerun-if-env-changed=WindowsSDKVersion
+WindowsSDKVersion = None
+cargo:rerun-if-env-changed=LIB
+LIB = None
+PATH = Some(C:\dev\altv\altv-rust\examples\reloading\target\debug\deps;C:\dev\altv\altv-rust\examples\reloading\target\debug;C:\Users\xshad\.rustup\toolchains\1.83.0-x86_64-pc-windows-msvc\lib\rustlib\x86_64-pc-windows-msvc\lib;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Program Files\dotnet\;C:\Program Files\CMake\bin;G:\program files\glab_1.42.0_Windows_x86_64\bin;C:\Program Files (x86)\ZeroTier\One\;;C:\Users\xshad\.wasmer\globals\wapm_packages\.bin;C:\Users\xshad\.console-ninja\.bin;C:\Users\xshad\AppData\Local\pnpm;C:\Users\xshad\.cargo\bin;C:\Users\xshad\AppData\Local\Microsoft\WindowsApps;C:\Users\xshad\AppData\Roaming\npm;C:\Users\xshad\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\xshad\xmake;C:\Users\xshad\.dotnet\tools;G:\Downloads\ffmpeg-n7.0-latest-win64-lgpl-7.0\ffmpeg-n7.0-latest-win64-lgpl-7.0\bin;C:\Program Files\Graphviz\bin;C:\Users\xshad\.wasmer\bin;G:\Downloads\helix-25.01.1-x86_64-windows\helix-25.01.1-x86_64-windows;;c:\Users\xshad\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\debugCommand)
+cargo:rerun-if-env-changed=INCLUDE
+INCLUDE = None
+HOST = Some(x86_64-pc-windows-msvc)
+cargo:rerun-if-env-changed=CXX_x86_64-pc-windows-msvc
+CXX_x86_64-pc-windows-msvc = None
+cargo:rerun-if-env-changed=CXX_x86_64_pc_windows_msvc
+CXX_x86_64_pc_windows_msvc = None
+cargo:rerun-if-env-changed=HOST_CXX
+HOST_CXX = None
+cargo:rerun-if-env-changed=CXX
+CXX = None
+cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+CRATE_CC_NO_DEFAULTS = None
+CARGO_CFG_TARGET_FEATURE = Some(cmpxchg16b,fxsr,sse,sse2,sse3)
+DEBUG = Some(true)
+cargo:rerun-if-env-changed=CXXFLAGS_x86_64-pc-windows-msvc
+CXXFLAGS_x86_64-pc-windows-msvc = None
+cargo:rerun-if-env-changed=CXXFLAGS_x86_64_pc_windows_msvc
+CXXFLAGS_x86_64_pc_windows_msvc = None
+cargo:rerun-if-env-changed=HOST_CXXFLAGS
+HOST_CXXFLAGS = None
+cargo:rerun-if-env-changed=CXXFLAGS
+CXXFLAGS = None
+CARGO_ENCODED_RUSTFLAGS = Some()
+cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
+gen0.cxx
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-math/alt-math.h(385): warning C4324: 'alt::PointLayoutAligned': structure was padded due to alignment specifier
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(328): warning C4100: 'idx': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(329): warning C4100: 'key': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(331): warning C4100: 'indent': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(356): warning C4530: C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(374): warning C4100: 'def': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(375): warning C4100: 'def': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(376): warning C4100: 'def': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(379): warning C4100: 'indent': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(725): warning C4310: cast truncates constant value
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(725): warning C4310: cast truncates constant value
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(725): warning C4310: cast truncates constant value
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\types/MValue.h(204): warning C5205: delete of an abstract class 'alt::IMValueFunction::Impl' that has a non-virtual destructor results in undefined behavior
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\types/MValue.h(192): note: see declaration of 'alt::IMValueFunction::Impl'
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\events\../IResource.h(42): warning C4100: 'info': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\events\../IResource.h(54): warning C4100: 'ev': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\events\../IResource.h(62): warning C4100: 'object': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\events\../IResource.h(63): warning C4100: 'object': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\IScriptRuntime.h(35): warning C4100: 'clientType': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\IScriptRuntime.h(36): warning C4100: 'clientPackage': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\IScriptRuntime.h(36): warning C4100: 'resource': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\src\alt_bridge.h(367): warning C4457: declaration of 'wrapper' hides function parameter
+C:\dev\altv\altv-rust\altv_sdk\src\alt_bridge.h(362): note: see declaration of 'wrapper'
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\types/Permissions.h(17): warning C4505: 'alt::GetPermissionFromString': unreferenced function with internal linkage has been removed
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\types/Permissions.h(25): warning C4505: 'alt::GetStringFromPermission': unreferenced function with internal linkage has been removed
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps\ConfigBase.h(144) : warning C4702: unreachable code
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps\ConfigBase.h(147) : warning C4702: unreachable code
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps\ConfigBase.h(147) : warning C4702: unreachable code
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps\ConfigBase.h(147) : warning C4702: unreachable code
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps\ConfigBase.h(147) : warning C4702: unreachable code
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps\ConfigBase.h(147) : warning C4702: unreachable code
+gen2.cxx
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-math/alt-math.h(385): warning C4324: 'alt::PointLayoutAligned': structure was padded due to alignment specifier
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(328): warning C4100: 'idx': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(329): warning C4100: 'key': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(331): warning C4100: 'indent': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(356): warning C4530: C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(374): warning C4100: 'def': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(375): warning C4100: 'def': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(376): warning C4100: 'def': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(379): warning C4100: 'indent': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(725): warning C4310: cast truncates constant value
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(725): warning C4310: cast truncates constant value
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\deps/alt-config/alt-config.h(725): warning C4310: cast truncates constant value
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\types/MValue.h(204): warning C5205: delete of an abstract class 'alt::IMValueFunction::Impl' that has a non-virtual destructor results in undefined behavior
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\types/MValue.h(192): note: see declaration of 'alt::IMValueFunction::Impl'
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\events\../IResource.h(54): warning C4100: 'ev': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\events\../IResource.h(62): warning C4100: 'object': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\events\../IResource.h(63): warning C4100: 'object': unreferenced formal parameter
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\types/Permissions.h(17): warning C4505: 'alt::GetPermissionFromString': unreferenced function with internal linkage has been removed
+C:\dev\altv\altv-rust\altv_sdk\cpp-sdk\types/Permissions.h(25): warning C4505: 'alt::GetStringFromPermission': unreferenced function with internal linkage has been removed
+cargo:rerun-if-env-changed=AR_x86_64-pc-windows-msvc
+AR_x86_64-pc-windows-msvc = None
+cargo:rerun-if-env-changed=AR_x86_64_pc_windows_msvc
+AR_x86_64_pc_windows_msvc = None
+cargo:rerun-if-env-changed=HOST_AR
+HOST_AR = None
+cargo:rerun-if-env-changed=AR
+AR = None
+cargo:rerun-if-env-changed=ARFLAGS_x86_64-pc-windows-msvc
+ARFLAGS_x86_64-pc-windows-msvc = None
+cargo:rerun-if-env-changed=ARFLAGS_x86_64_pc_windows_msvc
+ARFLAGS_x86_64_pc_windows_msvc = None
+cargo:rerun-if-env-changed=HOST_ARFLAGS
+HOST_ARFLAGS = None
+cargo:rerun-if-env-changed=ARFLAGS
+ARFLAGS = None
+cargo:rustc-link-lib=static=altv_sdk
+cargo:rustc-link-search=native=C:\dev\altv\altv-rust\examples\reloading\target\debug\build\altv_internal_sdk-7eaf3cee3880474e\out
+cargo:rerun-if-env-changed=CXXSTDLIB_x86_64-pc-windows-msvc
+CXXSTDLIB_x86_64-pc-windows-msvc = None
+cargo:rerun-if-env-changed=CXXSTDLIB_x86_64_pc_windows_msvc
+CXXSTDLIB_x86_64_pc_windows_msvc = None
+cargo:rerun-if-env-changed=HOST_CXXSTDLIB
+HOST_CXXSTDLIB = None
+cargo:rerun-if-env-changed=CXXSTDLIB
+CXXSTDLIB = None
