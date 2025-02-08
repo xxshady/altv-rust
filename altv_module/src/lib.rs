@@ -46,6 +46,7 @@ extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
   let resource_name = resource_name.to_string();
   logger::debug!("resource_start: {resource_name} ({full_main_path})");
 
+  // TODO: dont start module here, it's unsafe!!!!!!!!!!!!!!!!!!!!!!!!
   // TODO: don't panic here?
   let module = unsafe {
     relib_host::load_module::<gen_exports::ModuleExports>(
@@ -68,6 +69,8 @@ extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
 
     panic!("Failed to load resource: {resource_name} from: {full_main_path}\n{error_message}");
   });
+
+  dbg!();
 
   ScheduleStart::add(
     resource_name,
@@ -199,6 +202,9 @@ pub unsafe extern "C" fn altMain(core: *mut sdk::alt::ICore) -> bool {
   }
 
   logger::init().unwrap();
+
+  relib_host::super_special_reinit_of_dbghelp();
+  // relib_host::init();
 
   logger::debug!("set_alt_core");
   sdk::set_alt_core(core);

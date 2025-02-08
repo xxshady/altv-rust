@@ -20,9 +20,14 @@ logger = { path = "../logger", package = "altv_internal_logger", version = "=16.
 paste = { workspace = true }
 autocxx = { workspace = true }
 lazy_static = { workspace = true }
-relib_host = "0.4.1"
 relib_interface = { version = "0.4.1", features = ["include"] }
 libloading = "0.8.6"
+
+# relib_host = "0.4.1"
+# // TEST
+[dependencies.relib_host]
+path = "../../../rust/relib/host"
+features = ["super_special_reinit_of_dbghelp"]
 
 [lib]
 crate-type = ["cdylib"]

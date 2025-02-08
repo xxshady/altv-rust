@@ -103,6 +103,7 @@ pub enum AvoidEvent {
 
 pub struct ModuleWrapper(pub Module);
 
+// TODO: its unsound
 // SAFETY: see thread id check in start_if_not_already
 unsafe impl Send for ModuleWrapper {}
 unsafe impl Sync for ModuleWrapper {}

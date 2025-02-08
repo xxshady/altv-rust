@@ -40,7 +40,7 @@ dependencies = [
  "enumflags2",
  "erased-serde",
  "paste",
- "relib_interface",
+ "relib_interface 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde",
  "serde_bytes",
 ]
@@ -103,7 +103,7 @@ dependencies = [
  "libloading",
  "paste",
  "relib_host",
- "relib_interface",
+ "relib_interface 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -900,25 +900,34 @@ checksum = "613157d0f4a6200e69608474779243ff5a08f5117e2113e4ef09769294097181"
 dependencies = [
  "proc-macro2",
  "quote",
- "relib_internal_shared",
+ "relib_internal_shared 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "syn 2.0.96",
 ]
 
 [[package]]
 name = "relib_host"
 version = "0.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e371d2a7f081496b94609c45054f0447cbfce203d9fb928236878191868ade3f"
 dependencies = [
  "libc",
  "libloading",
  "minhook",
- "relib_interface",
- "relib_internal_crate_compilation_info",
- "relib_internal_shared",
+ "relib_interface 0.4.1",
+ "relib_internal_crate_compilation_info 0.4.1",
+ "relib_internal_shared 0.4.1",
  "thiserror 2.0.11",
  "thread-id",
  "windows-targets 0.53.0",
+]
+
+[[package]]
+name = "relib_interface"
+version = "0.4.1"
+dependencies = [
+ "prettyplease 0.2.29",
+ "proc-macro2",
+ "quote",
+ "relib_internal_shared 0.4.1",
+ "syn 2.0.96",
 ]
 
 [[package]]
@@ -930,15 +939,23 @@ dependencies = [
  "prettyplease 0.2.29",
  "proc-macro2",
  "quote",
- "relib_internal_shared",
+ "relib_internal_shared 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "syn 2.0.96",
 ]
 
 [[package]]
 name = "relib_internal_crate_compilation_info"
 version = "0.4.1"
+
+[[package]]
+name = "relib_internal_crate_compilation_info"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "efd5bc97b8642df6e4f6445e04740499b468f7ef363487c5cead4bfc1f628cec"
+
+[[package]]
+name = "relib_internal_shared"
+version = "0.4.1"
 
 [[package]]
 name = "relib_internal_shared"
@@ -954,9 +971,9 @@ checksum = "0a24b794ec339c16b9c56ebb189c83511fae0f26fa146c6506a4caa28aac7db2"
 dependencies = [
  "libc",
  "relib_export",
- "relib_interface",
- "relib_internal_crate_compilation_info",
- "relib_internal_shared",
+ "relib_interface 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "relib_internal_crate_compilation_info 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "relib_internal_shared 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "thread-id",
 ]
 

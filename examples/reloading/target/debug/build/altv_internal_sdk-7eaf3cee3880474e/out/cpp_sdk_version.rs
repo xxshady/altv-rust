@@ -1,1 +1,0 @@
-pub const ALT_SDK_VERSION: &[u8; 8usize] = b"3df49e4\0";
