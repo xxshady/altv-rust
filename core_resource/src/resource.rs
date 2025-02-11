@@ -3,7 +3,7 @@ use std::{
   rc::Rc,
 };
 
-use core_shared::{ModuleHandlers, StringResourceName};
+use core_shared::ResourceName;
 
 use crate::{alt_resource, base_objects, events, script_events, timers};
 
@@ -14,8 +14,7 @@ thread_local! {
 
 #[derive(Debug, Default)]
 pub struct Resource {
-  pub name: StringResourceName,
-  pub module_handlers: ModuleHandlers,
+  pub name: ResourceName,
 
   pub timers: RefCell<timers::TimerManager>,
   pub timer_schedule: RefCell<timers::ScheduleState>,
@@ -71,11 +70,10 @@ macro_rules! impl_borrow_mut_fn {
 }
 
 impl Resource {
-  pub fn init(resource_name: StringResourceName, module_handlers: ModuleHandlers) {
+  pub fn init(resource_name: ResourceName) {
     RESOURCE.with(|container| {
       let resource = Resource {
         name: resource_name,
-        module_handlers,
         ..Default::default()
       };
 

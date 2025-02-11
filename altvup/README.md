@@ -29,6 +29,13 @@ Compile latest `rust-module` again (if `rust-module` binary already exists it wo
 
 For example: `cargo altvup release --force-recompile`
 
+### `--reloading`
+
+<!-- TODO: add link to example in repo here -->
+Enable reloading feature for development.
+
+For example: `cargo altvup release --reloading`
+
 ### `--dont-compile`
 
 Don't download `altv-rust` source code and compile `rust-module` binary.

@@ -3,10 +3,10 @@ resolver = "2"
 
 members = [
   "core_shared",
-  "core_module",
   "core_resource",
   "mvalue",
   "resource_main_macro",
+  "resource_before_unload_macro",
   "altv_sdk",
   "altv_module",
   "logger",
@@ -14,7 +14,7 @@ members = [
   "cpp_codegen",
   "test/rust_resource",
   "test/run_test",
-  "altvup",
+  "altvup", 
 ]
 
 [workspace.package]
@@ -25,7 +25,8 @@ repository = "https://github.com/xxshady/altv-rust"
 readme = "README.md"
 
 # keep in sync with rust-toolchain.toml
-rust-version = "1.82.0"
+# examples as well
+rust-version = "1.83.0"
 
 [workspace.dependencies]
 cxx = "1.0.115"

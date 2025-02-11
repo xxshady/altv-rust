@@ -1,0 +1,10 @@
+[workspace]
+resolver = "2"
+members = ["resource", "xtask"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+
+# keep in sync with Cargo.toml in the root of the repo
+rust-version = "1.83.0"

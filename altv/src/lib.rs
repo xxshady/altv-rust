@@ -260,16 +260,13 @@ pub use resource_main_macro::resource_main_func as main;
 // __internal is intended for resource_main_func proc macro ^
 #[doc(hidden)]
 pub mod __internal {
-  pub use super::exports::{
-    init as core_init, ModuleHandlers, ResourceHandlers, CStringResourceName, CBool,
-  };
-  pub use altv_sdk::ffi::{alt::ICore, set_alt_core};
+  use core_resource::exports::{anyhow, logging::log_error_macro, Resource};
+  pub use relib_module;
 
-  pub fn init(
-    name: CStringResourceName,
-    resource_state: &mut ResourceHandlers,
-    module_handlers: ModuleHandlers,
-  ) {
-    core_init(name, resource_state, module_handlers);
+  pub fn on_main_error(err: anyhow::Error) {
+    let name = &Resource::current().name;
+    log_error_macro!("Rust resource: {name:?} main function returned error: {err:?}");
   }
 }
+
+pub use resource_before_unload_macro::resource_before_unload as before_unload;
