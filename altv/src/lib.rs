@@ -265,6 +265,8 @@ pub mod __internal {
 
   pub fn on_main_error(err: anyhow::Error) {
     let name = &Resource::current().name;
-    log_error_macro!("Rust resource: {name:?} main function returned error: {err:#?}");
+    log_error_macro!("Rust resource: {name:?} main function returned error: {err:?}");
   }
 }
+
+pub use resource_before_unload_macro::resource_before_unload as before_unload;

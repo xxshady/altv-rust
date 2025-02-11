@@ -4,10 +4,7 @@ use core_shared::{abi_stable::Str, imports::Imports};
 use relib_host::Module as RelibModule;
 
 use altv_sdk::{ffi as sdk, ALT_SDK_VERSION};
-use helpers::current_thread_id;
-use schedule_start::{
-  avoid_self_resource_start, AvoidEvent, ModuleWrapper, ResourceSchedule, ScheduleStart,
-};
+use resource_manager::ResourceManager;
 use std::{ffi::c_char, ptr::NonNull};
 
 use crate::{event_manager::EVENT_MANAGER_INSTANCE, resource_manager::RESOURCE_MANAGER_INSTANCE};
@@ -16,10 +13,6 @@ mod event_manager;
 mod helpers;
 mod required_sdk_events;
 mod resource_manager;
-
-// temp workaround for weird behavior added recently in alt:V core:
-// resources are starting in different threads and after that are called from main thread
-mod schedule_start;
 
 const ALTV_MODULE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -41,12 +34,13 @@ impl Imports for ModuleImportsImpl {
 pub type Module = RelibModule<gen_exports::ModuleExports>;
 
 #[allow(improper_ctypes_definitions)]
-extern "C" fn resource_start(resource_name: &str, full_main_path: &str) {
+extern "C" fn resource_start(resource_name: &str, full_main_path: &str) -> bool {
   let full_main_path = full_main_path.to_string();
   let resource_name = resource_name.to_string();
+
   logger::debug!("resource_start: {resource_name} ({full_main_path})");
 
-  ScheduleStart::add(resource_name, ResourceSchedule { full_main_path });
+  ResourceManager::start_resource(resource_name, full_main_path)
 }
 
 #[allow(improper_ctypes_definitions)]
@@ -69,8 +63,6 @@ extern "C" fn runtime_resource_destroy_impl() {
 
 #[allow(improper_ctypes_definitions)]
 extern "C" fn runtime_on_tick() {
-  ScheduleStart::start_all();
-
   RESOURCE_MANAGER_INSTANCE.with(|v| {
     for (_, controller) in v.borrow().resources_iter() {
       unsafe {
@@ -85,8 +77,6 @@ extern "C" fn runtime_on_tick() {
 extern "C" fn resource_on_event(resource_name: &str, event: altv_sdk::CEventPtr) {
   let resource_name = resource_name.to_string();
 
-  ScheduleStart::start_if_not_already(resource_name.clone());
-
   if event.is_null() {
     panic!("resource_on_event event is null");
   }
@@ -98,11 +88,6 @@ extern "C" fn resource_on_event(resource_name: &str, event: altv_sdk::CEventPtr)
     event_type
   {
     logger::debug!("ignoring create/remove baseobject event");
-    return;
-  }
-
-  if let AvoidEvent::Yes = avoid_self_resource_start(&resource_name, event_type) {
-    logger::debug!("avoiding self resource start");
     return;
   }
 
@@ -134,8 +119,6 @@ extern "C" fn resource_on_create_base_object(
 ) {
   let resource_name = resource_name.to_string();
 
-  ScheduleStart::start_if_not_already(resource_name.clone());
-
   unsafe {
     on_base_object_event!(
       on_base_object_create,
@@ -151,8 +134,6 @@ extern "C" fn resource_on_remove_base_object(
   base_object: altv_sdk::BaseObjectRawMutPtr,
 ) {
   let resource_name = resource_name.to_string();
-
-  ScheduleStart::start_if_not_already(resource_name.clone());
 
   unsafe {
     on_base_object_event!(
@@ -170,11 +151,7 @@ pub unsafe extern "C" fn altMain(core: *mut sdk::alt::ICore) -> bool {
   }
 
   logger::init().unwrap();
-
-  schedule_start::init_main_thread();
-
-  relib_host::super_special_reinit_of_dbghelp();
-  // relib_host::init();
+  relib_host::forcibly_reinit_dbghelp();
 
   logger::debug!("set_alt_core");
   sdk::set_alt_core(core);

@@ -1,6 +1,6 @@
 [package]
-name = "altv_internal_resource_main_macro"
-description = "Proc-macro for defining main function of alt:V Rust resource. Not intended for direct use."
+name = "altv_internal_resource_before_unload_macro"
+description = "Proc-macro for defining before_unload callback of alt:V Rust resource. Not intended for direct use."
 version = { workspace = true }
 rust-version = { workspace = true }
 edition = { workspace = true }

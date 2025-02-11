@@ -6,6 +6,7 @@ members = [
   "core_resource",
   "mvalue",
   "resource_main_macro",
+  "resource_before_unload_macro",
   "altv_sdk",
   "altv_module",
   "logger",

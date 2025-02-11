@@ -1,4 +1,11 @@
-use std::{env, fs, process::Command};
+use std::{
+  env::{
+    self,
+    consts::{DLL_PREFIX, DLL_SUFFIX},
+  },
+  fs,
+  process::Command,
+};
 
 fn main() {
   let script = env::args()
@@ -31,6 +38,11 @@ fn build() {
     "altv_server/modules/rust-module.dll",
   )
   .unwrap();
+  fs::copy(
+    "../../target/debug/altv_module.pdb",
+    "altv_server/modules/altv_module.pdb",
+  )
+  .unwrap();
 }
 
 fn rebuild() {
@@ -46,21 +58,37 @@ fn build_resource() {
     "--features",
     "reloading"
   );
-  let resource_file_name = if cfg!(target_os = "linux") {
-    "libresource.so"
-  } else {
-    "resource.dll"
-  };
+  let resource_file_name = format!("{DLL_PREFIX}resource{DLL_SUFFIX}");
   fs::copy(
     format!("target/debug/{resource_file_name}"),
     "altv_server/resources/main/main.module",
   )
   .unwrap();
+
+  if cfg!(target_os = "windows") {
+    fs::copy(
+      format!("target/debug/resource.pdb"),
+      "altv_server/resources/main/resource.pdb",
+    )
+    .unwrap();
+  }
 }
 
 macro_rules! cmd_impl {
   ( $program:expr $(, $arg:expr )* $(; current_dir: $current_dir:expr )? ) => ({
     let args: &[String] = &[ $( $arg.clone().into(), )* ];
+
+    let full_command = {
+      let args = args.join(" ");
+      let args = if args.is_empty() {
+        "".to_owned()
+      } else {
+        format!(" {args}")
+      };
+
+      format!("`{}{args}`", $program)
+    };
+    println!("running {full_command}");
 
     let status = Command::new($program)
       .args(args)

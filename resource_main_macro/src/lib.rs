@@ -2,8 +2,7 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn::{parse::Parser, spanned::Spanned, ItemFn};
 
-/// Converts the main function of your alt:V Rust resource
-/// for compatibility with the alt:V module.
+/// Defines entry point of your alt:V Rust resource.
 ///
 /// ## Example
 /// ```rust,ignore
@@ -41,6 +40,10 @@ pub fn resource_main_func(params: TokenStream, input: TokenStream) -> TokenStrea
     ..
   } = fn_item;
   let fn_ident = fn_sig.ident;
+
+  if fn_ident != "main" {
+    return compile_error(fn_ident, "main function must be named \"main\"");
+  }
   if !fn_sig.inputs.is_empty() {
     return compile_error(fn_sig.inputs, "main function can't have any arguments");
   }

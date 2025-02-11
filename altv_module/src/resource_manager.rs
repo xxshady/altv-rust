@@ -81,7 +81,7 @@ impl ResourceManager {
       .map(|resource| resource.module.exports())
   }
 
-  pub fn start_resource(resource_name: ResourceName, full_main_path: String) {
+  pub fn start_resource(resource_name: ResourceName, full_main_path: String) -> bool {
     RESOURCE_MANAGER_INSTANCE.with(|manager| {
       manager
         .borrow_mut()
@@ -120,24 +120,23 @@ impl ResourceManager {
           .unwrap();
       }
 
-      // TODO: fix this
-      // let resource_version = unsafe {
-      //   module.exports().altv_crate_version()
-      // }.unwrap_or_else(|| {
-      //   unreachable!();
-      // });
-      // let resource_version: String = resource_version.into();
+      let resource_version = unsafe {
+        module.exports().altv_crate_version()
+      }.unwrap_or_else(|| {
+        unreachable!();
+      });
+      let resource_version: String = resource_version.into();
 
-      // if resource_version != ALTV_MODULE_VERSION {
-      //   panic!(
-      //     "\n\n\
-      //     \x1b[31mRust module version ({}) does not match the version of the altv crate ({}) that you have installed!\n\
-      //     Update rust-module (.dll/.so) or altv crate\
-      //     \n\n\x1b[0m",
-      //     ALTV_MODULE_VERSION,
-      //     resource_version
-      //   );
-      // }
+      if resource_version != ALTV_MODULE_VERSION {
+        panic!(
+          "\n\n\
+          \x1b[31mRust module version ({}) does not match the version of the altv crate ({}) that you have installed!\n\
+          Update rust-module (.dll/.so) or altv crate\
+          \n\n\x1b[0m",
+          ALTV_MODULE_VERSION,
+          resource_version
+        );
+      }
 
       // TODO: don't panic here and stop resource?
       let ok: bool = unsafe {
@@ -146,15 +145,19 @@ impl ResourceManager {
         })
       };
 
-      if !ok {
-        // TODO: stop resource?
-        logger::error!("Resource: {resource_name:?} main function returned error");
-      }
-
       manager.borrow_mut().remove_pending_status(&resource_name);
 
       let resource_controller = ResourceController::new(module);
-      manager.borrow_mut().add(resource_name, resource_controller);
-    });
+      manager.borrow_mut().add(resource_name.clone(), resource_controller);
+
+      if !ok {
+        // TODO: stop resource?
+        logger::error!("Resource: {resource_name:?} main function returned error");
+
+        return false;
+      }
+
+      true
+    })
   }
 }

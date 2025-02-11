@@ -90,17 +90,19 @@ impl From<String> for OwnedStr {
 
 impl From<OwnedStr> for String {
   fn from(value: OwnedStr) -> Self {
-    unsafe { owned_str_into_string(value.ptr, value.len, value.capacity) }
+    let string = unsafe { owned_str_into_string(value.ptr, value.len, value.capacity) };
+    std::mem::forget(value);
+    string
   }
 }
 
 impl Clone for OwnedStr {
   fn clone(&self) -> Self {
     unsafe {
-      let slice = std::slice::from_raw_parts(self.ptr, self.len);
-      let str = std::str::from_utf8_unchecked(slice);
-      let string = str.to_owned();
-      string.into()
+      let string = owned_str_into_string(self.ptr, self.len, self.capacity);
+      let cloned = string.clone().into();
+      std::mem::forget(string);
+      cloned
     }
   }
 }
