@@ -151,6 +151,8 @@ pub unsafe extern "C" fn altMain(core: *mut sdk::alt::ICore) -> bool {
   }
 
   logger::init().unwrap();
+
+  #[cfg(target_os = "windows")]
   relib_host::forcibly_reinit_dbghelp();
 
   logger::debug!("set_alt_core");
