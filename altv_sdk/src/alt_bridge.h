@@ -157,11 +157,13 @@ alt::IBaseObject* read_base_object_ptr_wrapper(const BaseObjectPtrWrapper& wrapp
   return *wrapper.ptr;
 }
 
+// TODO: why is it not used, maybe it should be used in cpp codegen?
 BaseObjectVector create_base_object_vec() {
   BaseObjectVector vec;
   return vec;
 }
 
+// TODO: why is it not used
 void push_to_base_object_vec(BaseObjectVector& base_object_vec, alt::IBaseObject* base_object) {
   BaseObjectPtrWrapper wrapper;
   wrapper.ptr = std::make_shared<alt::IBaseObject*>(base_object);

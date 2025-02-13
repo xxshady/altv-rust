@@ -364,7 +364,7 @@ pub mod ffi {
 
   #[allow(improper_ctypes_definitions)]
   #[repr(transparent)]
-  pub struct ResourceStartCallback(pub extern "C" fn(name: &str, full_main_path: &str));
+  pub struct ResourceStartCallback(pub extern "C" fn(name: &str, full_main_path: &str) -> bool);
   impl_extern_type_callback!(ResourceStartCallback, "callbacks::ResourceStartCallback");
 
   #[allow(improper_ctypes_definitions)]

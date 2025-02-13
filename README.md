@@ -108,3 +108,5 @@ chmod +x altv-crash-handler
 ```
 
 13. If you have done everything correctly, you should see green "hello world" message in the console
+
+14. For development purposes it's also possible to [reload](https://docs.rs/altv/latest/altv/reloading_docs/index.html) Rust resources dynamically.

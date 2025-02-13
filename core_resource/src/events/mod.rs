@@ -1,4 +1,4 @@
-use std::{collections::HashMap, ffi::CString, fmt::Debug};
+use std::{collections::HashMap, fmt::Debug};
 use crate::{resource::Resource, VoidResult, SomeResult};
 
 pub use altv_sdk::EventType as SDKEventType;
@@ -399,12 +399,8 @@ impl EventManager {
   }
 
   fn toggle_sdk_event(&self, event_type: SupportedEventType, state: bool) {
-    Resource::with(|r| {
-      (r.module_handlers.toggle_event_type)(
-        CString::new(r.name.clone()).unwrap(),
-        event_type.into(),
-        state,
-      );
+    Resource::with(|r| unsafe {
+      crate::gen_imports::toggle_event_type(r.name.as_str().into(), event_type.into(), state);
     });
   }
 }

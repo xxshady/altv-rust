@@ -7,7 +7,7 @@
 #include "cxx.h"
 
 namespace shared {
-  using ResourceStartCallback = void (*)(rust::Str name, rust::Str full_main_path);
+  using ResourceStartCallback = bool (*)(rust::Str name, rust::Str full_main_path);
   using ResourceStopCallback = void (*)(rust::Str name);
   using RuntimeResourceDestroyImplCallback = void (*)();
   using RuntimeOnTickCallback = void (*)();

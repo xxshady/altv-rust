@@ -28,22 +28,28 @@ public:
     RustRuntime* runtime;
     alt::IResource* resource;
     std::string name;
+    std::string full_main_path;
 
   public:
     RustResource(
       RustRuntime* runtime,
       alt::IResource* resource,
-      std::string name
+      std::string name,
+      std::string full_main_path
     ) :
       runtime(runtime),
       resource(resource),
-      name(name)
+      name(name),
+      full_main_path(full_main_path)
     {};
 
     ~RustResource() = default;
 
     bool Start() override {
-      return true;
+      auto instance = RustRuntime::get_instance();
+      auto resource_start_callback = instance.resource_start_callback;
+      assert(resource_start_callback != nullptr);
+      return resource_start_callback(name, full_main_path);
     }
 
     bool Stop() override {
@@ -87,11 +93,9 @@ public:
     auto resource_impl = new RustRuntime::RustResource(
       this,
       resource,
-      resource_name
+      resource_name,
+      full_main_path
     );
-
-    assert(resource_start_callback != nullptr);
-    resource_start_callback(resource_name, full_main_path);
 
     return static_cast<alt::IResource::Impl*>(resource_impl);
   }

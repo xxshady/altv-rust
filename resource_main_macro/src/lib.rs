@@ -1,15 +1,8 @@
-#![allow(clippy::needless_doctest_main)]
-
 use proc_macro::TokenStream;
-use proc_macro2::Span;
 use quote::quote;
-use syn::{parse::Parser, ItemFn};
+use syn::{parse::Parser, spanned::Spanned, ItemFn};
 
-// copy-pasted from tokio
-type AttributeArgs = syn::punctuated::Punctuated<syn::NestedMeta, syn::Token![,]>;
-
-/// Converts the main function of your alt:V Rust resource
-/// for compatibility with the alt:V module.
+/// Defines entry point of your alt:V Rust resource.
 ///
 /// ## Example
 /// ```rust,ignore
@@ -36,94 +29,77 @@ type AttributeArgs = syn::punctuated::Punctuated<syn::NestedMeta, syn::Token![,]
 /// }
 /// ```
 #[proc_macro_attribute]
-pub fn resource_main_func(args: TokenStream, input: TokenStream) -> TokenStream {
-  let input = syn::parse_macro_input!(input as ItemFn);
-  let ItemFn {
-    attrs,
-    vis: _,
-    sig: _sig,
-    block,
-  } = input;
-  let statements = &block.stmts;
+pub fn resource_main_func(params: TokenStream, input: TokenStream) -> TokenStream {
+  let fn_item = {
+    let input = input.clone();
+    syn::parse_macro_input!(input as ItemFn)
+  };
+  let syn::ItemFn {
+    sig: fn_sig,
+    block: fn_block,
+    ..
+  } = fn_item;
+  let fn_ident = fn_sig.ident;
 
-  let args = AttributeArgs::parse_terminated.parse(args).unwrap();
-
-  let mut crate_name = String::from("altv");
-
-  for arg in args {
-    match arg {
-      syn::NestedMeta::Meta(syn::Meta::NameValue(name_value)) => {
-        let ident = name_value
-          .path
-          .get_ident()
-          .expect(".path.get_ident()")
-          .to_string()
-          .to_lowercase();
-        match ident.as_str() {
-          "crate_name" => {
-            if let syn::Lit::Str(s) = name_value.lit {
-              let path = s.parse::<syn::Path>().expect("s.parse::<syn::Path>()");
-              let ident = path
-                .get_ident()
-                .cloned()
-                .expect("path.get_ident().cloned()");
-              crate_name = ident.to_string();
-            } else {
-              panic!("crate attr is not syn::Lit::Str");
-            }
-          }
-          ident => panic!("unknown arg: {ident}"),
-        }
-      }
-      _ => panic!("invalid arg"),
-    }
+  if fn_ident != "main" {
+    return compile_error(fn_ident, "main function must be named \"main\"");
+  }
+  if !fn_sig.inputs.is_empty() {
+    return compile_error(fn_sig.inputs, "main function can't have any arguments");
   }
 
-  let crate_name_ident = syn::Ident::new(&crate_name, Span::call_site());
-  let resource_version = env!("CARGO_PKG_VERSION");
+  let crate_name = parse_crate_name_from_params(params);
+
+  let wrapped_fn = quote! {
+    fn #fn_ident() -> bool {
+      use #crate_name::IntoVoidResult;
+      fn user_code() -> impl IntoVoidResult #fn_block
+
+      match user_code().into_void_result() {
+        Ok(()) => {
+          true
+        }
+        Err(err) => {
+          #crate_name::__internal::on_main_error(err);
+          false
+        }
+      }
+    }
+  };
+
+  let exportified_fn = relib_exportify::exportify(wrapped_fn);
 
   quote! {
-        #[no_mangle]
-        #(#attrs)* extern "C" fn main(
-            altv_module_version: std::ffi::CString, // should always be FIRST arg for backward compatibility!!!
-            core: usize, // workaround for the clippy unsafety error
-            resource_name: std::ffi::CString,
-            resource_handlers: &mut #crate_name_ident::__internal::ResourceHandlers,
-            module_handlers: #crate_name_ident::__internal::ModuleHandlers,
-        ) -> #crate_name_ident::__internal::CBool {
-            let altv_module_version = altv_module_version.into_string().unwrap();
-            if altv_module_version != #resource_version {
-                panic!(
-                    "\n\n\
-                    \x1b[31mRust module version ({}) does not match the version of the altv crate ({}) that you have installed!\n\
-                    Update Rust module (.dll/.so) or altv crate\
-                    \n\n\x1b[0m",
-                    altv_module_version,
-                    #resource_version
-                );
-            }
+    // NOTE ⚠️: relib_module must be imported because it exports internal symbols that are required for relib_host crate
+    use #crate_name::__internal::relib_module as _;
 
-            unsafe { #crate_name_ident::__internal::set_alt_core(core as *mut #crate_name_ident::__internal::ICore) };
-            #crate_name_ident::__internal::init(resource_name.clone(), resource_handlers, module_handlers);
+    #exportified_fn
+  }
+  .into()
+}
 
-            use #crate_name_ident::IntoVoidResult;
-            fn user_code() -> impl IntoVoidResult {
-                #(#statements)*
-            }
-
-            let result = match user_code().into_void_result() {
-                Ok(()) => {
-                    true
-                }
-                Err(err) => {
-                    #crate_name_ident::log_error!("Rust resource: {resource_name:?} main function returned error: {err:?}");    
-                    false
-                }
-            };
-            #crate_name_ident::__internal::CBool {
-                value: result
-            }
-        }
-    }
+fn compile_error(spanned: impl Spanned, message: &str) -> TokenStream {
+  syn::Error::new(spanned.span(), message)
+    .to_compile_error()
     .into()
+}
+
+fn parse_crate_name_from_params(params: TokenStream) -> syn::Ident {
+  let mut crate_name = "altv".to_owned();
+
+  let parser = syn::meta::parser(|meta| {
+    assert!(
+      meta.path.is_ident("crate_name"),
+      "expected crate_name parameter"
+    );
+    let literal: syn::LitStr = meta.value()?.parse()?;
+    crate_name = literal.value();
+    Ok(())
+  });
+
+  parser
+    .parse(params)
+    .expect("Failed to parse altv::main parameters");
+
+  quote::format_ident!("{crate_name}")
 }

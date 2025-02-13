@@ -1,15 +1,22 @@
 [package]
-name = "core_module"
+name = "altv_internal_resource_before_unload_macro"
+description = "Proc-macro for defining before_unload callback of alt:V Rust resource. Not intended for direct use."
 version = { workspace = true }
 rust-version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
 repository = { workspace = true }
 readme = { workspace = true }
-publish = false
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "=16.3.0" }
-core_shared = { path = "../core_shared", package = "altv_internal_core_shared", version = "=16.3.0" }
+quote = "1.0.37"
+relib_exportify = "0.4.2"
+
+[dependencies.syn]
+version = "2.0.90"
+features = ["extra-traits", "full"]
+
+[lib]
+proc-macro = true

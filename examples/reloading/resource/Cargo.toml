@@ -1,0 +1,14 @@
+[package]
+name = "resource"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[features]
+reloading = ["altv/reloading"]
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+altv = { version = "16.3.0", path = "../../../altv" }

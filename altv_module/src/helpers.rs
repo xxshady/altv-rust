@@ -1,5 +1,3 @@
-use std::thread::{self, ThreadId};
-
 #[macro_export]
 macro_rules! on_base_object_event {
   ($method_name:ident, $resource_name:expr, $base_object:expr) => {
@@ -17,7 +15,7 @@ macro_rules! on_base_object_event {
           return;
         }
 
-        let base_object_type = unsafe { altv_sdk::helpers::get_base_object_type($base_object.as_ptr()) };
+        let base_object_type = altv_sdk::helpers::get_base_object_type($base_object.as_ptr());
 
         logger::debug!(
           "{} type: {:?}",
@@ -25,17 +23,16 @@ macro_rules! on_base_object_event {
           base_object_type
         );
 
-        manager
-          .get_resource_for_module_by_name($resource_name)
-          .unwrap_or_else(|| {
-            panic!("{} resource: {:?} get_resource_for_module_by_path failed", stringified_method_name, $resource_name);
-          })
-          .[<$method_name>]($base_object, base_object_type);
+        let exports = manager.get_resource_exports_by_name($resource_name);
+        let Some(exports) = exports else {
+          logger::debug!("{} resource: {:?} get_resource_exports_by_name failed", stringified_method_name, $resource_name);
+          return;
+        };
+
+        exports.[<$method_name>]($base_object, base_object_type)
+          // TODO: stop resource on panic if reloading is enabled
+          .unwrap();
       });
     }
   };
-}
-
-pub fn current_thread_id() -> ThreadId {
-  thread::current().id()
 }

@@ -1,11 +1,13 @@
 use std::{
   cell::{Ref, RefCell, RefMut},
+  ptr::NonNull,
   rc::Rc,
 };
 
-use core_shared::{ModuleHandlers, StringResourceName};
+use altv_sdk::BaseObjectType;
+use core_shared::ResourceName;
 
-use crate::{alt_resource, base_objects, events, script_events, timers};
+use crate::{alt_resource, base_objects, events, script_events, timers, sdk};
 
 thread_local! {
   pub static RESOURCE: Rc<RefCell<Option<Resource>>> =
@@ -14,8 +16,7 @@ thread_local! {
 
 #[derive(Debug, Default)]
 pub struct Resource {
-  pub name: StringResourceName,
-  pub module_handlers: ModuleHandlers,
+  pub name: ResourceName,
 
   pub timers: RefCell<timers::TimerManager>,
   pub timer_schedule: RefCell<timers::ScheduleState>,
@@ -27,6 +28,9 @@ pub struct Resource {
   pub base_objects: RefCell<base_objects::Store>,
   pub pending_base_object_destroy_or_creation: RefCell<base_objects::PendingDestroyOrCreation>,
   pub alt_resources: RefCell<alt_resource::AltResourceManager>,
+
+  #[cfg(feature = "reloading")]
+  pub reloading: RefCell<crate::reloading::Manager>,
 }
 
 macro_rules! with_resource {
@@ -71,17 +75,19 @@ macro_rules! impl_borrow_mut_fn {
 }
 
 impl Resource {
-  pub fn init(resource_name: StringResourceName, module_handlers: ModuleHandlers) {
+  pub fn init(resource_name: ResourceName) {
     RESOURCE.with(|container| {
       let resource = Resource {
         name: resource_name,
-        module_handlers,
         ..Default::default()
       };
-
       resource.alt_resources.borrow_mut().init(&resource.name);
 
       container.replace(Some(resource));
+    });
+
+    Self::with(|resource| {
+      resource.init_created_base_objects();
     });
   }
 
@@ -99,7 +105,6 @@ impl Resource {
       .is_err()
   }
 
-  #[allow(clippy::not_unsafe_ptr_arg_deref)]
   pub fn on_base_object_create(
     &self,
     ptr: altv_sdk::BaseObjectMutPtr,
@@ -136,6 +141,21 @@ impl Resource {
       .on_remove(ptr, base_object_type);
   }
 
+  pub fn init_created_base_objects(&self) {
+    let mut base_obj_manager = self.base_objects.borrow_mut();
+    for ty in 0..(BaseObjectType::Size as u8) {
+      let objects = unsafe { sdk::ICore::GetBaseObjects(ty) };
+
+      for wrapper in objects.iter() {
+        let ptr = unsafe { sdk::read_base_object_ptr_wrapper(wrapper) };
+        let ptr = NonNull::new(ptr).unwrap();
+        let ty = BaseObjectType::try_from(ty).unwrap();
+
+        base_obj_manager.on_create(ptr, ty);
+      }
+    }
+  }
+
   impl_borrow_mut_fn!(timers, timers::TimerManager);
   impl_borrow_mut_fn!(timer_schedule, timers::ScheduleState);
   impl_borrow_mut_fn!(events, events::EventManager);
@@ -157,4 +177,7 @@ impl Resource {
   );
   impl_borrow_fn!(alt_resources, alt_resource::AltResourceManager);
   impl_borrow_mut_fn!(alt_resources, alt_resource::AltResourceManager);
+
+  #[cfg(feature = "reloading")]
+  impl_borrow_mut_fn!(reloading, crate::reloading::Manager);
 }
