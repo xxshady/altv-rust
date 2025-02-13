@@ -13,6 +13,7 @@ readme = { workspace = true }
 [features]
 # Enable support for clientside JS WASM API
 clientside = []
+reloading = []
 
 [dependencies]
 core_shared = { path = "../core_shared", package = "altv_internal_core_shared", version = "=16.3.0" }

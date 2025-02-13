@@ -25,7 +25,6 @@ macro_rules! on_base_object_event {
 
         let exports = manager.get_resource_exports_by_name($resource_name);
         let Some(exports) = exports else {
-          // TODO: get all baseobjects created before resource has started in resource init
           logger::debug!("{} resource: {:?} get_resource_exports_by_name failed", stringified_method_name, $resource_name);
           return;
         };

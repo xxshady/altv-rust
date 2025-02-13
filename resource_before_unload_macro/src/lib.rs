@@ -2,9 +2,8 @@ use proc_macro::TokenStream;
 use quote::ToTokens;
 use syn::{spanned::Spanned, ItemFn};
 
-// TODO: add link to reloading feature docs
 /// Defines `before_unload` callback of your alt:V Rust resource.
-/// It will be called when resource is unloaded when reloading feature is enabled,
+/// It will be called when resource is unloaded when [reload](https://docs.rs/altv/latest/altv/reloading_docs/index.html) feature is enabled,
 /// for example using `stop <resource name>` command in the server console.
 ///
 /// ## Example

@@ -1,4 +1,5 @@
 set RUST_BACKTRACE=1
+set LOG_LEVEL=debug
 cargo build --workspace --features reloading &&^
 echo building reloading example &&^
 cd examples/reloading &&^

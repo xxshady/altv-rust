@@ -1,12 +1,12 @@
 use std::{fmt::Debug, ptr::NonNull, rc::Rc};
 
 use super::{
-  base_impl::mvalue::impl_deserialize_for,
+  base_impl::{mvalue::impl_deserialize_for, base_ptr::BasePtr},
   extra_pools::{Entity, WorldObject},
   pool_funcs::BaseObjectPoolFuncs,
   BaseObjectContainer, BaseObjectId, BaseObjectManager, BaseObjectWrapper,
 };
-use crate::{col_shape::ColShapy, sdk};
+use crate::{col_shape::ColShapy, sdk, SomeResult};
 
 macro_rules! base_objects {
   (@internal $(
@@ -82,7 +82,12 @@ macro_rules! base_objects {
             $crate::resource::Resource::with_base_objects_mut(|mut v, _| -> $crate::VoidResult {
               use $crate::base_objects::BasePtr;
               let base_ptr = $base_object.base_ptr()?;
+
               v.[<$manager_name_snake>].remove(base_ptr, $base_object.ptr()?)?;
+
+              #[cfg(feature = "reloading")]
+              $crate::reloading::handle_base_object_destruction(base_ptr.as_ptr());
+
               Ok(())
             })
           };
@@ -98,6 +103,9 @@ macro_rules! base_objects {
               let base_ptr = std::ptr::NonNull::new(unsafe {
                 $crate::sdk::$manager_name_snake::to_base_object($ptr.as_ptr())
               }).unwrap();
+
+              #[cfg(feature = "reloading")]
+              $crate::reloading::handle_base_object_creation(base_ptr.as_ptr());
 
               let inherit_ptrs = $crate::helpers::if_not!(
                 if: ($(
@@ -124,6 +132,16 @@ macro_rules! base_objects {
       pub enum AnyBaseObject { $(
         $manager_name($manager_name_snake::$name_container),
       )+ }
+
+      impl AnyBaseObject {
+        pub(crate) fn raw_base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectRawMutPtr> {
+          match self { $(
+            Self::$manager_name(container) => {
+              container.raw_base_ptr()
+            }
+          )+ }
+        }
+      }
 
       #[derive(Default)]
       pub struct Store {

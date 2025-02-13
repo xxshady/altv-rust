@@ -541,7 +541,7 @@ fn cpp_method_to_rust_compatible_func(
       "std::vector<WeaponWrapper>" => {
         "---std::vector<WeaponWrapper> is not implemented as param".to_string()
       }
-      "BaseObjectType" => "---BaseObjectType is not implemented as param".to_string(),
+      "BaseObjectType" => format!("u8 {name}"),
       "ColShapeType" => "---ColShapeType is not implemented as param".to_string(),
       "WeaponDamageEventBodyPart" => {
         "---WeaponDamageEventBodyPart is not implemented as param".to_string()
@@ -583,7 +583,7 @@ fn cpp_method_to_rust_compatible_func(
         "std::vector<WeaponWrapper>" => {
           "---std::vector<WeaponWrapper> is not implemented as passed param".to_string()
         }
-        "BaseObjectType" => "---BaseObjectType is not implemented as passed param".to_string(),
+        "BaseObjectType" => format!("static_cast<alt::IBaseObject::Type>({name})"),
         "ColShapeType" => "---ColShapeType is not implemented as passed param".to_string(),
         "BlipType" => format!("static_cast<alt::IBlip::BlipType>({name})"),
         "MarkerType" => format!("static_cast<alt::IMarker::MarkerType>({name})"),

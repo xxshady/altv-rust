@@ -17,6 +17,7 @@ const SOURCE_ASSET: &str = "source.tar.gz";
 const RELEASES_URL: &str = "https://api.github.com/repos/xxshady/altv-rust/releases";
 const RUST_MODULE_PREFIX: &str = if cfg!(windows) { "" } else { "lib" };
 const RUST_MODULE_EXT: &str = if cfg!(windows) { ".dll" } else { ".so" };
+const TARGET_DIRECTORY: &str = "modules/rust-module";
 
 #[derive(Debug, Deserialize)]
 struct GithubAsset {
@@ -199,7 +200,8 @@ fn compile_rust_module(src_dir: &Path, cli_args: &[String]) -> anyhow::Result<()
     bail!("Failed to build rust-module binary");
   }
 
-  fs::create_dir_all("modules").context("Failed to create modules directory")?;
+  fs::create_dir_all(TARGET_DIRECTORY)
+    .with_context(|| format!("Failed to create {TARGET_DIRECTORY} directory"))?;
 
   let source_lib_path = src_dir.join(format!(
     "target/release/{RUST_MODULE_PREFIX}altv_module{RUST_MODULE_EXT}"
@@ -211,6 +213,24 @@ fn compile_rust_module(src_dir: &Path, cli_args: &[String]) -> anyhow::Result<()
   fs::copy(source_lib_path, target_lib_path).context("Failed to copy rust-module binary")?;
 
   println!("{}", "Successfully saved".bright_green());
+
+  #[cfg(windows)]
+  {
+    let pdb = find_cli_param(cli_args, "pdb");
+    if pdb.is_some() {
+      let source_lib_path = src_dir.join("target/release/altv_module.pdb");
+      let target_lib_path = rust_module_pdb_target_path();
+
+      println!(
+        "Saving rust-module pdb file to: {}",
+        target_lib_path.bright_cyan()
+      );
+
+      fs::copy(source_lib_path, target_lib_path).context("Failed to copy rust-module pdb file")?;
+
+      println!("{}", "Successfully saved".bright_green());
+    }
+  }
 
   Ok(())
 }
@@ -258,5 +278,9 @@ fn rust_module_lib_name() -> String {
 }
 
 fn rust_module_target_path() -> String {
-  format!("modules/{}", rust_module_lib_name())
+  format!("{TARGET_DIRECTORY}/{}", rust_module_lib_name())
+}
+
+fn rust_module_pdb_target_path() -> String {
+  format!("{TARGET_DIRECTORY}/altv_module.pdb")
 }

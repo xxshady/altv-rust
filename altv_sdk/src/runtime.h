@@ -49,8 +49,6 @@ public:
       auto instance = RustRuntime::get_instance();
       auto resource_start_callback = instance.resource_start_callback;
       assert(resource_start_callback != nullptr);
-
-      // TODO: return bool from this callback
       return resource_start_callback(name, full_main_path);
     }
 

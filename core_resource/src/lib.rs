@@ -38,6 +38,8 @@ pub mod exports;
 
 #[cfg(feature = "clientside")]
 mod clientside;
+#[cfg(feature = "reloading")]
+mod reloading;
 
 use core_shared::{
   abi_stable::{OwnedStr, Str},
@@ -68,6 +70,9 @@ impl Exports for ModuleExportsImpl {
     Resource::init(resource_name);
     script_events::LocalEventManager::init();
     script_events::ClientEventManager::init();
+
+    #[cfg(feature = "reloading")]
+    crate::reloading::init();
   }
 
   fn on_base_object_create(base_object: altv_sdk::BaseObjectMutPtr, ty: altv_sdk::BaseObjectType) {

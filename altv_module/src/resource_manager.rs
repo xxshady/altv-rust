@@ -70,7 +70,11 @@ impl ResourceManager {
     #[cfg(not(feature = "reloading"))]
     {
       drop(resource);
-      logger::warn!("Resource: {resource_name} is leaked since reloading is disabled");
+      logger::warn!(
+        "Resource: {resource_name} is leaked since reloading is disabled\n\
+        note: if you want to dynamically reload resources for development purposes:\n\
+        https://docs.rs/altv/latest/altv/reloading_docs/index.html"
+      );
     }
   }
 
@@ -87,14 +91,12 @@ impl ResourceManager {
         .borrow_mut()
         .add_pending_status(resource_name.clone());
 
-      dbg!();
       let module = unsafe {
         relib_host::load_module::<gen_exports::ModuleExports>(
           &full_main_path,
           gen_imports::init_imports,
         )
       };
-      dbg!(module.is_ok());
       // TODO: don't panic here?
       let module = module
         .unwrap_or_else(|e| {

@@ -5,10 +5,10 @@ edition.workspace = true
 rust-version.workspace = true
 
 [features]
-reloading = ["alt/reloading"]
+reloading = ["altv/reloading"]
 
 [lib]
 crate-type = ["cdylib"]
 
 [dependencies]
-alt = { version = "16.3.0", path = "../../../altv", package = "altv" }
+altv = { version = "16.3.0", path = "../../../altv" }

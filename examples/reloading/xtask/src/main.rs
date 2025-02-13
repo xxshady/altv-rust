@@ -26,23 +26,7 @@ fn build() {
   fs::copy("server.toml", "altv_server/server.toml").unwrap();
 
   build_resource();
-
-  // TODO:
-  // cmd!("cargo", "altvup", "release", "--reloading"; current_dir: "altv_server");
-  cmd!("cargo", "altvup", "release", "--reloading", "--dont-compile"; current_dir: "altv_server");
-
-  // TODO: remove this:
-  fs::create_dir_all("altv_server/modules").unwrap();
-  fs::copy(
-    "../../target/debug/altv_module.dll",
-    "altv_server/modules/rust-module.dll",
-  )
-  .unwrap();
-  fs::copy(
-    "../../target/debug/altv_module.pdb",
-    "altv_server/modules/altv_module.pdb",
-  )
-  .unwrap();
+  cmd!("cargo", "altvup", "release", "--reloading"; current_dir: "altv_server");
 }
 
 fn rebuild() {

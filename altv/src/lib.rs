@@ -119,6 +119,9 @@ pub mod events;
 pub mod meta;
 pub mod mvalue;
 
+#[cfg(doc)]
+pub mod reloading_docs;
+
 #[rustfmt::skip]
 pub mod prelude {
   pub use super::exports::{

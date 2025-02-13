@@ -67,6 +67,20 @@ alt::IResource* GetResource(const StdStringClone name) {
 alt::IEntity* GetEntityBySyncID(u16 id) {
   return alt::ICore::Instance().GetEntityBySyncID(id);
 }
+alt::IBaseObject* GetBaseObjectByID(u8 type, u32 id) {
+  return alt::ICore::Instance().GetBaseObjectByID(static_cast<alt::IBaseObject::Type>(type), id);
+}
+BaseObjectVector GetBaseObjects(u8 type) {
+  auto alt_vec = alt::ICore::Instance().GetBaseObjects(static_cast<alt::IBaseObject::Type>(type));
+  BaseObjectVector vec {};
+  vec.reserve(alt_vec.size());
+  for (const auto& e : alt_vec) {
+  BaseObjectPtrWrapper wrapper;
+  wrapper.ptr = std::make_shared<alt::IBaseObject*>(e);
+  vec.push_back(wrapper.clone());
+  }
+  return vec;
+}
 bool HasMetaData(const StdStringClone key) {
   return alt::ICore::Instance().HasMetaData(key);
 }

@@ -1,50 +1,37 @@
-#[alt::main(crate_name = "alt")]
-fn main() -> impl alt::IntoVoidResult {
-  // std::env::set_var("RUST_BACKTRACE", "1");
-  alt::log!("~gl~hello world");
+use altv::prelude::*;
 
-  // alt::log!("bt:\n{}", std::backtrace::Backtrace::capture());
+#[altv::main]
+fn main() -> impl altv::IntoVoidResult {
+  altv::log!("~gl~hello world");
 
-  use alt::prelude::*;
-
-  alt::events::on_player("test", |ev| {
-    let args: (alt::mvalue::AnyMValue, alt::mvalue::AnyMValue) = ev.args.deserialize()?;
-    dbg!(args);
+  altv::events::on_player_connect(|ev| {
+    on_player_connect(&ev.player)?;
     Ok(())
   });
 
-  alt::events::on_player_connect(|ev| {
-    ev.player.spawn("mp_m_freemode_01", (0, 0, 71))?;
-    ev.player.emit("test", &[&123, &"test"])?;
-    Ok(())
-  });
+  // After reloading of the resource all previously connected players
+  // remain on the server so we need get them manually:
+  for p in altv::Player::all() {
+    on_player_connect(&p)?;
+  }
 
-  alt::events::on_console_command(|ev| {
-    match ev.name.as_str() {
-      "d" => {
-        dbg!();
-        let players = alt::Player::all();
-        let Some(player) = players.get(0) else {
-          dbg!();
-          return Ok(());
-        };
+  // This vehicle will be destroyed automatically at resource unloading
+  let _vehicle = altv::Vehicle::new("sultan2", (3, 3, 75), 0)?;
 
-        player.emit("test", &[&125, &"test"])?;
-      }
-      "w" => {
-        dbg!();
-        std::mem::forget(vec![1_u8; 1024 * 1024 * 10]);
-      }
-      _ => {}
-    }
+  // TODO: metadata cleanup when resource is unloaded
+  // (not implemented yet)
 
-    Ok(())
-  });
-
-  // alt::anyhow::bail!("this is an error");
+  Ok(())
 }
 
-#[alt::before_unload]
+// Called when resource is unloaded, for example
+// by using `stop <resource name>` command in the server console
+#[altv::before_unload]
 fn before_unload() {
-  alt::log_error!("before unload");
+  altv::log!("before unload");
+}
+
+fn on_player_connect(player: &altv::PlayerContainer) -> altv::VoidResult {
+  player.spawn("mp_m_freemode_01", (0, 0, 71))?;
+  Ok(())
 }

@@ -7,7 +7,7 @@ use crate::{sdk, helpers::base_ptr_to_raw};
 pub const GENERATION_ID_KEY: &str = "&^#altv-rust";
 
 thread_local! {
-    pub static CURRENT_GENERATION_ID: Cell<u64> = const { Cell::new(1) };
+  pub static CURRENT_GENERATION_ID: Cell<u64> = const { Cell::new(1) };
 }
 
 pub fn handle_base_object_creation(raw_ptr: BaseObjectRawMutPtr) {
@@ -22,8 +22,8 @@ pub fn handle_base_object_destruction() {
   let next = current.checked_add(1).unwrap_or_else(|| {
     logger::error!(
       "Base object generation reached u64::MAX.\n\
-            Next base object will use non-unique generation.\n\
-            Consider opening issue in altv-rust repo: https://github.com/xxshady/altv-rust/issues."
+      Next base object will use non-unique generation.\n\
+      Consider opening issue in altv-rust repo: https://github.com/xxshady/altv-rust/issues."
     );
     1
   });

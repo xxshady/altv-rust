@@ -31,8 +31,7 @@ For example: `cargo altvup release --force-recompile`
 
 ### `--reloading`
 
-<!-- TODO: add link to example in repo here -->
-Enable reloading feature for development.
+Enable [reloading](https://docs.rs/altv/latest/altv/reloading_docs/index.html) feature for development.
 
 For example: `cargo altvup release --reloading`
 
@@ -67,6 +66,14 @@ Increase it if you have "Cannot find altv-rust release of branch..." error
 
 For example: `cargo altvup release --rust-module-releases-pages=5`
 
+### `--pdb`
+
+> NOTE: Windows only
+
+Copy pdb file of rust-module to `modules/rust-module` directory to enable backtraces for rust-module binary.
+
+For example: `cargo altvup release --pdb`
+
 ## How `rust-module` is installed
 
-It downloads `altv-rust` source code to `.altvup-src` directory (see also: [`--src-dir`](#--src-dir)) and compiles `rust-module` (.so or .dll) to the `modules` directory, after compilation `.altvup-src` directory will be deleted.
+It downloads `altv-rust` source code to `.altvup-src` directory (see also: [`--src-dir`](#--src-dir)) and compiles `rust-module` (.so or .dll) to the `modules/rust-module` directory, after compilation `.altvup-src` directory will be deleted.
