@@ -14,7 +14,7 @@
 //! To use it:
 //!
 //! ...compile rust-module with reloading enabled:
-//! ```ignore
+//! ```txt
 //! cargo altvup release --reloading
 //! ```
 //!
@@ -26,17 +26,17 @@
 //! ```
 //!
 //! ...and running something like:
-//! ```ignore
+//! ```txt
 //! cargo build --features reloading
 //! ```
 //!
 //! ...now start altv-server, run in it:
-//! ```ignore
+//! ```txt
 //! stop <your resource name>
 //! ```
 //!
 //! ...recompile your resource and run in altv-server:
-//! ```ignore
+//! ```txt
 //! start <your resource name>
 //! ```
 //!
@@ -62,4 +62,4 @@
 //!
 //! For more details about reloading feature see [relib](https://github.com/xxshady/relib).
 //! About caveats, only [*File descriptors and network sockets*](https://github.com/xxshady/relib?tab=readme-ov-file#file-descriptors-and-network-sockets)
-//! and [*Dead locks*](https://github.com/xxshady/relib?tab=readme-ov-file#dead-locks) apply to Rust module, ignore the rest.
+//! and [*Dead locks*](https://github.com/xxshady/relib?tab=readme-ov-file#dead-locks) apply to Rust module, txt the rest.
