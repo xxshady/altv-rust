@@ -14,7 +14,7 @@
 //! To use it:
 //!
 //! ...compile rust-module with reloading enabled:
-//! ```
+//! ```ignore
 //! cargo altvup release --reloading
 //! ```
 //!
@@ -26,17 +26,17 @@
 //! ```
 //!
 //! ...and running something like:
-//! ```
+//! ```ignore
 //! cargo build --features reloading
 //! ```
 //!
 //! ...now start altv-server, run in it:
-//! ```
+//! ```ignore
 //! stop <your resource name>
 //! ```
 //!
 //! ...recompile your resource and run in altv-server:
-//!  ```
+//! ```ignore
 //! start <your resource name>
 //! ```
 //!
