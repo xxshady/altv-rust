@@ -187,7 +187,7 @@ fn compile_rust_module(src_dir: &Path, cli_args: &[String]) -> anyhow::Result<()
 
   let reloading = find_cli_param(cli_args, "reloading");
   if reloading.is_some() {
-    args.push("--features reloading");
+    args.extend(["--features", "reloading"]);
   }
 
   let status = Command::new("cargo")
