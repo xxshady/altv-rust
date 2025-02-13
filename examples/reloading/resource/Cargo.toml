@@ -11,4 +11,4 @@ reloading = ["altv/reloading"]
 crate-type = ["cdylib"]
 
 [dependencies]
-altv = { version = "16.3.0", path = "../../../altv" }
+altv = { version = "*", path = "../../../altv" }
