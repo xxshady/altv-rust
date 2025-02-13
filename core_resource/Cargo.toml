@@ -16,10 +16,10 @@ clientside = []
 reloading = []
 
 [dependencies]
-core_shared = { path = "../core_shared", package = "altv_internal_core_shared", version = "=16.3.0" }
-logger = { path = "../logger", package = "altv_internal_logger", version = "=16.3.0" }
-altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "=16.3.0" }
-mvalue = { path = "../mvalue", package = "altv_internal_mvalue", version = "=16.3.0" }
+core_shared = { path = "../core_shared", package = "altv_internal_core_shared", version = "=16.4.2" }
+logger = { path = "../logger", package = "altv_internal_logger", version = "=16.4.2" }
+altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "=16.4.2" }
+mvalue = { path = "../mvalue", package = "altv_internal_mvalue", version = "=16.4.2" }
 anyhow = { workspace = true }
 autocxx = { workspace = true }
 paste = { workspace = true }
@@ -30,5 +30,5 @@ enumflags2 = "0.7.10"
 relib_interface = { version = "0.4.2", features = ["include"] }
 
 [build-dependencies]
-core_shared = { path = "../core_shared", package = "altv_internal_core_shared", version = "=16.3.0" } 
+core_shared = { path = "../core_shared", package = "altv_internal_core_shared", version = "=16.4.2" } 
 relib_interface = { version = "0.4.2", features = ["build"] }
