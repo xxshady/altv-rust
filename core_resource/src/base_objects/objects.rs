@@ -1,12 +1,12 @@
 use std::{fmt::Debug, ptr::NonNull, rc::Rc};
 
 use super::{
-  base_impl::{mvalue::impl_deserialize_for, base_ptr::BasePtr},
+  base_impl::mvalue::impl_deserialize_for,
   extra_pools::{Entity, WorldObject},
   pool_funcs::BaseObjectPoolFuncs,
   BaseObjectContainer, BaseObjectId, BaseObjectManager, BaseObjectWrapper,
 };
-use crate::{col_shape::ColShapy, sdk, SomeResult};
+use crate::{col_shape::ColShapy, sdk};
 
 macro_rules! base_objects {
   (@internal $(
@@ -133,9 +133,13 @@ macro_rules! base_objects {
         $manager_name($manager_name_snake::$name_container),
       )+ }
 
+      #[cfg(feature = "reloading")]
+      use crate::SomeResult;
+
       impl AnyBaseObject {
         #[cfg(feature = "reloading")]
         pub(crate) fn raw_base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectRawMutPtr> {
+          use $crate::base_objects::BasePtr;
           match self { $(
             Self::$manager_name(container) => {
               container.raw_base_ptr()
