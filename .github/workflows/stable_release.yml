@@ -54,7 +54,7 @@ jobs:
 
       - name: cargo release
         run: |
-          cargo release ${{ steps.extract_version.outputs.VERSION }} --exclude cargo-altvup --no-confirm --execute
+          cargo release ${{ steps.extract_version.outputs.VERSION }} --exclude cargo-altvup --no-confirm --unpublished --execute
 
       - name: create archive
         # seems like --exclude-from doesnt support all syntax of gitignore but it doesnt really matter
