@@ -134,6 +134,7 @@ macro_rules! base_objects {
       )+ }
 
       impl AnyBaseObject {
+        #[cfg(feature = "reloading")]
         pub(crate) fn raw_base_ptr(&self) -> SomeResult<altv_sdk::BaseObjectRawMutPtr> {
           match self { $(
             Self::$manager_name(container) => {

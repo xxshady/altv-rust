@@ -281,6 +281,7 @@ fn rust_module_target_path() -> String {
   format!("{TARGET_DIRECTORY}/{}", rust_module_lib_name())
 }
 
+#[cfg(windows)]
 fn rust_module_pdb_target_path() -> String {
   format!("{TARGET_DIRECTORY}/altv_module.pdb")
 }
