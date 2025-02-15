@@ -95,7 +95,6 @@ impl voice_channel::VoiceChannel {
   }
 
   pub fn destroy(&self) -> VoidResult {
-    voice_channel::remove_from_pool!(self)?;
-    self.internal_destroy()
+    voice_channel::destroy_and_remove_from_pool!(self)
   }
 }

@@ -43,8 +43,7 @@ impl ped::Ped {
   }
 
   pub fn destroy(&self) -> VoidResult {
-    ped::remove_from_pool!(self)?;
-    self.internal_destroy()
+    ped::destroy_and_remove_from_pool!(self)
   }
 
   pub fn health(&self) -> SomeResult<u16> {

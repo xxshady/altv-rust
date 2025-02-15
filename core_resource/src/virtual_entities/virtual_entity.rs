@@ -106,8 +106,7 @@ impl virtual_entity::VirtualEntity {
   }
 
   pub fn destroy(&self) -> VoidResult {
-    virtual_entity::remove_from_pool!(self)?;
-    self.internal_destroy()
+    virtual_entity::destroy_and_remove_from_pool!(self)
   }
 }
 

@@ -129,8 +129,7 @@ impl blip::Blip {
   }
 
   pub fn destroy(&self) -> VoidResult {
-    blip::remove_from_pool!(self)?;
-    self.internal_destroy()
+    blip::destroy_and_remove_from_pool!(self)
   }
 
   pub fn global(&self) -> SomeResult<bool> {

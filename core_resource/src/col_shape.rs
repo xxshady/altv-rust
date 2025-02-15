@@ -107,8 +107,7 @@ impl col_shape::ColShape {
   }
 
   pub fn destroy(&self) -> VoidResult {
-    col_shape::remove_from_pool!(self)?;
-    self.internal_destroy()
+    col_shape::destroy_and_remove_from_pool!(self)
   }
 }
 

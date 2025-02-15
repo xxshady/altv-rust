@@ -96,8 +96,7 @@ impl object::Object {
   }
 
   pub fn destroy(&self) -> VoidResult {
-    object::remove_from_pool!(self)?;
-    self.internal_destroy()
+    object::destroy_and_remove_from_pool!(self)
   }
 
   pub fn alpha(&self) -> SomeResult<u8> {

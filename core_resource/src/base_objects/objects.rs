@@ -77,29 +77,32 @@ macro_rules! base_objects {
         impl_deserialize_for!($name_container, $manager_name, [<$manager_name_snake _mvalue_deserialize_impl>]);
 
         #[macro_export]
-        macro_rules! [<__ $manager_name_snake _remove_from_pool>] {
-          ($base_object:expr) => {
-            $crate::resource::Resource::with_base_objects_mut(|mut v, _| -> $crate::VoidResult {
-              use $crate::base_objects::BasePtr;
-              let base_ptr = $base_object.base_ptr()?;
+        macro_rules! [<__ $manager_name_snake _destroy_and_remove_from_pool>] {
+          ($base_object:expr) => ({
+            use $crate::base_objects::BasePtr;
+            let base_ptr = $base_object.base_ptr()?;
+            let ptr = $base_object.ptr()?;
 
-              v.[<$manager_name_snake>].remove(base_ptr, $base_object.ptr()?)?;
+            $base_object.internal_destroy()?;
+
+            $crate::resource::Resource::with_base_objects_mut(|mut base_objects, _| -> VoidResult {
+              base_objects.[<$manager_name_snake>].remove(base_ptr, ptr)?;
 
               #[cfg(feature = "reloading")]
               $crate::reloading::handle_base_object_destruction(base_ptr.as_ptr());
 
               Ok(())
             })
-          };
+          });
         }
 
         #[allow(unused_imports)]
-        pub(crate) use [<__ $manager_name_snake _remove_from_pool>] as remove_from_pool;
+        pub(crate) use [<__ $manager_name_snake _destroy_and_remove_from_pool>] as destroy_and_remove_from_pool;
 
         #[macro_export]
         macro_rules! [<__ $manager_name_snake _add_to_pool>] {
           ($ptr:expr) => {
-            $crate::resource::Resource::with_base_objects_mut(|mut v, _| {
+            $crate::resource::Resource::with_base_objects_mut(|mut base_objects, _| {
               let base_ptr = std::ptr::NonNull::new(unsafe {
                 $crate::sdk::$manager_name_snake::to_base_object($ptr.as_ptr())
               }).unwrap();
@@ -116,7 +119,7 @@ macro_rules! base_objects {
 
               let container = Self::_new($ptr, base_ptr, inherit_ptrs);
 
-              v.[<$manager_name_snake>].add(base_ptr, $ptr, container.clone());
+              base_objects.[<$manager_name_snake>].add(base_ptr, $ptr, container.clone());
 
               container
             })

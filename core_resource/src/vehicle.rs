@@ -47,8 +47,7 @@ impl vehicle::Vehicle {
   }
 
   pub fn destroy(&self) -> VoidResult {
-    vehicle::remove_from_pool!(self)?;
-    self.internal_destroy()
+    vehicle::destroy_and_remove_from_pool!(self)
   }
 
   pub fn driver(&self) -> SomeResult<Option<player::PlayerContainer>> {

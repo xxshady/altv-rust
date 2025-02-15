@@ -39,8 +39,7 @@ impl checkpoint::Checkpoint {
   }
 
   pub fn destroy(&self) -> VoidResult {
-    checkpoint::remove_from_pool!(self)?;
-    self.internal_destroy()
+    checkpoint::destroy_and_remove_from_pool!(self)
   }
 
   pub fn checkpoint_type(&self) -> SomeResult<u8> {
