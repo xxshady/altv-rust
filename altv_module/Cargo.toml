@@ -14,9 +14,9 @@ publish = false
 reloading = ["relib_host/unloading"]
 
 [dependencies]
-altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "=16.4.2" }
-core_shared = { path = "../core_shared", package = "altv_internal_core_shared", version = "=16.4.2" }
-logger = { path = "../logger", package = "altv_internal_logger", version = "=16.4.2" }
+altv_sdk = { path = "../altv_sdk", package = "altv_internal_sdk", version = "=16.4.3" }
+core_shared = { path = "../core_shared", package = "altv_internal_core_shared", version = "=16.4.3" }
+logger = { path = "../logger", package = "altv_internal_logger", version = "=16.4.3" }
 paste = { workspace = true }
 autocxx = { workspace = true }
 lazy_static = { workspace = true }
@@ -32,4 +32,4 @@ crate-type = ["cdylib"]
 
 [build-dependencies]
 relib_interface = { version = "0.4.2", features = ["build"] }
-core_shared = { path = "../core_shared", package = "altv_internal_core_shared", version = "=16.4.2" }
+core_shared = { path = "../core_shared", package = "altv_internal_core_shared", version = "=16.4.3" }
