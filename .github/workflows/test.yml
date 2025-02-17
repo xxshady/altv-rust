@@ -90,6 +90,9 @@ jobs:
 
       - name: check examples
         run: |
+          set PATH=%PATH:C:\Program Files\LLVM\bin;=%
+          echo %PATH%
+
           cd examples/reloading
           cargo build --workspace
           cargo build --workspace --features reloading
