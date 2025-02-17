@@ -89,6 +89,7 @@ jobs:
           cargo test --doc
 
       - name: check examples
+        shell: cmd
         run: |
           set PATH=%PATH:C:\Program Files\LLVM\bin;=%
           echo %PATH%
