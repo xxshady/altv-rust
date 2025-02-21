@@ -1,3 +1,7 @@
+# This project is suspended
+
+Currently on hold due to unclear situation with alt:V.
+
 # alt:V API for Rust
 
 <div align="center">
